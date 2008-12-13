@@ -1,0 +1,71 @@
+<Zone name="Test">
+
+    <Models>
+        <Model name="Barrel" file="barrel.m2">
+            <Texture>
+                <Diffuse file="barrel.jpg"/>
+            </Texture>
+        </Model>
+    </Models>
+    
+    <Sky>
+        <Model model="sky.m2"/>
+    </Sky>
+    
+    <Terrain>
+        <HeightMap file="height_map.png"/>
+            <MinHeight val="0"/>
+            <MaxHeight val="5"/>
+        </HeightMap>
+        <Dimensions x="20" y="20"/>
+        <SubDivisions nx="30" ny="30"/>
+        <Textures>
+            <Diffuse file="grass.jpg">
+                <Tilling nx="1" ny="1"/>
+            </Diffuse>
+            <Specular file="grass_s.jpg">
+                <Tilling nx="1" ny="1"/>
+            </Specular>
+        </Textures>
+    </Terrain>
+    
+    <Doodads>
+        <Doodad name="Barrel" model="Barrel" static="true">
+            <Position x="0" y="0" z="0"/>
+            <Scale x="1" y="1" z="1"/>
+            <Orientation x="0" y="0" z="0" w="1"/>
+            <SelfLighting r="0" g="0" b="0"/>
+        </Doodad>
+    </Doodads>
+    
+    <AmbientColor r="100" g="100" b="100"/>
+    
+    <Fog>
+        <Color r="0" g="0" b="0"/>
+        <Distance min="50" max="80"/>
+    </Fog>
+    
+    <Lights>
+        <Point name="Torch">
+            <Position x="0" y="0" z="5"/>
+            <Diffuse r="150" g="100" b="0"/>
+            <Specular r="150" g="100" b="0"/>
+            <Attenuation constant="0.0f" linear="1.0" quadratic="0.0"/>
+        </Point>
+        <Directional name="Sun">
+            <Direction x="2" y="2" z="-5"/>
+            <Diffuse r="0" g="150" b="0"/>
+            <Specular r="0" g="150" b="0"/>
+        </Directional>
+        <Spot name="Projector">
+            <Position x="-5" y="-5" z="3"/>
+            <Direction x="5" y="5" z="0"/>
+            <Diffuse r="0" g="0" b="150"/>
+            <Specular r="0" g="0" b="150"/>
+            <Dimensions inAngle="0.1" outAngle="0.125"/>
+            <Fallof val="1.0"/>
+            <Attenuation constant="0.0f" linear="1.0" quadratic="0.0"/>
+        </Spot>
+    </Lights>
+    
+</Zone>

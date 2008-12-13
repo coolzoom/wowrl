@@ -1,0 +1,31 @@
+<Races>
+    <Race name="Orc">
+        <MaleModel model="OrcMale">
+            <BodyTextures>
+                <Texture file="Textures/Character/Orc/Male/OrcMaleSkin.png"/>
+            </BodyTextures>
+            <HairTextures>
+                <Texture file="Textures/Character/Orc/Male/OrcMaleHair.png"/>
+            </HairTextures>
+            <DefaultParts>
+                <Part val="0000"/> <!-- body  -->
+                <Part val="1501"/> <!-- back  -->
+                <Part val="0401"/> <!-- hands -->
+                <Part val="0501"/> <!-- legs  -->
+                <Part val="1301"/> <!-- feets -->
+                <Part val="0701"/> <!-- misc  -->
+            </DefaultParts>
+        </MaleModel>
+        <FemaleModel model="OrcFemale">
+            <BodyTextures>
+                <Texture file="Textures/Character/Orc/Female/OrcFemaleSkin.png"/>
+            </BodyTextures>
+            <HairTextures>
+                <Texture file="Textures/Character/Orc/Female/OrcFemaleHair.png"/>
+            </HairTextures>
+            <DefaultParts>
+                <Part val="0000"/> <!-- body  -->
+            </DefaultParts>
+        </FemaleModel>
+    </Race>
+</Races>

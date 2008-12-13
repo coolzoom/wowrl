@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Frost" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug_Win32">
+				<Option platforms="Windows;" />
+				<Option output="bin/FrostD" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj_Frost/Debug_Win32/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-mthreads" />
+					<Add option="-fmessage-length=0" />
+					<Add option="-fexceptions" />
+					<Add option="-fident" />
+					<Add option="-D_DEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-Wl,--enable-runtime-pseudo-reloc" />
+					<Add option="-Wl,--enable-auto-image-base" />
+					<Add option="-Wl,--add-stdcall-alias" />
+					<Add option="-Wl,--allow-multiple-definition" />
+					<Add library="OgreMain_d" />
+					<Add library="OIS_d" />
+					<Add library="libutils_d.a" />
+					<Add library="liblua5.1_d.a" />
+				</Linker>
+			</Target>
+			<Target title="Release_Win32">
+				<Option platforms="Windows;" />
+				<Option output="bin/Frost" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj_Frost/Release_Win32/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-mthreads" />
+					<Add option="-fmessage-length=0" />
+					<Add option="-fexceptions" />
+					<Add option="-fident" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-Wl,--enable-runtime-pseudo-reloc" />
+					<Add option="-Wl,--enable-auto-image-base" />
+					<Add option="-Wl,--add-stdcall-alias" />
+					<Add option="-Wl,--allow-multiple-definition" />
+					<Add library="OgreMain" />
+					<Add library="OIS" />
+					<Add library="libutils.a" />
+					<Add library="liblua5.1.a" />
+				</Linker>
+			</Target>
+			<Target title="Debug_Linux">
+				<Option platforms="Unix;" />
+				<Option output="bin/FrostD" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj_Frost/Debug_Linux/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DFROST_LINUX" />
+					<Add option="-DLUA_USE_MKSTEMP" />
+				</Compiler>
+				<Linker>
+					<Add library="OgreMain_d" />
+					<Add library="OIS" />
+					<Add library="libutils_l_d.a" />
+					<Add library="liblua5.1_l_d.a" />
+				</Linker>
+			</Target>
+			<Target title="Release_Linux">
+				<Option platforms="Unix;" />
+				<Option output="bin/Frost" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj_Frost/Release_Linux/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DFROST_LINUX" />
+					<Add option="-DLUA_USE_MKSTEMP" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="OgreMain" />
+					<Add library="OIS" />
+					<Add library="libutils_l.a" />
+					<Add library="liblua5.1_l.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-DWIN32" />
+			<Add option="-D_WINDOWS" />
+			<Add directory="../ogre/OgreMain/include" />
+			<Add directory="include" />
+			<Add directory="../ogre/Dependencies/include" />
+			<Add directory="dependencies" />
+		</Compiler>
+		<Linker>
+			<Add directory="../ogre/lib" />
+			<Add directory="lib" />
+			<Add directory="bin" />
+		</Linker>
+		<Unit filename="include/frost.h" />
+		<Unit filename="include/frost_animmanager.h" />
+		<Unit filename="include/frost_camera.h" />
+		<Unit filename="include/frost_cameramanager.h" />
+		<Unit filename="include/frost_character.h" />
+		<Unit filename="include/frost_creature.h" />
+		<Unit filename="include/frost_decal.h" />
+		<Unit filename="include/frost_engine.h" />
+		<Unit filename="include/frost_event.h" />
+		<Unit filename="include/frost_eventmanager.h" />
+		<Unit filename="include/frost_eventreceiver.h" />
+		<Unit filename="include/frost_fontmanager.h" />
+		<Unit filename="include/frost_gfx.h" />
+		<Unit filename="include/frost_gui.h" />
+		<Unit filename="include/frost_guimanager.h" />
+		<Unit filename="include/frost_inputmanager.h" />
+		<Unit filename="include/frost_lib_std.h" />
+		<Unit filename="include/frost_lib_utils.h" />
+		<Unit filename="include/frost_light.h" />
+		<Unit filename="include/frost_lightmanager.h" />
+		<Unit filename="include/frost_localemanager.h" />
+		<Unit filename="include/frost_lua.h" />
+		<Unit filename="include/frost_lua_utils.h" />
+		<Unit filename="include/frost_macros.h" />
+		<Unit filename="include/frost_material.h" />
+		<Unit filename="include/frost_materialmanager.h" />
+		<Unit filename="include/frost_model.h" />
+		<Unit filename="include/frost_modeldata.h" />
+		<Unit filename="include/frost_modelmanager.h" />
+		<Unit filename="include/frost_modelstructs.h" />
+		<Unit filename="include/frost_movableobject.h" />
+		<Unit filename="include/frost_path.h" />
+		<Unit filename="include/frost_path_directpath.h" />
+		<Unit filename="include/frost_path_manualpath.h" />
+		<Unit filename="include/frost_path_smoothpath.h" />
+		<Unit filename="include/frost_pathmanager.h" />
+		<Unit filename="include/frost_plane.h" />
+		<Unit filename="include/frost_profiler.h" />
+		<Unit filename="include/frost_scenemanager.h" />
+		<Unit filename="include/frost_sprite.h" />
+		<Unit filename="include/frost_spritemanager.h" />
+		<Unit filename="include/frost_stableheaders.h">
+			<Option compile="1" />
+		</Unit>
+		<Unit filename="include/frost_terrain.h" />
+		<Unit filename="include/frost_terraindata.h" />
+		<Unit filename="include/frost_terrainstructs.h" />
+		<Unit filename="include/frost_text.h" />
+		<Unit filename="include/frost_timemanager.h" />
+		<Unit filename="include/frost_timers.h" />
+		<Unit filename="include/frost_unit.h" />
+		<Unit filename="include/frost_unitmanager.h" />
+		<Unit filename="include/frost_xml_block.h" />
+		<Unit filename="include/frost_xml_document.h" />
+		<Unit filename="include/gui/frost_gui_button.h" />
+		<Unit filename="include/gui/frost_gui_editbox.h" />
+		<Unit filename="include/gui/frost_gui_fontstring.h" />
+		<Unit filename="include/gui/frost_gui_frame.h" />
+		<Unit filename="include/gui/frost_gui_layeredregion.h" />
+		<Unit filename="include/gui/frost_gui_scrollingmessageframe.h" />
+		<Unit filename="include/gui/frost_gui_slider.h" />
+		<Unit filename="include/gui/frost_gui_statusbar.h" />
+		<Unit filename="include/gui/frost_gui_texture.h" />
+		<Unit filename="include/gui/frost_gui_uiobject.h" />
+		<Unit filename="ressources.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="src/frost_camera.cpp" />
+		<Unit filename="src/frost_cameramanager.cpp" />
+		<Unit filename="src/frost_character.cpp" />
+		<Unit filename="src/frost_creature.cpp" />
+		<Unit filename="src/frost_decal.cpp" />
+		<Unit filename="src/frost_engine.cpp" />
+		<Unit filename="src/frost_event.cpp" />
+		<Unit filename="src/frost_eventmanager.cpp" />
+		<Unit filename="src/frost_eventreceiver.cpp" />
+		<Unit filename="src/frost_fontmanager.cpp" />
+		<Unit filename="src/frost_gfx.cpp" />
+		<Unit filename="src/frost_inputmanager.cpp" />
+		<Unit filename="src/frost_light.cpp" />
+		<Unit filename="src/frost_lightmanager.cpp" />
+		<Unit filename="src/frost_localemanager.cpp" />
+		<Unit filename="src/frost_main.cpp" />
+		<Unit filename="src/frost_material.cpp" />
+		<Unit filename="src/frost_materialmanager.cpp" />
+		<Unit filename="src/frost_movableobject.cpp" />
+		<Unit filename="src/frost_plane.cpp" />
+		<Unit filename="src/frost_profiler.cpp" />
+		<Unit filename="src/frost_scenemanager.cpp" />
+		<Unit filename="src/frost_terrain.cpp" />
+		<Unit filename="src/frost_terraindata.cpp" />
+		<Unit filename="src/frost_timemanager.cpp" />
+		<Unit filename="src/frost_timers.cpp" />
+		<Unit filename="src/frost_unit.cpp" />
+		<Unit filename="src/frost_unitmanager.cpp" />
+		<Unit filename="src/gui/frost_anchor.cpp" />
+		<Unit filename="src/gui/frost_button.cpp" />
+		<Unit filename="src/gui/frost_editbox.cpp" />
+		<Unit filename="src/gui/frost_fontstring.cpp" />
+		<Unit filename="src/gui/frost_frame.cpp" />
+		<Unit filename="src/gui/frost_frame_glues.cpp" />
+		<Unit filename="src/gui/frost_guimanager.cpp" />
+		<Unit filename="src/gui/frost_layeredregion.cpp" />
+		<Unit filename="src/gui/frost_lunar.cpp" />
+		<Unit filename="src/gui/frost_scrollingmessageframe.cpp" />
+		<Unit filename="src/gui/frost_slider.cpp" />
+		<Unit filename="src/gui/frost_sprite.cpp" />
+		<Unit filename="src/gui/frost_spritemanager.cpp" />
+		<Unit filename="src/gui/frost_statusbar.cpp" />
+		<Unit filename="src/gui/frost_text.cpp" />
+		<Unit filename="src/gui/frost_texture.cpp" />
+		<Unit filename="src/gui/frost_uiobject.cpp" />
+		<Unit filename="src/gui/frost_uiobject_glues.cpp" />
+		<Unit filename="src/lua/frost_lua.cpp" />
+		<Unit filename="src/lua/frost_lua_glues.cpp" />
+		<Unit filename="src/lua/frost_lua_utils.cpp" />
+		<Unit filename="src/lua/frost_lua_utils_argument.cpp" />
+		<Unit filename="src/lua/frost_lua_utils_data.cpp" />
+		<Unit filename="src/lua/frost_lua_utils_function.cpp" />
+		<Unit filename="src/lua/frost_lua_utils_returnvalue.cpp" />
+		<Unit filename="src/model/frost_animmanager.cpp" />
+		<Unit filename="src/model/frost_model.cpp" />
+		<Unit filename="src/model/frost_modeldata.cpp" />
+		<Unit filename="src/model/frost_modelmanager.cpp" />
+		<Unit filename="src/model/frost_modelpart.cpp" />
+		<Unit filename="src/parsers/frost_unitmanager_parser.cpp" />
+		<Unit filename="src/path/frost_path.cpp" />
+		<Unit filename="src/path/frost_path_directpath.cpp" />
+		<Unit filename="src/path/frost_path_manualpath.cpp" />
+		<Unit filename="src/path/frost_path_smoothpath.cpp" />
+		<Unit filename="src/path/frost_pathmanager.cpp" />
+		<Unit filename="src/xml/frost_xml_block.cpp" />
+		<Unit filename="src/xml/frost_xml_document.cpp" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+			<envvars />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

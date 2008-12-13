@@ -1,0 +1,372 @@
+
+#include "frost.h"
+#include "frost_model.h"
+#include "frost_modelmanager.h"
+#include "frost_animmanager.h"
+#include "frost_fontmanager.h"
+#include "frost_guimanager.h"
+#include "frost_sprite.h"
+#include "frost_spritemanager.h"
+#include "frost_inputmanager.h"
+#include "frost_timemanager.h"
+#include "frost_cameramanager.h"
+#include "frost_camera.h"
+#include "frost_path_directpath.h"
+#include "frost_path_smoothpath.h"
+#include "frost_pathmanager.h"
+#include "frost_materialmanager.h"
+#include "frost_material.h"
+#include "frost_scenemanager.h"
+#include "frost_plane.h"
+#include "frost_lightmanager.h"
+#include "frost_light.h"
+#include "frost_eventmanager.h"
+#include "frost_event.h"
+#include "frost_unitmanager.h"
+#include "frost_character.h"
+
+#include <OgreException.h>
+
+#ifndef FROST_LINUX
+    #include <windows.h>
+#endif
+
+using namespace std;
+using namespace Frost;
+
+s_ptr<Engine> pFrost;
+s_ptr<Character> pChar;
+s_ptr<Character> pChar2;
+s_ptr<Model>  pModel;
+
+s_refptr<Sprite> pSprite;
+s_refptr<Sprite> pSprite2;
+RenderTarget     mRTarget;
+
+s_refptr<SmoothPath> pPath;
+s_ptr<Camera>        pCam;
+
+s_ptr<Plane>         pPlane;
+s_ptr<Light>         pLight1;
+s_ptr<Light>         pLight2;
+s_ptr<Light>         pLight3;
+
+s_float fCoefX = M_PI_4;
+s_float fCoefY = M_PI_4;
+s_float fZoom = 1.0f;
+s_float fCamSpeed = 20.0f;
+
+s_bool bCameraMovedAlone;
+s_bool bAdjustCamDir;
+
+s_bool bUnitControlled = false;
+
+s_bool FrameFunc()
+{
+    static s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
+    static s_ptr<TimeManager> pTimeMgr = TimeManager::GetSingleton();
+
+    if (pInputMgr->KeyIsPressed(KEY_ESCAPE))
+        return false;
+
+    if (pInputMgr->KeyIsPressed(KEY_T))
+    {
+        pFrost->TakeScreenshot();
+    }
+
+    if (bUnitControlled)
+    {
+        if (pInputMgr->KeyIsPressed(KEY_SPACE))
+        {
+            pChar->Jump();
+        }
+
+        if (pInputMgr->KeyIsPressed(KEY_W))
+        {
+            bAdjustCamDir = true;
+            pChar->SetMoveForward(true);
+        }
+
+        if (pInputMgr->KeyIsReleased(KEY_W))
+        {
+            bAdjustCamDir = true;
+            pChar->SetMoveForward(false);
+        }
+
+        if (pInputMgr->KeyIsPressed(KEY_S))
+        {
+            bAdjustCamDir = true;
+            pChar->SetMoveBackward(true);
+        }
+
+        if (pInputMgr->KeyIsReleased(KEY_S))
+        {
+            bAdjustCamDir = true;
+            pChar->SetMoveBackward(false);
+        }
+
+        if (pInputMgr->KeyIsPressed(KEY_A))
+        {
+            pChar->SetMoveLeft(true);
+        }
+
+        if (pInputMgr->KeyIsReleased(KEY_A))
+        {
+            pChar->SetMoveLeft(false);
+        }
+
+        if (pInputMgr->KeyIsPressed(KEY_D))
+        {
+            pChar->SetMoveRight(true);
+        }
+
+        if (pInputMgr->KeyIsReleased(KEY_D))
+        {
+            pChar->SetMoveRight(false);
+        }
+
+        if (pInputMgr->KeyIsPressed(KEY_DIVIDE))
+        {
+            pChar->ToggleWalking();
+        }
+
+        if (pInputMgr->MouseIsDown(MOUSE_LEFT))
+        {
+            fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
+            fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
+
+            pCam->Yaw(fCoefX);
+            pCam->Pitch(fCoefY);
+
+            bCameraMovedAlone = true;
+        }
+
+        if ( pInputMgr->MouseIsPressed(MOUSE_RIGHT) || pInputMgr->MouseIsReleased(MOUSE_RIGHT))
+            pChar->ToggleTurning();
+
+        if (pInputMgr->MouseIsDown(MOUSE_RIGHT))
+        {
+            if (bCameraMovedAlone)
+            {
+                Vector mDirection = pCam->GetDirection();
+                mDirection.Y(0);
+                pModel->SetDirection(mDirection);
+                bCameraMovedAlone = false;
+            }
+
+            fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
+            fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
+
+            // TODO : mettre ça dans Unit
+            pModel->Yaw(fCoefX);
+            pCam->Yaw(fCoefX);
+            pCam->Pitch(fCoefY);
+        }
+
+        if (pInputMgr->WheelIsRolled())
+        {
+            fZoom = -s_float(pInputMgr->GetMWheel())/120.0f;
+            pCam->Translate(Vector::UNIT_Z*fZoom, true);
+        }
+
+        /*if (bAdjustCamDir)
+        {
+            Vector mDiff = pCam->GetDirection() - pChar->GetBodyModel()->GetDirection();
+            mDiff.Z(0.0f);
+            if (mDiff.GetNorm() > 0.1f)
+            {
+                if ((mDiff^pCam->GetDirection()).Z() > 0.0f)
+                    pCam->Yaw(s_float(s_double(0.25)*pTimeMgr->GetDelta()));
+                else
+                    pCam->Yaw(s_float(s_double(-0.25)*pTimeMgr->GetDelta()));
+            }
+            else
+            {
+                bAdjustCamDir = false;
+            }
+        }*/
+    }
+    else
+    {
+        if (pInputMgr->KeyIsDown(KEY_W))
+        {
+            pCam->Translate(Vector::UNIT_Z*(-fCamSpeed)*s_float(pTimeMgr->GetDelta()), true);
+        }
+
+        if (pInputMgr->KeyIsDown(KEY_S))
+        {
+            pCam->Translate(Vector::UNIT_Z*fCamSpeed*s_float(pTimeMgr->GetDelta()), true);
+        }
+
+        if (pInputMgr->KeyIsDown(KEY_A))
+        {
+            pCam->Translate(Vector::UNIT_X*(-fCamSpeed)*s_float(pTimeMgr->GetDelta()), true);
+        }
+
+        if (pInputMgr->KeyIsDown(KEY_D))
+        {
+            pCam->Translate(Vector::UNIT_X*fCamSpeed*s_float(pTimeMgr->GetDelta()), true);
+        }
+
+        if (pInputMgr->KeyIsDown(KEY_Q))
+        {
+            pCam->Translate(Vector::UNIT_Y*fCamSpeed*s_float(pTimeMgr->GetDelta()), true);
+        }
+
+        if (pInputMgr->KeyIsDown(KEY_E))
+        {
+            pCam->Translate(Vector::UNIT_Y*(-fCamSpeed)*s_float(pTimeMgr->GetDelta()), true);
+        }
+
+        if ( pInputMgr->MouseIsDown(MOUSE_LEFT) || pInputMgr->MouseIsDown(MOUSE_RIGHT) )
+        {
+            fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
+            fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
+
+            pCam->Yaw(fCoefX);
+            pCam->Pitch(fCoefY);
+        }
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_C))
+    {
+        bUnitControlled = !bUnitControlled;
+        if (bUnitControlled)
+        {
+            pCam = pChar->GetCamera();
+            CameraManager::GetSingleton()->SetMainCamera(pCam);
+        }
+        else
+        {
+            pCam = pFrost->GetCamera();
+            CameraManager::GetSingleton()->SetMainCamera(pCam);
+        }
+    }
+
+    return true;
+}
+
+s_bool RenderFunc()
+{
+    static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
+
+    // Render in the main target
+    pSpriteMgr->Begin();
+
+        pSpriteMgr->Clear(Color(0, 0, 0, 0));
+
+        // And the sprite another time
+        pSprite->Render(0, 0);
+
+    pSpriteMgr->End();
+
+    return true;
+}
+
+// To Do List :
+
+#ifdef FROST_LINUX
+int main(int argc, char *argv[])
+#else
+INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
+#endif
+{
+    try
+    {
+        // Create the engine
+        pFrost = Engine::GetSingleton();
+
+        // Initialize base parameters
+        if (pFrost->Initialize())
+        {
+            // Set render and frame functions
+            pFrost->SetFrameFunction(&FrameFunc);
+            SpriteManager::GetSingleton()->SetRenderFunction(&RenderFunc);
+
+            LightManager::GetSingleton()->SetAmbient(Color(150, 150, 150));
+
+            // Parse temporary script
+            Lua::DoFile(GUIManager::GetSingleton()->GetLua(), "Scripts/Temp.lua");
+
+            // Populate the world !
+
+            // Create a Unit
+            //pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
+            pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
+            pModel = pChar->GetBodyModel().Get();
+            //CameraManager::GetSingleton()->SetMainCamera(pChar->GetCamera());
+            //pCam = pChar->GetCamera();
+            pCam = pFrost->GetCamera();
+
+            // The ground
+            s_refptr<Material> pGroundMat = MaterialManager::GetSingleton()->CreateMaterial3D(
+                "Textures/Tileset/Aerie Peaks/AeriePeaksTrollTile.png"
+            );
+            pGroundMat->SetTilling(0.01f, 0.01f);
+
+            pPlane = SceneManager::GetSingleton()->CreatePlane();
+            pPlane->SetMaterial(pGroundMat);
+
+            // Some light
+            /*pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+            pLight1->SetPosition(Vector(5, 0, 1));
+            pLight1->SetColor(Color(255, 0, 0));
+            pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
+            pLight1->SetRange(100.0f);
+
+            pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+            pLight2->SetPosition(Vector(0, 5, 1));
+            pLight2->SetColor(Color(0, 255, 0));
+            pLight2->SetAttenuation(0.0f, 0.125f, 0.0f);
+            pLight2->SetRange(100.0f);
+
+            pLight3 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+            pLight3->SetPosition(Vector(0, 0, 1));
+            pLight3->SetColor(Color(0, 0, 255));
+            pLight3->SetAttenuation(0.0f, 0.125f, 0.0f);
+            pLight3->SetRange(100.0f);*/
+
+            // UI
+            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
+                "UI-UnitFrame.png"
+            );
+            pSprite = s_refptr<Sprite>(new Sprite(pMat, 256, 128));
+
+            /*mRTarget = GFX::CreateRenderTarget("RttTex", 256, 128);
+            Material* pMat2 = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
+                "RttTex"
+            );
+            pSprite2 = new Sprite(pMat2, 256, 128);*/
+
+            // Enter the main loop
+            pFrost->Loop();
+        }
+        else
+        {
+            #ifdef FROST_LINUX
+                std::cerr << "An error has occured while loading.\nSee Frost.log." << std::endl;
+            #else
+                MessageBox(
+                    NULL, "An error has occured while loading.\nSee Frost.log.",
+                    "Frost Error", MB_OK|MB_ICONERROR|MB_TASKMODAL
+                );
+            #endif
+        }
+
+        // Close the engine
+        Engine::Delete();
+    }
+    catch (Ogre::Exception e)
+    {
+        #ifdef FROST_LINUX
+            std::cerr << e.getFullDescription().c_str() << std::endl;
+        #else
+            MessageBox(
+                NULL, e.getFullDescription().c_str(),
+                "Ogre Error", MB_OK|MB_ICONERROR|MB_TASKMODAL
+            );
+        #endif
+    }
+
+    return 0;
+}

@@ -1,0 +1,26 @@
+<Races>
+    <Race name>
+        <*MaleModel model>
+            <&BodyTextures>
+                <Texture file/>
+            </BodyTextures>
+            <&HairTextures>
+                <Texture file/>
+            </HairTextures>
+            <&DefaultParts>
+                <Part val/>
+            </DefaultParts>
+        </MaleModel>
+        <*FemaleModel model>
+            <&BodyTextures>
+                <Texture file/>
+            </BodyTextures>
+            <&HairTextures>
+                <Texture file/>
+            </HairTextures>
+            <&DefaultParts>
+                <Part val/>
+            </DefaultParts>
+        </FemaleModel>
+    </Race>
+</Races>
