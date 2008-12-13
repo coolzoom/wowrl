@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Ui>
+	<Frame name="UIParent" hidden="false" movable="false" enableMouse="false" clampedToScreen="true">
+		<Size>
+			<RelDimension x="1" y="1"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER" relativePoint="CENTER"/>
+		</Anchors>
+	</Frame>
+</Ui>

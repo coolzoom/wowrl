@@ -1,0 +1,6 @@
+[UI]
+error_dead = "Can't do that while dead."
+error_friend = "Target is friendly."
+desc = "Salut grand guerrier !\nTa force et ton courrage ont fait bruit dans la région...
+        Même le grand shaman Gragold est impressionné !
+        Tu devrais le rencontrer."

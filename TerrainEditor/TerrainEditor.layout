@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release_Linux" />
+	<File name="include/frost_te_mainwindow.h" open="1" top="0" tabpos="6">
+		<Cursor position="6391" topLine="219" />
+	</File>
+	<File name="include/frost_te_terrain.h" open="1" top="0" tabpos="4">
+		<Cursor position="1525" topLine="51" />
+	</File>
+	<File name="src/frost_te_main.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="1436" topLine="45" />
+	</File>
+	<File name="src/frost_te_mainwindow.cpp" open="1" top="1" tabpos="1">
+		<Cursor position="32250" topLine="947" />
+	</File>
+	<File name="src/frost_te_terrain.cpp" open="1" top="0" tabpos="5">
+		<Cursor position="392" topLine="9" />
+	</File>
+	<File name="src/frost_te_tool.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="1511" topLine="34" />
+	</File>
+	<File name="../src/frost_timers.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="0" topLine="87" />
+	</File>
+</CodeBlocks_layout_file>

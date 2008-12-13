@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="Frost.cbp" />
+		<Project filename="Frost - Utils.cbp" />
+		<Project filename="TerrainEditor/TerrainEditor.cbp" active="1" />
+		<Project filename="../temp/temp.cbp" />
+		<Project filename="../tempGTK/tempGTK.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

@@ -1,0 +1,4 @@
+<CharacterModels>
+    <CharacterModel name="OrcMale" file="Models/Character/OrcMale.m2"/>
+    <CharacterModel name="OrcFemale" file="Models/Character/OrcFemale.m2"/>
+</CharacterModels>

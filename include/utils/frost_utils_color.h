@@ -1,0 +1,116 @@
+/* ###################################### */
+/* ###     Frost Engine, by Kalith    ### */
+/* ###################################### */
+/*                                        */
+
+
+#ifndef FROST_UTILS_COLOR_H
+#define FROST_UTILS_COLOR_H
+
+#include "frost_utils.h"
+#include "frost_utils_uint.h"
+
+namespace Frost
+{
+    /// Color container
+    /** Automatically builds ARGB packed
+    *   color out of separated A, R, G and B
+    *   values and vice versa.
+    */
+    class Color
+    {
+    public :
+
+        /// Default constructor.
+        Color();
+
+        /// Constructor.
+        /** \param uiR The red component
+        *   \param uiG The green component
+        *   \param uiB The blue component
+        */
+        Color(const s_uint& uiR, const s_uint& uiG, const s_uint& uiB);
+
+        /// Constructor.
+        /** \param uiA The alpha component
+        *   \param uiR The green component
+        *   \param uiG The green component
+        *   \param uiB The blue component
+        */
+        Color(const s_uint& uiA, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB);
+
+        /// Constructor.
+        /** \param uiColor The ARGB packed color
+        */
+        Color(const s_uint& uiColor);
+
+        /// Returns the alpha component.
+        /** \return The alpha component
+        */
+        const s_uint& GetA() const;
+
+        /// Returns the red component.
+        /** \return The red component
+        */
+        const s_uint& GetR() const;
+
+        /// Returns the green component.
+        /** \return The green component
+        */
+        const s_uint& GetG() const;
+
+        /// Returns the blue component.
+        /** \return The blue component
+        */
+        const s_uint& GetB() const;
+
+        /// Returns the packed ARGB value.
+        /** \return The packed ARGB value
+        */
+        const s_uint& Get() const;
+
+        /// Sets the alpha component.
+        /** \param uiA The alpha component
+        */
+        void          SetA(const s_uint& uiA);
+
+        /// Sets the red component.
+        /** \param uiR The red component
+        */
+        void          SetR(const s_uint& uiR);
+
+        /// Sets the green component.
+        /** \param uiG The green component
+        */
+        void          SetG(const s_uint& uiG);
+
+        /// Sets the blue component.
+        /** \param uiB The blue component
+        */
+        void          SetB(const s_uint& uiB);
+
+        /// Sets the packed ARGB component.
+        /** \param uiColor packed ARGB component.
+        */
+        void          Set(const s_uint& uiColor);
+
+        static const s_str CLASS_NAME;
+
+    private :
+
+        void BuildUIColor_();
+        void BuildABGRColor_();
+
+        s_uint uiA_;
+        s_uint uiR_;
+        s_uint uiG_;
+        s_uint uiB_;
+
+        s_uint uiColor_;
+    };
+
+    s_str operator + (const char* sLeft, const Color& mRight);
+    s_str operator + (const s_str& sLeft, const Color& mRight);
+}
+
+#endif
