@@ -27,6 +27,7 @@ namespace XML
         /// Default constructor.
         /** \param sFileName    The path to the file you want to parse
         *   \param sDefFileName The path to the definition file to use
+        *   \note The definition file is parsed in this constructor.
         */
         Document(const s_str& sFileName, const s_str& sDefFileName);
 
@@ -44,7 +45,8 @@ namespace XML
         /// Returns the line that is being parsed.
         /** \return The line that is being parsed
         *   \note Only used internaly.<br>If you call this
-        *         method before Check(), it will return 1.
+        *         method before Check(), it will return the
+        *         total number of line in the definition file.
         *         After, it will return the total number of
         *         line in the XML file.
         */
@@ -68,9 +70,12 @@ namespace XML
 
         s_str  sFileName_;
         s_str  sDefFileName_;
+        s_str  sActualFileName_;
         s_uint uiLineNbr_;
         s_bool bValid_;
         Block  mMainBlock_;
+
+        std::map<s_str, Block> lPredefinedBlockList_;
     };
 }
 }

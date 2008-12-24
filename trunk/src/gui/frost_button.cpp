@@ -13,6 +13,6 @@ using namespace Frost::GUI;
 
 const s_str Button::CLASS_NAME = "GUI::Button";
 
-Button::Button(lua_State* luaVM) : Frame(luaVM)
+Button::Button() : Frame()
 {
 }

@@ -29,7 +29,7 @@
 1227804341 /home/kalith/Programmation/Frost/TerrainEditor/include/frost_te.h
 	"frost_te_lib_utils.h"
 
-1228853734 /home/kalith/Programmation/Frost/TerrainEditor/include/frost_te_lib_utils.h
+1229171616 /home/kalith/Programmation/Frost/TerrainEditor/include/frost_te_lib_utils.h
 	"utils/frost_utils.h"
 	"utils/frost_utils_bool.h"
 	"utils/frost_utils_int.h"
@@ -54,13 +54,13 @@
 	"utils/frost_utils_stdhelper.h"
 	"utils/frost_utils_manager.h"
 
-1225383046 /home/kalith/Programmation/Frost/include/utils/frost_utils.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils.h
 	<string>
 	<vector>
 	<fstream>
 	<map>
 
-1225380058 /home/kalith/Programmation/Frost/include/utils/frost_utils_bool.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_bool.h
 	"frost_utils.h"
 
 1229002413 /home/kalith/Programmation/Frost/include/utils/frost_utils_int.h
@@ -79,11 +79,11 @@
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1226008022 /home/kalith/Programmation/Frost/include/utils/frost_utils_str.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_str.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1226265500 /home/kalith/Programmation/Frost/include/utils/frost_utils_var.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_var.h
 	"frost_utils.h"
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
@@ -96,13 +96,13 @@
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1224782008 /home/kalith/Programmation/Frost/include/utils/frost_utils_math.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_math.h
 
 1227210861 /home/kalith/Programmation/Frost/include/utils/frost_utilsmanager.h
 	"frost_utils.h"
 	"frost_utils_manager.h"
 
-1225479094 /home/kalith/Programmation/Frost/include/utils/frost_utils_manager.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_manager.h
 	"frost_utils_ptr.h"
 	"frost_utils_str.h"
 
@@ -136,12 +136,12 @@
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1229105798 /home/kalith/Programmation/Frost/include/utils/frost_utils_vector.h
+1229640306 /home/kalith/Programmation/Frost/include/utils/frost_utils_vector.h
 	"frost_utils.h"
 	"frost_utils_float.h"
 	"frost_utils_bool.h"
 
-1225546840 /home/kalith/Programmation/Frost/include/utils/frost_utils_directory.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_directory.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 	"frost_utils_str.h"
@@ -150,10 +150,10 @@
 1227359425 /home/kalith/Programmation/Frost/include/utils/frost_utils_file.h
 	"frost_utils.h"
 
-1228853598 /home/kalith/Programmation/Frost/include/utils/frost_utils_point.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_point.h
 	"frost_utils.h"
 
-1225380058 /home/kalith/Programmation/Frost/include/utils/frost_utils_tester.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_tester.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
@@ -161,7 +161,7 @@
 	"frost_utils.h"
 	"frost_utils_double.h"
 
-1229127766 /home/kalith/Programmation/Frost/TerrainEditor/include/frost_te_terrain.h
+1229640711 /home/kalith/Programmation/Frost/TerrainEditor/include/frost_te_terrain.h
 	"frost_te.h"
 
 1222341435 /usr/include/gtkmm-2.4/gtkmm/window.h
@@ -2388,14 +2388,14 @@
 	<gdk/gdk.h>
 	<gtk/gtkcontainer.h>
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_timemanager.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_timemanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
 1228860634 /home/kalith/Programmation/Frost/include/frost.h
 	"frost_stableheaders.h"
 
-1225485930 /home/kalith/Programmation/Frost/include/frost_stableheaders.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_stableheaders.h
 	<OgrePrerequisites.h>
 	<OIS/OISPrereqs.h>
 	"frost_lib_std.h"
@@ -2417,7 +2417,7 @@
 	<fstream>
 	<ios>
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_lib_utils.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_lib_utils.h
 	"utils/frost_utils.h"
 	"utils/frost_utils_bool.h"
 	"utils/frost_utils_int.h"
@@ -2440,9 +2440,9 @@
 	"utils/frost_utils_stdhelper.h"
 	"utils/frost_utils_manager.h"
 
-1226262070 /home/kalith/Programmation/Frost/include/frost_macros.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_macros.h
 
-1226076370 /home/kalith/Programmation/Frost/include/frost_lua.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_lua.h
 	"lua/lualib.h"
 	"lua/lauxlib.h"
 	"lua/lua.h"
@@ -2476,15 +2476,15 @@
 	<stdio.h>
 	"lua.h"
 
-1192738054 /home/kalith/Programmation/Frost/dependencies/lua/lunar.h
+1229171617 /home/kalith/Programmation/Frost/dependencies/lua/lunar.h
 	"lua.h"
 	"lauxlib.h"
 	<string>
 
-1225645000 /home/kalith/Programmation/Frost/include/frost_lua_utils.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_lua_utils.h
 	"frost.h"
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_engine.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_engine.h
 	"frost.h"
 
 1222341435 /usr/include/gtkmm-2.4/gtkmm/main.h
@@ -2509,9 +2509,10 @@
 	<gdk/gdk.h>
 	<gtk/gtkcontainer.h>
 
-1229127767 source:/home/kalith/Programmation/Frost/TerrainEditor/src/frost_te_terrain.cpp
+1229642099 source:/home/kalith/Programmation/Frost/TerrainEditor/src/frost_te_terrain.cpp
 	"frost_te_terrain.h"
 	<iostream>
+	<math.h>
 
 1228491619 source:/home/kalith/Programmation/Frost/src/frost_gfx.cpp
 	"frost_gfx.h"
@@ -2613,7 +2614,7 @@
 	<OgreHardwareBufferManager.h>
 	<OgreHardwareVertexBuffer.h>
 
-1229129100 source:/home/kalith/Programmation/Frost/TerrainEditor/src/frost_te_mainwindow.cpp
+1229641903 source:/home/kalith/Programmation/Frost/TerrainEditor/src/frost_te_mainwindow.cpp
 	"frost_te_mainwindow.h"
 	<gtkmm/main.h>
 	<gtkmm/stock.h>
@@ -2902,7 +2903,7 @@
 	<gdkmm/display.h>
 	<gdkmm/pixbuf.h>
 
-1229104179 source:/home/kalith/Programmation/Frost/src/frost_decal.cpp
+1229637385 source:/home/kalith/Programmation/Frost/src/frost_decal.cpp
 	"frost_decal.h"
 	<OgreFrustum.h>
 	<OgreSceneNode.h>

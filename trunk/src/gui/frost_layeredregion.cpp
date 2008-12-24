@@ -13,7 +13,7 @@ using namespace Frost::GUI;
 
 const s_str LayeredRegion::CLASS_NAME = "GUI::LayeredRegion";
 
-LayeredRegion::LayeredRegion(lua_State* luaVM) : UIObject(luaVM)
+LayeredRegion::LayeredRegion() : UIObject()
 {
 }
 

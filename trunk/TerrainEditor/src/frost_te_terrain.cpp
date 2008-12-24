@@ -1,6 +1,7 @@
 #include "frost_te_terrain.h"
 
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 using namespace Frost;
@@ -239,6 +240,33 @@ float TE::Terrain::GetPointHeight(const uint& uiX, const uint& uiZ)
     return lPointList_[uiX*uiNumZPoint_+uiZ].fHeight/fYSize_;
 }
 
+float TE::Terrain::FastGetPointHeight_(const uint& uiX, const uint& uiZ)
+{
+    return lPointList_[uiX*uiNumZPoint_+uiZ].fHeight;
+}
+
+float TE::Terrain::CalcPointHeight(const float& fX, const float& fZ)
+{
+    float fNX = (fX/fXSize_ + 0.5f)*uiNumXPoint_;
+    float fNZ = (fZ/fZSize_ + 0.5f)*uiNumZPoint_;
+    Log("nx : "+s_float(fNX)+", nz : "+s_float(fNZ));
+
+    float fXMin = floor(fNX);
+    float fXMax = ceil(fNX);
+    float fZMin = floor(fNZ);
+    float fZMax = ceil(fNZ);
+
+    float fH1 = FastGetPointHeight_((uint)fXMin, (uint)fZMin);
+    float fH2 = FastGetPointHeight_((uint)fXMin, (uint)fZMax);
+    float fMH1 = fH1 + (fH2-fH1)*(fNZ-fZMin)/(fZMax-fZMin);
+
+    float fH3 = FastGetPointHeight_((uint)fXMax, (uint)fZMin);
+    float fH4 = FastGetPointHeight_((uint)fXMax, (uint)fZMax);
+    float fMH2 = fH3 + (fH4-fH3)*(fNZ-fZMin)/(fZMax-fZMin);
+
+    return fMH1 + (fMH2-fMH1)*(fNX-fXMin)/(fXMax-fXMin);
+}
+
 const uchar& TE::Terrain::GetPointFlags(const uint& uiX, const uint& uiZ)
 {
     if (!bArrayCreated_)
@@ -252,6 +280,11 @@ const uchar& TE::Terrain::GetPointFlags(const uint& uiX, const uint& uiZ)
     return lPointList_[uiX*uiNumZPoint_+uiZ].ucFlags;
 }
 
+bool TE::Terrain::TestPoint(const float& fX, const float& fZ)
+{
+    return ((fX > -fXSize_/2.0f && fX < fXSize_/2.0f) &&
+            (fZ > -fZSize_/2.0f && fZ < fZSize_/2.0f));
+}
 
 void TE::Terrain::WriteToFile( const Frost::s_str& sFileName )
 {

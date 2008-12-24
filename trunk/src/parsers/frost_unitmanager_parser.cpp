@@ -22,7 +22,7 @@ namespace Frost
         if (mDoc.Check())
         {
             s_ptr<XML::Block> pCharacterModel;
-            foreach_block (pCharacterModel, "CharacterModel", mDoc.GetMainBlock())
+            foreach_named_block (pCharacterModel, "CharacterModel", mDoc.GetMainBlock())
             {
                 s_str sModelName = pCharacterModel->GetAttribute("name");
                 s_str sFileName = pCharacterModel->GetAttribute("file");
@@ -40,7 +40,7 @@ namespace Frost
         if (mDoc.Check())
         {
             s_ptr<XML::Block> pRace;
-            foreach_block (pRace, "Race", mDoc.GetMainBlock())
+            foreach_named_block (pRace, "Race", mDoc.GetMainBlock())
             {
                 Race mRace;
                 mRace.sName = pRace->GetAttribute("name");
@@ -51,22 +51,25 @@ namespace Frost
 
                 s_ptr<XML::Block> pBodyTextures = pMaleModel->GetBlock("BodyTextures");
                 s_ptr<XML::Block> pTexture;
-                foreach_block (pTexture, "Texture", pBodyTextures)
+                foreach_named_block (pTexture, "Texture", pBodyTextures)
                 {
                     mRace.mMaleModelInfo.lBodyTextureList.push_back(pTexture->GetAttribute("file"));
                 }
 
                 s_ptr<XML::Block> pHairTextures = pMaleModel->GetBlock("HairTextures");
-                foreach_block (pTexture, "Texture", pHairTextures)
+                foreach_named_block (pTexture, "Texture", pHairTextures)
                 {
                     mRace.mMaleModelInfo.lHairTextureList.push_back(pTexture->GetAttribute("file"));
                 }
 
                 s_ptr<XML::Block> pDefaultParts = pMaleModel->GetBlock("DefaultParts");
                 s_ptr<XML::Block> pPart;
-                foreach_block (pPart, "Part", pDefaultParts)
+                if (pDefaultParts)
                 {
-                    mRace.mMaleModelInfo.lDefaultPartList.push_back(s_uint(pPart->GetAttribute("val")));
+                    foreach_named_block (pPart, "Part", pDefaultParts)
+                    {
+                        mRace.mMaleModelInfo.lDefaultPartList.push_back(s_uint(pPart->GetAttribute("val")));
+                    }
                 }
 
                 // Female model
@@ -74,21 +77,24 @@ namespace Frost
                 mRace.mFemaleModelInfo.sModel = pFemaleModel->GetAttribute("model");
 
                 pBodyTextures = pFemaleModel->GetBlock("BodyTextures");
-                foreach_block (pTexture, "Texture", pBodyTextures)
+                foreach_named_block (pTexture, "Texture", pBodyTextures)
                 {
                     mRace.mFemaleModelInfo.lBodyTextureList.push_back(pTexture->GetAttribute("file"));
                 }
 
                 pHairTextures = pFemaleModel->GetBlock("HairTextures");
-                foreach_block (pTexture, "Texture", pHairTextures)
+                foreach_named_block (pTexture, "Texture", pHairTextures)
                 {
                     mRace.mFemaleModelInfo.lHairTextureList.push_back(pTexture->GetAttribute("file"));
                 }
 
                 pDefaultParts = pFemaleModel->GetBlock("DefaultParts");
-                foreach_block (pPart, "Part", pDefaultParts)
+                if (pDefaultParts)
                 {
-                    mRace.mFemaleModelInfo.lDefaultPartList.push_back(s_uint(pPart->GetAttribute("val")));
+                    foreach_named_block (pPart, "Part", pDefaultParts)
+                    {
+                        mRace.mFemaleModelInfo.lDefaultPartList.push_back(s_uint(pPart->GetAttribute("val")));
+                    }
                 }
 
                 if (MAPFIND(mRace.sName, lRaceList_))

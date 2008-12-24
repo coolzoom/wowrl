@@ -25,16 +25,17 @@
 *  in LUA.
 */
 
-#define method(widget, function) {#function, &widget::_##function}
+#define method(widget, function) {#function, &Lua##widget::_##function}
 
 namespace Frost
 {
 namespace GUI
 {
-    const char UIObject::className[] = "UIObject";
-    Lunar<UIObject>::RegType UIObject::methods[] = {
-        {"dt", &UIObject::GetDataTable},
+    const char LuaUIObject::className[] = "UIObject";
+    Lunar<LuaUIObject>::RegType LuaUIObject::methods[] = {
+        {"dt", &LuaUIObject::GetDataTable},
 
+        // UIObject
         method(UIObject, GetAlpha),
         method(UIObject, GetName),
         method(UIObject, GetObjectType),
@@ -67,57 +68,152 @@ namespace GUI
         {0,0}
     };
 
-    const char Frame::className[] = "Frame";
-    Lunar<Frame>::RegType Frame::methods[] = {
-        {"dt", &Frame::GetDataTable},
+    const char LuaFrame::className[] = "Frame";
+    Lunar<LuaFrame>::RegType LuaFrame::methods[] = {
+        {"dt", &LuaFrame::GetDataTable},
+
+        // UIObject (inherited)
+        method(Frame, GetAlpha),
+        method(Frame, GetName),
+        method(Frame, GetObjectType),
+        method(Frame, IsObjectType),
+        method(Frame, SetAlpha),
+
+        method(Frame, ClearAllPoints),
+        method(Frame, GetBottom),
+        method(Frame, GetCenter),
+        method(Frame, GetHeight),
+        method(Frame, GetLeft),
+        method(Frame, GetNumPoint),
+        method(Frame, GetParent),
+        method(Frame, GetPoint),
+        method(Frame, GetRight),
+        method(Frame, GetTop),
+        method(Frame, GetWidth),
+        method(Frame, Hide),
+        method(Frame, IsShown),
+        method(Frame, IsVisible),
+        method(Frame, RebuildCache),
+        method(Frame, SetAllPoints),
+        method(Frame, SetHeight),
+        method(Frame, SetParent),
+        method(Frame, SetPoint),
+        method(Frame, SetWidth),
+        method(Frame, Show),
+
+        method(Frame, RebuildCache),
+
+        // Frame
+        method(Frame, CreateFontString),
+        method(Frame, CreateTexture),
+        method(Frame, CreateTitleRegion),
+        method(Frame, DisableDrawLayer),
+        method(Frame, EnableDrawLayer),
+        method(Frame, EnableKeyboard),
+        method(Frame, EnableMouse),
+        method(Frame, EnableMouseWheel),
+        method(Frame, GetBackdrop),
+        method(Frame, GetBackdropBorderColor),
+        method(Frame, GetBackdropColor),
+        method(Frame, GetChildren),
+        method(Frame, GetEffectiveAlpha),
+        method(Frame, GetEffectiveScale),
+        method(Frame, GetFrameLevel),
+        method(Frame, GetFrameStrata),
+        method(Frame, GetFrameType),
+        method(Frame, GetHitRectInsets),
+        method(Frame, GetID),
+        method(Frame, GetMaxResize),
+        method(Frame, GetMinResize),
+        method(Frame, GetNumChildren),
+        method(Frame, GetNumRegions),
+        method(Frame, GetScale),
+        method(Frame, GetScript),
+        method(Frame, GetTitleRegion),
+        method(Frame, HasScript),
+        method(Frame, HookScript),
+        method(Frame, IsClampedToScreen),
+        method(Frame, IsFrameType),
+        method(Frame, IsKeyboardEnabled),
+        method(Frame, IsMouseEnabled),
+        method(Frame, IsMouseWheelEnabled),
+        method(Frame, IsMovable),
+        method(Frame, IsResizable),
+        method(Frame, IsTopLevel),
+        method(Frame, IsUserPlaced),
+        method(Frame, Lower),
+        method(Frame, Raise),
+        method(Frame, RegisterAllEvents),
+        method(Frame, RegisterEvent),
+        method(Frame, RegisterForDrag),
+        method(Frame, SetBackdrop),
+        method(Frame, SetBackdropBorderColor),
+        method(Frame, SetBackdropColor),
+        method(Frame, SetClampedToScreen),
+        method(Frame, SetFrameStrata),
+        method(Frame, SetHitRectInsets),
+        method(Frame, SetMaxResize),
+        method(Frame, SetMinResize),
+        method(Frame, SetMovable),
+        method(Frame, SetResizable),
+        method(Frame, SetScale),
+        method(Frame, SetScript),
+        method(Frame, SetTopLevel),
+        method(Frame, SetUserPlaced),
+        method(Frame, StartMoving),
+        method(Frame, StartSizing),
+        method(Frame, StopMovingOrSizing),
+        method(Frame, UnregisterAllEvents),
+        method(Frame, UnregisterEvent),
+
         {0,0}
     };
 
-    const char StatusBar::className[] = "StatusBar";
-    Lunar<StatusBar>::RegType StatusBar::methods[] = {
-        {"dt", &StatusBar::GetDataTable},
+    const char LuaStatusBar::className[] = "StatusBar";
+    Lunar<LuaStatusBar>::RegType LuaStatusBar::methods[] = {
+        {"dt", &LuaStatusBar::GetDataTable},
         {0,0}
     };
 
-    const char EditBox::className[] = "EditBox";
-    Lunar<EditBox>::RegType EditBox::methods[] = {
-        {"dt", &EditBox::GetDataTable},
+    const char LuaEditBox::className[] = "EditBox";
+    Lunar<LuaEditBox>::RegType LuaEditBox::methods[] = {
+        {"dt", &LuaEditBox::GetDataTable},
         {0,0}
     };
 
-    const char ScrollingMessageFrame::className[] = "ScrollingMessageFrame";
-    Lunar<ScrollingMessageFrame>::RegType ScrollingMessageFrame::methods[] = {
-        {"dt", &ScrollingMessageFrame::GetDataTable},
+    const char LuaScrollingMessageFrame::className[] = "ScrollingMessageFrame";
+    Lunar<LuaScrollingMessageFrame>::RegType LuaScrollingMessageFrame::methods[] = {
+        {"dt", &LuaScrollingMessageFrame::GetDataTable},
         {0,0}
     };
 
-    const char Button::className[] = "Button";
-    Lunar<Button>::RegType Button::methods[] = {
-        {"dt", &Button::GetDataTable},
+    const char LuaButton::className[] = "Button";
+    Lunar<LuaButton>::RegType LuaButton::methods[] = {
+        {"dt", &LuaButton::GetDataTable},
         {0,0}
     };
 
-    const char Slider::className[] = "Slider";
-    Lunar<Slider>::RegType Slider::methods[] = {
-        {"dt", &Slider::GetDataTable},
+    const char LuaSlider::className[] = "Slider";
+    Lunar<LuaSlider>::RegType LuaSlider::methods[] = {
+        {"dt", &LuaSlider::GetDataTable},
         {0,0}
     };
 
-    const char LayeredRegion::className[] = "LayeredRegion";
-    Lunar<LayeredRegion>::RegType LayeredRegion::methods[] = {
-        {"dt", &LayeredRegion::GetDataTable},
+    const char LuaLayeredRegion::className[] = "LayeredRegion";
+    Lunar<LuaLayeredRegion>::RegType LuaLayeredRegion::methods[] = {
+        {"dt", &LuaLayeredRegion::GetDataTable},
         {0,0}
     };
 
-    const char Texture::className[] = "Texture";
-    Lunar<Texture>::RegType Texture::methods[] = {
-        {"dt", &Texture::GetDataTable},
+    const char LuaTexture::className[] = "Texture";
+    Lunar<LuaTexture>::RegType LuaTexture::methods[] = {
+        {"dt", &LuaTexture::GetDataTable},
         {0,0}
     };
 
-    const char FontString::className[] = "FontString";
-    Lunar<FontString>::RegType FontString::methods[] = {
-        {"dt", &FontString::GetDataTable},
+    const char LuaFontString::className[] = "FontString";
+    Lunar<LuaFontString>::RegType LuaFontString::methods[] = {
+        {"dt", &LuaFontString::GetDataTable},
         {0,0}
     };
 }

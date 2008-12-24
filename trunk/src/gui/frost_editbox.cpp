@@ -13,6 +13,6 @@ using namespace Frost::GUI;
 
 const s_str EditBox::CLASS_NAME = "GUI::EditBox";
 
-EditBox::EditBox(lua_State* luaVM) : Frame(luaVM)
+EditBox::EditBox() : Frame()
 {
 }

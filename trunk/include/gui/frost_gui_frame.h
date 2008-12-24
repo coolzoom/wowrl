@@ -65,7 +65,7 @@ namespace Frost
         public :
 
             /// Constructor.
-            Frame(lua_State* pLua);
+            Frame();
 
             /// Updates this widget's logic.
             virtual void        Update();
@@ -259,6 +259,11 @@ namespace Frost
             */
             void                SetFrameStrata(FrameStrata mStrata);
 
+            /// Sets this Frame's strata.
+            /** \param sStrata The new strata
+            */
+            void                SetFrameStrata(const s_str& sStrata);
+
             /// Sets this Frame's hit rect insets.
             /** \param iLeft   Offset from the left border
             *   \param iRight  Offset from the right border
@@ -330,7 +335,61 @@ namespace Frost
             */
             void                UnregisterEvent(const s_str& sEventName);
 
-            // Glues
+            static const s_str CLASS_NAME;
+
+        protected :
+
+            void FireBuildStrataList_();
+            void FireBuildLayerList_();
+
+            std::map<s_uint, s_ptr<Frame> >         lChildList_;
+            std::map<FrameStrata, Strata>           lStrataList_;
+            std::map<s_uint, s_ptr<LayeredRegion> > lRegionList_;
+            std::map<LayerType, Layer>              lLayerList_;
+            std::map<s_str, s_bool>                 lDefinedScriptList_;
+            std::map<s_str, s_bool>                 lRegEventList_;
+            std::map<s_str, s_bool>                 lRegDragList_;
+
+            s_uint uiLevel_;
+
+            FrameStrata mStrata_;
+            s_bool      bIsParentStrata_;
+            s_bool      bIsTopStrata_;
+            s_bool      bIsTopLevel_;
+
+            s_bool bHasAllEventsRegistred_;
+
+            s_bool bIsKeyboardEnabled_;
+            s_bool bIsMouseEnabled_;
+            s_bool bIsMouseWheelEnabled_;
+            s_bool bIsMovable_;
+            s_bool bIsClampedToScreen_;
+            s_bool bIsResizable_;
+            s_bool bIsUserPlaced_;
+
+            s_bool bBuildStrataList_;
+            s_bool bBuildLayerList_;
+
+            s_array<s_int,4> lHitRectInsetList_;
+
+            s_uint uiMinWidth_;
+            s_uint uiMaxWidth_;
+            s_uint uiMinHeight_;
+            s_uint uiMaxHeight_;
+
+            s_float fScale_;
+
+            s_ptr<Frame> pParentFrame_;
+        };
+
+        /// Frame Lua glue
+        class LuaFrame : public LuaUIObject
+        {
+        public :
+
+            /// Constructor.
+            LuaFrame(lua_State* pLua);
+
             /**/ int _CreateFontString(lua_State*) { return 0; }
             /**/ int _CreateTexture(lua_State*) { return 0; }
             /**/ int _CreateTitleRegion(lua_State*) { return 0; }
@@ -396,52 +455,12 @@ namespace Frost
             int _UnregisterEvent(lua_State*);
 
             static const char className[];
-            static Lunar<Frame>::RegType methods[];
+            static Lunar<LuaFrame>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
 
-            void FireBuildStrataList_();
-            void FireBuildLayerList_();
-
-            std::map<s_uint, s_ptr<Frame> >         lChildList_;
-            std::map<FrameStrata, Strata>           lStrataList_;
-            std::map<s_uint, s_ptr<LayeredRegion> > lRegionList_;
-            std::map<LayerType, Layer>              lLayerList_;
-            std::map<s_str, s_bool>                 lDefinedScriptList_;
-            std::map<s_str, s_bool>                 lRegEventList_;
-            std::map<s_str, s_bool>                 lRegDragList_;
-
-            s_uint uiLevel_;
-
-            FrameStrata mStrata_;
-            s_bool      bIsParentStrata_;
-            s_bool      bIsTopStrata_;
-            s_bool      bIsTopLevel_;
-
-            s_bool bHasAllEventsRegistred_;
-
-            s_bool bIsKeyboardEnabled_;
-            s_bool bIsMouseEnabled_;
-            s_bool bIsMouseWheelEnabled_;
-            s_bool bIsMovable_;
-            s_bool bIsClampedToScreen_;
-            s_bool bIsResizable_;
-            s_bool bIsUserPlaced_;
-
-            s_bool bBuildStrataList_;
-            s_bool bBuildLayerList_;
-
-            s_array<s_int,4> lHitRectInsetList_;
-
-            s_uint uiMinWidth_;
-            s_uint uiMaxWidth_;
-            s_uint uiMinHeight_;
-            s_uint uiMaxHeight_;
-
-            s_float fScale_;
-
-            s_ptr<Frame> pParentFrame_;
+            s_ptr<Frame> pFrameParent_;
         };
     }
 }

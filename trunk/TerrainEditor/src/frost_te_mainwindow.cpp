@@ -1245,11 +1245,11 @@ void TE::MainWindow::OnApply()
 
 bool TE::MainWindow::OnMouseMoved( GdkEventMotion* pMotion )
 {
-    if (!pDecalUpdateTimer)
+    /*if (!pDecalUpdateTimer)
     {
         pDecalUpdateTimer = s_refptr<Timer>(new Timer());
         pDecalUpdateTimer->Start();
-    }
+    }*/
 
     float fDX;
     float fDY;
@@ -1275,9 +1275,9 @@ bool TE::MainWindow::OnMouseMoved( GdkEventMotion* pMotion )
         }
         if ((!lToolList[mTool]->HideDecalsWhileDragging() && bDragging) || !bDragging)
         {
-            if (pDecalUpdateTimer->GetElapsed() >= 0.05)
-            {
-                pDecalUpdateTimer->Zero();
+            //if (pDecalUpdateTimer->GetElapsed() >= 0.05)
+            //{
+                //pDecalUpdateTimer->Zero();
                 uint uiX = pTerrain->GetNumXPoint();
                 uint uiZ = pTerrain->GetNumZPoint();
                 float fXSize = pTerrain->GetXSize();
@@ -1320,7 +1320,7 @@ bool TE::MainWindow::OnMouseMoved( GdkEventMotion* pMotion )
                         pDecal2->Hide();
                     }
                 }
-            }
+            //}
         }
         else
         {
@@ -1565,8 +1565,8 @@ void TE::MainWindow::CreateMesh()
     float fXSize = pTerrain->GetXSize();
     float fYSize = pTerrain->GetYSize();
     float fZSize = pTerrain->GetZSize();
-    float fXCoef = fXSize/uiX;
-    float fZCoef = fZSize/uiZ;
+    float fXCoef = fXSize/(uiX-1);
+    float fZCoef = fZSize/(uiZ-1);
 
     delete pNArray;
     delete pIArray;
@@ -1704,8 +1704,8 @@ void TE::MainWindow::CreateMesh()
         pSubMesh->setMaterialName(pTerrainMaterialNoTex->GetOgreMaterialName().Get());
 
     pTerrainMesh->_setBounds(Ogre::AxisAlignedBox(
-        -fXSize/2.0f, -fYSize/2.0f, -fZSize/2.0f,
-         fXSize/2.0f,  fYSize/2.0f,  fZSize/2.0f
+        -fXSize/2.0f, -fYSize, -fZSize/2.0f,
+         fXSize/2.0f,  fYSize,  fZSize/2.0f
     ));
 
     pTerrainMesh->_setBoundingSphereRadius(
@@ -1722,9 +1722,128 @@ void TE::MainWindow::CreateMesh()
 
     pTerrainNode = pSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3::ZERO);
     pTerrainNode->attachObject(pTerrainEntity.Get());
+    pTerrainNode->showBoundingBox(true);
 }
 
 Vector TE::MainWindow::GetVertexUnderMouse( float x, float y )
+{
+    if (pTerrain)
+    {
+        Ogre::Ray ray = pCamera->getCameraToViewportRay(x/mOgreWindow.get_width(), y/mOgreWindow.get_height());
+        Ogre::AxisAlignedBox box = pTerrainMesh->getBounds();
+        Ogre::Vector3 point = ray.getOrigin();
+        Ogre::Vector3 dir = ray.getDirection();
+
+        // first, does the ray start from inside the terrain extents?
+        if (!box.contains(point))
+        {
+            // not inside the box, so let's see if we are actually
+            // colliding with it
+            pair<bool, Ogre::Real> res = ray.intersects(box);
+            if (!res.first)
+                return Vector(s_float::NaN);
+            // update point to the collision position
+            point = ray.getPoint(res.second);
+        }
+
+        // now move along the ray until we intersect or leave the bounding box
+        while (true)
+        {
+            // have we arived at or under the terrain height?
+            // note that this approach means that ray queries from below won't work
+            // correctly, but then again, that shouldn't be a usual case...
+            if (pTerrain->TestPoint(point.x, point.z))
+            {
+                float height = pTerrain->CalcPointHeight(point.x, point.z);
+                if (point.y <= height)
+                {
+                    point.y = height;
+                    return Vector::OgreToFrost(point);
+                }
+            }
+
+            // move further...
+            point += dir;
+
+            // check if we are still inside the boundaries
+            if (point.x < box.getMinimum().x || point.z < box.getMinimum().z
+                || point.x > box.getMaximum().x || point.z > box.getMaximum().z)
+                return Vector(s_float::NaN);
+        }
+
+        // Ask Ogre for the mouse ray
+        /*Ogre::Ray mMouseRay = pCamera->getCameraToViewportRay(x/mOgreWindow.get_width(), y/mOgreWindow.get_height());
+        Vector mTest = Vector::OgreToFrost(mMouseRay.getOrigin());
+        Vector mDirection = Vector::OgreToFrost(mMouseRay.getDirection());
+
+        // First test if the ray intersects the terrain's bounding box
+        pair<bool, Ogre::Real> mResult = mMouseRay.intersects(pTerrainMesh->getBounds());
+        if (mResult.first)
+        {
+            Log("1");
+            // Then, search for the intersection
+            mTest += s_float(mResult.second)*mDirection;
+            bool bFirstIteration = true;
+
+            if (mDirection.Y() > 0.0f)
+            {
+                Log("2"+mTest);
+                // Trying to select from the bottom of the terrain
+                while ( (mTest.Y() < pTerrain->GetYSize()) && pTerrain->TestPoint(mTest.X().Get(), mTest.Z().Get()) )
+                {
+                    float fTestHeight = pTerrain->CalcPointHeight(mTest.X().Get(), mTest.Z().Get());
+                    if (mTest.Y() > fTestHeight)
+                    {
+                        if (!bFirstIteration)
+                        {
+                            Log("2.");
+                            return mTest;
+                        }
+                        else
+                        {
+                            Log("2..");
+                            break;
+                        }
+                    }
+
+                    mTest += mDirection;
+                    Log(" "+mTest);
+                    bFirstIteration = false;
+                }
+            }
+            else
+            {
+                Log("3 : "+mTest);
+                // Trying to select from the top of the terrain
+                while ( (mTest.Y() > -pTerrain->GetYSize()) && pTerrain->TestPoint(mTest.X().Get(), mTest.Z().Get()) )
+                {
+                    float fTestHeight = pTerrain->CalcPointHeight(mTest.X().Get(), mTest.Z().Get());
+                    if (mTest.Y() < fTestHeight)
+                    {
+                        if (!bFirstIteration)
+                        {
+                            Log("3.");
+                            return mTest;
+                        }
+                        else
+                        {
+                            Log("3..");
+                            break;
+                        }
+                    }
+
+                    mTest += mDirection;
+                    Log(" "+mTest);
+                    bFirstIteration = false;
+                }
+            }
+        }*/
+    }
+
+    return Vector(s_float::NaN);
+}
+
+/*Vector TE::MainWindow::GetVertexUnderMouse( float x, float y )
 {
     if (pTerrain)
     {
@@ -1732,15 +1851,6 @@ Vector TE::MainWindow::GetVertexUnderMouse( float x, float y )
         Ogre::Ray mMouseRay = pCamera->getCameraToViewportRay(x/mOgreWindow.get_width(), y/mOgreWindow.get_height());
         Vector mOrigin = Vector::OgreToFrost(mMouseRay.getOrigin());
         Vector mDirection = Vector::OgreToFrost(mMouseRay.getDirection());
-
-        // Debug line
-        /*Ogre::Vector3 temp;
-        pDbgLine->beginUpdate(0);
-        temp = mMouseRay.getOrigin();
-        pDbgLine->position(temp);
-        temp = mMouseRay.getOrigin() + mMouseRay.getDirection()*20;
-        pDbgLine->position(temp);
-        pDbgLine->end();*/
 
         // Prepare the iteration
         Vector mV1, mV2, mV3;
@@ -1837,4 +1947,4 @@ Vector TE::MainWindow::GetVertexUnderMouse( float x, float y )
     }
 
     return Vector(s_float::NaN);
-}
+}*/

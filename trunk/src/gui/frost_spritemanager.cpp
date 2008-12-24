@@ -133,7 +133,6 @@ namespace Frost
         {
             // There was no main render target
             // Let's create one
-            Log("1");
             mMainTarget_ = GFX::CreateRenderTarget(
                 "_TargetMain", uiWidth, uiHeight
             );
@@ -143,7 +142,6 @@ namespace Frost
         {
             // There was already one, but it was too small
             // Let's delete the old one and create another bigger one
-            Log("2");
             GFX::DeleteRenderTarget("_TargetMain");
             mMainTarget_ = GFX::CreateRenderTarget(
                 "_TargetMain", uiWidth, uiHeight
@@ -153,16 +151,9 @@ namespace Frost
         {
             // There was already one, with a correct size
             // Just change its virtual size
-            Log("3");
             mMainTarget_.uiWidth = uiWidth;
             mMainTarget_.uiHeight = uiHeight;
         }
-
-        /*s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT("_TargetMain");
-
-        pMainSprite_ = s_refptr<Sprite>(new Sprite(
-            pMat, fWidth, fHeight
-        ));*/
 
         pMainSprite_ = s_refptr<Sprite>(new Sprite(
             pMainSprite_->GetMaterial(), fWidth, fHeight
@@ -413,9 +404,9 @@ namespace Frost
 
         mHardwareBuffer_ = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
             pDecl->getVertexSize(0),
-            uiSize, // Buffer size
+            uiSize,
             Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE,
-            false // Use shadow buffer? no
+            false
         );
 
         mColorBuffer_ = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
@@ -464,10 +455,6 @@ namespace Frost
             }
             else
             {
-                /*x = (x+(mRenderTarget_.pOgreRenderTarget->getWidth()-mRenderTarget_.uiWidth.Get()))
-                    *2.0f/mRenderTarget_.pOgreRenderTarget->getWidth() + fXOffset_.Get();
-                y = (y+(mRenderTarget_.pOgreRenderTarget->getHeight()-mRenderTarget_.uiHeight.Get()))
-                    *2.0f/mRenderTarget_.pOgreRenderTarget->getHeight() + fYOffset_.Get();*/
                 x = 2.0f*x/mRenderTarget_.pOgreRenderTarget->getWidth() - 1.0f + fXOffset_.Get();
                 y = 2.0f*(y - mRenderTarget_.uiHeight.Get())/mRenderTarget_.pOgreRenderTarget->getHeight() + 1.0f + fYOffset_.Get();
             }

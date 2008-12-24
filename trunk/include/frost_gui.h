@@ -47,9 +47,7 @@ namespace Frost
                 s_ptr<UIObject> pObj,
                 AnchorPoint     mPoint,
                 s_ptr<UIObject> pParent,
-                AnchorPoint     mParentPoint,
-                const s_int&    iX = 0,
-                const s_int&    iY = 0
+                AnchorPoint     mParentPoint
             );
 
             /// Returns this Anchor absolute X (in pixel).

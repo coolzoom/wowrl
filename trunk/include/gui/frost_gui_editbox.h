@@ -20,7 +20,19 @@ namespace Frost
         {
         public :
 
-            EditBox(lua_State* pLua);
+            EditBox();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaEditBox : public LuaFrame
+        {
+        public :
+
+            LuaEditBox(lua_State* pLua);
 
             // Glues
             /**/ int AddHistoryLine_L(lua_State*) { return 0; }
@@ -57,10 +69,12 @@ namespace Frost
             /**/ int ToggleInputLanguage_L(lua_State*) { return 0; }
 
             static const char className[];
-            static Lunar<EditBox>::RegType methods[];
+            static Lunar<LuaEditBox>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<EditBox> pEditBoxParent_;
 
         };
     }

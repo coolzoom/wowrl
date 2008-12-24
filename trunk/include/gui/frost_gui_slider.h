@@ -20,7 +20,19 @@ namespace Frost
         {
         public :
 
-            Slider(lua_State* pLua);
+            Slider();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaSlider : public LuaFrame
+        {
+        public :
+
+            LuaSlider(lua_State* pLua);
 
             // Glues
             /**/ int GetMinMaxValues(lua_State*) { return 0; }
@@ -35,10 +47,12 @@ namespace Frost
             /**/ int SetValueStep(lua_State*) { return 0; }
 
             static const char className[];
-            static Lunar<Slider>::RegType methods[];
+            static Lunar<LuaSlider>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<Slider> pSliderParent_;
 
         };
     }

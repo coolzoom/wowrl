@@ -20,7 +20,19 @@ namespace Frost
         {
         public :
 
-            Button(lua_State* pLua);
+            Button();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaButton : public LuaFrame
+        {
+        public :
+
+            LuaButton(lua_State* pLua);
 
             // Glues
             /**/ int Click_L(lua_State*) { return 0; }
@@ -64,10 +76,12 @@ namespace Frost
             /**/ int UnlockHighlight_L(lua_State*) { return 0; }
 
             static const char className[];
-            static Lunar<Button>::RegType methods[];
+            static Lunar<LuaButton>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<Button> pButtonParent_;
 
         };
     }

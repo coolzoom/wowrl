@@ -13,6 +13,6 @@ using namespace Frost::GUI;
 
 const s_str Slider::CLASS_NAME = "GUI::Slider";
 
-Slider::Slider(lua_State* luaVM) : Frame(luaVM)
+Slider::Slider() : Frame()
 {
 }

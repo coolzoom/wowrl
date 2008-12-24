@@ -79,7 +79,10 @@ namespace TE
 
         const float& GetLastHeight(const uint& uiX, const uint& uiZ);
         float        GetPointHeight(const uint& uiX, const uint& uiZ);
+        float        CalcPointHeight(const float& fX, const float& fZ);
         const uchar& GetPointFlags(const uint& uiX, const uint& uiZ);
+
+        bool TestPoint(const float& fX, const float& fZ);
 
         void WriteToFile(const Frost::s_str& sFileName);
 
@@ -87,6 +90,8 @@ namespace TE
 
         void CreateArray_();
         void DeleteArray_();
+
+        float FastGetPointHeight_(const uint& uiX, const uint& uiZ);
 
         uint uiNumXPoint_;
         uint uiNumZPoint_;

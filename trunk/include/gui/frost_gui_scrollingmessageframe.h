@@ -20,7 +20,19 @@ namespace Frost
         {
         public :
 
-            ScrollingMessageFrame(lua_State* pLua);
+            ScrollingMessageFrame();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaScrollingMessageFrame : public LuaFrame
+        {
+        public :
+
+            LuaScrollingMessageFrame(lua_State* pLua);
 
             // Glues
             /**/ int AddMessage_L(lua_State*) { return 0; }
@@ -49,10 +61,12 @@ namespace Frost
             /**/ int UpdateColorByID_L(lua_State*) { return 0; }
 
             static const char className[];
-            static Lunar<ScrollingMessageFrame>::RegType methods[];
+            static Lunar<LuaScrollingMessageFrame>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<ScrollingMessageFrame> pSMFParent_;
 
         };
     }

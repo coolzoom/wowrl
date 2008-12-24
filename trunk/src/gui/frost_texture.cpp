@@ -13,6 +13,6 @@ using namespace Frost::GUI;
 
 const s_str Texture::CLASS_NAME = "GUI::Texture";
 
-Texture::Texture(lua_State* luaVM) : LayeredRegion(luaVM)
+Texture::Texture() : LayeredRegion()
 {
 }

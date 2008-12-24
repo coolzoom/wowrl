@@ -22,7 +22,10 @@
 // Iterates through an stl container
 #define foreach(iter, container) for ((iter) = (container).begin(); (iter) != (container).end(); (iter)++)
 
+// Iterates through an XML::Block sub-blocks by name
+#define foreach_named_block(block, name, parent) for ((block) = (parent)->First(name); (block); (block) = (parent)->Next())
+
 // Iterates through an XML::Block sub-blocks
-#define foreach_block(block, name, parent) for ((block) = (parent)->First(name); (block); (block) = (parent)->Next())
+#define foreach_block(block, parent) for ((block) = (parent)->First(); (block); (block) = (parent)->Next())
 
 #endif
