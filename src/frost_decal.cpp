@@ -36,6 +36,7 @@ namespace Frost
         if (pOgrePass_ && !bShown_)
         {
             pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
+            pOgrePass_->setDepthCheckEnabled(false);
             pTUS_ = pOgrePass_->createTextureUnitState(sTextureFile_.Get());
             pTUS_->setProjectiveTexturing(true, pOgreFrustum_.Get());
             pTUS_->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
@@ -54,6 +55,7 @@ namespace Frost
             {
                 pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_FAIL);
             }
+
             bShown_ = false;
         }
     }

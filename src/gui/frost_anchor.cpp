@@ -21,14 +21,14 @@ Anchor::Anchor()
     mType_ = ANCHOR_ABS;
 }
 
-Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, s_ptr<UIObject> pParent, AnchorPoint mParentPoint, const s_int& iX, const s_int& iY )
+Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, s_ptr<UIObject> pParent, AnchorPoint mParentPoint/*, const s_int& iX, const s_int& iY*/ )
 {
     pObj_ = pObj;
     mPoint_ = mPoint;
     pParent_ = pParent;
     mParentPoint_ = mParentPoint;
-    iAbsOffX_ = iX;
-    iAbsOffY_ = iY;
+    /*iAbsOffX_ = iX;
+    iAbsOffY_ = iY;*/
     mType_ = ANCHOR_ABS;
 }
 

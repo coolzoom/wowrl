@@ -20,20 +20,33 @@ namespace Frost
         {
         public :
 
-            LayeredRegion(lua_State* pLua);
+            LayeredRegion();
 
             LayerType GetDrawLayer();
             void SetDrawLayer(LayerType mLayer);
 
-            // Glues
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaLayeredRegion : public LuaUIObject
+        {
+        public :
+
+            LuaLayeredRegion(lua_State* pLua);
+
             /**/ int _GetDrawLayer(lua_State*) { return 0; }
             /**/ int _SetDrawLayer(lua_State*) { return 0; }
 
             static const char className[];
-            static Lunar<LayeredRegion>::RegType methods[];
+            static Lunar<LuaLayeredRegion>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<LayeredRegion> pLayeredRegionParent_;
 
         };
     }

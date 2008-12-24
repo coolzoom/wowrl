@@ -16,12 +16,12 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
 
-const s_str Frame::CLASS_NAME = "GUI::Frame";
-const s_str Layer::CLASS_NAME = "GUI::Layer";
-const s_str Level::CLASS_NAME = "GUI::Level";
+const s_str Frame::CLASS_NAME  = "GUI::Frame";
+const s_str Layer::CLASS_NAME  = "GUI::Layer";
+const s_str Level::CLASS_NAME  = "GUI::Level";
 const s_str Strata::CLASS_NAME = "GUI::Strata";
 
-Frame::Frame(lua_State* luaVM) : UIObject(luaVM), lHitRectInsetList_(0)
+Frame::Frame() : UIObject(), lHitRectInsetList_(0)
 {
     mType_ = OJBECT_TYPE_FRAME;
     lType_.push_back("Frame");
@@ -159,12 +159,12 @@ s_array<s_int,4> Frame::GetHitRectInsets() const
 
 s_array<s_uint,2> Frame::GetMaxResize() const
 {
-    return s_array<s_uint,2>((uiMaxWidth_, uiMaxHeight_));
+    return (uiMaxWidth_, uiMaxHeight_);
 }
 
 s_array<s_uint,2> Frame::GetMinResize() const
 {
-    return s_array<s_uint,2>((uiMinWidth_, uiMinHeight_));
+    return (uiMinWidth_, uiMinHeight_);
 }
 
 s_uint Frame::GetNumChildren() const
@@ -234,9 +234,11 @@ void Frame::NotifyScriptDefined( const s_str& sScriptName )
 
 void Frame::OnEvent( const Event& mEvent )
 {
+    lua_State* pLua = GUIManager::GetSingleton()->GetLua();
+
     // Set event name
-    lua_pushstring(pLua_, mEvent.GetName().c_str());
-    lua_setglobal(pLua_, "event");
+    lua_pushstring(pLua, mEvent.GetName().c_str());
+    lua_setglobal(pLua, "event");
 
     // Set arguments
     for (s_uint i; i < mEvent.GetNumParam(); i++)
@@ -246,33 +248,35 @@ void Frame::OnEvent( const Event& mEvent )
             (pArg->GetType() == VALUE_UINT) ||
             (pArg->GetType() == VALUE_FLOAT) ||
             (pArg->GetType() == VALUE_DOUBLE))
-            lua_pushnumber(pLua_, pArg->GetF().Get());
+            lua_pushnumber(pLua, pArg->GetF().Get());
         else if (pArg->GetType() == VALUE_STRING)
-            lua_pushstring(pLua_, pArg->GetS().c_str());
+            lua_pushstring(pLua, pArg->GetS().c_str());
         else if (pArg->GetType() == VALUE_BOOL)
-            lua_pushboolean(pLua_, pArg->GetB().Get());
+            lua_pushboolean(pLua, pArg->GetB().Get());
         else
             break;
 
-        lua_setglobal(pLua_, ("arg" + s_str(i)).c_str());
+        lua_setglobal(pLua, ("arg" + s_str(i)).c_str());
         i++;
     }
 
-    lua_getglobal(pLua_, (sName_ + ":OnEvent").c_str());
-    if (lua_isfunction(pLua_, -1))
+    lua_getglobal(pLua, (sName_ + ":OnEvent").c_str());
+    if (lua_isfunction(pLua, -1))
     {
-        int iError = lua_pcall(pLua_, 0, 0, 0);
-        if (iError) l_ThrowError(pLua_);
+        int iError = lua_pcall(pLua, 0, 0, 0);
+        if (iError) l_ThrowError(pLua);
     }
-    lua_pop(pLua_, 1);
+    lua_pop(pLua, 1);
 }
 
 void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 {
     if (MAPFIND(sScriptName, lDefinedScriptList_))
 	{
-        lua_getglobal(pLua_, sName_.c_str());
-        lua_setglobal(pLua_, "this");
+	    lua_State* pLua = GUIManager::GetSingleton()->GetLua();
+
+        lua_getglobal(pLua, sName_.c_str());
+        lua_setglobal(pLua, "this");
 
         if ((sScriptName == "KeyDown") ||
             (sScriptName == "KeyUp") )
@@ -280,8 +284,8 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             // Set key name
             if (pEvent != NULL)
             {
-                lua_pushstring(pLua_, pEvent->Get(0)->GetS().c_str());
-                lua_setglobal(pLua_, "arg1");
+                lua_pushstring(pLua, pEvent->Get(0)->GetS().c_str());
+                lua_setglobal(pLua, "arg1");
             }
         }
         else if (sScriptName == "MouseDown")
@@ -298,8 +302,8 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             if ( (mState == MOUSE_CLICKED) || (mState == MOUSE_LONG) )
                 sMouseState = "LeftButton";
 
-            lua_pushstring(pLua_, sMouseState.c_str());
-            lua_setglobal(pLua_, "arg1");
+            lua_pushstring(pLua, sMouseState.c_str());
+            lua_setglobal(pLua, "arg1");
         }
         else if (sScriptName == "MouseUp")
         {
@@ -315,24 +319,24 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             if (mState == MOUSE_UP)
                 sMouseState = "LeftButton";
 
-            lua_pushstring(pLua_, sMouseState.c_str());
-            lua_setglobal(pLua_, "arg1");
+            lua_pushstring(pLua, sMouseState.c_str());
+            lua_setglobal(pLua, "arg1");
         }
         else if (sScriptName == "Update")
         {
             // Set delta time
-            lua_pushnumber(pLua_, TimeManager::GetSingleton()->GetDelta().Get());
-            lua_setglobal(pLua_, "arg1");
+            lua_pushnumber(pLua, TimeManager::GetSingleton()->GetDelta().Get());
+            lua_setglobal(pLua, "arg1");
         }
 
-        lua_getglobal(pLua_, (sName_ + ":On" + sScriptName).c_str());
-        if (lua_isfunction(pLua_, -1))
+        lua_getglobal(pLua, (sName_ + ":On" + sScriptName).c_str());
+        if (lua_isfunction(pLua, -1))
         {
-            int iError = lua_pcall(pLua_, 0, 0, 0);
-            if (iError) l_ThrowError(pLua_);
+            int iError = lua_pcall(pLua, 0, 0, 0);
+            if (iError) l_ThrowError(pLua);
         }
 
-        lua_pop(pLua_, 1);
+        lua_pop(pLua, 1);
 	}
 
 	if (sScriptName == "Load")
@@ -386,9 +390,40 @@ void Frame::SetFrameStrata( FrameStrata mStrata )
     mStrata_ = mStrata;
 }
 
+void Frame::SetFrameStrata( const s_str& sStrata )
+{
+    FrameStrata mStrata;
+
+    if (sStrata == "BACKGROUND")
+        mStrata = STRATA_BACKGROUND;
+    else if (sStrata == "LOW")
+        mStrata = STRATA_LOW;
+    else if (sStrata == "MEDIUM")
+        mStrata = STRATA_MEDIUM;
+    else if (sStrata == "HIGH")
+        mStrata = STRATA_HIGH;
+    else if (sStrata == "DIALOG")
+        mStrata = STRATA_DIALOG;
+    else if (sStrata == "FULLSCREEN")
+        mStrata = STRATA_FULLSCREEN;
+    else if (sStrata == "FULLSCREEN_DIALOG")
+        mStrata = STRATA_FULLSCREEN_DIALOG;
+    else if (sStrata == "TOOLTIP")
+        mStrata = STRATA_TOOLTIP;
+    else
+    {
+        Warning(lType_.back(),
+            "Unknown strata : \""+sStrata+"\"."
+        );
+        return;
+    }
+
+    SetFrameStrata(mStrata);
+}
+
 void Frame::SetHitRectInsets( const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom )
 {
-    lHitRectInsetList_ = s_array<s_int,4>((iLeft, iRight, iTop, iBottom));
+    lHitRectInsetList_ = (iLeft, iRight, iTop, iBottom);
 }
 
 void Frame::SetLevel( const s_uint& uiLevel )

@@ -20,7 +20,19 @@ namespace Frost
         {
         public :
 
-            Texture(lua_State* pLua);
+            Texture();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaTexture : public LuaLayeredRegion
+        {
+        public :
+
+            LuaTexture(lua_State* pLua);
 
             // Glues
             /**/ int _GetBlendMode(lua_State*) { return 0; }
@@ -39,10 +51,12 @@ namespace Frost
             /**/ int _SetVertexColor(lua_State*) { return 0; }
 
             static const char className[];
-            static Lunar<Texture>::RegType methods[];
+            static Lunar<LuaTexture>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<Texture> pTextureParent_;
 
         };
     }

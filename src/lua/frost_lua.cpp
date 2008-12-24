@@ -51,16 +51,16 @@ void Lua::RegisterGlobalFuncs( lua_State* pLua )
 
 void Lua::RegisterGUIClasses( lua_State* pLua )
 {
-    Lunar<GUI::UIObject>::Register(pLua);
-    Lunar<GUI::Frame>::Register(pLua);
-    Lunar<GUI::StatusBar>::Register(pLua);
-    Lunar<GUI::EditBox>::Register(pLua);
-    Lunar<GUI::ScrollingMessageFrame>::Register(pLua);
-    Lunar<GUI::Button>::Register(pLua);
-    Lunar<GUI::Slider>::Register(pLua);
-    Lunar<GUI::LayeredRegion>::Register(pLua);
-    Lunar<GUI::Texture>::Register(pLua);
-    Lunar<GUI::FontString>::Register(pLua);
+    Lunar<GUI::LuaUIObject>::Register(pLua);
+    Lunar<GUI::LuaFrame>::Register(pLua);
+    Lunar<GUI::LuaStatusBar>::Register(pLua);
+    Lunar<GUI::LuaEditBox>::Register(pLua);
+    Lunar<GUI::LuaScrollingMessageFrame>::Register(pLua);
+    Lunar<GUI::LuaButton>::Register(pLua);
+    Lunar<GUI::LuaSlider>::Register(pLua);
+    Lunar<GUI::LuaLayeredRegion>::Register(pLua);
+    Lunar<GUI::LuaTexture>::Register(pLua);
+    Lunar<GUI::LuaFontString>::Register(pLua);
 }
 
 // Modified openlibs function to load my own libs

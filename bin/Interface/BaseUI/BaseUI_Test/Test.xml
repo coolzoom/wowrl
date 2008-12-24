@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <Ui>
 	<Script file="Test.lua"/>
 	<Frame name="Test" parent="UIParent" hidden="false" movable="true" enableMouse="true" clampedToScreen="true">

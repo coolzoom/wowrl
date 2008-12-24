@@ -13,6 +13,6 @@ using namespace Frost::GUI;
 
 const s_str StatusBar::CLASS_NAME = "GUI::StatusBar";
 
-StatusBar::StatusBar(lua_State* luaVM) : Frame(luaVM)
+StatusBar::StatusBar() : Frame()
 {
 }

@@ -20,7 +20,19 @@ namespace Frost
         {
         public :
 
-            StatusBar(lua_State* pLua);
+            StatusBar();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaStatusBar : public LuaFrame
+        {
+        public :
+
+            LuaStatusBar(lua_State* pLua);
 
             // Glues
             /**/ int _GetMinMaxValues(lua_State*) { return 0; }
@@ -35,10 +47,12 @@ namespace Frost
             /**/ int _SetValue(lua_State*) { return 0; }
 
             static const char className[];
-            static Lunar<StatusBar>::RegType methods[];
+            static Lunar<LuaStatusBar>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<StatusBar> pStatusBarParent_;
 
         };
     }

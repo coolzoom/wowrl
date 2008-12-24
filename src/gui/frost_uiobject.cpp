@@ -15,16 +15,8 @@ using namespace Frost::GUI;
 
 const s_str UIObject::CLASS_NAME = "GUI::UIObject";
 
-int UIObject::GetDataTable(lua_State * pLua)
+UIObject::UIObject()
 {
-    lua_getref(pLua, iRef_);
-    return 1;
-}
-
-UIObject::UIObject(lua_State* pLua)
-{
-    sName_ = lua_tostring(pLua, 1);
-
     mType_ = OJBECT_TYPE_UIOBJECT;
     lType_.push_back("UIObject");
 
@@ -34,18 +26,16 @@ UIObject::UIObject(lua_State* pLua)
     fRelWidth_ = 1.0f;
     fRelHeight_ = 1.0f;
     bIsShown_ = true;
-
-    lua_newtable(pLua);
-    iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);
-    pLua_ = pLua;
-
-    uiID_ = GUIManager::GetSingleton()->AddUIObject(this);
+    uiID_ = s_uint::NaN;
 }
 
 UIObject::~UIObject()
 {
-    luaL_unref(pLua_, LUA_REGISTRYINDEX, iRef_);
-    GUIManager::GetSingleton()->RemoveUIObject(this);
+}
+
+s_ptr<LuaUIObject> UIObject::GetGlue()
+{
+    return pGlue_;
 }
 
 s_refptr<Material> UIObject::GetMaterial()
@@ -58,9 +48,27 @@ const s_str& UIObject::GetName() const
     return sName_;
 }
 
-ObjectType UIObject::GetObjectType() const
+void UIObject::SetName( const s_str& sName )
 {
-    return mType_;
+    if (sName_.IsEmpty())
+    {
+        sName_ = sName;
+        if (pParent_)
+        {
+            sName_.Replace("$parent", pParent_->GetName());
+        }
+    }
+    else
+    {
+        Warning(lType_.back(),
+            "SetName() can only be called once."
+        );
+    }
+}
+
+vector<s_str> UIObject::GetObjectType() const
+{
+    return lType_;
 }
 
 const s_float& UIObject::GetAlpha() const
@@ -165,7 +173,9 @@ void UIObject::SetParent( s_ptr<UIObject> pParent )
     }
     else
     {
-        Error(lType_.back(), "Can't call SetParent(this)");
+        Error(lType_.back(),
+            "Can't call SetParent(this)"
+        );
     }
 }
 
@@ -223,15 +233,20 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
         FireUpdateBorders();
     }
     else
-        Error(lType_.back(), "Can't call SetAllPoints(this).");
+    {
+        Error(lType_.back(),
+            "Can't call SetAllPoints(this)."
+        );
+    }
 }
 
-void UIObject::SetPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_int& iX, const s_int& iY )
+void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_int& iX, const s_int& iY )
 {
     map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.find(mPoint);
     if (iterAnchor == lAnchorList_.end())
     {
-        Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint, iX, iY);
+        Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
+        mAnchor.SetAbsOffset(iX, iY);
         lAnchorList_[mPoint] = mAnchor;
         lAnchorStack_.push_back(&lAnchorList_[mPoint]);
     }
@@ -241,6 +256,27 @@ void UIObject::SetPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint m
         pAnchor->SetParent(pObj);
         pAnchor->SetParentPoint(mRelativePoint);
         pAnchor->SetAbsOffset(iX, iY);
+    }
+
+    FireUpdateBorders();
+}
+
+void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_float& fX, const s_float& fY )
+{
+    map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.find(mPoint);
+    if (iterAnchor == lAnchorList_.end())
+    {
+        Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
+        mAnchor.SetRelOffset(fX, fY);
+        lAnchorList_[mPoint] = mAnchor;
+        lAnchorStack_.push_back(&lAnchorList_[mPoint]);
+    }
+    else
+    {
+        s_ptr<Anchor> pAnchor = &iterAnchor->second;
+        pAnchor->SetParent(pObj);
+        pAnchor->SetParentPoint(mRelativePoint);
+        pAnchor->SetRelOffset(fX, fY);
     }
 
     FireUpdateBorders();
@@ -263,6 +299,18 @@ s_ptr<Anchor> UIObject::GetPoint( const s_uint& uiPoint )
 const s_uint& UIObject::GetID() const
 {
     return uiID_;
+}
+
+void UIObject::SetID( const s_uint& uiID )
+{
+    if (!uiID_)
+        uiID_ = uiID;
+    else
+    {
+        Warning(lType_.back(),
+            "SetID() can't be called more than once."
+        );
+    }
 }
 
 void UIObject::UpdateBorders_()

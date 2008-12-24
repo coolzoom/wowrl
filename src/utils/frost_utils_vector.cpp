@@ -294,4 +294,9 @@ namespace Frost
     {
         return sLeft+"("+s_str(mRight.X())+", "+s_str(mRight.Y())+", "+s_str(mRight.Z())+")";
     }
+
+    Vector operator * (const s_float& fLeft, const Vector& mRight)
+    {
+        return mRight*fLeft;
+    }
 }

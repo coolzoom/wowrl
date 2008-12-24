@@ -5,6 +5,7 @@
 		<Option title="Frost" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<Option virtualFolders="src/;" />
 		<Build>
 			<Target title="Debug_Win32">
 				<Option platforms="Windows;" />
@@ -171,7 +172,9 @@
 		<Unit filename="include/frost_xml_block.h" />
 		<Unit filename="include/frost_xml_document.h" />
 		<Unit filename="include/gui/frost_gui_button.h" />
-		<Unit filename="include/gui/frost_gui_editbox.h" />
+		<Unit filename="include/gui/frost_gui_editbox.h">
+			<Option virtualFolder="src/" />
+		</Unit>
 		<Unit filename="include/gui/frost_gui_fontstring.h" />
 		<Unit filename="include/gui/frost_gui_frame.h" />
 		<Unit filename="include/gui/frost_gui_layeredregion.h" />
@@ -213,20 +216,28 @@
 		<Unit filename="src/frost_unitmanager.cpp" />
 		<Unit filename="src/gui/frost_anchor.cpp" />
 		<Unit filename="src/gui/frost_button.cpp" />
+		<Unit filename="src/gui/frost_button_glues.cpp" />
 		<Unit filename="src/gui/frost_editbox.cpp" />
+		<Unit filename="src/gui/frost_editbox_glues.cpp" />
 		<Unit filename="src/gui/frost_fontstring.cpp" />
+		<Unit filename="src/gui/frost_fontstring_glues.cpp" />
 		<Unit filename="src/gui/frost_frame.cpp" />
 		<Unit filename="src/gui/frost_frame_glues.cpp" />
 		<Unit filename="src/gui/frost_guimanager.cpp" />
 		<Unit filename="src/gui/frost_layeredregion.cpp" />
+		<Unit filename="src/gui/frost_layeredregion_glues.cpp" />
 		<Unit filename="src/gui/frost_lunar.cpp" />
 		<Unit filename="src/gui/frost_scrollingmessageframe.cpp" />
+		<Unit filename="src/gui/frost_scrollingmessageframe_glues.cpp" />
 		<Unit filename="src/gui/frost_slider.cpp" />
+		<Unit filename="src/gui/frost_slider_glues.cpp" />
 		<Unit filename="src/gui/frost_sprite.cpp" />
 		<Unit filename="src/gui/frost_spritemanager.cpp" />
 		<Unit filename="src/gui/frost_statusbar.cpp" />
+		<Unit filename="src/gui/frost_statusbar_glues.cpp" />
 		<Unit filename="src/gui/frost_text.cpp" />
 		<Unit filename="src/gui/frost_texture.cpp" />
+		<Unit filename="src/gui/frost_texture_glues.cpp" />
 		<Unit filename="src/gui/frost_uiobject.cpp" />
 		<Unit filename="src/gui/frost_uiobject_glues.cpp" />
 		<Unit filename="src/lua/frost_lua.cpp" />
@@ -241,6 +252,7 @@
 		<Unit filename="src/model/frost_modeldata.cpp" />
 		<Unit filename="src/model/frost_modelmanager.cpp" />
 		<Unit filename="src/model/frost_modelpart.cpp" />
+		<Unit filename="src/parsers/frost_guimanager_parser.cpp" />
 		<Unit filename="src/parsers/frost_unitmanager_parser.cpp" />
 		<Unit filename="src/path/frost_path.cpp" />
 		<Unit filename="src/path/frost_path_directpath.cpp" />

@@ -32,6 +32,18 @@ namespace XML
         static const s_str CLASS_NAME;
     };
 
+    /// A wrapped pointer to a pre-defined XML Block
+    struct PredefinedBlock
+    {
+        PredefinedBlock();
+        PredefinedBlock(s_ptr<Block> block, const s_uint& min, const s_uint& max, const s_bool& radio = false);
+
+        s_ptr<Block> pBlock;
+        s_uint       uiMin;
+        s_uint       uiMax;
+        s_bool       bRadio;
+    };
+
     /// An element in an XML file
     class Block
     {
@@ -41,23 +53,18 @@ namespace XML
         Block();
 
         /// Definition constructor.
-        /** \param sName The name of this block
-        *   \param uiMinNbr The minimum number of occurences
-        *   \param uiMaxNbr The maximum number of occurences
+        /** \param sName        The name of this block
+        *   \param uiMinNbr     The minimum number of occurences
+        *   \param uiMaxNbr     The maximum number of occurences
+        *   \param bRadio       'true' if only one Block can be present on this level
         */
-        Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr);
+        Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_bool& bRadio = false);
 
         /// Adds an attribute to the list.
         /** \param mAttrib The new attribute
         *   \note Only used in the definition stage.
         */
-        void          Add(const Attribute& mAttrib);
-
-        /// Adds a block to the list.
-        /** \param mBlock The new block
-        *   \note Only used in the definition stage.
-        */
-        void          Add(const Block& mBlock);
+        s_bool        Add(const Attribute& mAttrib);
 
         /// Retrieves attributes from a string.
         /** \param sAttributes The string containing attributes
@@ -126,6 +133,33 @@ namespace XML
         */
         const s_uint& GetMaxCount() const;
 
+        /// Makes this Block a "radio" Block.
+        /** \note Only used in the definition stage.
+        */
+        void          SetRadio();
+
+        /// Checks if this Block can only be present if it's alone on its level.
+        /** \return 'true' if this Block can only be present if it's alone on its level
+        */
+        const s_bool& IsRadio() const;
+
+        /// Checks if this Block can only contain one child.
+        /** \return 'true' if this Block can only contain one child
+        */
+        const s_bool& HasRadioChilds() const;
+
+        /// Returns the number of sub-blocks defined for this Block.
+        /** \return the number of sub-blocks defined for this Block
+        *   \note Only used in definition stage.
+        */
+        s_uint        GetDefChildNumber() const;
+
+        /// Returns the number of sub-blocks found in this Block.
+        /** \return the number of sub-blocks found in this Block
+        *   \note Only used in loading stage.
+        */
+        s_uint        GetChildNumber() const;
+
         /// Starts iteration through this Block's sub-blocks.
         /** \param sName The name of the sub-blocks you need
         *   \return The first sub-block (NULL if none)
@@ -157,6 +191,12 @@ namespace XML
         */
         s_ptr<Block>  GetBlock(const s_str& sName);
 
+        /// Returns the only sub-block available.
+        /** \return The only sub-block available
+        *   \note Only works if this Block has radio childs.
+        */
+        s_ptr<Block>  GetRadioBlock();
+
         /// Checks if this Block can contain another Block.
         /** \param sName The name of the Block to test
         *   \return 'true' if this Block can contain the other one.
@@ -184,12 +224,36 @@ namespace XML
         void          AddBlock();
 
         /// Creates a new Block (used for definition).
-        /** \param sName The name of the block
+        /** \param sName    The name of the block
         *   \param uiMinNbr The minimum number of occurences
         *   \param uiMaxNbr The maximum number of occurences
         *   \note Only used in the definition stage.
         */
         s_ptr<Block>  CreateDefBlock(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr);
+
+        /// Creates a new Block (used for definition).
+        /** \param sName The name of the block
+        *   \note Only used in the definition stage.<br>
+        *         Creates a "radio" Block : it can only be present
+        *         if none of its defined neighbours are.
+        */
+        s_ptr<Block>  CreateRadioDefBlock(const s_str& sName);
+
+        /// Adds a pre-defined Block to the list.
+        /** \param pBlock   The pre-defined Block
+        *   \param uiMinNbr The minimum number of occurences
+        *   \param uiMaxNbr The maximum number of occurences
+        *   \note Only used in the definition stage.
+        */
+        s_ptr<PredefinedBlock> AddPredefinedBlock(s_ptr<Block> pBlock, const s_uint& uiMinNbr, const s_uint& uiMaxNbr);
+
+        /// Adds a pre-defined Block to the list.
+        /** \param pBlock   The pre-defined Block
+        *   \note Only used in the definition stage.<br>
+        *         Adds a "radio" Block : it can only be present
+        *         if none of its defined neighbours are.
+        */
+        s_ptr<PredefinedBlock> AddPredefinedRadioBlock(s_ptr<Block> pBlock);
 
         static const s_str CLASS_NAME;
 
@@ -198,18 +262,27 @@ namespace XML
         s_str           sName_;
         s_uint          uiMaxNumber_;
         s_uint          uiMinNumber_;
+        s_bool          bRadio_;
+        s_bool          bRadioChilds_;
         s_str           sValue_;
         s_ptr<Document> pDoc_;
         s_ptr<Block>    pParent_;
         s_refptr<Block> pNewBlock_;
         s_bool          bCreating_;
 
-        std::multimap<s_str, Block>::iterator mCurrIter_;
-        std::multimap<s_str, Block>::iterator mEndIter_;
+        std::vector< s_ptr<Block> >::iterator mCurrIter_;
+        std::vector< s_ptr<Block> >::iterator mEndIter_;
 
-        std::map<s_str, Attribute>  lAttributeList_;
-        std::map<s_str, Block>      lBlockList_;
-        std::multimap<s_str, Block> lFoundBlockList_;
+        std::multimap<s_str, Block>::iterator mCurrNIter_;
+        std::multimap<s_str, Block>::iterator mEndNIter_;
+
+        s_bool bNamedIteration_;
+
+        std::map<s_str, Attribute>       lAttributeList_;
+        std::map<s_str, Block>           lDefBlockList_;
+        std::map<s_str, PredefinedBlock> lPreDefBlockList_;
+        std::multimap<s_str, Block>      lFoundBlockList_;
+        std::vector< s_ptr<Block> >      lFoundBlockStack_;
     };
 }
 }

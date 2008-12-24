@@ -22,10 +22,9 @@ Document::Document( const s_str& sFileName, const s_str& sDefFileName ) :
         if (File::Exists(sDefFileName_))
         {
             mMainBlock_.SetDocument(this);
-            uiLineNbr_ = 1;
+            uiLineNbr_ = 1u;
             bValid_ = true;
-
-            LoadDefinition_();
+            bValid_ = LoadDefinition_();
         }
         else
         {
@@ -47,7 +46,7 @@ s_ptr<Block> Document::GetMainBlock()
 
 const s_str& Document::GetFileName() const
 {
-    return sFileName_;
+    return sActualFileName_;
 }
 
 const s_uint& Document::GetLineNbr() const
@@ -64,9 +63,10 @@ s_bool Document::LoadDefinition_()
 {
     if (bValid_)
     {
+        sActualFileName_ = sDefFileName_;
         File mFile(sDefFileName_, FILE_I);
 
-        s_ptr<Block> pActual = &mMainBlock_;
+        s_ptr<Block> pActual;
         s_ptr<Block> pParent;
 
         while (mFile.IsValid())
@@ -75,7 +75,7 @@ s_bool Document::LoadDefinition_()
 
             #ifdef FROST_LINUX
             // Fix line endings
-            if ((sLine.Length() > 0) && (sLine.Get(sLine.Length()-s_uint(1u)) == '\r'))
+            if ((sLine.Length() > 0u) && (sLine.Get(sLine.Length() - 1u) == '\r'))
             {
                 sLine.EraseFromEnd(1u);
             }
@@ -95,23 +95,105 @@ s_bool Document::LoadDefinition_()
                         sLine = sLine.Cut("/>").front();
                         vector<s_str> lWords = sLine.Cut(" ", 1);
                         s_str sName = lWords.front();
-                        s_uint uiMax = s_uint::INF;
                         s_uint uiMin = 0u;
-                        if (sName[0] == '*')
+                        s_uint uiMax = s_uint::INF;
+                        s_bool bPreDefining = false;
+                        s_bool bRadio = false;
+                        s_bool bLoad = false;
+                        s_str sParent;
+
+                        // Read commands
+                        vector<s_str> lCommands = sName.Cut(":");
+                        sName = lCommands.back();
+                        lCommands.pop_back();
+                        vector<s_str>::iterator iterCommand;
+                        foreach (iterCommand, lCommands)
                         {
-                            sName.EraseFromStart(1);
-                            uiMax = uiMin = 1u;
+                            s_str sLetterCode = s_str((*iterCommand)[0]);
+                            if (sLetterCode == "d")
+                            {
+                                // Pre-definintion
+                                if (pParent)
+                                {
+                                    Error(sDefFileName_+":"+uiLineNbr_,
+                                        "Can't pre-define a block outside root level (nested \'d\' command forbidden)."
+                                    );
+                                    return false;
+                                }
+                                else
+                                {
+                                    bPreDefining = true;
+
+                                    s_uint uiStart = iterCommand->Find("[");
+                                    s_uint uiEnd = iterCommand->Find("]");
+                                    if (uiStart && uiEnd)
+                                    {
+                                        // Inheritance
+                                        sParent = iterCommand->ExtractRange(uiStart+1, uiEnd);
+                                    }
+                                }
+                            }
+                            else if (sLetterCode == "l")
+                            {
+                                // Load pre-definition
+                                if (!pParent)
+                                {
+                                    Error(sDefFileName_+":"+uiLineNbr_,
+                                        "Can't load a pre-defined block at root level (\'l\' command forbidden)."
+                                    );
+                                    return false;
+                                }
+                                else
+                                {
+                                    bLoad = true;
+                                }
+                            }
+                            else if (sLetterCode == "n")
+                            {
+                                // Min/max count
+                                s_uint uiStart = iterCommand->Find("[");
+                                s_uint uiEnd = iterCommand->Find("]");
+                                if (uiStart && uiEnd)
+                                {
+                                    s_str sParams = iterCommand->ExtractRange(uiStart+1, uiEnd);
+                                    if (sParams.Find(","))
+                                    {
+                                        vector<s_str> lMinMax = sParams.Cut(",");
+                                        s_str sMin = lMinMax.front();
+                                        s_str sMax = lMinMax.back();
+                                        if (sMin != ".")
+                                            uiMin = s_uint(sMin);
+                                        if (sMax != ".")
+                                            uiMax = s_uint(sMax);
+                                    }
+                                    else
+                                    {
+                                        if (sParams == "*")
+                                            bRadio = true;
+                                        else
+                                        {
+                                            Warning(sDefFileName_+":"+uiLineNbr_,
+                                                "Unknown param : \""+sParams+"\" for \'n\' command. Skipped."
+                                            );
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Warning(sDefFileName_+":"+uiLineNbr_,
+                                        "\'n\' command requires some parameters. Correct synthax is : \"n[params]\". Skipped."
+                                    );
+                                }
+                            }
+                            else
+                            {
+                                Warning(sDefFileName_+":"+uiLineNbr_,
+                                    "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                                );
+                            }
                         }
-                        else if (sName[0] == '$')
-                        {
-                            sName.EraseFromStart(1);
-                            uiMax = 1u;
-                        }
-                        else if (sName[0] == '&')
-                        {
-                            sName.EraseFromStart(1);
-                            uiMin = 1u;
-                        }
+
+                        // Prepare attributes
                         vector<s_str> lAttribs;
                         if (lWords.size() > 1)
                         {
@@ -123,42 +205,148 @@ s_bool Document::LoadDefinition_()
 
                         if (pParent)
                         {
-                            pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
-                            vector<s_str>::iterator iterAttr;
-                            foreach (iterAttr, lAttribs)
+                            if (bLoad)
                             {
-                                s_str sAttr = *iterAttr;
-                                s_str sDefault;
-                                s_bool bOptional = false;
-                                if (sAttr.Find("="))
+                                if (MAPFIND(sName, lPredefinedBlockList_))
                                 {
-                                    bOptional = true;
-                                    vector<s_str> lCut = sAttr.Cut("=");
-                                    sAttr = lCut.front();
-                                    sDefault = lCut.back();
+                                    s_ptr<PredefinedBlock> pAdded;
+                                    if (bRadio)
+                                        pAdded = pParent->AddPredefinedRadioBlock(&lPredefinedBlockList_[sName]);
+                                    else
+                                        pAdded = pParent->AddPredefinedBlock(&lPredefinedBlockList_[sName], uiMin, uiMax);
+
+                                    if (!pAdded)
+                                        return false;
+
+                                    if (lAttribs.size() != 0)
+                                    {
+                                        Warning(sDefFileName_+":"+uiLineNbr_,
+                                            "Can't add attributes to a loaded pre-defined block."
+                                        );
+                                    }
                                 }
-                                pActual->Add(Attribute(sAttr, bOptional, sDefault));
+                                else
+                                {
+                                    Error(sDefFileName_+":"+uiLineNbr_,
+                                        "\""+sName+"\" has not (yet?) been pre-defined."
+                                    );
+                                    return false;
+                                }
                             }
-                            pActual = pParent;
+                            else
+                            {
+                                if (!MAPFIND(sName, lPredefinedBlockList_))
+                                {
+                                    if (bRadio)
+                                        pActual = pParent->CreateRadioDefBlock(sName);
+                                    else
+                                        pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
+
+                                    if (!pActual)
+                                        return false;
+
+                                    vector<s_str>::iterator iterAttr;
+                                    foreach (iterAttr, lAttribs)
+                                    {
+                                        s_str sAttr = *iterAttr;
+                                        s_str sDefault;
+                                        s_bool bOptional = false;
+                                        if (sAttr.Find("="))
+                                        {
+                                            bOptional = true;
+                                            vector<s_str> lCut = sAttr.Cut("=");
+                                            sAttr = lCut.front();
+                                            sDefault = lCut.back();
+                                        }
+                                        if (!pActual->Add(Attribute(sAttr, bOptional, sDefault)))
+                                            return false;
+                                    }
+                                    pActual = pParent;
+                                }
+                                else
+                                {
+                                    Error(sDefFileName_+":"+uiLineNbr_,
+                                        "Defining a new block named \""+sName+"\", which is the name "
+                                        "of a pre-defined block."
+                                    );
+                                    return false;
+                                }
+                            }
                         }
                         else
                         {
-                            // Main block
-                            pActual->SetName(sName);
-                            vector<s_str>::iterator iterAttr;
-                            foreach (iterAttr, lAttribs)
+                            if (bPreDefining)
                             {
-                                s_str sAttr = *iterAttr;
-                                s_str sDefault;
-                                s_bool bOptional = false;
-                                if (sAttr.Find("="))
+                                // Pre-definition
+                                if (!sParent.IsEmpty())
                                 {
-                                    bOptional = true;
-                                    vector<s_str> lCut = sAttr.Cut("=");
-                                    sAttr = lCut.front();
-                                    sDefault = lCut.back();
+                                    // Inheritance
+                                    if (MAPFIND(sParent, lPredefinedBlockList_))
+                                    {
+                                        lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
+                                    }
+                                    else
+                                    {
+                                        Error(sDefFileName_+":"+uiLineNbr_,
+                                            "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "
+                                            "inherited."
+                                        );
+                                    }
                                 }
-                                pActual->Add(Attribute(sAttr, bOptional));
+                                pActual = &lPredefinedBlockList_[sName];
+                                pActual->SetDocument(this);
+                                pActual->SetName(sName);
+                                vector<s_str>::iterator iterAttr;
+                                foreach (iterAttr, lAttribs)
+                                {
+                                    s_str sAttr = *iterAttr;
+                                    s_str sDefault;
+                                    s_bool bOptional = false;
+                                    if (sAttr.Find("="))
+                                    {
+                                        bOptional = true;
+                                        vector<s_str> lCut = sAttr.Cut("=");
+                                        sAttr = lCut.front();
+                                        sDefault = lCut.back();
+                                    }
+                                    if (!pActual->Add(Attribute(sAttr, bOptional)))
+                                        return false;
+                                }
+                            }
+                            else
+                            {
+                                // Main block
+                                if (!MAPFIND(sName, lPredefinedBlockList_))
+                                {
+                                    pActual = &mMainBlock_;
+                                    pActual->SetName(sName);
+                                    vector<s_str>::iterator iterAttr;
+                                    foreach (iterAttr, lAttribs)
+                                    {
+                                        s_str sAttr = *iterAttr;
+                                        s_str sDefault;
+                                        s_bool bOptional = false;
+                                        if (sAttr.Find("="))
+                                        {
+                                            bOptional = true;
+                                            vector<s_str> lCut = sAttr.Cut("=");
+                                            sAttr = lCut.front();
+                                            sDefault = lCut.back();
+                                        }
+                                        if (!pActual->Add(Attribute(sAttr, bOptional)))
+                                            return false;
+                                    }
+                                }
+                                else
+                                {
+                                    Error(sDefFileName_+":"+uiLineNbr_,
+                                        "Defining a new block named \""+sName+"\", which is the name "
+                                        "of a pre-defined block."
+                                    );
+                                    return false;
+                                }
+
+                                return true;
                             }
                         }
                     }
@@ -178,22 +366,28 @@ s_bool Document::LoadDefinition_()
                             }
                             else
                             {
-                                // It's the main block's end tag
-                                break;
+                                if (pActual == &mMainBlock_)
+                                {
+                                    // It's the main block's end tag
+                                    return true;
+                                }
+                                else
+                                {
+                                    // It's the end tag of a pre-defined block
+                                }
                             }
                         }
                         else
                         {
-                            Error(sFileName_+":"+uiLineNbr_,
+                            Error(sDefFileName_+":"+uiLineNbr_,
                                 "Wrong end tag : \"</"+sLine+">\". Expected : \"</"+pActual->GetName()+">\"."
                             );
-                            bValid_ = false;
-                            break;
+                            return false;
                         }
                     }
                     else if (sLine.Find("<!--"))
                     {
-                        // A comment
+                        // A comment, skip it
                     }
                     else
                     {
@@ -202,23 +396,95 @@ s_bool Document::LoadDefinition_()
                         sLine = sLine.Cut(">").front();
                         vector<s_str> lWords = sLine.Cut(" ", 1);
                         s_str sName = lWords.front();
-                        s_uint uiMax = s_uint::INF;
                         s_uint uiMin = 0;
-                        if (sName[0] == '*')
+                        s_uint uiMax = s_uint::INF;
+                        s_bool bPreDefining = false;
+                        s_bool bRadio = false;
+                        s_str sParent;
+
+                        vector<s_str> lCommands = sName.Cut(":");
+                        sName = lCommands.back();
+                        lCommands.pop_back();
+                        vector<s_str>::iterator iterCommand;
+                        foreach (iterCommand, lCommands)
                         {
-                            sName.EraseFromStart(1);
-                            uiMax = uiMin = 1u;
+                            s_str sLetterCode = s_str((*iterCommand)[0]);
+                            if (sLetterCode == "d")
+                            {
+                                // Pre-definintion
+                                if (pParent)
+                                {
+                                    Error(sDefFileName_+":"+uiLineNbr_,
+                                        "Can't pre-define blocks outside root level (\'d\' command forbidden)."
+                                    );
+                                    return false;
+                                }
+                                else
+                                {
+                                    bPreDefining = true;
+
+                                    s_uint uiStart = iterCommand->Find("[");
+                                    s_uint uiEnd = iterCommand->Find("]");
+                                    if (uiStart && uiEnd)
+                                    {
+                                        // Inheritance
+                                        sParent = iterCommand->ExtractRange(uiStart+1, uiEnd);
+                                    }
+                                }
+                            }
+                            else if (sLetterCode == "l")
+                            {
+                                // Load pre-definition
+                                Error(sDefFileName_+":"+uiLineNbr_,
+                                    "Can't load a pre-defined block using a multiline block (\'l\' command forbidden)."
+                                );
+                                return false;
+                            }
+                            else if (sLetterCode == "n")
+                            {
+                                // Min/max count
+                                s_uint uiStart = iterCommand->Find("[");
+                                s_uint uiEnd = iterCommand->Find("]");
+                                if (uiStart && uiEnd)
+                                {
+                                    s_str sParams = iterCommand->ExtractRange(uiStart+1, uiEnd);
+                                    if (sParams.Find(","))
+                                    {
+                                        vector<s_str> lMinMax = sParams.Cut(",");
+                                        s_str sMin = lMinMax.front();
+                                        s_str sMax = lMinMax.back();
+                                        if (sMin != ".")
+                                            uiMin = s_uint(sMin);
+                                        if (sMax != ".")
+                                            uiMax = s_uint(sMax);
+                                    }
+                                    else
+                                    {
+                                        if (sParams == "*")
+                                            bRadio = true;
+                                        else
+                                        {
+                                            Warning(sDefFileName_+":"+uiLineNbr_,
+                                                "Unknown param : \""+sParams+"\" for \'n\' command. Skipped."
+                                            );
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Warning(sDefFileName_+":"+uiLineNbr_,
+                                        "\'n\' command requires some parameters. Correct synthax is : \"n[params]\". Skipped."
+                                    );
+                                }
+                            }
+                            else
+                            {
+                                Warning(sDefFileName_+":"+uiLineNbr_,
+                                    "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                                );
+                            }
                         }
-                        else if (sName[0] == '$')
-                        {
-                            sName.EraseFromStart(1);
-                            uiMax = 1u;
-                        }
-                        else if (sName[0] == '&')
-                        {
-                            sName.EraseFromStart(1);
-                            uiMin = 1u;
-                        }
+
                         vector<s_str> lAttribs;
                         if (lWords.size() > 1)
                         {
@@ -230,28 +496,73 @@ s_bool Document::LoadDefinition_()
 
                         if (pParent)
                         {
-                            pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
-                            vector<s_str>::iterator iterAttr;
-                            foreach (iterAttr, lAttribs)
+                            if (!MAPFIND(sName, lPredefinedBlockList_))
                             {
-                                s_str sAttr = *iterAttr;
-                                s_str sDefault;
-                                s_bool bOptional = false;
-                                if (sAttr.Find("="))
+                                if (bRadio)
+                                    pActual = pParent->CreateRadioDefBlock(sName);
+                                else
+                                    pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
+
+                                if (!pActual)
+                                    return false;
+
+                                vector<s_str>::iterator iterAttr;
+                                foreach (iterAttr, lAttribs)
                                 {
-                                    bOptional = true;
-                                    vector<s_str> lCut = sAttr.Cut("=");
-                                    sAttr = lCut.front();
-                                    sDefault = lCut.back();
+                                    s_str sAttr = *iterAttr;
+                                    s_str sDefault;
+                                    s_bool bOptional = false;
+                                    if (sAttr.Find("="))
+                                    {
+                                        bOptional = true;
+                                        vector<s_str> lCut = sAttr.Cut("=");
+                                        sAttr = lCut.front();
+                                        sDefault = lCut.back();
+                                    }
+                                    if (!pActual->Add(Attribute(sAttr, bOptional)))
+                                        return false;
                                 }
-                                pActual->Add(Attribute(sAttr, bOptional));
+                                pParent = pActual;
                             }
-                            pParent = pActual;
+                            else
+                            {
+                                Error(sDefFileName_+":"+uiLineNbr_,
+                                    "Defining a new block named \""+sName+"\", which is the name "
+                                    "of a pre-defined block."
+                                );
+                                return false;
+                            }
                         }
                         else
                         {
-                            // Main block
-                            pActual->SetName(sName);
+
+                            if (bPreDefining)
+                            {
+                                // Pre-definition
+                                if (!sParent.IsEmpty())
+                                {
+                                    // Inheritance
+                                    if (MAPFIND(sParent, lPredefinedBlockList_))
+                                    {
+                                        lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
+                                    }
+                                    else
+                                    {
+                                        Error(sDefFileName_+":"+uiLineNbr_,
+                                            "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "
+                                            "inherited."
+                                        );
+                                    }
+                                }
+                                pActual = &lPredefinedBlockList_[sName];
+                                pActual->SetDocument(this);
+                            }
+                            else
+                            {
+                                // Main block
+                                pActual = &mMainBlock_;
+                            }
+
                             pActual->SetName(sName);
                             vector<s_str>::iterator iterAttr;
                             foreach (iterAttr, lAttribs)
@@ -266,7 +577,8 @@ s_bool Document::LoadDefinition_()
                                     sAttr = lCut.front();
                                     sDefault = lCut.back();
                                 }
-                                pActual->Add(Attribute(sAttr, bOptional));
+                                if (!pActual->Add(Attribute(sAttr, bOptional)))
+                                    return false;
                             }
                             pParent = pActual;
                         }
@@ -274,22 +586,26 @@ s_bool Document::LoadDefinition_()
                 }
                 else
                 {
-                    Error(sFileName_+":"+uiLineNbr_, "Invalid line.");
-                    bValid_ = false;
-                    break;
+                    Error(sDefFileName_+":"+uiLineNbr_, "Invalid line :\n    "+sLine);
+                    return false;
                 }
             }
+            uiLineNbr_++;
         }
     }
+    else
+        return false;
 
-    return bValid_;
+    return true;
 }
 
 s_bool Document::Check()
 {
     if (bValid_)
     {
+        sActualFileName_ = sFileName_;
         File mFile(sFileName_, FILE_I);
+        uiLineNbr_ = 1u;
 
         s_ptr<Block> pActual = &mMainBlock_;
         s_ptr<Block> pParent;
@@ -302,18 +618,18 @@ s_bool Document::Check()
 
             #ifdef FROST_LINUX
             // Fix line endings
-            if ((sLine.Length() > 0) && (sLine.Get(sLine.Length()-s_uint(1u)) == '\r'))
+            if ((sLine.Length() > 0) && (sLine.Get(sLine.Length() - 1u) == '\r'))
             {
                 sLine.EraseFromEnd(1u);
             }
             #endif
-
             sLine.Trim(' ');
 
             if (!sLine.IsEmpty())
             {
                 if (CheckLineSynthax_(sLine))
                 {
+
                     // It's a tag
                     if (sLine.Find("/>") && !bValue)
                     {

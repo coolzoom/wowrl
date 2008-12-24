@@ -1,3 +1,25 @@
+<!------------------- How to read this file ? ---------------------->
+<!-- A block preceded by :                                        -->
+<!--   - "d:" indicates definition of the pre-defined block.      -->
+<!--   - "d[X]:" indicates this block inherits from "X" (it takes -->
+<!--     X's attributes and sub-block, and can add new ones).     -->
+<!--   - "l:" indicates loading a pre-defined block.              -->
+<!--   - "n[a,b]:" can only be present "b" times at most, and "a" -->
+<!--     times at least. If b=".", the block can be present as    -->
+<!--     many times as the user whishes, and if a=".", the block  -->
+<!--     can be ommited.                                          -->
+<!--   - "n[*]:" indicates a radio block : it can only be present -->
+<!--     if none of its defined neighbours are.                   -->
+<!--   - "nothing" can be present multiple times or ommited.      -->
+<!-- A member followed by a "=" and a value can be ommited. It    -->
+<!-- will take this value if ommited.                             -->
+<!-- Else, the value cant' be ommited.                            -->
+<!------------------------------------------------------------------>
+
+<!-------------------->
+<!-- FILE STRUCTURE -->
+<!-------------------->
+
 <Zone name>
 
     <!------------>
@@ -5,11 +27,11 @@
     <!------------>
     
     <!--Models : lists all models that could be used by this zone-->
-    <$Models>
+    <n[.,1]:Models>
         <!--Model : binds a file to a model name-->
         <Model name file>
             <!--Texture : applies a texture to this model-->
-            <$Texture>
+            <n[.,1]:Texture>
                 <!--Diffuse : the picture to use as diffuse color-->
                 <Diffuse file/>
             </Texture>
@@ -17,45 +39,45 @@
     </Models>
     
     <!--Sky : the sky model-->
-    <$Sky model/>
+    <n[.,1]:Sky model/>
     
     <!--Terrain : heightmaped terrain, with texture splatting-->
-    <$Terrain>
+    <n[.,1]:Terrain>
         <!--HeightMap : the picture to use as heightmap (black is low, white is high)-->
-        <*HeightMap file/>
+        <n[1,1]:HeightMap file/>
             <!--MinHeight : the height to give to black pixels-->
-            <$MinHeight val="0"/>
+            <n[.,1]:MinHeight val="0"/>
             <!--MaxHeight : the height to give to white pixels-->
-            <$MaxHeight val="1"/>
+            <n[.,1]:MaxHeight val="1"/>
         </HeightMap>
         <!--Dimensions : the size of the terrain (in world units)-->
-        <*Dimensions x="20" y="20"/>
+        <n[1,1]:Dimensions x="20" y="20"/>
         <!--SubDivisions : the number of subdivisions to create (the more there are, the nicer the terrain looks)-->
-        <$SubDivisions nx="1" ny="1"/>
+        <n[.,1]:SubDivisions nx="1" ny="1"/>
         <!--Textures : -->
-        <$Textures>
-            <$Coverage file>
-            <&Diffuse file>
-                <$Tilling nx="1" ny="1"/>
+        <n[.,1]:Textures>
+            <n[.,1]:Coverage file>
+            <n[1,1]:Diffuse file>
+                <n[.,1]:Tilling nx="1" ny="1"/>
             </Diffuse>
-            <$Specular file>
-                <$Tilling nx="1" ny="1"/>
+            <n[.,1]:Specular file>
+                <n[.,1]:Tilling nx="1" ny="1"/>
             </Specular>
         </Textures>
     </Terrain>
     
     <!--Doodads : lists all doodads in the scene-->
-    <$Doodads>
+    <n[.,1]:Doodads>
         <!--Doodad : instance of model-->
         <Doodad name model static="true" shown="false">
             <!--Position : the position of this doodad (in world unit)-->
-            <*Position x="0" y="0" z="0"/>
+            <n[1,1]:Position x="0" y="0" z="0"/>
             <!--Scale : the scale of this doodad (relative : 1 is normal)-->
-            <$Scale x="1" y="1" z="1"/>
+            <n[.,1]:Scale x="1" y="1" z="1"/>
             <!--Orientation : the orientation of this doodad (quaternion)-->
-            <$Orientation x="0" y="0" z="0" w="1"/>
+            <n[.,1]:Orientation x="0" y="0" z="0" w="1"/>
             <!--SelfLighting : ambient light to add to this doodad-->
-            <$SelfLighting r="0" g="0" b="0"/>
+            <n[.,1]:SelfLighting r="0" g="0" b="0"/>
         </Doodad>
     </Doodads>
     
@@ -64,54 +86,54 @@
     <!------------>
     
     <!--AmbientColor : the ambient light to add to all objects in the scene-->
-    <$AmbientColor r="0" g="0" b="0"/>
+    <n[.,1]:AmbientColor r="0" g="0" b="0"/>
     
     <!--Fog : colors pixels depending on their distance-->
-    <*Fog>
+    <n[1,1]:Fog>
         <!--Color : the color to apply-->
-        <*Color r="0" g="0" b="0"/>
+        <n[1,1]:Color r="0" g="0" b="0"/>
         <!--Distance : the range into which pixels are affected-->
-        <$Distance min="100" max="120"/>
+        <n[.,1]:Distance min="100" max="120"/>
     </Fog>
     
     <!--Lights : lists all lights in the scene-->
-    <$Lights>
+    <n[.,1]:Lights>
         <!--Point : a point light-->
         <Point name active="false">
             <!--Position : coordinates (in world units)-->
-            <*Position x="0" y="0" z="0"/>
+            <n[1,1]:Position x="0" y="0" z="0"/>
             <!--Diffuse : the diffuse color-->
-            <$Diffuse r="0" g="0" b="0"/>
+            <n[.,1]:Diffuse r="0" g="0" b="0"/>
             <!--Specular : the specular color-->
-            <$Specular r="0" g="0" b="0"/>
+            <n[.,1]:Specular r="0" g="0" b="0"/>
             <!--Attenuation : attenuation factors-->
-            <$Attenuation constant="0" linear="1" quadratic="0"/>
+            <n[.,1]:Attenuation constant="0" linear="1" quadratic="0"/>
         </Point>
         <!--Directional : a directional light-->
         <Directional name active="false">
             <!--Direction : vector(x, y, z)-->
-            <*Direction x="1" y="0" z="0"/>
+            <n[1,1]:Direction x="1" y="0" z="0"/>
             <!--Diffuse : the diffuse color-->
-            <$Diffuse r="0" g="0" b="0"/>
+            <n[.,1]:Diffuse r="0" g="0" b="0"/>
             <!--Specular : the specular color-->
-            <$Specular r="0" g="0" b="0"/>
+            <n[.,1]:Specular r="0" g="0" b="0"/>
         </Directional>
         <!--Spot : a spot light-->
         <Spot name active="false">
             <!--Position : coordinates (in world units)-->
-            <*Position x="0" y="0" z="0"/>
+            <n[1,1]:Position x="0" y="0" z="0"/>
             <!--Direction : vector(x, y, z)-->
-            <*Direction x="1" y="0" z="0"/>
+            <n[1,1]:Direction x="1" y="0" z="0"/>
             <!--Dimensions : inner and outer angles (defines the cone)-->
-            <*Dimensions inAngle="0.1" outAngle="0.125"/>
+            <n[1,1]:Dimensions inAngle="0.1" outAngle="0.125"/>
             <!--Fallof : transition type (1 is linear)-->
-            <$Fallof val="1.0"/>
+            <n[.,1]:Fallof val="1.0"/>
             <!--Diffuse : the diffuse color-->
-            <$Diffuse r="0" g="0" b="150"/>
+            <n[.,1]:Diffuse r="0" g="0" b="150"/>
             <!--Specular : the specular color-->
-            <$Specular r="0" g="0" b="150"/>
+            <n[.,1]:Specular r="0" g="0" b="150"/>
             <!--Attenuation : attenuation factors-->
-            <$Attenuation constant="0" linear="1" quadratic="0"/>
+            <n[.,1]:Attenuation constant="0" linear="1" quadratic="0"/>
         </Spot>
     </Lights>
     
@@ -120,16 +142,14 @@
     <!------------->
     
     <!--Scripts : lists Lua scripts-->
-    <$Scripts>
+    <n[.,1]:Scripts>
         <!--OnLoad : executed once, just after loading-->
-        <$OnLoad>
-        </OnLoad>
+        <n[.,1]:OnLoad/>
         <!--OnUpdate : executed on each frame-->
-        <$OnUpdate>
-        </OnUpdate>
+        <n[.,1]:OnUpdate/>
         <!--OnEvent : executed when a registered event occurs-->
-        <$OnEvent>
-        </OnEvent>
+        <n[.,1]:OnEvent/>
     </Scripts>
     
 </Zone>
+

@@ -1,0 +1,214 @@
+<!------------------- How to read this file ? ---------------------->
+<!-- A block preceded by :                                        -->
+<!--   - "d:" indicates definition of the pre-defined block.      -->
+<!--   - "d[X]:" indicates this block inherits from "X" (it takes -->
+<!--     X's attributes and sub-block, and can add new ones).     -->
+<!--   - "l:" indicates loading a pre-defined block.              -->
+<!--   - "n[a,b]:" can only be present "b" times at most, and "a" -->
+<!--     times at least. If b=".", the block can be present as    -->
+<!--     many times as the user whishes, and if a=".", the block  -->
+<!--     can be ommited.                                          -->
+<!--   - "n[*]:" indicates a radio block : it can only be present -->
+<!--     if none of its defined neighbours are.                   -->
+<!--   - "nothing" can be present multiple times or ommited.      -->
+<!-- A member followed by a "=" and a value can be ommited. It    -->
+<!-- will take this value if ommited.                             -->
+<!-- Else, the value cant' be ommited.                            -->
+<!------------------------------------------------------------------>
+
+<!--------------------->
+<!-- PRE-DEFINITIONS -->
+<!--------------------->
+
+<d:FontString name inherits="" virtual="false" setAllPoints="false" hidden="false" text="" spacing="0.0" outline="NONE" monochrome="false" nonspacewrap="false" justifyV="MIDDLE" justifyH="CENTER" maxLines="0" font="" bytes="255">
+    
+    <n[.,1]:Size>
+        <n[*]:AbsDimension x y/>
+        <n[*]:RelDimension x="1.0" y="1.0"/>
+    </Size>
+    
+    <n[.,1]:Anchors>
+        <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
+            <n[.,1]:Offset>
+                <n[*]:AbsDimension x="0" y="0"/>
+                <n[*]:RelDimension x="0.0" y="0.0"/>
+            </Offset>
+        </Anchor>
+    </Anchors>
+    
+    <n[.,1]:FontHeight>
+        <n[*]:AbsValue x/>
+        <n[*]:RelValue x/>
+    </FontHeight>
+    
+    <n[.,1]:Color a="1.0" r="0.0" g="0.0" b="0.0"/>
+    
+    <n[.,1]:Shadow>
+        <n[.,1]:Color a="1.0" r="0.0" g="0.0" b="0.0"/>
+        <n[.,1]:Offset>
+            <n[*]:AbsDimension x="0" y="0"/>
+            <n[*]:RelDimension x="0.0" y="0.0"/>
+        </Offset>
+    </Shadow>
+    
+</FontString>
+
+<d:Texture name inherits="" virtual="false" setAllPoints="false" hidden="false" file="" alphaMode="BLEND">
+
+    <n[.,1]:Size>
+        <n[*]:AbsDimension x y/>
+        <n[*]:RelDimension x="1.0" y="1.0"/>
+    </Size>
+    
+    <n[.,1]:Anchors>
+        <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
+            <n[.,1]:Offset>
+                <n[*]:AbsDimension x="0" y="0"/>
+                <n[*]:RelDimension x="0.0" y="0.0"/>
+            </Offset>
+        </Anchor>
+    </Anchors>
+    
+    <n[.,1]:TexCoords left="0.0" right="1.0" top="0.0" bottom="1.0"/>
+    
+    <n[.,1]:Color a="1.0" r="0.0" g="0.0" b="0.0"/>
+    
+    <n[.,1]:Gradient orientation="HORIZONTAL">
+        <n[.,1]:MinColor a="1.0" r="0.0" g="0.0" b="0.0"/>
+        <n[.,1]:MaxColor a="1.0" r="0.0" g="0.0" b="0.0"/>
+    </Gradient>
+    
+</Texture>
+
+<d:Frame name inherits="" virtual="false" setAllPoints="false" hidden="false" alpha="1.0" parent="" toplevel="false" movable="false" resizable="false" frameStrata="PARENT" enableMouse="false" enableKeyboard="false">
+
+    <n[.,1]:Size>
+        <n[*]:AbsDimension x y/>
+        <n[*]:RelDimension x="1.0" y="1.0"/>
+    </Size>
+    
+    <n[.,1]:Anchors>
+        <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
+            <n[.,1]:Offset>
+                <n[*]:AbsDimension x="0" y="0"/>
+                <n[*]:RelDimension x="0.0" y="0.0"/>
+            </Offset>
+        </Anchor>
+    </Anchors>
+    
+    <n[.,1]:TitleRegion>
+        <n[.,1]:Size>
+            <n[*]:AbsDimension x y/>
+            <n[*]:RelDimension x="1.0" y="1.0"/>
+        </Size>
+        
+        <n[.,1]:Anchors>
+            <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
+                <n[*]:AbsDimension x="0" y="0"/>
+                <n[*]:RelDimension x="0.0" y="0.0"/>
+            </Anchor>
+        </Anchors>
+    </TitleRegion>
+    
+    <n[.,1]:Backdrop bgFile="" edgeFile="" tile="false">
+        <n[.,1]:BackgroundInsets>
+            <n[*]:AbsInset left="0" right="0" top="0" bottom="0"/>
+            <n[*]:RelInset left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+        </BackgroundInsets>
+        
+        <n[.,1]:TileSize>
+            <n[*]:AbsValue x/>
+            <n[*]:RelValue x/>
+        </TileSize>
+        
+        <n[.,1]:EdgeSize>
+            <n[*]:AbsValue x/>
+            <n[*]:RelValue x/>
+        </EdgeSize>
+    </Backdrop>
+    
+    <n[.,1]:HitRectInsets>
+        <n[*]:AbsInset left="0" right="0" top="0" bottom="0"/>
+        <n[*]:RelInset left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+    </HitRectInsets>
+    
+    <n[.,1]:Layers>
+        <Layer level="ARTWORK">
+            <l:Texture/>
+            <l:FontString/>
+        </Layer>
+    </Layers>
+    
+    <n[.,1]:Frames>
+        <l:Frame/>
+        <l:Button/>
+        <l:EditBox/>
+        <l:ScrollingMessageFrame/>
+        <l:Slider/>
+        <l:StatusBar/>
+    </Frames>
+    
+    <n[.,1]:Scripts>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnUpdate/>
+    </Scripts>
+    
+</Frame>
+
+<d[Frame]:Button>
+</Button>
+
+<d[Frame]:EditBox>
+</EditBox>
+
+<d[Frame]:ScrollingMessageFrame>
+</Frame>
+
+<d[Frame]:Slider>
+</Slider>
+
+<d[Frame]:StatusBar>
+</StatusBar>
+
+<!-------------------->
+<!-- FILE STRUCTURE -->
+<!-------------------->
+
+<Ui>
+
+    <!------------>
+    <!--Includes-->
+    <!------------>
+
+    <!--Include : Parses another XML file -->
+    <Include file/>
+    <!--Script : Parses a Lua file -->    
+    <Script file/>
+    
+    <!----------->
+    <!--Objects-->
+    <!----------->
+    
+    <l:Frame/>
+    <l:Button/>
+    <l:EditBox/>
+    <l:ScrollingMessageFrame/>
+    <l:Slider/>
+    <l:StatusBar/>
+    
+</Ui>
+

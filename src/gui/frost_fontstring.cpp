@@ -13,6 +13,6 @@ using namespace Frost::GUI;
 
 const s_str FontString::CLASS_NAME = "GUI::FontString";
 
-FontString::FontString(lua_State* luaVM) : LayeredRegion(luaVM)
+FontString::FontString() : LayeredRegion()
 {
 }

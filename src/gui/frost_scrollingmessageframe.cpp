@@ -13,6 +13,6 @@ using namespace Frost::GUI;
 
 const s_str ScrollingMessageFrame::CLASS_NAME = "GUI::ScrollingMessageFrame";
 
-ScrollingMessageFrame::ScrollingMessageFrame(lua_State* luaVM) : Frame(luaVM)
+ScrollingMessageFrame::ScrollingMessageFrame() : Frame()
 {
 }

@@ -20,8 +20,19 @@ namespace Frost
         {
         public :
 
-            static const char className[];
-            static Lunar<FontString>::RegType methods[];
+            FontString();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+        };
+
+        class LuaFontString : public LuaLayeredRegion
+        {
+        public :
+
+            LuaFontString(lua_State* pLua);
 
             // Glues
             // Inherits from FontInstance
@@ -51,10 +62,13 @@ namespace Frost
             /**/ int SetText_L(lua_State*) { return 0; }
             /**/ int SetTextHeight_L(lua_State*) { return 0; }
 
-            FontString(lua_State* pLua);
+            static const char className[];
+            static Lunar<LuaFontString>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<FontString> pFontStringParent_;
 
         };
     }

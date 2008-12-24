@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1225485930 source:/home/kalith/Programmation/Frost/include/frost_stableheaders.h
+1229171617 source:/home/kalith/Programmation/Frost/include/frost_stableheaders.h
 	<OgrePrerequisites.h>
 	<OIS/OISPrereqs.h>
 	"frost_lib_std.h"
@@ -104,7 +104,7 @@
 	<fstream>
 	<ios>
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_lib_utils.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_lib_utils.h
 	"utils/frost_utils.h"
 	"utils/frost_utils_bool.h"
 	"utils/frost_utils_int.h"
@@ -127,13 +127,13 @@
 	"utils/frost_utils_stdhelper.h"
 	"utils/frost_utils_manager.h"
 
-1225383046 /home/kalith/Programmation/Frost/include/utils/frost_utils.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils.h
 	<string>
 	<vector>
 	<fstream>
 	<map>
 
-1225380058 /home/kalith/Programmation/Frost/include/utils/frost_utils_bool.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_bool.h
 	"frost_utils.h"
 
 1229002413 /home/kalith/Programmation/Frost/include/utils/frost_utils_int.h
@@ -144,19 +144,19 @@
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1229012265 /home/kalith/Programmation/Frost/include/utils/frost_utils_float.h
+1229105622 /home/kalith/Programmation/Frost/include/utils/frost_utils_float.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1229002413 /home/kalith/Programmation/Frost/include/utils/frost_utils_double.h
+1229105622 /home/kalith/Programmation/Frost/include/utils/frost_utils_double.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1226008022 /home/kalith/Programmation/Frost/include/utils/frost_utils_str.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_str.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1226265500 /home/kalith/Programmation/Frost/include/utils/frost_utils_var.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_var.h
 	"frost_utils.h"
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
@@ -169,17 +169,17 @@
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1224782008 /home/kalith/Programmation/Frost/include/utils/frost_utils_math.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_math.h
 
 1227210861 /home/kalith/Programmation/Frost/include/utils/frost_utilsmanager.h
 	"frost_utils.h"
 	"frost_utils_manager.h"
 
-1225479094 /home/kalith/Programmation/Frost/include/utils/frost_utils_manager.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_manager.h
 	"frost_utils_ptr.h"
 	"frost_utils_str.h"
 
-1228853598 /home/kalith/Programmation/Frost/include/utils/frost_utils_ptr.h
+1229082833 /home/kalith/Programmation/Frost/include/utils/frost_utils_ptr.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 	"frost_utils_log.h"
@@ -193,7 +193,7 @@
 	"frost_utils_bool.h"
 	"frost_utils_log.h"
 
-1228853598 /home/kalith/Programmation/Frost/include/utils/frost_utils_refptr.h
+1229082833 /home/kalith/Programmation/Frost/include/utils/frost_utils_refptr.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 	"frost_utils_bool.h"
@@ -209,12 +209,12 @@
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1229002431 /home/kalith/Programmation/Frost/include/utils/frost_utils_vector.h
+1229640306 /home/kalith/Programmation/Frost/include/utils/frost_utils_vector.h
 	"frost_utils.h"
 	"frost_utils_float.h"
 	"frost_utils_bool.h"
 
-1225546840 /home/kalith/Programmation/Frost/include/utils/frost_utils_directory.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_directory.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 	"frost_utils_str.h"
@@ -223,10 +223,10 @@
 1227359425 /home/kalith/Programmation/Frost/include/utils/frost_utils_file.h
 	"frost_utils.h"
 
-1228853598 /home/kalith/Programmation/Frost/include/utils/frost_utils_point.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_point.h
 	"frost_utils.h"
 
-1225380058 /home/kalith/Programmation/Frost/include/utils/frost_utils_tester.h
+1229171617 /home/kalith/Programmation/Frost/include/utils/frost_utils_tester.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
@@ -234,9 +234,9 @@
 	"frost_utils.h"
 	"frost_utils_double.h"
 
-1226262070 /home/kalith/Programmation/Frost/include/frost_macros.h
+1230038602 /home/kalith/Programmation/Frost/include/frost_macros.h
 
-1226076370 /home/kalith/Programmation/Frost/include/frost_lua.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_lua.h
 	"lua/lualib.h"
 	"lua/lauxlib.h"
 	"lua/lua.h"
@@ -270,15 +270,15 @@
 	<stdio.h>
 	"lua.h"
 
-1192738054 /home/kalith/Programmation/Frost/dependencies/lua/lunar.h
+1229171617 /home/kalith/Programmation/Frost/dependencies/lua/lunar.h
 	"lua.h"
 	"lauxlib.h"
 	<string>
 
-1228860634 /home/kalith/Programmation/Frost/include/frost.h
+1230043987 /home/kalith/Programmation/Frost/include/frost.h
 	"frost_stableheaders.h"
 
-1225485930 /home/kalith/Programmation/Frost/include/frost_stableheaders.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_stableheaders.h
 	<OgrePrerequisites.h>
 	<OIS/OISPrereqs.h>
 	"frost_lib_std.h"
@@ -287,10 +287,10 @@
 	"frost_lua.h"
 	"frost_engine.h"
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_engine.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_engine.h
 	"frost.h"
 
-1225645000 /home/kalith/Programmation/Frost/include/frost_lua_utils.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_lua_utils.h
 	"frost.h"
 
 1229030087 source:/home/kalith/Programmation/Frost/src/frost_camera.cpp
@@ -903,14 +903,14 @@
 1226271698 /home/kalith/Programmation/Frost/include/frost_timers.h
 	"frost.h"
 
-1226575052 /home/kalith/Programmation/Frost/include/frost_modelmanager.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_modelmanager.h
 	"frost.h"
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_model.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_model.h
 	"frost.h"
 	"frost_movableobject.h"
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_animmanager.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_animmanager.h
 	"frost.h"
 	<OgreVector3.h>
 	<OgreQuaternion.h>
@@ -932,7 +932,7 @@
 	"frost.h"
 	"frost_unit.h"
 
-1229030783 source:/home/kalith/Programmation/Frost/src/frost_engine.cpp
+1229030945 source:/home/kalith/Programmation/Frost/src/frost_engine.cpp
 	"frost_engine.h"
 	"frost_timemanager.h"
 	"frost_eventmanager.h"
@@ -956,7 +956,7 @@
 	<OgreMaterialManager.h>
 	<OgreUnifiedHighLevelGpuProgram.h>
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_timemanager.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_timemanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
@@ -964,19 +964,19 @@
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_inputmanager.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_inputmanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
-1228853619 /home/kalith/Programmation/Frost/include/frost_fontmanager.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_fontmanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
-1226003414 /home/kalith/Programmation/Frost/include/frost_guimanager.h
+1230083297 /home/kalith/Programmation/Frost/include/frost_guimanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
-1225464116 /home/kalith/Programmation/Frost/include/frost_localemanager.h
+1229171617 /home/kalith/Programmation/Frost/include/frost_localemanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
@@ -1102,7 +1102,7 @@
 	"frost_eventreceiver.h"
 	"frost_eventmanager.h"
 
-1228853619 source:/home/kalith/Programmation/Frost/src/frost_fontmanager.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/frost_fontmanager.cpp
 	"frost_fontmanager.h"
 	<OgreFontManager.h>
 
@@ -1159,10 +1159,10 @@
 	"frost_gfx.h"
 	"OgreSceneManager.h"
 
-1228853619 source:/home/kalith/Programmation/Frost/src/frost_localemanager.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/frost_localemanager.cpp
 	"frost_localemanager.h"
 
-1229030620 source:/home/kalith/Programmation/Frost/src/frost_main.cpp
+1229037437 source:/home/kalith/Programmation/Frost/src/frost_main.cpp
 	"frost.h"
 	"frost_model.h"
 	"frost_modelmanager.h"
@@ -1207,7 +1207,7 @@
 	"frost.h"
 	"frost_movableobject.h"
 
-1228861159 source:/home/kalith/Programmation/Frost/src/frost_material.cpp
+1229035481 source:/home/kalith/Programmation/Frost/src/frost_material.cpp
 	"frost_material.h"
 	<OgreMaterial.h>
 	<OgreTechnique.h>
@@ -1226,7 +1226,7 @@
 	<OgreRenderTarget.h>
 	<OgreRenderTexture.h>
 
-1229030808 source:/home/kalith/Programmation/Frost/src/frost_movableobject.cpp
+1229033501 source:/home/kalith/Programmation/Frost/src/frost_movableobject.cpp
 	"frost_movableobject.h"
 	"frost_engine.h"
 	"frost_gfx.h"
@@ -1363,53 +1363,53 @@
 	"frost_materialmanager.h"
 	"frost_material.h"
 
-1228504852 source:/home/kalith/Programmation/Frost/src/gui/frost_anchor.cpp
+1230083474 source:/home/kalith/Programmation/Frost/src/gui/frost_anchor.cpp
 	"frost_gui.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
 
-1225644610 /home/kalith/Programmation/Frost/include/frost_gui.h
+1230083787 /home/kalith/Programmation/Frost/include/frost_gui.h
 	"frost.h"
 
-1225498760 /home/kalith/Programmation/Frost/include/gui/frost_gui_uiobject.h
+1230083705 /home/kalith/Programmation/Frost/include/gui/frost_gui_uiobject.h
 	"frost.h"
 	"frost_gui.h"
 	"frost_gfx.h"
 
-1225834508 /home/kalith/Programmation/Frost/include/gui/frost_gui_frame.h
+1230083190 /home/kalith/Programmation/Frost/include/gui/frost_gui_frame.h
 	"frost.h"
 	"gui/frost_gui_uiobject.h"
 	"frost_eventreceiver.h"
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_button.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_button.cpp
 	"gui/frost_gui_button.h"
 	"gui/frost_gui_frame.h"
 
-1225464118 /home/kalith/Programmation/Frost/include/gui/frost_gui_button.h
+1230046082 /home/kalith/Programmation/Frost/include/gui/frost_gui_button.h
 	"frost.h"
 	"gui/frost_gui_frame.h"
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_editbox.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_editbox.cpp
 	"gui/frost_gui_editbox.h"
 	"gui/frost_gui_frame.h"
 
-1225464118 /home/kalith/Programmation/Frost/include/gui/frost_gui_editbox.h
+1230046082 /home/kalith/Programmation/Frost/include/gui/frost_gui_editbox.h
 	"frost.h"
 	"gui/frost_gui_frame.h"
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_fontstring.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_fontstring.cpp
 	"gui/frost_gui_fontstring.h"
 	"gui/frost_gui_layeredregion.h"
 
-1225464118 /home/kalith/Programmation/Frost/include/gui/frost_gui_fontstring.h
+1230046082 /home/kalith/Programmation/Frost/include/gui/frost_gui_fontstring.h
 	"frost.h"
 	"gui/frost_gui_layeredregion.h"
 
-1225464118 /home/kalith/Programmation/Frost/include/gui/frost_gui_layeredregion.h
+1230046082 /home/kalith/Programmation/Frost/include/gui/frost_gui_layeredregion.h
 	"frost.h"
 	"gui/frost_gui_uiobject.h"
 
-1225832126 source:/home/kalith/Programmation/Frost/src/gui/frost_frame.cpp
+1230083214 source:/home/kalith/Programmation/Frost/src/gui/frost_frame.cpp
 	"gui/frost_gui_frame.h"
 	"gui/frost_gui_layeredregion.h"
 	"gui/frost_gui_uiobject.h"
@@ -1418,19 +1418,19 @@
 	"frost_timemanager.h"
 	"frost_event.h"
 
-1225656422 source:/home/kalith/Programmation/Frost/src/gui/frost_frame_glues.cpp
+1230083130 source:/home/kalith/Programmation/Frost/src/gui/frost_frame_glues.cpp
 	"gui/frost_gui_frame.h"
 
-1228853619 source:/home/kalith/Programmation/Frost/src/gui/frost_guimanager.cpp
+1230083297 source:/home/kalith/Programmation/Frost/src/gui/frost_guimanager.cpp
 	"frost_guimanager.h"
 	"gui/frost_gui_uiobject.h"
 	"frost_gui.h"
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_layeredregion.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_layeredregion.cpp
 	"gui/frost_gui_layeredregion.h"
 	"gui/frost_gui_uiobject.h"
 
-1226002478 source:/home/kalith/Programmation/Frost/src/gui/frost_lunar.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_lunar.cpp
 	"frost_gui.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
@@ -1443,27 +1443,27 @@
 	"gui/frost_gui_fontstring.h"
 	"gui/frost_gui_texture.h"
 
-1225464120 /home/kalith/Programmation/Frost/include/gui/frost_gui_scrollingmessageframe.h
+1230046082 /home/kalith/Programmation/Frost/include/gui/frost_gui_scrollingmessageframe.h
 	"frost.h"
 	"gui/frost_gui_frame.h"
 
-1225464120 /home/kalith/Programmation/Frost/include/gui/frost_gui_slider.h
+1230046082 /home/kalith/Programmation/Frost/include/gui/frost_gui_slider.h
 	"frost.h"
 	"gui/frost_gui_frame.h"
 
-1225464120 /home/kalith/Programmation/Frost/include/gui/frost_gui_statusbar.h
+1230046082 /home/kalith/Programmation/Frost/include/gui/frost_gui_statusbar.h
 	"frost.h"
 	"gui/frost_gui_frame.h"
 
-1225464120 /home/kalith/Programmation/Frost/include/gui/frost_gui_texture.h
+1230046083 /home/kalith/Programmation/Frost/include/gui/frost_gui_texture.h
 	"frost.h"
 	"gui/frost_gui_layeredregion.h"
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_scrollingmessageframe.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_scrollingmessageframe.cpp
 	"gui/frost_gui_scrollingmessageframe.h"
 	"gui/frost_gui_frame.h"
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_slider.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_slider.cpp
 	"gui/frost_gui_slider.h"
 	"gui/frost_gui_frame.h"
 
@@ -1477,7 +1477,7 @@
 	<OgrePass.h>
 	<OgreTextureUnitState.h>
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_statusbar.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_statusbar.cpp
 	"gui/frost_gui_statusbar.h"
 	"gui/frost_gui_frame.h"
 
@@ -1488,22 +1488,22 @@
 	"frost.h"
 	"frost_gfx.h"
 
-1225496416 source:/home/kalith/Programmation/Frost/src/gui/frost_texture.cpp
+1230043987 source:/home/kalith/Programmation/Frost/src/gui/frost_texture.cpp
 	"gui/frost_gui_texture.h"
 	"gui/frost_gui_layeredregion.h"
 
-1228504852 source:/home/kalith/Programmation/Frost/src/gui/frost_uiobject.cpp
+1230083705 source:/home/kalith/Programmation/Frost/src/gui/frost_uiobject.cpp
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
 	"frost_guimanager.h"
 	"frost_material.h"
 
-1225644818 source:/home/kalith/Programmation/Frost/src/gui/frost_uiobject_glues.cpp
+1230083728 source:/home/kalith/Programmation/Frost/src/gui/frost_uiobject_glues.cpp
 	"gui/frost_gui_uiobject.h"
 	"frost_gui.h"
 	"frost_guimanager.h"
 
-1228504852 source:/home/kalith/Programmation/Frost/src/lua/frost_lua.cpp
+1230045545 source:/home/kalith/Programmation/Frost/src/lua/frost_lua.cpp
 	"frost_lua.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
@@ -1516,7 +1516,7 @@
 	"gui/frost_gui_fontstring.h"
 	"gui/frost_gui_texture.h"
 
-1226076370 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_glues.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_glues.cpp
 	"frost_lua.h"
 	"frost_inputmanager.h"
 	"frost_localemanager.h"
@@ -1524,28 +1524,28 @@
 	"frost_eventmanager.h"
 	"frost_event.h"
 
-1226077042 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils.cpp
 	"frost_lua.h"
 
-1225645092 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_argument.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_argument.cpp
 	"frost_lua_utils.h"
 
-1226066494 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_data.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_data.cpp
 	"frost_lua_utils.h"
 
-1225645202 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_function.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_function.cpp
 	"frost_lua_utils.h"
 
-1226066508 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_returnvalue.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/lua/frost_lua_utils_returnvalue.cpp
 	"frost_lua_utils.h"
 
-1226329090 source:/home/kalith/Programmation/Frost/src/model/frost_animmanager.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/model/frost_animmanager.cpp
 	"frost_animmanager.h"
 	"frost_model.h"
 	<OgreAnimationState.h>
 	<OgreEntity.h>
 
-1229027180 source:/home/kalith/Programmation/Frost/src/model/frost_model.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/model/frost_model.cpp
 	"frost_model.h"
 	"frost_modeldata.h"
 	"frost_animmanager.h"
@@ -1609,30 +1609,30 @@
 	"OgreAnimationTrack.h"
 	"OgreAnimationState.h"
 
-1226575274 source:/home/kalith/Programmation/Frost/src/model/frost_modelmanager.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/model/frost_modelmanager.cpp
 	"frost_modelmanager.h"
 	"frost_animmanager.h"
 	"frost_model.h"
 	"frost_modeldata.h"
 
-1225500116 source:/home/kalith/Programmation/Frost/src/model/frost_modelpart.cpp
+1229171618 source:/home/kalith/Programmation/Frost/src/model/frost_modelpart.cpp
 	"frost_model.h"
 	"frost_material.h"
 	<OgreEntity.h>
 	<OgreSubEntity.h>
 
-1227211185 source:/home/kalith/Programmation/Frost/src/parsers/frost_unitmanager_parser.cpp
+1230038680 source:/home/kalith/Programmation/Frost/src/parsers/frost_unitmanager_parser.cpp
 	"frost_unitmanager.h"
 	"frost_character.h"
 	"frost_creature.h"
 	"frost_modelmanager.h"
 	"frost_xml_document.h"
 
-1226528434 /home/kalith/Programmation/Frost/include/frost_xml_document.h
+1230037621 /home/kalith/Programmation/Frost/include/frost_xml_document.h
 	"frost.h"
 	"frost_xml_block.h"
 
-1226527666 /home/kalith/Programmation/Frost/include/frost_xml_block.h
+1230083526 /home/kalith/Programmation/Frost/include/frost_xml_block.h
 	"frost.h"
 
 1225464118 source:/home/kalith/Programmation/Frost/src/path/frost_path.cpp
@@ -1657,15 +1657,15 @@
 	"frost_path_manualpath.h"
 	"frost_path_smoothpath.h"
 
-1226528434 source:/home/kalith/Programmation/Frost/src/xml/frost_xml_block.cpp
+1230083130 source:/home/kalith/Programmation/Frost/src/xml/frost_xml_block.cpp
 	"frost_xml_block.h"
 	"frost_xml_document.h"
 
-1227279377 source:/home/kalith/Programmation/Frost/src/xml/frost_xml_document.cpp
+1230078639 source:/home/kalith/Programmation/Frost/src/xml/frost_xml_document.cpp
 	"frost_xml_document.h"
 	"frost_xml_block.h"
 
-1228853239 source:/home/kalith/Programmation/Frost/src/gui/frost_spritemanager.cpp
+1230083130 source:/home/kalith/Programmation/Frost/src/gui/frost_spritemanager.cpp
 	"frost_spritemanager.h"
 	"frost_sprite.h"
 	"frost_material.h"
@@ -1680,13 +1680,52 @@
 
 1227920119 /home/kalith/Programmation/ogre/OgreMain/include/config.h
 
-1228860903 source:/home/kalith/Programmation/Frost/src/frost_decal.cpp
+1229637385 source:/home/kalith/Programmation/Frost/src/frost_decal.cpp
 	"frost_decal.h"
 	<OgreFrustum.h>
 	<OgreSceneNode.h>
 	<OgrePass.h>
 
-1228860924 /home/kalith/Programmation/Frost/include/frost_decal.h
+1229034622 /home/kalith/Programmation/Frost/include/frost_decal.h
 	"frost.h"
 	"frost_movableobject.h"
+
+1230083736 source:/home/kalith/Programmation/Frost/src/parsers/frost_guimanager_parser.cpp
+	"frost_guimanager.h"
+	"frost_gui.h"
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_frame.h"
+	"frost_xml_document.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_button_glues.cpp
+	"gui/frost_gui_button.h"
+	"gui/frost_gui_frame.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_editbox_glues.cpp
+	"gui/frost_gui_editbox.h"
+	"gui/frost_gui_frame.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_fontstring_glues.cpp
+	"gui/frost_gui_fontstring.h"
+	"gui/frost_gui_layeredregion.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_layeredregion_glues.cpp
+	"gui/frost_gui_layeredregion.h"
+	"gui/frost_gui_uiobject.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_scrollingmessageframe_glues.cpp
+	"gui/frost_gui_scrollingmessageframe.h"
+	"gui/frost_gui_frame.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_slider_glues.cpp
+	"gui/frost_gui_slider.h"
+	"gui/frost_gui_frame.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_statusbar_glues.cpp
+	"gui/frost_gui_statusbar.h"
+	"gui/frost_gui_frame.h"
+
+1230046031 source:/home/kalith/Programmation/Frost/src/gui/frost_texture_glues.cpp
+	"gui/frost_gui_texture.h"
+	"gui/frost_gui_layeredregion.h"
 

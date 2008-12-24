@@ -45,7 +45,7 @@ namespace Frost
 
         void           Initialize();
 
-        s_uint               AddUIObject(s_ptr<GUI::UIObject> pObj);
+        s_bool               AddUIObject(s_ptr<GUI::UIObject> pObj);
         void                 RemoveUIObject(s_ptr<GUI::UIObject> pObj);
         s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName);
 
@@ -54,6 +54,8 @@ namespace Frost
         void           LoadUI();
         void           CloseUI();
         void           ReloadUI();
+
+        void ParseXMLFile(const s_str& sFile);
 
         static const s_str CLASS_NAME;
 
@@ -83,6 +85,10 @@ namespace Frost
     private :
 
         void LoadAddOn(s_str sName, s_str sFolder);
+
+        s_bool ParseFrameAttributes_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
+        s_bool ParseSizeBlock_(s_ptr<GUI::UIObject> pObject, s_ptr<XML::Block> pMainBlock);
+        s_bool ParseAnchorsBlock_(s_ptr<GUI::UIObject> pObject, s_ptr<XML::Block> pMainBlock);
 
         lua_State* pLua_;
 

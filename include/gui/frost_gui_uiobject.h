@@ -65,7 +65,7 @@ namespace Frost
         public :
 
             /// Contructor.
-            UIObject(lua_State* luaVM);
+            UIObject();
 
             /// Destructor.
             virtual ~UIObject();
@@ -90,6 +90,12 @@ namespace Frost
             /** \return This widget's name
             */
             const s_str&    GetName() const;
+
+            /// Sets this widget's name.
+            /** \param sName This widget's name
+            *   \note Can only be called once.
+            */
+            void            SetName(const s_str& sName);
 
             /// Changes this widget's parent.
             /** \param pParent The new parent
@@ -183,10 +189,10 @@ namespace Frost
             */
             const s_float&  GetRelHeight() const;
 
-            /// Returns the type of this widget.
-            /** \return The type of this widget (see ObjectType)
+            /// Returns an array containing all the types of this widget.
+            /** \return  An array containing all the types of this widget
             */
-            ObjectType      GetObjectType() const;
+            std::vector<s_str> GetObjectType() const;
 
             /// Returns the vertical position of this widget's bottom border.
             /** \return The vertical position of this widget's bottom border
@@ -232,12 +238,27 @@ namespace Frost
             *   \param iX             The horizontal offset
             *   \param iY             The vertical offset
             */
-            void            SetPoint(
+            void            SetAbsPoint(
                                 AnchorPoint mPoint,
                                 s_ptr<UIObject> pObj,
                                 AnchorPoint mRelativePoint,
                                 const s_int& iX,
                                 const s_int& iY
+            );
+
+            /// Creates/modifies an anchor.
+            /** \param mPoint         The anchor point for this object
+            *   \param pObj           The anchor parent
+            *   \param mRelativePoint The anchor point for the parent
+            *   \param fX             The horizontal offset
+            *   \param fY             The vertical offset
+            */
+            void            SetRelPoint(
+                                AnchorPoint mPoint,
+                                s_ptr<UIObject> pObj,
+                                AnchorPoint mRelativePoint,
+                                const s_float& fX,
+                                const s_float& fY
             );
 
             /// Returns the number of defined anchors.
@@ -256,7 +277,62 @@ namespace Frost
             */
             const s_uint&   GetID() const;
 
-            // Glues
+            /// Sets this widget's unique ID.
+            /** \param uiID The ID
+            *   \note Can only be called once.
+            */
+            void            SetID(const s_uint& uiID);
+
+            /// Returns this widget's Lua glue.
+            /** \return This widget's Lua glue
+            */
+            s_ptr<LuaUIObject> GetGlue();
+
+            static const s_str CLASS_NAME;
+
+        protected :
+
+            void UpdateBorders_();
+
+            s_str           sName_;
+            s_uint          uiID_;
+            ObjectType      mType_;
+            s_ptr<UIObject> pParent_;
+
+            s_ptr<LuaUIObject> pGlue_;
+
+            std::vector<s_str> lType_;
+
+            std::map<AnchorPoint, Anchor> lAnchorList_;
+            std::vector< s_ptr<Anchor> >  lAnchorStack_;
+            s_int                         lBorderList_[4];
+
+            s_float fAlpha_;
+            s_bool  bIsShown_;
+            s_uint  uiAbsWidth_;
+            s_uint  uiAbsHeight_;
+            s_float fRelWidth_;
+            s_float fRelHeight_;
+
+            RenderTarget       mTarget_;
+            s_refptr<Material> pMaterial_;
+
+            s_bool bUpdateBorders_;
+        };
+
+        /// UIObject Lua glue
+        class LuaUIObject
+        {
+        public :
+
+            /// Contructor.
+            LuaUIObject(lua_State* luaVM);
+
+            /// Destructor.
+            virtual ~LuaUIObject();
+
+            s_ptr<UIObject> GetParent();
+
             int _GetAlpha(lua_State*);
             int _GetName(lua_State*);
             int _GetObjectType(lua_State*);
@@ -289,37 +365,13 @@ namespace Frost
             int GetDataTable(lua_State *L);
 
             static const char className[];
-            static Lunar<UIObject>::RegType methods[];
+            static Lunar<LuaUIObject>::RegType methods[];
             static const s_str CLASS_NAME;
 
         protected :
 
-            void UpdateBorders_();
-
-            s_str           sName_;
-            s_uint          uiID_;
-            ObjectType      mType_;
             s_ptr<UIObject> pParent_;
 
-            std::vector<s_str> lType_;
-
-            std::map<AnchorPoint, Anchor> lAnchorList_;
-            std::vector< s_ptr<Anchor> >  lAnchorStack_;
-            s_int                         lBorderList_[4];
-
-            s_float fAlpha_;
-            s_bool  bIsShown_;
-            s_uint  uiAbsWidth_;
-            s_uint  uiAbsHeight_;
-            s_float fRelWidth_;
-            s_float fRelHeight_;
-
-            RenderTarget       mTarget_;
-            s_refptr<Material> pMaterial_;
-
-            s_bool bUpdateBorders_;
-
-            // Lunar variables
             lua_State*  pLua_;
             int         iRef_;
         };

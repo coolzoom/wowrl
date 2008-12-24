@@ -39,7 +39,7 @@ namespace Frost
         Lua::RegisterGlobalFuncs(pLua_);
     }
 
-    s_uint GUIManager::AddUIObject( s_ptr<GUI::UIObject> pObj )
+    s_bool GUIManager::AddUIObject(s_ptr<GUI::UIObject> pObj)
     {
         if (pObj != NULL)
         {
@@ -55,19 +55,20 @@ namespace Frost
                 }
                 lObjectList_[i] = pObj;
                 lNamedObjectList_[pObj->GetName()] = pObj;
+                pObj->SetID(i);
 
-                return i;
+                return true;
             }
             else
             {
                 Error(CLASS_NAME, "A widget with the name \""+pObj->GetName()+"\" already exists.");
-                return s_uint(s_uint::INTEGER_NAN);
+                return false;
             }
         }
         else
         {
             Warning(CLASS_NAME, "Adding a NULL widget.");
-            return s_uint(s_uint::INTEGER_NAN);
+            return false;
         }
     }
 
@@ -77,6 +78,7 @@ namespace Frost
         if (iterObj != lObjectList_.end())
         {
             lObjectList_.erase(iterObj);
+            lNamedObjectList_.erase(lNamedObjectList_.find(pObj->GetName()));
         }
     }
 
@@ -234,11 +236,7 @@ namespace Frost
                 }
                 else if (j.IsValid())
                 {
-                    /*s_ptr<TiXmlDocument> pDoc = XMLManager::GetSingleton()->OpenFile(*iterFile);
-                    if (pDoc)
-                    {
-                        //XML::ParseUIFile(pAddOn, mDoc);
-                    }*/
+                    ParseXMLFile(iterFile->Get());
                 }
             }
         }
