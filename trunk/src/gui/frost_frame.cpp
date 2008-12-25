@@ -21,7 +21,7 @@ const s_str Layer::CLASS_NAME  = "GUI::Layer";
 const s_str Level::CLASS_NAME  = "GUI::Level";
 const s_str Strata::CLASS_NAME = "GUI::Strata";
 
-Frame::Frame() : UIObject(), lHitRectInsetList_(0)
+Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
 {
     mType_ = OJBECT_TYPE_FRAME;
     lType_.push_back("Frame");
@@ -152,9 +152,14 @@ const s_str& Frame::GetFrameType() const
     return lType_.back();
 }
 
-s_array<s_int,4> Frame::GetHitRectInsets() const
+s_array<s_int,4> Frame::GetAbsHitRectInsets() const
 {
-    return lHitRectInsetList_;
+    return lAbsHitRectInsetList_;
+}
+
+s_array<s_float,4> Frame::GetRelHitRectInsets() const
+{
+    return lRelHitRectInsetList_;
 }
 
 s_array<s_uint,2> Frame::GetMaxResize() const
@@ -421,9 +426,14 @@ void Frame::SetFrameStrata( const s_str& sStrata )
     SetFrameStrata(mStrata);
 }
 
-void Frame::SetHitRectInsets( const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom )
+void Frame::SetAbsHitRectInsets( const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom )
 {
-    lHitRectInsetList_ = (iLeft, iRight, iTop, iBottom);
+    lAbsHitRectInsetList_ = (iLeft, iRight, iTop, iBottom);
+}
+
+void Frame::SetRelHitRectInsets( const s_float& fLeft, const s_float& fRight, const s_float& fTop, const s_float& fBottom )
+{
+    lRelHitRectInsetList_ = (fLeft, fRight, fTop, fBottom);
 }
 
 void Frame::SetLevel( const s_uint& uiLevel )

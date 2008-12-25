@@ -229,10 +229,17 @@ s_bool Lua::DoFile( lua_State* pLua, s_str sFile )
     }
     else
     {
-        Log("bad...");
         PrintError(pLua, "Can't open \""+sFile+"\".");
         return false;
     }
+}
+
+s_bool Lua::DoString( lua_State* pLua, s_str sStr )
+{
+    int iError = luaL_dostring(pLua, sStr.c_str());
+    if (iError) l_ThrowError(pLua);
+
+    return (iError == 0);
 }
 
 s_bool Lua::InitLua( lua_State** pLua )

@@ -206,7 +206,7 @@ namespace XML
 
         /// Creates a new Block in this one.
         /** \param sName The name of the Block to create
-        *   \return The new block
+        *   \return The new Block
         *   \note Only used in the loading stage.<br>
         *         Returns NULL if this Block is already
         *         creating another Block.<br>
@@ -227,12 +227,14 @@ namespace XML
         /** \param sName    The name of the block
         *   \param uiMinNbr The minimum number of occurences
         *   \param uiMaxNbr The maximum number of occurences
+        *   \return The new Block
         *   \note Only used in the definition stage.
         */
         s_ptr<Block>  CreateDefBlock(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr);
 
         /// Creates a new Block (used for definition).
         /** \param sName The name of the block
+        *   \return The new Block
         *   \note Only used in the definition stage.<br>
         *         Creates a "radio" Block : it can only be present
         *         if none of its defined neighbours are.
@@ -243,12 +245,14 @@ namespace XML
         /** \param pBlock   The pre-defined Block
         *   \param uiMinNbr The minimum number of occurences
         *   \param uiMaxNbr The maximum number of occurences
+        *   \return The new Block reference
         *   \note Only used in the definition stage.
         */
         s_ptr<PredefinedBlock> AddPredefinedBlock(s_ptr<Block> pBlock, const s_uint& uiMinNbr, const s_uint& uiMaxNbr);
 
         /// Adds a pre-defined Block to the list.
         /** \param pBlock   The pre-defined Block
+        *   \return The new Block reference
         *   \note Only used in the definition stage.<br>
         *         Adds a "radio" Block : it can only be present
         *         if none of its defined neighbours are.
@@ -273,16 +277,13 @@ namespace XML
         std::vector< s_ptr<Block> >::iterator mCurrIter_;
         std::vector< s_ptr<Block> >::iterator mEndIter_;
 
-        std::multimap<s_str, Block>::iterator mCurrNIter_;
-        std::multimap<s_str, Block>::iterator mEndNIter_;
-
-        s_bool bNamedIteration_;
-
         std::map<s_str, Attribute>       lAttributeList_;
         std::map<s_str, Block>           lDefBlockList_;
         std::map<s_str, PredefinedBlock> lPreDefBlockList_;
-        std::multimap<s_str, Block>      lFoundBlockList_;
-        std::vector< s_ptr<Block> >      lFoundBlockStack_;
+
+        std::multimap<s_str, Block>                    lFoundBlockList_;
+        std::vector< s_ptr<Block> >                    lFoundBlockStack_;
+        std::map< s_str, std::vector< s_ptr<Block> > > lFoundBlockSortedStacks_;
     };
 }
 }

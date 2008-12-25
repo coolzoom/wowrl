@@ -243,7 +243,6 @@ s_ptr<Block> Block::First( const s_str& sName )
 {
     if (sName.IsEmpty())
     {
-        bNamedIteration_ = false;
         if (!lFoundBlockStack_.empty())
         {
             mCurrIter_ = lFoundBlockStack_.begin();
@@ -257,15 +256,11 @@ s_ptr<Block> Block::First( const s_str& sName )
     }
     else
     {
-        bNamedIteration_ = true;
-        if (MAPFIND(sName, lFoundBlockList_))
+        if (MAPFIND(sName, lFoundBlockSortedStacks_))
         {
-            pair< multimap<s_str, Block>::iterator,
-                  multimap<s_str, Block>::iterator > mIterPair;
-            mIterPair = lFoundBlockList_.equal_range(sName);
-            mCurrNIter_ = mIterPair.first;
-            mEndNIter_ = mIterPair.second;
-            return &mCurrNIter_->second;
+            mCurrIter_ = lFoundBlockSortedStacks_[sName].begin();
+            mEndIter_ = lFoundBlockSortedStacks_[sName].end();
+            return *mCurrIter_;
         }
         else
         {
@@ -276,32 +271,16 @@ s_ptr<Block> Block::First( const s_str& sName )
 
 s_ptr<Block> Block::Next()
 {
-    if (bNamedIteration_)
+    if (mCurrIter_ != mEndIter_)
     {
-        if (mCurrNIter_ != mEndNIter_)
-        {
-            mCurrNIter_++;
-            if (mCurrNIter_ == mEndNIter_)
-                return NULL;
-            else
-                return &mCurrNIter_->second;
-        }
-        else
+        mCurrIter_++;
+        if (mCurrIter_ == mEndIter_)
             return NULL;
+        else
+            return *mCurrIter_;
     }
     else
-    {
-        if (mCurrIter_ != mEndIter_)
-        {
-            mCurrIter_++;
-            if (mCurrIter_ == mEndIter_)
-                return NULL;
-            else
-                return *mCurrIter_;
-        }
-        else
-            return NULL;
-    }
+        return NULL;
 }
 
 s_str Block::GetAttribute( const s_str& sName )
@@ -375,8 +354,13 @@ void Block::AddBlock()
     if (bCreating_)
     {
         multimap<s_str, Block>::iterator iterAdded;
+        // Store the new block
         iterAdded = lFoundBlockList_.insert(make_pair(pNewBlock_->GetName(), *pNewBlock_));
+        // Position it on the global stack
         lFoundBlockStack_.push_back(&iterAdded->second);
+        // Position it on the sorted stack
+        lFoundBlockSortedStacks_[pNewBlock_->GetName()].push_back(&iterAdded->second);
+
         pNewBlock_.SetNull();
         bCreating_ = false;
     }
