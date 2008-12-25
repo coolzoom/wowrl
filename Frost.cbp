@@ -5,7 +5,6 @@
 		<Option title="Frost" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="src/;" />
 		<Build>
 			<Target title="Debug_Win32">
 				<Option platforms="Windows;" />
@@ -172,9 +171,6 @@
 		<Unit filename="include/frost_xml_block.h" />
 		<Unit filename="include/frost_xml_document.h" />
 		<Unit filename="include/gui/frost_gui_button.h" />
-		<Unit filename="include/gui/frost_gui_editbox.h">
-			<Option virtualFolder="src/" />
-		</Unit>
 		<Unit filename="include/gui/frost_gui_fontstring.h" />
 		<Unit filename="include/gui/frost_gui_frame.h" />
 		<Unit filename="include/gui/frost_gui_layeredregion.h" />

@@ -71,6 +71,14 @@ namespace Frost
         */
         s_bool  DoFile(lua_State* pLua, s_str sFile);
 
+        /// Executes a string containing Lua instructions
+        /** \param pLua The Lua state to use
+        *   \param sStr The string to execute
+        *   \return 'false' if there was an error in the string
+        *   \note This function prints the errors in the log file
+        */
+        s_bool  DoString(lua_State* pLua, s_str sStr);
+
         /// Prints an error string in the log file with the Lua tag
         /** \param pLua   The Lua state to use
         *   \param sError The error string to output

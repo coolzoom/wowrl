@@ -200,7 +200,7 @@ int LuaFrame::_GetHitRectInsets(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:GetHitRectInsets", pLua, 4);
 
-    s_array<s_int,4> lInsets = pFrameParent_->GetHitRectInsets();
+    s_array<s_int,4> lInsets = pFrameParent_->GetAbsHitRectInsets();
 
     for (s_uint i; i<4; i++)
         mFunc.Push(Lua::ReturnValue(lInsets[i]));
@@ -460,7 +460,7 @@ int LuaFrame::_SetHitRectInsets(lua_State* pLua)
     mFunc.Add(3, "bottom", LUA_TNUMBER, VALUE_INT);
     if (mFunc.Check())
     {
-        pFrameParent_->SetHitRectInsets(
+        pFrameParent_->SetAbsHitRectInsets(
             mFunc.Get(0)->GetI(),
             mFunc.Get(1)->GetI(),
             mFunc.Get(2)->GetI(),
@@ -549,11 +549,13 @@ int LuaFrame::_SetScript(lua_State* pLua)
             {
                 lua_pushvalue(pLua, pSecond->GetUI().Get());
                 lua_setglobal(pLua, (pFrameParent_->GetName() + ":" + sScriptName).c_str());
+                pFrameParent_->NotifyScriptDefined(sScriptName);
             }
             else
             {
                 lua_pushnil(pLua);
                 lua_setglobal(pLua, (pFrameParent_->GetName() + ":" + sScriptName).c_str());
+                pFrameParent_->NotifyScriptDefined(sScriptName);
             }
         }
         else

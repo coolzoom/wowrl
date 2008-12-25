@@ -142,10 +142,15 @@ namespace Frost
             */
             const s_str&        GetFrameType() const;
 
-            /// Returns this Frame's hit rect insets.
-            /** \return This Frame's hit rect insets
+            /// Returns this Frame's absolute hit rect insets.
+            /** \return This Frame's absolute hit rect insets
             */
-            s_array<s_int,4>    GetHitRectInsets() const;
+            s_array<s_int,4>    GetAbsHitRectInsets() const;
+
+            /// Returns this Frame's relative hit rect insets.
+            /** \return This Frame's relative hit rect insets
+            */
+            s_array<s_float,4>  GetRelHitRectInsets() const;
 
             /// Returns this Frame's max dimensions.
             /** \return This Frame's max dimensions
@@ -264,14 +269,23 @@ namespace Frost
             */
             void                SetFrameStrata(const s_str& sStrata);
 
-            /// Sets this Frame's hit rect insets.
+            /// Sets this Frame's absolute hit rect insets.
             /** \param iLeft   Offset from the left border
             *   \param iRight  Offset from the right border
             *   \param iTop    Offset from the top border
             *   \param iBottom Offset from the bottom border
             *   \note This is the zone on which you can click.
             */
-            void                SetHitRectInsets(const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom);
+            void                SetAbsHitRectInsets(const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom);
+
+            /// Sets this Frame's relative hit rect insets.
+            /** \param fLeft   Offset from the left border
+            *   \param fRight  Offset from the right border
+            *   \param fTop    Offset from the top border
+            *   \param fBottom Offset from the bottom border
+            *   \note This is the zone on which you can click.
+            */
+            void                SetRelHitRectInsets(const s_float& fLeft, const s_float& fRight, const s_float& fTop, const s_float& fBottom);
 
             /// Sets this Frame's level.
             /** \param uiLevel The new level
@@ -370,7 +384,8 @@ namespace Frost
             s_bool bBuildStrataList_;
             s_bool bBuildLayerList_;
 
-            s_array<s_int,4> lHitRectInsetList_;
+            s_array<s_int,  4> lAbsHitRectInsetList_;
+            s_array<s_float,4> lRelHitRectInsetList_;
 
             s_uint uiMinWidth_;
             s_uint uiMaxWidth_;
