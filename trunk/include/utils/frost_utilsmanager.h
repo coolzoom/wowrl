@@ -46,7 +46,7 @@ namespace Frost
         *         you close your program by calling Delete() (this is
         *         automatically done by Engine).
         */
-        ~UtilsManager();
+        virtual ~UtilsManager();
 
     private :
 
