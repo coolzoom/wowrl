@@ -74,6 +74,11 @@ s_bool FrameFunc()
         pFrost->TakeScreenshot();
     }
 
+    if (pInputMgr->KeyIsPressed(KEY_P))
+    {
+        GUIManager::GetSingleton()->PrintUI();
+    }
+
     if (bUnitControlled)
     {
         if (pInputMgr->KeyIsPressed(KEY_SPACE))

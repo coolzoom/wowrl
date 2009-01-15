@@ -100,22 +100,21 @@ namespace Frost
         return pLua_;
     }
 
-    void GUIManager::LoadAddOn( s_str sName, s_str sFolder )
+    void GUIManager::LoadAddOnTOC_( const s_str& sAddOnName, const s_str& sAddOnFolder )
     {
-        if (!MAPFIND(sName, lAddOnList_))
+        if (!MAPFIND(sAddOnName, lAddOnList_))
         {
             AddOn mAddOn;
             mAddOn.bEnabled = true;
-            mAddOn.sFolder = sFolder + sName;
-            string sTocFile = (mAddOn.sFolder + "/" + sName + ".toc").Get();
-            fstream mFile(sTocFile.c_str(), ios::in);
+            mAddOn.sFolder = sAddOnFolder + "/" + sAddOnName;
 
-            if (mFile.is_open())
+            File mFile(mAddOn.sFolder + "/" + sAddOnName + ".toc", FILE_I);
+
+            if (mFile.IsOpen())
             {
-                s_str sLine;
-                while (!mFile.eof())
+                while (mFile.IsValid())
                 {
-                    getline(mFile, sLine.GetR());
+                    s_str sLine = mFile.GetLine();
                     if ( (sLine[0] == '#') && (sLine[1] == '#') )
                     {
                         sLine = sLine.Extract(2);
@@ -131,13 +130,14 @@ namespace Frost
                             {
                                 mAddOn.sUIVersion = sValue;
 
-                                s_var mGameVersion = Engine::GetSingleton()->GetConstant("GameVersion");
-                                if (mAddOn.sUIVersion == mGameVersion.GetS())
+                                s_str sGameVersion = Engine::GetSingleton()->GetConstant("GameVersion").GetS();
+                                sGameVersion.Replace(".", "");
+                                if (mAddOn.sUIVersion == sGameVersion)
                                     mAddOn.bEnabled = true;
                                 else
                                 {
                                     Warning(CLASS_NAME,
-                                        "Wrong game version for \""+sName+"\". AddOn disabled."
+                                        "Wrong game version for \""+sAddOnName+"\". AddOn disabled."
                                     );
                                     mAddOn.bEnabled = false;
                                 }
@@ -178,68 +178,112 @@ namespace Frost
                     }
                 }
 
-                mFile.close();
+                mFile.Close();
 
                 if (mAddOn.sName == "")
-                    Error(CLASS_NAME, "Missing AddOn name in "+sTocFile+".");
+                    Error(CLASS_NAME, "Missing AddOn name in "+mFile.GetName()+".");
                 else
                     lAddOnList_[mAddOn.sName] = mAddOn;
             }
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Missing TOC file for AddOn \""+sAddOnName+"\". Folder ignored."
+                );
+            }
+        }
+    }
+
+    void GUIManager::LoadAddOnFiles_( s_ptr<AddOn> pAddOn )
+    {
+        vector<s_str>::iterator iterFile;
+        foreach (iterFile, pAddOn->lFileList)
+        {
+            s_uint i = iterFile->Find(".lua");
+            s_uint j = iterFile->Find(".xml");
+            if (i.IsValid())
+            {
+                Lua::DoFile(pLua_, iterFile->Get());
+            }
+            else if (j.IsValid())
+            {
+                this->ParseXMLFile_(iterFile->Get(), pAddOn);
+            }
+        }
+    }
+
+    void GUIManager::LoadAddOnDirectory_( const s_str& sDirectory )
+    {
+        Directory mDir(sDirectory);
+        s_ptr<Directory> pSubDir;
+
+        foreach_subdir (pSubDir, mDir)
+        {
+            this->LoadAddOnTOC_(pSubDir->GetName(), sDirectory);
+        }
+
+        vector< s_ptr<AddOn> > lCoreAddOnStack;
+        vector< s_ptr<AddOn> > lAddOnStack;
+        s_bool bCore = false;
+
+        File mFile(sDirectory + "/AddOns.txt", FILE_I);
+        if (mFile.IsOpen())
+        {
+            while (mFile.IsValid())
+            {
+                s_str sLine = mFile.GetLine();
+                if (sLine[0] == '#')
+                {
+                    sLine.EraseFromStart(1);
+                    sLine.Trim(' ');
+                    if (sLine == "Core")
+                        bCore = true;
+                    else
+                        bCore = false;
+                }
+                else
+                {
+                    vector<s_str> lArgs = sLine.Cut(":", 1);
+                    if (lArgs.size() == 2)
+                    {
+                        s_str sKey = lArgs[0];
+                        sKey.Trim(' ');
+                        s_str sValue = lArgs[1];
+                        sValue.Trim(' ');
+                        if (MAPFIND(sKey, lAddOnList_))
+                        {
+                            if (bCore)
+                                lCoreAddOnStack.push_back(&lAddOnList_[sKey]);
+                            else
+                                lAddOnStack.push_back(&lAddOnList_[sKey]);
+
+                            if (sValue != "1")
+                            {
+                                lAddOnList_[sKey].bEnabled = false;
+                            }
+                        }
+                    }
+                }
+            }
+            mFile.Close();
+        }
+
+        vector< s_ptr<AddOn> >::iterator iterAddOn;
+        foreach (iterAddOn, lCoreAddOnStack)
+        {
+            this->LoadAddOnFiles_(*iterAddOn);
+        }
+
+        foreach (iterAddOn, lAddOnStack)
+        {
+            this->LoadAddOnFiles_(*iterAddOn);
         }
     }
 
     void GUIManager::LoadUI()
     {
-        Directory mDir("Interface/BaseUI");
-        s_ptr<Directory> pSubDir = mDir.GetNextSubDirectory();
-        while (pSubDir)
-        {
-            LoadAddOn(pSubDir->GetName(), "Interface/BaseUI");
-            pSubDir = mDir.GetNextSubDirectory();
-        }
-
-        fstream mFile("Interface/AddOns.txt", ios::in);
-        if (mFile.is_open())
-        {
-            while (!mFile.eof())
-            {
-                s_str sLine;
-                getline(mFile, sLine.GetR());
-                vector<s_str> lArgs = sLine.Cut(":", 1);
-                if (lArgs.size() == 2)
-                {
-                    s_str sKey = lArgs[0];
-                    sKey.Trim(' ');
-                    s_str sValue = lArgs[1];
-                    sValue.Trim(' ');
-                    if ( MAPFIND(sKey, lAddOnList_) && (sValue != "1") )
-                    {
-                        lAddOnList_[sKey].bEnabled = false;
-                    }
-                }
-            }
-            mFile.close();
-        }
-
-        map<s_str, AddOn>::iterator iterAddOn;
-        foreach (iterAddOn, lAddOnList_)
-        {
-            s_ptr<AddOn> pAddOn = &iterAddOn->second;
-            vector<s_str>::iterator iterFile;
-            foreach (iterFile, pAddOn->lFileList)
-            {
-                s_uint i = iterFile->Find(".lua");
-                s_uint j = iterFile->Find(".xml");
-                if (i.IsValid())
-                {
-                    Lua::DoFile(pLua_, iterFile->Get());
-                }
-                else if (j.IsValid())
-                {
-                    ParseXMLFile(iterFile->Get());
-                }
-            }
-        }
+        this->LoadAddOnDirectory_("Interface/BaseUI");
+        this->LoadAddOnDirectory_("Interface/AddOns");
     }
 
     void GUIManager::CloseUI()
@@ -248,6 +292,25 @@ namespace Frost
 
     void GUIManager::ReloadUI()
     {
+    }
+
+    void GUIManager::Update( const s_float& fDelta )
+    {
+        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        foreach (iterObj, lObjectList_)
+        {
+            if (!iterObj->second->GetParent())
+                iterObj->second->Update();
+        }
+    }
+
+    void GUIManager::PrintUI()
+    {
+        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        foreach (iterObj, lObjectList_)
+        {
+            Log(iterObj->second->Serialize() + "\n########################\n");
+        }
     }
 }
 
