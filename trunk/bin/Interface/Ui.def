@@ -1,135 +1,117 @@
-<!------------------- How to read this file ? ---------------------->
-<!-- A block preceded by :                                        -->
-<!--   - "d:" indicates definition of the pre-defined block.      -->
-<!--   - "d[X]:" indicates this block inherits from "X" (it takes -->
-<!--     X's attributes and sub-block, and can add new ones).     -->
-<!--   - "l:" indicates loading a pre-defined block.              -->
-<!--   - "n[a,b]:" can only be present "b" times at most, and "a" -->
-<!--     times at least. If b=".", the block can be present as    -->
-<!--     many times as the user whishes, and if a=".", the block  -->
-<!--     can be ommited.                                          -->
-<!--   - "n[*]:" indicates a radio block : it can only be present -->
-<!--     if none of its defined neighbours are.                   -->
-<!--   - "nothing" can be present multiple times or ommited.      -->
-<!-- A member followed by a "=" and a value can be ommited. It    -->
-<!-- will take this value if ommited.                             -->
-<!-- Else, the value cant' be ommited.                            -->
-<!------------------------------------------------------------------>
-
 <!--------------------->
 <!-- PRE-DEFINITIONS -->
 <!--------------------->
 
-<d:FontString name inherits="" virtual="false" setAllPoints="false" hidden="false" text="" spacing="0.0" outline="NONE" monochrome="false" nonspacewrap="false" justifyV="MIDDLE" justifyH="CENTER" maxLines="0" font="" bytes="255">
+<d:FontString name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" text="" n:spacing="0.0" outline="NONE" b:monochrome="false" b:nonspacewrap="false" justifyV="MIDDLE" justifyH="CENTER" n:maxLines="0" font="" n:bytes="255">
     
     <n[.,1]:Size>
-        <n[*]:AbsDimension x y/>
-        <n[*]:RelDimension x="1.0" y="1.0"/>
+        <n[*]:AbsDimension n:x       n:y/>
+        <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
     
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
             <n[.,1]:Offset>
-                <n[*]:AbsDimension x="0" y="0"/>
-                <n[*]:RelDimension x="0.0" y="0.0"/>
+                <n[*]:AbsDimension n:x="0"   n:y="0"/>
+                <n[*]:RelDimension n:x="0.0" n:y="0.0"/>
             </Offset>
         </Anchor>
     </Anchors>
     
     <n[.,1]:FontHeight>
-        <n[*]:AbsValue x/>
-        <n[*]:RelValue x/>
+        <n[*]:AbsValue n:x/>
+        <n[*]:RelValue n:x/>
     </FontHeight>
     
-    <n[.,1]:Color a="1.0" r="0.0" g="0.0" b="0.0"/>
+    <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
     
     <n[.,1]:Shadow>
-        <n[.,1]:Color a="1.0" r="0.0" g="0.0" b="0.0"/>
+        <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
         <n[.,1]:Offset>
-            <n[*]:AbsDimension x="0" y="0"/>
-            <n[*]:RelDimension x="0.0" y="0.0"/>
+            <n[*]:AbsDimension n:x="0"   n:y="0"/>
+            <n[*]:RelDimension n:x="0.0" n:y="0.0"/>
         </Offset>
     </Shadow>
     
 </FontString>
 
-<d:Texture name inherits="" virtual="false" setAllPoints="false" hidden="false" file="" alphaMode="BLEND">
+<d:Texture name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" file="" alphaMode="BLEND">
 
     <n[.,1]:Size>
-        <n[*]:AbsDimension x y/>
-        <n[*]:RelDimension x="1.0" y="1.0"/>
+        <n[*]:AbsDimension n:x       n:y/>
+        <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
     
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
             <n[.,1]:Offset>
-                <n[*]:AbsDimension x="0" y="0"/>
-                <n[*]:RelDimension x="0.0" y="0.0"/>
+                <n[*]:AbsDimension n:x="0"   n:y="0"/>
+                <n[*]:RelDimension n:x="0.0" n:y="0.0"/>
             </Offset>
         </Anchor>
     </Anchors>
     
-    <n[.,1]:TexCoords left="0.0" right="1.0" top="0.0" bottom="1.0"/>
+    <n[.,1]:TexCoords n:left="0.0" n:right="1.0" n:top="0.0" n:bottom="1.0"/>
     
-    <n[.,1]:Color a="1.0" r="0.0" g="0.0" b="0.0"/>
+    <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
     
     <n[.,1]:Gradient orientation="HORIZONTAL">
-        <n[.,1]:MinColor a="1.0" r="0.0" g="0.0" b="0.0"/>
-        <n[.,1]:MaxColor a="1.0" r="0.0" g="0.0" b="0.0"/>
+        <n[.,1]:MinColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
+        <n[.,1]:MaxColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
     </Gradient>
     
 </Texture>
 
-<d:Frame name inherits="" virtual="false" setAllPoints="false" hidden="false" alpha="1.0" parent="" toplevel="false" movable="false" resizable="false" frameStrata="PARENT" enableMouse="false" enableKeyboard="false">
+<d:Frame name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" n:alpha="1.0" parent="" b:toplevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" b:enableMouse="false" b:enableKeyboard="false" b:clampedToScreen="true">
 
     <n[.,1]:Size>
-        <n[*]:AbsDimension x y/>
-        <n[*]:RelDimension x="1.0" y="1.0"/>
+        <n[*]:AbsDimension n:x       n:y/>
+        <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
     
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
             <n[.,1]:Offset>
-                <n[*]:AbsDimension x="0" y="0"/>
-                <n[*]:RelDimension x="0.0" y="0.0"/>
+                <n[*]:AbsDimension n:x="0"   n:y="0"/>
+                <n[*]:RelDimension n:x="0.0" n:y="0.0"/>
             </Offset>
         </Anchor>
     </Anchors>
     
     <n[.,1]:TitleRegion>
         <n[.,1]:Size>
-            <n[*]:AbsDimension x y/>
-            <n[*]:RelDimension x="1.0" y="1.0"/>
+            <n[*]:AbsDimension n:x       n:y/>
+            <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
         </Size>
         
         <n[.,1]:Anchors>
             <Anchor point="TOPLEFT" relativeTo="" relativePoint="TOPLEFT">
-                <n[*]:AbsDimension x="0" y="0"/>
-                <n[*]:RelDimension x="0.0" y="0.0"/>
+                <n[*]:AbsDimension n:x="0"   n:y="0"/>
+                <n[*]:RelDimension n:x="0.0" n:y="0.0"/>
             </Anchor>
         </Anchors>
     </TitleRegion>
     
-    <n[.,1]:Backdrop bgFile="" edgeFile="" tile="false">
+    <n[.,1]:Backdrop bgFile="" edgeFile="" b:tile="false">
         <n[.,1]:BackgroundInsets>
-            <n[*]:AbsInset left="0" right="0" top="0" bottom="0"/>
-            <n[*]:RelInset left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+            <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
+            <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
         </BackgroundInsets>
         
         <n[.,1]:TileSize>
-            <n[*]:AbsValue x/>
-            <n[*]:RelValue x/>
+            <n[*]:AbsValue n:x/>
+            <n[*]:RelValue n:x/>
         </TileSize>
         
         <n[.,1]:EdgeSize>
-            <n[*]:AbsValue x/>
-            <n[*]:RelValue x/>
+            <n[*]:AbsValue n:x/>
+            <n[*]:RelValue n:x/>
         </EdgeSize>
     </Backdrop>
     
     <n[.,1]:HitRectInsets>
-        <n[*]:AbsInset left="0" right="0" top="0" bottom="0"/>
-        <n[*]:RelInset left="0.0" right="0.0" top="0.0" bottom="0.0"/>
+        <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
+        <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
     </HitRectInsets>
     
     <n[.,1]:Layers>
@@ -141,11 +123,6 @@
     
     <n[.,1]:Frames>
         <l:Frame/>
-        <l:Button/>
-        <l:EditBox/>
-        <l:ScrollingMessageFrame/>
-        <l:Slider/>
-        <l:StatusBar/>
     </Frames>
     
     <n[.,1]:Scripts>
@@ -176,7 +153,7 @@
 </EditBox>
 
 <d[Frame]:ScrollingMessageFrame>
-</Frame>
+</ScrollingMessageFrame>
 
 <d[Frame]:Slider>
 </Slider>
@@ -204,11 +181,6 @@
     <!----------->
     
     <l:Frame/>
-    <l:Button/>
-    <l:EditBox/>
-    <l:ScrollingMessageFrame/>
-    <l:Slider/>
-    <l:StatusBar/>
     
 </Ui>
 
