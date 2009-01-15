@@ -23,7 +23,7 @@ namespace Frost
     class s_double;
     class s_bool;
     class s_str;
-    template<class T> class ctnr;
+    template<class T> class s_ctnr;
 
     enum ValueType
     {
@@ -79,7 +79,7 @@ namespace Frost
         ValueType GetType() const;
 
         s_var&      operator = (const s_var& vValue);
-        ctnr<s_var> operator , (const s_var& vValue) const;
+        s_ctnr<s_var> operator , (const s_var& vValue) const;
 
         static const s_str CLASS_NAME;
 

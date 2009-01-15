@@ -17,7 +17,7 @@ namespace Frost
     class s_double;
     class s_bool;
     class s_str;
-    template<class T> class ctnr;
+    template<class T> class s_ctnr;
 
     /// Base type : unsigned integer
     /** Frost's base types are made to allow simpler
@@ -166,7 +166,7 @@ namespace Frost
 
         s_uint&      operator =  (const s_uint& uiValue);
 
-        ctnr<s_uint> operator ,  (const s_uint& uiValue) const;
+        s_ctnr<s_uint> operator ,  (const s_uint& uiValue) const;
 
         static const s_uint NaN;
         static const s_uint INF;

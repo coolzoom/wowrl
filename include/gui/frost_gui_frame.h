@@ -75,6 +75,11 @@ namespace Frost
             */
             virtual void        UpdateMaterial(const s_bool& bForceUpdate = false);
 
+            /// Prints all relevant information about this widget in a string.
+            /** \return All relevant information about this widget
+            */
+            virtual s_str       Serialize() const;
+
             /// Returns 'true' if this Frame can use a script.
             /** \param sScriptName The name of the script
             *   \note This method can be overriden if needed.
@@ -111,6 +116,16 @@ namespace Frost
             *   \return 'true' if this script is defined
             */
             s_bool              HasScript(const s_str& sScriptName) const;
+
+            /// Adds a Frame to this Frame's children.
+            /** \param pChild The Frame to add
+            */
+            void                AddChild(s_ptr<Frame> pChild);
+
+            /// Removes a Frame from this Frame's children.
+            /** \param pChild The Frame to remove
+            */
+            void                RemoveChild(s_ptr<Frame> pChild);
 
             /// Returns the child list.
             /** \return The child list

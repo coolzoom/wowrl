@@ -44,102 +44,107 @@ namespace Frost
         ~File();
 
         /// Call that function when you're done reading.
-        void   Close();
+        void        Close();
 
         /// Checks if the file has been found and opened.
         /** \return 'true' if the file has been succesfuly opened
         */
-        s_bool IsOpen();
+        s_bool      IsOpen();
 
         /// Checks if the file can still be read.
         /** \return 'true' if the file has been successfuly opened and if it
         *           has not yet reached its end.
         */
-        s_bool IsValid();
+        s_bool      IsValid();
 
         /// Returns this file's number of character.
         /** \return This file's character count
         */
-        s_uint GetLength();
+        s_uint      GetLength();
+
+        /// Returns this file's name.
+        /** \return This file's name
+        */
+        const s_str GetName() const;
 
         /// Returns the next line.
         /** \return The next line
         */
-        s_str  GetLine();
+        s_str       GetLine();
 
         /// Returns the reading position in the file.
         /** \return The position of the actual read character
         *   in the file
         */
-        s_uint GetReadPos();
+        s_uint      GetReadPos();
 
         /// Sets the reading position in the file.
         /** \param uiPos The new position
         */
-        void   SetReadPos(const s_uint& uiPos);
+        void        SetReadPos(const s_uint& uiPos);
 
         /// Returns the writing position in the file.
         /** \return The position of the actual written character
         *   in the file
         */
-        s_uint GetWritePos();
+        s_uint      GetWritePos();
 
         /// Sets the writing position in the file.
         /** \param uiPos The new position
         */
-        void   SetWritePos(const s_uint& uiPos);
+        void        SetWritePos(const s_uint& uiPos);
 
         /// Returns the next character.
         /** \return The next character
         */
-        char   Get();
+        char        Get();
 
         /// Extracts a block(n-1) of unformated data until \\n is found.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
-        void   Get(s_str& sBuffer, const s_uint& uiSize);
+        void        Get(s_str& sBuffer, const s_uint& uiSize);
 
         /// Extracts a block(n) of unformated data.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
-        void   Read(s_str& sBuffer, const s_uint& uiSize);
+        void        Read(s_str& sBuffer, const s_uint& uiSize);
 
         /// Extracts a block(n-1) of unformated data until \\n is found.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
-        void   Get(char* sBuffer, const s_uint& uiSize);
+        void        Get(char* sBuffer, const s_uint& uiSize);
 
         /// Extracts a block(n) of unformated data.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
-        void   Read(char* sBuffer, const s_uint& uiSize);
+        void        Read(char* sBuffer, const s_uint& uiSize);
 
         /// Extracts a block(n-1) of unformated data until a character is found.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         *   \param      cDelim  Extraction should stop when this char is encountered
         */
-        void   Get(s_str& sBuffer, const s_uint& uiSize, const char& cDelim);
+        void        Get(s_str& sBuffer, const s_uint& uiSize, const char& cDelim);
 
         /// Writes down a char array into the file.
         /** \param sBuffer The char array (can be a casted type)
         *   \param uiSize  The number of char to write to the file
         *   \note This function changes the writing position
         */
-        void   Write(const char* sBuffer, const s_uint& uiSize);
+        void        Write(const char* sBuffer, const s_uint& uiSize);
 
         /// Writes down a single char into the file.
         /** \param cChar The char to write down
         *   \note This function changes the writing position
         */
-        void   Write(const char& cChar);
+        void        Write(const char& cChar);
 
         /// Forces writing everything to the file.
-        void   Flush();
+        void        Flush();
 
         /// Checks if a file exists.
         /** \param sFileName The name of the file
@@ -153,7 +158,9 @@ namespace Frost
     private :
 
         /// The file stream object
-        std::fstream mFile;
+        std::fstream mFile_;
+        /// The name of this file
+        s_str        sName_;
     };
 }
 

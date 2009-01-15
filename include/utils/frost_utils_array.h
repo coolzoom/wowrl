@@ -26,20 +26,20 @@ namespace Frost
     *   with the latest value.
     */
     template<class T>
-    class ctnr
+    class s_ctnr
     {
     public :
 
-        ctnr()
+        s_ctnr()
         {
         }
 
-        ctnr(T mElem)
+        s_ctnr(T mElem)
         {
             lArray_.push_back(mElem);
         }
 
-        ctnr& operator, (const T& mElem)
+        s_ctnr& operator, (const T& mElem)
         {
             lArray_.push_back(mElem);
             return (*this);
@@ -90,7 +90,7 @@ namespace Frost
             }
         }
 
-        s_array(const T lInitArray[N])
+        /*s_array(const T lInitArray[N])
         {
             for (uint i = 0; i < N; i++)
             {
@@ -104,9 +104,9 @@ namespace Frost
             {
                 lArray_[i] = lInitArray[i];
             }
-        }
+        }*/
 
-        s_array(const ctnr<T>& mContainer)
+        s_array(const s_ctnr<T>& mContainer)
         {
             for (uint i = 0; i < N; i++)
             {
@@ -141,7 +141,7 @@ namespace Frost
             }
         }
 
-        uint GetSize() const
+        s_uint GetSize() const
         {
             return N;
         }
@@ -183,15 +183,15 @@ namespace Frost
     template<class T, uint N> T s_array<T, N>::mDummy;
 
     template<class T>
-    s_str operator+ (const s_str& sLeft, const ctnr<T>& sRight)
+    s_str operator + (const s_str& sLeft, const s_ctnr<T>& mRight)
     {
         s_str sTemp = "(";
-        for (s_uint i = 0; i < sRight.GetSize(); i++)
+        for (s_uint i = 0; i < mRight.GetSize(); i++)
         {
-            if (i == sRight.GetSize()-s_uint(1u))
-                sTemp += s_str(sRight[i]);
+            if (i == mRight.GetSize()-s_uint(1u))
+                sTemp += s_str(mRight[i]);
             else
-                sTemp += s_str(sRight[i]) + ", ";
+                sTemp += s_str(mRight[i]) + ", ";
         }
         sTemp += ")";
 
@@ -199,21 +199,21 @@ namespace Frost
     }
 
     template<class T>
-    s_str operator+ (const char* sLeft, const ctnr<T>& sRight)
+    s_str operator + (const char* sLeft, const s_ctnr<T>& mRight)
     {
-        return s_str(sLeft) + sRight;
+        return s_str(sLeft) + mRight;
     }
 
     template<class T, uint N>
-    s_str operator+ (const s_str& sLeft, const s_array<T, N>& sRight)
+    s_str operator + (const s_str& sLeft, const s_array<T, N>& mRight)
     {
         s_str sTemp = "(";
         for (uint i = 0; i < N; i++)
         {
             if (i == N-1)
-                sTemp += s_str(sRight.Get(i));
+                sTemp += s_str(mRight.Get(i));
             else
-                sTemp += s_str(sRight.Get(i)) + ", ";
+                sTemp += s_str(mRight.Get(i)) + ", ";
         }
         sTemp += ")";
 
@@ -221,9 +221,25 @@ namespace Frost
     }
 
     template<class T, uint N>
-    s_str operator+ (const char* sLeft, const s_array<T, N>& sRight)
+    s_str operator + (const char* sLeft, const s_array<T, N>& mRight)
     {
-        return s_str(sLeft) + sRight;
+        return s_str(sLeft) + mRight;
+    }
+
+    template<class T, uint N>
+    s_str& operator << (s_str& sLeft, const s_array<T, N>& mRight)
+    {
+        s_str sTemp = "(";
+        for (uint i = 0; i < N; i++)
+        {
+            if (i == N-1)
+                sTemp += s_str(mRight.Get(i));
+            else
+                sTemp += s_str(mRight.Get(i)) + ", ";
+        }
+        sTemp += ")";
+
+        return sLeft << sTemp;
     }
 }
 

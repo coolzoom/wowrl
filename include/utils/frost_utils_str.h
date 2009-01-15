@@ -19,7 +19,7 @@ namespace Frost
     class s_double;
     class s_bool;
     class s_str;
-    template<class T> class ctnr;
+    template<class T> class s_ctnr;
 
     enum IntegerConversionType
     {
@@ -216,9 +216,21 @@ namespace Frost
         inline std::string& GetR() { return sValue_; }
 
         /// Checks if the string is empty.
-        /** \return 'true' if the string doesn't contain any character
+        /** \param bIgnoreSpaces Set to 'true' if you want a string to be reported as
+        *                        empty if it only contains white spaces and or tabs
+        *   \return 'true' if the string doesn't contain any character
         */
-        s_bool              IsEmpty() const;
+        s_bool              IsEmpty(const s_bool& bIgnoreSpaces = false) const;
+
+        /// Checks if the string is a number.
+        /** \return 'true' if the string is a number
+        */
+        s_bool              IsNumber() const;
+
+        /// Checks if the string is a bool.
+        /** \return 'true' if the string is a bool
+        */
+        s_bool              IsBoolean() const;
 
         /// Returns the number of character in the string.
         /** \return The number of character in the string
@@ -282,7 +294,7 @@ namespace Frost
         s_str&              operator << (const IntegerConversionType& mIntConvType);
         s_str&              operator << (const BoolConversionType& mBoolConvType);
 
-        ctnr<s_str>         operator ,  (const s_str& sValue) const;
+        s_ctnr<s_str>         operator ,  (const s_str& sValue) const;
 
         static char cDummy;
         static const s_str CLASS_NAME;
