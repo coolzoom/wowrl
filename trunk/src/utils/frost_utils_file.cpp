@@ -17,30 +17,31 @@ namespace Frost
 
     File::File( const s_str& sName, const FileType& mType, const s_bool& bBinary )
     {
+        sName_ = sName;
         switch (mType)
         {
             case FILE_IO :
             {
                 if (bBinary)
-                    mFile.open(sName.c_str(), ios_base::in | ios_base::out | ios::binary);
+                    mFile_.open(sName.c_str(), ios_base::in | ios_base::out | ios::binary);
                 else
-                    mFile.open(sName.c_str(), ios_base::in | ios_base::out);
+                    mFile_.open(sName.c_str(), ios_base::in | ios_base::out);
                 break;
             }
             case FILE_I :
             {
                 if (bBinary)
-                    mFile.open(sName.c_str(), ios::in | ios::binary);
+                    mFile_.open(sName.c_str(), ios::in | ios::binary);
                 else
-                    mFile.open(sName.c_str(), ios::in);
+                    mFile_.open(sName.c_str(), ios::in);
                 break;
             }
             case FILE_O :
             {
                 if (bBinary)
-                    mFile.open(sName.c_str(), ios::out | ios::binary);
+                    mFile_.open(sName.c_str(), ios::out | ios::binary);
                 else
-                    mFile.open(sName.c_str(), ios::out);
+                    mFile_.open(sName.c_str(), ios::out);
                 break;
             }
         }
@@ -54,68 +55,73 @@ namespace Frost
 
     void File::Close()
     {
-        mFile.close();
+        mFile_.close();
     }
 
     s_bool File::IsOpen()
     {
-        return mFile.is_open();
+        return mFile_.is_open();
     }
 
     s_bool File::IsValid()
     {
-        return (mFile.is_open() && !mFile.eof());
+        return (mFile_.is_open() && !mFile_.eof());
     }
 
     s_uint File::GetLength()
     {
-        uint uiOldPos = mFile.tellg();
+        uint uiOldPos = mFile_.tellg();
 
-        mFile.seekg(0, ios::end);
-        s_uint uiLength = (uint)mFile.tellg();
-        mFile.seekg(uiOldPos);
+        mFile_.seekg(0, ios::end);
+        s_uint uiLength = (uint)mFile_.tellg();
+        mFile_.seekg(uiOldPos);
 
         return uiLength;
+    }
+
+    const s_str File::GetName() const
+    {
+        return sName_;
     }
 
     s_str File::GetLine()
     {
         s_str sTemp;
-        getline(mFile, sTemp.GetR());
+        getline(mFile_, sTemp.GetR());
         return sTemp;
     }
 
     s_uint File::GetReadPos()
     {
-        return (uint)mFile.tellg();
+        return (uint)mFile_.tellg();
     }
 
     void File::SetReadPos( const s_uint& uiPos )
     {
-        mFile.seekg(uiPos.Get());
+        mFile_.seekg(uiPos.Get());
     }
 
     s_uint File::GetWritePos()
     {
-        return (uint)mFile.tellp();
+        return (uint)mFile_.tellp();
     }
 
     void File::SetWritePos( const s_uint& uiPos )
     {
-        mFile.seekp(uiPos.Get());
+        mFile_.seekp(uiPos.Get());
     }
 
     char File::Get()
     {
         char cTemp;
-        mFile.get(cTemp);
+        mFile_.get(cTemp);
         return cTemp;
     }
 
     void File::Get( s_str& sBuffer, const s_uint& uiSize )
     {
         char* sTemp = new char[uiSize.Get()];
-        mFile.get(sTemp, uiSize.Get());
+        mFile_.get(sTemp, uiSize.Get());
         sBuffer = sTemp;
         delete sTemp;
     }
@@ -123,42 +129,42 @@ namespace Frost
     void File::Read( s_str& sBuffer, const s_uint& uiSize )
     {
         char* sTemp = new char[uiSize.Get()];
-        mFile.read(sTemp, uiSize.Get());
+        mFile_.read(sTemp, uiSize.Get());
         sBuffer = sTemp;
         delete sTemp;
     }
 
     void File::Get( char* sBuffer, const s_uint& uiSize )
     {
-        mFile.get(sBuffer, uiSize.Get());
+        mFile_.get(sBuffer, uiSize.Get());
     }
 
     void File::Read( char* sBuffer, const s_uint& uiSize )
     {
-        mFile.read(sBuffer, uiSize.Get());
+        mFile_.read(sBuffer, uiSize.Get());
     }
 
     void File::Get( s_str& sBuffer, const s_uint& uiSize, const char& cDelim )
     {
         char* sTemp = new char[uiSize.Get()];
-        mFile.get(sTemp, uiSize.Get(), cDelim);
+        mFile_.get(sTemp, uiSize.Get(), cDelim);
         sBuffer = sTemp;
         delete sTemp;
     }
 
     void File::Write( const char* sBuffer, const s_uint& uiSize )
     {
-        mFile.write(sBuffer, uiSize.Get());
+        mFile_.write(sBuffer, uiSize.Get());
     }
 
     void File::Write( const char& cChar )
     {
-        mFile.put(cChar);
+        mFile_.put(cChar);
     }
 
     void File::Flush()
     {
-        mFile.flush();
+        mFile_.flush();
     }
 
     s_bool File::Exists( const s_str& sFileName, const s_bool& bPrint )

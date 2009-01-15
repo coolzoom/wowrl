@@ -152,9 +152,56 @@ namespace Frost
         sValue_.clear();
     }
 
-    s_bool s_str::IsEmpty() const
+    s_bool s_str::IsEmpty( const s_bool& bIgnoreSpaces ) const
     {
-        return sValue_.empty();
+        if (sValue_.empty())
+        {
+            return true;
+        }
+        else
+        {
+            if (bIgnoreSpaces)
+            {
+                s_bool bEmpty = true;
+                for (uint i = 0; i < sValue_.length(); i++)
+                {
+                    if ( (sValue_[i] != ' ') && (sValue_[i] != '	') )
+                    {
+                        bEmpty = false;
+                        break;
+                    }
+                }
+
+                return bEmpty;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    s_bool s_str::IsNumber() const
+    {
+        stringstream mTemp(sValue_);
+        double dValue;
+        mTemp >> dValue;
+        return !mTemp.fail();
+    }
+
+    s_bool s_str::IsBoolean() const
+    {
+        switch (mBoolConvType_)
+        {
+            case CONV_TRUE_FALSE :
+                return ((sValue_ == "false") || (sValue_ == "true"));
+            case CONV_1_0 :
+                return ((sValue_ == "0")     || (sValue_ == "1"));
+            case CONV_YES_NO :
+                return ((sValue_ == "no")    || (sValue_ == "yes"));
+            default :
+                return false;
+        }
     }
 
     char& s_str::operator[] ( const s_uint& uiIndex )
@@ -500,7 +547,8 @@ namespace Frost
         while (uiPos.IsValid())
         {
             uiCurSize = uiPos - uiLastPos;
-            lPieces.push_back(Extract(uiLastPos, uiCurSize));
+            if (!uiCurSize.IsNull())
+                lPieces.push_back(Extract(uiLastPos, uiCurSize));
             uiLastPos = uiPos + sDelim.Length();
             uiPos = Find(sDelim, uiLastPos);
             uiCount++;
@@ -618,9 +666,9 @@ namespace Frost
         return s_str(sLeft) + sRight;
     }
 
-    ctnr<s_str> s_str::operator, ( const s_str& sValue ) const
+    s_ctnr<s_str> s_str::operator, ( const s_str& sValue ) const
     {
-        ctnr<s_str> mContainer;
+        s_ctnr<s_str> mContainer;
         mContainer.Push(*this);
         mContainer.Push(sValue);
         return mContainer;

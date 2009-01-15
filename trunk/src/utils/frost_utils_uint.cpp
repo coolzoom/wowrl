@@ -737,9 +737,9 @@ namespace Frost
         return s_str(*this) + sValue;
     }
 
-    ctnr<s_uint> s_uint::operator, ( const s_uint& uiValue ) const
+    s_ctnr<s_uint> s_uint::operator, ( const s_uint& uiValue ) const
     {
-        ctnr<s_uint> mContainer;
+        s_ctnr<s_uint> mContainer;
         mContainer.Push(*this);
         mContainer.Push(uiValue);
         return mContainer;

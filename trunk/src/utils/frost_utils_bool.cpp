@@ -102,9 +102,9 @@ namespace Frost
         return s_str(*this) + sValue;
     }
 
-    ctnr<s_bool> s_bool::operator, ( const s_bool& bValue ) const
+    s_ctnr<s_bool> s_bool::operator, ( const s_bool& bValue ) const
     {
-        ctnr<s_bool> mContainer;
+        s_ctnr<s_bool> mContainer;
         mContainer.Push(*this);
         mContainer.Push(bValue);
         return mContainer;

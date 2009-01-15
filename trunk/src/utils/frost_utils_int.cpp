@@ -900,9 +900,9 @@ namespace Frost
         return s_str(*this) + sValue;
     }
 
-    ctnr<s_int> s_int::operator, ( const s_int& iValue ) const
+    s_ctnr<s_int> s_int::operator, ( const s_int& iValue ) const
     {
-        ctnr<s_int> mContainer;
+        s_ctnr<s_int> mContainer;
         mContainer.Push(*this);
         mContainer.Push(iValue);
         return mContainer;
