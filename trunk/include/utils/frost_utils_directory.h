@@ -27,9 +27,9 @@ namespace Frost
     public :
 
         /// Call that constructor to open a directory.
-        /** \param sName The directory path (relative to the program).
+        /** \param sRelPath The directory path (relative to the program).
         */
-        Directory(const s_str& sName);
+        Directory(const s_str& sRelPath);
 
         /// Iterates through sub-directories.
         /** \return The next sub-directory, 'NULL' if none
@@ -38,8 +38,17 @@ namespace Frost
 
         /// Returns this directory's name.
         /** \return This directory's name
+        *   \note For example : Interface/Base_UI.<br>
+        *         This function would return "Base_UI".
         */
         const s_str& GetName() const;
+
+        /// Returns this directory's relative path.
+        /** \return This directory's relative path
+        *   \note For example : Interface/Base_UI.<br>
+        *         This function would return "Interface/Base_UI".
+        */
+        const s_str& GetRelPath() const;
 
         static const s_str CLASS_NAME;
 
@@ -51,6 +60,8 @@ namespace Frost
         s_uint uiIter_;
         /// This directory name
         s_str  sName_;
+        /// This directory relative path (with name)
+        s_str  sRelPath_;
     };
 }
 

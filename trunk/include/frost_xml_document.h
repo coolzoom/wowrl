@@ -31,6 +31,9 @@ namespace XML
         */
         Document(const s_str& sFileName, const s_str& sDefFileName);
 
+        /// Destructor.
+        ~Document();
+
         /// Returns this file's main block.
         /** \return This file's main block
         */
@@ -61,11 +64,17 @@ namespace XML
         */
         s_bool        Check();
 
+        /// Returns a predefined Block.
+        /** \param sName The name of the predefined Block you want
+        *   \note Only used in loading stage.
+        */
+        s_ptr<Block>  GetPredefinedBlock(const s_str& sName);
+
         static const s_str CLASS_NAME;
 
     private :
 
-        s_bool CheckLineSynthax_(const s_str& sLine);
+        s_bool CheckLineSynthax_(s_str& sLine);
         s_bool LoadDefinition_();
 
         s_str  sFileName_;

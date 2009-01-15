@@ -12,7 +12,7 @@
 namespace Frost
 {
     class s_str;
-    template<class T> class ctnr;
+    template<class T> class s_ctnr;
 
     /// Base type : boolean
     /** Frost's base types are made to allow simpler
@@ -54,7 +54,7 @@ namespace Frost
 
         s_bool&      operator =  (const s_bool& bValue);
 
-        ctnr<s_bool> operator,   (const s_bool& bValue) const;
+        s_ctnr<s_bool> operator,   (const s_bool& bValue) const;
 
         static bool bDummy;
 

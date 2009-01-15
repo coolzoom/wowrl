@@ -49,13 +49,15 @@ namespace Frost
         void                 RemoveUIObject(s_ptr<GUI::UIObject> pObj);
         s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName);
 
+        void           PrintUI();
+
         lua_State*     GetLua();
 
         void           LoadUI();
         void           CloseUI();
         void           ReloadUI();
 
-        void ParseXMLFile(const s_str& sFile);
+        void           Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 
@@ -84,7 +86,11 @@ namespace Frost
 
     private :
 
-        void LoadAddOn(s_str sName, s_str sFolder);
+        void LoadAddOnTOC_(const s_str& sAddOnName, const s_str& sAddOnFolder);
+        void LoadAddOnFiles_(s_ptr<AddOn> pAddOn);
+        void LoadAddOnDirectory_(const s_str& sDirectory);
+
+        void ParseXMLFile_(const s_str& sFile, s_ptr<AddOn> pAddOn);
 
         // Attribute parsers
         s_bool ParseFrameAttributes_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);

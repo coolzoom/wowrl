@@ -28,4 +28,7 @@
 // Iterates through an XML::Block sub-blocks
 #define foreach_block(block, parent) for ((block) = (parent)->First(); (block); (block) = (parent)->Next())
 
+// Iterates through a Directory's sub directories
+#define foreach_subdir(subdir, dir) for ((subdir) = (dir).GetNextSubDirectory(); (subdir); (subdir) = (dir).GetNextSubDirectory())
+
 #endif

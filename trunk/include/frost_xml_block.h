@@ -17,17 +17,25 @@ namespace XML
 {
     class Document;
 
+    enum AttrType
+    {
+        ATTR_TYPE_STRING,
+        ATTR_TYPE_NUMBER,
+        ATTR_TYPE_BOOL
+    };
+
     /// An attribute of an XML Block
     struct Attribute
     {
         Attribute();
-        Attribute(const s_str& name, const s_bool& optional = false, const s_str& def = "");
+        Attribute(const s_str& name, const s_bool& optional = false, const s_str& def = "", const AttrType& type = ATTR_TYPE_STRING);
 
-        s_str  sName;
-        s_str  sValue;
-        s_str  sDefault;
-        s_bool bOptional;
-        s_bool bFound;
+        s_str    sName;
+        s_str    sValue;
+        s_str    sDefault;
+        s_bool   bOptional;
+        s_bool   bFound;
+        AttrType mType;
 
         static const s_str CLASS_NAME;
     };
@@ -59,6 +67,14 @@ namespace XML
         *   \param bRadio       'true' if only one Block can be present on this level
         */
         Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_bool& bRadio = false);
+
+        /// Copy constructor.
+        /** \param mValue The Block to copy
+        */
+        Block::Block(const Block& mValue);
+
+        /// Destructor.
+        ~Block();
 
         /// Adds an attribute to the list.
         /** \param mAttrib The new attribute
@@ -110,6 +126,20 @@ namespace XML
         *   \note Returns NULL for the main block.
         */
         s_ptr<Block>  GetParent() const;
+
+        /// Notify this Block that another one derivates from it.
+        /** \param sName The name of the derivated Block
+        *   \note Only works for pre-defined blocks.<br>
+        *         Only used in the definition stage.
+        */
+        void          AddDerivated(const s_str& sName);
+
+        /// Checks if this Block is being derivated from by another Block.
+        /** \param sName The name of the Block you want to test
+        *   \note Only works for pre-defined blocks.<br>
+        *         Only used in the loading stage.
+        */
+        s_bool        HasDerivated(const s_str& sName);
 
         /// Sets this Block's parent.
         /** \param pParent The new parent
@@ -274,16 +304,18 @@ namespace XML
         s_refptr<Block> pNewBlock_;
         s_bool          bCreating_;
 
-        std::vector< s_ptr<Block> >::iterator mCurrIter_;
-        std::vector< s_ptr<Block> >::iterator mEndIter_;
+        std::vector<std::multimap< s_str, s_ptr<Block> >::iterator>::iterator mCurrIter_;
+        std::vector<std::multimap< s_str, s_ptr<Block> >::iterator>::iterator mEndIter_;
+
+        std::vector<s_str> lDerivatedList_;
 
         std::map<s_str, Attribute>       lAttributeList_;
         std::map<s_str, Block>           lDefBlockList_;
         std::map<s_str, PredefinedBlock> lPreDefBlockList_;
 
-        std::multimap<s_str, Block>                    lFoundBlockList_;
-        std::vector< s_ptr<Block> >                    lFoundBlockStack_;
-        std::map< s_str, std::vector< s_ptr<Block> > > lFoundBlockSortedStacks_;
+        std::multimap< s_str, s_ptr<Block> >                                           lFoundBlockList_;
+        std::vector<std::multimap< s_str, s_ptr<Block> >::iterator>                    lFoundBlockStack_;
+        std::map< s_str, std::vector<std::multimap< s_str, s_ptr<Block> >::iterator> > lFoundBlockSortedStacks_;
     };
 }
 }

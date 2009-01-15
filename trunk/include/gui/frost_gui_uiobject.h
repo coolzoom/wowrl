@@ -78,6 +78,11 @@ namespace Frost
             */
             virtual void    UpdateMaterial(const s_bool& bForceUpdate = false);
 
+            /// Prints all relevant information about this widget in a string.
+            /** \return All relevant information about this widget
+            */
+            virtual s_str   Serialize() const;
+
             /// Returns this widget's material.
             /** \return This widget's material (texture)
             */
@@ -305,7 +310,7 @@ namespace Frost
 
             std::map<AnchorPoint, Anchor> lAnchorList_;
             std::vector< s_ptr<Anchor> >  lAnchorStack_;
-            s_int                         lBorderList_[4];
+            s_array<s_int, 4>             lBorderList_;
 
             s_float fAlpha_;
             s_bool  bIsShown_;
