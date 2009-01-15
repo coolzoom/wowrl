@@ -19,8 +19,8 @@ Attribute::Attribute()
 {
 }
 
-Attribute::Attribute(const s_str& name, const s_bool& optional, const s_str& def) :
-    sName(name), sDefault(def), bOptional(optional)
+Attribute::Attribute(const s_str& name, const s_bool& optional, const s_str& def, const AttrType& type) :
+    sName(name), sDefault(def), bOptional(optional), mType(type)
 {
 }
 
@@ -40,6 +40,43 @@ Block::Block()
 Block::Block( const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_bool& bRadio ) :
     sName_(sName), uiMaxNumber_(uiMaxNbr), uiMinNumber_(uiMinNbr), bRadio_(bRadio)
 {
+}
+
+Block::Block( const Block& mValue )
+{
+    sName_ = mValue.sName_;
+    uiMaxNumber_ = mValue.uiMaxNumber_;
+    uiMinNumber_ = mValue.uiMinNumber_;
+    bRadio_ = mValue.bRadio_;
+    bRadioChilds_ = mValue.bRadioChilds_;
+    sValue_ = mValue.sValue_;
+    pDoc_ = mValue.pDoc_;
+    pParent_ = mValue.pParent_;
+    bCreating_ = mValue.bCreating_;
+
+    lDerivatedList_ = mValue.lDerivatedList_;
+
+    lAttributeList_ = mValue.lAttributeList_;
+    lDefBlockList_ = mValue.lDefBlockList_;
+    lPreDefBlockList_ = mValue.lPreDefBlockList_;
+
+    multimap< s_str, s_ptr<Block> >::const_iterator iterBlock;
+    multimap< s_str, s_ptr<Block> >::iterator iterAdded;
+    foreach (iterBlock, mValue.lFoundBlockList_)
+    {
+        iterAdded = lFoundBlockList_.insert(make_pair(iterBlock->first, new Block(*(iterBlock->second))));
+        lFoundBlockStack_.push_back(iterAdded);
+        lFoundBlockSortedStacks_[iterBlock->first].push_back(iterAdded);
+    }
+}
+
+Block::~Block()
+{
+    multimap< s_str, s_ptr<Block> >::iterator iterBlock;
+    foreach (iterBlock, lFoundBlockList_)
+    {
+        delete iterBlock->second.Get();
+    }
 }
 
 s_bool Block::Add( const Attribute& mAttrib )
@@ -70,15 +107,36 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
             {
                 vector<s_str> lWords = iterAttr->Cut("=");
                 s_str sAttrName = lWords.front();
-
                 sAttrName.Trim(' ');
+
                 s_str sAttrValue = lWords.back();
                 sAttrValue.Trim(' ');
-                sAttrValue.EraseFromStart(1);
-                sAttrValue.EraseFromEnd(1);
+                sAttrValue.Trim('"');
+
                 if (MAPFIND(sAttrName, lAttributeList_))
                 {
                     s_ptr<Attribute> pAttr = &lAttributeList_[sAttrName];
+                    if (pAttr->mType == ATTR_TYPE_BOOL)
+                    {
+                        if (!sAttrValue.IsBoolean())
+                        {
+                            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                                "Attribute \""+sAttrName+"\" has wrong type (boolean expected)."
+                            );
+                            return false;
+                        }
+                    }
+                    else if (pAttr->mType == ATTR_TYPE_NUMBER)
+                    {
+                        if (!sAttrValue.IsNumber())
+                        {
+                            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                                "Attribute \""+sAttrName+"\" has wrong type (number expected)."
+                            );
+                            return false;
+                        }
+                    }
+
                     pAttr->bFound = true;
                     pAttr->sValue = sAttrValue;
                 }
@@ -164,6 +222,26 @@ s_bool Block::CheckBlocks()
         }
     }
 
+    map<s_str, PredefinedBlock>::iterator iterPreDefBlock;
+    foreach (iterPreDefBlock, lPreDefBlockList_)
+    {
+        s_uint uiCount = lFoundBlockList_.count(iterPreDefBlock->first);
+        if (uiCount < iterPreDefBlock->second.uiMin)
+        {
+            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                "Too few \"<"+iterPreDefBlock->first+">\" blocks (expected : at least "+iterPreDefBlock->second.uiMin+")."
+            );
+            return false;
+        }
+        else if (uiCount > iterPreDefBlock->second.uiMax)
+        {
+            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                "Too many \"<"+iterPreDefBlock->first+">\" blocks (expected : at most "+iterPreDefBlock->second.uiMax+")."
+            );
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -195,6 +273,32 @@ s_ptr<Block> Block::GetParent() const
 void Block::SetParent( s_ptr<Block> pParent )
 {
     pParent_ = pParent;
+}
+
+void Block::AddDerivated( const s_str& sName )
+{
+    lDerivatedList_.push_back(sName);
+}
+
+s_bool Block::HasDerivated( const s_str& sName )
+{
+    if (VECTORFIND(sName, lDerivatedList_))
+    {
+        return true;
+    }
+    else
+    {
+        vector<s_str>::iterator iter;
+        foreach (iter, lDerivatedList_)
+        {
+            if (pDoc_->GetPredefinedBlock(*iter)->HasDerivated(sName))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void Block::SetDocument( s_ptr<Document> pDoc )
@@ -247,7 +351,7 @@ s_ptr<Block> Block::First( const s_str& sName )
         {
             mCurrIter_ = lFoundBlockStack_.begin();
             mEndIter_ = lFoundBlockStack_.end();
-            return *mCurrIter_;
+            return (*mCurrIter_)->second;
         }
         else
         {
@@ -260,7 +364,7 @@ s_ptr<Block> Block::First( const s_str& sName )
         {
             mCurrIter_ = lFoundBlockSortedStacks_[sName].begin();
             mEndIter_ = lFoundBlockSortedStacks_[sName].end();
-            return *mCurrIter_;
+            return (*mCurrIter_)->second;
         }
         else
         {
@@ -277,7 +381,7 @@ s_ptr<Block> Block::Next()
         if (mCurrIter_ == mEndIter_)
             return NULL;
         else
-            return *mCurrIter_;
+            return (*mCurrIter_)->second;
     }
     else
         return NULL;
@@ -291,7 +395,7 @@ s_str Block::GetAttribute( const s_str& sName )
     }
     else
     {
-        Error(CLASS_NAME, "Attribute \""+sName+"\" doesn't exist.");
+        Error(CLASS_NAME + "("+sName_+")", "Attribute \""+sName+"\" doesn't exist.");
         Log("List :");
         map<s_str, Attribute>::iterator iterAttr;
         foreach (iterAttr, lAttributeList_)
@@ -304,7 +408,7 @@ s_ptr<Block> Block::GetBlock( const s_str& sName )
 {
     if (MAPFIND(sName, lFoundBlockList_))
     {
-        return &lFoundBlockList_.find(sName)->second;
+        return lFoundBlockList_.find(sName)->second;
     }
     else
     {
@@ -315,14 +419,32 @@ s_ptr<Block> Block::GetBlock( const s_str& sName )
 s_ptr<Block> Block::GetRadioBlock()
 {
     if (bRadioChilds_)
-        return &lFoundBlockList_.begin()->second;
+        return lFoundBlockList_.begin()->second;
     else
         return NULL;
 }
 
 s_bool Block::HasBlock( const s_str& sName )
 {
-    return (MAPFIND(sName, lDefBlockList_) || MAPFIND(sName, lPreDefBlockList_));
+    if (MAPFIND(sName, lDefBlockList_) || MAPFIND(sName, lPreDefBlockList_))
+    {
+        return true;
+    }
+    else
+    {
+        s_ptr<XML::Block> pGlobal;
+        map<s_str, PredefinedBlock>::iterator iterBlock;
+        foreach (iterBlock, lPreDefBlockList_)
+        {
+            pGlobal = pDoc_->GetPredefinedBlock(iterBlock->first);
+            if (pGlobal->HasDerivated(sName))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 s_ptr<Block> Block::CreateBlock( const s_str& sName )
@@ -335,7 +457,7 @@ s_ptr<Block> Block::CreateBlock( const s_str& sName )
         }
         else
         {
-            pNewBlock_ = s_refptr<Block>(new Block(*(lPreDefBlockList_[sName].pBlock)));
+            pNewBlock_ = s_refptr<Block>(new Block(*pDoc_->GetPredefinedBlock(sName)));
         }
         pNewBlock_->SetParent(this);
         pNewBlock_->SetDocument(pDoc_);
@@ -353,13 +475,13 @@ void Block::AddBlock()
 {
     if (bCreating_)
     {
-        multimap<s_str, Block>::iterator iterAdded;
+        multimap< s_str, s_ptr<Block> >::iterator iterAdded;
         // Store the new block
-        iterAdded = lFoundBlockList_.insert(make_pair(pNewBlock_->GetName(), *pNewBlock_));
+        iterAdded = lFoundBlockList_.insert(make_pair(pNewBlock_->GetName(), new Block(*pNewBlock_)));
         // Position it on the global stack
-        lFoundBlockStack_.push_back(&iterAdded->second);
+        lFoundBlockStack_.push_back(iterAdded);
         // Position it on the sorted stack
-        lFoundBlockSortedStacks_[pNewBlock_->GetName()].push_back(&iterAdded->second);
+        lFoundBlockSortedStacks_[pNewBlock_->GetName()].push_back(iterAdded);
 
         pNewBlock_.SetNull();
         bCreating_ = false;

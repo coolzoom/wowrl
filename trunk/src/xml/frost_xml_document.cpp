@@ -39,6 +39,10 @@ Document::Document( const s_str& sFileName, const s_str& sDefFileName ) :
     }
 }
 
+Document::~Document()
+{
+}
+
 s_ptr<Block> Document::GetMainBlock()
 {
     return &mMainBlock_;
@@ -54,9 +58,29 @@ const s_uint& Document::GetLineNbr() const
     return uiLineNbr_;
 }
 
-s_bool Document::CheckLineSynthax_( const s_str& sLine )
+s_bool Document::CheckLineSynthax_( s_str& sLine )
 {
-    return ( (sLine.Get(0) == '<') && sLine.Find(">") );
+    #ifdef FROST_LINUX
+    // Fix line endings
+    if ((sLine.Length() > 0u) && (sLine.Get(sLine.Length() - 1u) == '\r'))
+    {
+        sLine.EraseFromEnd(1u);
+    }
+    #endif
+
+    s_uint uiPos = sLine.Find("<");
+    if (uiPos)
+    {
+        sLine.EraseFromStart(uiPos);
+        uiPos = sLine.Find(">");
+        if (uiPos)
+        {
+            sLine.EraseFromEnd(sLine.Size()-uiPos-1);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 s_bool Document::LoadDefinition_()
@@ -73,17 +97,7 @@ s_bool Document::LoadDefinition_()
         {
             s_str sLine = mFile.GetLine();
 
-            #ifdef FROST_LINUX
-            // Fix line endings
-            if ((sLine.Length() > 0u) && (sLine.Get(sLine.Length() - 1u) == '\r'))
-            {
-                sLine.EraseFromEnd(1u);
-            }
-            #endif
-
-            sLine.Trim(' ');
-
-            if (!sLine.IsEmpty())
+            if (!sLine.IsEmpty(true))
             {
                 if (CheckLineSynthax_(sLine))
                 {
@@ -249,6 +263,7 @@ s_bool Document::LoadDefinition_()
                                     foreach (iterAttr, lAttribs)
                                     {
                                         s_str sAttr = *iterAttr;
+
                                         s_str sDefault;
                                         s_bool bOptional = false;
                                         if (sAttr.Find("="))
@@ -257,8 +272,38 @@ s_bool Document::LoadDefinition_()
                                             vector<s_str> lCut = sAttr.Cut("=");
                                             sAttr = lCut.front();
                                             sDefault = lCut.back();
+                                            sDefault.Trim('"');
                                         }
-                                        if (!pActual->Add(Attribute(sAttr, bOptional, sDefault)))
+
+                                        AttrType mType = ATTR_TYPE_STRING;
+                                        vector<s_str> lCommands = sAttr.Cut(":");
+                                        sAttr = lCommands.back();
+                                        lCommands.pop_back();
+                                        vector<s_str>::iterator iterCommand;
+                                        foreach (iterCommand, lCommands)
+                                        {
+                                            s_str sLetterCode = s_str(iterCommand->Get(0));
+                                            if (sLetterCode == "s")
+                                            {
+                                                mType = ATTR_TYPE_STRING;
+                                            }
+                                            else if (sLetterCode == "n")
+                                            {
+                                                mType = ATTR_TYPE_NUMBER;
+                                            }
+                                            else if (sLetterCode == "b")
+                                            {
+                                                mType = ATTR_TYPE_BOOL;
+                                            }
+                                            else
+                                            {
+                                                Warning(sDefFileName_+":"+uiLineNbr_,
+                                                    "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                                                );
+                                            }
+                                        }
+
+                                        if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
                                             return false;
                                     }
                                     pActual = pParent;
@@ -284,6 +329,7 @@ s_bool Document::LoadDefinition_()
                                     if (MAPFIND(sParent, lPredefinedBlockList_))
                                     {
                                         lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
+                                        lPredefinedBlockList_[sParent].AddDerivated(sName);
                                     }
                                     else
                                     {
@@ -308,8 +354,38 @@ s_bool Document::LoadDefinition_()
                                         vector<s_str> lCut = sAttr.Cut("=");
                                         sAttr = lCut.front();
                                         sDefault = lCut.back();
+                                        sDefault.Trim('"');
                                     }
-                                    if (!pActual->Add(Attribute(sAttr, bOptional)))
+
+                                    AttrType mType = ATTR_TYPE_STRING;
+                                    vector<s_str> lCommands = sAttr.Cut(":");
+                                    sAttr = lCommands.back();
+                                    lCommands.pop_back();
+                                    vector<s_str>::iterator iterCommand;
+                                    foreach (iterCommand, lCommands)
+                                    {
+                                        s_str sLetterCode = s_str(iterCommand->Get(0));
+                                        if (sLetterCode == "s")
+                                        {
+                                            mType = ATTR_TYPE_STRING;
+                                        }
+                                        else if (sLetterCode == "n")
+                                        {
+                                            mType = ATTR_TYPE_NUMBER;
+                                        }
+                                        else if (sLetterCode == "b")
+                                        {
+                                            mType = ATTR_TYPE_BOOL;
+                                        }
+                                        else
+                                        {
+                                            Warning(sDefFileName_+":"+uiLineNbr_,
+                                                "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                                            );
+                                        }
+                                    }
+
+                                    if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
                                         return false;
                                 }
                             }
@@ -332,8 +408,38 @@ s_bool Document::LoadDefinition_()
                                             vector<s_str> lCut = sAttr.Cut("=");
                                             sAttr = lCut.front();
                                             sDefault = lCut.back();
+                                            sDefault.Trim('"');
                                         }
-                                        if (!pActual->Add(Attribute(sAttr, bOptional)))
+
+                                        AttrType mType = ATTR_TYPE_STRING;
+                                        vector<s_str> lCommands = sAttr.Cut(":");
+                                        sAttr = lCommands.back();
+                                        lCommands.pop_back();
+                                        vector<s_str>::iterator iterCommand;
+                                        foreach (iterCommand, lCommands)
+                                        {
+                                            s_str sLetterCode = s_str(iterCommand->Get(0));
+                                            if (sLetterCode == "s")
+                                            {
+                                                mType = ATTR_TYPE_STRING;
+                                            }
+                                            else if (sLetterCode == "n")
+                                            {
+                                                mType = ATTR_TYPE_NUMBER;
+                                            }
+                                            else if (sLetterCode == "b")
+                                            {
+                                                mType = ATTR_TYPE_BOOL;
+                                            }
+                                            else
+                                            {
+                                                Warning(sDefFileName_+":"+uiLineNbr_,
+                                                    "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                                                );
+                                            }
+                                        }
+
+                                        if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
                                             return false;
                                     }
                                 }
@@ -518,8 +624,38 @@ s_bool Document::LoadDefinition_()
                                         vector<s_str> lCut = sAttr.Cut("=");
                                         sAttr = lCut.front();
                                         sDefault = lCut.back();
+                                        sDefault.Trim('"');
                                     }
-                                    if (!pActual->Add(Attribute(sAttr, bOptional)))
+
+                                    AttrType mType = ATTR_TYPE_STRING;
+                                    vector<s_str> lCommands = sAttr.Cut(":");
+                                    sAttr = lCommands.back();
+                                    lCommands.pop_back();
+                                    vector<s_str>::iterator iterCommand;
+                                    foreach (iterCommand, lCommands)
+                                    {
+                                        s_str sLetterCode = s_str(iterCommand->Get(0));
+                                        if (sLetterCode == "s")
+                                        {
+                                            mType = ATTR_TYPE_STRING;
+                                        }
+                                        else if (sLetterCode == "n")
+                                        {
+                                            mType = ATTR_TYPE_NUMBER;
+                                        }
+                                        else if (sLetterCode == "b")
+                                        {
+                                            mType = ATTR_TYPE_BOOL;
+                                        }
+                                        else
+                                        {
+                                            Warning(sDefFileName_+":"+uiLineNbr_,
+                                                "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                                            );
+                                        }
+                                    }
+
+                                    if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
                                         return false;
                                 }
                                 pParent = pActual;
@@ -545,6 +681,7 @@ s_bool Document::LoadDefinition_()
                                     if (MAPFIND(sParent, lPredefinedBlockList_))
                                     {
                                         lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
+                                        lPredefinedBlockList_[sParent].AddDerivated(sName);
                                     }
                                     else
                                     {
@@ -576,8 +713,38 @@ s_bool Document::LoadDefinition_()
                                     vector<s_str> lCut = sAttr.Cut("=");
                                     sAttr = lCut.front();
                                     sDefault = lCut.back();
+                                    sDefault.Trim('"');
                                 }
-                                if (!pActual->Add(Attribute(sAttr, bOptional)))
+
+                                AttrType mType = ATTR_TYPE_STRING;
+                                vector<s_str> lCommands = sAttr.Cut(":");
+                                sAttr = lCommands.back();
+                                lCommands.pop_back();
+                                vector<s_str>::iterator iterCommand;
+                                foreach (iterCommand, lCommands)
+                                {
+                                    s_str sLetterCode = s_str(iterCommand->Get(0));
+                                    if (sLetterCode == "s")
+                                    {
+                                        mType = ATTR_TYPE_STRING;
+                                    }
+                                    else if (sLetterCode == "n")
+                                    {
+                                        mType = ATTR_TYPE_NUMBER;
+                                    }
+                                    else if (sLetterCode == "b")
+                                    {
+                                        mType = ATTR_TYPE_BOOL;
+                                    }
+                                    else
+                                    {
+                                        Warning(sDefFileName_+":"+uiLineNbr_,
+                                            "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                                        );
+                                    }
+                                }
+
+                                if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
                                     return false;
                             }
                             pParent = pActual;
@@ -616,20 +783,10 @@ s_bool Document::Check()
         {
             s_str sLine = mFile.GetLine();
 
-            #ifdef FROST_LINUX
-            // Fix line endings
-            if ((sLine.Length() > 0) && (sLine.Get(sLine.Length() - 1u) == '\r'))
-            {
-                sLine.EraseFromEnd(1u);
-            }
-            #endif
-            sLine.Trim(' ');
-
-            if (!sLine.IsEmpty())
+            if (!sLine.IsEmpty(true))
             {
                 if (CheckLineSynthax_(sLine))
                 {
-
                     // It's a tag
                     if (sLine.Find("/>") && !bValue)
                     {
@@ -824,4 +981,16 @@ s_bool Document::Check()
     }
 
     return bValid_;
+}
+
+s_ptr<Block> Document::GetPredefinedBlock( const s_str& sName )
+{
+    if (MAPFIND(sName, lPredefinedBlockList_))
+    {
+        return &lPredefinedBlockList_[sName];
+    }
+    else
+    {
+        return NULL;
+    }
 }
