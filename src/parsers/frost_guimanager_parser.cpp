@@ -25,18 +25,29 @@ namespace Frost
             if (!pFrame->GetParent())
             {
                 s_ptr<GUI::UIObject> pParent = this->GetUIObjectByName(sParent);
-                if (pParent)
+                s_str sName = pMainBlock->GetAttribute("name");
+                if (!sName.IsEmpty(true))
                 {
-                    pFrame->SetParent(pParent);
-                    pFrame->SetName(pMainBlock->GetAttribute("name"));
+                    if (pParent)
+                    {
+                        pFrame->SetParent(pParent);
+                        pFrame->SetName(sName);
+                    }
+                    else
+                    {
+                        pFrame->SetName(sName);
+                        Warning(CLASS_NAME,
+                            "Can't find \""+pFrame->GetName()+"\"'s parent : \""+sParent+"\". "
+                            "No parent given to that widget."
+                        );
+                    }
                 }
                 else
                 {
-                    pFrame->SetName(pMainBlock->GetAttribute("name"));
-                    Warning(CLASS_NAME,
-                        "Can't find \""+pFrame->GetName()+"\"'s parent : \""+sParent+"\". "
-                        "No parent given to that widget."
+                    Error(CLASS_NAME,
+                        "Can't create an UIObject with a blank name. Skipped."
                     );
+                    return false;
                 }
             }
             else
@@ -47,6 +58,10 @@ namespace Frost
                     "because it is a nested widget. Attribute ignored."
                 );
             }
+        }
+        else
+        {
+            pFrame->SetName(pMainBlock->GetAttribute("name"));
         }
 
 
@@ -406,17 +421,20 @@ namespace Frost
         return true;
     }
 
-    void GUIManager::ParseXMLFile( const s_str& sFile )
+    void GUIManager::ParseXMLFile_( const s_str& sFile, s_ptr<AddOn> pAddOn )
     {
+        Log(sFile);
         XML::Document mDoc(sFile, "Interface/UI.def");
         if (mDoc.Check())
         {
+            Log("Good ! ");
             s_ptr<XML::Block> pElemBlock;
             foreach_block (pElemBlock, mDoc.GetMainBlock())
             {
+                Log(pElemBlock->GetName());
                 if (pElemBlock->GetName() == "Script")
                 {
-                    Lua::DoFile(pLua_, pElemBlock->GetAttribute("file"));
+                    Lua::DoFile(pLua_, pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"));
                 }
                 else if (pElemBlock->GetName() == "Include")
                 {

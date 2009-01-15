@@ -13,7 +13,7 @@ using namespace Frost::Lua;
 /* [#] The following functions are shortcuts to the LUA C API. They are very
 *  usefull when dealing with tables, and allow default value.
 */
-s_int Lua::GetGlobalInt( s_str sName, s_bool bCritical, s_int iDefaultValue )
+s_int Lua::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue )
 {
     lua_State* pLua = Engine::GetSingleton()->GetLua();
     s_int i;
@@ -43,7 +43,7 @@ s_int Lua::GetGlobalInt( s_str sName, s_bool bCritical, s_int iDefaultValue )
     return i;
 }
 
-s_float Lua::GetGlobalFloat( s_str sName, s_bool bCritical, s_float fDefaultValue )
+s_float Lua::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue )
 {
     lua_State* pLua = Engine::GetSingleton()->GetLua();
     s_float f;
@@ -73,7 +73,7 @@ s_float Lua::GetGlobalFloat( s_str sName, s_bool bCritical, s_float fDefaultValu
     return f;
 }
 
-s_str Lua::GetGlobalString( s_str sName, s_bool bCritical, s_str sDefaultValue )
+s_str Lua::GetGlobalString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue )
 {
     lua_State* pLua = Engine::GetSingleton()->GetLua();
     s_str s;
@@ -103,7 +103,7 @@ s_str Lua::GetGlobalString( s_str sName, s_bool bCritical, s_str sDefaultValue )
     return s;
 }
 
-s_bool Lua::GetGlobalBool( s_str sName, s_bool bCritical, s_bool bDefaultValue )
+s_bool Lua::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue )
 {
     lua_State* pLua = Engine::GetSingleton()->GetLua();
     s_bool b;
@@ -133,7 +133,7 @@ s_bool Lua::GetGlobalBool( s_str sName, s_bool bCritical, s_bool bDefaultValue )
     return b;
 }
 
-s_int Lua::GetFieldInt( s_str sName, s_bool bCritical, s_int iDefaultValue, s_bool bSetValue, lua_State* pLua )
+s_int Lua::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue, const s_bool& bSetValue, lua_State* pLua )
 {
     s_int i;
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
@@ -165,7 +165,7 @@ s_int Lua::GetFieldInt( s_str sName, s_bool bCritical, s_int iDefaultValue, s_bo
     return i;
 }
 
-s_float Lua::GetFieldFloat( s_str sName, s_bool bCritical, s_float fDefaultValue, s_bool bSetValue, lua_State* pLua )
+s_float Lua::GetFieldFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue, const s_bool& bSetValue, lua_State* pLua )
 {
     s_float f;
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
@@ -198,7 +198,7 @@ s_float Lua::GetFieldFloat( s_str sName, s_bool bCritical, s_float fDefaultValue
     return f;
 }
 
-s_str Lua::GetFieldString( s_str sName, s_bool bCritical, s_str sDefaultValue, s_bool bSetValue, lua_State* pLua )
+s_str Lua::GetFieldString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue, const s_bool& bSetValue, lua_State* pLua )
 {
     s_str s;
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
@@ -230,7 +230,7 @@ s_str Lua::GetFieldString( s_str sName, s_bool bCritical, s_str sDefaultValue, s
     return s;
 }
 
-s_bool Lua::GetFieldBool( s_str sName, s_bool bCritical, s_bool bDefaultValue, s_bool bSetValue, lua_State* pLua )
+s_bool Lua::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue, const s_bool& bSetValue, lua_State* pLua )
 {
     s_bool b;
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
@@ -262,7 +262,7 @@ s_bool Lua::GetFieldBool( s_str sName, s_bool bCritical, s_bool bDefaultValue, s
     return b;
 }
 
-void Lua::SetFieldInt( s_str sName, s_int iValue, lua_State* pLua )
+void Lua::SetFieldInt( const s_str& sName, const s_int& iValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushstring(pLua, sName.c_str());
@@ -270,7 +270,7 @@ void Lua::SetFieldInt( s_str sName, s_int iValue, lua_State* pLua )
     lua_settable(pLua, -3);
 }
 
-void Lua::SetFieldFloat( s_str sName, s_float fValue, lua_State* pLua )
+void Lua::SetFieldFloat( const s_str& sName, const s_float& fValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushstring(pLua, sName.c_str());
@@ -278,7 +278,7 @@ void Lua::SetFieldFloat( s_str sName, s_float fValue, lua_State* pLua )
     lua_settable(pLua, -3);
 }
 
-void Lua::SetFieldString( s_str sName, s_str sValue, lua_State* pLua )
+void Lua::SetFieldString( const s_str& sName, const s_str& sValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushstring(pLua, sName.c_str());
@@ -286,7 +286,7 @@ void Lua::SetFieldString( s_str sName, s_str sValue, lua_State* pLua )
     lua_settable(pLua, -3);
 }
 
-void Lua::SetFieldBool( s_str sName, s_bool bValue, lua_State* pLua )
+void Lua::SetFieldBool( const s_str& sName, const s_bool& bValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushstring(pLua, sName.c_str());
@@ -294,7 +294,7 @@ void Lua::SetFieldBool( s_str sName, s_bool bValue, lua_State* pLua )
     lua_settable(pLua, -3);
 }
 
-void Lua::SetIFieldInt( s_int iID, s_int iValue, lua_State* pLua )
+void Lua::SetIFieldInt( const s_int& iID, const s_int& iValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushnumber(pLua, iID);
@@ -302,7 +302,7 @@ void Lua::SetIFieldInt( s_int iID, s_int iValue, lua_State* pLua )
     lua_settable(pLua, -3);
 }
 
-void Lua::SetIFieldFloat( s_int iID, s_float fValue, lua_State* pLua )
+void Lua::SetIFieldFloat( const s_int& iID, const s_float& fValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushnumber(pLua, iID);
@@ -310,7 +310,7 @@ void Lua::SetIFieldFloat( s_int iID, s_float fValue, lua_State* pLua )
     lua_settable(pLua, -3);
 }
 
-void Lua::SetIFieldString( s_int iID, s_str sValue, lua_State* pLua )
+void Lua::SetIFieldString( const s_int& iID, const s_str& sValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushnumber(pLua, iID);
@@ -318,7 +318,7 @@ void Lua::SetIFieldString( s_int iID, s_str sValue, lua_State* pLua )
     lua_settable(pLua, -3);
 }
 
-void Lua::SetIFieldBool( s_int iID, s_bool bValue, lua_State* pLua )
+void Lua::SetIFieldBool( const s_int& iID, const s_bool& bValue, lua_State* pLua )
 {
     if (pLua == NULL) pLua = Engine::GetSingleton()->GetLua();
     lua_pushnumber(pLua, iID);

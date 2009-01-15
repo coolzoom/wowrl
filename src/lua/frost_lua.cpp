@@ -88,7 +88,7 @@ void Lua::OpenLibs(lua_State* pLua)
 }
 
 
-s_str Lua::ConcTable(lua_State* pLua, s_str sTable )
+s_str Lua::ConcTable(lua_State* pLua, const s_str& sTable )
 {
     /* [#] This function converts a LUA table into a formated string. It is used
     *  to save the content of the table in the SavedVariables.
@@ -115,7 +115,7 @@ s_str Lua::ConcTable(lua_State* pLua, s_str sTable )
     return Engine::sLuaComString;
 }
 
-void Lua::CopyTable( lua_State* pSrcVM, lua_State* pDestVM, s_str sSrcName, s_str sDestName )
+void Lua::CopyTable( lua_State* pSrcVM, lua_State* pDestVM, const s_str& sSrcName, const s_str& sDestName )
 {
     Engine::sLuaComString = "";
     s_str sExec = "str = \"\";\nstr = ConcTable(str, \"" + sSrcName + "\");\n";
@@ -218,7 +218,7 @@ void Lua::CopyTable( lua_State* pSrcVM, lua_State* pDestVM, s_str sSrcName, s_st
     }
 }
 
-s_bool Lua::DoFile( lua_State* pLua, s_str sFile )
+s_bool Lua::DoFile( lua_State* pLua, const s_str& sFile )
 {
     if (File::Exists(sFile))
     {
@@ -229,12 +229,12 @@ s_bool Lua::DoFile( lua_State* pLua, s_str sFile )
     }
     else
     {
-        PrintError(pLua, "Can't open \""+sFile+"\".");
+        Error("LUA", "Can't open \""+sFile+"\".");
         return false;
     }
 }
 
-s_bool Lua::DoString( lua_State* pLua, s_str sStr )
+s_bool Lua::DoString( lua_State* pLua, const s_str& sStr )
 {
     int iError = luaL_dostring(pLua, sStr.c_str());
     if (iError) l_ThrowError(pLua);
@@ -260,7 +260,7 @@ s_bool Lua::InitLua( lua_State** pLua )
     return true;
 }
 
-void Lua::PrintError( lua_State* pLua, s_str sError )
+void Lua::PrintError( lua_State* pLua, const s_str& sError )
 {
     lua_Debug d;
     lua_getstack(pLua, 1, &d);
@@ -270,32 +270,32 @@ void Lua::PrintError( lua_State* pLua, s_str sError )
     l_ThrowError(pLua);
 }
 
-void Frost::lua_pushnumber( lua_State* pLua, s_float fValue )
+void Frost::lua_pushnumber( lua_State* pLua, const s_float& fValue )
 {
     lua_pushnumber(pLua, fValue.Get());
 }
 
-void Frost::lua_pushnumber( lua_State* pLua, s_double dValue )
+void Frost::lua_pushnumber( lua_State* pLua, const s_double& dValue )
 {
     lua_pushnumber(pLua, dValue.Get());
 }
 
-void Frost::lua_pushnumber( lua_State* pLua, s_int iValue )
+void Frost::lua_pushnumber( lua_State* pLua, const s_int& iValue )
 {
     lua_pushnumber(pLua, iValue.Get());
 }
 
-void Frost::lua_pushnumber( lua_State* pLua, s_uint uiValue )
+void Frost::lua_pushnumber( lua_State* pLua, const s_uint& uiValue )
 {
     lua_pushnumber(pLua, uiValue.Get());
 }
 
-void Frost::lua_pushboolean( lua_State* pLua, s_bool bValue )
+void Frost::lua_pushboolean( lua_State* pLua, const s_bool& bValue )
 {
     lua_pushboolean(pLua, bValue.Get());
 }
 
-void Frost::lua_pushstring( lua_State* pLua, s_str sValue )
+void Frost::lua_pushstring( lua_State* pLua, const s_str& sValue )
 {
     lua_pushstring(pLua, sValue.c_str());
 }

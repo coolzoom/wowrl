@@ -222,6 +222,9 @@ namespace Frost
             // Update units' state, actions, movement, ...
             pUnitMgr_->UpdateUnits(fDelta);
 
+            // Update the GUI
+            pGUIMgr_->Update(fDelta);
+
             // Update our own render targets
             if (!pSpriteMgr_->RenderTargets())
                 break;

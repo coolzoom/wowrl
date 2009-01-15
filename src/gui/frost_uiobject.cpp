@@ -26,6 +26,7 @@ UIObject::UIObject()
     fRelWidth_ = 1.0f;
     fRelHeight_ = 1.0f;
     bIsShown_ = true;
+    bUpdateBorders_ = true;
     uiID_ = s_uint::NaN;
 }
 
@@ -41,6 +42,29 @@ s_ptr<LuaUIObject> UIObject::GetGlue()
 s_refptr<Material> UIObject::GetMaterial()
 {
     return pMaterial_;
+}
+
+s_str UIObject::Serialize() const
+{
+    s_str sStr;
+
+    sStr << "  Name : " << sName_ << "\n";
+    sStr << "  ID : " << uiID_ << "\n";
+    sStr << "  Type : " << lType_.back() << "\n";
+    if (pParent_)
+        sStr << "  Parent : " << pParent_->GetName() << "\n";
+    else
+        sStr << "  Parent : none\n";
+    sStr << "  Num anchors : " << s_int((int)lAnchorList_.size()) << "\n";
+    sStr << "  Borders : " << lBorderList_ << "\n";
+    sStr << "  Alpha : " << fAlpha_ << "\n";
+    sStr << "  Shown : " << bIsShown_ << "\n";
+    sStr << "  Abs width : " << uiAbsWidth_ << "\n";
+    sStr << "  Abs height : " << uiAbsHeight_ << "\n";
+    sStr << "  Rel width : " << fRelWidth_ << "\n";
+    sStr << "  Rel height : " << fRelHeight_ << "\n";
+
+    return sStr;
 }
 
 const s_str& UIObject::GetName() const
@@ -133,7 +157,7 @@ void UIObject::SetRelWidth( const s_float& fRelWidth )
     if (pParent_ != NULL)
         uiAbsWidth_ = s_uint(fRelWidth_*s_float(pParent_->GetAbsWidth()));
     else
-        uiAbsWidth_ = s_uint(fRelWidth_*s_float(Engine::GetSingleton()->GetScreenHeight()));
+        uiAbsWidth_ = s_uint(fRelWidth_*s_float(Engine::GetSingleton()->GetScreenWidth()));
 }
 
 void UIObject::SetRelHeight( const s_float& fRelHeight )
@@ -186,30 +210,30 @@ s_ptr<UIObject> UIObject::GetParent()
 
 const s_int& UIObject::GetBottom() const
 {
-    return lBorderList_[BORDER_BOTTOM];
+    return lBorderList_.Get(BORDER_BOTTOM);
 }
 
 Point<s_int> UIObject::GetCenter() const
 {
     return Point<s_int>(
-        (lBorderList_[BORDER_LEFT] + s_int(uiAbsWidth_/2u)).Get(),
-        (lBorderList_[BORDER_TOP] + s_int(uiAbsHeight_/2u)).Get()
+        (lBorderList_.Get(BORDER_LEFT) + s_int(uiAbsWidth_/2u)).Get(),
+        (lBorderList_.Get(BORDER_TOP) + s_int(uiAbsHeight_/2u)).Get()
     );
 }
 
 const s_int& UIObject::GetLeft() const
 {
-    return lBorderList_[BORDER_RIGHT];
+    return lBorderList_.Get(BORDER_RIGHT);
 }
 
 const s_int& UIObject::GetRight() const
 {
-    return lBorderList_[BORDER_RIGHT];
+    return lBorderList_.Get(BORDER_RIGHT);
 }
 
 const s_int& UIObject::GetTop() const
 {
-    return lBorderList_[BORDER_TOP];
+    return lBorderList_.Get(BORDER_TOP);
 }
 
 void UIObject::ClearAllPoints()
@@ -315,6 +339,7 @@ void UIObject::SetID( const s_uint& uiID )
 
 void UIObject::UpdateBorders_()
 {
+    // TODO : débugger ça
     s_int iTop    = s_int(s_int::INTEGER_INF_PLUS);
     s_int iBottom = s_int(s_int::INTEGER_INF_MINUS);
     s_int iLeft   = s_int(s_int::INTEGER_INF_PLUS);

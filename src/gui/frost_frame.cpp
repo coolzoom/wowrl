@@ -38,6 +38,13 @@ Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0
     uiLevel_ = 0u;
 }
 
+s_str Frame::Serialize() const
+{
+    s_str sStr = UIObject::Serialize();
+
+    return sStr;
+}
+
 s_bool Frame::CanUseScript( const s_str& sScriptName ) const
 {
     if ((sScriptName == "OnDragStart") ||
@@ -99,6 +106,43 @@ void Frame::FireBuildLayerList_()
 s_bool Frame::HasScript( const s_str& sScriptName ) const
 {
     return MAPFIND(sScriptName, lDefinedScriptList_);
+}
+
+void Frame::AddChild( s_ptr<Frame> pChild )
+{
+    if (pChild)
+    {
+        if (!MAPFIND(pChild->GetID(), lChildList_))
+        {
+            lChildList_[pChild->GetID()] = pChild;
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "Trying to add \""+pChild->GetName()+"\" to \""+sName_+"\"'s children, "
+                "but it was already one of this Frame's child."
+            );
+        }
+    }
+}
+
+void Frame::RemoveChild( s_ptr<Frame> pChild )
+{
+    if (pChild)
+    {
+        map< s_uint, s_ptr<Frame> >::iterator iter = lChildList_.find(pChild->GetID());
+        if (iter != lChildList_.end())
+        {
+            lChildList_.erase(iter);
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "Trying to remove \""+pChild->GetName()+"\" from \""+sName_+"\"'s children, "
+                "but it was not one of this Frame's child."
+            );
+        }
+    }
 }
 
 vector< s_ptr<Frame> > Frame::GetChildren()
@@ -415,6 +459,13 @@ void Frame::SetFrameStrata( const s_str& sStrata )
         mStrata = STRATA_FULLSCREEN_DIALOG;
     else if (sStrata == "TOOLTIP")
         mStrata = STRATA_TOOLTIP;
+    else if (sStrata == "PARENT")
+    {
+        if (pParentFrame_)
+            mStrata = pParentFrame_->GetFrameStrata();
+        else
+            mStrata = STRATA_MEDIUM;
+    }
     else
     {
         Warning(lType_.back(),
@@ -473,8 +524,14 @@ void Frame::SetParent( s_ptr<UIObject> pParent )
 {
     if (pParent != (UIObject*)this)
     {
+        if (pParentFrame_)
+            pParentFrame_->RemoveChild(this);
+
         pParent_ = pParent;
         pParentFrame_ = (Frame*)pParent.Get();
+
+        if (pParent_)
+            pParentFrame_->AddChild(this);
     }
     else
     {
@@ -542,14 +599,14 @@ void Frame::UnregisterEvent( const s_str& sEvent )
 
 void Frame::Update()
 {
-    ((UIObject*)this)->Update();
+    UIObject::Update();
 
     if (bBuildStrataList_)
     {
         lStrataList_.clear();
 
         map< s_uint, s_ptr<Frame> >::iterator iterChild;
-        foreach(iterChild, lChildList_)
+        foreach (iterChild, lChildList_)
         {
             s_ptr<Frame> pChild = iterChild->second;
             s_ptr<Strata> pStrata = &lStrataList_[pChild->GetFrameStrata()];
@@ -578,6 +635,13 @@ void Frame::Update()
         }
 
         bBuildLayerList_ = false;
+    }
+
+    // Update childrens
+    map< s_uint, s_ptr<Frame> >::iterator iterChild;
+    foreach (iterChild, lChildList_)
+    {
+        iterChild->second->Update();
     }
 }
 
