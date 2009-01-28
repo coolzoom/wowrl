@@ -1,11 +1,39 @@
 <Ui>
 	<Script file="Test.lua"/>
+    
+    <Frame name="Template_Child" virtual="true">
+        <Anchors>
+            <Anchor point="TOPLEFT" relativeTo="$parent_Pin" relativePoint="TOPLEFT"/>
+            <Anchor point="BOTTOMRIGHT" relativeTo="$parent_Pin" relativePoint="BOTTOMRIGHT"/>
+        </Anchors>
+    </Frame>
+    
 	<Frame name="Test" parent="UIParent" hidden="false" movable="true" enableMouse="true" clampedToScreen="true">
-		<Size>
-			<AbsDimension x="400" y="400"/>
-		</Size>
+        <Size>
+            <AbsDimension x="400" y="400"/>
+        </Size>
 		<Anchors>
-			<Anchor point="CENTER" relativeTo="UIParent" relativePoint="CENTER"/>
+			<Anchor point="BOTTOMRIGHT" relativeTo="UIParent" relativePoint="TOPLEFT"/>
 		</Anchors>
+        <Frames>
+            <Frame name="$parent_Pin">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="CENTER"/>
+                </Anchors>
+            </Frame>
+            <Frame name="$parent_Child1" inherits="Template_Child">
+                <Size>
+                    <AbsDimension x="200" y="200"/>
+                </Size>
+            </Frame>
+            <Frame name="$parent_Child2" inherits="Template_Child">
+                <Size>
+                    <AbsDimension x="100" y="100"/>
+                </Size>
+            </Frame>
+        </Frames>
 	</Frame>
 </Ui>

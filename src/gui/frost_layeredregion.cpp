@@ -19,7 +19,7 @@ LayeredRegion::LayeredRegion() : UIObject()
 
 LayerType LayeredRegion::GetDrawLayer()
 {
-
+    return LAYER_ARTWORK;
 }
 
 void LayeredRegion::SetDrawLayer(LayerType mLayer)

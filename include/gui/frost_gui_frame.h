@@ -86,6 +86,11 @@ namespace Frost
             */
             virtual s_bool      CanUseScript(const s_str& sScriptName) const;
 
+            /// Copies an UIObject's parameters into this Frame (inheritance).
+            /** \param pObj The UIObject to copy
+            */
+            virtual void        CopyFrom(s_ptr<UIObject> pObj);
+
             /// Disables a Layer.
             /** \param mLayer The layer to disable
             */
@@ -371,13 +376,13 @@ namespace Frost
             void FireBuildStrataList_();
             void FireBuildLayerList_();
 
-            std::map<s_uint, s_ptr<Frame> >         lChildList_;
-            std::map<FrameStrata, Strata>           lStrataList_;
-            std::map<s_uint, s_ptr<LayeredRegion> > lRegionList_;
-            std::map<LayerType, Layer>              lLayerList_;
-            std::map<s_str, s_bool>                 lDefinedScriptList_;
-            std::map<s_str, s_bool>                 lRegEventList_;
-            std::map<s_str, s_bool>                 lRegDragList_;
+            std::map< s_uint, s_ptr<Frame> >         lChildList_;
+            std::map<FrameStrata, Strata>            lStrataList_;
+            std::map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
+            std::map<LayerType, Layer>               lLayerList_;
+            std::map<s_str, s_bool>                  lDefinedScriptList_;
+            std::map<s_str, s_bool>                  lRegEventList_;
+            std::map<s_str, s_bool>                  lRegDragList_;
 
             s_uint uiLevel_;
 

@@ -21,13 +21,16 @@ UIObject::UIObject()
     lType_.push_back("UIObject");
 
     fAlpha_ = 1.0f;
-    uiAbsWidth_ = 1u;
-    uiAbsHeight_ = 1u;
-    fRelWidth_ = 1.0f;
-    fRelHeight_ = 1.0f;
+    uiAbsWidth_ = s_uint::NaN;
+    uiAbsHeight_ = s_uint::NaN;
+    bIsWidthAbs_ = true;
+    bIsHeightAbs_ = true;
+    fRelWidth_ = s_float::NaN;
+    fRelHeight_ = s_float::NaN;
     bIsShown_ = true;
     bUpdateBorders_ = true;
     uiID_ = s_uint::NaN;
+    bReady_ = true;
 }
 
 UIObject::~UIObject()
@@ -48,23 +51,59 @@ s_str UIObject::Serialize() const
 {
     s_str sStr;
 
-    sStr << "  Name : " << sName_ << "\n";
-    sStr << "  ID : " << uiID_ << "\n";
-    sStr << "  Type : " << lType_.back() << "\n";
+    sStr << "  Name : "        << sName_ << " ("+bReady_.GetAsString("ready", "not ready")+")\n";
+    sStr << "  ID : "          << uiID_ << "\n";
+    sStr << "  Type : "        << lType_.back() << "\n";
     if (pParent_)
-        sStr << "  Parent : " << pParent_->GetName() << "\n";
+        sStr << "  Parent : "  << pParent_->GetName() << "\n";
     else
         sStr << "  Parent : none\n";
     sStr << "  Num anchors : " << s_int((int)lAnchorList_.size()) << "\n";
-    sStr << "  Borders : " << lBorderList_ << "\n";
-    sStr << "  Alpha : " << fAlpha_ << "\n";
-    sStr << "  Shown : " << bIsShown_ << "\n";
-    sStr << "  Abs width : " << uiAbsWidth_ << "\n";
-    sStr << "  Abs height : " << uiAbsHeight_ << "\n";
-    sStr << "  Rel width : " << fRelWidth_ << "\n";
-    sStr << "  Rel height : " << fRelHeight_ << "\n";
+    if (!lAnchorList_.empty())
+    {
+        sStr << "    ####\n";
+        map<AnchorPoint, Anchor>::const_iterator iterAnchor;
+        foreach (iterAnchor, lAnchorList_)
+        {
+            sStr << iterAnchor->second.Serialize();
+            sStr << "    ####\n";
+        }
+    }
+    sStr << "  Borders : "     << lBorderList_ << "\n";
+    sStr << "  Alpha : "       << fAlpha_ << "\n";
+    sStr << "  Shown : "       << bIsShown_ << "\n";
+    sStr << "  Abs width : "   << uiAbsWidth_ << "\n";
+    sStr << "  Abs height : "  << uiAbsHeight_ << "\n";
+    sStr << "  Rel width : "   << fRelWidth_ << "\n";
+    sStr << "  Rel height : "  << fRelHeight_ << "\n";
 
     return sStr;
+}
+
+void UIObject::CopyFrom( s_ptr<UIObject> pObj )
+{
+    this->SetAlpha(pObj->GetAlpha());
+    this->SetShown(pObj->IsShown());
+    if (pObj->IsWidthAbsolute())
+        this->SetAbsWidth(pObj->GetAbsWidth());
+    else
+        this->SetRelWidth(pObj->GetRelWidth());
+    if (pObj->IsHeightAbsolute())
+        this->SetAbsHeight(pObj->GetAbsHeight());
+    else
+        this->SetRelHeight(pObj->GetRelHeight());
+
+    for (s_uint i = 1; i <= pObj->GetNumPoint(); i++)
+    {
+        s_ptr<Anchor> pAnchor = pObj->GetPoint(i);
+        if (pAnchor)
+        {
+            Anchor mAnchor(this, pAnchor->GetPoint(), NULL, pAnchor->GetParentPoint());
+            mAnchor.SetAbsOffset(pAnchor->GetAbsOffsetX(), pAnchor->GetAbsOffsetY());
+            mAnchor.SetParentRawName(pAnchor->GetParentRawName());
+            this->SetPoint(mAnchor);
+        }
+    }
 }
 
 const s_str& UIObject::GetName() const
@@ -90,7 +129,12 @@ void UIObject::SetName( const s_str& sName )
     }
 }
 
-vector<s_str> UIObject::GetObjectType() const
+const s_str& UIObject::GetObjectType() const
+{
+    return lType_.back();
+}
+
+const vector<s_str>& UIObject::GetObjectTypeList() const
 {
     return lType_;
 }
@@ -115,6 +159,11 @@ void UIObject::Hide()
     bIsShown_ = false;
 }
 
+void UIObject::SetShown( const s_bool& bIsShown )
+{
+    bIsShown_ = bIsShown;
+}
+
 const s_bool& UIObject::IsShown() const
 {
     return bIsShown_;
@@ -135,38 +184,40 @@ s_bool UIObject::IsVisible() const
 
 void UIObject::SetAbsWidth( const s_uint& uiAbsWidth )
 {
+    bIsWidthAbs_ = true;
     uiAbsWidth_ = uiAbsWidth;
-    if (pParent_ != NULL)
-        fRelWidth_ = s_float(uiAbsWidth_)/s_float(pParent_->GetAbsWidth());
-    else
-        fRelWidth_ = s_float(uiAbsWidth_)/s_float(Engine::GetSingleton()->GetScreenWidth());
+    FireUpdateDimensions();
 }
 
 void UIObject::SetAbsHeight( const s_uint& uiAbsHeight )
 {
+    bIsHeightAbs_ = true;
     uiAbsHeight_ = uiAbsHeight;
-    if (pParent_ != NULL)
-        fRelHeight_ = s_float(uiAbsHeight_)/s_float(pParent_->GetAbsHeight());
-    else
-        fRelHeight_ = s_float(uiAbsHeight_)/s_float(Engine::GetSingleton()->GetScreenHeight());
+    FireUpdateDimensions();
+}
+
+const s_bool& UIObject::IsWidthAbsolute() const
+{
+    return bIsWidthAbs_;
+}
+
+const s_bool& UIObject::IsHeightAbsolute() const
+{
+    return bIsHeightAbs_;
 }
 
 void UIObject::SetRelWidth( const s_float& fRelWidth )
 {
+    bIsWidthAbs_ = false;
     fRelWidth_ = fRelWidth;
-    if (pParent_ != NULL)
-        uiAbsWidth_ = s_uint(fRelWidth_*s_float(pParent_->GetAbsWidth()));
-    else
-        uiAbsWidth_ = s_uint(fRelWidth_*s_float(Engine::GetSingleton()->GetScreenWidth()));
+    FireUpdateDimensions();
 }
 
 void UIObject::SetRelHeight( const s_float& fRelHeight )
 {
+    bIsHeightAbs_ = false;
     fRelHeight_ = fRelHeight;
-    if (pParent_ != NULL)
-        uiAbsHeight_ = s_uint(fRelHeight_*s_float(pParent_->GetAbsHeight()));
-    else
-        uiAbsHeight_ = s_uint(fRelHeight_*s_float(Engine::GetSingleton()->GetScreenHeight()));
+    FireUpdateDimensions();
 }
 
 const s_uint& UIObject::GetAbsWidth() const
@@ -194,11 +245,12 @@ void UIObject::SetParent( s_ptr<UIObject> pParent )
     if (pParent != this)
     {
         pParent_ = pParent;
+        FireUpdateDimensions();
     }
     else
     {
         Error(lType_.back(),
-            "Can't call SetParent(this)"
+            "Can't call SetParent(this)."
         );
     }
 }
@@ -223,7 +275,7 @@ Point<s_int> UIObject::GetCenter() const
 
 const s_int& UIObject::GetLeft() const
 {
-    return lBorderList_.Get(BORDER_RIGHT);
+    return lBorderList_.Get(BORDER_LEFT);
 }
 
 const s_int& UIObject::GetRight() const
@@ -239,7 +291,6 @@ const s_int& UIObject::GetTop() const
 void UIObject::ClearAllPoints()
 {
     lAnchorList_.clear();
-    lAnchorStack_.clear();
 }
 
 void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
@@ -247,12 +298,12 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
     if (pObj != this)
     {
         ClearAllPoints();
+
         Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, pObj, ANCHOR_TOPLEFT);
         lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
-        lAnchorStack_.push_back(&lAnchorList_[ANCHOR_TOPLEFT]);
+
         mAnchor = Anchor(this, ANCHOR_BOTTOMRIGHT, pObj, ANCHOR_BOTTOMRIGHT);
         lAnchorList_[ANCHOR_BOTTOMRIGHT] = mAnchor;
-        lAnchorStack_.push_back(&lAnchorList_[ANCHOR_BOTTOMRIGHT]);
 
         FireUpdateBorders();
     }
@@ -272,7 +323,6 @@ void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
         Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
         mAnchor.SetAbsOffset(iX, iY);
         lAnchorList_[mPoint] = mAnchor;
-        lAnchorStack_.push_back(&lAnchorList_[mPoint]);
     }
     else
     {
@@ -293,7 +343,6 @@ void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
         Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
         mAnchor.SetRelOffset(fX, fY);
         lAnchorList_[mPoint] = mAnchor;
-        lAnchorStack_.push_back(&lAnchorList_[mPoint]);
     }
     else
     {
@@ -306,19 +355,38 @@ void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
     FireUpdateBorders();
 }
 
+void UIObject::SetPoint( const Anchor& mAnchor )
+{
+    lAnchorList_[mAnchor.GetPoint()] = mAnchor;
+}
+
 s_uint UIObject::GetNumPoint() const
 {
-    return lAnchorStack_.size();
+    return lAnchorList_.size();
 }
 
 s_ptr<Anchor> UIObject::GetPoint( const s_uint& uiPoint )
 {
-    if (uiPoint <= lAnchorStack_.size())
-        return lAnchorStack_[uiPoint.Get()-1];
-    else
-        return NULL;
+    s_ptr<Anchor> pAnchor;
+    map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.begin();
+    for (s_uint i = 0; i < uiPoint; i++)
+    {
+        pAnchor = &(iterAnchor->second);
+        iterAnchor++;
+    }
+
+    return pAnchor;
 }
 
+const s_bool& UIObject::IsVirtual() const
+{
+    return bVirtual_;
+}
+
+void UIObject::SetVirtual()
+{
+    bVirtual_ = true;
+}
 
 const s_uint& UIObject::GetID() const
 {
@@ -337,44 +405,190 @@ void UIObject::SetID( const s_uint& uiID )
     }
 }
 
-void UIObject::UpdateBorders_()
+void UIObject::UpdateDimensions_()
 {
-    // TODO : débugger ça
-    s_int iTop    = s_int(s_int::INTEGER_INF_PLUS);
-    s_int iBottom = s_int(s_int::INTEGER_INF_MINUS);
-    s_int iLeft   = s_int(s_int::INTEGER_INF_PLUS);
-    s_int iRight  = s_int(s_int::INTEGER_INF_MINUS);
-
-    map<AnchorPoint, Anchor>::iterator iterAnchor;
-    foreach (iterAnchor, lAnchorList_)
+    if (pParent_ != NULL)
     {
-        s_int iNewTop = iterAnchor->second.GetAbsY();
-        if (iNewTop < iTop) iTop = iNewTop;
+        if (bIsHeightAbs_)
+            fRelHeight_ = s_float(uiAbsHeight_)/s_float(pParent_->GetAbsHeight());
+        else
+            uiAbsHeight_ = s_uint(fRelHeight_*s_float(pParent_->GetAbsHeight()));
 
-        s_int iNewBottom = iterAnchor->second.GetAbsY() + s_int(uiAbsHeight_);
-        if (iNewBottom < iBottom) iBottom = iNewBottom;
+        if (bIsWidthAbs_)
+            fRelWidth_ = s_float(uiAbsWidth_)/s_float(pParent_->GetAbsWidth());
+        else
+            uiAbsWidth_ = s_uint(fRelWidth_*s_float(pParent_->GetAbsWidth()));
+    }
+    else
+    {
+        if (bIsHeightAbs_)
+            fRelHeight_ = s_float(uiAbsHeight_)/s_float(Engine::GetSingleton()->GetScreenHeight());
+        else
+            uiAbsHeight_ = s_uint(fRelHeight_*s_float(Engine::GetSingleton()->GetScreenHeight()));
 
-        s_int iNewLeft = iterAnchor->second.GetAbsX();
-        if (iNewLeft < iLeft) iLeft = iNewLeft;
+        if (bIsWidthAbs_)
+            fRelWidth_ = s_float(uiAbsWidth_)/s_float(Engine::GetSingleton()->GetScreenWidth());
+        else
+            uiAbsWidth_ = s_uint(fRelWidth_*s_float(Engine::GetSingleton()->GetScreenWidth()));
+    }
+}
 
-        s_int iNewRight = iterAnchor->second.GetAbsX() + s_int(uiAbsWidth_);
-        if (iNewRight > iRight) iRight = iNewRight;
+void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize, s_bool& bReady )
+{
+    if (!iMin && !iMax)
+    {
+        if (iSize)
+        {
+            if (iCenter)
+            {
+                iMin = iCenter - iSize/2;
+                iMax = iCenter + iSize/2;
+            }
+            else
+                bReady = false;
+        }
+        else
+            bReady = false;
+    }
+    else if (!iMax)
+    {
+        if (iSize)
+        {
+            iMax = iMin + iSize;
+        }
+        else
+        {
+            if (iCenter)
+            {
+                iMax = iMin + 2*(iCenter-iMin);
+            }
+            else
+                bReady = false;
+        }
+    }
+    else if (!iMin)
+    {
+        if (iSize)
+        {
+            iMin = iMax - iSize;
+        }
+        else
+        {
+            if (iCenter)
+            {
+                iMin = iMax - 2*(iMax-iCenter);
+            }
+            else
+                bReady = false;
+        }
     }
 
-    lBorderList_[BORDER_TOP] = iTop;
-    lBorderList_[BORDER_RIGHT] = iRight;
-    lBorderList_[BORDER_BOTTOM] = iBottom;
-    lBorderList_[BORDER_LEFT] = iLeft;
+    if (iMin >= iMax)
+        bReady = false;
+}
 
-    SetAbsWidth(s_uint(iBottom - iTop));
-    SetAbsHeight(s_uint(iRight - iLeft));
+void UIObject::UpdateBorders_()
+{
+    bReady_ = true;
 
-    bUpdateBorders_ = false;
+    if (bUpdateDimensions_)
+    {
+        this->UpdateDimensions_();
+        bUpdateDimensions_ = false;
+    }
+
+    if (!lAnchorList_.empty())
+    {
+        s_int iLeft   = s_int(s_int::INFPLUS);
+        s_int iRight  = s_int(s_int::INFMINUS);
+        s_int iTop    = s_int(s_int::INFPLUS);
+        s_int iBottom = s_int(s_int::INFMINUS);
+
+        s_int iXCenter;
+        s_int iYCenter;
+
+        map<AnchorPoint, Anchor>::iterator iterAnchor;
+        foreach (iterAnchor, lAnchorList_)
+        {
+            switch (iterAnchor->second.GetPoint())
+            {
+                case ANCHOR_TOPLEFT :
+                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
+                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
+                    break;
+                case ANCHOR_TOP :
+                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
+                    iXCenter = iterAnchor->second.GetAbsX();
+                    break;
+                case ANCHOR_TOPRIGHT :
+                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
+                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
+                    break;
+                case ANCHOR_RIGHT :
+                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
+                    iYCenter = iterAnchor->second.GetAbsY();
+                    break;
+                case ANCHOR_BOTTOMRIGHT :
+                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
+                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
+                    break;
+                case ANCHOR_BOTTOM :
+                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
+                    iXCenter = iterAnchor->second.GetAbsX();
+                    break;
+                case ANCHOR_BOTTOMLEFT :
+                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
+                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
+                    break;
+                case ANCHOR_LEFT :
+                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
+                    iYCenter = iterAnchor->second.GetAbsY();
+                    break;
+                case ANCHOR_CENTER :
+                    iXCenter = iterAnchor->second.GetAbsX();
+                    iYCenter = iterAnchor->second.GetAbsY();
+                    break;
+            }
+        }
+
+        MakeBorders(iTop, iBottom, iYCenter, s_int(uiAbsHeight_), bReady_);
+        MakeBorders(iLeft, iRight, iXCenter, s_int(uiAbsWidth_), bReady_);
+
+        if (bReady_)
+        {
+            lBorderList_[BORDER_LEFT] = iLeft;
+            lBorderList_[BORDER_RIGHT] = iRight;
+            lBorderList_[BORDER_TOP] = iTop;
+            lBorderList_[BORDER_BOTTOM] = iBottom;
+
+            bIsWidthAbs_ = true;
+            uiAbsWidth_ = s_uint(iRight - iLeft);
+
+            bIsHeightAbs_ = true;
+            uiAbsHeight_ = s_uint(iBottom - iTop);
+
+            this->UpdateDimensions_();
+        }
+        else
+        {
+            lBorderList_.Set(s_int::NaN);
+        }
+
+        bUpdateBorders_ = false;
+    }
+    else
+        bReady_ = false;
 }
 
 void UIObject::FireUpdateBorders()
 {
     bUpdateBorders_ = true;
+}
+
+void UIObject::FireUpdateDimensions()
+{
+    FireUpdateBorders();
+    bUpdateDimensions_ = true;
 }
 
 void UIObject::Update()

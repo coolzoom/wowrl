@@ -58,6 +58,11 @@ namespace Frost
             bValue_ = false;
     }
 
+    const s_str& s_bool::GetAsString(const s_str& sTrue, const s_str& sFalse) const
+    {
+        return (bValue_ ? sTrue : sFalse);
+    }
+
     s_bool::operator MemberFn() const
     {
         if (bValue_)

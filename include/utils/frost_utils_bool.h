@@ -42,6 +42,13 @@ namespace Frost
         */
         inline bool& GetR() { return bValue_; }
 
+        /// Returns the first argument if this boolean is true, and the second otherwise.
+        /** \param sTrue  The string to return if 'true'
+        *   \param sFalse The string to return if 'false'
+        *   \return Either sTrue or sFalse.
+        */
+        const s_str& GetAsString(const s_str& sTrue, const s_str& sFalse) const;
+
         bool         operator !  () const;
         typedef      const bool& (s_bool::*MemberFn)() const;
         operator     MemberFn() const;

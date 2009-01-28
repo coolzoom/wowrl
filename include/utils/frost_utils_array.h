@@ -90,22 +90,6 @@ namespace Frost
             }
         }
 
-        /*s_array(const T lInitArray[N])
-        {
-            for (uint i = 0; i < N; i++)
-            {
-                lArray_[i] = lInitArray[i];
-            }
-        }
-
-        s_array(const T*& lInitArray)
-        {
-            for (uint i = 0; i < N; i++)
-            {
-                lArray_[i] = lInitArray[i];
-            }
-        }*/
-
         s_array(const s_ctnr<T>& mContainer)
         {
             for (uint i = 0; i < N; i++)
@@ -115,6 +99,11 @@ namespace Frost
 
                 lArray_[i] = mContainer[i];
             }
+        }
+
+        s_array(const s_array& mValue)
+        {
+            memcpy(lArray_, mValue.lArray_, N*sizeof(T));
         }
 
         void Set(const T& mValue)
@@ -171,6 +160,12 @@ namespace Frost
             }
 
             return true;
+        }
+
+        s_array& operator = (const s_array& mValue)
+        {
+            memcpy(lArray_, mValue.lArray_, N*sizeof(T));
+            return *this;
         }
 
         static T mDummy;

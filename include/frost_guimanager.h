@@ -47,7 +47,7 @@ namespace Frost
 
         s_bool               AddUIObject(s_ptr<GUI::UIObject> pObj);
         void                 RemoveUIObject(s_ptr<GUI::UIObject> pObj);
-        s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName);
+        s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName, const s_bool& bVirtual = false);
 
         void           PrintUI();
 
@@ -121,6 +121,9 @@ namespace Frost
 
         std::map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
+
+        std::map< s_uint, s_ptr<GUI::UIObject> > lVirtualObjectList_;
+        std::map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
 
         std::map<s_str, AddOn> lAddOnList_;
     };

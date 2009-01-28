@@ -1,24 +1,6 @@
-<!------------------- How to read this file ? ---------------------->
-<!-- A block preceded by :                                        -->
-<!--   - "d:" indicates definition of the pre-defined block.      -->
-<!--   - "d[X]:" indicates this block inherits from "X" (it takes -->
-<!--     X's attributes and sub-block, and can add new ones).     -->
-<!--   - "l:" indicates loading a pre-defined block.              -->
-<!--   - "n[a,b]:" can only be present "b" times at most, and "a" -->
-<!--     times at least. If b=".", the block can be present as    -->
-<!--     many times as the user whishes, and if a=".", the block  -->
-<!--     can be ommited.                                          -->
-<!--   - "n[*]:" indicates a radio block : it can only be present -->
-<!--     if none of its defined neighbours are.                   -->
-<!--   - "nothing" can be present multiple times or ommited.      -->
-<!-- A member followed by a "=" and a value can be ommited. It    -->
-<!-- will take this value if ommited.                             -->
-<!-- Else, the value cant' be ommited.                            -->
-<!------------------------------------------------------------------>
-
-<!-------------------->
-<!-- FILE STRUCTURE -->
-<!-------------------->
+<-------------------->
+<-- FILE STRUCTURE -->
+<-------------------->
 
 <CreatureModels>
 </CreatureModels>

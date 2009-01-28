@@ -31,7 +31,7 @@ using namespace Frost::Lua;
 void Lua::RegisterGlobalFuncs( lua_State* pLua )
 {
     lua_register(pLua, "Log", l_Log);
-    lua_register(pLua, "l_ThrowError", l_ThrowError);
+    lua_register(pLua, "Error", l_ThrowError);
     lua_register(pLua, "RandomInt", l_RandomInt);
     lua_register(pLua, "RandomFloat", l_RandomFloat);
     lua_register(pLua, "StrReplace", l_StrReplace);
@@ -272,22 +272,34 @@ void Lua::PrintError( lua_State* pLua, const s_str& sError )
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_float& fValue )
 {
-    lua_pushnumber(pLua, fValue.Get());
+    if (fValue)
+        lua_pushnumber(pLua, fValue.Get());
+    else
+        lua_pushnil(pLua);
 }
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_double& dValue )
 {
-    lua_pushnumber(pLua, dValue.Get());
+    if (dValue)
+        lua_pushnumber(pLua, dValue.Get());
+    else
+        lua_pushnil(pLua);
 }
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_int& iValue )
 {
-    lua_pushnumber(pLua, iValue.Get());
+    if (iValue)
+        lua_pushnumber(pLua, iValue.Get());
+    else
+        lua_pushnil(pLua);
 }
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_uint& uiValue )
 {
-    lua_pushnumber(pLua, uiValue.Get());
+    if (uiValue)
+        lua_pushnumber(pLua, uiValue.Get());
+    else
+        lua_pushnil(pLua);
 }
 
 void Frost::lua_pushboolean( lua_State* pLua, const s_bool& bValue )

@@ -1729,3 +1729,1754 @@
 	"gui/frost_gui_texture.h"
 	"gui/frost_gui_layeredregion.h"
 
+1208707334 source:c:\programmation2\frost\ressources.rc
+
+1230117759 source:c:\programmation2\frost\include\frost_stableheaders.h
+	<OgrePrerequisites.h>
+	<OIS/OISPrereqs.h>
+	"frost_lib_std.h"
+	"frost_lib_utils.h"
+	"frost_macros.h"
+	"frost_lua.h"
+	"frost_engine.h"
+
+1223640716 c:\programmation2\ogre\ogremain\include\ogreprerequisites.h
+	"OgrePlatform.h"
+	<string>
+	"OgreStdHeaders.h"
+	"OgreMemoryAllocatorConfig.h"
+
+1221550740 c:\programmation2\ogre\ogremain\include\ogreplatform.h
+	"OgreConfig.h"
+	<_mingw.h>
+	"config.h"
+
+1226846526 c:\programmation2\ogre\ogremain\include\ogreconfig.h
+
+1222377276 c:\programmation2\ogre\ogremain\include\ogrestdheaders.h
+	<cassert>
+	<cstdio>
+	<cstdlib>
+	<ctime>
+	<cstring>
+	<cstdarg>
+	<cmath>
+	<vector>
+	<map>
+	<string>
+	<set>
+	<list>
+	<deque>
+	<queue>
+	<bitset>
+	<tr1/unordered_map>
+	<tr1/unordered_set>
+	<ext/hash_map>
+	<ext/hash_set>
+	<hash_set>
+	<hash_map>
+	<algorithm>
+	<functional>
+	<limits>
+	<fstream>
+	<iostream>
+	<iomanip>
+	<sstream>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<unistd.h>
+	<dlfcn.h>
+	<unistd.h>
+	<sys/param.h>
+	<CoreFoundation/CoreFoundation.h>
+	<boost/thread/tss.hpp>
+	<boost/thread/recursive_mutex.hpp>
+	<boost/thread/condition.hpp>
+	<boost/thread/thread.hpp>
+
+1225040858 c:\programmation2\ogre\ogremain\include\ogrememoryallocatorconfig.h
+	"OgrePrerequisites.h"
+	"OgreMemoryAllocatedObject.h"
+	"OgreMemorySTLAllocator.h"
+	"OgreMemoryNedAlloc.h"
+	"OgreMemoryStdAlloc.h"
+
+1220427776 c:\programmation2\ogre\ogremain\include\ogrememoryallocatedobject.h
+	"OgrePrerequisites.h"
+
+1211543808 c:\programmation2\ogre\ogremain\include\ogrememorystlallocator.h
+	"OgrePrerequisites.h"
+
+1225118578 c:\programmation2\ogre\ogremain\include\ogrememorynedalloc.h
+
+1227189555 c:\programmation2\ogre\ogremain\include\ogrememorystdalloc.h
+	<memory>
+	<limits>
+	"OgreAlignedAllocator.h"
+	"OgreMemoryTracker.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrealignedallocator.h
+
+1221765970 c:\programmation2\ogre\ogremain\include\ogrememorytracker.h
+	"OgrePrerequisites.h"
+	<backward/hash_map>
+	<ext/hash_map>
+
+1161670626 c:\programmation2\ogre\dependencies\include\ois\oisprereqs.h
+	<vector>
+	<string>
+	<map>
+	"OISConfig.h"
+
+1155363640 c:\programmation2\ogre\dependencies\include\ois\oisconfig.h
+
+1230117759 c:\programmation2\frost\include\frost_lib_std.h
+	<math.h>
+	<string>
+	<map>
+	<tr1/unordered_map>
+	<ext/hash_map>
+	<vector>
+	<deque>
+	<list>
+	<sstream>
+	<fstream>
+	<ios>
+
+1230117759 c:\programmation2\frost\include\frost_lib_utils.h
+	"utils/frost_utils.h"
+	"utils/frost_utils_bool.h"
+	"utils/frost_utils_int.h"
+	"utils/frost_utils_uint.h"
+	"utils/frost_utils_float.h"
+	"utils/frost_utils_double.h"
+	"utils/frost_utils_str.h"
+	"utils/frost_utils_var.h"
+	"utils/frost_utils_array.h"
+	"utils/frost_utils_math.h"
+	"utils/frost_utilsmanager.h"
+	"utils/frost_utils_ptr.h"
+	"utils/frost_utils_refptr.h"
+	"utils/frost_utils_color.h"
+	"utils/frost_utils_vector.h"
+	"utils/frost_utils_directory.h"
+	"utils/frost_utils_file.h"
+	"utils/frost_utils_point.h"
+	"utils/frost_utils_tester.h"
+	"utils/frost_utils_stdhelper.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils.h
+	<string>
+	<vector>
+	<fstream>
+	<map>
+
+1232905714 c:\programmation2\frost\include\utils\frost_utils_bool.h
+	"frost_utils.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_int.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_uint.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_float.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_double.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1231868350 c:\programmation2\frost\include\utils\frost_utils_str.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_var.h
+	"frost_utils.h"
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+
+1233000342 c:\programmation2\frost\include\utils\frost_utils_array.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_math.h
+
+1231684798 c:\programmation2\frost\include\utils\frost_utilsmanager.h
+	"frost_utils.h"
+	"frost_utils_manager.h"
+
+1231684503 c:\programmation2\frost\include\utils\frost_utils_manager.h
+	"frost_utils_ptr.h"
+	"frost_utils_str.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_ptr.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+	"frost_utils_log.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_log.h
+	"frost_utils.h"
+	"frost_utils_str.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_refptr.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+	"frost_utils_bool.h"
+	"frost_utils_log.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_color.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+
+1231876268 c:\programmation2\frost\include\utils\frost_utils_vector.h
+	"frost_utils.h"
+	"frost_utils_float.h"
+	"frost_utils_bool.h"
+
+1231865670 c:\programmation2\frost\include\utils\frost_utils_directory.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+	"frost_utils_str.h"
+	"frost_utils_ptr.h"
+
+1231777313 c:\programmation2\frost\include\utils\frost_utils_file.h
+	"frost_utils.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_point.h
+	"frost_utils.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_tester.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_stdhelper.h
+	"frost_utils.h"
+	"frost_utils_double.h"
+
+1231776167 c:\programmation2\frost\include\frost_macros.h
+
+1232990756 c:\programmation2\frost\include\frost_lua.h
+	"lua/lualib.h"
+	"lua/lauxlib.h"
+	"lua/lua.h"
+	"lua/lunar.h"
+	"frost.h"
+	"frost_lua_utils.h"
+
+1230117760 c:\programmation2\frost\dependencies\lua\lualib.h
+	"lua.h"
+
+1230117760 c:\programmation2\frost\dependencies\lua\lua.h
+	<stdarg.h>
+	<stddef.h>
+	"luaconf.h"
+
+1230117760 c:\programmation2\frost\dependencies\lua\luaconf.h
+	<limits.h>
+	<stddef.h>
+	<unistd.h>
+	<io.h>
+	<stdio.h>
+	<stdio.h>
+	<readline/readline.h>
+	<readline/history.h>
+	<assert.h>
+	<math.h>
+	<unistd.h>
+
+1230117760 c:\programmation2\frost\dependencies\lua\lauxlib.h
+	<stddef.h>
+	<stdio.h>
+	"lua.h"
+
+1192734454 c:\programmation2\frost\dependencies\lua\lunar.h
+	"lua.h"
+	"lauxlib.h"
+	<string>
+
+1232992657 c:\programmation2\frost\include\frost.h
+	"frost_stableheaders.h"
+
+1230117759 c:\programmation2\frost\include\frost_stableheaders.h
+	<OgrePrerequisites.h>
+	<OIS/OISPrereqs.h>
+	"frost_lib_std.h"
+	"frost_lib_utils.h"
+	"frost_macros.h"
+	"frost_lua.h"
+	"frost_engine.h"
+
+1230117759 c:\programmation2\frost\include\frost_engine.h
+	"frost.h"
+
+1230117759 c:\programmation2\frost\include\frost_lua_utils.h
+	"frost.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_camera.cpp
+	"frost_camera.h"
+	"frost_engine.h"
+	"frost_gfx.h"
+	"frost_pathmanager.h"
+	"frost_path.h"
+	<OgreSceneManager.h>
+	<OgreCamera.h>
+
+1230117759 c:\programmation2\frost\include\frost_camera.h
+	"frost.h"
+	"frost_movableobject.h"
+
+1230117759 c:\programmation2\frost\include\frost_movableobject.h
+	"frost.h"
+	"frost_eventreceiver.h"
+
+1230117759 c:\programmation2\frost\include\frost_eventreceiver.h
+	"frost.h"
+
+1230117759 c:\programmation2\frost\include\frost_gfx.h
+	"frost.h"
+	<OgreTexture.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogretexture.h
+	"OgrePrerequisites.h"
+	"OgreHardwareBuffer.h"
+	"OgreResource.h"
+	"OgreImage.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrehardwarebuffer.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreresource.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreSharedPtr.h"
+	"OgreStringInterface.h"
+	"OgreAtomicWrappers.h"
+
+1222377276 c:\programmation2\ogre\ogremain\include\ogrestring.h
+	"OgrePrerequisites.h"
+	<tr1/unordered_map>
+	<ext/hash_map>
+
+1214430010 c:\programmation2\ogre\ogremain\include\ogresharedptr.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrestringinterface.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreCommon.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrecommon.h
+	"OgreString.h"
+	<utility>
+	<vector>
+	<map>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreatomicwrappers.h
+	<signal.h>
+	"OgrePrerequisites.h"
+	"OgreException.h"
+	<windows.h>
+	<intrin.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreexception.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	<exception>
+
+1219434116 c:\programmation2\ogre\ogremain\include\ogreimage.h
+	"OgrePrerequisites.h"
+	"OgreCommon.h"
+	"OgrePixelFormat.h"
+	"OgreDataStream.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrepixelformat.h
+	"OgrePrerequisites.h"
+	"OgreCommon.h"
+
+1214430010 c:\programmation2\ogre\ogremain\include\ogredatastream.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreSharedPtr.h"
+	<istream>
+
+1230117759 c:\programmation2\frost\include\frost_pathmanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\frost_path.h
+	"frost.h"
+
+1226953852 c:\programmation2\ogre\ogremain\include\ogrescenemanager.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreSceneNode.h"
+	"OgrePlane.h"
+	"OgreQuaternion.h"
+	"OgreColourValue.h"
+	"OgreCommon.h"
+	"OgreSceneQuery.h"
+	"OgreAutoParamDataSource.h"
+	"OgreAnimationState.h"
+	"OgreRenderQueue.h"
+	"OgreRenderQueueSortingGrouping.h"
+	"OgreRectangle2D.h"
+	"OgrePixelFormat.h"
+	"OgreResourceGroupManager.h"
+	"OgreTexture.h"
+	"OgreShadowCameraSetup.h"
+	"OgreShadowTextureManager.h"
+	"OgreCamera.h"
+	"OgreInstancedGeometry.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrescenenode.h
+	"OgrePrerequisites.h"
+	"OgreNode.h"
+	"OgreIteratorWrappers.h"
+	"OgreAxisAlignedBox.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrenode.h
+	"OgrePrerequisites.h"
+	"OgreMatrix3.h"
+	"OgreMatrix4.h"
+	"OgreQuaternion.h"
+	"OgreString.h"
+	"OgreRenderable.h"
+	"OgreIteratorWrappers.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrematrix3.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrevector3.h
+	"OgrePrerequisites.h"
+	"OgreMath.h"
+	"OgreQuaternion.h"
+
+1219250660 c:\programmation2\ogre\ogremain\include\ogremath.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrequaternion.h
+	"OgrePrerequisites.h"
+	"OgreMath.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrematrix4.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+	"OgreMatrix3.h"
+	"OgreVector4.h"
+	"OgrePlane.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrevector4.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreplane.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+
+1214214780 c:\programmation2\ogre\ogremain\include\ogrerenderable.h
+	"OgrePrerequisites.h"
+	"OgreCommon.h"
+	"OgreRenderOperation.h"
+	"OgreMatrix4.h"
+	"OgreMaterial.h"
+	"OgrePlane.h"
+	"OgreGpuProgram.h"
+	"OgreVector4.h"
+	"OgreException.h"
+	"OgreAny.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrerenderoperation.h
+	"OgrePrerequisites.h"
+	"OgreVertexIndexData.h"
+
+1214163508 c:\programmation2\ogre\ogremain\include\ogrevertexindexdata.h
+	"OgrePrerequisites.h"
+	"OgreHardwareVertexBuffer.h"
+	"OgreHardwareIndexBuffer.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogrehardwarevertexbuffer.h
+	"OgrePrerequisites.h"
+	"OgreHardwareBuffer.h"
+	"OgreSharedPtr.h"
+	"OgreColourValue.h"
+
+1222856192 c:\programmation2\ogre\ogremain\include\ogrecolourvalue.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrehardwareindexbuffer.h
+	"OgrePrerequisites.h"
+	"OgreHardwareBuffer.h"
+	"OgreSharedPtr.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrematerial.h
+	"OgrePrerequisites.h"
+	"OgreResource.h"
+	"OgreIteratorWrappers.h"
+	"OgreCommon.h"
+	"OgreColourValue.h"
+	"OgreBlendMode.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreiteratorwrappers.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreblendmode.h
+	"OgrePrerequisites.h"
+	"OgreColourValue.h"
+
+1223055240 c:\programmation2\ogre\ogremain\include\ogregpuprogram.h
+	"OgrePrerequisites.h"
+	"OgreResource.h"
+	"OgreSharedPtr.h"
+	"OgreIteratorWrappers.h"
+	"OgreSerializer.h"
+	"OgreRenderOperation.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogreserializer.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreDataStream.h"
+
+1216847870 c:\programmation2\ogre\ogremain\include\ogreany.h
+	"OgrePrerequisites.h"
+	"OgreException.h"
+	"OgreString.h"
+	<algorithm>
+	<typeinfo>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreaxisalignedbox.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+	"OgreMatrix4.h"
+
+1214760268 c:\programmation2\ogre\ogremain\include\ogrescenequery.h
+	"OgrePrerequisites.h"
+	"OgreAxisAlignedBox.h"
+	"OgreSphere.h"
+	"OgreRay.h"
+	"OgreRenderOperation.h"
+	"OgrePlaneBoundedVolume.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogresphere.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreray.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+	"OgrePlaneBoundedVolume.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreplaneboundedvolume.h
+	"OgrePrerequisites.h"
+	"OgreAxisAlignedBox.h"
+	"OgreSphere.h"
+	"OgreMath.h"
+	"OgrePlane.h"
+
+1220434084 c:\programmation2\ogre\ogremain\include\ogreautoparamdatasource.h
+	"OgrePrerequisites.h"
+	"OgreCommon.h"
+	"OgreMatrix4.h"
+	"OgreVector4.h"
+	"OgreLight.h"
+	"OgreColourValue.h"
+
+1219250660 c:\programmation2\ogre\ogremain\include\ogrelight.h
+	"OgrePrerequisites.h"
+	"OgreColourValue.h"
+	"OgreVector3.h"
+	"OgreVector4.h"
+	"OgreString.h"
+	"OgreMovableObject.h"
+	"OgrePlaneBoundedVolume.h"
+	"OgreShadowCameraSetup.h"
+
+1214305544 c:\programmation2\ogre\ogremain\include\ogremovableobject.h
+	"OgrePrerequisites.h"
+	"OgreRenderQueue.h"
+	"OgreAxisAlignedBox.h"
+	"OgreSphere.h"
+	"OgreShadowCaster.h"
+	"OgreFactoryObj.h"
+	"OgreAnimable.h"
+	"OgreAny.h"
+	"OgreUserDefinedObject.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrerenderqueue.h
+	"OgrePrerequisites.h"
+	"OgreIteratorWrappers.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogreshadowcaster.h
+	"OgrePrerequisites.h"
+	"OgreRenderable.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrefactoryobj.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreanimable.h
+	"OgrePrerequisites.h"
+	"OgreVector2.h"
+	"OgreVector3.h"
+	"OgreVector4.h"
+	"OgreQuaternion.h"
+	"OgreColourValue.h"
+	"OgreSharedPtr.h"
+	"OgreStringVector.h"
+	"OgreException.h"
+	"OgreAny.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrevector2.h
+	"OgrePrerequisites.h"
+	"OgreMath.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrestringvector.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreSharedPtr.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreuserdefinedobject.h
+	"OgrePrerequisites.h"
+
+1219076966 c:\programmation2\ogre\ogremain\include\ogreshadowcamerasetup.h
+	"OgrePrerequisites.h"
+	"OgreMovablePlane.h"
+	"OgreSharedPtr.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogremovableplane.h
+	"OgrePrerequisites.h"
+	"OgrePlane.h"
+	"OgreMovableObject.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreanimationstate.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreController.h"
+	"OgreIteratorWrappers.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrecontroller.h
+	"OgrePrerequisites.h"
+	"OgreSharedPtr.h"
+
+1214214780 c:\programmation2\ogre\ogremain\include\ogrerenderqueuesortinggrouping.h
+	"OgrePrerequisites.h"
+	"OgreIteratorWrappers.h"
+	"OgreMaterial.h"
+	"OgreTechnique.h"
+	"OgrePass.h"
+	"OgreRadixSort.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogretechnique.h
+	"OgrePrerequisites.h"
+	"OgreIteratorWrappers.h"
+	"OgreBlendMode.h"
+	"OgreCommon.h"
+	"OgrePass.h"
+	"OgreIteratorWrappers.h"
+	"OgreRenderSystemCapabilities.h"
+
+1223736320 c:\programmation2\ogre\ogremain\include\ogrepass.h
+	"OgrePrerequisites.h"
+	"OgreGpuProgram.h"
+	"OgreColourValue.h"
+	"OgreBlendMode.h"
+	"OgreCommon.h"
+	"OgreLight.h"
+	"OgreTextureUnitState.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogretextureunitstate.h
+	"OgrePrerequisites.h"
+	"OgreCommon.h"
+	"OgreBlendMode.h"
+	"OgreMatrix4.h"
+	"OgreIteratorWrappers.h"
+	"OgreString.h"
+	"OgreTexture.h"
+
+1219505438 c:\programmation2\ogre\ogremain\include\ogrerendersystemcapabilities.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreStringConverter.h"
+	"OgreStringVector.h"
+	"OgreResource.h"
+	"OgreLogManager.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrestringconverter.h
+	"OgrePrerequisites.h"
+	"OgreMath.h"
+	"OgreString.h"
+	"OgreStringVector.h"
+
+1214760268 c:\programmation2\ogre\ogremain\include\ogrelogmanager.h
+	"OgrePrerequisites.h"
+	"OgreLog.h"
+	"OgreSingleton.h"
+	"OgreString.h"
+
+1226953940 c:\programmation2\ogre\ogremain\include\ogrelog.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogresingleton.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreradixsort.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrerectangle2d.h
+	"OgrePrerequisites.h"
+	"OgreSimpleRenderable.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogresimplerenderable.h
+	"OgrePrerequisites.h"
+	"OgreMovableObject.h"
+	"OgreRenderable.h"
+	"OgreAxisAlignedBox.h"
+	"OgreMaterial.h"
+
+1223053300 c:\programmation2\ogre\ogremain\include\ogreresourcegroupmanager.h
+	"OgrePrerequisites.h"
+	"OgreSingleton.h"
+	"OgreCommon.h"
+	"OgreDataStream.h"
+	"OgreResource.h"
+	"OgreArchive.h"
+	"OgreIteratorWrappers.h"
+	<ctime>
+
+1215205846 c:\programmation2\ogre\ogremain\include\ogrearchive.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreDataStream.h"
+	"OgreSharedPtr.h"
+	"OgreStringVector.h"
+	<ctime>
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogreshadowtexturemanager.h
+	"OgrePrerequisites.h"
+	"OgreSingleton.h"
+	"OgrePixelFormat.h"
+	"OgreTexture.h"
+	"OgreIteratorWrappers.h"
+
+1223734538 c:\programmation2\ogre\ogremain\include\ogrecamera.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreMovableObject.h"
+	"OgreMatrix4.h"
+	"OgreVector3.h"
+	"OgrePlane.h"
+	"OgreQuaternion.h"
+	"OgreCommon.h"
+	"OgreFrustum.h"
+	"OgreRay.h"
+	"OgrePlaneBoundedVolume.h"
+
+1219657340 c:\programmation2\ogre\ogremain\include\ogrefrustum.h
+	"OgrePrerequisites.h"
+	"OgreMovableObject.h"
+	"OgreRenderable.h"
+	"OgreAxisAlignedBox.h"
+	"OgreVertexIndexData.h"
+	"OgreMovablePlane.h"
+
+1218182804 c:\programmation2\ogre\ogremain\include\ogreinstancedgeometry.h
+	"OgrePrerequisites.h"
+	"OgreMovableObject.h"
+	"OgreSimpleRenderable.h"
+	"OgreSkeleton.h"
+	"OgreSkeletonInstance.h"
+	"OgreAnimationTrack.h"
+	"OgreBone.h"
+	"OgreIteratorWrappers.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreskeleton.h
+	"OgrePrerequisites.h"
+	"OgreResource.h"
+	"OgreQuaternion.h"
+	"OgreVector3.h"
+	"OgreIteratorWrappers.h"
+	"OgreStringVector.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreskeletoninstance.h
+	"OgrePrerequisites.h"
+	"OgreSkeleton.h"
+
+1223053300 c:\programmation2\ogre\ogremain\include\ogreanimationtrack.h
+	"OgrePrerequisites.h"
+	"OgreSimpleSpline.h"
+	"OgreRotationalSpline.h"
+	"OgreKeyFrame.h"
+	"OgreAnimable.h"
+	"OgrePose.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogresimplespline.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+	"OgreMatrix4.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogrerotationalspline.h
+	"OgrePrerequisites.h"
+	"OgreQuaternion.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrekeyframe.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+	"OgreQuaternion.h"
+	"OgreAny.h"
+	"OgreHardwareVertexBuffer.h"
+	"OgreIteratorWrappers.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogrepose.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreHardwareVertexBuffer.h"
+	"OgreVector3.h"
+	"OgreIteratorWrappers.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrebone.h
+	"OgrePrerequisites.h"
+	"OgreNode.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_cameramanager.cpp
+	"frost_cameramanager.h"
+	"frost_camera.h"
+	<OgreCamera.h>
+	<OgreRenderWindow.h>
+	<OgreViewport.h>
+
+1230117759 c:\programmation2\frost\include\frost_cameramanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrerenderwindow.h
+	"OgrePrerequisites.h"
+	"OgreRenderTarget.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrerendertarget.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreTextureManager.h"
+	"OgreViewport.h"
+	"OgreTimer.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogretexturemanager.h
+	"OgrePrerequisites.h"
+	"OgreResourceManager.h"
+	"OgreTexture.h"
+	"OgreSingleton.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogreresourcemanager.h
+	"OgrePrerequisites.h"
+	"OgreResource.h"
+	"OgreResourceGroupManager.h"
+	"OgreIteratorWrappers.h"
+	"OgreCommon.h"
+	"OgreDataStream.h"
+	"OgreStringVector.h"
+	"OgreScriptLoader.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrescriptloader.h
+	"OgrePrerequisites.h"
+	"OgreDataStream.h"
+	"OgreStringVector.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogreviewport.h
+	"OgrePrerequisites.h"
+	"OgreCommon.h"
+	"OgreColourValue.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogretimer.h
+	"OgrePrerequisites.h"
+	"OgrePlatform.h"
+	"WIN32/OgreTimerImp.h"
+	"GLX/OgreTimerImp.h"
+	"OSX/OgreTimerImp.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\win32\ogretimerimp.h
+	"windows.h"
+
+1213561604 c:\programmation2\ogre\ogremain\include\glx\ogretimerimp.h
+	"OgrePrerequisites.h"
+
+1213561604 c:\programmation2\ogre\ogremain\include\osx\ogretimerimp.h
+	<Ogre/OgrePrerequisites.h>
+
+1230117761 source:c:\programmation2\frost\src\frost_character.cpp
+	"frost_character.h"
+	"frost_modelmanager.h"
+	"frost_model.h"
+	"frost_animmanager.h"
+	"frost_materialmanager.h"
+	"frost_material.h"
+	"frost_camera.h"
+
+1230117759 c:\programmation2\frost\include\frost_character.h
+	"frost.h"
+	"frost_unit.h"
+
+1230117759 c:\programmation2\frost\include\frost_unit.h
+	"frost.h"
+	"frost_eventreceiver.h"
+	"frost_timers.h"
+
+1230117759 c:\programmation2\frost\include\frost_timers.h
+	"frost.h"
+
+1230117759 c:\programmation2\frost\include\frost_modelmanager.h
+	"frost.h"
+
+1230117759 c:\programmation2\frost\include\frost_model.h
+	"frost.h"
+	"frost_movableobject.h"
+
+1230117759 c:\programmation2\frost\include\frost_animmanager.h
+	"frost.h"
+	<OgreVector3.h>
+	<OgreQuaternion.h>
+
+1230117759 c:\programmation2\frost\include\frost_materialmanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\frost_material.h
+	"frost.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_creature.cpp
+	"frost_creature.h"
+	"frost_modelmanager.h"
+	"frost_model.h"
+	"frost_animmanager.h"
+
+1230117759 c:\programmation2\frost\include\frost_creature.h
+	"frost.h"
+	"frost_unit.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_decal.cpp
+	"frost_decal.h"
+	<OgreFrustum.h>
+	<OgreSceneNode.h>
+	<OgrePass.h>
+
+1230117759 c:\programmation2\frost\include\frost_decal.h
+	"frost.h"
+	"frost_movableobject.h"
+
+1231877186 source:c:\programmation2\frost\src\frost_engine.cpp
+	"frost_engine.h"
+	"frost_timemanager.h"
+	"frost_eventmanager.h"
+	"frost_inputmanager.h"
+	"frost_fontmanager.h"
+	"frost_guimanager.h"
+	"frost_localemanager.h"
+	"frost_spritemanager.h"
+	"frost_pathmanager.h"
+	"frost_modelmanager.h"
+	"frost_cameramanager.h"
+	"frost_scenemanager.h"
+	"frost_materialmanager.h"
+	"frost_lightmanager.h"
+	"frost_unitmanager.h"
+	"frost_camera.h"
+	<OgreRoot.h>
+	<OgreRenderSystem.h>
+	<OgreRenderWindow.h>
+	<OgreWindowEventUtilities.h>
+	<OgreMaterialManager.h>
+	<OgreUnifiedHighLevelGpuProgram.h>
+
+1230117759 c:\programmation2\frost\include\frost_timemanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\frost_eventmanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1232990756 c:\programmation2\frost\include\frost_inputmanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\frost_fontmanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1232997927 c:\programmation2\frost\include\frost_guimanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\frost_localemanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\frost_spritemanager.h
+	"frost.h"
+	"frost_gfx.h"
+	<OgreRenderOperation.h>
+	<OgreHardwareVertexBuffer.h>
+	<OgreRenderQueueListener.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrerenderqueuelistener.h
+	"OgrePrerequisites.h"
+	"OgreRenderQueue.h"
+
+1230117759 c:\programmation2\frost\include\frost_scenemanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+
+1230117759 c:\programmation2\frost\include\frost_lightmanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+	"frost_light.h"
+
+1230117759 c:\programmation2\frost\include\frost_light.h
+	"frost.h"
+	"frost_movableobject.h"
+
+1230117759 c:\programmation2\frost\include\frost_unitmanager.h
+	"frost.h"
+	"utils/frost_utils_manager.h"
+	"frost_character.h"
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogreroot.h
+	"OgrePrerequisites.h"
+	"OgreSingleton.h"
+	"OgreString.h"
+	"OgreSceneManagerEnumerator.h"
+	"OgreResourceGroupManager.h"
+	<exception>
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogrescenemanagerenumerator.h
+	"OgrePrerequisites.h"
+	"OgreSceneManager.h"
+	"OgreSingleton.h"
+	"OgreIteratorWrappers.h"
+
+1219657340 c:\programmation2\ogre\ogremain\include\ogrerendersystem.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreTextureUnitState.h"
+	"OgreCommon.h"
+	"OgreRenderOperation.h"
+	"OgreRenderSystemCapabilities.h"
+	"OgreRenderTarget.h"
+	"OgreRenderTexture.h"
+	"OgreFrameListener.h"
+	"OgreConfigOptionMap.h"
+	"OgreGpuProgram.h"
+	"OgrePlane.h"
+	"OgreIteratorWrappers.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrerendertexture.h
+	"OgrePrerequisites.h"
+	"OgreRenderTarget.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreframelistener.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreconfigoptionmap.h
+	"OgrePrerequisites.h"
+	"OgreStringVector.h"
+	"OgreString.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrewindoweventutilities.h
+	"OgrePrerequisites.h"
+	"OgrePlatform.h"
+	<windows.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrematerialmanager.h
+	"OgrePrerequisites.h"
+	"OgreSingleton.h"
+	"OgreResourceManager.h"
+	"OgreMaterial.h"
+	"OgreStringVector.h"
+	"OgreMaterialSerializer.h"
+
+1214430010 c:\programmation2\ogre\ogremain\include\ogrematerialserializer.h
+	"OgrePrerequisites.h"
+	"OgreMaterial.h"
+	"OgreBlendMode.h"
+	"OgreTextureUnitState.h"
+	"OgreGpuProgram.h"
+	"OgreStringVector.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreunifiedhighlevelgpuprogram.h
+	"OgrePrerequisites.h"
+	"OgreHighLevelGpuProgram.h"
+	"OgreHighLevelGpuProgramManager.h"
+
+1215273946 c:\programmation2\ogre\ogremain\include\ogrehighlevelgpuprogram.h
+	"OgrePrerequisites.h"
+	"OgreGpuProgram.h"
+
+1214430010 c:\programmation2\ogre\ogremain\include\ogrehighlevelgpuprogrammanager.h
+	"OgrePrerequisites.h"
+	"OgreResourceManager.h"
+	"OgreSingleton.h"
+	"OgreException.h"
+	"OgreHighLevelGpuProgram.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_event.cpp
+	"frost_event.h"
+
+1230117759 c:\programmation2\frost\include\frost_event.h
+	"frost.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_eventmanager.cpp
+	"frost_eventmanager.h"
+	"frost_event.h"
+	"frost_eventreceiver.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_eventreceiver.cpp
+	"frost_eventreceiver.h"
+	"frost_eventmanager.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_fontmanager.cpp
+	"frost_fontmanager.h"
+	<OgreFontManager.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrefontmanager.h
+	"OgrePrerequisites.h"
+	"OgreSingleton.h"
+	"OgreResourceManager.h"
+	"OgreFont.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrefont.h
+	"OgrePrerequisites.h"
+	"OgreResource.h"
+	"OgreTexture.h"
+	"OgreMaterial.h"
+	"OgreCommon.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_gfx.cpp
+	"frost_gfx.h"
+	"frost_material.h"
+	<OgreMaterialManager.h>
+	<OgreTextureManager.h>
+	<OgreMaterial.h>
+	<OgreTechnique.h>
+	<OgrePass.h>
+	<OgreHardwarePixelBuffer.h>
+	<OgreRenderTarget.h>
+	<OgreRenderTexture.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrehardwarepixelbuffer.h
+	"OgrePrerequisites.h"
+	"OgreHardwareBuffer.h"
+	"OgreSharedPtr.h"
+	"OgrePixelFormat.h"
+	"OgreImage.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_inputmanager.cpp
+	"frost_inputmanager.h"
+	"frost_timemanager.h"
+	<OgreRenderWindow.h>
+	<OIS/OISInputManager.h>
+	<OIS/OISMouse.h>
+	<OIS/OISKeyboard.h>
+
+1165914146 c:\programmation2\ogre\dependencies\include\ois\oisinputmanager.h
+	"OISPrereqs.h"
+
+1156942558 c:\programmation2\ogre\dependencies\include\ois\oismouse.h
+	"OISObject.h"
+	"OISEvents.h"
+
+1155357760 c:\programmation2\ogre\dependencies\include\ois\oisobject.h
+	"OISPrereqs.h"
+	"OISInterface.h"
+
+1142347658 c:\programmation2\ogre\dependencies\include\ois\oisinterface.h
+	"OISPrereqs.h"
+
+1155357760 c:\programmation2\ogre\dependencies\include\ois\oisevents.h
+	"OISPrereqs.h"
+
+1155357760 c:\programmation2\ogre\dependencies\include\ois\oiskeyboard.h
+	"OISObject.h"
+	"OISEvents.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_light.cpp
+	"frost_light.h"
+	"frost_gfx.h"
+	"frost_event.h"
+	<OgreSceneManager.h>
+	<OgreLight.h>
+
+1230117761 source:c:\programmation2\frost\src\frost_lightmanager.cpp
+	"frost_lightmanager.h"
+	"frost_light.h"
+	"frost_gfx.h"
+	"OgreSceneManager.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_localemanager.cpp
+	"frost_localemanager.h"
+
+1231864996 source:c:\programmation2\frost\src\frost_main.cpp
+	"frost.h"
+	"frost_model.h"
+	"frost_modelmanager.h"
+	"frost_animmanager.h"
+	"frost_fontmanager.h"
+	"frost_guimanager.h"
+	"frost_sprite.h"
+	"frost_spritemanager.h"
+	"frost_inputmanager.h"
+	"frost_timemanager.h"
+	"frost_cameramanager.h"
+	"frost_camera.h"
+	"frost_path_directpath.h"
+	"frost_path_smoothpath.h"
+	"frost_pathmanager.h"
+	"frost_materialmanager.h"
+	"frost_material.h"
+	"frost_scenemanager.h"
+	"frost_plane.h"
+	"frost_lightmanager.h"
+	"frost_light.h"
+	"frost_eventmanager.h"
+	"frost_event.h"
+	"frost_unitmanager.h"
+	"frost_character.h"
+	<OgreException.h>
+	<windows.h>
+
+1232990756 c:\programmation2\frost\include\frost_sprite.h
+	"frost.h"
+	"frost_gfx.h"
+
+1230117759 c:\programmation2\frost\include\frost_path_directpath.h
+	"frost.h"
+	"frost_path.h"
+
+1230117759 c:\programmation2\frost\include\frost_path_smoothpath.h
+	"frost.h"
+	"frost_path.h"
+
+1230117759 c:\programmation2\frost\include\frost_plane.h
+	"frost.h"
+	"frost_movableobject.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_material.cpp
+	"frost_material.h"
+	<OgreMaterial.h>
+	<OgreTechnique.h>
+	<OgrePass.h>
+	"frost_decal.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_materialmanager.cpp
+	"frost_materialmanager.h"
+	"frost_material.h"
+	<OgreMaterialManager.h>
+	<OgreTextureManager.h>
+	<OgreMaterial.h>
+	<OgreTechnique.h>
+	<OgrePass.h>
+	<OgreHardwarePixelBuffer.h>
+	<OgreRenderTarget.h>
+	<OgreRenderTexture.h>
+
+1230117761 source:c:\programmation2\frost\src\frost_movableobject.cpp
+	"frost_movableobject.h"
+	"frost_engine.h"
+	"frost_gfx.h"
+	"frost_pathmanager.h"
+	"frost_path.h"
+	<OgreSceneManager.h>
+	<OgreRoot.h>
+
+1230117761 source:c:\programmation2\frost\src\frost_plane.cpp
+	"frost_plane.h"
+	"frost_material.h"
+	<OgreSceneManager.h>
+	<OgreMeshManager.h>
+	<OgreNode.h>
+	<OgreEntity.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogremeshmanager.h
+	"OgrePrerequisites.h"
+	"OgreResourceManager.h"
+	"OgreSingleton.h"
+	"OgreVector3.h"
+	"OgreHardwareBuffer.h"
+	"OgreMesh.h"
+	"OgrePatchMesh.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogremesh.h
+	"OgrePrerequisites.h"
+	"OgreResource.h"
+	"OgreVertexIndexData.h"
+	"OgreAxisAlignedBox.h"
+	"OgreVertexBoneAssignment.h"
+	"OgreIteratorWrappers.h"
+	"OgreProgressiveMesh.h"
+	"OgreHardwareVertexBuffer.h"
+	"OgreSkeleton.h"
+	"OgreAnimationTrack.h"
+	"OgrePose.h"
+	"OgreDataStream.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrevertexboneassignment.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreprogressivemesh.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+	"OgreHardwareVertexBuffer.h"
+	"OgreHardwareIndexBuffer.h"
+	"OgreRenderOperation.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrepatchmesh.h
+	"OgrePrerequisites.h"
+	"OgreMesh.h"
+	"OgrePatchSurface.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrepatchsurface.h
+	"OgrePrerequisites.h"
+	"OgreVector3.h"
+	"OgreString.h"
+	"OgreRenderOperation.h"
+	"OgreAxisAlignedBox.h"
+
+1220472722 c:\programmation2\ogre\ogremain\include\ogreentity.h
+	"OgrePrerequisites.h"
+	"OgreCommon.h"
+	"OgreString.h"
+	"OgreMovableObject.h"
+	"OgreQuaternion.h"
+	"OgreVector3.h"
+	"OgreHardwareBufferManager.h"
+	"OgreMesh.h"
+	"OgreRenderable.h"
+
+1219389354 c:\programmation2\ogre\ogremain\include\ogrehardwarebuffermanager.h
+	"OgrePrerequisites.h"
+	"OgreSingleton.h"
+	"OgreHardwareVertexBuffer.h"
+	"OgreHardwareIndexBuffer.h"
+	"OgreRenderToVertexBuffer.h"
+
+1220472062 c:\programmation2\ogre\ogremain\include\ogrerendertovertexbuffer.h
+	"OgrePrerequisites.h"
+	"OgreMaterial.h"
+	"OgreRenderOperation.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_profiler.cpp
+	"frost_profiler.h"
+	"frost_timemanager.h"
+
+1230117759 c:\programmation2\frost\include\frost_profiler.h
+	"frost.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_scenemanager.cpp
+	"frost_scenemanager.h"
+	"frost_plane.h"
+	"frost_terrain.h"
+	<OgreMeshManager.h>
+
+1230117759 c:\programmation2\frost\include\frost_terrain.h
+	"frost.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_terrain.cpp
+	"frost_terrain.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_terraindata.cpp
+	"frost_terraindata.h"
+
+1230117759 c:\programmation2\frost\include\frost_terraindata.h
+	"frost.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_timemanager.cpp
+	"frost_timemanager.h"
+	"frost_profiler.h"
+	<OgreTimer.h>
+
+1230117761 source:c:\programmation2\frost\src\frost_timers.cpp
+	"frost_timers.h"
+	"frost_timemanager.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_unit.cpp
+	"frost_unit.h"
+	"frost_modelmanager.h"
+	"frost_model.h"
+	"frost_animmanager.h"
+	"frost_timemanager.h"
+	"frost_cameramanager.h"
+	"frost_camera.h"
+
+1230117761 source:c:\programmation2\frost\src\frost_unitmanager.cpp
+	"frost_unitmanager.h"
+	"frost_character.h"
+	"frost_creature.h"
+	"frost_modelmanager.h"
+	"frost_model.h"
+	"frost_materialmanager.h"
+	"frost_material.h"
+
+1232996151 source:c:\programmation2\frost\src\gui\frost_anchor.cpp
+	"gui/frost_gui_anchor.h"
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_frame.h"
+	"frost_guimanager.h"
+
+1232992352 c:\programmation2\frost\include\frost_gui.h
+	"frost.h"
+
+1232997927 c:\programmation2\frost\include\gui\frost_gui_uiobject.h
+	"frost.h"
+	"frost_gui_anchor.h"
+	"frost_gfx.h"
+
+1233000043 c:\programmation2\frost\include\gui\frost_gui_frame.h
+	"frost.h"
+	"gui/frost_gui_uiobject.h"
+	"frost_eventreceiver.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_button.cpp
+	"gui/frost_gui_button.h"
+	"gui/frost_gui_frame.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_button.h
+	"frost.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_button_glues.cpp
+	"gui/frost_gui_button.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_editbox.cpp
+	"gui/frost_gui_editbox.h"
+	"gui/frost_gui_frame.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_editbox.h
+	"frost.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_editbox_glues.cpp
+	"gui/frost_gui_editbox.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_fontstring.cpp
+	"gui/frost_gui_fontstring.h"
+	"gui/frost_gui_layeredregion.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_fontstring.h
+	"frost.h"
+	"gui/frost_gui_layeredregion.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_layeredregion.h
+	"frost.h"
+	"gui/frost_gui_uiobject.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_fontstring_glues.cpp
+	"gui/frost_gui_fontstring.h"
+	"gui/frost_gui_layeredregion.h"
+
+1233000133 source:c:\programmation2\frost\src\gui\frost_frame.cpp
+	"gui/frost_gui_frame.h"
+	"gui/frost_gui_layeredregion.h"
+	"gui/frost_gui_uiobject.h"
+	"frost_guimanager.h"
+	"frost_inputmanager.h"
+	"frost_timemanager.h"
+	"frost_event.h"
+
+1231601120 source:c:\programmation2\frost\src\gui\frost_frame_glues.cpp
+	"gui/frost_gui_frame.h"
+
+1232997927 source:c:\programmation2\frost\src\gui\frost_guimanager.cpp
+	"frost_guimanager.h"
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_anchor.h"
+
+1232392790 source:c:\programmation2\frost\src\gui\frost_layeredregion.cpp
+	"gui/frost_gui_layeredregion.h"
+	"gui/frost_gui_uiobject.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_layeredregion_glues.cpp
+	"gui/frost_gui_layeredregion.h"
+	"gui/frost_gui_uiobject.h"
+
+1232996198 source:c:\programmation2\frost\src\gui\frost_lunar.cpp
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_frame.h"
+	"gui/frost_gui_layeredregion.h"
+	"gui/frost_gui_button.h"
+	"gui/frost_gui_editbox.h"
+	"gui/frost_gui_scrollingmessageframe.h"
+	"gui/frost_gui_slider.h"
+	"gui/frost_gui_statusbar.h"
+	"gui/frost_gui_fontstring.h"
+	"gui/frost_gui_texture.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_scrollingmessageframe.h
+	"frost.h"
+	"gui/frost_gui_frame.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_slider.h
+	"frost.h"
+	"gui/frost_gui_frame.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_statusbar.h
+	"frost.h"
+	"gui/frost_gui_frame.h"
+
+1230117759 c:\programmation2\frost\include\gui\frost_gui_texture.h
+	"frost.h"
+	"gui/frost_gui_layeredregion.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_scrollingmessageframe.cpp
+	"gui/frost_gui_scrollingmessageframe.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_scrollingmessageframe_glues.cpp
+	"gui/frost_gui_scrollingmessageframe.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_slider.cpp
+	"gui/frost_gui_slider.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_slider_glues.cpp
+	"gui/frost_gui_slider.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_sprite.cpp
+	"frost_sprite.h"
+	"frost_spritemanager.h"
+	"frost_material.h"
+	"frost_materialmanager.h"
+	<OgreMaterial.h>
+	<OgreTechnique.h>
+	<OgrePass.h>
+	<OgreTextureUnitState.h>
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_spritemanager.cpp
+	"frost_spritemanager.h"
+	"frost_sprite.h"
+	"frost_material.h"
+	"frost_materialmanager.h"
+	<OgreRoot.h>
+	<OgreViewport.h>
+	<OgreRenderSystem.h>
+	<OgreSceneManager.h>
+	<OgreMatrix4.h>
+	<OgreHardwareBufferManager.h>
+	<OgreHardwareVertexBuffer.h>
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_statusbar.cpp
+	"gui/frost_gui_statusbar.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_statusbar_glues.cpp
+	"gui/frost_gui_statusbar.h"
+	"gui/frost_gui_frame.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_text.cpp
+	"frost_text.h"
+
+1230117759 c:\programmation2\frost\include\frost_text.h
+	"frost.h"
+	"frost_gfx.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_texture.cpp
+	"gui/frost_gui_texture.h"
+	"gui/frost_gui_layeredregion.h"
+
+1230117761 source:c:\programmation2\frost\src\gui\frost_texture_glues.cpp
+	"gui/frost_gui_texture.h"
+	"gui/frost_gui_layeredregion.h"
+
+1232997927 source:c:\programmation2\frost\src\gui\frost_uiobject.cpp
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_frame.h"
+	"frost_guimanager.h"
+	"frost_material.h"
+
+1232996198 source:c:\programmation2\frost\src\gui\frost_uiobject_glues.cpp
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_anchor.h"
+	"frost_guimanager.h"
+
+1232904678 source:c:\programmation2\frost\src\lua\frost_lua.cpp
+	"frost_lua.h"
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_frame.h"
+	"gui/frost_gui_layeredregion.h"
+	"gui/frost_gui_button.h"
+	"gui/frost_gui_editbox.h"
+	"gui/frost_gui_scrollingmessageframe.h"
+	"gui/frost_gui_slider.h"
+	"gui/frost_gui_statusbar.h"
+	"gui/frost_gui_fontstring.h"
+	"gui/frost_gui_texture.h"
+
+1230117760 source:c:\programmation2\frost\src\lua\frost_lua_glues.cpp
+	"frost_lua.h"
+	"frost_inputmanager.h"
+	"frost_localemanager.h"
+	"frost_timemanager.h"
+	"frost_eventmanager.h"
+	"frost_event.h"
+
+1231869645 source:c:\programmation2\frost\src\lua\frost_lua_utils.cpp
+	"frost_lua.h"
+
+1230117760 source:c:\programmation2\frost\src\lua\frost_lua_utils_argument.cpp
+	"frost_lua_utils.h"
+
+1230117760 source:c:\programmation2\frost\src\lua\frost_lua_utils_data.cpp
+	"frost_lua_utils.h"
+
+1230117760 source:c:\programmation2\frost\src\lua\frost_lua_utils_function.cpp
+	"frost_lua_utils.h"
+
+1230117760 source:c:\programmation2\frost\src\lua\frost_lua_utils_returnvalue.cpp
+	"frost_lua_utils.h"
+
+1230117760 source:c:\programmation2\frost\src\model\frost_animmanager.cpp
+	"frost_animmanager.h"
+	"frost_model.h"
+	<OgreAnimationState.h>
+	<OgreEntity.h>
+
+1230117760 source:c:\programmation2\frost\src\model\frost_model.cpp
+	"frost_model.h"
+	"frost_modeldata.h"
+	"frost_animmanager.h"
+	"frost_timemanager.h"
+	"frost_gfx.h"
+	"frost_material.h"
+	"frost_materialmanager.h"
+	<OgreSceneManager.h>
+	<OgreSceneNode.h>
+	<OgreEntity.h>
+	<OgreSubEntity.h>
+
+1230117759 c:\programmation2\frost\include\frost_modeldata.h
+	"frost.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogresubentity.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreRenderable.h"
+	"OgreHardwareBufferManager.h"
+
+1230117760 source:c:\programmation2\frost\src\model\frost_modeldata.cpp
+	"frost_modeldata.h"
+	"frost_model.h"
+	"frost_animmanager.h"
+	"frost_modelstructs.h"
+	"frost_materialmanager.h"
+	"frost_material.h"
+	"frost_gfx.h"
+	"frost_timers.h"
+	<OgreBone.h>
+	<OgreMeshManager.h>
+	<OgreSubMesh.h>
+	<OgreSkeletonManager.h>
+	<OgreSkeleton.h>
+	<OgreAnimation.h>
+	<OgreHardwareBufferManager.h>
+
+1232990756 c:\programmation2\frost\include\frost_modelstructs.h
+	"frost.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogresubmesh.h
+	"OgrePrerequisites.h"
+	"OgreVertexIndexData.h"
+	"OgreMaterial.h"
+	"OgreRenderOperation.h"
+	"OgreVertexBoneAssignment.h"
+	"OgreProgressiveMesh.h"
+	"OgreAnimationTrack.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreskeletonmanager.h
+	"OgrePrerequisites.h"
+	"OgreResourceManager.h"
+	"OgreSingleton.h"
+
+1222014352 c:\programmation2\ogre\ogremain\include\ogreanimation.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreIteratorWrappers.h"
+	"OgreAnimable.h"
+	"OgreAnimationTrack.h"
+	"OgreAnimationState.h"
+
+1230117760 source:c:\programmation2\frost\src\model\frost_modelmanager.cpp
+	"frost_modelmanager.h"
+	"frost_animmanager.h"
+	"frost_model.h"
+	"frost_modeldata.h"
+
+1230117760 source:c:\programmation2\frost\src\model\frost_modelpart.cpp
+	"frost_model.h"
+	"frost_material.h"
+	<OgreEntity.h>
+	<OgreSubEntity.h>
+
+1233000043 source:c:\programmation2\frost\src\parsers\frost_guimanager_parser.cpp
+	"frost_guimanager.h"
+	"gui/frost_gui_anchor.h"
+	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_frame.h"
+	"frost_xml_document.h"
+
+1231867942 c:\programmation2\frost\include\frost_xml_document.h
+	"frost.h"
+	"frost_xml_block.h"
+
+1231790201 c:\programmation2\frost\include\frost_xml_block.h
+	"frost.h"
+
+1230117760 source:c:\programmation2\frost\src\parsers\frost_unitmanager_parser.cpp
+	"frost_unitmanager.h"
+	"frost_character.h"
+	"frost_creature.h"
+	"frost_modelmanager.h"
+	"frost_xml_document.h"
+
+1230117761 source:c:\programmation2\frost\src\path\frost_path.cpp
+	"frost_path.h"
+
+1230117761 source:c:\programmation2\frost\src\path\frost_path_directpath.cpp
+	"frost_path_directpath.h"
+
+1230117761 source:c:\programmation2\frost\src\path\frost_path_manualpath.cpp
+	"frost_path_manualpath.h"
+
+1230117759 c:\programmation2\frost\include\frost_path_manualpath.h
+	"frost.h"
+	"frost_path.h"
+
+1230117761 source:c:\programmation2\frost\src\path\frost_path_smoothpath.cpp
+	"frost_path_smoothpath.h"
+
+1230117761 source:c:\programmation2\frost\src\path\frost_pathmanager.cpp
+	"frost_pathmanager.h"
+	"frost_path_directpath.h"
+	"frost_path_manualpath.h"
+	"frost_path_smoothpath.h"
+
+1231790342 source:c:\programmation2\frost\src\xml\frost_xml_block.cpp
+	"frost_xml_block.h"
+	"frost_xml_document.h"
+
+1232239861 source:c:\programmation2\frost\src\xml\frost_xml_document.cpp
+	"frost_xml_document.h"
+	"frost_xml_block.h"
+
+1232992657 c:\programmation2\frost\include\gui\frost_gui_anchor.h
+	"frost.h"
+

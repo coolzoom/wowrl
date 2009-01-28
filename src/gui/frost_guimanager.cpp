@@ -12,7 +12,7 @@
 #include "frost_guimanager.h"
 
 #include "gui/frost_gui_uiobject.h"
-#include "frost_gui.h"
+#include "gui/frost_gui_anchor.h"
 
 using namespace std;
 
@@ -41,27 +41,43 @@ namespace Frost
 
     s_bool GUIManager::AddUIObject(s_ptr<GUI::UIObject> pObj)
     {
+        map< s_str, s_ptr<GUI::UIObject> >* lNamedList;
+        map< s_uint, s_ptr<GUI::UIObject> >* lIDList;
+        if (pObj->IsVirtual())
+        {
+            lNamedList = &lNamedVirtualObjectList_;
+            lIDList = &lVirtualObjectList_;
+        }
+        else
+        {
+            lNamedList = &lNamedObjectList_;
+            lIDList = &lObjectList_;
+        }
+
         if (pObj != NULL)
         {
-            map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamedObj = lNamedObjectList_.find(pObj->GetName());
-            if (iterNamedObj == lNamedObjectList_.end())
+            map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamedObj = lNamedList->find(pObj->GetName());
+            if (iterNamedObj == lNamedList->end())
             {
                 s_uint i;
-                map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.find(i);
-                while (iterObj != lObjectList_.end())
+                map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lIDList->find(i);
+                while (iterObj != lIDList->end())
                 {
                     i++;
-                    iterObj = lObjectList_.find(i);
+                    iterObj = lIDList->find(i);
                 }
-                lObjectList_[i] = pObj;
-                lNamedObjectList_[pObj->GetName()] = pObj;
+                (*lIDList)[i] = pObj;
+                (*lNamedList)[pObj->GetName()] = pObj;
                 pObj->SetID(i);
 
                 return true;
             }
             else
             {
-                Error(CLASS_NAME, "A widget with the name \""+pObj->GetName()+"\" already exists.");
+                Error(CLASS_NAME,
+                    "A "+pObj->IsVirtual().GetAsString("virtual", "")+" widget with the name \""
+                    +pObj->GetName()+"\" already exists."
+                );
                 return false;
             }
         }
@@ -82,16 +98,31 @@ namespace Frost
         }
     }
 
-    s_ptr<GUI::UIObject> GUIManager::GetUIObjectByName( const s_str& sName )
+    s_ptr<GUI::UIObject> GUIManager::GetUIObjectByName( const s_str& sName, const s_bool& bVirtual )
     {
-        if (MAPFIND(sName, lNamedObjectList_))
+        if (bVirtual)
         {
-            return lNamedObjectList_[sName];
+            if (MAPFIND(sName, lNamedVirtualObjectList_))
+            {
+                return lNamedVirtualObjectList_[sName];
+            }
+            else
+            {
+                Warning(CLASS_NAME, "No virtual UIObject with the name \""+sName+"\".");
+                return NULL;
+            }
         }
         else
         {
-            Warning(CLASS_NAME, "No UIObject with the name \""+sName+"\".");
-            return NULL;
+            if (MAPFIND(sName, lNamedObjectList_))
+            {
+                return lNamedObjectList_[sName];
+            }
+            else
+            {
+                Warning(CLASS_NAME, "No UIObject with the name \""+sName+"\".");
+                return NULL;
+            }
         }
     }
 
@@ -306,10 +337,32 @@ namespace Frost
 
     void GUIManager::PrintUI()
     {
-        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
-        foreach (iterObj, lObjectList_)
+        if (lObjectList_.size() >= 1)
         {
-            Log(iterObj->second->Serialize() + "\n########################\n");
+            Log("\n\n######################## UIObjects ########################\n\n########################\n");
+            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+            foreach (iterObj, lObjectList_)
+            {
+                Log(iterObj->second->Serialize() + "\n########################\n");
+            }
+        }
+        else
+        {
+            Log("\n########################\nNo UIObject.\n########################\n");
+        }
+
+        if (lVirtualObjectList_.size() >= 1)
+        {
+            Log("\n\n######################## Virtual UIObjects ########################\n\n########################\n");
+            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+            foreach (iterObj, lVirtualObjectList_)
+            {
+                Log(iterObj->second->Serialize() + "\n########################\n");
+            }
+        }
+        else
+        {
+            Log("\n########################\nNo virtual UIObject.\n########################\n");
         }
     }
 }

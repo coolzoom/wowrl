@@ -10,7 +10,7 @@
 #define FROST_GUI_UIOBJECT_H
 
 #include "frost.h"
-#include "frost_gui.h"
+#include "frost_gui_anchor.h"
 #include "frost_gfx.h"
 
 namespace Frost
@@ -34,10 +34,10 @@ namespace Frost
 
         enum BorderType
         {
-            BORDER_TOP = 0,
+            BORDER_LEFT,
             BORDER_RIGHT,
-            BORDER_BOTTOM,
-            BORDER_LEFT
+            BORDER_TOP,
+            BORDER_BOTTOM
         };
 
         enum LayerType
@@ -83,6 +83,11 @@ namespace Frost
             */
             virtual s_str   Serialize() const;
 
+            /// Copies an UIObject's parameters into this UIObject (inheritance).
+            /** \param pObj The UIObject to copy
+            */
+            virtual void    CopyFrom(s_ptr<UIObject> pObj);
+
             /// Returns this widget's material.
             /** \return This widget's material (texture)
             */
@@ -90,6 +95,9 @@ namespace Frost
 
             /// Tells this widget to update its borders.
             void            FireUpdateBorders();
+
+            /// Tells this widget to update its dimensions.
+            void            FireUpdateDimensions();
 
             /// Returns this widget's name.
             /** \return This widget's name
@@ -136,6 +144,12 @@ namespace Frost
             */
             void            Hide();
 
+            /// Shows/hides this widget.
+            /** \param bIsShown 'true' if you want to show this widget
+            *   \note See Show() and Hide() for more infos.
+            */
+            void            SetShown(const s_bool& bIsShown);
+
             /// Checks if this widget is shown.
             /** \return 'true' if this widget is shown
             */
@@ -159,6 +173,16 @@ namespace Frost
             *         all of this widget's childs.
             */
             void            SetAbsHeight(const s_uint& uiAbsHeight);
+
+            /// Checks if this widget's width has been defined as absolute.
+            /** \return 'true' if this widget's width has been defined as absolute
+            */
+            const s_bool&   IsWidthAbsolute() const;
+
+            /// Checks if this widget's height has been defined as absolute.
+            /** \return 'true' if this widget's height has been defined as absolute
+            */
+            const s_bool&   IsHeightAbsolute() const;
 
             /// Changes this widget's width (relative to its parent).
             /** \param fRelWidth The new width
@@ -194,10 +218,15 @@ namespace Frost
             */
             const s_float&  GetRelHeight() const;
 
+            /// Returns the type of this widget.
+            /** \return  The type of this widget
+            */
+            const s_str&    GetObjectType() const;
+
             /// Returns an array containing all the types of this widget.
             /** \return  An array containing all the types of this widget
             */
-            std::vector<s_str> GetObjectType() const;
+            const std::vector<s_str>& GetObjectTypeList() const;
 
             /// Returns the vertical position of this widget's bottom border.
             /** \return The vertical position of this widget's bottom border
@@ -253,7 +282,7 @@ namespace Frost
 
             /// Creates/modifies an anchor.
             /** \param mPoint         The anchor point for this object
-            *   \param pObj           The anchor parent
+            *   \param pObj           The Anchor's parent
             *   \param mRelativePoint The anchor point for the parent
             *   \param fX             The horizontal offset
             *   \param fY             The vertical offset
@@ -266,6 +295,11 @@ namespace Frost
                                 const s_float& fY
             );
 
+            /// Adds/replaces an anchor.
+            /** \param mAnchor The Anchor to add
+            */
+            void            SetPoint(const Anchor& mAnchor);
+
             /// Returns the number of defined anchors.
             /** \return The number of defined anchors
             */
@@ -276,6 +310,17 @@ namespace Frost
             *   \return A pointer to the anchor, NULL if none
             */
             s_ptr<Anchor>   GetPoint(const s_uint& uiPoint);
+
+            /// Checks if this UIObject is virtual.
+            /** \return 'true' if this UIObject is virtual
+            *   \note A virtual UIObject can be inherited.
+            */
+            const s_bool&   IsVirtual() const;
+
+            /// Makes this UIObject virtual.
+            /** \note See IsVirtual().
+            */
+            void            SetVirtual();
 
             /// Returns this widget's unique ID.
             /** \return This widget's unique ID
@@ -298,18 +343,21 @@ namespace Frost
         protected :
 
             void UpdateBorders_();
+            void UpdateDimensions_();
 
             s_str           sName_;
             s_uint          uiID_;
             ObjectType      mType_;
             s_ptr<UIObject> pParent_;
 
+            s_bool          bVirtual_;
+            s_bool          bReady_;
+
             s_ptr<LuaUIObject> pGlue_;
 
             std::vector<s_str> lType_;
 
             std::map<AnchorPoint, Anchor> lAnchorList_;
-            std::vector< s_ptr<Anchor> >  lAnchorStack_;
             s_array<s_int, 4>             lBorderList_;
 
             s_float fAlpha_;
@@ -318,11 +366,14 @@ namespace Frost
             s_uint  uiAbsHeight_;
             s_float fRelWidth_;
             s_float fRelHeight_;
+            s_bool  bIsWidthAbs_;
+            s_bool  bIsHeightAbs_;
 
             RenderTarget       mTarget_;
             s_refptr<Material> pMaterial_;
 
             s_bool bUpdateBorders_;
+            s_bool bUpdateDimensions_;
         };
 
         /// UIObject Lua glue

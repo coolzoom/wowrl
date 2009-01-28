@@ -57,7 +57,7 @@ struct ModelHeader
     uint ofsTransparency;
     uint nI;   // always unused ?
     uint ofsI;
-    uint nTexAnims;	// J
+    uint nTexAnims;    // J
     uint ofsTexAnims;
     uint nTexReplace;
     uint ofsTexReplace;
@@ -70,7 +70,7 @@ struct ModelHeader
     uint nTexLookup;
     uint ofsTexLookup;
 
-    uint nTexUnitLookup;		// L
+    uint nTexUnitLookup;        // L
     uint ofsTexUnitLookup;
     uint nTransparencyLookup; // M
     uint ofsTransparencyLookup;
@@ -118,11 +118,11 @@ struct ModelVertex
 struct ModelView
 {
     uint nIndex, ofsIndex; // Vertices in this model (index into vertices[])
-    uint nTris, ofsTris;	 // indices
+    uint nTris, ofsTris;     // indices
     uint nProps, ofsProps; // additional vertex properties
-    uint nSub, ofsSub;	 // materials/renderops/submeshes
-    uint nTex, ofsTex;	 // material properties/textures
-    int lod;				 // LOD bias?
+    uint nSub, ofsSub;     // materials/renderops/submeshes
+    uint nTex, ofsTex;     // material properties/textures
+    int lod;                 // LOD bias?
 };
 
 struct ModelSubMesh
@@ -139,18 +139,18 @@ struct ModelSubMesh
 
 struct ModelTexUnit
 {
-    ushort flags;		// Flags
-    short order;		// ?
-    ushort op;			// Material this texture is part of (index into mat)
-    ushort op2;			// Always same as above?
-    short colorIndex;	// color or -1
-    ushort flagsIndex;	// more flags...
-    ushort texunit;		// Texture unit (0 or 1)
-    ushort d4;			// ? (seems to be always 1)
-    ushort textureid;	// Texture id (index into global texture list)
-    ushort texunit2;	// copy of texture unit val?
-    ushort transid;		// transparency id (index into transparency list)
-    ushort texanimid;	// texture animation id
+    ushort flags;        // Flags
+    short order;        // ?
+    ushort op;            // Material this texture is part of (index into mat)
+    ushort op2;            // Always same as above?
+    short colorIndex;    // color or -1
+    ushort flagsIndex;    // more flags...
+    ushort texunit;        // Texture unit (0 or 1)
+    ushort d4;            // ? (seems to be always 1)
+    ushort textureid;    // Texture id (index into global texture list)
+    ushort texunit2;    // copy of texture unit val?
+    ushort transid;        // transparency id (index into transparency list)
+    ushort texanimid;    // texture animation id
 };
 
 struct ModelTextureDef
@@ -185,8 +185,8 @@ struct ModelAnimation
 
 struct AnimationBlock
 {
-    short type;		// interpolation type (0=none, 1=linear, 2=hermite)
-    short seq;		// global sequence id or -1
+    short type;        // interpolation type (0=none, 1=linear, 2=hermite)
+    short seq;        // global sequence id or -1
     uint nRanges;
     uint ofsRanges;
     uint nTimes;
