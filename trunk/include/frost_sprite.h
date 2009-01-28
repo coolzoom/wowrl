@@ -229,7 +229,7 @@ namespace Frost
         s_float            fX2_, fY2_;
         s_float            fWidth_, fHeight_;
         s_float            fHotSpotX_, fHotSpotY_;
-        s_uint		       uiTexWidth_, uiTexHeight_;
+        s_uint               uiTexWidth_, uiTexHeight_;
         s_bool             bUsingMaterial_;
         s_refptr<Material> pMaterial_;
     };

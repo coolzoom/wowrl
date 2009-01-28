@@ -4,8 +4,8 @@
 /*                                        */
 
 #include "gui/frost_gui_uiobject.h"
+#include "gui/frost_gui_anchor.h"
 
-#include "frost_gui.h"
 #include "frost_guimanager.h"
 
 using namespace std;
@@ -63,7 +63,7 @@ int LuaUIObject::_GetObjectType( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetObjectType", pLua, 1);
 
-    mFunc.Push(Lua::ReturnValue(pParent_->GetObjectType().back()));
+    mFunc.Push(Lua::ReturnValue(pParent_->GetObjectType()));
 
     return mFunc.Return();
 }
@@ -76,8 +76,8 @@ int LuaUIObject::_IsObjectType( lua_State* pLua )
     {
         s_bool bIsType = false;
         s_str sType = mFunc.Get(0)->GetS();
-        vector<s_str> lType = pParent_->GetObjectType();
-        vector<s_str>::iterator iterType;
+        const vector<s_str>& lType = pParent_->GetObjectTypeList();
+        vector<s_str>::const_iterator iterType;
         foreach (iterType, lType)
         {
             if (sType == *iterType)
@@ -297,7 +297,6 @@ int LuaUIObject::_SetHeight( lua_State* pLua )
     mFunc.Add(0, "height", LUA_TNUMBER, VALUE_INT);
     if (mFunc.Check())
     {
-        //if (lAnchorStack_.size() <= 1)
         pParent_->SetAbsHeight(mFunc.Get(0)->GetUI());
     }
 
@@ -386,7 +385,6 @@ int LuaUIObject::_SetWidth( lua_State* pLua )
     mFunc.Add(0, "width", LUA_TNUMBER, VALUE_INT);
     if (mFunc.Check())
     {
-        //if (lAnchorStack_.size() <= 1)
         pParent_->SetAbsWidth(mFunc.Get(0)->GetUI());
     }
 

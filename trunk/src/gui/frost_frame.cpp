@@ -68,6 +68,89 @@ s_bool Frame::CanUseScript( const s_str& sScriptName ) const
         return false;
 }
 
+void Frame::CopyFrom( s_ptr<UIObject> pObj )
+{
+    // TODO : tester ça (et ptet l'écrire mieu, comme l'autre avec les fonctions)
+    UIObject::CopyFrom(pObj);
+
+    if (pObj->GetObjectType() == "Frame")
+    {
+        s_ptr<Frame> pFrame = (Frame*)pObj.Get();
+
+        lDefinedScriptList_ = pFrame->lDefinedScriptList_;
+
+        mStrata_ = pFrame->mStrata_;
+        bIsParentStrata_ = pFrame->bIsParentStrata_;
+        bIsTopStrata_ = pFrame->bIsTopStrata_;
+        bIsTopLevel_ = pFrame->bIsTopLevel_;
+
+        bIsKeyboardEnabled_ = pFrame->bIsKeyboardEnabled_;
+        bIsMouseEnabled_ = pFrame->bIsMouseEnabled_;
+        bIsMouseWheelEnabled_ = pFrame->bIsMouseWheelEnabled_;
+        bIsMovable_ = pFrame->bIsMovable_;
+        bIsClampedToScreen_ = pFrame->bIsClampedToScreen_;
+        bIsResizable_ = pFrame->bIsResizable_;
+
+        lAbsHitRectInsetList_ = pFrame->lAbsHitRectInsetList_;
+        lRelHitRectInsetList_ = pFrame->lRelHitRectInsetList_;
+
+        uiMinWidth_ = pFrame->uiMinWidth_;
+        uiMaxWidth_ = pFrame->uiMaxWidth_;
+        uiMinHeight_ = pFrame->uiMinHeight_;
+        uiMaxHeight_ = pFrame->uiMaxHeight_;
+
+        fScale_ = pFrame->fScale_;
+
+        map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
+        foreach (iterChild, pFrame->lChildList_)
+        {
+            s_ptr<Frame> pChild = iterChild->second;
+            s_ptr<Frame> pNewChild;
+            if (pChild->GetObjectType() == "Frame")
+                pNewChild = new Frame();
+            else if (pChild->GetObjectType() == "Button")
+                pNewChild = new Button();
+            else if (pChild->GetObjectType() == "EditBox")
+                pNewChild = new EditBox();
+            else if (pChild->GetObjectType() == "ScrollingMessageFrame")
+                pNewChild = new ScrollingMessageFrame();
+            else if (pChild->GetObjectType() == "Slider")
+                pNewChild = new Slider();
+            else if (pChild->GetObjectType() == "StatusBar")
+                pNewChild = new StatusBar();
+            else
+            {
+                Warning(lType_.back(),
+                    "Trying to create an inherited "+pChild->GetObjectType()+" child, "
+                    "but no copying code was available. Skipped."
+                );
+            }
+
+            if (pNewChild)
+            {
+                pNewChild->SetParent(this);
+                pNewChild->SetName(pChild->GetName());
+                if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
+                {
+                    Warning(lType_.back(),
+                        "Couldn't add an inherited child, because its name was already taken : \""
+                        +pNewChild->GetName()+"\". Skipped."
+                    );
+                    continue;
+                }
+                this->AddChild(pNewChild);
+                pNewChild->CopyFrom(pChild);
+            }
+        }
+
+        // TODO : Copy me
+        //map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
+
+        bBuildStrataList_ = true;
+        bBuildLayerList_ = true;
+    }
+}
+
 void Frame::DisableDrawLayer( LayerType mLayer )
 {
     lLayerList_[mLayer].bDisabled = true;
@@ -118,9 +201,9 @@ void Frame::AddChild( s_ptr<Frame> pChild )
         }
         else
         {
-            Warning(CLASS_NAME,
+            Warning(lType_.back(),
                 "Trying to add \""+pChild->GetName()+"\" to \""+sName_+"\"'s children, "
-                "but it was already one of this Frame's child."
+                "but it was already one of this Frame's children."
             );
         }
     }
@@ -137,9 +220,9 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
         }
         else
         {
-            Warning(CLASS_NAME,
+            Warning(lType_.back(),
                 "Trying to remove \""+pChild->GetName()+"\" from \""+sName_+"\"'s children, "
-                "but it was not one of this Frame's child."
+                "but it was not one of this Frame's children."
             );
         }
     }
@@ -321,8 +404,8 @@ void Frame::OnEvent( const Event& mEvent )
 void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 {
     if (MAPFIND(sScriptName, lDefinedScriptList_))
-	{
-	    lua_State* pLua = GUIManager::GetSingleton()->GetLua();
+    {
+        lua_State* pLua = GUIManager::GetSingleton()->GetLua();
 
         lua_getglobal(pLua, sName_.c_str());
         lua_setglobal(pLua, "this");
@@ -386,18 +469,18 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
         }
 
         lua_pop(pLua, 1);
-	}
+    }
 
-	if (sScriptName == "Load")
-	{
-		// OnLoad must be called from parent to childs, because childs often
-		// rely on their parent's state
-		map<s_uint, s_ptr<Frame> >::iterator iterChild;
-		foreach (iterChild, lChildList_)
-		{
-			iterChild->second->On("Load");
-		}
-	}
+    if (sScriptName == "Load")
+    {
+        // OnLoad must be called from parent to childs, because childs often
+        // rely on their parent's state
+        map<s_uint, s_ptr<Frame> >::iterator iterChild;
+        foreach (iterChild, lChildList_)
+        {
+            iterChild->second->On("Load");
+        }
+    }
 }
 
 void Frame::RegisterAllEvents()
@@ -495,7 +578,7 @@ void Frame::SetLevel( const s_uint& uiLevel )
     }
     else
     {
-        Warning(lType_.back(), "SetLevel can't be called more than once.");
+        Warning(lType_.back(), "SetLevel() can't be called more than once.");
     }
 }
 
@@ -530,12 +613,11 @@ void Frame::SetParent( s_ptr<UIObject> pParent )
         pParent_ = pParent;
         pParentFrame_ = (Frame*)pParent.Get();
 
-        if (pParent_)
-            pParentFrame_->AddChild(this);
+        FireUpdateDimensions();
     }
     else
     {
-        Error(lType_.back(), "Can't call SetParent(this)");
+        Error(lType_.back(), "Can't call SetParent(this).");
     }
 }
 

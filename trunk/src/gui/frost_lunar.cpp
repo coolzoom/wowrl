@@ -3,7 +3,6 @@
 /* ###################################### */
 /*                                        */
 
-#include "frost_gui.h"
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_frame.h"
 #include "gui/frost_gui_layeredregion.h"

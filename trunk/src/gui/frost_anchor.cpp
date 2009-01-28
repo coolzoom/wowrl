@@ -4,10 +4,10 @@
 /*             Anchor source              */
 /*                                        */
 
-#include "frost_gui.h"
-
+#include "gui/frost_gui_anchor.h"
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_frame.h"
+#include "frost_guimanager.h"
 
 using namespace std;
 using namespace Frost;
@@ -21,50 +21,55 @@ Anchor::Anchor()
     mType_ = ANCHOR_ABS;
 }
 
-Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, s_ptr<UIObject> pParent, AnchorPoint mParentPoint/*, const s_int& iX, const s_int& iY*/ )
+Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, s_ptr<UIObject> pParent, AnchorPoint mParentPoint )
 {
     pObj_ = pObj;
     mPoint_ = mPoint;
     pParent_ = pParent;
     mParentPoint_ = mParentPoint;
-    /*iAbsOffX_ = iX;
-    iAbsOffY_ = iY;*/
     mType_ = ANCHOR_ABS;
 }
 
-const s_int& Anchor::GetAbsX( s_bool bRelativeToParent )
+void Anchor::UpdateParent_()
+{
+    if (!bParentUpdated_)
+    {
+        if (sParent_.IsEmpty())
+        {
+            pParent_ = pObj_->GetParent();
+        }
+        else
+        {
+            s_ptr<UIObject> pObjParent = pObj_->GetParent();
+            if (pObjParent)
+                sParent_.Replace("$parent", pObjParent->GetName());
+            else
+                sParent_.Replace("$parent", "");
+
+            if (sParent_.IsEmpty())
+                pParent_ = NULL;
+            else
+                pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sParent_);
+        }
+
+        bParentUpdated_ = true;
+    }
+}
+
+const s_int& Anchor::GetAbsX()
 {
     if (pObj_ != NULL)
     {
-        s_int iParentX ;
-        if (pParent_ != NULL)
-        {
-            iParentX = pParent_->GetLeft();
-        }
-        else if (pObj_->GetParent() != NULL)
-        {
-            pParent_ = pObj_->GetParent();
-            iParentX = pParent_->GetLeft();
-        }
+        this->UpdateParent_();
 
-        s_int iSelfOffset;
-        if ((mPoint_ == ANCHOR_TOPLEFT) || (mPoint_ == ANCHOR_LEFT) || (mPoint_ == ANCHOR_BOTTOMLEFT))
-        {
-            //iSelfOffset = 0;
-        }
-        else if ((mPoint_ == ANCHOR_TOP) || (mPoint_ == ANCHOR_CENTER) || (mPoint_ == ANCHOR_BOTTOM))
-        {
-            iSelfOffset = -pObj_->GetAbsWidth()/2;
-        }
-        else if ((mPoint_ == ANCHOR_TOPRIGHT) || (mPoint_ == ANCHOR_RIGHT) || (mPoint_ == ANCHOR_BOTTOMRIGHT))
-        {
-            iSelfOffset = -pObj_->GetAbsWidth();
-        }
+        s_int iParentX;
+        if (pParent_ != NULL)
+            iParentX = pParent_->GetLeft();
 
         s_int iParentOffset;
         if ((mParentPoint_ == ANCHOR_TOPLEFT) || (mParentPoint_ == ANCHOR_LEFT) || (mParentPoint_ == ANCHOR_BOTTOMLEFT))
         {
-            //iParentOffset = 0;
+            iParentOffset = 0;
         }
         else if ((mParentPoint_ == ANCHOR_TOP) || (mParentPoint_ == ANCHOR_CENTER) || (mParentPoint_ == ANCHOR_BOTTOM))
         {
@@ -81,50 +86,26 @@ const s_int& Anchor::GetAbsX( s_bool bRelativeToParent )
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenWidth());
         }
 
-        s_int iX = iSelfOffset + iParentOffset;
-
-        if (!bRelativeToParent)
-            iX += iParentX;
-
-        iAbsX_ = iAbsOffX_+iX;
+        iAbsX_ = iAbsOffX_+iParentOffset+iParentX;
     }
 
     return iAbsX_;
 }
 
-const s_int& Anchor::GetAbsY( s_bool bRelativeToParent )
+const s_int& Anchor::GetAbsY()
 {
     if (pObj_ != NULL)
     {
+        this->UpdateParent_();
+
         s_int iParentY;
         if (pParent_ != NULL)
-        {
-            iParentY = pParent_->GetLeft();
-        }
-        else if (pObj_->GetParent() != NULL)
-        {
-            pParent_ = pObj_->GetParent();
-            iParentY = pParent_->GetLeft();
-        }
-
-        s_int iSelfOffset;
-        if ((mPoint_ == ANCHOR_TOPLEFT) || (mPoint_ == ANCHOR_TOP) || (mPoint_ == ANCHOR_TOPRIGHT))
-        {
-            //iSelfOffset = 0;
-        }
-        else if ((mPoint_ == ANCHOR_LEFT) || (mPoint_ == ANCHOR_CENTER) || (mPoint_ == ANCHOR_RIGHT))
-        {
-            iSelfOffset = -s_int(pObj_->GetAbsHeight())/2;
-        }
-        else if ((mPoint_ == ANCHOR_BOTTOMLEFT) || (mPoint_ == ANCHOR_BOTTOM) || (mPoint_ == ANCHOR_BOTTOMRIGHT))
-        {
-            iSelfOffset = -s_int(pObj_->GetAbsHeight());
-        }
+            iParentY = pParent_->GetTop();
 
         s_int iParentOffset;
         if ((mParentPoint_ == ANCHOR_TOPLEFT) || (mParentPoint_ == ANCHOR_TOP) || (mParentPoint_ == ANCHOR_TOPRIGHT))
         {
-            //iParentOffset = 0;
+            iParentOffset = 0;
         }
         else if ((mParentPoint_ == ANCHOR_LEFT) || (mParentPoint_ == ANCHOR_CENTER) || (mParentPoint_ == ANCHOR_RIGHT))
         {
@@ -141,12 +122,7 @@ const s_int& Anchor::GetAbsY( s_bool bRelativeToParent )
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenHeight());
         }
 
-        s_int iY = iSelfOffset + iParentOffset;
-
-        if (!bRelativeToParent)
-            iY += iParentY;
-
-        iAbsY_ = iAbsOffY_+iY;
+        iAbsY_ = iAbsOffY_+iParentOffset+iParentY;
     }
 
     return iAbsY_;
@@ -160,6 +136,11 @@ s_ptr<UIObject> Anchor::GetObject() const
 s_ptr<UIObject> Anchor::GetParent() const
 {
     return pParent_;
+}
+
+const s_str& Anchor::GetParentRawName() const
+{
+    return sParent_;
 }
 
 AnchorPoint Anchor::GetPoint() const
@@ -200,6 +181,17 @@ void Anchor::SetObject( s_ptr<UIObject> pObj )
 void Anchor::SetParent( s_ptr<UIObject> pParent )
 {
     pParent_ = pParent;
+    if (pParent_)
+        sParent_ = pParent_->GetName();
+    else
+        sParent_.Clear();
+    bParentUpdated_ = true;
+}
+
+void Anchor::SetParentRawName( const s_str& sName )
+{
+    sParent_ = sName;
+    bParentUpdated_ = false;
 }
 
 void Anchor::SetPoint( AnchorPoint mPoint )
@@ -226,6 +218,24 @@ void Anchor::SetRelOffset( const s_float& fX, const s_float& fY )
     mType_ = ANCHOR_REL;
 }
 
+s_str Anchor::Serialize() const
+{
+    s_str sStr;
+
+    sStr << "      Point : "           << GetStringPoint(mPoint_) << "\n";
+    if (pParent_)
+        sStr << "      Parent : "      << pParent_->GetName() << "\n";
+    else
+        sStr << "      Parent : none\n";
+    if (!sParent_.IsEmpty())
+        sStr << "      Parent raw name : " << sParent_ << "\n";
+    sStr << "      Parent point : "    << GetStringPoint(mParentPoint_) << "\n";
+    sStr << "      Offset X : "        << iAbsOffX_ << "\n";
+    sStr << "      Offset Y : "        << iAbsOffY_ << "\n";
+
+    return sStr;
+}
+
 s_str Anchor::GetStringPoint( AnchorPoint mPoint )
 {
     s_str sPoint;
@@ -244,7 +254,7 @@ s_str Anchor::GetStringPoint( AnchorPoint mPoint )
     return sPoint;
 }
 
-AnchorPoint Anchor::GetAnchorPoint( s_str sPoint )
+AnchorPoint Anchor::GetAnchorPoint( const s_str& sPoint )
 {
     AnchorPoint mPoint = ANCHOR_TOPLEFT;
     if (sPoint == "TOPLEFT")          mPoint = ANCHOR_TOPLEFT;

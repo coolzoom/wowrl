@@ -7,7 +7,7 @@
 
 #include "frost_guimanager.h"
 
-#include "frost_gui.h"
+#include "gui/frost_gui_anchor.h"
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_frame.h"
 
@@ -55,7 +55,7 @@ namespace Frost
                 pFrame->SetName(pMainBlock->GetAttribute("name"));
                 Warning(CLASS_NAME,
                     "Can't use the \"parent\" attribute on \""+pFrame->GetName()+"\", "
-                    "because it is a nested widget. Attribute ignored."
+                    "because it is a nested UIObject. Attribute ignored."
                 );
             }
         }
@@ -64,9 +64,59 @@ namespace Frost
             pFrame->SetName(pMainBlock->GetAttribute("name"));
         }
 
+        s_bool bVirtual = s_bool(pMainBlock->GetAttribute("virtual"));
+
+        if ( bVirtual || (pFrame->GetParent() && pFrame->GetParent()->IsVirtual()) )
+            pFrame->SetVirtual();
 
         if (!this->AddUIObject(pFrame))
             return false;
+
+        s_ptr<GUI::Frame> pParent = (GUI::Frame*)pFrame->GetParent().Get();
+        if (pParent)
+            pParent->AddChild(pFrame);
+
+        s_str sInheritance = pMainBlock->GetAttribute("inherits");
+        if (!sInheritance.IsEmpty())
+        {
+            s_ptr<GUI::UIObject> pObj = this->GetUIObjectByName(sInheritance, true);
+            if (pObj)
+            {
+                if (pObj->GetParent())
+                {
+                    Error(CLASS_NAME,
+                        "\""+pFrame->GetName()+"\" cannot inherit "
+                        "from \""+sInheritance+"\" because this virtual "
+                        +pObj->GetObjectType()+" has a parent. Skipped."
+                    );
+                    return false;
+                }
+                else
+                {
+                    const vector<s_str>& lFrameTypes = pFrame->GetObjectTypeList();
+                    if (VECTORFIND(pObj->GetObjectType(), lFrameTypes))
+                    {
+                        // Inherit from the other Frame
+                        pFrame->CopyFrom(pObj);
+                    }
+                    else
+                    {
+                        Error(CLASS_NAME,
+                            "\""+pFrame->GetName()+"\" ("+pFrame->GetObjectType()+") cannot inherit "
+                            "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
+                        );
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                Error(CLASS_NAME,
+                    "Couldn't find inherited object \""+sInheritance+"\". Skipped."
+                );
+                return false;
+            }
+        }
 
         if (pMainBlock->GetAttribute("hidden") == "true")
             pFrame->Hide();
@@ -89,8 +139,12 @@ namespace Frost
             s_ptr<XML::Block> pDimBlock = pSizeBlock->GetRadioBlock();
             if (pDimBlock->GetName() == "AbsDimension")
             {
-                pObject->SetAbsWidth(s_uint(pDimBlock->GetAttribute("x")));
-                pObject->SetAbsHeight(s_uint(pDimBlock->GetAttribute("y")));
+                s_int iX = s_int(pDimBlock->GetAttribute("x"));
+                s_int iY = s_int(pDimBlock->GetAttribute("y"));
+                if (iX >= 0)
+                    pObject->SetAbsWidth(s_uint(iX));
+                if (iY >= 0)
+                    pObject->SetAbsHeight(s_uint(iY));
             }
             else if (pDimBlock->GetName() == "RelDimension")
             {
@@ -124,19 +178,17 @@ namespace Frost
                 }
                 else
                 {
-                    s_ptr<GUI::UIObject> pParent;
-                    if (!sParent.IsEmpty())
-                    {
-                        pParent = this->GetUIObjectByName(sParent);
+                    if (sRelativePoint.IsEmpty())
+                        sRelativePoint = sPoint;
 
-                        if (!pParent)
-                        {
-                            Warning(CLASS_NAME,
-                                "Can't find widget \""+sParent+"\" while defining anchors for \""+
-                                pObject->GetName()+"\". No parent given to that anchor."
-                            );
-                        }
-                    }
+                    GUI::Anchor mAnchor(
+                        pObject,
+                        GUI::Anchor::GetAnchorPoint(sPoint),
+                        NULL,
+                        GUI::Anchor::GetAnchorPoint(sRelativePoint)
+                    );
+
+                    mAnchor.SetParentRawName(sParent);
 
                     s_ptr<XML::Block> pOffsetBlock = pAnchorBlock->GetBlock("Offset");
                     if (pOffsetBlock)
@@ -144,34 +196,21 @@ namespace Frost
                         s_ptr<XML::Block> pDimBlock = pOffsetBlock->GetRadioBlock();
                         if (pDimBlock->GetName() == "AbsDimension")
                         {
-                            pObject->SetAbsPoint(
-                                GUI::Anchor::GetAnchorPoint(sPoint),
-                                pParent,
-                                GUI::Anchor::GetAnchorPoint(sRelativePoint),
+                            mAnchor.SetAbsOffset(
                                 s_int(pDimBlock->GetAttribute("x")),
                                 s_int(pDimBlock->GetAttribute("y"))
                             );
                         }
                         else if (pDimBlock->GetName() == "RelDimension")
                         {
-                            pObject->SetRelPoint(
-                                GUI::Anchor::GetAnchorPoint(sPoint),
-                                pParent,
-                                GUI::Anchor::GetAnchorPoint(sRelativePoint),
+                            mAnchor.SetRelOffset(
                                 s_float(pDimBlock->GetAttribute("x")),
                                 s_float(pDimBlock->GetAttribute("y"))
                             );
                         }
                     }
-                    else
-                    {
-                        pObject->SetAbsPoint(
-                            GUI::Anchor::GetAnchorPoint(sPoint),
-                            pParent,
-                            GUI::Anchor::GetAnchorPoint(sRelativePoint),
-                            0, 0
-                        );
-                    }
+
+                    pObject->SetPoint(mAnchor);
                 }
             }
         }
@@ -423,15 +462,12 @@ namespace Frost
 
     void GUIManager::ParseXMLFile_( const s_str& sFile, s_ptr<AddOn> pAddOn )
     {
-        Log(sFile);
         XML::Document mDoc(sFile, "Interface/UI.def");
         if (mDoc.Check())
         {
-            Log("Good ! ");
             s_ptr<XML::Block> pElemBlock;
             foreach_block (pElemBlock, mDoc.GetMainBlock())
             {
-                Log(pElemBlock->GetName());
                 if (pElemBlock->GetName() == "Script")
                 {
                     Lua::DoFile(pLua_, pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"));

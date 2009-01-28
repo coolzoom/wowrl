@@ -395,3 +395,392 @@
 
 1227920119 /home/kalith/Programmation/ogre/OgreMain/include/config.h
 
+1232905725 source:c:\programmation2\frost\src\utils\frost_utils_bool.cpp
+	"frost_utils_bool.h"
+	"frost_utils_str.h"
+	"frost_utils_array.h"
+
+1232905714 c:\programmation2\frost\include\utils\frost_utils_bool.h
+	"frost_utils.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils.h
+	<string>
+	<vector>
+	<fstream>
+	<map>
+
+1231868350 c:\programmation2\frost\include\utils\frost_utils_str.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_uint.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1233000342 c:\programmation2\frost\include\utils\frost_utils_array.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+
+1230117761 source:c:\programmation2\frost\src\utils\frost_utils_color.cpp
+	"frost_utils_color.h"
+	"frost_utils_str.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_color.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+
+1231865709 source:c:\programmation2\frost\src\utils\frost_utils_directory.cpp
+	"frost_utils_directory.h"
+	"frost_utils_ptr.h"
+	"OgreArchiveManager.h"
+	"OgreStringVector.h"
+
+1231865670 c:\programmation2\frost\include\utils\frost_utils_directory.h
+	"frost_utils.h"
+	"frost_utils_uint.h"
+	"frost_utils_str.h"
+	"frost_utils_ptr.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_ptr.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+	"frost_utils_log.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_log.h
+	"frost_utils.h"
+	"frost_utils_str.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrearchivemanager.h
+	"OgrePrerequisites.h"
+	"OgreResourceManager.h"
+	"OgreSingleton.h"
+
+1223640716 c:\programmation2\ogre\ogremain\include\ogreprerequisites.h
+	"OgrePlatform.h"
+	<string>
+	"OgreStdHeaders.h"
+	"OgreMemoryAllocatorConfig.h"
+
+1221550740 c:\programmation2\ogre\ogremain\include\ogreplatform.h
+	"OgreConfig.h"
+	<_mingw.h>
+	"config.h"
+
+1226846526 c:\programmation2\ogre\ogremain\include\ogreconfig.h
+
+1222377276 c:\programmation2\ogre\ogremain\include\ogrestdheaders.h
+	<cassert>
+	<cstdio>
+	<cstdlib>
+	<ctime>
+	<cstring>
+	<cstdarg>
+	<cmath>
+	<vector>
+	<map>
+	<string>
+	<set>
+	<list>
+	<deque>
+	<queue>
+	<bitset>
+	<tr1/unordered_map>
+	<tr1/unordered_set>
+	<ext/hash_map>
+	<ext/hash_set>
+	<hash_set>
+	<hash_map>
+	<algorithm>
+	<functional>
+	<limits>
+	<fstream>
+	<iostream>
+	<iomanip>
+	<sstream>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	<unistd.h>
+	<dlfcn.h>
+	<unistd.h>
+	<sys/param.h>
+	<CoreFoundation/CoreFoundation.h>
+	<boost/thread/tss.hpp>
+	<boost/thread/recursive_mutex.hpp>
+	<boost/thread/condition.hpp>
+	<boost/thread/thread.hpp>
+
+1225040858 c:\programmation2\ogre\ogremain\include\ogrememoryallocatorconfig.h
+	"OgrePrerequisites.h"
+	"OgreMemoryAllocatedObject.h"
+	"OgreMemorySTLAllocator.h"
+	"OgreMemoryNedAlloc.h"
+	"OgreMemoryStdAlloc.h"
+
+1220427776 c:\programmation2\ogre\ogremain\include\ogrememoryallocatedobject.h
+	"OgrePrerequisites.h"
+
+1211543808 c:\programmation2\ogre\ogremain\include\ogrememorystlallocator.h
+	"OgrePrerequisites.h"
+
+1225118578 c:\programmation2\ogre\ogremain\include\ogrememorynedalloc.h
+
+1227189555 c:\programmation2\ogre\ogremain\include\ogrememorystdalloc.h
+	<memory>
+	<limits>
+	"OgreAlignedAllocator.h"
+	"OgreMemoryTracker.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrealignedallocator.h
+
+1221765970 c:\programmation2\ogre\ogremain\include\ogrememorytracker.h
+	"OgrePrerequisites.h"
+	<backward/hash_map>
+	<ext/hash_map>
+
+1213561508 c:\programmation2\ogre\ogremain\include\ogreresourcemanager.h
+	"OgrePrerequisites.h"
+	"OgreResource.h"
+	"OgreResourceGroupManager.h"
+	"OgreIteratorWrappers.h"
+	"OgreCommon.h"
+	"OgreDataStream.h"
+	"OgreStringVector.h"
+	"OgreScriptLoader.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreresource.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreSharedPtr.h"
+	"OgreStringInterface.h"
+	"OgreAtomicWrappers.h"
+
+1222377276 c:\programmation2\ogre\ogremain\include\ogrestring.h
+	"OgrePrerequisites.h"
+	<tr1/unordered_map>
+	<ext/hash_map>
+
+1214430010 c:\programmation2\ogre\ogremain\include\ogresharedptr.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrestringinterface.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreCommon.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrecommon.h
+	"OgreString.h"
+	<utility>
+	<vector>
+	<map>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreatomicwrappers.h
+	<signal.h>
+	"OgrePrerequisites.h"
+	"OgreException.h"
+	<windows.h>
+	<intrin.h>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreexception.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	<exception>
+
+1223053300 c:\programmation2\ogre\ogremain\include\ogreresourcegroupmanager.h
+	"OgrePrerequisites.h"
+	"OgreSingleton.h"
+	"OgreCommon.h"
+	"OgreDataStream.h"
+	"OgreResource.h"
+	"OgreArchive.h"
+	"OgreIteratorWrappers.h"
+	<ctime>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogresingleton.h
+	"OgrePrerequisites.h"
+
+1214430010 c:\programmation2\ogre\ogremain\include\ogredatastream.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreSharedPtr.h"
+	<istream>
+
+1215205846 c:\programmation2\ogre\ogremain\include\ogrearchive.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreDataStream.h"
+	"OgreSharedPtr.h"
+	"OgreStringVector.h"
+	<ctime>
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrestringvector.h
+	"OgrePrerequisites.h"
+	"OgreString.h"
+	"OgreSharedPtr.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogreiteratorwrappers.h
+	"OgrePrerequisites.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrescriptloader.h
+	"OgrePrerequisites.h"
+	"OgreDataStream.h"
+	"OgreStringVector.h"
+
+1231698390 source:c:\programmation2\frost\src\utils\frost_utils_double.cpp
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_array.h"
+	"frost_utils.h"
+	<math.h>
+	<float.h>
+	<OgreMath.h>
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_int.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_float.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_double.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1219250660 c:\programmation2\ogre\ogremain\include\ogremath.h
+	"OgrePrerequisites.h"
+
+1231777327 source:c:\programmation2\frost\src\utils\frost_utils_file.cpp
+	"frost_utils_uint.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_file.h"
+	"frost_utils.h"
+
+1231777313 c:\programmation2\frost\include\utils\frost_utils_file.h
+	"frost_utils.h"
+
+1231698391 source:c:\programmation2\frost\src\utils\frost_utils_float.cpp
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_array.h"
+	"frost_utils.h"
+	<math.h>
+	<float.h>
+	<OgreMath.h>
+
+1231698391 source:c:\programmation2\frost\src\utils\frost_utils_int.cpp
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_array.h"
+	"frost_utils.h"
+	<math.h>
+	<OgreMath.h>
+
+1230117761 source:c:\programmation2\frost\src\utils\frost_utils_log.cpp
+	"frost_utils_log.h"
+	"frost_utilsmanager.h"
+
+1231684798 c:\programmation2\frost\include\utils\frost_utilsmanager.h
+	"frost_utils.h"
+	"frost_utils_manager.h"
+
+1231684503 c:\programmation2\frost\include\utils\frost_utils_manager.h
+	"frost_utils_ptr.h"
+	"frost_utils_str.h"
+
+1230117761 source:c:\programmation2\frost\src\utils\frost_utils_math.cpp
+	"frost_utils_math.h"
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	<math.h>
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_math.h
+
+1232990745 source:c:\programmation2\frost\src\utils\frost_utils_str.cpp
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_array.h"
+	"frost_utils.h"
+	"frost_utils_log.h"
+	<sstream>
+	<cstdlib>
+	<algorithm>
+
+1230117761 source:c:\programmation2\frost\src\utils\frost_utils_tester.cpp
+	"frost_utils_tester.h"
+	"frost_utils.h"
+	"frost_utils_str.h"
+
+1230117759 c:\programmation2\frost\include\utils\frost_utils_tester.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1231698391 source:c:\programmation2\frost\src\utils\frost_utils_uint.cpp
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_array.h"
+	"frost_utils.h"
+	<math.h>
+	<OgreMath.h>
+
+1231698391 source:c:\programmation2\frost\src\utils\frost_utils_var.cpp
+	"frost_utils_var.h"
+	"frost_utils_array.h"
+	"frost_utils.h"
+
+1231698390 c:\programmation2\frost\include\utils\frost_utils_var.h
+	"frost_utils.h"
+	"frost_utils_int.h"
+	"frost_utils_uint.h"
+	"frost_utils_float.h"
+	"frost_utils_double.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+
+1231876268 source:c:\programmation2\frost\src\utils\frost_utils_vector.cpp
+	"frost_utils_vector.h"
+	"frost_utils_math.h"
+	"frost_utils_str.h"
+	<OgreQuaternion.h>
+	<OgreVector3.h>
+
+1231876268 c:\programmation2\frost\include\utils\frost_utils_vector.h
+	"frost_utils.h"
+	"frost_utils_float.h"
+	"frost_utils_bool.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrequaternion.h
+	"OgrePrerequisites.h"
+	"OgreMath.h"
+
+1213276258 c:\programmation2\ogre\ogremain\include\ogrevector3.h
+	"OgrePrerequisites.h"
+	"OgreMath.h"
+	"OgreQuaternion.h"
+
+1230117761 source:c:\programmation2\frost\src\utils\frost_utilsmanager.cpp
+	"frost_utilsmanager.h"
+

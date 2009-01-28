@@ -7,9 +7,6 @@
 
 #define GAME_VERSION 0.045
 
-// Un-comment this line and press [P] ingame to start profiling
-//#define PROFILE
-
 #ifndef NULL
     #define NULL 0
 #endif
@@ -46,11 +43,11 @@ namespace Frost
     // frost_event.h
     class  Event;
 
-    // frost_eventreceiver.h
-    class  EventReceiver;
-
     // frost_eventmanager.h
     class  EventManager;
+
+    // frost_eventreceiver.h
+    class  EventReceiver;
 
     // frost_fontmanager.h
     class  FontManager;
@@ -62,7 +59,7 @@ namespace Frost
 
     namespace GUI
     {
-        // frost_gui.h
+        // frost_gui_anchor.h
         class  Anchor;
 
         // frost_gui_uiobject.h
@@ -209,9 +206,11 @@ namespace Frost
     namespace XML
     {
         // frost_xml_block.h
-        class Block;
+        class  Block;
+        struct Attribute;
+        struct PredefinedBlock;
 
         // frost_xml_document.h
-        class Document;
+        class  Document;
     }
 }
