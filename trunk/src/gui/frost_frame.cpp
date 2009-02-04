@@ -7,6 +7,11 @@
 
 #include "gui/frost_gui_layeredregion.h"
 #include "gui/frost_gui_uiobject.h"
+#include "gui/frost_gui_button.h"
+#include "gui/frost_gui_editbox.h"
+#include "gui/frost_gui_scrollingmessageframe.h"
+#include "gui/frost_gui_slider.h"
+#include "gui/frost_gui_statusbar.h"
 #include "frost_guimanager.h"
 #include "frost_inputmanager.h"
 #include "frost_timemanager.h"

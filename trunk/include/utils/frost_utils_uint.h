@@ -68,7 +68,7 @@ namespace Frost
         /// Returns a reference to the uint.
         /** \return A reference to the uint
         */
-        inline uint& GetR(s_bool* bIsNaN = NULL)
+        inline uint&   GetR(s_bool* bIsNaN = NULL)
         {
             if (bIsNaN != NULL)
                 *bIsNaN = (mType_ != INTEGER);
@@ -82,89 +82,84 @@ namespace Frost
         /// Returns the power of two just above the actual value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-        s_uint       GetNearestPowerOfTwo() const;
+        s_uint         GetNearestPowerOfTwo() const;
 
         /// Returns the type of this uint.
         /** \return The type of this uint (infinite, NaN, ...)
         */
-        IntegerType  GetType() const;
+        IntegerType    GetType() const;
 
         /// Checks if this uint is infinite
         /** \return 'true' if this uint is infinite
         */
-        s_bool       IsInfinite() const;
+        s_bool         IsInfinite() const;
 
         /// Checks if this uint is a Not a Number (NaN)
         /** \return 'true' if this uint is NaN
         */
-        s_bool       IsNaN() const;
+        s_bool         IsNaN() const;
 
         /// Checks if this uint equals zero.
         /** \return 'true' if this uint equals zero
         */
-        s_bool       IsNull() const;
+        s_bool         IsNull() const;
 
         /// Checks if this uint is a valid number.
         /** \return 'true' if this uint is not infinite and a number
         */
-        s_bool       IsValid() const;
+        s_bool         IsValid() const;
 
         /// Elevates this uint to a certain power (this^n).
         /** \param uiPower The power...
         */
-        void         Pow(const s_uint& uiPower);
+        void           Pow(const s_uint& uiPower);
 
         /// Sets the value of the uint to a random number.
         /** \param uiMin The lower bound (minimum)
         *   \param uiMax The upper bound (maximum)
         */
-        void         Random(const s_uint& uiMin = 0u, const s_uint& uiMax = 1u);
+        void           Random(const s_uint& uiMin = 0u, const s_uint& uiMax = 1u);
 
         /// Sets this uint to infinite.
-        void         SetInfinite();
+        void           SetInfinite();
 
         /// Set this uint to Not a Number state.
-        void         SetNaN();
+        void           SetNaN();
 
-        bool         operator !  () const;
-        typedef      void (s_uint::*MemberFn)();
-        operator     MemberFn() const;
+        bool           operator !  () const;
+        typedef        void (s_uint::*MemberFn)();
+        operator       MemberFn() const;
 
-        s_uint&      operator ++ ();
-        s_uint       operator ++ (int);
-        s_int        operator -  () const;
-        s_uint&      operator -- ();
-        s_uint       operator -- (int);
+        s_uint&        operator ++ ();
+        s_uint         operator ++ (int);
+        s_int          operator -  () const;
+        s_uint&        operator -- ();
+        s_uint         operator -- (int);
 
-        s_uint       operator +  (const s_uint& uiValue) const;
-        s_uint       operator -  (const s_uint& uiValue) const;
-        s_uint       operator *  (const s_uint& uiValue) const;
-        s_uint       operator /  (const s_uint& uiValue) const;
-        s_uint       operator %  (const s_uint& uiValue) const;
-        void         operator += (const s_uint& uiValue);
-        void         operator -= (const s_uint& uiValue);
-        void         operator *= (const s_uint& uiValue);
-        void         operator /= (const s_uint& uiValue);
-        void         operator %= (const s_uint& uiValue);
+        s_uint         operator +  (const s_uint& uiValue) const;
+        s_uint         operator -  (const s_uint& uiValue) const;
+        s_uint         operator *  (const s_uint& uiValue) const;
+        s_uint         operator /  (const s_uint& uiValue) const;
+        s_uint         operator %  (const s_uint& uiValue) const;
+        void           operator += (const s_uint& uiValue);
+        void           operator -= (const s_uint& uiValue);
+        void           operator *= (const s_uint& uiValue);
+        void           operator /= (const s_uint& uiValue);
+        void           operator %= (const s_uint& uiValue);
 
-        /*s_float      operator +  (const s_float& fValue) const;
-        s_float      operator -  (const s_float& fValue) const;
-        s_float      operator *  (const s_float& fValue) const;
-        s_float      operator /  (const s_float& fValue) const;*/
+        s_str          operator +  (const char* sValue) const;
+        s_str          operator +  (const s_str& sValue) const;
 
-        s_str        operator +  (const char* sValue) const;
-        s_str        operator +  (const s_str& sValue) const;
+        s_uint&        operator << (const s_uint& uiValue);
 
-        s_uint&      operator << (const s_uint& uiValue);
+        bool           operator == (const s_uint& uiValue) const;
+        bool           operator != (const s_uint& uiValue) const;
+        bool           operator <  (const s_uint& uiValue) const;
+        bool           operator >  (const s_uint& uiValue) const;
+        bool           operator <= (const s_uint& uiValue) const;
+        bool           operator >= (const s_uint& uiValue) const;
 
-        bool         operator == (const s_uint& uiValue) const;
-        bool         operator != (const s_uint& uiValue) const;
-        bool         operator <  (const s_uint& uiValue) const;
-        bool         operator >  (const s_uint& uiValue) const;
-        bool         operator <= (const s_uint& uiValue) const;
-        bool         operator >= (const s_uint& uiValue) const;
-
-        s_uint&      operator =  (const s_uint& uiValue);
+        s_uint&        operator =  (const s_uint& uiValue);
 
         s_ctnr<s_uint> operator ,  (const s_uint& uiValue) const;
 

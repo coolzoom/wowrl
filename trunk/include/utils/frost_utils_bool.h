@@ -40,26 +40,26 @@ namespace Frost
         /// Returns a reference to the boolean.
         /** \return A reference to the boolean
         */
-        inline bool& GetR() { return bValue_; }
+        inline bool&   GetR() { return bValue_; }
 
         /// Returns the first argument if this boolean is true, and the second otherwise.
         /** \param sTrue  The string to return if 'true'
         *   \param sFalse The string to return if 'false'
         *   \return Either sTrue or sFalse.
         */
-        const s_str& GetAsString(const s_str& sTrue, const s_str& sFalse) const;
+        const s_str&   GetAsString(const s_str& sTrue, const s_str& sFalse) const;
 
-        bool         operator !  () const;
-        typedef      const bool& (s_bool::*MemberFn)() const;
-        operator     MemberFn() const;
+        bool           operator !  () const;
+        typedef        const bool& (s_bool::*MemberFn)() const;
+        operator       MemberFn() const;
 
-        bool         operator == (const s_bool& bValue) const;
-        bool         operator != (const s_bool& bValue) const;
+        bool           operator == (const s_bool& bValue) const;
+        bool           operator != (const s_bool& bValue) const;
 
-        s_str        operator +  (const char* sValue) const;
-        s_str        operator +  (const s_str& sValue) const;
+        s_str          operator +  (const char* sValue) const;
+        s_str          operator +  (const s_str& sValue) const;
 
-        s_bool&      operator =  (const s_bool& bValue);
+        s_bool&        operator =  (const s_bool& bValue);
 
         s_ctnr<s_bool> operator,   (const s_bool& bValue) const;
 

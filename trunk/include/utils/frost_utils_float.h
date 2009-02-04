@@ -61,19 +61,19 @@ namespace Frost
         /// Converts this float to a angle in radian.
         /** \note It is assumed that the previous value was an angle in degree.
         */
-        void          DegToRad();
+        void            DegToRad();
 
         /// Converts this float to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        s_float       GetRad() const;
+        s_float         GetRad() const;
 
         /// Converts this float to an angle in degree.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        s_float       GetDeg() const;
+        s_float         GetDeg() const;
 
         /// Returns a const reference to the float.
         /** \return A const reference to the float
@@ -92,7 +92,7 @@ namespace Frost
         /// Returns a reference to the float.
         /** \return A reference to the float
         */
-        inline float&  GetR(s_bool* bIsNaN = NULL)
+        inline float&   GetR(s_bool* bIsNaN = NULL)
         {
             if (bIsNaN != NULL)
                 *bIsNaN = (mType_ != FLOAT);
@@ -106,119 +106,119 @@ namespace Frost
         /// Returns the power of two just above the actual value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-        s_uint        GetNearestPowerOfTwo() const;
+        s_uint          GetNearestPowerOfTwo() const;
 
         /// Returns the type of this float.
         /** \return The type of this float (infinite, NaN, ...)
         */
-        FloatType     GetType() const;
+        FloatType       GetType() const;
 
         /// Checks if this float is infinite and negative
         /** \return 'true' if this float is infinite and negative
         */
-        s_bool        IsInfiniteMinus() const;
+        s_bool          IsInfiniteMinus() const;
 
         /// Checks if this float is infinite and positive
         /** \return 'true' if this float is infinite and positive
         */
-        s_bool        IsInfinitePlus() const;
+        s_bool          IsInfinitePlus() const;
 
         /// Checks if this float is a Not a Number (NaN)
         /** \return 'true' if this float is NaN
         */
-        s_bool        IsNaN() const;
+        s_bool          IsNaN() const;
 
         /// Checks if this float equals zero.
         /** \return 'true' if this float equals zero (precision : 10^-10)
         */
-        s_bool        IsNull() const;
+        s_bool          IsNull() const;
 
         /// Checks if this float is a valid number.
         /** \return 'true' if this float is not infinite and a number
         */
-        s_bool        IsValid() const;
+        s_bool          IsValid() const;
 
         /// Elevates this float to a certain power (this^n).
         /** \param fPower The power...
         */
-        void          Pow(const s_float& fPower);
+        void            Pow(const s_float& fPower);
 
         /// Converts this float to an angle in degree.
         /** \param bNegativeAllowed 'true' if you allow negative return values
         *   \note It is assumed that the previous value was an angle in radian.
         */
-        void          RadToDeg(const s_bool& bNegativeAllowed = true);
+        void            RadToDeg(const s_bool& bNegativeAllowed = true);
 
         /// Sets the value of the float to a random number.
         /** \param fMin The lower bound (minimum)
         *   \param fMax The upper bound (maximum)
         */
-        void          Random(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
+        void            Random(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
 
         /// Rounds the value.
         /** \param mRoundType How to round the value (see RoundType)
         */
-        void          Round(const RoundType& mRoundType = ROUND_MID);
+        void            Round(const RoundType& mRoundType = ROUND_MID);
 
         /// Adjusts the float to fit into the provided range.
         /** \param fMin The lower bound (minimum)
         *   \param fMax The upper bound (maximum)
         */
-        void          Saturate(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
+        void            Saturate(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
 
         /// Sets this float to infinite (positive).
-        void          SetInfiniteMinus();
+        void            SetInfiniteMinus();
 
         /// Sets this float to infinite (negative).
-        void          SetInfinitePlus();
+        void            SetInfinitePlus();
 
         /// Set this float to Not a Number state.
-        void          SetNaN();
+        void            SetNaN();
 
         /// Returns the sign of this float.
         /** \return The sign of this float
         */
-        s_int         Sign();
+        s_int           Sign();
 
         /// Converts this float to an angle in degree.
         /** \param bNegativeAllowed 'true' if you allow negative return values
         *   \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        void          ToDeg(const s_bool& bNegativeAllowed = true);
+        void            ToDeg(const s_bool& bNegativeAllowed = true);
 
         /// Converts this float to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        void          ToRad();
+        void            ToRad();
 
-        bool          operator ! () const;
-        typedef       void (s_float::*MemberFn)();
-        operator      MemberFn() const;
+        bool            operator ! () const;
+        typedef         void (s_float::*MemberFn)();
+        operator        MemberFn() const;
 
-        s_float       operator - () const;
+        s_float         operator - () const;
 
-        s_float       operator +  (const s_float& fValue) const;
-        s_float       operator -  (const s_float& fValue) const;
-        s_float       operator *  (const s_float& fValue) const;
-        s_float       operator /  (const s_float& fValue) const;
-        void          operator += (const s_float& fValue);
-        void          operator -= (const s_float& fValue);
-        void          operator *= (const s_float& fValue);
-        void          operator /= (const s_float& fValue);
+        s_float         operator +  (const s_float& fValue) const;
+        s_float         operator -  (const s_float& fValue) const;
+        s_float         operator *  (const s_float& fValue) const;
+        s_float         operator /  (const s_float& fValue) const;
+        void            operator += (const s_float& fValue);
+        void            operator -= (const s_float& fValue);
+        void            operator *= (const s_float& fValue);
+        void            operator /= (const s_float& fValue);
 
-        s_str         operator +  (const char* sValue) const;
-        s_str         operator +  (const s_str& sValue) const;
+        s_str           operator +  (const char* sValue) const;
+        s_str           operator +  (const s_str& sValue) const;
 
-        bool          operator == (const s_float& fValue) const;
-        bool          operator != (const s_float& fValue) const;
-        bool          operator <  (const s_float& fValue) const;
-        bool          operator >  (const s_float& fValue) const;
-        bool          operator <= (const s_float& fValue) const;
-        bool          operator >= (const s_float& fValue) const;
+        bool            operator == (const s_float& fValue) const;
+        bool            operator != (const s_float& fValue) const;
+        bool            operator <  (const s_float& fValue) const;
+        bool            operator >  (const s_float& fValue) const;
+        bool            operator <= (const s_float& fValue) const;
+        bool            operator >= (const s_float& fValue) const;
 
-        s_float&      operator =  (const s_float& fValue);
+        s_float&        operator =  (const s_float& fValue);
 
         s_ctnr<s_float> operator ,  (const s_float& fValue) const;
 

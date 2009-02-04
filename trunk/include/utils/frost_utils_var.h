@@ -78,7 +78,7 @@ namespace Frost
 
         ValueType GetType() const;
 
-        s_var&      operator = (const s_var& vValue);
+        s_var&        operator = (const s_var& vValue);
         s_ctnr<s_var> operator , (const s_var& vValue) const;
 
         static const s_str CLASS_NAME;

@@ -212,6 +212,14 @@ namespace Frost
             return cDummy;
     }
 
+    const char& s_str::operator[] ( const s_uint& uiIndex ) const
+    {
+        if (uiIndex.Get() < sValue_.size())
+            return sValue_[uiIndex.Get()];
+        else
+            return cDummy;
+    }
+
     s_str s_str::operator+ ( const s_str& mValue ) const
     {
         return s_str(sValue_ + mValue.sValue_);
