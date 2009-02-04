@@ -134,10 +134,13 @@ namespace Frost
         /// Removes the content of the string.
         void                Clear();
 
-        /// Cuts this string everytime the delimitator is found.
-        /** \param sDelim   The delimitator
+        /// Cuts this string everytime the delineator is found.
+        /** \param sDelim   The delineator
         *   \param uiMaxCut The maximum number of occurences
         *   \return A vector containing the separated strings
+        *   \note If the delineator is not found in the string, this function
+        *         returns the whole string, unchanged.
+        *   \note Removes the delineator from the sub-strings.
         */
         std::vector<s_str>  Cut(const s_str& sDelim, const s_uint& uiMaxCut = s_uint::INF) const;
 
@@ -196,15 +199,6 @@ namespace Frost
         */
         inline const std::string& Get() const { return sValue_; }
 
-        /// Returns the character at the given index.
-        /** \return The character at the given index
-        */
-        inline char         Get(const s_uint& uiIndex) const
-        {
-            if (uiIndex.Get() < sValue_.size()) return sValue_[uiIndex.Get()];
-            else return cDummy;
-        }
-
         /// Returns a C-style string.
         /** \return A C-style string
         */
@@ -256,6 +250,7 @@ namespace Frost
         s_uint              Replace(const s_str& sPattern, const s_str& sReplacement);
 
         char&               operator [] (const s_uint& uiIndex);
+        const char&         operator [] (const s_uint& uiIndex) const;
         s_str               operator +  (const s_str& mValue) const;
         s_str               operator +  (const char* sValue) const;
         s_str               operator +  (const char& cValue) const;
@@ -294,7 +289,7 @@ namespace Frost
         s_str&              operator << (const IntegerConversionType& mIntConvType);
         s_str&              operator << (const BoolConversionType& mBoolConvType);
 
-        s_ctnr<s_str>         operator ,  (const s_str& sValue) const;
+        s_ctnr<s_str>       operator ,  (const s_str& sValue) const;
 
         static char cDummy;
         static const s_str CLASS_NAME;

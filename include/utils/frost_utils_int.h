@@ -69,7 +69,7 @@ namespace Frost
         /// Returns a reference to the int.
         /** \return A reference to the int
         */
-        inline int& GetR(s_bool* bIsNaN = NULL)
+        inline int&   GetR(s_bool* bIsNaN = NULL)
         {
             if (bIsNaN != NULL)
                 *bIsNaN = (mType_ != INTEGER);
@@ -83,100 +83,95 @@ namespace Frost
         /// Returns the power of two just above the actual value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-        s_uint      GetNearestPowerOfTwo() const;
+        s_uint        GetNearestPowerOfTwo() const;
 
         /// Returns the type of this int.
         /** \return The type of this int (infinite, NaN, ...)
         */
-        IntegerType GetType() const;
+        IntegerType   GetType() const;
 
         /// Checks if this int is infinite and negative
         /** \return 'true' if this int is infinite and negative
         */
-        s_bool      IsInfiniteMinus() const;
+        s_bool        IsInfiniteMinus() const;
 
         /// Checks if this int is infinite and positive
         /** \return 'true' if this int is infinite and positive
         */
-        s_bool      IsInfinitePlus() const;
+        s_bool        IsInfinitePlus() const;
 
         /// Checks if this int is a Not a Number (NaN)
         /** \return 'true' if this int is NaN
         */
-        s_bool      IsNaN() const;
+        s_bool        IsNaN() const;
 
         /// Checks if this int equals zero.
         /** \return 'true' if this int equals zero
         */
-        s_bool      IsNull() const;
+        s_bool        IsNull() const;
 
         /// Checks if this int is a valid number.
         /** \return 'true' if this int is not infinite and a number
         */
-        s_bool      IsValid() const;
+        s_bool        IsValid() const;
 
         /// Elevates this int to a certain power (this^n).
         /** \param uiPower The power...
         */
-        void        Pow(const s_uint& uiPower);
+        void          Pow(const s_uint& uiPower);
 
         /// Sets the value of the int to a random number.
         /** \param iMin The lower bound (minimum)
         *   \param iMax The upper bound (maximum)
         */
-        void        Random(const s_int& iMin = 0, const s_int& iMax = 1);
+        void          Random(const s_int& iMin = 0, const s_int& iMax = 1);
 
         /// Sets this int to infinite (positive).
-        void        SetInfiniteMinus();
+        void          SetInfiniteMinus();
 
         /// Sets this int to infinite (negative).
-        void        SetInfinitePlus();
+        void          SetInfinitePlus();
 
         /// Set this int to Not a Number state.
-        void        SetNaN();
+        void          SetNaN();
 
 
-        s_int       Sign();
+        s_int         Sign();
 
-        bool        operator !  () const;
-        typedef     void (s_int::*MemberFn)();
-        operator    MemberFn() const;
+        bool          operator !  () const;
+        typedef       void (s_int::*MemberFn)();
+        operator      MemberFn() const;
 
-        s_int&      operator ++ ();
-        s_int       operator ++ (int);
-        s_int       operator -  () const;
-        s_int&      operator -- ();
-        s_int       operator -- (int);
+        s_int&        operator ++ ();
+        s_int         operator ++ (int);
+        s_int         operator -  () const;
+        s_int&        operator -- ();
+        s_int         operator -- (int);
 
-        s_int       operator +  (const s_int& iValue) const;
-        s_int       operator -  (const s_int& iValue) const;
-        s_int       operator *  (const s_int& iValue) const;
-        s_int       operator /  (const s_int& iValue) const;
-        s_int       operator %  (const s_int& iValue) const;
-        void        operator += (const s_int& iValue);
-        void        operator -= (const s_int& iValue);
-        void        operator *= (const s_int& iValue);
-        void        operator /= (const s_int& iValue);
-        void        operator %= (const s_int& iValue);
+        s_int         operator +  (const s_int& iValue) const;
+        s_int         operator -  (const s_int& iValue) const;
+        s_int         operator *  (const s_int& iValue) const;
+        s_int         operator /  (const s_int& iValue) const;
+        s_int         operator %  (const s_int& iValue) const;
+        void          operator += (const s_int& iValue);
+        void          operator -= (const s_int& iValue);
+        void          operator *= (const s_int& iValue);
+        void          operator /= (const s_int& iValue);
+        void          operator %= (const s_int& iValue);
 
-        /*s_float     operator +  (const s_float& fValue) const;
-        s_float     operator -  (const s_float& fValue) const;
-        s_float     operator *  (const s_float& fValue) const;
-        s_float     operator /  (const s_float& fValue) const;*/
+        s_str         operator +  (const char* sValue) const;
+        s_str         operator +  (const s_str& sValue) const;
 
-        s_str       operator +  (const char* sValue) const;
-        s_str       operator +  (const s_str& sValue) const;
+        s_int&        operator << (const s_uint& uiValue);
 
-        s_int&      operator << (const s_uint& uiValue);
+        bool          operator == (const s_int& iValue) const;
+        bool          operator != (const s_int& iValue) const;
+        bool          operator <  (const s_int& iValue) const;
+        bool          operator >  (const s_int& iValue) const;
+        bool          operator <= (const s_int& iValue) const;
+        bool          operator >= (const s_int& iValue) const;
 
-        bool        operator == (const s_int& iValue) const;
-        bool        operator != (const s_int& iValue) const;
-        bool        operator <  (const s_int& iValue) const;
-        bool        operator >  (const s_int& iValue) const;
-        bool        operator <= (const s_int& iValue) const;
-        bool        operator >= (const s_int& iValue) const;
-
-        s_int&      operator =  (const s_int& iValue);
+        s_int&        operator =  (const s_int& iValue);
 
         s_ctnr<s_int> operator ,  (const s_int& iValue) const;
 

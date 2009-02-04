@@ -322,7 +322,7 @@ s_bool Document::LoadDefinition_()
                                         vector<s_str>::iterator iterCommand;
                                         foreach (iterCommand, lCommands)
                                         {
-                                            s_str sLetterCode = s_str(iterCommand->Get(0));
+                                            s_str sLetterCode = s_str((*iterCommand)[0]);
                                             if (sLetterCode == "s")
                                             {
                                                 mType = ATTR_TYPE_STRING;
@@ -404,7 +404,7 @@ s_bool Document::LoadDefinition_()
                                     vector<s_str>::iterator iterCommand;
                                     foreach (iterCommand, lCommands)
                                     {
-                                        s_str sLetterCode = s_str(iterCommand->Get(0));
+                                        s_str sLetterCode = s_str((*iterCommand)[0]);
                                         if (sLetterCode == "s")
                                         {
                                             mType = ATTR_TYPE_STRING;
@@ -458,7 +458,7 @@ s_bool Document::LoadDefinition_()
                                         vector<s_str>::iterator iterCommand;
                                         foreach (iterCommand, lCommands)
                                         {
-                                            s_str sLetterCode = s_str(iterCommand->Get(0));
+                                            s_str sLetterCode = s_str((*iterCommand)[0]);
                                             if (sLetterCode == "s")
                                             {
                                                 mType = ATTR_TYPE_STRING;
@@ -693,7 +693,7 @@ s_bool Document::LoadDefinition_()
                                         vector<s_str>::iterator iterCommand;
                                         foreach (iterCommand, lCommands)
                                         {
-                                            s_str sLetterCode = s_str(iterCommand->Get(0));
+                                            s_str sLetterCode = s_str((*iterCommand)[0]);
                                             if (sLetterCode == "s")
                                             {
                                                 mType = ATTR_TYPE_STRING;
@@ -782,7 +782,7 @@ s_bool Document::LoadDefinition_()
                                     vector<s_str>::iterator iterCommand;
                                     foreach (iterCommand, lCommands)
                                     {
-                                        s_str sLetterCode = s_str(iterCommand->Get(0));
+                                        s_str sLetterCode = s_str((*iterCommand)[0]);
                                         if (sLetterCode == "s")
                                         {
                                             mType = ATTR_TYPE_STRING;

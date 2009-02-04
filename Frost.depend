@@ -1873,30 +1873,30 @@
 	<fstream>
 	<map>
 
-1232905714 c:\programmation2\frost\include\utils\frost_utils_bool.h
+1233426454 c:\programmation2\frost\include\utils\frost_utils_bool.h
 	"frost_utils.h"
 
-1231698390 c:\programmation2\frost\include\utils\frost_utils_int.h
-	"frost_utils.h"
-	"frost_utils_bool.h"
-
-1231698390 c:\programmation2\frost\include\utils\frost_utils_uint.h
+1233426455 c:\programmation2\frost\include\utils\frost_utils_int.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1231698390 c:\programmation2\frost\include\utils\frost_utils_float.h
+1233426455 c:\programmation2\frost\include\utils\frost_utils_uint.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1231698390 c:\programmation2\frost\include\utils\frost_utils_double.h
+1233426454 c:\programmation2\frost\include\utils\frost_utils_float.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1231868350 c:\programmation2\frost\include\utils\frost_utils_str.h
+1233426454 c:\programmation2\frost\include\utils\frost_utils_double.h
+	"frost_utils.h"
+	"frost_utils_bool.h"
+
+1233427574 c:\programmation2\frost\include\utils\frost_utils_str.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1231698390 c:\programmation2\frost\include\utils\frost_utils_var.h
+1233426455 c:\programmation2\frost\include\utils\frost_utils_var.h
 	"frost_utils.h"
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
@@ -2671,7 +2671,7 @@
 	"frost.h"
 	"frost_movableobject.h"
 
-1231877186 source:c:\programmation2\frost\src\frost_engine.cpp
+1233427692 source:c:\programmation2\frost\src\frost_engine.cpp
 	"frost_engine.h"
 	"frost_timemanager.h"
 	"frost_eventmanager.h"
@@ -3137,7 +3137,7 @@
 	"frost_gui_anchor.h"
 	"frost_gfx.h"
 
-1233000043 c:\programmation2\frost\include\gui\frost_gui_frame.h
+1233004195 c:\programmation2\frost\include\gui\frost_gui_frame.h
 	"frost.h"
 	"gui/frost_gui_uiobject.h"
 	"frost_eventreceiver.h"
@@ -3182,10 +3182,15 @@
 	"gui/frost_gui_fontstring.h"
 	"gui/frost_gui_layeredregion.h"
 
-1233000133 source:c:\programmation2\frost\src\gui\frost_frame.cpp
+1233439209 source:c:\programmation2\frost\src\gui\frost_frame.cpp
 	"gui/frost_gui_frame.h"
 	"gui/frost_gui_layeredregion.h"
 	"gui/frost_gui_uiobject.h"
+	"gui/frost_gui_button.h"
+	"gui/frost_gui_editbox.h"
+	"gui/frost_gui_scrollingmessageframe.h"
+	"gui/frost_gui_slider.h"
+	"gui/frost_gui_statusbar.h"
 	"frost_guimanager.h"
 	"frost_inputmanager.h"
 	"frost_timemanager.h"
@@ -3297,7 +3302,7 @@
 	"gui/frost_gui_texture.h"
 	"gui/frost_gui_layeredregion.h"
 
-1232997927 source:c:\programmation2\frost\src\gui\frost_uiobject.cpp
+1233004195 source:c:\programmation2\frost\src\gui\frost_uiobject.cpp
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
 	"frost_guimanager.h"

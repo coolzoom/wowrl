@@ -60,19 +60,19 @@ namespace Frost
         /// Converts this double to a angle in radian.
         /** \note It is assumed that the previous value was an angle in degree.
         */
-        void           DegToRad();
+        void             DegToRad();
 
         /// Converts this float to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        s_double       GetRad() const;
+        s_double         GetRad() const;
 
         /// Converts this float to an angle in degree.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        s_double       GetDeg() const;
+        s_double         GetDeg() const;
 
         /// Returns a const reference to the double.
         /** \return A const reference to the double
@@ -91,7 +91,7 @@ namespace Frost
         /// Returns a reference to the double.
         /** \return A reference to the double
         */
-        inline double& GetR(s_bool* bIsNaN = NULL)
+        inline double&   GetR(s_bool* bIsNaN = NULL)
         {
             if (bIsNaN != NULL)
                 *bIsNaN = (mType_ != DOUBLE);
@@ -105,119 +105,119 @@ namespace Frost
         /// Returns the power of two just above the actual value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-        s_uint         GetNearestPowerOfTwo() const;
+        s_uint           GetNearestPowerOfTwo() const;
 
         /// Returns the type of this double.
         /** \return The type of this double (infinite, NaN, ...)
         */
-        DoubleType     GetType() const;
+        DoubleType       GetType() const;
 
         /// Checks if this double is infinite and negative
         /** \return 'true' if this double is infinite and negative
         */
-        s_bool         IsInfiniteMinus() const;
+        s_bool           IsInfiniteMinus() const;
 
         /// Checks if this double is infinite and positive
         /** \return 'true' if this double is infinite and positive
         */
-        s_bool         IsInfinitePlus() const;
+        s_bool           IsInfinitePlus() const;
 
         /// Checks if this double is a Not a Number (NaN)
         /** \return 'true' if this double is NaN
         */
-        s_bool         IsNaN() const;
+        s_bool           IsNaN() const;
 
         /// Checks if this double equals zero.
         /** \return 'true' if this double equals zero (precision : 10^-10)
         */
-        s_bool         IsNull() const;
+        s_bool           IsNull() const;
 
         /// Checks if this double is a valid number.
         /** \return 'true' if this double is not infinite and a number
         */
-        s_bool         IsValid() const;
+        s_bool           IsValid() const;
 
         /// Elevates this double to a certain power (this^n).
         /** \param dPower The power...
         */
-        void           Pow(const s_double& dPower);
+        void             Pow(const s_double& dPower);
 
         /// Converts this double to an angle in degree.
         /** \param bNegativeAllowed 'true' if you allow negative return values
         *   \note It is assumed that the previous value was an angle in radian.
         */
-        void           RadToDeg(const s_bool& bNegativeAllowed = true);
+        void             RadToDeg(const s_bool& bNegativeAllowed = true);
 
         /// Sets the value of the double to a random number.
         /** \param dMin The lower bound (minimum)
         *   \param dMax The upper bound (maximum)
         */
-        void           Random(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
+        void             Random(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
 
         /// Rounds the value.
         /** \param mRoundType How to round the value (see RoundType)
         */
-        void           Round(const RoundType& mRoundType = ROUND_MID);
+        void             Round(const RoundType& mRoundType = ROUND_MID);
 
         /// Adjusts the double to fit into the provided range.
         /** \param dMin The lower bound (minimum)
         *   \param dMax The upper bound (maximum)
         */
-        void           Saturate(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
+        void             Saturate(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
 
         /// Sets this double to infinite (positive).
-        void           SetInfiniteMinus();
+        void             SetInfiniteMinus();
 
         /// Sets this double to infinite (negative).
-        void           SetInfinitePlus();
+        void             SetInfinitePlus();
 
         /// Set this double to Not a Number state.
-        void           SetNaN();
+        void             SetNaN();
 
         /// Returns the sign of this double.
         /** \return The sign of this double
         */
-        s_int          Sign();
+        s_int            Sign();
 
         /// Converts this double to an angle in degree.
         /** \param bNegativeAllowed 'true' if you allow negative return values
         *   \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        void           ToDeg(const s_bool& bNegativeAllowed = true);
+        void             ToDeg(const s_bool& bNegativeAllowed = true);
 
         /// Converts this double to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        void           ToRad();
+        void             ToRad();
 
-        bool           operator ! () const;
-        typedef        void (s_double::*MemberFn)();
-        operator       MemberFn() const;
+        bool             operator ! () const;
+        typedef          void (s_double::*MemberFn)();
+        operator         MemberFn() const;
 
-        s_double       operator - () const;
+        s_double         operator - () const;
 
-        s_double       operator +  (const s_double& dValue) const;
-        s_double       operator -  (const s_double& dValue) const;
-        s_double       operator *  (const s_double& dValue) const;
-        s_double       operator /  (const s_double& dValue) const;
-        void           operator += (const s_double& dValue);
-        void           operator -= (const s_double& dValue);
-        void           operator *= (const s_double& dValue);
-        void           operator /= (const s_double& dValue);
+        s_double         operator +  (const s_double& dValue) const;
+        s_double         operator -  (const s_double& dValue) const;
+        s_double         operator *  (const s_double& dValue) const;
+        s_double         operator /  (const s_double& dValue) const;
+        void             operator += (const s_double& dValue);
+        void             operator -= (const s_double& dValue);
+        void             operator *= (const s_double& dValue);
+        void             operator /= (const s_double& dValue);
 
-        s_str          operator +  (const char* sValue) const;
-        s_str          operator +  (const s_str& sValue) const;
+        s_str            operator +  (const char* sValue) const;
+        s_str            operator +  (const s_str& sValue) const;
 
-        bool           operator == (const s_double& dValue) const;
-        bool           operator != (const s_double& dValue) const;
-        bool           operator <  (const s_double& dValue) const;
-        bool           operator >  (const s_double& dValue) const;
-        bool           operator <= (const s_double& dValue) const;
-        bool           operator >= (const s_double& dValue) const;
+        bool             operator == (const s_double& dValue) const;
+        bool             operator != (const s_double& dValue) const;
+        bool             operator <  (const s_double& dValue) const;
+        bool             operator >  (const s_double& dValue) const;
+        bool             operator <= (const s_double& dValue) const;
+        bool             operator >= (const s_double& dValue) const;
 
-        s_double&      operator =  (const s_double& dValue);
+        s_double&        operator =  (const s_double& dValue);
 
         s_ctnr<s_double> operator ,  (const s_double& dValue) const;
 

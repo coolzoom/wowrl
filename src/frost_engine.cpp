@@ -91,7 +91,7 @@ namespace Frost
         if (bTimeStamps)
         {
             s_str sNewMessage;
-            if (sMessage.Get(0) == '|' && sMessage.Get(1) == 't')
+            if (sMessage[0] == '|' && sMessage[1] == 't')
             {
                 sNewMessage = sMessage;
                 sNewMessage.Erase(0, 2);

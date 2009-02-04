@@ -1,50 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release_Win32" />
+	<File name="include\utils\frost_utils.h" open="1" top="0" tabpos="31">
+		<Cursor position="0" topLine="0" />
+	</File>
 	<File name="include\utils\frost_utils_array.h" open="1" top="0" tabpos="3">
-		<Cursor position="5084" topLine="181" />
+		<Cursor position="4710" topLine="169" />
 	</File>
 	<File name="include\utils\frost_utils_bool.h" open="1" top="0" tabpos="22">
-		<Cursor position="1583" topLine="28" />
+		<Cursor position="1304" topLine="25" />
 	</File>
 	<File name="include\utils\frost_utils_color.h" open="1" top="0" tabpos="4">
-		<Cursor position="479" topLine="84" />
+		<Cursor position="2811" topLine="24" />
 	</File>
 	<File name="include\utils\frost_utils_directory.h" open="1" top="0" tabpos="7">
 		<Cursor position="1805" topLine="36" />
 	</File>
 	<File name="include\utils\frost_utils_double.h" open="1" top="0" tabpos="8">
-		<Cursor position="7524" topLine="233" />
+		<Cursor position="1812" topLine="44" />
 	</File>
 	<File name="include\utils\frost_utils_file.h" open="1" top="0" tabpos="25">
 		<Cursor position="5289" topLine="135" />
 	</File>
 	<File name="include\utils\frost_utils_float.h" open="1" top="0" tabpos="19">
-		<Cursor position="7843" topLine="190" />
+		<Cursor position="1831" topLine="40" />
 	</File>
 	<File name="include\utils\frost_utils_int.h" open="1" top="0" tabpos="9">
-		<Cursor position="5617" topLine="172" />
+		<Cursor position="2109" topLine="60" />
 	</File>
 	<File name="include\utils\frost_utils_manager.h" open="1" top="0" tabpos="10">
 		<Cursor position="2314" topLine="39" />
 	</File>
-	<File name="include\utils\frost_utils_ptr.h" open="1" top="0" tabpos="1">
-		<Cursor position="4016" topLine="146" />
+	<File name="include\utils\frost_utils_ptr.h" open="1" top="1" tabpos="1">
+		<Cursor position="4147" topLine="134" />
 	</File>
 	<File name="include\utils\frost_utils_refptr.h" open="1" top="0" tabpos="2">
 		<Cursor position="5810" topLine="206" />
 	</File>
 	<File name="include\utils\frost_utils_str.h" open="1" top="0" tabpos="18">
-		<Cursor position="8242" topLine="259" />
+		<Cursor position="7326" topLine="191" />
+	</File>
+	<File name="include\utils\frost_utils_tester.h" open="1" top="0" tabpos="32">
+		<Cursor position="695" topLine="12" />
 	</File>
 	<File name="include\utils\frost_utils_uint.h" open="1" top="0" tabpos="21">
-		<Cursor position="5722" topLine="179" />
+		<Cursor position="2103" topLine="54" />
 	</File>
 	<File name="include\utils\frost_utils_var.h" open="1" top="0" tabpos="23">
-		<Cursor position="2177" topLine="63" />
+		<Cursor position="2268" topLine="51" />
 	</File>
 	<File name="include\utils\frost_utils_vector.h" open="1" top="0" tabpos="27">
-		<Cursor position="6577" topLine="181" />
+		<Cursor position="3286" topLine="175" />
 	</File>
 	<File name="include\utils\frost_utilsmanager.h" open="1" top="0" tabpos="11">
 		<Cursor position="0" topLine="0" />
@@ -74,7 +80,7 @@
 		<Cursor position="1307" topLine="33" />
 	</File>
 	<File name="src\utils\frost_utils_str.cpp" open="1" top="0" tabpos="15">
-		<Cursor position="4431" topLine="262" />
+		<Cursor position="5632" topLine="196" />
 	</File>
 	<File name="src\utils\frost_utils_tester.cpp" open="1" top="0" tabpos="17">
 		<Cursor position="0" topLine="0" />
