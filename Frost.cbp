@@ -173,6 +173,7 @@
 		<Unit filename="include\gui\frost_gui_button.h" />
 		<Unit filename="include\gui\frost_gui_fontstring.h" />
 		<Unit filename="include\gui\frost_gui_frame.h" />
+		<Unit filename="include\gui\frost_gui_gradient.h" />
 		<Unit filename="include\gui\frost_gui_layeredregion.h" />
 		<Unit filename="include\gui\frost_gui_scrollingmessageframe.h" />
 		<Unit filename="include\gui\frost_gui_slider.h" />
@@ -219,6 +220,7 @@
 		<Unit filename="src\gui\frost_fontstring_glues.cpp" />
 		<Unit filename="src\gui\frost_frame.cpp" />
 		<Unit filename="src\gui\frost_frame_glues.cpp" />
+		<Unit filename="src\gui\frost_gradient.cpp" />
 		<Unit filename="src\gui\frost_guimanager.cpp" />
 		<Unit filename="src\gui\frost_layeredregion.cpp" />
 		<Unit filename="src\gui\frost_layeredregion_glues.cpp" />
