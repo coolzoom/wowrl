@@ -1,145 +1,160 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release_Win32" />
-	<File name="include\frost.h" open="1" top="0" tabpos="40">
-		<Cursor position="296" topLine="169" />
+	<File name="include\frost.h" open="1" top="0" tabpos="41">
+		<Cursor position="1247" topLine="88" />
 	</File>
-	<File name="include\frost_gfx.h" open="1" top="0" tabpos="34">
+	<File name="include\frost_gfx.h" open="1" top="0" tabpos="35">
 		<Cursor position="3498" topLine="74" />
 	</File>
-	<File name="include\frost_guimanager.h" open="1" top="0" tabpos="6">
-		<Cursor position="4848" topLine="100" />
+	<File name="include\frost_guimanager.h" open="1" top="0" tabpos="7">
+		<Cursor position="4797" topLine="31" />
 	</File>
-	<File name="include\frost_inputmanager.h" open="1" top="0" tabpos="36">
+	<File name="include\frost_inputmanager.h" open="1" top="0" tabpos="37">
 		<Cursor position="6783" topLine="138" />
 	</File>
-	<File name="include\frost_lua.h" open="1" top="0" tabpos="12">
+	<File name="include\frost_lua.h" open="1" top="0" tabpos="13">
 		<Cursor position="3118" topLine="77" />
 	</File>
-	<File name="include\frost_lua_utils.h" open="1" top="0" tabpos="23">
+	<File name="include\frost_lua_utils.h" open="1" top="0" tabpos="24">
 		<Cursor position="626" topLine="24" />
 	</File>
-	<File name="include\frost_macros.h" open="1" top="0" tabpos="19">
+	<File name="include\frost_macros.h" open="1" top="0" tabpos="20">
 		<Cursor position="598" topLine="2" />
 	</File>
-	<File name="include\frost_modeldata.h" open="1" top="0" tabpos="77">
+	<File name="include\frost_modeldata.h" open="1" top="0" tabpos="46">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="include\frost_modelstructs.h" open="1" top="0" tabpos="26">
+	<File name="include\frost_modelstructs.h" open="1" top="0" tabpos="27">
 		<Cursor position="539" topLine="4" />
 	</File>
-	<File name="include\frost_sprite.h" open="1" top="0" tabpos="37">
+	<File name="include\frost_sprite.h" open="1" top="0" tabpos="38">
 		<Cursor position="9711" topLine="199" />
 	</File>
-	<File name="include\frost_stableheaders.h" open="1" top="0" tabpos="44">
+	<File name="include\frost_spritemanager.h" open="1" top="0" tabpos="84">
+		<Cursor position="1118" topLine="199" />
+	</File>
+	<File name="include\frost_stableheaders.h" open="1" top="0" tabpos="45">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="include\frost_text.h" open="1" top="0" tabpos="25">
+	<File name="include\frost_text.h" open="1" top="0" tabpos="26">
 		<Cursor position="380" topLine="0" />
 	</File>
-	<File name="include\frost_xml_block.h" open="1" top="0" tabpos="5">
+	<File name="include\frost_xml_block.h" open="1" top="0" tabpos="6">
 		<Cursor position="563" topLine="15" />
 	</File>
-	<File name="include\frost_xml_document.h" open="1" top="0" tabpos="18">
+	<File name="include\frost_xml_document.h" open="1" top="0" tabpos="19">
 		<Cursor position="2374" topLine="60" />
 	</File>
-	<File name="include\gui\frost_gui_anchor.h" open="1" top="0" tabpos="38">
+	<File name="include\gui\frost_gui_anchor.h" open="1" top="0" tabpos="39">
 		<Cursor position="4817" topLine="129" />
 	</File>
-	<File name="include\gui\frost_gui_fontstring.h" open="1" top="0" tabpos="39">
+	<File name="include\gui\frost_gui_fontstring.h" open="1" top="0" tabpos="40">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="include\gui\frost_gui_frame.h" open="1" top="0" tabpos="7">
-		<Cursor position="2212" topLine="62" />
+	<File name="include\gui\frost_gui_frame.h" open="1" top="0" tabpos="8">
+		<Cursor position="2142" topLine="4" />
 	</File>
-	<File name="include\gui\frost_gui_texture.h" open="1" top="0" tabpos="33">
-		<Cursor position="0" topLine="0" />
+	<File name="include\gui\frost_gui_gradient.h" open="1" top="0" tabpos="82">
+		<Cursor position="635" topLine="18" />
 	</File>
-	<File name="include\gui\frost_gui_uiobject.h" open="1" top="0" tabpos="21">
+	<File name="include\gui\frost_gui_texture.h" open="1" top="1" tabpos="34">
+		<Cursor position="7342" topLine="9" />
+	</File>
+	<File name="include\gui\frost_gui_uiobject.h" open="1" top="0" tabpos="22">
 		<Cursor position="2405" topLine="61" />
 	</File>
-	<File name="src\frost_engine.cpp" open="1" top="0" tabpos="20">
+	<File name="src\frost_engine.cpp" open="1" top="0" tabpos="21">
 		<Cursor position="13794" topLine="418" />
 	</File>
-	<File name="src\frost_eventreceiver.cpp" open="1" top="0" tabpos="43">
+	<File name="src\frost_eventreceiver.cpp" open="1" top="0" tabpos="44">
 		<Cursor position="543" topLine="5" />
 	</File>
-	<File name="src\frost_main.cpp" open="1" top="0" tabpos="15">
-		<Cursor position="4476" topLine="318" />
+	<File name="src\frost_inputmanager.cpp" open="1" top="0" tabpos="85">
+		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src\frost_materialmanager.cpp" open="1" top="0" tabpos="42">
+	<File name="src\frost_main.cpp" open="1" top="0" tabpos="16">
+		<Cursor position="4137" topLine="151" />
+	</File>
+	<File name="src\frost_materialmanager.cpp" open="1" top="0" tabpos="43">
 		<Cursor position="543" topLine="48" />
 	</File>
-	<File name="src\frost_plane.cpp" open="1" top="0" tabpos="79">
+	<File name="src\frost_plane.cpp" open="1" top="0" tabpos="47">
 		<Cursor position="1219" topLine="21" />
 	</File>
-	<File name="src\frost_terraindata.cpp" open="1" top="0" tabpos="27">
+	<File name="src\frost_terraindata.cpp" open="1" top="0" tabpos="28">
 		<Cursor position="404" topLine="0" />
 	</File>
-	<File name="src\frost_timemanager.cpp" open="1" top="0" tabpos="0">
+	<File name="src\frost_timemanager.cpp" open="1" top="0" tabpos="1">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src\frost_timers.cpp" open="1" top="0" tabpos="1">
+	<File name="src\frost_timers.cpp" open="1" top="0" tabpos="2">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src\gui\frost_anchor.cpp" open="1" top="0" tabpos="24">
+	<File name="src\gui\frost_anchor.cpp" open="1" top="0" tabpos="25">
 		<Cursor position="6024" topLine="207" />
 	</File>
-	<File name="src\gui\frost_button.cpp" open="1" top="0" tabpos="16">
+	<File name="src\gui\frost_button.cpp" open="1" top="0" tabpos="17">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src\gui\frost_frame.cpp" open="1" top="0" tabpos="9">
-		<Cursor position="1857" topLine="87" />
+	<File name="src\gui\frost_frame.cpp" open="1" top="0" tabpos="10">
+		<Cursor position="640" topLine="0" />
 	</File>
-	<File name="src\gui\frost_frame_glues.cpp" open="1" top="0" tabpos="8">
+	<File name="src\gui\frost_frame_glues.cpp" open="1" top="0" tabpos="9">
 		<Cursor position="15971" topLine="220" />
 	</File>
-	<File name="src\gui\frost_guimanager.cpp" open="1" top="0" tabpos="11">
+	<File name="src\gui\frost_gradient.cpp" open="1" top="0" tabpos="83">
+		<Cursor position="478" topLine="0" />
+	</File>
+	<File name="src\gui\frost_guimanager.cpp" open="1" top="0" tabpos="12">
 		<Cursor position="12154" topLine="334" />
 	</File>
-	<File name="src\gui\frost_layeredregion.cpp" open="1" top="0" tabpos="35">
+	<File name="src\gui\frost_layeredregion.cpp" open="1" top="0" tabpos="36">
 		<Cursor position="532" topLine="0" />
 	</File>
-	<File name="src\gui\frost_lunar.cpp" open="1" top="0" tabpos="31">
-		<Cursor position="183" topLine="12" />
+	<File name="src\gui\frost_lunar.cpp" open="1" top="0" tabpos="32">
+		<Cursor position="981" topLine="145" />
 	</File>
-	<File name="src\gui\frost_spritemanager.cpp" open="1" top="0" tabpos="41">
+	<File name="src\gui\frost_spritemanager.cpp" open="1" top="0" tabpos="42">
 		<Cursor position="15507" topLine="233" />
 	</File>
-	<File name="src\gui\frost_text.cpp" open="1" top="0" tabpos="29">
+	<File name="src\gui\frost_text.cpp" open="1" top="0" tabpos="30">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src\gui\frost_texture_glues.cpp" open="1" top="0" tabpos="30">
+	<File name="src\gui\frost_texture.cpp" open="1" top="0" tabpos="81">
+		<Cursor position="813" topLine="21" />
+	</File>
+	<File name="src\gui\frost_texture_glues.cpp" open="1" top="0" tabpos="31">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src\gui\frost_uiobject.cpp" open="1" top="0" tabpos="10">
+	<File name="src\gui\frost_uiobject.cpp" open="1" top="0" tabpos="11">
 		<Cursor position="1857" topLine="51" />
 	</File>
-	<File name="src\gui\frost_uiobject_glues.cpp" open="1" top="0" tabpos="32">
+	<File name="src\gui\frost_uiobject_glues.cpp" open="1" top="0" tabpos="33">
 		<Cursor position="258" topLine="0" />
 	</File>
-	<File name="src\lua\frost_lua.cpp" open="1" top="0" tabpos="13">
+	<File name="src\lua\frost_lua.cpp" open="1" top="0" tabpos="14">
 		<Cursor position="8540" topLine="241" />
 	</File>
-	<File name="src\lua\frost_lua_glues.cpp" open="1" top="0" tabpos="14">
+	<File name="src\lua\frost_lua_glues.cpp" open="1" top="0" tabpos="15">
 		<Cursor position="5972" topLine="209" />
 	</File>
-	<File name="src\lua\frost_lua_utils.cpp" open="1" top="0" tabpos="22">
+	<File name="src\lua\frost_lua_utils.cpp" open="1" top="0" tabpos="23">
 		<Cursor position="7954" topLine="273" />
 	</File>
-	<File name="src\model\frost_animmanager.cpp" open="1" top="0" tabpos="28">
+	<File name="src\model\frost_animmanager.cpp" open="1" top="0" tabpos="29">
 		<Cursor position="4036" topLine="119" />
 	</File>
-	<File name="src\parsers\frost_guimanager_parser.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="1755" topLine="31" />
+	<File name="src\parsers\frost_guimanager_parser.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="6113" topLine="223" />
 	</File>
-	<File name="src\parsers\frost_unitmanager_parser.cpp" open="1" top="0" tabpos="2">
+	<File name="src\parsers\frost_unitmanager_parser.cpp" open="1" top="0" tabpos="3">
 		<Cursor position="1435" topLine="35" />
 	</File>
-	<File name="src\xml\frost_xml_block.cpp" open="1" top="0" tabpos="4">
+	<File name="src\xml\frost_xml_block.cpp" open="1" top="0" tabpos="5">
 		<Cursor position="11026" topLine="382" />
 	</File>
-	<File name="src\xml\frost_xml_document.cpp" open="1" top="0" tabpos="17">
+	<File name="src\xml\frost_xml_document.cpp" open="1" top="0" tabpos="18">
 		<Cursor position="37837" topLine="768" />
 	</File>
 </CodeBlocks_layout_file>

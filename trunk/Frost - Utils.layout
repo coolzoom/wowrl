@@ -31,10 +31,10 @@
 	<File name="include\utils\frost_utils_manager.h" open="1" top="0" tabpos="10">
 		<Cursor position="2016" topLine="53" />
 	</File>
-	<File name="include\utils\frost_utils_math.h" open="1" top="0" tabpos="34">
+	<File name="include\utils\frost_utils_math.h" open="1" top="0" tabpos="32">
 		<Cursor position="2433" topLine="37" />
 	</File>
-	<File name="include\utils\frost_utils_ptr.h" open="1" top="0" tabpos="1">
+	<File name="include\utils\frost_utils_ptr.h" open="1" top="1" tabpos="1">
 		<Cursor position="1538" topLine="51" />
 	</File>
 	<File name="include\utils\frost_utils_refptr.h" open="1" top="0" tabpos="2">
