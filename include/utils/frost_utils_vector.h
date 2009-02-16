@@ -207,7 +207,6 @@ namespace Frost
     s_str  operator + (const s_str& sLeft, const Vector& mRight);
     s_str& operator << (s_str& sLeft, const Vector& mRight);
     Vector operator * (const s_float& fLeft, const Vector& mRight);
-;
 }
 
 #endif

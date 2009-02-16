@@ -39,19 +39,33 @@ namespace Frost
         Lua::RegisterGlobalFuncs(pLua_);
     }
 
-    s_bool GUIManager::AddUIObject(s_ptr<GUI::UIObject> pObj)
+    s_bool GUIManager::AddUIObject( s_ptr<GUI::UIObject> pObj )
     {
         map< s_str, s_ptr<GUI::UIObject> >* lNamedList;
-        map< s_uint, s_ptr<GUI::UIObject> >* lIDList;
         if (pObj->IsVirtual())
         {
-            lNamedList = &lNamedVirtualObjectList_;
-            lIDList = &lVirtualObjectList_;
+            if (pObj->GetParent())
+            {
+                s_uint i;
+                map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.find(i);
+                while (iterObj != lObjectList_.end())
+                {
+                    i++;
+                    iterObj = lObjectList_.find(i);
+                }
+                lObjectList_[i] = pObj;
+                pObj->SetID(i);
+
+                return true;
+            }
+            else
+            {
+                lNamedList = &lNamedVirtualObjectList_;
+            }
         }
         else
         {
             lNamedList = &lNamedObjectList_;
-            lIDList = &lObjectList_;
         }
 
         if (pObj != NULL)
@@ -60,13 +74,13 @@ namespace Frost
             if (iterNamedObj == lNamedList->end())
             {
                 s_uint i;
-                map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lIDList->find(i);
-                while (iterObj != lIDList->end())
+                map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.find(i);
+                while (iterObj != lObjectList_.end())
                 {
                     i++;
-                    iterObj = lIDList->find(i);
+                    iterObj = lObjectList_.find(i);
                 }
-                (*lIDList)[i] = pObj;
+                lObjectList_[i] = pObj;
                 (*lNamedList)[pObj->GetName()] = pObj;
                 pObj->SetID(i);
 
@@ -327,8 +341,8 @@ namespace Frost
 
     void GUIManager::Update( const s_float& fDelta )
     {
-        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
-        foreach (iterObj, lObjectList_)
+        map< s_str, s_ptr<GUI::UIObject> >::iterator iterObj;
+        foreach (iterObj, lNamedObjectList_)
         {
             if (!iterObj->second->GetParent())
                 iterObj->second->Update();
@@ -343,26 +357,16 @@ namespace Frost
             map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
             foreach (iterObj, lObjectList_)
             {
-                Log(iterObj->second->Serialize() + "\n########################\n");
+                if (!iterObj->second->IsVirtual() && !iterObj->second->GetParent())
+                    Log(iterObj->second->Serialize("") + "\n########################\n");
             }
-        }
-        else
-        {
-            Log("\n########################\nNo UIObject.\n########################\n");
-        }
 
-        if (lVirtualObjectList_.size() >= 1)
-        {
             Log("\n\n######################## Virtual UIObjects ########################\n\n########################\n");
-            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
-            foreach (iterObj, lVirtualObjectList_)
+            foreach (iterObj, lObjectList_)
             {
-                Log(iterObj->second->Serialize() + "\n########################\n");
+                if (iterObj->second->IsVirtual() && !iterObj->second->GetParent())
+                    Log(iterObj->second->Serialize("") + "\n########################\n");
             }
-        }
-        else
-        {
-            Log("\n########################\nNo virtual UIObject.\n########################\n");
         }
     }
 }

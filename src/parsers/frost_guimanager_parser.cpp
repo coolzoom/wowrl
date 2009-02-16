@@ -20,6 +20,8 @@ namespace Frost
     s_bool GUIManager::ParseFrameAttributes_( s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock )
     {
         s_str sParent = pMainBlock->GetAttribute("parent");
+        s_bool bVirtual = s_bool(pMainBlock->GetAttribute("virtual"));
+
         if (!sParent.IsEmpty())
         {
             if (!pFrame->GetParent())
@@ -31,10 +33,14 @@ namespace Frost
                     if (pParent)
                     {
                         pFrame->SetParent(pParent);
+                        if ( bVirtual || pParent->IsVirtual() )
+                            pFrame->SetVirtual();
                         pFrame->SetName(sName);
                     }
                     else
                     {
+                        if (bVirtual)
+                            pFrame->SetVirtual();
                         pFrame->SetName(sName);
                         Warning(CLASS_NAME,
                             "Can't find \""+pFrame->GetName()+"\"'s parent : \""+sParent+"\". "
@@ -52,6 +58,8 @@ namespace Frost
             }
             else
             {
+                if ( bVirtual || pFrame->GetParent()->IsVirtual() )
+                    pFrame->SetVirtual();
                 pFrame->SetName(pMainBlock->GetAttribute("name"));
                 Warning(CLASS_NAME,
                     "Can't use the \"parent\" attribute on \""+pFrame->GetName()+"\", "
@@ -61,13 +69,10 @@ namespace Frost
         }
         else
         {
+            if ( bVirtual  || (pFrame->GetParent() && pFrame->GetParent()->IsVirtual()) )
+                pFrame->SetVirtual();
             pFrame->SetName(pMainBlock->GetAttribute("name"));
         }
-
-        s_bool bVirtual = s_bool(pMainBlock->GetAttribute("virtual"));
-
-        if ( bVirtual || (pFrame->GetParent() && pFrame->GetParent()->IsVirtual()) )
-            pFrame->SetVirtual();
 
         if (!this->AddUIObject(pFrame))
             return false;

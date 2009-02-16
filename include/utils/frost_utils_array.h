@@ -184,11 +184,11 @@ namespace Frost
         for (s_uint i = 0; i < mRight.GetSize(); i++)
         {
             if (i == mRight.GetSize()-s_uint(1u))
-                sTemp += s_str(mRight[i]);
+                sTemp << mRight[i];
             else
-                sTemp += s_str(mRight[i]) + ", ";
+                sTemp << mRight[i] << ", ";
         }
-        sTemp += ")";
+        sTemp <<")";
 
         return sLeft + sTemp;
     }
@@ -206,11 +206,11 @@ namespace Frost
         for (uint i = 0; i < N; i++)
         {
             if (i == N-1)
-                sTemp += s_str(mRight.Get(i));
+                sTemp << mRight.Get(i);
             else
-                sTemp += s_str(mRight.Get(i)) + ", ";
+                sTemp << mRight.Get(i) << ", ";
         }
-        sTemp += ")";
+        sTemp << ")";
 
         return sLeft + sTemp;
     }
@@ -228,11 +228,11 @@ namespace Frost
         for (uint i = 0; i < N; i++)
         {
             if (i == N-1)
-                sTemp += s_str(mRight.Get(i));
+                sTemp << mRight.Get(i);
             else
-                sTemp += s_str(mRight.Get(i)) + ", ";
+                sTemp << mRight.Get(i) << ", ";
         }
-        sTemp += ")";
+        sTemp << ")";
 
         return sLeft << sTemp;
     }

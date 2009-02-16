@@ -79,6 +79,23 @@ namespace Frost
         */
         s_bool  DoString(lua_State* pLua, const s_str& sStr);
 
+        /// Executes a Lua function
+        /** \param pLua          The Lua state to use
+        *   \param sFunctionName The name of the function to execute
+        *   \return 'false' if there was an error
+        *   \note This function prints the errors in the log file
+        */
+        s_bool  CallFunction(lua_State* pLua, const s_str& sFunctionName);
+
+        /// Executes a Lua function with arguments
+        /** \param pLua           The Lua state to use
+        *   \param sFunctionName  The name of the function to execute
+        *   \param lArgumentStack The agument stack (order matters)
+        *   \return 'false' if there was an error
+        *   \note This function prints the errors in the log file
+        */
+        s_bool  CallFunction(lua_State* pLua, const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack);
+
         /// Prints an error string in the log file with the Lua tag
         /** \param pLua   The Lua state to use
         *   \param sError The error string to output

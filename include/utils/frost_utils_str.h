@@ -281,6 +281,7 @@ namespace Frost
         s_str&              operator << (const double& dValue);
         s_str&              operator << (const bool& bValue);
         s_str&              operator << (const char& cValue);
+        s_str&              operator << (const void* pValue);
         s_str&              operator << (const s_int& iValue);
         s_str&              operator << (const s_uint& uiValue);
         s_str&              operator << (const s_float& fValue);

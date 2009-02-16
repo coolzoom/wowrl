@@ -47,35 +47,35 @@ s_refptr<Material> UIObject::GetMaterial()
     return pMaterial_;
 }
 
-s_str UIObject::Serialize() const
+s_str UIObject::Serialize( const s_str& sTab ) const
 {
     s_str sStr;
 
-    sStr << "  Name : "        << sName_ << " ("+bReady_.GetAsString("ready", "not ready")+")\n";
-    sStr << "  ID : "          << uiID_ << "\n";
-    sStr << "  Type : "        << lType_.back() << "\n";
+    sStr << sTab << "  Name : "        << sName_ << " ("+bReady_.GetAsString("ready", "not ready")+")\n";
+    sStr << sTab << "  ID : "          << uiID_ << "\n";
+    sStr << sTab << "  Type : "        << lType_.back() << "\n";
     if (pParent_)
-        sStr << "  Parent : "  << pParent_->GetName() << "\n";
+        sStr << sTab << "  Parent : "  << pParent_->GetName() << "\n";
     else
-        sStr << "  Parent : none\n";
-    sStr << "  Num anchors : " << s_int((int)lAnchorList_.size()) << "\n";
+        sStr << sTab << "  Parent : none\n";
+    sStr << sTab << "  Num anchors : " << s_int((int)lAnchorList_.size()) << "\n";
     if (!lAnchorList_.empty())
     {
-        sStr << "    ####\n";
+        sStr << sTab << "  |-####\n";
         map<AnchorPoint, Anchor>::const_iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
-            sStr << iterAnchor->second.Serialize();
-            sStr << "    ####\n";
+            sStr << iterAnchor->second.Serialize(sTab);
+            sStr << sTab << "  |-####\n";
         }
     }
-    sStr << "  Borders : "     << lBorderList_ << "\n";
-    sStr << "  Alpha : "       << fAlpha_ << "\n";
-    sStr << "  Shown : "       << bIsShown_ << "\n";
-    sStr << "  Abs width : "   << uiAbsWidth_ << "\n";
-    sStr << "  Abs height : "  << uiAbsHeight_ << "\n";
-    sStr << "  Rel width : "   << fRelWidth_ << "\n";
-    sStr << "  Rel height : "  << fRelHeight_ << "\n";
+    sStr << sTab << "  Borders : "     << lBorderList_ << "\n";
+    sStr << sTab << "  Alpha : "       << fAlpha_ << "\n";
+    sStr << sTab << "  Shown : "       << bIsShown_ << "\n";
+    sStr << sTab << "  Abs width : "   << uiAbsWidth_ << "\n";
+    sStr << sTab << "  Abs height : "  << uiAbsHeight_ << "\n";
+    sStr << sTab << "  Rel width : "   << fRelWidth_ << "\n";
+    sStr << sTab << "  Rel height : "  << fRelHeight_ << "\n";
 
     return sStr;
 }
@@ -116,7 +116,7 @@ void UIObject::SetName( const s_str& sName )
     if (sName_.IsEmpty())
     {
         sName_ = sName;
-        if (pParent_)
+        if (pParent_ && !bVirtual_)
         {
             sName_.Replace("$parent", pParent_->GetName());
         }

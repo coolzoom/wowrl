@@ -1867,7 +1867,7 @@
 	"utils/frost_utils_stdhelper.h"
 	"utils/frost_utils_manager.h"
 
-1230117759 c:\programmation2\frost\include\utils\frost_utils.h
+1234541803 c:\programmation2\frost\include\utils\frost_utils.h
 	<string>
 	<vector>
 	<fstream>
@@ -1892,11 +1892,11 @@
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1233427574 c:\programmation2\frost\include\utils\frost_utils_str.h
+1234542785 c:\programmation2\frost\include\utils\frost_utils_str.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1233426455 c:\programmation2\frost\include\utils\frost_utils_var.h
+1234542872 c:\programmation2\frost\include\utils\frost_utils_var.h
 	"frost_utils.h"
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
@@ -1905,7 +1905,7 @@
 	"frost_utils_str.h"
 	"frost_utils_bool.h"
 
-1233000342 c:\programmation2\frost\include\utils\frost_utils_array.h
+1234541737 c:\programmation2\frost\include\utils\frost_utils_array.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
@@ -1919,7 +1919,7 @@
 	"frost_utils_ptr.h"
 	"frost_utils_str.h"
 
-1230117759 c:\programmation2\frost\include\utils\frost_utils_ptr.h
+1234542652 c:\programmation2\frost\include\utils\frost_utils_ptr.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 	"frost_utils_log.h"
@@ -1928,7 +1928,7 @@
 	"frost_utils.h"
 	"frost_utils_str.h"
 
-1230117759 c:\programmation2\frost\include\utils\frost_utils_refptr.h
+1234542661 c:\programmation2\frost\include\utils\frost_utils_refptr.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 	"frost_utils_bool.h"
@@ -1938,7 +1938,7 @@
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1231876268 c:\programmation2\frost\include\utils\frost_utils_vector.h
+1234541824 c:\programmation2\frost\include\utils\frost_utils_vector.h
 	"frost_utils.h"
 	"frost_utils_float.h"
 	"frost_utils_bool.h"
@@ -1963,9 +1963,9 @@
 	"frost_utils.h"
 	"frost_utils_double.h"
 
-1231776167 c:\programmation2\frost\include\frost_macros.h
+1234526473 c:\programmation2\frost\include\frost_macros.h
 
-1232990756 c:\programmation2\frost\include\frost_lua.h
+1234090766 c:\programmation2\frost\include\frost_lua.h
 	"lua/lualib.h"
 	"lua/lauxlib.h"
 	"lua/lua.h"
@@ -2004,7 +2004,7 @@
 	"lauxlib.h"
 	<string>
 
-1232992657 c:\programmation2\frost\include\frost.h
+1234742960 c:\programmation2\frost\include\frost.h
 	"frost_stableheaders.h"
 
 1230117759 c:\programmation2\frost\include\frost_stableheaders.h
@@ -2711,7 +2711,7 @@
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
-1232997927 c:\programmation2\frost\include\frost_guimanager.h
+1233780965 c:\programmation2\frost\include\frost_guimanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
@@ -3123,7 +3123,7 @@
 	"frost_materialmanager.h"
 	"frost_material.h"
 
-1232996151 source:c:\programmation2\frost\src\gui\frost_anchor.cpp
+1234109023 source:c:\programmation2\frost\src\gui\frost_anchor.cpp
 	"gui/frost_gui_anchor.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
@@ -3132,12 +3132,12 @@
 1232992352 c:\programmation2\frost\include\frost_gui.h
 	"frost.h"
 
-1232997927 c:\programmation2\frost\include\gui\frost_gui_uiobject.h
+1234108675 c:\programmation2\frost\include\gui\frost_gui_uiobject.h
 	"frost.h"
 	"frost_gui_anchor.h"
 	"frost_gfx.h"
 
-1233004195 c:\programmation2\frost\include\gui\frost_gui_frame.h
+1234108675 c:\programmation2\frost\include\gui\frost_gui_frame.h
 	"frost.h"
 	"gui/frost_gui_uiobject.h"
 	"frost_eventreceiver.h"
@@ -3182,7 +3182,7 @@
 	"gui/frost_gui_fontstring.h"
 	"gui/frost_gui_layeredregion.h"
 
-1233439209 source:c:\programmation2\frost\src\gui\frost_frame.cpp
+1234109152 source:c:\programmation2\frost\src\gui\frost_frame.cpp
 	"gui/frost_gui_frame.h"
 	"gui/frost_gui_layeredregion.h"
 	"gui/frost_gui_uiobject.h"
@@ -3199,7 +3199,7 @@
 1231601120 source:c:\programmation2\frost\src\gui\frost_frame_glues.cpp
 	"gui/frost_gui_frame.h"
 
-1232997927 source:c:\programmation2\frost\src\gui\frost_guimanager.cpp
+1234108802 source:c:\programmation2\frost\src\gui\frost_guimanager.cpp
 	"frost_guimanager.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_anchor.h"
@@ -3236,9 +3236,10 @@
 	"frost.h"
 	"gui/frost_gui_frame.h"
 
-1230117759 c:\programmation2\frost\include\gui\frost_gui_texture.h
+1234743026 c:\programmation2\frost\include\gui\frost_gui_texture.h
 	"frost.h"
 	"gui/frost_gui_layeredregion.h"
+	"gui/frost_gui_gradient.h"
 
 1230117761 source:c:\programmation2\frost\src\gui\frost_scrollingmessageframe.cpp
 	"gui/frost_gui_scrollingmessageframe.h"
@@ -3266,7 +3267,7 @@
 	<OgrePass.h>
 	<OgreTextureUnitState.h>
 
-1230117761 source:c:\programmation2\frost\src\gui\frost_spritemanager.cpp
+1233959666 source:c:\programmation2\frost\src\gui\frost_spritemanager.cpp
 	"frost_spritemanager.h"
 	"frost_sprite.h"
 	"frost_material.h"
@@ -3302,7 +3303,7 @@
 	"gui/frost_gui_texture.h"
 	"gui/frost_gui_layeredregion.h"
 
-1233004195 source:c:\programmation2\frost\src\gui\frost_uiobject.cpp
+1234109023 source:c:\programmation2\frost\src\gui\frost_uiobject.cpp
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
 	"frost_guimanager.h"
@@ -3313,7 +3314,7 @@
 	"gui/frost_gui_anchor.h"
 	"frost_guimanager.h"
 
-1232904678 source:c:\programmation2\frost\src\lua\frost_lua.cpp
+1234090766 source:c:\programmation2\frost\src\lua\frost_lua.cpp
 	"frost_lua.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
@@ -3394,7 +3395,7 @@
 	<OgreAnimation.h>
 	<OgreHardwareBufferManager.h>
 
-1232990756 c:\programmation2\frost\include\frost_modelstructs.h
+1234539883 c:\programmation2\frost\include\frost_modelstructs.h
 	"frost.h"
 
 1213276258 c:\programmation2\ogre\ogremain\include\ogresubmesh.h
@@ -3431,7 +3432,7 @@
 	<OgreEntity.h>
 	<OgreSubEntity.h>
 
-1233000043 source:c:\programmation2\frost\src\parsers\frost_guimanager_parser.cpp
+1233776987 source:c:\programmation2\frost\src\parsers\frost_guimanager_parser.cpp
 	"frost_guimanager.h"
 	"gui/frost_gui_anchor.h"
 	"gui/frost_gui_uiobject.h"
@@ -3478,10 +3479,16 @@
 	"frost_xml_block.h"
 	"frost_xml_document.h"
 
-1232239861 source:c:\programmation2\frost\src\xml\frost_xml_document.cpp
+1233439289 source:c:\programmation2\frost\src\xml\frost_xml_document.cpp
 	"frost_xml_document.h"
 	"frost_xml_block.h"
 
-1232992657 c:\programmation2\frost\include\gui\frost_gui_anchor.h
+1234108675 c:\programmation2\frost\include\gui\frost_gui_anchor.h
+	"frost.h"
+
+1234742960 source:c:\programmation2\frost\src\gui\frost_gradient.cpp
+	"gui/frost_gui_gradient.h"
+
+1234742960 c:\programmation2\frost\include\gui\frost_gui_gradient.h
 	"frost.h"
 

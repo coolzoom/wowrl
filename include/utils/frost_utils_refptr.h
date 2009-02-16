@@ -216,6 +216,14 @@ namespace Frost
             return s_refptr<N>(pValue_, pCounter_);
         }
 
+        s_ctnr< s_refptr<T> > operator , ( s_refptr<T> pValue ) const
+        {
+            s_ctnr< s_refptr<T> > mContainer;
+            mContainer.Push(*this);
+            mContainer.Push(pValue);
+            return mContainer;
+        }
+
         static const s_str CLASS_NAME;
 
     private :
@@ -247,6 +255,24 @@ namespace Frost
 
     template<class T>
     const s_str s_refptr<T>::CLASS_NAME = "s_refptr";
+
+    template<class T>
+    s_str operator+ ( const s_str& sLeft, s_refptr<T> pRight )
+    {
+        return s_str(sLeft) << (void*)pRight.Get();
+    }
+
+    template<class T>
+    s_str& operator<< ( s_str& sLeft, s_refptr<T> pRight )
+    {
+        return sLeft << (void*)pRight.Get();
+    }
+
+    template<class T>
+    s_str operator+ ( const char* sLeft, s_refptr<T> pRight )
+    {
+        return s_str(sLeft) << (void*)pRight.Get();
+    }
 }
 
 #endif
