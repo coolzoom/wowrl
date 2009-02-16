@@ -165,7 +165,7 @@ namespace Frost
     {
         if (pPtr_)
         {
-            if (mType_ == VALUE_INT)
+            if (mType_ == VALUE_FLOAT)
                 return *((s_float*)pPtr_);
             else if (mType_ == VALUE_UINT)
                 return s_float(*((s_uint*)pPtr_));
@@ -302,5 +302,50 @@ namespace Frost
             delete (s_str*)pPtr_;
 
         pPtr_= NULL;
+    }
+
+    s_str operator + ( const char* sLeft, const s_var& vRight )
+    {
+        switch (vRight.GetType())
+        {
+            case VALUE_INT : return s_str(sLeft) + vRight.GetI();
+            case VALUE_UINT : return s_str(sLeft) + vRight.GetUI();
+            case VALUE_FLOAT : return s_str(sLeft) + vRight.GetF();
+            case VALUE_DOUBLE : return s_str(sLeft) + vRight.GetD();
+            case VALUE_BOOL : return s_str(sLeft) + vRight.GetB();
+            case VALUE_STRING : return s_str(sLeft) + vRight.GetS();
+            case VALUE_POINTER : return s_str(sLeft) << vRight.GetP();
+            default : return s_str(sLeft) + "<none>";
+        }
+    }
+
+    s_str operator + ( const s_str& sLeft, const s_var& vRight )
+    {
+        switch (vRight.GetType())
+        {
+            case VALUE_INT : return sLeft + vRight.GetI();
+            case VALUE_UINT : return sLeft + vRight.GetUI();
+            case VALUE_FLOAT : return sLeft + vRight.GetF();
+            case VALUE_DOUBLE : return sLeft + vRight.GetD();
+            case VALUE_BOOL : return sLeft + vRight.GetB();
+            case VALUE_STRING : return sLeft + vRight.GetS();
+            case VALUE_POINTER : return s_str(sLeft) << vRight.GetP();
+            default : return sLeft + "<none>";
+        }
+    }
+
+    s_str& operator << ( s_str& sLeft, const s_var& vRight )
+    {
+        switch (vRight.GetType())
+        {
+            case VALUE_INT : return sLeft << vRight.GetI();
+            case VALUE_UINT : return sLeft << vRight.GetUI();
+            case VALUE_FLOAT : return sLeft << vRight.GetF();
+            case VALUE_DOUBLE : return sLeft << vRight.GetD();
+            case VALUE_BOOL : return sLeft << vRight.GetB();
+            case VALUE_STRING : return sLeft << vRight.GetS();
+            case VALUE_POINTER : return sLeft << vRight.GetP();
+            default : return sLeft << "<none>";
+        }
     }
 }

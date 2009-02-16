@@ -218,20 +218,20 @@ void Anchor::SetRelOffset( const s_float& fX, const s_float& fY )
     mType_ = ANCHOR_REL;
 }
 
-s_str Anchor::Serialize() const
+s_str Anchor::Serialize( const s_str& sTab ) const
 {
     s_str sStr;
 
-    sStr << "      Point : "           << GetStringPoint(mPoint_) << "\n";
+    sStr << sTab << "  |   Point : "           << GetStringPoint(mPoint_) << "\n";
     if (pParent_)
-        sStr << "      Parent : "      << pParent_->GetName() << "\n";
+        sStr << sTab << "  |   Parent : "      << pParent_->GetName() << "\n";
     else
-        sStr << "      Parent : none\n";
+        sStr << sTab << "  |   Parent : none\n";
     if (!sParent_.IsEmpty())
-        sStr << "      Parent raw name : " << sParent_ << "\n";
-    sStr << "      Parent point : "    << GetStringPoint(mParentPoint_) << "\n";
-    sStr << "      Offset X : "        << iAbsOffX_ << "\n";
-    sStr << "      Offset Y : "        << iAbsOffY_ << "\n";
+        sStr << sTab << "  |   Parent raw name : " << sParent_ << "\n";
+    sStr << sTab << "  |   Parent point : "    << GetStringPoint(mParentPoint_) << "\n";
+    sStr << sTab << "  |   Offset X : "        << iAbsOffX_ << "\n";
+    sStr << sTab << "  |   Offset Y : "        << iAbsOffY_ << "\n";
 
     return sStr;
 }

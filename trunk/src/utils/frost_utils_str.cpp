@@ -239,27 +239,27 @@ namespace Frost
 
     s_str s_str::operator+ (const s_int& iValue) const
     {
-        return s_str(sValue_) + s_str(iValue);
+        return *this + s_str(iValue);
     }
 
     s_str s_str::operator+ (const s_uint& uiValue) const
     {
-        return s_str(sValue_) + s_str(uiValue);
+        return *this + s_str(uiValue);
     }
 
     s_str s_str::operator+ (const s_float& fValue) const
     {
-        return s_str(sValue_) + s_str(fValue);
+        return *this + s_str(fValue);
     }
 
     s_str s_str::operator+ (const s_double& dValue) const
     {
-        return s_str(sValue_) + s_str(dValue);
+        return *this + s_str(dValue);
     }
 
     s_str s_str::operator+ (const s_bool& bValue) const
     {
-        return s_str(sValue_) + s_str(bValue);
+        return *this + s_str(bValue);
     }
 
     s_str s_str::operator- ( const s_uint& uiNumber ) const
@@ -432,6 +432,14 @@ namespace Frost
     {
         this->operator+=(cValue);
         return *this;
+    }
+
+    s_str& s_str::operator<< ( const void* pValue )
+    {
+        if (pValue == NULL)
+            return this->operator<<("NULL");
+        else
+            return this->operator<<(s_uint((uint)pValue));
     }
 
     s_str& s_str::operator<< ( const s_int& iValue )

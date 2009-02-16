@@ -14,12 +14,22 @@
 
 #include "frost.h"
 
-// NOTE : OS specific code.
+// NOTE : OS specific code (potentially).
 // Relies on :
 //    sizeof(char)  = sizeof(uchar)  = 1
 //    sizeof(short) = sizeof(ushort) = 2
 //    sizeof(int)   = sizeof(uint)   = 4
 //    sizeof(float)                  = 4
+
+void MODELSTRUCT_H_Assertions()
+{
+    // If these conditions aren't met, the compiler will
+    // throw an error concerning a duplicated case value.
+    COMPILE_TIME_ASSERT(sizeof(char)  == 1);
+    COMPILE_TIME_ASSERT(sizeof(short) == 2);
+    COMPILE_TIME_ASSERT(sizeof(int)   == 4);
+    COMPILE_TIME_ASSERT(sizeof(float) == 4);
+}
 
 struct ModelHeader
 {

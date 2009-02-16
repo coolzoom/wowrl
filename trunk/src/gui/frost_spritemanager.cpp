@@ -168,7 +168,7 @@ namespace Frost
         pBuffer++;
         *pBuffer = mV.fY.Get();  // y
         pBuffer++;
-        *pBuffer = -1;     // z
+        *pBuffer = -1;           // z
         pBuffer++;
 
         *pBuffer = mV.fTX.Get(); // u

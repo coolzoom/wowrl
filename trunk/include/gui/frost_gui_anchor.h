@@ -143,9 +143,10 @@ namespace Frost
             void               SetRelOffset(const s_float& fX, const s_float& fY);
 
             /// Prints all relevant information about this anchor in a string.
-            /** \return All relevant information about this anchor
+            /** \param sTab The offset to give to all lines
+            *   \return All relevant information about this anchor
             */
-            s_str              Serialize() const;
+            s_str              Serialize(const s_str& sTab) const;
 
             /// Returns the name of an anchor point.
             /** \param mPoint The anchor point

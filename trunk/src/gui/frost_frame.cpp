@@ -43,9 +43,25 @@ Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0
     uiLevel_ = 0u;
 }
 
-s_str Frame::Serialize() const
+s_str Frame::Serialize( const s_str& sTab ) const
 {
-    s_str sStr = UIObject::Serialize();
+    s_str sStr = UIObject::Serialize(sTab);
+
+    if (!lChildList_.empty())
+    {
+        if (lChildList_.size() == 1)
+            sStr << sTab << "  Child : \n";
+        else
+            sStr << sTab << "  Children : " << lChildList_.size() << "\n";
+        sStr << sTab << "  |-####\n";
+
+        map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
+        foreach (iterChild, lChildList_)
+        {
+            sStr << iterChild->second->Serialize(sTab+"  | ");
+            sStr << sTab << "  |-####\n";
+        }
+    }
 
     return sStr;
 }
@@ -138,9 +154,10 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                 if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
                 {
                     Warning(lType_.back(),
-                        "Couldn't add an inherited child, because its name was already taken : \""
+                        "Couldn't add an inherited child to \""+sName_+"\", because its name was already taken : \""
                         +pNewChild->GetName()+"\". Skipped."
                     );
+                    delete pNewChild.Get();
                     continue;
                 }
                 this->AddChild(pNewChild);
@@ -373,6 +390,11 @@ void Frame::OnEvent( const Event& mEvent )
 {
     lua_State* pLua = GUIManager::GetSingleton()->GetLua();
 
+    // Lua handlers do not need direct arguments.
+    // Instead, we set the value of some global variables
+    // (event : event name, arg1, arg2, ... arg9 : arguments)
+    // that the user can use however he wants in his handler.
+
     // Set event name
     lua_pushstring(pLua, mEvent.GetName().c_str());
     lua_setglobal(pLua, "event");
@@ -391,19 +413,13 @@ void Frame::OnEvent( const Event& mEvent )
         else if (pArg->GetType() == VALUE_BOOL)
             lua_pushboolean(pLua, pArg->GetB().Get());
         else
-            break;
+            lua_pushnil(pLua);
 
         lua_setglobal(pLua, ("arg" + s_str(i)).c_str());
         i++;
     }
 
-    lua_getglobal(pLua, (sName_ + ":OnEvent").c_str());
-    if (lua_isfunction(pLua, -1))
-    {
-        int iError = lua_pcall(pLua, 0, 0, 0);
-        if (iError) l_ThrowError(pLua);
-    }
-    lua_pop(pLua, 1);
+    Lua::CallFunction(pLua, sName_+":OnEvent");
 }
 
 void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
@@ -466,14 +482,7 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             lua_setglobal(pLua, "arg1");
         }
 
-        lua_getglobal(pLua, (sName_ + ":On" + sScriptName).c_str());
-        if (lua_isfunction(pLua, -1))
-        {
-            int iError = lua_pcall(pLua, 0, 0, 0);
-            if (iError) l_ThrowError(pLua);
-        }
-
-        lua_pop(pLua, 1);
+        Lua::CallFunction(pLua, sName_+":On"+sScriptName);
     }
 
     if (sScriptName == "Load")
@@ -692,6 +701,7 @@ void Frame::Update()
     {
         lStrataList_.clear();
 
+        // Build the strata map
         map< s_uint, s_ptr<Frame> >::iterator iterChild;
         foreach (iterChild, lChildList_)
         {
@@ -712,10 +722,16 @@ void Frame::Update()
 
     if (bBuildLayerList_)
     {
-        lLayerList_.clear();
+        // Clear layers' content
+        map< LayerType, Layer >::iterator iterLayer;
+        foreach (iterLayer, lLayerList_)
+        {
+            iterLayer->second.lRegionList.clear();
+        }
 
+        // Fill layers with regions
         map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
-        foreach(iterRegion, lRegionList_)
+        foreach (iterRegion, lRegionList_)
         {
             s_ptr<LayeredRegion> pRegion = iterRegion->second;
             lLayerList_[pRegion->GetDrawLayer()].lRegionList[pRegion->GetID()] = pRegion;

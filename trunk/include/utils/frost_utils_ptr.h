@@ -163,16 +163,42 @@ namespace Frost
             return s_ptr<N>(pValue_);
         }
 
+        s_ctnr< s_ptr<T> > operator , ( s_ptr<T> pValue ) const
+        {
+            s_ctnr< s_ptr<T> > mContainer;
+            mContainer.Push(*this);
+            mContainer.Push(pValue);
+            return mContainer;
+        }
+
         static const s_str CLASS_NAME;
 
     private :
 
         T* pValue_;
-
     };
 
     template<class T>
     const s_str s_ptr<T>::CLASS_NAME = "s_ptr";
+
+
+    template<class T>
+    s_str operator+ ( const s_str& sLeft, s_ptr<T> pRight )
+    {
+        return s_str(sLeft) << (void*)pRight.Get();
+    }
+
+    template<class T>
+    s_str& operator<< ( s_str& sLeft, s_ptr<T> pRight )
+    {
+        return sLeft << (void*)pRight.Get();
+    }
+
+    template<class T>
+    s_str operator+ ( const char* sLeft, s_ptr<T> pRight )
+    {
+        return s_str(sLeft) << (void*)pRight.Get();
+    }
 }
 
 #endif

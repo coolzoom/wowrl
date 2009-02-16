@@ -242,6 +242,46 @@ s_bool Lua::DoString( lua_State* pLua, const s_str& sStr )
     return (iError == 0);
 }
 
+s_bool Lua::CallFunction( lua_State* pLua, const s_str& sFunctionName )
+{
+    lua_getglobal(pLua, sFunctionName.c_str());
+    if (lua_isfunction(pLua, -1))
+    {
+        int iError = lua_pcall(pLua, 0, 0, 0);
+        if (iError) l_ThrowError(pLua);
+    }
+    else
+        lua_pop(pLua, 1);
+}
+
+s_bool Lua::CallFunction( lua_State* pLua, const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
+{
+    lua_getglobal(pLua, sFunctionName.c_str());
+    if (lua_isfunction(pLua, -1))
+    {
+        for (s_uint i; i < lArgumentStack.GetSize(); i++)
+        {
+            const s_var& pArg = lArgumentStack[i];
+            if ((pArg.GetType() == VALUE_INT) ||
+                (pArg.GetType() == VALUE_UINT) ||
+                (pArg.GetType() == VALUE_FLOAT) ||
+                (pArg.GetType() == VALUE_DOUBLE))
+                lua_pushnumber(pLua, pArg.GetF().Get());
+            else if (pArg.GetType() == VALUE_STRING)
+                lua_pushstring(pLua, pArg.GetS().c_str());
+            else if (pArg.GetType() == VALUE_BOOL)
+                lua_pushboolean(pLua, pArg.GetB().Get());
+            else
+                lua_pushnil(pLua);
+        }
+
+        int iError = lua_pcall(pLua, lArgumentStack.GetSize().Get(), 0, 0);
+        if (iError) l_ThrowError(pLua);
+    }
+    else
+        lua_pop(pLua, 1);
+}
+
 s_bool Lua::InitLua( lua_State** pLua )
 {
     *pLua = lua_open();

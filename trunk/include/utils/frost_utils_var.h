@@ -66,7 +66,7 @@ namespace Frost
         void SetD(const s_double& dValue);
         void SetB(const s_bool& bValue);
         void SetS(const s_str& sValue);
-        void SetP(void*);
+        void SetP(void* pValue);
 
         s_int     GetI() const;
         s_uint    GetUI() const;
@@ -90,6 +90,10 @@ namespace Frost
         ValueType mType_;
         void*     pPtr_;
     };
+
+    s_str  operator+ (const char* sLeft, const s_var& vRight);
+    s_str  operator+ (const s_str& sLeft, const s_var& vRight);
+    s_str& operator<< (s_str& sLeft, const s_var& vRight);
 }
 
 #endif

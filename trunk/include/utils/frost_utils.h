@@ -6,10 +6,10 @@
 /*                                        */
 
 // Base types
-typedef unsigned int uint;
-typedef unsigned char uchar;
+typedef unsigned int   uint;
+typedef unsigned char  uchar;
 typedef unsigned short ushort;
-typedef unsigned long ulong;
+typedef unsigned long  ulong;
 
 #ifndef FROST_UTILS_H
 #define FROST_UTILS_H

@@ -119,11 +119,10 @@ namespace Frost
 
         lua_State* pLua_;
 
-        std::map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
-
-        std::map< s_uint, s_ptr<GUI::UIObject> > lVirtualObjectList_;
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
+
+        std::map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
 
         std::map<s_str, AddOn> lAddOnList_;
     };

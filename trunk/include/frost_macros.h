@@ -13,6 +13,9 @@
 #ifndef FROST_MACROS_H
 #define FROST_MACROS_H
 
+// Allows compilation assertions (must be placed inside a dummy function)
+#define COMPILE_TIME_ASSERT(condition) switch(0) {case 0: case (condition): ;}
+
 // Returns 'true' if the key is found in the map
 #define MAPFIND(key, map) ((map).find(key) != (map).end())
 

@@ -79,9 +79,10 @@ namespace Frost
             virtual void    UpdateMaterial(const s_bool& bForceUpdate = false);
 
             /// Prints all relevant information about this widget in a string.
-            /** \return All relevant information about this widget
+            /** \param sTab The offset to give to all lines
+            *   \return All relevant information about this widget
             */
-            virtual s_str   Serialize() const;
+            virtual s_str   Serialize(const s_str& sTab) const;
 
             /// Copies an UIObject's parameters into this UIObject (inheritance).
             /** \param pObj The UIObject to copy

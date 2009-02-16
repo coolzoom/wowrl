@@ -62,6 +62,9 @@ namespace Frost
         // frost_gui_anchor.h
         class  Anchor;
 
+        // frost_gui_gradient.h
+        class  Gradient;
+
         // frost_gui_uiobject.h
         class  UIObject;
         class  LuaUIObject;
