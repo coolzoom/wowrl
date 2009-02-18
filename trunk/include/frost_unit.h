@@ -92,7 +92,27 @@ namespace Frost
         /// Stops this Unit's movement.
         void             StopMovement();
 
+        /// Moves this Unit's Camera on its local axis.
+        /** \param fZoom The amount
+        */
+        void             ZoomCamera(const s_float& fZoom);
+
+        /// Moves this Unit's Camera around its anchor point.
+        /** \param fYaw   Angle to rotate horizontaly
+        *   \param fPitch Angle to rotate verticaly
+        */
+        void             RotateCamera(const s_float& fYaw, const s_float& fPitch);
+
+        /// Rotates this Unit's Model.
+        /** \param fYaw   Angle to rotate horizontaly
+        *   \param fPitch Angle to rotate verticaly
+        *   \note Also rotates the Camera like RotateCamera().
+        */
+        void             RotateModel(const s_float& fYaw, const s_float& fPitch);
+
         /// Returns the Camera associated to this Unit.
+        /** \return The Camera associated to this Unit
+        */
         s_ptr<Camera>    GetCamera();
 
         /// Returns this Unit's body model.
@@ -127,6 +147,7 @@ namespace Frost
         s_str           sName_;
         s_refptr<Model> pBodyModel_;
         s_ptr<Camera>   pCamera_;
+        s_bool          bCameraMovedAlone_;
 
         s_bool          bJumping_;
         Vector          mJumpPosition_;

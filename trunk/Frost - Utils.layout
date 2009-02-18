@@ -34,11 +34,17 @@
 	<File name="include\utils\frost_utils_math.h" open="1" top="0" tabpos="32">
 		<Cursor position="2433" topLine="37" />
 	</File>
+	<File name="include\utils\frost_utils_point.h" open="1" top="0" tabpos="35">
+		<Cursor position="2344" topLine="13" />
+	</File>
 	<File name="include\utils\frost_utils_ptr.h" open="1" top="1" tabpos="1">
-		<Cursor position="1538" topLine="51" />
+		<Cursor position="3553" topLine="132" />
 	</File>
 	<File name="include\utils\frost_utils_refptr.h" open="1" top="0" tabpos="2">
 		<Cursor position="6813" topLine="243" />
+	</File>
+	<File name="include\utils\frost_utils_stdhelper.h" open="1" top="0" tabpos="34">
+		<Cursor position="749" topLine="118" />
 	</File>
 	<File name="include\utils\frost_utils_str.h" open="1" top="0" tabpos="18">
 		<Cursor position="12166" topLine="240" />
@@ -47,13 +53,13 @@
 		<Cursor position="695" topLine="12" />
 	</File>
 	<File name="include\utils\frost_utils_uint.h" open="1" top="0" tabpos="21">
-		<Cursor position="1642" topLine="54" />
+		<Cursor position="2356" topLine="54" />
 	</File>
 	<File name="include\utils\frost_utils_var.h" open="1" top="0" tabpos="23">
-		<Cursor position="2646" topLine="67" />
+		<Cursor position="2113" topLine="55" />
 	</File>
 	<File name="include\utils\frost_utils_vector.h" open="1" top="0" tabpos="27">
-		<Cursor position="6416" topLine="180" />
+		<Cursor position="5473" topLine="171" />
 	</File>
 	<File name="include\utils\frost_utilsmanager.h" open="1" top="0" tabpos="11">
 		<Cursor position="0" topLine="0" />
@@ -77,7 +83,7 @@
 		<Cursor position="1307" topLine="53" />
 	</File>
 	<File name="src\utils\frost_utils_int.cpp" open="1" top="0" tabpos="16">
-		<Cursor position="19120" topLine="878" />
+		<Cursor position="4634" topLine="596" />
 	</File>
 	<File name="src\utils\frost_utils_math.cpp" open="1" top="0" tabpos="13">
 		<Cursor position="1307" topLine="33" />
