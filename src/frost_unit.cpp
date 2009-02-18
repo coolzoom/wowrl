@@ -24,8 +24,9 @@ namespace Frost
     const s_str Unit::CLASS_NAME = "Unit";
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
-        uiID_(uiID), sName_(sName), bTurn_(true),
-        fJumpHeight_(1.4f), fJumpDuration_(0.9f),
+        uiID_(uiID), sName_(sName), mMovementType_(MOVEMENT_NONE),
+        mJumpMovementType_(MOVEMENT_NONE), mLMovementType_(LMOVEMENT_NONE),
+        bTurn_(true), fJumpHeight_(1.4f), fJumpDuration_(0.9f),
         fForwardRunSpeed_(6.5f), fForwardWalkSpeed_(2.5f),
         fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f),
         fTurnRate_(0.385f)
@@ -457,7 +458,8 @@ namespace Frost
 
     void Unit::SetTurning( const s_bool& bTurn )
     {
-        if ( (bTurn_ && !bTurn) || (!bTurn_ && bTurn) )
+        //if ( (bTurn_ && !bTurn) || (!bTurn_ && bTurn) )
+        if (bTurn_ != bTurn)
             ToggleTurning();
     }
 
@@ -483,6 +485,35 @@ namespace Frost
     s_refptr<Model> Unit::GetBodyModel()
     {
         return pBodyModel_;
+    }
+
+
+    void Unit::ZoomCamera( const s_float& fZoom )
+    {
+        pCamera_->Translate(Vector::UNIT_Z*fZoom, true);
+    }
+
+    void Unit::RotateCamera( const s_float& fYaw, const s_float& fPitch )
+    {
+        pCamera_->Yaw(fYaw);
+        pCamera_->Pitch(fPitch);
+
+        bCameraMovedAlone_ = true;
+    }
+
+    void Unit::RotateModel( const s_float& fYaw, const s_float& fPitch )
+    {
+        if (bCameraMovedAlone_)
+        {
+            Vector mDirection = pCamera_->GetDirection(false);
+            mDirection.Y(0.0f);
+            pBodyModel_->SetDirection(mDirection);
+            bCameraMovedAlone_ = false;
+        }
+
+        pBodyModel_->Yaw(fYaw);
+        pCamera_->Yaw(fYaw);
+        pCamera_->Pitch(fPitch);
     }
 
     s_ptr<Camera> Unit::GetCamera()

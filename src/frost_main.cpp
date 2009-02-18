@@ -88,25 +88,21 @@ s_bool FrameFunc()
 
         if (pInputMgr->KeyIsPressed(KEY_W))
         {
-            bAdjustCamDir = true;
             pChar->SetMoveForward(true);
         }
 
         if (pInputMgr->KeyIsReleased(KEY_W))
         {
-            bAdjustCamDir = true;
             pChar->SetMoveForward(false);
         }
 
         if (pInputMgr->KeyIsPressed(KEY_S))
         {
-            bAdjustCamDir = true;
             pChar->SetMoveBackward(true);
         }
 
         if (pInputMgr->KeyIsReleased(KEY_S))
         {
-            bAdjustCamDir = true;
             pChar->SetMoveBackward(false);
         }
 
@@ -140,10 +136,7 @@ s_bool FrameFunc()
             fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
             fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
 
-            pCam->Yaw(fCoefX);
-            pCam->Pitch(fCoefY);
-
-            bCameraMovedAlone = true;
+            pChar->RotateCamera(fCoefX, fCoefY);
         }
 
         if ( pInputMgr->MouseIsPressed(MOUSE_RIGHT) || pInputMgr->MouseIsReleased(MOUSE_RIGHT))
@@ -151,45 +144,17 @@ s_bool FrameFunc()
 
         if (pInputMgr->MouseIsDown(MOUSE_RIGHT))
         {
-            if (bCameraMovedAlone)
-            {
-                Vector mDirection = pCam->GetDirection();
-                mDirection.Y(0);
-                pModel->SetDirection(mDirection);
-                bCameraMovedAlone = false;
-            }
-
             fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
             fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
 
-            // TODO : mettre ça dans Unit
-            pModel->Yaw(fCoefX);
-            pCam->Yaw(fCoefX);
-            pCam->Pitch(fCoefY);
+            pChar->RotateModel(fCoefX, fCoefY);
         }
 
         if (pInputMgr->WheelIsRolled())
         {
             fZoom = -s_float(pInputMgr->GetMWheel())/120.0f;
-            pCam->Translate(Vector::UNIT_Z*fZoom, true);
+            pChar->ZoomCamera(fZoom);
         }
-
-        /*if (bAdjustCamDir)
-        {
-            Vector mDiff = pCam->GetDirection() - pChar->GetBodyModel()->GetDirection();
-            mDiff.Z(0.0f);
-            if (mDiff.GetNorm() > 0.1f)
-            {
-                if ((mDiff^pCam->GetDirection()).Z() > 0.0f)
-                    pCam->Yaw(s_float(s_double(0.25)*pTimeMgr->GetDelta()));
-                else
-                    pCam->Yaw(s_float(s_double(-0.25)*pTimeMgr->GetDelta()));
-            }
-            else
-            {
-                bAdjustCamDir = false;
-            }
-        }*/
     }
     else
     {
@@ -239,13 +204,12 @@ s_bool FrameFunc()
         if (bUnitControlled)
         {
             pCam = pChar->GetCamera();
-            CameraManager::GetSingleton()->SetMainCamera(pCam);
         }
         else
         {
             pCam = pFrost->GetCamera();
-            CameraManager::GetSingleton()->SetMainCamera(pCam);
         }
+        CameraManager::GetSingleton()->SetMainCamera(pCam);
     }
 
     return true;
@@ -299,8 +263,6 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             //pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
             pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
             pModel = pChar->GetBodyModel().Get();
-            //CameraManager::GetSingleton()->SetMainCamera(pChar->GetCamera());
-            //pCam = pChar->GetCamera();
             pCam = pFrost->GetCamera();
 
             // The ground
