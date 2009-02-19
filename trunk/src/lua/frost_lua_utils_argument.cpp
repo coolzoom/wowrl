@@ -19,7 +19,7 @@ Argument::Argument()
     pParent_ = NULL;
 }
 
-Argument::Argument( s_str sName, int iLuaType, ValueType mType, s_ptr<Function> pParent )
+Argument::Argument( const s_str& sName, int iLuaType, ValueType mType, s_ptr<Function> pParent )
 {
     bSet_ = false;
     lData_.push_back(Data(sName, iLuaType, mType, this));
@@ -27,7 +27,7 @@ Argument::Argument( s_str sName, int iLuaType, ValueType mType, s_ptr<Function> 
     pParent_ = pParent;
 }
 
-void Argument::Add( s_str sName, int iLuaType, ValueType mType )
+void Argument::Add( const s_str& sName, int iLuaType, ValueType mType )
 {
     lData_.push_back(Data(sName, iLuaType, mType, this));
     if (lData_.size() == 1)
@@ -69,12 +69,12 @@ int Argument::GetType() const
     return pData_->GetLuaType();
 }
 
-s_bool Argument::IsProvided() const
+const s_bool& Argument::IsProvided() const
 {
     return bSet_;
 }
 
-s_bool Argument::Test( lua_State* pLua, s_uint uiIndex, s_bool bPrintError )
+s_bool Argument::Test( lua_State* pLua, const s_uint& uiIndex, const s_bool& bPrintError )
 {
     s_bool bSeveralChoices = (lData_.size() > 1);
 

@@ -229,7 +229,7 @@ namespace Frost
 
     void Sprite::SetColor( const Color& mColor, const s_uint& uiIndex )
     {
-        if (!uiIndex)
+        if (!uiIndex.IsValid())
         {
             mColor_ = mColor;
             for (uint i = 0; i < 4; i++)
@@ -279,7 +279,7 @@ namespace Frost
 
     void Sprite::SetWidth( const s_float& fWidth, const s_bool& bAdjustUVs )
     {
-        if (fWidth.IsNull() || fWidth < 0.0f)
+        if (fWidth <= 0.0f)
             fWidth_ = 1.0f;
         else
             fWidth_ = fWidth;
@@ -293,7 +293,7 @@ namespace Frost
 
     void Sprite::SetHeight( const s_float& fHeight, const s_bool& bAdjustUVs )
     {
-        if (fHeight.IsNull() || fHeight < 0.0f)
+        if (fHeight <= 0.0f)
             fHeight_ = 1.0f;
         else
             fHeight_ = fHeight;
@@ -307,7 +307,7 @@ namespace Frost
 
     void Sprite::SetDimensions(const s_float& fWidth, const s_float& fHeight, const s_bool& bAdjustUVs )
     {
-        if (fWidth.IsNull() || fWidth < 0.0f)
+        if (fWidth <= 0.0f)
             fWidth_ = 1.0f;
         else
             fWidth_ = fWidth;

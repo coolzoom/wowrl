@@ -126,10 +126,6 @@ namespace Frost
         /// Set this uint to Not a Number state.
         void           SetNaN();
 
-        bool           operator !  () const;
-        typedef        void (s_uint::*MemberFn)();
-        operator       MemberFn() const;
-
         s_uint&        operator ++ ();
         s_uint         operator ++ (int);
         s_int          operator -  () const;

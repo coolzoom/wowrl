@@ -145,14 +145,6 @@ namespace Frost
         fValue_ = atof(sValue.c_str());
     }
 
-    s_float::operator MemberFn() const
-    {
-        if (mType_ == FLOAT)
-            return &s_float::SetNaN;
-        else
-            return NULL;
-    }
-
     s_float::FloatType s_float::GetType() const
     {
         return mType_;
@@ -469,11 +461,6 @@ namespace Frost
         fValue_ = mValue.fValue_;
         mType_ = mValue.mType_;
         return *this;
-    }
-
-    bool s_float::operator! () const
-    {
-        return (mType_ != FLOAT);
     }
 
     s_bool s_float::IsValid() const

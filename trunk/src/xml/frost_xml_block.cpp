@@ -521,7 +521,7 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
 {
     if (!HasBlock(sName))
     {
-        if (!bRadioChilds_ && !GetDefChildNumber().IsNull())
+        if ( !bRadioChilds_ && (GetDefChildNumber() != 0) )
         {
             Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
                 "\""+sName+"\" has been declared as a radio block, but the previous ones weren't. "
@@ -592,7 +592,7 @@ s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock )
 {
     if (!HasBlock(pBlock->GetName()))
     {
-        if (!bRadioChilds_ && !GetDefChildNumber().IsNull())
+        if ( !bRadioChilds_ && (GetDefChildNumber() != 0) )
         {
             Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
                 "\""+pBlock->GetName()+"\" has been declared as a radio block, but the previous ones weren't. "

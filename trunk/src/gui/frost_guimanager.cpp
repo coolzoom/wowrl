@@ -214,9 +214,7 @@ namespace Frost
                     else
                     {
                         sLine.Trim(' ');
-                        s_uint i = sLine.Find(".lua");
-                        s_uint j = sLine.Find(".xml");
-                        if (i || j)
+                        if (sLine.Find(".lua") || sLine.Find(".xml"))
                         {
                             mAddOn.lFileList.push_back(mAddOn.sFolder + "/" + sLine);
                         }
@@ -244,13 +242,11 @@ namespace Frost
         vector<s_str>::iterator iterFile;
         foreach (iterFile, pAddOn->lFileList)
         {
-            s_uint i = iterFile->Find(".lua");
-            s_uint j = iterFile->Find(".xml");
-            if (i.IsValid())
+            if (iterFile->Find(".lua"))
             {
                 Lua::DoFile(pLua_, iterFile->Get());
             }
-            else if (j.IsValid())
+            else if (iterFile->Find(".xml"))
             {
                 this->ParseXMLFile_(iterFile->Get(), pAddOn);
             }

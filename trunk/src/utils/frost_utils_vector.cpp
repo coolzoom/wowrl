@@ -153,12 +153,12 @@ namespace Frost
 
     bool Vector::operator! () const
     {
-        return (!fX_ || !fY_ || !fZ_);
+        return (!fX_.IsValid() || !fY_.IsValid() || !fZ_.IsValid());
     }
 
     Vector::operator MemberFn() const
     {
-        if (fX_ && fY_ && fZ_)
+        if (fX_.IsValid() && fY_.IsValid() && fZ_.IsValid())
             return &Vector::Normalize;
         else
             return NULL;

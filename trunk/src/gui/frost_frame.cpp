@@ -586,7 +586,7 @@ void Frame::SetRelHitRectInsets( const s_float& fLeft, const s_float& fRight, co
 
 void Frame::SetLevel( const s_uint& uiLevel )
 {
-    if (uiLevel_.IsNull())
+    if (uiLevel_ == 0)
     {
         uiLevel_ = uiLevel;
     }

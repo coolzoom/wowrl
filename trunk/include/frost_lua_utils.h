@@ -37,14 +37,14 @@ namespace Frost
             *   \param pParent  A pointer to the Argument that'll be using it
             *   \note You shouldn't have to call it. Consider using Function instead.
             */
-            Data(s_str sName, int iLuaType, ValueType mType, s_ptr<Argument> pParent);
+            Data(const s_str& sName, int iLuaType, ValueType mType, s_ptr<Argument> pParent);
 
             /// Gets data from Lua
             /** \param pLua    The Lua state to use
             *   \param uiIndex The index at which to get the value
             *   \note Only called on a valid Data (expected type is found).
             */
-            void         Set(lua_State* pLua, s_uint uiIndex);
+            void         Set(lua_State* pLua, const s_uint& uiIndex);
 
             /// Returns this argument's name.
             /** \return This argument's name
@@ -98,64 +98,64 @@ namespace Frost
             *   \param pParent  A pointer to the function that'll be using it
             *   \note You shouldn't have to call it. Consider using Function instead.
             */
-            Argument(s_str sName, int iLuaType, ValueType mType, s_ptr<Function> pParent);
+            Argument(const s_str& sName, int iLuaType, ValueType mType, s_ptr<Function> pParent);
 
             /// Adds an alternative to this argument.
             /** \param sName    The name of this alternative argument (used to print errors in the log)
             *   \param iLuaType The expected type in Lua
             *   \param mType    The C++ type you'll be using (conversion is done automatically)
             */
-            void        Add(s_str sName, int iLuaType, ValueType mType);
+            void          Add(const s_str& sName, int iLuaType, ValueType mType);
 
             /// Returns the associated Data.
             /** \return The associated Data
             */
-            s_ptr<Data> Get() const;
+            s_ptr<Data>   Get() const;
 
             /// Returns the value and converts it to an int.
             /** \return The value and converts it to an int
             */
-            s_int       GetI() const;
+            s_int         GetI() const;
 
             /// Returns the value and converts it to an unsigned int.
             /** \return The value and converts it to an unsigned int
             */
-            s_uint      GetUI() const;
+            s_uint        GetUI() const;
 
             /// Returns the value and converts it to a float.
             /** \return The value and converts it to a float
             */
-            s_float     GetF() const;
+            s_float       GetF() const;
 
             /// Returns the value and converts it to a double.
             /** \return The value and converts it to a double
             */
-            s_double    GetD() const;
+            s_double      GetD() const;
 
             /// Returns the value and converts it to a bool.
             /** \return The value and converts it to a bool
             */
-            s_bool      GetB() const;
+            s_bool        GetB() const;
 
             /// Returns the value and converts it to a string.
             /** \return The value and converts it to a string
             */
-            s_str       GetS() const;
+            s_str         GetS() const;
 
             /// Returns the value and converts it to a void pointer.
             /** \return The value and converts it to a void pointer
             */
-            const void* GetP() const;
+            const void*   GetP() const;
 
             /// Returns the actual type of this value.
             /** \return The actual type of this value
             */
-            int         GetType() const;
+            int           GetType() const;
 
             /// Checks if this argument has been provided (in case it is optional).
             /** \return 'true' if the user has provided this argument
             */
-            s_bool      IsProvided() const;
+            const s_bool& IsProvided() const;
 
             /// Checks if this argument has the expected type(s).
             /** \param pLua        The Lua state to use
@@ -164,12 +164,12 @@ namespace Frost
             *                      to print errors in the log
             *   \return 'true' if everything went fine
             */
-            s_bool      Test(lua_State* pLua, s_uint uiIndex, s_bool bPrintError = true);
+            s_bool        Test(lua_State* pLua, const s_uint& uiIndex, const s_bool& bPrintError = true);
 
             /// Sets this argument's data
             /** \param pData A pointer to the good Data
             */
-            void        SetData(s_ptr<Data> pData);
+            void          SetData(s_ptr<Data> pData);
 
             static const s_str CLASS_NAME;
 
@@ -200,16 +200,23 @@ namespace Frost
         {
             ReturnValue();
             ReturnValue(ReturnValueType type);
-            ReturnValue(s_var vVal);
-            ReturnValue(s_int iVal);
-            ReturnValue(s_uint uiVal);
-            ReturnValue(s_float fVal);
-            ReturnValue(s_double dVal);
-            ReturnValue(s_bool bVal);
-            ReturnValue(s_str sVal);
+            ReturnValue(const s_var& vVal);
+            ReturnValue(const s_int& iVal);
+            ReturnValue(const s_uint& uiVal);
+            ReturnValue(const s_float& fVal);
+            ReturnValue(const s_double& dVal);
+            ReturnValue(const s_bool& bVal);
+            ReturnValue(const s_str& sVal);
 
             ReturnValueType mType;
             s_var           vValue;
+        };
+
+        struct ArgumentList
+        {
+            std::map<s_uint, Argument> lArg_;
+            std::map<s_uint, Argument> lOptional_;
+            s_uint                     uiRank_;
         };
 
         /// A helper to write Lua glues
@@ -234,7 +241,7 @@ namespace Frost
             *   \param uiReturnNbr The maximum number of returned values
             *   \note Call this at the beginning of your glue
             */
-            Function(s_str sName, lua_State* pLua, s_uint uiReturnNbr = 0u);
+            Function(const s_str& sName, lua_State* pLua, const s_uint& uiReturnNbr = 0u);
 
             /// Adds an argument to that function.
             /** \param uiIndex    The index of this argument
@@ -248,7 +255,16 @@ namespace Frost
             *         have different Lua types. The function will then choose the right one acording
             *         to the actual Lua type that the user has provided.
             */
-            void            Add(s_uint uiIndex, s_str sName, int iLuaType, ValueType mType, s_bool bOptional = false);
+            void            Add(const s_uint& uiIndex, const s_str& sName, int iLuaType, ValueType mType, const s_bool& bOptional = false);
+
+            /// Tells the Function there is another parameter set that will be provided.
+            void            NewParamSet();
+
+            /// Returns the indice of the paramater set that the user has provided.
+            /** \return The indice of the paramater set that the user has provided
+            *   \note Should be called after Check() has been called.
+            */
+            const s_uint&   GetParamSetRank();
 
             /// Checks if all the arguments types and retreive them.
             /** \param bPrintError If set to 'false', this function will fail
@@ -256,13 +272,13 @@ namespace Frost
             *   \return 'true' if everything went fine
             *   \note You should always check the return value of this function.
             */
-            s_bool          Check(s_bool bPrintError = true);
+            s_bool          Check(const s_bool& bPrintError = true);
 
             /// Returns the argument at the provided index.
             /** \param uiIndex The index of the argument
             *   \return The argument at the provided index
             */
-            s_ptr<Argument> Get(s_uint uiIndex);
+            s_ptr<Argument> Get(const s_uint& uiIndex);
 
             /// Checks if an argument has been provided (in case it is optional).
             /** \param uiIndex The index of the argument
@@ -270,7 +286,13 @@ namespace Frost
             *   \note You should always check the return value of this function
             *         whenever you want to use an optional argument.
             */
-            s_bool          IsProvided(s_uint uiIndex);
+            s_bool          IsProvided(const s_uint& uiIndex) const;
+
+            /// Returns the number of provided parameters.
+            /** \return The number of provided parameters
+            *   \note Should be called after Check() has been called.
+            */
+            const s_uint&   GetParamCount() const;
 
             /// Adds a return value
             /** \param mReturn The returned value
@@ -306,10 +328,11 @@ namespace Frost
 
             s_str                      sName_;
             lua_State*                 pLua_;
+            s_uint                     uiParamCount_;
             s_uint                     uiReturnNbr_;
             s_uint                     uiReturnCount_;
-            std::map<s_uint, Argument> lArg_;
-            std::map<s_uint, Argument> lOptional_;
+            std::vector<ArgumentList>  lArgListStack_;
+            s_ptr<ArgumentList>        pArgList_;
         };
     }
 }

@@ -395,7 +395,7 @@ const s_uint& UIObject::GetID() const
 
 void UIObject::SetID( const s_uint& uiID )
 {
-    if (!uiID_)
+    if (!uiID_.IsValid())
         uiID_ = uiID;
     else
     {
@@ -435,11 +435,11 @@ void UIObject::UpdateDimensions_()
 
 void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize, s_bool& bReady )
 {
-    if (!iMin && !iMax)
+    if (!iMin.IsValid() && !iMax.IsValid())
     {
-        if (iSize)
+        if (iSize.IsValid())
         {
-            if (iCenter)
+            if (iCenter.IsValid())
             {
                 iMin = iCenter - iSize/2;
                 iMax = iCenter + iSize/2;
@@ -450,15 +450,15 @@ void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& i
         else
             bReady = false;
     }
-    else if (!iMax)
+    else if (!iMax.IsValid())
     {
-        if (iSize)
+        if (iSize.IsValid())
         {
             iMax = iMin + iSize;
         }
         else
         {
-            if (iCenter)
+            if (iCenter.IsValid())
             {
                 iMax = iMin + 2*(iCenter-iMin);
             }
@@ -466,15 +466,15 @@ void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& i
                 bReady = false;
         }
     }
-    else if (!iMin)
+    else if (!iMin.IsValid())
     {
-        if (iSize)
+        if (iSize.IsValid())
         {
             iMin = iMax - iSize;
         }
         else
         {
-            if (iCenter)
+            if (iCenter.IsValid())
             {
                 iMin = iMax - 2*(iMax-iCenter);
             }

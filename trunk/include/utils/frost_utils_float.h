@@ -193,10 +193,6 @@ namespace Frost
         */
         void            ToRad();
 
-        bool            operator ! () const;
-        typedef         void (s_float::*MemberFn)();
-        operator        MemberFn() const;
-
         s_float         operator - () const;
 
         s_float         operator +  (const s_float& fValue) const;

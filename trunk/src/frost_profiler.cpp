@@ -57,7 +57,7 @@ namespace Frost
         Log("  - "+ sName_ +" :");
         Log("     - call number : "+ uiCallNbr_ +" ("+ uiZeroTimings_ +" not timed)");
 
-        if (!uiCallNbr_.IsNull())
+        if (uiCallNbr_ != 0)
         {
             Log("     - total time : "+ dTotalTime_ +" s ("+ 100.0*dTotalTime_/dProfileTime +"%% of total)");
             Log("     - average time : "+ 1000.0*dTotalTime_/s_double(uiCallNbr_-uiZeroTimings_) +" ms");
