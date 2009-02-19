@@ -68,12 +68,12 @@ s_bool Document::CheckLineSynthax_( s_str& sLine )
     }
     #endif
 
-    s_uint uiPos = sLine.Find("<");
-    if (uiPos)
+    s_uint uiPos = sLine.FindPos("<");
+    if (uiPos.IsValid())
     {
         sLine.EraseFromStart(uiPos);
-        uiPos = sLine.Find(">");
-        if (uiPos)
+        uiPos = sLine.FindPos(">");
+        if (uiPos.IsValid())
         {
             sLine.EraseFromEnd(sLine.Size()-uiPos-1);
             return true;
@@ -178,9 +178,9 @@ s_bool Document::LoadDefinition_()
                                 {
                                     bPreDefining = true;
 
-                                    s_uint uiStart = iterCommand->Find("[");
-                                    s_uint uiEnd = iterCommand->Find("]");
-                                    if (uiStart && uiEnd)
+                                    s_uint uiStart = iterCommand->FindPos("[");
+                                    s_uint uiEnd = iterCommand->FindPos("]");
+                                    if (uiStart.IsValid() && uiEnd.IsValid())
                                     {
                                         // Inheritance
                                         sParent = iterCommand->ExtractRange(uiStart+1, uiEnd);
@@ -205,9 +205,9 @@ s_bool Document::LoadDefinition_()
                             else if (sLetterCode == "n")
                             {
                                 // Min/max count
-                                s_uint uiStart = iterCommand->Find("[");
-                                s_uint uiEnd = iterCommand->Find("]");
-                                if (uiStart && uiEnd)
+                                s_uint uiStart = iterCommand->FindPos("[");
+                                s_uint uiEnd = iterCommand->FindPos("]");
+                                if (uiStart.IsValid() && uiEnd.IsValid())
                                 {
                                     s_str sParams = iterCommand->ExtractRange(uiStart+1, uiEnd);
                                     if (sParams.Find(","))
@@ -507,7 +507,7 @@ s_bool Document::LoadDefinition_()
                             if (sLine == sCommentTag)
                             {
                                 uiCommentTagCount--;
-                                if (uiCommentTagCount.IsNull())
+                                if (uiCommentTagCount == 0)
                                     bComment = false;
                             }
                         }
@@ -588,9 +588,9 @@ s_bool Document::LoadDefinition_()
                                     {
                                         bPreDefining = true;
 
-                                        s_uint uiStart = iterCommand->Find("[");
-                                        s_uint uiEnd = iterCommand->Find("]");
-                                        if (uiStart && uiEnd)
+                                        s_uint uiStart = iterCommand->FindPos("[");
+                                        s_uint uiEnd = iterCommand->FindPos("]");
+                                        if (uiStart.IsValid() && uiEnd.IsValid())
                                         {
                                             // Inheritance
                                             sParent = iterCommand->ExtractRange(uiStart+1, uiEnd);
@@ -608,9 +608,9 @@ s_bool Document::LoadDefinition_()
                                 else if (sLetterCode == "n")
                                 {
                                     // Min/max count
-                                    s_uint uiStart = iterCommand->Find("[");
-                                    s_uint uiEnd = iterCommand->Find("]");
-                                    if (uiStart && uiEnd)
+                                    s_uint uiStart = iterCommand->FindPos("[");
+                                    s_uint uiEnd = iterCommand->FindPos("]");
+                                    if (uiStart.IsValid() && uiEnd.IsValid())
                                     {
                                         s_str sParams = iterCommand->ExtractRange(uiStart+1, uiEnd);
                                         if (sParams.Find(","))
@@ -979,7 +979,7 @@ s_bool Document::Check()
                             if (sLine == sCommentTag)
                             {
                                 uiCommentTagCount--;
-                                if (uiCommentTagCount.IsNull())
+                                if (uiCommentTagCount == 0)
                                     bComment = false;
                             }
                         }

@@ -139,14 +139,6 @@ namespace Frost
         dValue_ = atof(sValue.c_str());
     }
 
-    s_double::operator MemberFn() const
-    {
-        if (mType_ == DOUBLE)
-            return& s_double::SetNaN;
-        else
-            return NULL;
-    }
-
     s_double::DoubleType s_double::GetType() const
     {
         return mType_;
@@ -463,11 +455,6 @@ namespace Frost
         dValue_ = mValue.dValue_;
         mType_ = mValue.mType_;
         return *this;
-    }
-
-    bool s_double::operator! () const
-    {
-        return (mType_ != DOUBLE);
     }
 
     s_bool s_double::IsValid() const

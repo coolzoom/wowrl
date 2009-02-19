@@ -192,7 +192,14 @@ namespace Frost
         *   \param uiStart From where to start searching
         *   \return The position of the pattern (NaN if not found)
         */
-        s_uint              Find(const s_str& sValue, const s_uint& uiStart = 0u) const;
+        s_uint              FindPos(const s_str& sValue, const s_uint& uiStart = 0u) const;
+
+        /// Returns true is the pattern is found in the string.
+        /** \param sValue  The string to search for
+        *   \param uiStart From where to start searching
+        *   \return 'true' if the  pattern is found
+        */
+        s_bool              Find(const s_str& sValue, const s_uint& uiStart = 0u) const;
 
         /// Returns a const reference to the string.
         /** \return A const reference to the string

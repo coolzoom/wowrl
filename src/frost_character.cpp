@@ -93,9 +93,9 @@ namespace Frost
     s_ptr<ModelPart> Character::GetModelPart( const s_uint& uiCategory, const s_uint& uiVariation )
     {
         s_uint uiID = uiVariation;
-        if (!uiCategory.IsNull())
+        if (uiCategory != 0u)
         {
-            if ( (uiVariation.IsNull()) || (uiVariation > 99) )
+            if ( (uiVariation == 0u) || (uiVariation > 99) )
                 uiID = 1;
             uiID = uiCategory*100u + uiID;
         }

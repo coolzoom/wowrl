@@ -17,12 +17,12 @@ Data::Data()
     sName_ = ""; iLuaType_ = LUA_TNIL; mType_ = VALUE_NONE; pParent_ = NULL;
 }
 
-Data::Data( s_str name, int iLuaType, ValueType mType, s_ptr<Argument> pParent )
+Data::Data( const s_str& name, int iLuaType, ValueType mType, s_ptr<Argument> pParent )
 {
     sName_ = name; iLuaType_ = iLuaType; mType_ = mType; pParent_ = pParent;
 }
 
-void Data::Set( lua_State* pLua, s_uint uiIndex )
+void Data::Set( lua_State* pLua, const s_uint& uiIndex )
 {
     if (mType_ == VALUE_BOOL)
         mValue_.SetB(lua_toboolean(pLua, uiIndex.Get()));

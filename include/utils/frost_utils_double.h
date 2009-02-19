@@ -192,10 +192,6 @@ namespace Frost
         */
         void             ToRad();
 
-        bool             operator ! () const;
-        typedef          void (s_double::*MemberFn)();
-        operator         MemberFn() const;
-
         s_double         operator - () const;
 
         s_double         operator +  (const s_double& dValue) const;

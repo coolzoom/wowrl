@@ -135,12 +135,10 @@ namespace Frost
         /// Set this int to Not a Number state.
         void          SetNaN();
 
-
+        /// Returns the sign of this int (either 1 or -1).
+        /** \return The sign of this int (either 1 or -1)
+        */
         s_int         Sign();
-
-        bool          operator !  () const;
-        typedef       void (s_int::*MemberFn)();
-        operator      MemberFn() const;
 
         s_int&        operator ++ ();
         s_int         operator ++ (int);

@@ -179,20 +179,20 @@ namespace Frost
             LuaTexture(lua_State* pLua);
 
             // Glues
-            /**/ int _GetBlendMode(lua_State*) { return 0; }
-            /**/ int _GetTexCoord(lua_State*) { return 0; }
-            /**/ int _GetTexCoordModifiesRect(lua_State*) { return 0; }
-            /**/ int _GetTexture(lua_State*) { return 0; }
-            /**/ int _GetVertexColor(lua_State*) { return 0; }
-            /**/ int _IsDesaturated(lua_State*) { return 0; }
-            /**/ int _SetBlendMode(lua_State*) { return 0; }
-            /**/ int _SetDesaturated(lua_State*) { return 0; }
-            /**/ int _SetGradient(lua_State*) { return 0; }
-            /**/ int _SetGradientAlpha(lua_State*) { return 0; }
-            /**/ int _SetTexCoord(lua_State*) { return 0; }
-            /**/ int _SetTexCoordModifiesRect(lua_State*) { return 0; }
-            /**/ int _SetTexture(lua_State*) { return 0; }
-            /**/ int _SetVertexColor(lua_State*) { return 0; }
+            int _GetBlendMode(lua_State*);
+            int _GetTexCoord(lua_State*);
+            int _GetTexCoordModifiesRect(lua_State*);
+            int _GetTexture(lua_State*);
+            int _GetVertexColor(lua_State*);
+            int _IsDesaturated(lua_State*);
+            int _SetBlendMode(lua_State*);
+            int _SetDesaturated(lua_State*);
+            int _SetGradient(lua_State*);
+            int _SetGradientAlpha(lua_State*);
+            int _SetTexCoord(lua_State*);
+            int _SetTexCoordModifiesRect(lua_State*);
+            int _SetTexture(lua_State*);
+            int _SetVertexColor(lua_State*);
 
             static const char className[];
             static Lunar<LuaTexture>::RegType methods[];

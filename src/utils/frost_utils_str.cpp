@@ -525,7 +525,7 @@ namespace Frost
         return *this;
     }
 
-    s_uint s_str::Find( const s_str& sValue, const s_uint& uiStart ) const
+    s_uint s_str::FindPos( const s_str& sValue, const s_uint& uiStart ) const
     {
         if (uiStart.IsValid())
         {
@@ -543,6 +543,23 @@ namespace Frost
         return s_uint(s_uint::INTEGER_NAN);
     }
 
+    s_bool s_str::Find( const s_str& sValue, const s_uint& uiStart ) const
+    {
+        if (uiStart.IsValid())
+        {
+            // string::npos is an int for Linux, and an uint for Windows
+            #ifdef FROST_LINUX
+                int iResult = sValue_.find(sValue.Get(), uiStart.Get());
+                if (iResult >= 0)
+                    return true;
+            #else
+                uint uiResult = sValue_.find(sValue.Get(), uiStart.Get());
+                if (uiResult != sValue_.npos)
+                    return true;
+            #endif
+        }
+        return false;
+    }
 
     void s_str::CapitalStart( const s_bool& bCapitalStart )
     {
@@ -556,7 +573,7 @@ namespace Frost
     std::vector<s_str> s_str::Cut( const s_str& sDelim, const s_uint& uiMaxCut ) const
     {
         vector<s_str> lPieces;
-        s_uint uiPos = Find(sDelim);
+        s_uint uiPos = FindPos(sDelim);
         s_uint uiLastPos;
         s_uint uiCount;
         s_uint uiCurSize;
@@ -566,7 +583,7 @@ namespace Frost
             if (!uiCurSize.IsNull())
                 lPieces.push_back(Extract(uiLastPos, uiCurSize));
             uiLastPos = uiPos + sDelim.Length();
-            uiPos = Find(sDelim, uiLastPos);
+            uiPos = FindPos(sDelim, uiLastPos);
             uiCount++;
 
             if (uiCount >= uiMaxCut)
@@ -581,12 +598,12 @@ namespace Frost
     s_uint s_str::CountOccurences( const s_str& sPattern ) const
     {
         s_uint uiCount;
-        s_uint uiPos = Find(sPattern);
+        s_uint uiPos = FindPos(sPattern);
         while (uiPos.IsValid())
         {
             uiCount++;
             uiPos++;
-            uiPos = Find(sPattern, uiPos);
+            uiPos = FindPos(sPattern, uiPos);
         }
 
         return uiCount;
@@ -594,7 +611,7 @@ namespace Frost
 
     void s_str::Erase( const s_uint& uiStart, const s_uint& uiNbr )
     {
-        if (!uiNbr)
+        if (!uiNbr.IsValid())
             sValue_.erase(uiStart.Get(), string::npos);
         else
             sValue_.erase(uiStart.Get(), uiNbr.Get());
@@ -602,7 +619,7 @@ namespace Frost
 
     void s_str::EraseRange( const s_uint& uiStart, const s_uint& uiEnd )
     {
-        if (!uiEnd)
+        if (!uiEnd.IsValid())
             sValue_.erase(uiStart.Get(), string::npos);
         else
             sValue_.erase(uiStart.Get(), (uiEnd-uiStart).Get());
@@ -622,7 +639,7 @@ namespace Frost
 
     s_str s_str::Extract( const s_uint& uiStart, const s_uint& uiNbr ) const
     {
-        if (!uiNbr)
+        if (!uiNbr.IsValid())
             return s_str(sValue_.substr(uiStart.Get(), string::npos));
         else
             return s_str(sValue_.substr(uiStart.Get(), uiNbr.Get()));
@@ -630,7 +647,7 @@ namespace Frost
 
     s_str s_str::ExtractRange( const s_uint& uiStart, const s_uint& uiEnd ) const
     {
-        if (!uiEnd)
+        if (!uiEnd.IsValid())
             return s_str(sValue_.substr(uiStart.Get(), string::npos));
         else
             return s_str(sValue_.substr(uiStart.Get(), (uiEnd-uiStart).Get()));
@@ -665,12 +682,12 @@ namespace Frost
     s_uint s_str::Replace( const s_str& sPattern, const s_str& sReplacement )
     {
         s_uint uiCount;
-        s_uint uiPos = Find(sPattern);
+        s_uint uiPos = FindPos(sPattern);
 
         while (uiPos.IsValid())
         {
             sValue_.replace(uiPos.Get(), sPattern.Length().Get(), sReplacement.Get());
-            uiPos = Find(sPattern, uiPos+sReplacement.Length());
+            uiPos = FindPos(sPattern, uiPos+sReplacement.Length());
             uiCount++;
         }
 

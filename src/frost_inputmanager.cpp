@@ -329,7 +329,7 @@ namespace Frost
         fDMY_ = mMouseState.Y.rel;
 
         iMWheel_ = mMouseState.Z.rel;
-        if (iMWheel_.IsNull())
+        if (iMWheel_ == 0u)
             bWheelRolled_ = false;
         else
             bWheelRolled_ = true;

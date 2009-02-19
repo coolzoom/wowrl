@@ -83,7 +83,7 @@ namespace Frost
             return dDelta_;
         else
         {
-            if (!uiFPS_.IsNull())
+            if (uiFPS_ != 0)
                 return 1.0/uiFPS_.Get();
             else
                 return 0.0;
@@ -97,7 +97,7 @@ namespace Frost
 
     s_uint TimeManager::GetAverageFPS() const
     {
-        if (uiFrameNbr_.IsNull())
+        if (uiFrameNbr_ == 0)
             return s_uint(s_uint::INTEGER_NAN);
         else
             return uiAvgFPS_/uiFrameNbr_;
@@ -178,7 +178,7 @@ namespace Frost
             }
 
             Log("|t\n");
-            if (!uiGroup)
+            if (!uiGroup.IsValid())
                 Log("# Profiling info : "+ dProfileTime_ +" s of profiling");
             else
                 Log("# Profiling info for group ["+ uiGroup +"] : "+ dProfileTime_ +" s of profiling");
@@ -186,7 +186,7 @@ namespace Frost
             foreach (iter, lProfilerList_)
             {
                 s_ptr<Profiler> pProfiler = &iter->second;
-                if ( (pProfiler->GetGroup() == uiGroup) || (!uiGroup) )
+                if ( (pProfiler->GetGroup() == uiGroup) || (!uiGroup.IsValid()) )
                     pProfiler->PrintProfile(dProfileTime_);
             }
             Log("# end.");

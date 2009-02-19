@@ -136,20 +136,20 @@ void Lua::CopyTable( lua_State* pSrcVM, lua_State* pDestVM, const s_str& sSrcNam
             if (uiLineNbr > 1000u)
                 break;
 
-            if (uiTableIndent.IsNull())
+            if (uiTableIndent == 0)
             {
                 bTableEnded = true;
             }
             else
             {
-                s_uint i = s.Find(" ");
+                s_uint i = s.FindPos(" ");
                 s_str sKey = s.Extract(0, i);
                 s.Erase(0, ++i);
                 if (sKey == "'end'")
                 {
                     uiTableIndent--;
                     sTab = sTab.Extract(0, sTab.Length() - 4u);
-                    if (uiTableIndent.IsNull())
+                    if (uiTableIndent == 0)
                         sTable += "}\n";
                     else
                         sTable += sTab + "},\n";
@@ -158,7 +158,7 @@ void Lua::CopyTable( lua_State* pSrcVM, lua_State* pDestVM, const s_str& sSrcNam
                 {
                     sKey = "[" + sKey + "]";
 
-                    i = s.Find(" ");
+                    i = s.FindPos(" ");
                     s_str sValue = s.Extract(0, i);
                     s.Erase(0, ++i);
 
@@ -168,15 +168,13 @@ void Lua::CopyTable( lua_State* pSrcVM, lua_State* pDestVM, const s_str& sSrcNam
                     else
                     {
                         iType = LUA_TNUMBER;
-                        s_uint j = sValue.Find("\"");
-                        if (j)
+                        if (sValue.Find("\""))
                         {
                             iType = LUA_TSTRING;
                         }
                         else
                         {
-                            j = sValue.Find("'");
-                            if (j)
+                            if (sValue.Find("'"))
                             {
                                 iType = LUA_TBOOLEAN;
                                 sValue.Trim('\'');
@@ -248,10 +246,19 @@ s_bool Lua::CallFunction( lua_State* pLua, const s_str& sFunctionName )
     if (lua_isfunction(pLua, -1))
     {
         int iError = lua_pcall(pLua, 0, 0, 0);
-        if (iError) l_ThrowError(pLua);
+        if (iError)
+        {
+            l_ThrowError(pLua);
+            return false;
+        }
     }
     else
+    {
         lua_pop(pLua, 1);
+        return false;
+    }
+
+    return true;
 }
 
 s_bool Lua::CallFunction( lua_State* pLua, const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
@@ -276,10 +283,19 @@ s_bool Lua::CallFunction( lua_State* pLua, const s_str& sFunctionName, const s_c
         }
 
         int iError = lua_pcall(pLua, lArgumentStack.GetSize().Get(), 0, 0);
-        if (iError) l_ThrowError(pLua);
+        if (iError)
+        {
+            l_ThrowError(pLua);
+            return false;
+        }
     }
     else
+    {
         lua_pop(pLua, 1);
+        return false;
+    }
+
+    return true;
 }
 
 s_bool Lua::InitLua( lua_State** pLua )
@@ -312,7 +328,7 @@ void Lua::PrintError( lua_State* pLua, const s_str& sError )
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_float& fValue )
 {
-    if (fValue)
+    if (fValue.IsValid())
         lua_pushnumber(pLua, fValue.Get());
     else
         lua_pushnil(pLua);
@@ -320,7 +336,7 @@ void Frost::lua_pushnumber( lua_State* pLua, const s_float& fValue )
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_double& dValue )
 {
-    if (dValue)
+    if (dValue.IsValid())
         lua_pushnumber(pLua, dValue.Get());
     else
         lua_pushnil(pLua);
@@ -328,7 +344,7 @@ void Frost::lua_pushnumber( lua_State* pLua, const s_double& dValue )
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_int& iValue )
 {
-    if (iValue)
+    if (iValue.IsValid())
         lua_pushnumber(pLua, iValue.Get());
     else
         lua_pushnil(pLua);
@@ -336,7 +352,7 @@ void Frost::lua_pushnumber( lua_State* pLua, const s_int& iValue )
 
 void Frost::lua_pushnumber( lua_State* pLua, const s_uint& uiValue )
 {
-    if (uiValue)
+    if (uiValue.IsValid())
         lua_pushnumber(pLua, uiValue.Get());
     else
         lua_pushnil(pLua);

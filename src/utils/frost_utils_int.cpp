@@ -150,14 +150,6 @@ namespace Frost
         iValue_ = atoi(sValue.c_str());
     }
 
-    s_int::operator MemberFn() const
-    {
-        if (mType_ == INTEGER)
-            return &s_int::SetNaN;
-        else
-            return NULL;
-    }
-
     s_int::IntegerType s_int::GetType() const
     {
         return mType_;
@@ -206,7 +198,7 @@ namespace Frost
         if (mValue.IsNaN() || IsNaN())
             return s_int(INTEGER_NAN);
 
-        if (!mValue)
+        if (!mValue.IsValid())
         {
             if (mValue.IsInfinitePlus())
             {
@@ -223,7 +215,7 @@ namespace Frost
                     return s_int(INTEGER_INF_MINUS);
             }
         }
-        else if (!(*this))
+        else if (!this->IsValid())
         {
             if (IsInfinitePlus())
                 return s_int(INTEGER_INF_PLUS);
@@ -241,7 +233,7 @@ namespace Frost
         if (mValue.IsNaN() || IsNaN())
             return s_int(INTEGER_NAN);
 
-        if (!mValue)
+        if (!mValue.IsValid())
         {
             if (mValue.IsInfinitePlus())
             {
@@ -258,7 +250,7 @@ namespace Frost
                     return s_int(INTEGER_INF_PLUS);
             }
         }
-        else if (!(*this))
+        else if (!this->IsValid())
         {
             if (IsInfinitePlus())
                 return s_int(INTEGER_INF_MINUS);
@@ -276,7 +268,7 @@ namespace Frost
         if (mValue.IsNaN() || IsNaN())
             return s_int(INTEGER_NAN);
 
-        if (!mValue)
+        if (!mValue.IsValid())
         {
             if (mValue.IsInfinitePlus())
             {
@@ -307,7 +299,7 @@ namespace Frost
                 }
             }
         }
-        else if (!(*this))
+        else if (!this->IsValid())
         {
             if (mValue.IsNull())
                 return s_int(INTEGER_NAN);
@@ -338,14 +330,14 @@ namespace Frost
         if (mValue.IsNaN() || IsNaN() || mValue.IsNull())
             return s_int(INTEGER_NAN);
 
-        if (!mValue)
+        if (!mValue.IsValid())
         {
-            if (!(*this))
+            if (!this->IsValid())
                 return s_int(INTEGER_NAN);
             else
                 return s_int(0);
         }
-        else if (!(*this))
+        else if (!this->IsValid())
         {
             if (IsInfinitePlus())
             {
@@ -373,14 +365,14 @@ namespace Frost
         if (mValue.IsNaN() || IsNaN() || mValue.IsNull())
             return s_int(INTEGER_NAN);
 
-        if (!mValue)
+        if (!mValue.IsValid())
         {
-            if (!(*this))
+            if (!this->IsValid())
                 return s_int(0);
             else
                 return *this;
         }
-        else if (!(*this))
+        else if (!this->IsValid())
         {
             return s_int(0);
         }
@@ -414,173 +406,6 @@ namespace Frost
     {
         return s_int(iLeft) % iRight;
     }
-
-    /*s_float s_int::operator+ ( const s_float& fValue ) const
-    {
-        if (fValue.IsNaN() || IsNaN())
-            return s_float(s_float::FLOAT_NAN);
-
-        if (!fValue)
-        {
-            if (fValue.IsInfinitePlus())
-            {
-                if (IsInfiniteMinus())
-                    return s_float(s_float::FLOAT_NAN);
-                else
-                    return s_float(s_float::FLOAT_INF_PLUS);
-            }
-            else
-            {
-                if (IsInfinitePlus())
-                    return s_float(s_float::FLOAT_NAN);
-                else
-                    return s_float(s_float::FLOAT_INF_MINUS);
-            }
-        }
-        else if (!(*this))
-        {
-            if (IsInfinitePlus())
-                return s_float(s_float::FLOAT_INF_PLUS);
-            else
-                return s_float(s_float::FLOAT_INF_MINUS);
-        }
-        else
-        {
-            return s_float(iValue_ + fValue.Get());
-        }
-    }
-
-    s_float s_int::operator- ( const s_float& fValue ) const
-    {
-        if (fValue.IsNaN() || IsNaN())
-            return s_float(s_float::FLOAT_NAN);
-
-        if (!fValue)
-        {
-            if (fValue.IsInfinitePlus())
-            {
-                if (IsInfinitePlus())
-                    return s_float(s_float::FLOAT_NAN);
-                else
-                    return s_float(s_float::FLOAT_INF_MINUS);
-            }
-            else
-            {
-                if (IsInfiniteMinus())
-                    return s_float(s_float::FLOAT_NAN);
-                else
-                    return s_float(s_float::FLOAT_INF_PLUS);
-            }
-        }
-        else if (!(*this))
-        {
-            if (IsInfinitePlus())
-                return s_float(s_float::FLOAT_INF_MINUS);
-            else
-                return s_float(s_float::FLOAT_INF_PLUS);
-        }
-        else
-        {
-            return s_float(iValue_ - fValue.Get());
-        }
-    }
-
-    s_float s_int::operator* ( const s_float& fValue ) const
-    {
-        if (fValue.IsNaN() || IsNaN())
-            return s_float(s_float::FLOAT_NAN);
-
-        if (!fValue)
-        {
-            if (fValue.IsInfinitePlus())
-            {
-                if (IsInfiniteMinus() || IsNull())
-                    return s_float(s_float::FLOAT_NAN);
-                else if (IsInfinitePlus())
-                    return s_float(s_float::FLOAT_INF_PLUS);
-                else
-                {
-                    if (iValue_ > 0)
-                        return s_float(s_float::FLOAT_INF_PLUS);
-                    else
-                        return s_float(s_float::FLOAT_INF_MINUS);
-                }
-            }
-            else
-            {
-                if (IsInfinitePlus() || IsNull())
-                    return s_float(s_float::FLOAT_NAN);
-                else if (IsInfiniteMinus())
-                    return s_float(s_float::FLOAT_INF_MINUS);
-                else
-                {
-                    if (iValue_ > 0)
-                        return s_float(s_float::FLOAT_INF_MINUS);
-                    else
-                        return s_float(s_float::FLOAT_INF_PLUS);
-                }
-            }
-        }
-        else if (!(*this))
-        {
-            if (fValue.IsNull())
-                return s_float(s_float::FLOAT_NAN);
-
-            if (IsInfinitePlus())
-            {
-                if (fValue.Get() > 0.0f)
-                    return s_float(s_float::FLOAT_INF_PLUS);
-                else
-                    return s_float(s_float::FLOAT_INF_MINUS);
-            }
-            else
-            {
-                if (fValue.Get() > 0.0f)
-                    return s_float(s_float::FLOAT_INF_MINUS);
-                else
-                    return s_float(s_float::FLOAT_INF_PLUS);
-            }
-        }
-        else
-        {
-            return s_float(iValue_ * fValue.Get());
-        }
-    }
-
-    s_float s_int::operator/ ( const s_float& fValue ) const
-    {
-        if (fValue.IsNaN() || IsNaN() || fValue.IsNull())
-            return s_float(s_float::FLOAT_NAN);
-
-        if (!fValue)
-        {
-            if (!(*this))
-                return s_float(s_float::FLOAT_NAN);
-            else
-                return s_float(0.0f);
-        }
-        else if (!(*this))
-        {
-            if (IsInfinitePlus())
-            {
-                if (fValue.Get() > 0.0f)
-                    return s_float(s_float::FLOAT_INF_PLUS);
-                else
-                    return s_float(s_float::FLOAT_INF_MINUS);
-            }
-            else
-            {
-                if (fValue.Get() > 0.0f)
-                    return s_float(s_float::FLOAT_INF_MINUS);
-                else
-                    return s_float(s_float::FLOAT_INF_PLUS);
-            }
-        }
-        else
-        {
-            return s_float(iValue_ / fValue.Get());
-        }
-    }*/
 
     void s_int::operator+= ( const s_int& mValue )
     {
@@ -730,11 +555,6 @@ namespace Frost
         iValue_ = mValue.iValue_;
         mType_ = mValue.mType_;
         return *this;
-    }
-
-    bool s_int::operator! () const
-    {
-        return (mType_ != INTEGER);
     }
 
     s_bool s_int::IsValid() const
