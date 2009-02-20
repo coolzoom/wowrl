@@ -157,41 +157,41 @@ void State::CopyTable( s_ptr<State::State> pLua, const s_str& sSrcName, const s_
 
                     int iType;
                     if (sValue == "'table'")
-                        iType = LUA_TTABLE;
+                        iType = Lua::TYPE_TABLE;
                     else
                     {
-                        iType = LUA_TNUMBER;
+                        iType = Lua::TYPE_NUMBER;
                         if (sValue.Find("\""))
                         {
-                            iType = LUA_TSTRING;
+                            iType = Lua::TYPE_STRING;
                         }
                         else
                         {
                             if (sValue.Find("'"))
                             {
-                                iType = LUA_TBOOLEAN;
+                                iType = Lua::TYPE_BOOLEAN;
                                 sValue.Trim('\'');
                             }
                         }
                     }
 
-                    if (iType == LUA_TNUMBER)
+                    if (iType == Lua::TYPE_NUMBER)
                     {
                         sTable += sTab + sKey + " = " + sValue + ";\n";
                     }
-                    else if (iType == LUA_TNIL)
+                    else if (iType == Lua::TYPE_NIL)
                     {
                         sTable += sTab + sKey + " = nil;\n";
                     }
-                    else if (iType == LUA_TBOOLEAN)
+                    else if (iType == Lua::TYPE_BOOLEAN)
                     {
                         sTable += sTab + sKey + " = " + sValue + ";\n";
                     }
-                    else if (iType == LUA_TSTRING)
+                    else if (iType == Lua::TYPE_STRING)
                     {
                         sTable += sTab + sKey + " = " + sValue + ";\n";
                     }
-                    else if (iType == LUA_TTABLE)
+                    else if (iType == Lua::TYPE_TABLE)
                     {
                         sTable += sTab + sKey + " = {\n";
                         sTab += "    ";
@@ -387,16 +387,16 @@ Type State::GetType( const s_uint& uiIndex )
     int type = lua_type(pLua_, uiIndex.Get());
     switch (type)
     {
-        case LUA_TBOOLEAN : return Lua::TYPE_BOOLEAN;
-        case LUA_TFUNCTION : return Lua::TYPE_FUNCTION;
-        case LUA_TLIGHTUSERDATA : return Lua::TYPE_LIGHTUSERDATA;
-        case LUA_TNIL : return Lua::TYPE_NIL;
-        case LUA_TNONE : return Lua::TYPE_NONE;
-        case LUA_TNUMBER : return Lua::TYPE_NUMBER;
-        case LUA_TSTRING : return Lua::TYPE_STRING;
-        case LUA_TTABLE : return Lua::TYPE_TABLE;
-        case LUA_TTHREAD : return Lua::TYPE_THREAD;
-        case LUA_TUSERDATA : return Lua::TYPE_USERDATA;
+        case Lua::TYPE_BOOLEAN : return Lua::TYPE_BOOLEAN;
+        case Lua::TYPE_FUNCTION : return Lua::TYPE_FUNCTION;
+        case Lua::TYPE_LIGHTUSERDATA : return Lua::TYPE_LIGHTUSERDATA;
+        case Lua::TYPE_NIL : return Lua::TYPE_NIL;
+        case Lua::TYPE_NONE : return Lua::TYPE_NONE;
+        case Lua::TYPE_NUMBER : return Lua::TYPE_NUMBER;
+        case Lua::TYPE_STRING : return Lua::TYPE_STRING;
+        case Lua::TYPE_TABLE : return Lua::TYPE_TABLE;
+        case Lua::TYPE_THREAD : return Lua::TYPE_THREAD;
+        case Lua::TYPE_USERDATA : return Lua::TYPE_USERDATA;
         default : return Lua::TYPE_NONE;
     }
 }
@@ -405,16 +405,16 @@ s_str State::GetTypeName( Type mType )
 {
     switch (mType)
     {
-        case Lua::TYPE_BOOLEAN : return lua_typename(pLua_, LUA_TBOOLEAN);
-        case Lua::TYPE_FUNCTION : return lua_typename(pLua_, LUA_TFUNCTION);
-        case Lua::TYPE_LIGHTUSERDATA : return lua_typename(pLua_, LUA_TLIGHTUSERDATA);
-        case Lua::TYPE_NIL : return lua_typename(pLua_, LUA_TNIL);
-        case Lua::TYPE_NONE : return lua_typename(pLua_, LUA_TNONE);
-        case Lua::TYPE_NUMBER : return lua_typename(pLua_, LUA_TNUMBER);
-        case Lua::TYPE_STRING : return lua_typename(pLua_, LUA_TSTRING);
-        case Lua::TYPE_TABLE : return lua_typename(pLua_, LUA_TTABLE);
-        case Lua::TYPE_THREAD : return lua_typename(pLua_, LUA_TTHREAD);
-        case Lua::TYPE_USERDATA : return lua_typename(pLua_, LUA_TUSERDATA);
+        case Lua::TYPE_BOOLEAN : return lua_typename(pLua_, Lua::TYPE_BOOLEAN);
+        case Lua::TYPE_FUNCTION : return lua_typename(pLua_, Lua::TYPE_FUNCTION);
+        case Lua::TYPE_LIGHTUSERDATA : return lua_typename(pLua_, Lua::TYPE_LIGHTUSERDATA);
+        case Lua::TYPE_NIL : return lua_typename(pLua_, Lua::TYPE_NIL);
+        case Lua::TYPE_NONE : return lua_typename(pLua_, Lua::TYPE_NONE);
+        case Lua::TYPE_NUMBER : return lua_typename(pLua_, Lua::TYPE_NUMBER);
+        case Lua::TYPE_STRING : return lua_typename(pLua_, Lua::TYPE_STRING);
+        case Lua::TYPE_TABLE : return lua_typename(pLua_, Lua::TYPE_TABLE);
+        case Lua::TYPE_THREAD : return lua_typename(pLua_, Lua::TYPE_THREAD);
+        case Lua::TYPE_USERDATA : return lua_typename(pLua_, Lua::TYPE_USERDATA);
         default : return "";
     }
 }

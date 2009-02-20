@@ -124,9 +124,6 @@
 		<Unit filename="include\frost_creature.h" />
 		<Unit filename="include\frost_decal.h" />
 		<Unit filename="include\frost_engine.h" />
-		<Unit filename="include\frost_event.h" />
-		<Unit filename="include\frost_eventmanager.h" />
-		<Unit filename="include\frost_eventreceiver.h" />
 		<Unit filename="include\frost_fontmanager.h" />
 		<Unit filename="include\frost_gfx.h" />
 		<Unit filename="include\frost_guimanager.h" />
@@ -137,7 +134,6 @@
 		<Unit filename="include\frost_lightmanager.h" />
 		<Unit filename="include\frost_localemanager.h" />
 		<Unit filename="include\frost_lua.h" />
-		<Unit filename="include\frost_lua_utils.h" />
 		<Unit filename="include\frost_macros.h" />
 		<Unit filename="include\frost_material.h" />
 		<Unit filename="include\frost_materialmanager.h" />
@@ -189,9 +185,6 @@
 		<Unit filename="src\frost_creature.cpp" />
 		<Unit filename="src\frost_decal.cpp" />
 		<Unit filename="src\frost_engine.cpp" />
-		<Unit filename="src\frost_event.cpp" />
-		<Unit filename="src\frost_eventmanager.cpp" />
-		<Unit filename="src\frost_eventreceiver.cpp" />
 		<Unit filename="src\frost_fontmanager.cpp" />
 		<Unit filename="src\frost_gfx.cpp" />
 		<Unit filename="src\frost_inputmanager.cpp" />
@@ -240,11 +233,6 @@
 		<Unit filename="src\gui\frost_uiobject_glues.cpp" />
 		<Unit filename="src\lua\frost_lua.cpp" />
 		<Unit filename="src\lua\frost_lua_glues.cpp" />
-		<Unit filename="src\lua\frost_lua_utils.cpp" />
-		<Unit filename="src\lua\frost_lua_utils_argument.cpp" />
-		<Unit filename="src\lua\frost_lua_utils_data.cpp" />
-		<Unit filename="src\lua\frost_lua_utils_function.cpp" />
-		<Unit filename="src\lua\frost_lua_utils_returnvalue.cpp" />
 		<Unit filename="src\model\frost_animmanager.cpp" />
 		<Unit filename="src\model\frost_model.cpp" />
 		<Unit filename="src\model\frost_modeldata.cpp" />
