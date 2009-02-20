@@ -43,21 +43,21 @@ namespace Frost
     friend class Manager<GUIManager>;
     public :
 
-        void           Initialize();
+        void                 Initialize();
 
         s_bool               AddUIObject(s_ptr<GUI::UIObject> pObj);
         void                 RemoveUIObject(s_ptr<GUI::UIObject> pObj);
         s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName, const s_bool& bVirtual = false);
 
-        void           PrintUI();
+        void                 PrintUI();
 
-        lua_State*     GetLua();
+        s_ptr<Lua::State>    GetLua();
 
-        void           LoadUI();
-        void           CloseUI();
-        void           ReloadUI();
+        void                 LoadUI();
+        void                 CloseUI();
+        void                 ReloadUI();
 
-        void           Update(const s_float& fDelta);
+        void                 Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 
@@ -117,7 +117,7 @@ namespace Frost
         s_bool ParseFontStringBlock_(s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
         s_bool ParseTextureBlock_(s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
 
-        lua_State* pLua_;
+        s_ptr<Lua::State> pLua_;
 
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;

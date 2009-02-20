@@ -6,7 +6,6 @@
 #include "frost_engine.h"
 
 #include "frost_timemanager.h"
-#include "frost_eventmanager.h"
 #include "frost_inputmanager.h"
 #include "frost_fontmanager.h"
 #include "frost_guimanager.h"
@@ -20,6 +19,7 @@
 #include "frost_lightmanager.h"
 #include "frost_unitmanager.h"
 #include "frost_camera.h"
+#include "frost_lua.h"
 
 
 #include <OgreRoot.h>
@@ -33,7 +33,6 @@ using namespace std;
 
 namespace Frost
 {
-    s_str Engine::sLuaComString = "";
     const s_str Engine::CLASS_NAME = "Engine";
 
     Engine::Engine()
@@ -51,17 +50,12 @@ namespace Frost
 
         srand((unsigned)time(0));
 
-        // Initialize Lua
-        if (!Lua::InitLua(&pLua_))
-            return;
-
-        Lua::RegisterGlobalFuncs(pLua_);
-
         // Initialize OGRE
         pRoot_ = s_refptr<Ogre::Root>(new Ogre::Root("", ""));
 
         // Create singletons;
         pUtilsMgr_    = UtilsManager::GetSingleton();
+        pLuaMgr_      = LuaManager::GetSingleton();
         pEventMgr_    = EventManager::GetSingleton();
         pTimeMgr_     = TimeManager::GetSingleton();
         pInputMgr_    = InputManager::GetSingleton();
@@ -77,6 +71,11 @@ namespace Frost
         pSpriteMgr_   = SpriteManager::GetSingleton();
         pGUIMgr_      = GUIManager::GetSingleton();
         pUnitMgr_     = UnitManager::GetSingleton();
+
+        pLua_ = pLuaMgr_->CreateLua();
+        pLuaMgr_->SetDefaultLua(pLua_);
+
+        Lua::RegisterGlobalFuncs(pLua_);
 
         //mTimeMgr_->SetProfiling(true);
     }
@@ -124,7 +123,7 @@ namespace Frost
         Log(s_str('#', sLine.Length())+"\n");
 
         // Load configuration
-        if (!Lua::DoFile(pLua_, "Scripts/Config.lua"))
+        if (!pLua_->DoFile("Scripts/Config.lua"))
             return false;
         if (!this->ReadConfig_())
             return false;
@@ -274,10 +273,8 @@ namespace Frost
             InputManager::Delete();
             TimeManager::Delete();
             EventManager::Delete();
+            LuaManager::Delete();
             UtilsManager::Delete();
-
-            // Close Lua
-            lua_close(pLua_);
 
             // Close OGRE
             if (pRoot_)
@@ -396,10 +393,10 @@ namespace Frost
 
     s_bool Engine::ReadConfig_()
     {
-        iMaxComputedPaths_ = Lua::GetGlobalInt("iMaxComputedPaths", false, 2);
-        sGameVersion_ = Lua::GetGlobalString("sGameVersion", false, "0");
+        iMaxComputedPaths_ = pLua_->GetGlobalInt("iMaxComputedPaths", false, 2);
+        sGameVersion_ = pLua_->GetGlobalString("sGameVersion", false, "0");
 
-        s_str sRenderSystem = Lua::GetGlobalString("sRenderSystem");
+        s_str sRenderSystem = pLua_->GetGlobalString("sRenderSystem");
         if (sRenderSystem[0] == 'D')
         {
             #ifdef _DEBUG
@@ -429,12 +426,12 @@ namespace Frost
         // Initialize the Root
         pRoot_->initialise(false);
 
-        uiScreenWidth_ = s_uint(Lua::GetGlobalInt("iScreenWidth", false, 1024));
-        uiScreenHeight_ = s_uint(Lua::GetGlobalInt("iScreenHeight", false, 768));
+        uiScreenWidth_ = s_uint(pLua_->GetGlobalInt("iScreenWidth", false, 1024));
+        uiScreenHeight_ = s_uint(pLua_->GetGlobalInt("iScreenHeight", false, 768));
         s_uint uiScreenDepth = 32; // 32 is required for A8R8G8B8 format
-        s_bool bFullScreen = Lua::GetGlobalBool("bFullScreen", false, false);
-        s_bool bVSync = Lua::GetGlobalBool("bVSync", false, false);
-        s_uint uiFSAA = s_uint(Lua::GetGlobalInt("iFSAA", false, 0));
+        s_bool bFullScreen = pLua_->GetGlobalBool("bFullScreen", false, false);
+        s_bool bVSync = pLua_->GetGlobalBool("bVSync", false, false);
+        s_uint uiFSAA = s_uint(pLua_->GetGlobalInt("iFSAA", false, 0));
 
         Ogre::NameValuePairList lOptions;
         lOptions.insert(Ogre::NameValuePairList::value_type("colourDepth", s_str(uiScreenDepth).Get()));
@@ -497,7 +494,7 @@ namespace Frost
         return pRenderWindow_;
     }
 
-    lua_State* Engine::GetLua()
+    s_ptr<Lua::State> Engine::GetLua()
     {
         return pLua_;
     }

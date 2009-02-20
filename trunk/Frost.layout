@@ -79,7 +79,7 @@
 	<File name="src\frost_camera.cpp" open="1" top="0" tabpos="57">
 		<Cursor position="965" topLine="19" />
 	</File>
-	<File name="src\frost_character.cpp" open="1" top="0" tabpos="100">
+	<File name="src\frost_character.cpp" open="1" top="0" tabpos="65">
 		<Cursor position="3142" topLine="78" />
 	</File>
 	<File name="src\frost_engine.cpp" open="1" top="0" tabpos="21">
@@ -103,7 +103,7 @@
 	<File name="src\frost_plane.cpp" open="1" top="0" tabpos="47">
 		<Cursor position="1219" topLine="21" />
 	</File>
-	<File name="src\frost_profiler.cpp" open="1" top="0" tabpos="101">
+	<File name="src\frost_profiler.cpp" open="1" top="0" tabpos="66">
 		<Cursor position="1624" topLine="43" />
 	</File>
 	<File name="src\frost_terraindata.cpp" open="1" top="0" tabpos="28">
@@ -142,7 +142,7 @@
 	<File name="src\gui\frost_lunar.cpp" open="1" top="0" tabpos="32">
 		<Cursor position="981" topLine="145" />
 	</File>
-	<File name="src\gui\frost_sprite.cpp" open="1" top="0" tabpos="99">
+	<File name="src\gui\frost_sprite.cpp" open="1" top="0" tabpos="64">
 		<Cursor position="9050" topLine="337" />
 	</File>
 	<File name="src\gui\frost_spritemanager.cpp" open="1" top="0" tabpos="42">
@@ -154,7 +154,7 @@
 	<File name="src\gui\frost_texture.cpp" open="1" top="0" tabpos="48">
 		<Cursor position="1265" topLine="39" />
 	</File>
-	<File name="src\gui\frost_texture_glues.cpp" open="1" top="1" tabpos="31">
+	<File name="src\gui\frost_texture_glues.cpp" open="1" top="0" tabpos="31">
 		<Cursor position="7282" topLine="199" />
 	</File>
 	<File name="src\gui\frost_uiobject.cpp" open="1" top="0" tabpos="11">
@@ -167,7 +167,7 @@
 		<Cursor position="5534" topLine="135" />
 	</File>
 	<File name="src\lua\frost_lua_glues.cpp" open="1" top="0" tabpos="15">
-		<Cursor position="5972" topLine="209" />
+		<Cursor position="2967" topLine="95" />
 	</File>
 	<File name="src\lua\frost_lua_utils.cpp" open="1" top="0" tabpos="23">
 		<Cursor position="7954" topLine="273" />
@@ -184,10 +184,10 @@
 	<File name="src\lua\frost_lua_utils_returnvalue.cpp" open="1" top="0" tabpos="63">
 		<Cursor position="1526" topLine="11" />
 	</File>
-	<File name="src\model\frost_animmanager.cpp" open="1" top="0" tabpos="29">
-		<Cursor position="10489" topLine="298" />
+	<File name="src\model\frost_animmanager.cpp" open="1" top="1" tabpos="29">
+		<Cursor position="3597" topLine="89" />
 	</File>
-	<File name="src\model\frost_model.cpp" open="1" top="0" tabpos="102">
+	<File name="src\model\frost_model.cpp" open="1" top="0" tabpos="67">
 		<Cursor position="3673" topLine="112" />
 	</File>
 	<File name="src\parsers\frost_guimanager_parser.cpp" open="1" top="0" tabpos="4">

@@ -350,7 +350,7 @@ namespace Frost
                 sStr += "function "+ pFrame->GetName() + ":" + pScriptBlock->GetName() + "()\n";
                 sStr += pScriptBlock->GetValue() + "\n";
                 sStr += "end";
-                Lua::DoString(pLua_, sStr);
+                pLua_->DoString(sStr);
 
                 // Tell the Frame it can use it
                 pFrame->NotifyScriptDefined(pScriptBlock->GetName());
@@ -475,7 +475,7 @@ namespace Frost
             {
                 if (pElemBlock->GetName() == "Script")
                 {
-                    Lua::DoFile(pLua_, pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"));
+                    pLua_->DoFile(pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"));
                 }
                 else if (pElemBlock->GetName() == "Include")
                 {

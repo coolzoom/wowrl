@@ -95,7 +95,7 @@ int LuaTexture::_IsDesaturated( lua_State* pLua )
 int LuaTexture::_SetBlendMode( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetBlendMode", pLua);
-    mFunc.Add(0, "blendMode", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "blendMode", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         s_str sBlend = mFunc.Get(0)->GetS();
@@ -127,7 +127,7 @@ int LuaTexture::_SetBlendMode( lua_State* pLua )
 int LuaTexture::_SetDesaturated( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetDesaturated", pLua, 1);
-    mFunc.Add(0, "isDesaturated", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "isDesaturated", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pTextureParent_->SetDesaturated(mFunc.Get(0)->GetB());
@@ -141,13 +141,13 @@ int LuaTexture::_SetDesaturated( lua_State* pLua )
 int LuaTexture::_SetGradient( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetGradient", pLua);
-    mFunc.Add(0, "orientation", LUA_TSTRING, VALUE_STRING);
-    mFunc.Add(1, "minR", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(2, "minG", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(3, "minB", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(4, "maxR", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(5, "maxG", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(6, "maxB", LUA_TNUMBER, VALUE_UINT);
+    mFunc.Add(0, "orientation", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(1, "minR", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(2, "minG", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(3, "minB", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(4, "maxR", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(5, "maxG", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(6, "maxB", Lua::TYPE_NUMBER, VALUE_UINT);
     if (mFunc.Check())
     {
         s_str sOrientation = mFunc.Get(0)->GetS();
@@ -177,15 +177,15 @@ int LuaTexture::_SetGradient( lua_State* pLua )
 int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetGradientAlpha", pLua);
-    mFunc.Add(0, "orientation", LUA_TSTRING, VALUE_STRING);
-    mFunc.Add(1, "minR", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(2, "minG", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(3, "minB", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(4, "minA", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(5, "maxR", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(6, "maxG", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(7, "maxB", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(8, "maxA", LUA_TNUMBER, VALUE_UINT);
+    mFunc.Add(0, "orientation", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(1, "minR", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(2, "minG", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(3, "minB", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(4, "minA", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(5, "maxR", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(6, "maxG", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(7, "maxB", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(8, "maxA", Lua::TYPE_NUMBER, VALUE_UINT);
     if (mFunc.Check())
     {
         s_str sOrientation = mFunc.Get(0)->GetS();
@@ -215,19 +215,19 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 int LuaTexture::_SetTexCoord( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetTexCoord", pLua);
-    mFunc.Add(0, "x1", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(1, "y1", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(2, "x2", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(3, "y2", LUA_TNUMBER, VALUE_UINT);
+    mFunc.Add(0, "x1", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "y1", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(2, "x2", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(3, "y2", Lua::TYPE_NUMBER, VALUE_UINT);
     mFunc.NewParamSet();
-    mFunc.Add(0, "x1", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(1, "y1", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(2, "x2", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(3, "y2", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(4, "x3", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(5, "y3", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(6, "x4", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(7, "y4", LUA_TNUMBER, VALUE_UINT);
+    mFunc.Add(0, "x1", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "y1", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(2, "x2", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(3, "y2", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(4, "x3", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(5, "y3", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(6, "x4", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(7, "y4", Lua::TYPE_NUMBER, VALUE_UINT);
 
     if (mFunc.Check())
     {
@@ -257,7 +257,7 @@ int LuaTexture::_SetTexCoord( lua_State* pLua )
 int LuaTexture::_SetTexCoordModifiesRect( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetTexCoordModifiesRect", pLua);
-    mFunc.Add(0, "modifies", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "modifies", Lua::TYPE_BOOLEAN, VALUE_BOOL);
 
     if (mFunc.Check())
     {
@@ -270,12 +270,12 @@ int LuaTexture::_SetTexCoordModifiesRect( lua_State* pLua )
 int LuaTexture::_SetTexture( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetTexture", pLua);
-    mFunc.Add(0, "texture", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "texture", Lua::TYPE_STRING, VALUE_STRING);
     mFunc.NewParamSet();
-    mFunc.Add(0, "r", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(1, "g", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(2, "b", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(3, "a", LUA_TNUMBER, VALUE_UINT, true);
+    mFunc.Add(0, "r", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "g", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(2, "b", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(3, "a", Lua::TYPE_NUMBER, VALUE_UINT, true);
 
     if (mFunc.Check())
     {
@@ -315,10 +315,10 @@ int LuaTexture::_SetTexture( lua_State* pLua )
 int LuaTexture::_SetVertexColor( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetVertexColor", pLua);
-    mFunc.Add(0, "r", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(1, "g", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(2, "b", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(3, "a", LUA_TNUMBER, VALUE_UINT, true);
+    mFunc.Add(0, "r", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "g", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(2, "b", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(3, "a", Lua::TYPE_NUMBER, VALUE_UINT, true);
 
     Color mColor;
     if (mFunc.IsProvided(3))

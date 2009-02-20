@@ -9,10 +9,13 @@
 #ifndef FROST_EVENTRECEIVER_H
 #define FROST_EVENTRECEIVER_H
 
-#include "frost.h"
+#include "frost_utils.h"
+#include "frost_utils_str.h"
 
 namespace Frost
 {
+    class Event;
+
     /// Abstract interface for event handling
     /** All classes which should react to some events
     *   should inherit from this class.<br>

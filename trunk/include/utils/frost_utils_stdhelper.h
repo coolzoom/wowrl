@@ -12,6 +12,15 @@
 #include "frost_utils.h"
 #include "frost_utils_double.h"
 
+// Returns 'true' if the key is found in the map
+#define MAPFIND(key, map) ((map).find(key) != (map).end())
+
+// Returns 'true' if the key is found in the vector/list/deque
+#define VECTORFIND(key, vector) (find((vector).begin(), (vector).end(), key) != (vector).end())
+
+// Iterates through an stl container
+#define foreach(iter, container) for ((iter) = (container).begin(); (iter) != (container).end(); (iter)++)
+
 namespace Frost
 {
     /// Linear interpolation in an std::map

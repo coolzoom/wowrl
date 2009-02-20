@@ -13,7 +13,6 @@
 #include "frost_utils.h"
 
 #include <math.h>
-#include <OgreMath.h>
 
 using namespace std;
 
@@ -542,7 +541,7 @@ namespace Frost
         }
     }
 
-    void s_uint::Random( const s_uint& uiMin, const s_uint& uiMax )
+    void s_uint::Randomize( const s_uint& uiMin, const s_uint& uiMax )
     {
         if (uiMin.IsValid() && uiMax.IsValid())
         {
@@ -550,7 +549,7 @@ namespace Frost
             if (uiMax < uiMin)
                 uiValue_ = uiMin.Get();
             else
-                uiValue_ = static_cast<uint>(Ogre::Math::RangeRandom(uiMin.Get(), uiMax.Get()));
+                uiValue_ = (uint)(s_float(uiMax-uiMin)*s_float(rand()/float(RAND_MAX))).Get() + uiMin.Get();
         }
     }
 
@@ -570,7 +569,7 @@ namespace Frost
             return uiLeft;
     }
 
-    s_uint s_uint::Rand( const s_uint& uiMin, const s_uint& uiMax )
+    s_uint s_uint::Random( const s_uint& uiMin, const s_uint& uiMax )
     {
         if (uiMin.IsValid() && uiMax.IsValid())
         {
@@ -580,8 +579,7 @@ namespace Frost
             }
             else
             {
-                s_uint ui(static_cast<uint>(Ogre::Math::RangeRandom(uiMin.Get(), uiMax.Get())));
-                return ui;
+                return s_uint(s_float(uiMax-uiMin)*s_float(rand()/float(RAND_MAX))) + uiMin;
             }
         }
         else

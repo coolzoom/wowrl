@@ -55,7 +55,7 @@ namespace Frost
 
     s_bool LocaleManager::ReadConfig()
     {
-        sLocale_ = Lua::GetGlobalString("sLocale");
+        sLocale_ = LuaManager::GetSingleton()->GetDefaultLua()->GetGlobalString("sLocale");
         if (sLocale_ == "")
         {
             Error(CLASS_NAME, "No locale specified.");

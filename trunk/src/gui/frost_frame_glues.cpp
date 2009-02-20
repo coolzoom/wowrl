@@ -19,7 +19,7 @@ LuaFrame::LuaFrame(lua_State* pLua) : LuaUIObject(pLua)
 int LuaFrame::_DisableDrawLayer(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:DisableDrawLayer", pLua);
-    mFunc.Add(0, "layer", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "layer", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         s_str sLayer = mFunc.Get(0)->GetS();
@@ -51,7 +51,7 @@ int LuaFrame::_DisableDrawLayer(lua_State* pLua)
 int LuaFrame::_EnableDrawLayer(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:EnableDrawLayer", pLua);
-    mFunc.Add(0, "layer", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "layer", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         s_str sLayer = mFunc.Get(0)->GetS();
@@ -83,7 +83,7 @@ int LuaFrame::_EnableDrawLayer(lua_State* pLua)
 int LuaFrame::_EnableKeyboard(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:EnableKeyboard", pLua);
-    mFunc.Add(0, "enableKeyboard", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "enableKeyboard", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->EnableKeyboard(mFunc.Get(0)->GetB());
@@ -95,7 +95,7 @@ int LuaFrame::_EnableKeyboard(lua_State* pLua)
 int LuaFrame::_EnableMouse(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:EnableMouse", pLua);
-    mFunc.Add(0, "enableMouse", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "enableMouse", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->EnableMouse(mFunc.Get(0)->GetB());
@@ -107,7 +107,7 @@ int LuaFrame::_EnableMouse(lua_State* pLua)
 int LuaFrame::_EnableMouseWheel(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:EnableMouseWheel", pLua);
-    mFunc.Add(0, "enableMouseWheel", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "enableMouseWheel", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->EnableMouseWheel(mFunc.Get(0)->GetB());
@@ -271,7 +271,7 @@ int LuaFrame::_GetScale(lua_State* pLua)
 int LuaFrame::_GetScript(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:GetScript", pLua, 1);
-    mFunc.Add(0, "scriptName", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "scriptName", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         s_str sScriptName = mFunc.Get(0)->GetS();
@@ -288,7 +288,7 @@ int LuaFrame::_GetScript(lua_State* pLua)
 int LuaFrame::_HasScript(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:HasScript", pLua, 1);
-    mFunc.Add(0, "scriptName", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "scriptName", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         mFunc.Push(Lua::ReturnValue(pFrameParent_->CanUseScript(mFunc.Get(0)->GetS())));
@@ -309,7 +309,7 @@ int LuaFrame::_IsClampedToScreen(lua_State* pLua)
 int LuaFrame::_IsFrameType(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:IsFrameType", pLua, 1);
-    mFunc.Add(0, "frameType", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "frameType", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         if (pFrameParent_->GetFrameType() == mFunc.Get(0)->GetS())
@@ -396,7 +396,7 @@ int LuaFrame::_RegisterAllEvents(lua_State* pLua)
 int LuaFrame::_RegisterEvent(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:RegisterEvent", pLua);
-    mFunc.Add(0, "eventName", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "eventName", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         pFrameParent_->RegisterEvent(mFunc.Get(0)->GetS());
@@ -408,9 +408,9 @@ int LuaFrame::_RegisterEvent(lua_State* pLua)
 int LuaFrame::_RegisterForDrag(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:RegisterForDrag", pLua);
-    mFunc.Add(0, "button1", LUA_TSTRING, VALUE_STRING, true);
-    mFunc.Add(1, "button2", LUA_TSTRING, VALUE_STRING, true);
-    mFunc.Add(2, "button3", LUA_TSTRING, VALUE_STRING, true);
+    mFunc.Add(0, "button1", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(1, "button2", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(2, "button3", Lua::TYPE_STRING, VALUE_STRING, true);
     if (mFunc.Check())
     {
         vector<s_str> lButtonList;
@@ -430,7 +430,7 @@ int LuaFrame::_RegisterForDrag(lua_State* pLua)
 int LuaFrame::_SetClampedToScreen(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetClampedToScreen", pLua);
-    mFunc.Add(0, "clampedToScreen", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "clampedToScreen", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->SetClampedToScreen(mFunc.Get(0)->GetB());
@@ -442,7 +442,7 @@ int LuaFrame::_SetClampedToScreen(lua_State* pLua)
 int LuaFrame::_SetFrameStrata(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetFrameStrata", pLua);
-    mFunc.Add(0, "strata", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "strata", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         pFrameParent_->SetFrameStrata(mFunc.Get(0)->GetS());
@@ -454,10 +454,10 @@ int LuaFrame::_SetFrameStrata(lua_State* pLua)
 int LuaFrame::_SetHitRectInsets(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetHitRectInsets", pLua);
-    mFunc.Add(0, "left", LUA_TNUMBER, VALUE_INT);
-    mFunc.Add(1, "right", LUA_TNUMBER, VALUE_INT);
-    mFunc.Add(2, "top", LUA_TNUMBER, VALUE_INT);
-    mFunc.Add(3, "bottom", LUA_TNUMBER, VALUE_INT);
+    mFunc.Add(0, "left", Lua::TYPE_NUMBER, VALUE_INT);
+    mFunc.Add(1, "right", Lua::TYPE_NUMBER, VALUE_INT);
+    mFunc.Add(2, "top", Lua::TYPE_NUMBER, VALUE_INT);
+    mFunc.Add(3, "bottom", Lua::TYPE_NUMBER, VALUE_INT);
     if (mFunc.Check())
     {
         pFrameParent_->SetAbsHitRectInsets(
@@ -474,8 +474,8 @@ int LuaFrame::_SetHitRectInsets(lua_State* pLua)
 int LuaFrame::_SetMaxResize(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetMaxResize", pLua);
-    mFunc.Add(0, "width", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(1, "height", LUA_TNUMBER, VALUE_UINT);
+    mFunc.Add(0, "width", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "height", Lua::TYPE_NUMBER, VALUE_UINT);
     if (mFunc.Check())
     {
         pFrameParent_->SetMaxResize(mFunc.Get(0)->GetUI(), mFunc.Get(1)->GetUI());
@@ -487,8 +487,8 @@ int LuaFrame::_SetMaxResize(lua_State* pLua)
 int LuaFrame::_SetMinResize(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetMinResize", pLua);
-    mFunc.Add(0, "width", LUA_TNUMBER, VALUE_UINT);
-    mFunc.Add(1, "height", LUA_TNUMBER, VALUE_UINT);
+    mFunc.Add(0, "width", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "height", Lua::TYPE_NUMBER, VALUE_UINT);
     if (mFunc.Check())
     {
         pFrameParent_->SetMinResize(mFunc.Get(0)->GetUI(), mFunc.Get(1)->GetUI());
@@ -500,7 +500,7 @@ int LuaFrame::_SetMinResize(lua_State* pLua)
 int LuaFrame::_SetMovable(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetMovable", pLua);
-    mFunc.Add(0, "movable", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "movable", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->SetMovable(mFunc.Get(0)->GetB());
@@ -512,7 +512,7 @@ int LuaFrame::_SetMovable(lua_State* pLua)
 int LuaFrame::_SetResizable(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetResizable", pLua);
-    mFunc.Add(0, "resizable", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "resizable", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->SetResizable(mFunc.Get(0)->GetB());
@@ -524,7 +524,7 @@ int LuaFrame::_SetResizable(lua_State* pLua)
 int LuaFrame::_SetScale(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetScale", pLua);
-    mFunc.Add(0, "scale", LUA_TNUMBER, VALUE_FLOAT);
+    mFunc.Add(0, "scale", Lua::TYPE_NUMBER, VALUE_FLOAT);
     if (mFunc.Check())
     {
         pFrameParent_->SetScale(mFunc.Get(0)->GetF());
@@ -536,16 +536,16 @@ int LuaFrame::_SetScale(lua_State* pLua)
 int LuaFrame::_SetScript(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetScript", pLua);
-    mFunc.Add(0, "scriptName", LUA_TSTRING, VALUE_STRING);
-    mFunc.Add(1, "function", LUA_TFUNCTION, VALUE_NONE);
-    mFunc.Add(1, "nil", LUA_TNIL, VALUE_NONE);
+    mFunc.Add(0, "scriptName", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(1, "function", Lua::TYPE_FUNCTION, VALUE_NONE);
+    mFunc.Add(1, "nil", Lua::TYPE_NIL, VALUE_NONE);
     if (mFunc.Check())
     {
         s_str sScriptName = mFunc.Get(0)->GetS();
         if (pFrameParent_->CanUseScript(sScriptName))
         {
             s_ptr<Lua::Argument> pSecond = mFunc.Get(1);
-            if (pSecond->GetType() == LUA_TFUNCTION)
+            if (pSecond->GetType() == Lua::TYPE_FUNCTION)
             {
                 lua_pushvalue(pLua, pSecond->GetUI().Get());
                 lua_setglobal(pLua, (pFrameParent_->GetName() + ":" + sScriptName).c_str());
@@ -568,7 +568,7 @@ int LuaFrame::_SetScript(lua_State* pLua)
 int LuaFrame::_SetTopLevel(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetTopLevel", pLua);
-    mFunc.Add(0, "topLevel", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "topLevel", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->SetTopLevel(mFunc.Get(0)->GetB());
@@ -580,7 +580,7 @@ int LuaFrame::_SetTopLevel(lua_State* pLua)
 int LuaFrame::_SetUserPlaced(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetUserPlaced", pLua);
-    mFunc.Add(0, "userPlaced", LUA_TBOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "userPlaced", Lua::TYPE_BOOLEAN, VALUE_BOOL);
     if (mFunc.Check())
     {
         pFrameParent_->SetUserPlaced(mFunc.Get(0)->GetB());
@@ -601,7 +601,7 @@ int LuaFrame::_UnregisterAllEvents(lua_State* pLua)
 int LuaFrame::_UnregisterEvent(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:UnregisterEvent", pLua);
-    mFunc.Add(0, "eventName", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "eventName", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         pFrameParent_->UnregisterEvent(mFunc.Get(0)->GetS());

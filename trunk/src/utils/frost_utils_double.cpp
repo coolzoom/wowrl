@@ -14,7 +14,6 @@
 
 #include <math.h>
 #include <float.h>
-#include <OgreMath.h>
 
 using namespace std;
 
@@ -555,7 +554,7 @@ namespace Frost
             return 0.0;
     }
 
-    void s_double::Random( const s_double& dMin, const s_double& dMax )
+    void s_double::Randomize( const s_double& dMin, const s_double& dMax )
     {
         if (dMin.IsValid() && dMax.IsValid())
         {
@@ -563,7 +562,7 @@ namespace Frost
             if (dMax < dMin)
                 dValue_ = dMin.Get();
             else
-                dValue_ = Ogre::Math::RangeRandom(dMin.Get(), dMax.Get());
+                dValue_ = ((dMax-dMin)*s_double(rand()/float(RAND_MAX))).Get() + dMin.Get();
         }
     }
 
@@ -623,7 +622,7 @@ namespace Frost
             return dLeft;
     }
 
-    s_double s_double::Rand( const s_double& dMin, const s_double& dMax )
+    s_double s_double::Random( const s_double& dMin, const s_double& dMax )
     {
         if (dMin.IsValid() && dMax.IsValid())
         {
@@ -633,8 +632,7 @@ namespace Frost
             }
             else
             {
-                s_double d(static_cast<double>(Ogre::Math::RangeRandom(dMin.Get(), dMax.Get())));
-                return d;
+                return (dMax-dMin)*s_double(rand()/float(RAND_MAX)) + dMin;
             }
         }
         else

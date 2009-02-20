@@ -152,7 +152,7 @@ namespace Frost
         /** \param dMin The lower bound (minimum)
         *   \param dMax The upper bound (maximum)
         */
-        void             Random(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
+        void             Randomize(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
 
         /// Rounds the value.
         /** \param mRoundType How to round the value (see RoundType)
@@ -241,7 +241,7 @@ namespace Frost
         *   \param dMax The upper bound (maximum)
         *   \return A random double in the provided range
         */
-        static s_double Rand(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
+        static s_double Random(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
 
         static const s_str CLASS_NAME;
 

@@ -153,7 +153,7 @@ namespace Frost
         /** \param fMin The lower bound (minimum)
         *   \param fMax The upper bound (maximum)
         */
-        void            Random(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
+        void            Randomize(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
 
         /// Rounds the value.
         /** \param mRoundType How to round the value (see RoundType)
@@ -242,7 +242,7 @@ namespace Frost
         *   \param fMax The upper bound (maximum)
         *   \return A random float in the provided range
         */
-        static s_float Rand(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
+        static s_float Random(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
 
         static const s_str CLASS_NAME;
 

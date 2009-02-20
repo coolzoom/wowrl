@@ -13,7 +13,6 @@
 #include "frost_utils.h"
 
 #include <math.h>
-#include <OgreMath.h>
 
 using namespace std;
 
@@ -646,7 +645,7 @@ namespace Frost
         }
     }
 
-    void s_int::Random( const s_int& iMin, const s_int& iMax )
+    void s_int::Randomize( const s_int& iMin, const s_int& iMax )
     {
         if (iMin.IsValid() && iMax.IsValid())
         {
@@ -654,7 +653,7 @@ namespace Frost
             if (iMax < iMin)
                 iValue_ = iMin.Get();
             else
-                iValue_ = static_cast<int>(Ogre::Math::RangeRandom(iMin.Get(), iMax.Get()));
+                iValue_ = (int)(s_float(iMax-iMin)*s_float(rand()/float(RAND_MAX))).Get() + iMin.Get();
         }
     }
 
@@ -687,7 +686,7 @@ namespace Frost
             return iLeft;
     }
 
-    s_int s_int::Rand( const s_int& iMin, const s_int& iMax )
+    s_int s_int::Random( const s_int& iMin, const s_int& iMax )
     {
         if (iMin.IsValid() && iMax.IsValid())
         {
@@ -697,8 +696,7 @@ namespace Frost
             }
             else
             {
-                s_int i(static_cast<int>(Ogre::Math::RangeRandom(iMin.Get(), iMax.Get())));
-                return i;
+                return s_int(s_float(iMax-iMin)*s_float(rand()/float(RAND_MAX))) + iMin;
             }
         }
         else

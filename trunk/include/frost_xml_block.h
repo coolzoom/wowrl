@@ -9,6 +9,12 @@
 #ifndef FROST_XML_BLOCK_H
 #define FROST_XML_BLOCK_H
 
+// Iterates through an XML::Block sub-blocks by name
+#define foreach_named_block(block, name, parent) for ((block) = (parent)->First(name); (block); (block) = (parent)->Next())
+
+// Iterates through an XML::Block sub-blocks
+#define foreach_block(block, parent) for ((block) = (parent)->First(); (block); (block) = (parent)->Next())
+
 #include "frost.h"
 
 namespace Frost

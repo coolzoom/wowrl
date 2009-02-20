@@ -101,9 +101,9 @@ namespace Frost
         s_ptr<AnimationSequence> pAS = &(iterAnim->second);
         if (pAS->lSequence.size() > 1)
         {
-            s_uint uiRnd = s_uint::Rand(0u, 10u);
+            s_uint uiRnd = s_uint::Random(0u, 10u);
             if (uiRnd > 8)
-                uiRnd.Random(1, pAS->lSequence.size()-1);
+                uiRnd.Randomize(1, pAS->lSequence.size()-1);
             else
                 uiRnd = 0u;
             pActualAnim_ = &pAS->lSequence[uiRnd.Get()];

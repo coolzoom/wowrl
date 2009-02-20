@@ -13,6 +13,7 @@
 
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_anchor.h"
+#include "frost_lua.h"
 
 using namespace std;
 
@@ -28,13 +29,12 @@ namespace Frost
 
     GUIManager::~GUIManager()
     {
-        if (pLua_)
-            lua_close(pLua_);
+        LuaManager::GetSingleton()->CloseLua(pLua_);
     }
 
     void GUIManager::Initialize()
     {
-        Lua::InitLua(&pLua_);
+        pLua_ = LuaManager::GetSingleton()->CreateLua();
         Lua::RegisterGUIClasses(pLua_);
         Lua::RegisterGlobalFuncs(pLua_);
     }
@@ -140,7 +140,7 @@ namespace Frost
         }
     }
 
-    lua_State* GUIManager::GetLua()
+    s_ptr<Lua::State> GUIManager::GetLua()
     {
         return pLua_;
     }
@@ -244,11 +244,11 @@ namespace Frost
         {
             if (iterFile->Find(".lua"))
             {
-                Lua::DoFile(pLua_, iterFile->Get());
+                pLua_->DoFile(*iterFile);
             }
             else if (iterFile->Find(".xml"))
             {
-                this->ParseXMLFile_(iterFile->Get(), pAddOn);
+                this->ParseXMLFile_(*iterFile, pAddOn);
             }
         }
     }
