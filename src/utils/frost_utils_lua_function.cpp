@@ -28,28 +28,41 @@ Function::Function( const s_str& sName, s_ptr<Lua::State> pLua, const s_uint& ui
     NewParamSet();
 }
 
+Function::~Function()
+{
+    map< s_uint, s_ptr<Argument> >::iterator iter;
+    foreach (iter, pArgList_->lOptional_)
+    {
+        delete iter->second.Get();
+    }
+    foreach (iter, pArgList_->lArg_)
+    {
+        delete iter->second.Get();
+    }
+}
+
 void Function::Add( const s_uint& uiIndex, const s_str& sName, Lua::Type mLuaType, ValueType mType, const s_bool& bOptional )
 {
     if (bOptional)
     {
         if (MAPFIND(uiIndex, pArgList_->lOptional_))
         {
-            pArgList_->lOptional_[uiIndex].Add(sName, mLuaType, mType);
+            pArgList_->lOptional_[uiIndex]->Add(sName, mLuaType, mType);
         }
         else
         {
-            pArgList_->lOptional_[uiIndex] = Argument(sName, mLuaType, mType, this);
+            pArgList_->lOptional_[uiIndex] = new Argument(sName, mLuaType, mType, this);
         }
     }
     else
     {
         if (MAPFIND(uiIndex, pArgList_->lArg_))
         {
-            pArgList_->lArg_[uiIndex].Add(sName, mLuaType, mType);
+            pArgList_->lArg_[uiIndex]->Add(sName, mLuaType, mType);
         }
         else
         {
-            pArgList_->lArg_[uiIndex] = Argument(sName, mLuaType, mType, this);
+            pArgList_->lArg_[uiIndex] = new Argument(sName, mLuaType, mType, this);
         }
     }
 }
@@ -70,11 +83,11 @@ s_ptr<Argument> Function::Get( const s_uint& uiIndex )
 {
     if (MAPFIND(uiIndex, pArgList_->lArg_))
     {
-        return &pArgList_->lArg_[uiIndex];
+        return pArgList_->lArg_[uiIndex];
     }
     if (MAPFIND(uiIndex, pArgList_->lOptional_))
     {
-        return &pArgList_->lOptional_[uiIndex];
+        return pArgList_->lOptional_[uiIndex];
     }
 
     return NULL;
@@ -82,15 +95,15 @@ s_ptr<Argument> Function::Get( const s_uint& uiIndex )
 
 s_bool Function::IsProvided( const s_uint& uiIndex ) const
 {
-    map<s_uint, Argument>::const_iterator iter = pArgList_->lArg_.find(uiIndex);
+    map< s_uint, s_ptr<Argument> >::const_iterator iter = pArgList_->lArg_.find(uiIndex);
     if (iter != pArgList_->lArg_.end())
     {
-        return iter->second.IsProvided();
+        return iter->second->IsProvided();
     }
     iter = pArgList_->lOptional_.find(uiIndex);
     if (iter != pArgList_->lOptional_.end())
     {
-        return iter->second.IsProvided();
+        return iter->second->IsProvided();
     }
 
     return false;
@@ -103,7 +116,6 @@ const s_uint& Function::GetArgumentCount() const
 
 s_bool Function::Check( const s_bool& bPrintError )
 {
-    // TODO : tester ça
     uiArgumentCount_ = pLua_->GetTop();
 
     // Check if that's enough
@@ -114,6 +126,7 @@ s_bool Function::Check( const s_bool& bPrintError )
         if (uiArgumentCount_ >= iterArgList->lArg_.size())
             lValidArgList.push_back(&(*iterArgList));
     }
+
     if (lValidArgList.empty())
     {
         if (bPrintError)
@@ -122,12 +135,12 @@ s_bool Function::Check( const s_bool& bPrintError )
             foreach (iterArgList, lArgListStack_)
             {
                 s_str sArguments = "\n  - ["+s_uint(iterArgList->lArg_.size())+"] : ";
-                map<s_uint, Argument>::iterator iterArg;
+                map< s_uint, s_ptr<Argument> >::iterator iterArg;
                 foreach (iterArg, iterArgList->lArg_)
                 {
                     if (iterArg != iterArgList->lArg_.begin())
                         sArguments += ", ";
-                    sArguments += iterArg->second.Get()->GetName();
+                    sArguments += iterArg->second->Get()->GetName();
                 }
                 if (iterArgList->lOptional_.size() > 0)
                 {
@@ -138,7 +151,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                     {
                         if (iterArg != iterArgList->lOptional_.begin())
                             sArguments += ", ";
-                        sArguments += iterArg->second.Get()->GetName();
+                        sArguments += iterArg->second->Get()->GetName();
                     }
                     sArguments += ")";
                 }
@@ -164,18 +177,19 @@ s_bool Function::Check( const s_bool& bPrintError )
 
     // We then check the value type
     s_uint ui;
-    map<s_uint, Argument>::iterator iterArg;
+    map< s_uint, s_ptr<Argument> >::iterator iterArg;
     if (lValidArgList.size() > 1)
     {
         vector< s_ptr<ArgumentList> >::iterator iterArgListPtr;
         pArgList_.SetNull();
+        s_uint i;
         foreach (iterArgListPtr, lValidArgList)
         {
             ui = 1;
             s_bool bValid = true;
             foreach (iterArg, (*iterArgListPtr)->lArg_)
             {
-                if (!iterArg->second.Test(pLua_, ui, false))
+                if (!iterArg->second->Test(pLua_, ui, false))
                 {
                     bValid = false;
                     break;
@@ -187,6 +201,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                 pArgList_ = (*iterArgListPtr);
                 break;
             }
+            i++;
         }
 
         if (!pArgList_)
@@ -197,12 +212,12 @@ s_bool Function::Check( const s_bool& bPrintError )
                 foreach (iterArgList, lArgListStack_)
                 {
                     s_str sArguments = "\n  - ["+s_uint(iterArgList->lArg_.size())+"] : ";
-                    map<s_uint, Argument>::iterator iterArg;
+                    map< s_uint, s_ptr<Argument> >::iterator iterArg;
                     foreach (iterArg, iterArgList->lArg_)
                     {
                         if (iterArg != iterArgList->lArg_.begin())
                             sArguments += ", ";
-                        sArguments += iterArg->second.Get()->GetName();
+                        sArguments += iterArg->second->Get()->GetName();
                     }
                     if (iterArgList->lOptional_.size() > 0)
                     {
@@ -213,7 +228,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                         {
                             if (iterArg != iterArgList->lOptional_.begin())
                                 sArguments += ", ";
-                            sArguments += iterArg->second.Get()->GetName();
+                            sArguments += iterArg->second->Get()->GetName();
                         }
                         sArguments += ")";
                     }
@@ -232,15 +247,18 @@ s_bool Function::Check( const s_bool& bPrintError )
         pArgList_ = lValidArgList.front();
         ui = 1;
         s_bool bValid = true;
+        int i;
         foreach (iterArg, pArgList_->lArg_)
         {
-            if (!iterArg->second.Test(pLua_, ui, bPrintError))
+            if (!iterArg->second->Test(pLua_, ui, bPrintError))
                 bValid = false;
-            ui++;
+            ui++; i++;
         }
 
         if (!bValid)
+        {
             return false;
+        }
     }
 
     // We fill the stack with nil value until there are enough for optional arguments
@@ -254,7 +272,7 @@ s_bool Function::Check( const s_bool& bPrintError )
     {
         if (pLua_->GetType(ui) != Lua::TYPE_NIL)
         {
-            if (!iterArg->second.Test(pLua_, ui, bPrintError))
+            if (!iterArg->second->Test(pLua_, ui, bPrintError))
                 bValid = false;
         }
         ui++;

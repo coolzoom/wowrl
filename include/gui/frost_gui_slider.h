@@ -22,6 +22,9 @@ namespace Frost
 
             Slider();
 
+            /// Returns this widget's Lua glue.
+            virtual void        CreateGlue();
+
             static const s_str CLASS_NAME;
 
         protected :

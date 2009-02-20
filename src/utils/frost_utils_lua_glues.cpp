@@ -52,7 +52,7 @@ int Lua::l_ConcTable( lua_State* pLua )
 
 int Lua::l_ThrowError( lua_State* pLua )
 {
-    Lua::Function mFunc("l_ThrowError", pLua);
+    Lua::Function mFunc("ThrowError", pLua);
     mFunc.Add(0, "caption", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
@@ -163,7 +163,7 @@ int Lua::l_GetGlobal( lua_State* pLua )
 int Lua::l_DoString( lua_State* pLua )
 {
     Lua::Function mFunc("RunScript", pLua);
-    mFunc.Add(0, "string", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "script", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         s_str sScript = mFunc.Get(0)->GetS();

@@ -346,7 +346,7 @@ namespace Frost
     // Code taken from : http://www.jb.man.ac.uk/~slowe/cpp/itoa.html
     char* itoa ( int iValue, char* sResult, int iBase )
     {
-        // Check that the base if valid
+        // Check that the base is valid
         if (iBase < 2 || iBase > 16)
         {
             *sResult = 0;
