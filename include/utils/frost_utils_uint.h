@@ -118,7 +118,7 @@ namespace Frost
         /** \param uiMin The lower bound (minimum)
         *   \param uiMax The upper bound (maximum)
         */
-        void           Random(const s_uint& uiMin = 0u, const s_uint& uiMax = 1u);
+        void           Randomize(const s_uint& uiMin = 0u, const s_uint& uiMax = 1u);
 
         /// Sets this uint to infinite.
         void           SetInfinite();
@@ -182,7 +182,7 @@ namespace Frost
         *   \param uiMax The upper bound (maximum)
         *   \return A random uint in the provided range
         */
-        static s_uint Rand(const s_uint& uiMin = 0u, const s_uint& uiMax = 1u);
+        static s_uint Random(const s_uint& uiMin = 0u, const s_uint& uiMax = 1u);
 
         static const s_str CLASS_NAME;
 

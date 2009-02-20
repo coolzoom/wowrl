@@ -37,6 +37,15 @@
 #include "utils/frost_utils_point.h"
 #include "utils/frost_utils_tester.h"
 
+#include "utils/frost_utils_event.h"
+#include "utils/frost_utils_eventreceiver.h"
+#include "utils/frost_utils_eventmanager.h"
+
+#include "utils/frost_utils_lua_state.h"
+#include "utils/frost_utils_lua_function.h"
+#include "utils/frost_utils_luamanager.h"
+#include "utils/frost_utils_lua_glues.h"
+
 #include "utils/frost_utils_stdhelper.h"
 
 #include "utils/frost_utils_manager.h"

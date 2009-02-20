@@ -40,15 +40,6 @@ namespace Frost
     // frost_engine.h
     class  Engine;
 
-    // frost_event.h
-    class  Event;
-
-    // frost_eventmanager.h
-    class  EventManager;
-
-    // frost_eventreceiver.h
-    class  EventReceiver;
-
     // frost_fontmanager.h
     class  FontManager;
 
@@ -124,15 +115,6 @@ namespace Frost
 
     // frost_localemanager.h
     class  LocaleManager;
-
-    // frost_lua_utils.h
-    namespace Lua
-    {
-        class  Argument;
-        class  Data;
-        struct ReturnValue;
-        class  Function;
-    }
 
     // frost_material.h
     class  Material;

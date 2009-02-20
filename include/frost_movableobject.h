@@ -10,7 +10,6 @@
 #define FROST_MOVABLEOBJECT_H
 
 #include "frost.h"
-#include "frost_eventreceiver.h"
 
 namespace Frost
 {

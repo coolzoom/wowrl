@@ -7,7 +7,6 @@
 
 #include "frost_light.h"
 #include "frost_gfx.h"
-#include "frost_event.h"
 
 #include <OgreSceneManager.h>
 #include <OgreLight.h>

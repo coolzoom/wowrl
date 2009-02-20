@@ -11,7 +11,6 @@
 
 #include "frost.h"
 #include "gui/frost_gui_uiobject.h"
-#include "frost_eventreceiver.h"
 
 namespace Frost
 {

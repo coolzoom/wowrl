@@ -1731,13 +1731,12 @@
 
 1208707334 source:c:\programmation2\frost\ressources.rc
 
-1230117759 source:c:\programmation2\frost\include\frost_stableheaders.h
+1235135847 source:c:\programmation2\frost\include\frost_stableheaders.h
 	<OgrePrerequisites.h>
 	<OIS/OISPrereqs.h>
 	"frost_lib_std.h"
 	"frost_lib_utils.h"
 	"frost_macros.h"
-	"frost_lua.h"
 	"frost_engine.h"
 
 1223640716 c:\programmation2\ogre\ogremain\include\ogreprerequisites.h
@@ -1844,7 +1843,7 @@
 	<fstream>
 	<ios>
 
-1230117759 c:\programmation2\frost\include\frost_lib_utils.h
+1235136879 c:\programmation2\frost\include\frost_lib_utils.h
 	"utils/frost_utils.h"
 	"utils/frost_utils_bool.h"
 	"utils/frost_utils_int.h"
@@ -1864,6 +1863,13 @@
 	"utils/frost_utils_file.h"
 	"utils/frost_utils_point.h"
 	"utils/frost_utils_tester.h"
+	"utils/frost_utils_event.h"
+	"utils/frost_utils_eventreceiver.h"
+	"utils/frost_utils_eventmanager.h"
+	"utils/frost_utils_lua_state.h"
+	"utils/frost_utils_lua_function.h"
+	"utils/frost_utils_luamanager.h"
+	"utils/frost_utils_lua_glues.h"
 	"utils/frost_utils_stdhelper.h"
 	"utils/frost_utils_manager.h"
 
@@ -1876,19 +1882,19 @@
 1233426454 c:\programmation2\frost\include\utils\frost_utils_bool.h
 	"frost_utils.h"
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_int.h
+1235063115 c:\programmation2\frost\include\utils\frost_utils_int.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_uint.h
+1235063244 c:\programmation2\frost\include\utils\frost_utils_uint.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_float.h
+1235063244 c:\programmation2\frost\include\utils\frost_utils_float.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_double.h
+1235063244 c:\programmation2\frost\include\utils\frost_utils_double.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
@@ -1909,7 +1915,7 @@
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1230117759 c:\programmation2\frost\include\utils\frost_utils_math.h
+1235134756 c:\programmation2\frost\include\utils\frost_utils_math.h
 
 1231684798 c:\programmation2\frost\include\utils\frost_utilsmanager.h
 	"frost_utils.h"
@@ -1943,7 +1949,7 @@
 	"frost_utils_float.h"
 	"frost_utils_bool.h"
 
-1231865670 c:\programmation2\frost\include\utils\frost_utils_directory.h
+1235130728 c:\programmation2\frost\include\utils\frost_utils_directory.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 	"frost_utils_str.h"
@@ -1959,19 +1965,14 @@
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1230117759 c:\programmation2\frost\include\utils\frost_utils_stdhelper.h
+1235130728 c:\programmation2\frost\include\utils\frost_utils_stdhelper.h
 	"frost_utils.h"
 	"frost_utils_double.h"
 
-1234526473 c:\programmation2\frost\include\frost_macros.h
+1235130724 c:\programmation2\frost\include\frost_macros.h
 
-1234090766 c:\programmation2\frost\include\frost_lua.h
-	"lua/lualib.h"
-	"lua/lauxlib.h"
-	"lua/lua.h"
-	"lua/lunar.h"
+1235137867 c:\programmation2\frost\include\frost_lua.h
 	"frost.h"
-	"frost_lua_utils.h"
 
 1230117760 c:\programmation2\frost\dependencies\lua\lualib.h
 	"lua.h"
@@ -2004,19 +2005,18 @@
 	"lauxlib.h"
 	<string>
 
-1234742960 c:\programmation2\frost\include\frost.h
+1235138080 c:\programmation2\frost\include\frost.h
 	"frost_stableheaders.h"
 
-1230117759 c:\programmation2\frost\include\frost_stableheaders.h
+1235135847 c:\programmation2\frost\include\frost_stableheaders.h
 	<OgrePrerequisites.h>
 	<OIS/OISPrereqs.h>
 	"frost_lib_std.h"
 	"frost_lib_utils.h"
 	"frost_macros.h"
-	"frost_lua.h"
 	"frost_engine.h"
 
-1230117759 c:\programmation2\frost\include\frost_engine.h
+1235137255 c:\programmation2\frost\include\frost_engine.h
 	"frost.h"
 
 1235037571 c:\programmation2\frost\include\frost_lua_utils.h
@@ -2035,9 +2035,8 @@
 	"frost.h"
 	"frost_movableobject.h"
 
-1230117759 c:\programmation2\frost\include\frost_movableobject.h
+1235136899 c:\programmation2\frost\include\frost_movableobject.h
 	"frost.h"
-	"frost_eventreceiver.h"
 
 1230117759 c:\programmation2\frost\include\frost_eventreceiver.h
 	"frost.h"
@@ -2624,9 +2623,8 @@
 	"frost.h"
 	"frost_unit.h"
 
-1234916028 c:\programmation2\frost\include\frost_unit.h
+1235136890 c:\programmation2\frost\include\frost_unit.h
 	"frost.h"
-	"frost_eventreceiver.h"
 	"frost_timers.h"
 
 1230117759 c:\programmation2\frost\include\frost_timers.h
@@ -2671,10 +2669,9 @@
 	"frost.h"
 	"frost_movableobject.h"
 
-1233427692 source:c:\programmation2\frost\src\frost_engine.cpp
+1235137933 source:c:\programmation2\frost\src\frost_engine.cpp
 	"frost_engine.h"
 	"frost_timemanager.h"
-	"frost_eventmanager.h"
 	"frost_inputmanager.h"
 	"frost_fontmanager.h"
 	"frost_guimanager.h"
@@ -2688,6 +2685,7 @@
 	"frost_lightmanager.h"
 	"frost_unitmanager.h"
 	"frost_camera.h"
+	"frost_lua.h"
 	<OgreRoot.h>
 	<OgreRenderSystem.h>
 	<OgreRenderWindow.h>
@@ -2711,7 +2709,7 @@
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
-1233780965 c:\programmation2\frost\include\frost_guimanager.h
+1235138594 c:\programmation2\frost\include\frost_guimanager.h
 	"frost.h"
 	"utils/frost_utils_manager.h"
 
@@ -2841,7 +2839,7 @@
 	"frost_eventreceiver.h"
 	"frost_eventmanager.h"
 
-1230117761 source:c:\programmation2\frost\src\frost_fontmanager.cpp
+1235136949 source:c:\programmation2\frost\src\frost_fontmanager.cpp
 	"frost_fontmanager.h"
 	<OgreFontManager.h>
 
@@ -2906,10 +2904,9 @@
 	"OISObject.h"
 	"OISEvents.h"
 
-1230117761 source:c:\programmation2\frost\src\frost_light.cpp
+1235137331 source:c:\programmation2\frost\src\frost_light.cpp
 	"frost_light.h"
 	"frost_gfx.h"
-	"frost_event.h"
 	<OgreSceneManager.h>
 	<OgreLight.h>
 
@@ -2919,10 +2916,10 @@
 	"frost_gfx.h"
 	"OgreSceneManager.h"
 
-1230117761 source:c:\programmation2\frost\src\frost_localemanager.cpp
+1235137975 source:c:\programmation2\frost\src\frost_localemanager.cpp
 	"frost_localemanager.h"
 
-1234917221 source:c:\programmation2\frost\src\frost_main.cpp
+1235137975 source:c:\programmation2\frost\src\frost_main.cpp
 	"frost.h"
 	"frost_model.h"
 	"frost_modelmanager.h"
@@ -2944,8 +2941,6 @@
 	"frost_plane.h"
 	"frost_lightmanager.h"
 	"frost_light.h"
-	"frost_eventmanager.h"
-	"frost_event.h"
 	"frost_unitmanager.h"
 	"frost_character.h"
 	<OgreException.h>
@@ -3137,10 +3132,9 @@
 	"frost_gui_anchor.h"
 	"frost_gfx.h"
 
-1234108675 c:\programmation2\frost\include\gui\frost_gui_frame.h
+1235138080 c:\programmation2\frost\include\gui\frost_gui_frame.h
 	"frost.h"
 	"gui/frost_gui_uiobject.h"
-	"frost_eventreceiver.h"
 
 1230117761 source:c:\programmation2\frost\src\gui\frost_button.cpp
 	"gui/frost_gui_button.h"
@@ -3182,7 +3176,7 @@
 	"gui/frost_gui_fontstring.h"
 	"gui/frost_gui_layeredregion.h"
 
-1235061599 source:c:\programmation2\frost\src\gui\frost_frame.cpp
+1235138577 source:c:\programmation2\frost\src\gui\frost_frame.cpp
 	"gui/frost_gui_frame.h"
 	"gui/frost_gui_layeredregion.h"
 	"gui/frost_gui_uiobject.h"
@@ -3194,15 +3188,15 @@
 	"frost_guimanager.h"
 	"frost_inputmanager.h"
 	"frost_timemanager.h"
-	"frost_event.h"
 
-1231601120 source:c:\programmation2\frost\src\gui\frost_frame_glues.cpp
+1235138700 source:c:\programmation2\frost\src\gui\frost_frame_glues.cpp
 	"gui/frost_gui_frame.h"
 
-1235060997 source:c:\programmation2\frost\src\gui\frost_guimanager.cpp
+1235138891 source:c:\programmation2\frost\src\gui\frost_guimanager.cpp
 	"frost_guimanager.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_anchor.h"
+	"frost_lua.h"
 
 1232392790 source:c:\programmation2\frost\src\gui\frost_layeredregion.cpp
 	"gui/frost_gui_layeredregion.h"
@@ -3299,7 +3293,7 @@
 	"gui/frost_gui_texture.h"
 	"gui/frost_gui_layeredregion.h"
 
-1235062112 source:c:\programmation2\frost\src\gui\frost_texture_glues.cpp
+1235138891 source:c:\programmation2\frost\src\gui\frost_texture_glues.cpp
 	"gui/frost_gui_texture.h"
 	"gui/frost_gui_layeredregion.h"
 
@@ -3309,12 +3303,12 @@
 	"frost_guimanager.h"
 	"frost_material.h"
 
-1232996198 source:c:\programmation2\frost\src\gui\frost_uiobject_glues.cpp
+1235138891 source:c:\programmation2\frost\src\gui\frost_uiobject_glues.cpp
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_anchor.h"
 	"frost_guimanager.h"
 
-1235061599 source:c:\programmation2\frost\src\lua\frost_lua.cpp
+1235137867 source:c:\programmation2\frost\src\lua\frost_lua.cpp
 	"frost_lua.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
@@ -3327,13 +3321,11 @@
 	"gui/frost_gui_fontstring.h"
 	"gui/frost_gui_texture.h"
 
-1230117760 source:c:\programmation2\frost\src\lua\frost_lua_glues.cpp
+1235138891 source:c:\programmation2\frost\src\lua\frost_lua_glues.cpp
 	"frost_lua.h"
 	"frost_inputmanager.h"
 	"frost_localemanager.h"
 	"frost_timemanager.h"
-	"frost_eventmanager.h"
-	"frost_event.h"
 
 1231869645 source:c:\programmation2\frost\src\lua\frost_lua_utils.cpp
 	"frost_lua.h"
@@ -3350,7 +3342,7 @@
 1235035982 source:c:\programmation2\frost\src\lua\frost_lua_utils_returnvalue.cpp
 	"frost_lua_utils.h"
 
-1235060475 source:c:\programmation2\frost\src\model\frost_animmanager.cpp
+1235063458 source:c:\programmation2\frost\src\model\frost_animmanager.cpp
 	"frost_animmanager.h"
 	"frost_model.h"
 	<OgreAnimationState.h>
@@ -3432,18 +3424,18 @@
 	<OgreEntity.h>
 	<OgreSubEntity.h>
 
-1233776987 source:c:\programmation2\frost\src\parsers\frost_guimanager_parser.cpp
+1235138935 source:c:\programmation2\frost\src\parsers\frost_guimanager_parser.cpp
 	"frost_guimanager.h"
 	"gui/frost_gui_anchor.h"
 	"gui/frost_gui_uiobject.h"
 	"gui/frost_gui_frame.h"
 	"frost_xml_document.h"
 
-1231867942 c:\programmation2\frost\include\frost_xml_document.h
+1235127217 c:\programmation2\frost\include\frost_xml_document.h
 	"frost.h"
 	"frost_xml_block.h"
 
-1231790201 c:\programmation2\frost\include\frost_xml_block.h
+1235135848 c:\programmation2\frost\include\frost_xml_block.h
 	"frost.h"
 
 1230117760 source:c:\programmation2\frost\src\parsers\frost_unitmanager_parser.cpp
@@ -3479,7 +3471,7 @@
 	"frost_xml_block.h"
 	"frost_xml_document.h"
 
-1235061599 source:c:\programmation2\frost\src\xml\frost_xml_document.cpp
+1235127458 source:c:\programmation2\frost\src\xml\frost_xml_document.cpp
 	"frost_xml_document.h"
 	"frost_xml_block.h"
 
@@ -3491,4 +3483,39 @@
 
 1234742960 c:\programmation2\frost\include\gui\frost_gui_gradient.h
 	"frost.h"
+
+1235133799 c:\programmation2\frost\include\utils\frost_utils_event.h
+	"frost_utils.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_ptr.h"
+
+1235133746 c:\programmation2\frost\include\utils\frost_utils_eventreceiver.h
+	"frost_utils.h"
+	"frost_utils_str.h"
+
+1235133774 c:\programmation2\frost\include\utils\frost_utils_eventmanager.h
+	"frost_utils.h"
+	"frost_utils_manager.h"
+
+1235138638 c:\programmation2\frost\include\utils\frost_utils_lua_state.h
+	"lua/lualib.h"
+	"lua/lauxlib.h"
+	"lua/lua.h"
+	"lua/lunar.h"
+	"frost_utils.h"
+	"frost_utils_manager.h"
+	"frost_utils_var.h"
+	"frost_utils_array.h"
+
+1235133326 c:\programmation2\frost\include\utils\frost_utils_lua_function.h
+	"frost_utils.h"
+
+1235136795 c:\programmation2\frost\include\utils\frost_utils_luamanager.h
+	"frost_utils.h"
+	"frost_utils_manager.h"
+	"frost_utils_lua_state.h"
+
+1235133164 c:\programmation2\frost\include\utils\frost_utils_lua_glues.h
+	"frost_utils_lua_state.h"
 

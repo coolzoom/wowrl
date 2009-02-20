@@ -20,8 +20,6 @@
 #include "frost_plane.h"
 #include "frost_lightmanager.h"
 #include "frost_light.h"
-#include "frost_eventmanager.h"
-#include "frost_event.h"
 #include "frost_unitmanager.h"
 #include "frost_character.h"
 
@@ -255,7 +253,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             LightManager::GetSingleton()->SetAmbient(Color(150, 150, 150));
 
             // Parse temporary script
-            Lua::DoFile(GUIManager::GetSingleton()->GetLua(), "Scripts/Temp.lua");
+            GUIManager::GetSingleton()->GetLua()->DoFile("Scripts/Temp.lua");
 
             // Populate the world !
 

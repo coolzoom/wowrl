@@ -10,7 +10,6 @@
 #define FROST_UNIT_H
 
 #include "frost.h"
-#include "frost_eventreceiver.h"
 #include "frost_timers.h"
 
 namespace Frost

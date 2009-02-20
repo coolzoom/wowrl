@@ -9,11 +9,14 @@
 #ifndef FROST_EVENTMANAGER_H
 #define FROST_EVENTMANAGER_H
 
-#include "frost.h"
-#include "utils/frost_utils_manager.h"
+#include "frost_utils.h"
+#include "frost_utils_manager.h"
 
 namespace Frost
 {
+    class EventReceiver;
+    class Event;
+
     /// Manages events and their responses
     class EventManager : public Manager<EventManager>
     {

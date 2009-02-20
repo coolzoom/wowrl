@@ -9,10 +9,16 @@
 #ifndef FROST_EVENT_H
 #define FROST_EVENT_H
 
-#include "frost.h"
+#include "frost_utils.h"
+#include "frost_utils_str.h"
+#include "frost_utils_bool.h"
+#include "frost_utils_ptr.h"
 
 namespace Frost
 {
+    class s_var;
+    class s_uint;
+
     /// Contains an event informations
     class Event
     {

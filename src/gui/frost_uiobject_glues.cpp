@@ -71,7 +71,7 @@ int LuaUIObject::_GetObjectType( lua_State* pLua )
 int LuaUIObject::_IsObjectType( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:IsObjectType", pLua, 1);
-    mFunc.Add(0, "type", LUA_TSTRING, VALUE_STRING);
+    mFunc.Add(0, "type", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         s_bool bIsType = false;
@@ -96,7 +96,7 @@ int LuaUIObject::_IsObjectType( lua_State* pLua )
 int LuaUIObject::_SetAlpha( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetAlpha", pLua);
-    mFunc.Add(0, "alpha", LUA_TNUMBER, VALUE_FLOAT);
+    mFunc.Add(0, "alpha", Lua::TYPE_NUMBER, VALUE_FLOAT);
     if (mFunc.Check())
     {
         pParent_->SetAlpha(mFunc.Get(0)->GetF());
@@ -177,7 +177,7 @@ int LuaUIObject::_GetParent( lua_State* pLua )
 int LuaUIObject::_GetPoint( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetPoint", pLua, 5);
-    mFunc.Add(0, "pointID", LUA_TNUMBER, VALUE_INT);
+    mFunc.Add(0, "pointID", Lua::TYPE_NUMBER, VALUE_INT);
     if (mFunc.Check())
     {
         s_ptr<Anchor> pAnchor = pParent_->GetPoint(mFunc.Get(0)->GetUI());
@@ -268,15 +268,15 @@ int LuaUIObject::_RebuildCache( lua_State* pLua )
 int LuaUIObject::_SetAllPoints( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetAllPoints", pLua);
-    mFunc.Add(0, "frameName", LUA_TSTRING, VALUE_STRING, true);
-    mFunc.Add(0, "frame", LUA_TUSERDATA, VALUE_NONE, true);
+    mFunc.Add(0, "frameName", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(0, "frame", Lua::TYPE_USERDATA, VALUE_NONE, true);
     if (mFunc.Check())
     {
         s_ptr<Lua::Argument> pArg = mFunc.Get(0);
         if (pArg->IsProvided())
         {
             s_ptr<UIObject> pFrame;
-            if (pArg->GetType() == LUA_TSTRING)
+            if (pArg->GetType() == Lua::TYPE_STRING)
                 pFrame = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetS());
             else
                 pFrame = Lunar<LuaUIObject>::check(pLua, pArg->GetI().Get())->GetParent();
@@ -294,7 +294,7 @@ int LuaUIObject::_SetAllPoints( lua_State* pLua )
 int LuaUIObject::_SetHeight( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetHeight", pLua);
-    mFunc.Add(0, "height", LUA_TNUMBER, VALUE_INT);
+    mFunc.Add(0, "height", Lua::TYPE_NUMBER, VALUE_INT);
     if (mFunc.Check())
     {
         pParent_->SetAbsHeight(mFunc.Get(0)->GetUI());
@@ -306,15 +306,15 @@ int LuaUIObject::_SetHeight( lua_State* pLua )
 int LuaUIObject::_SetParent( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetParent", pLua);
-    mFunc.Add(0, "parentName", LUA_TSTRING, VALUE_STRING, true);
-    mFunc.Add(0, "parent", LUA_TUSERDATA, VALUE_NONE, true);
+    mFunc.Add(0, "parentName", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(0, "parent", Lua::TYPE_USERDATA, VALUE_NONE, true);
     if (mFunc.Check())
     {
         s_ptr<Lua::Argument> pArg = mFunc.Get(0);
         if (pArg->IsProvided())
         {
             s_ptr<UIObject> pParent;
-            if (pArg->GetType() == LUA_TSTRING)
+            if (pArg->GetType() == Lua::TYPE_STRING)
                 pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetS());
             else
                 pParent = Lunar<LuaUIObject>::check(pLua, pArg->GetI().Get())->GetParent();
@@ -332,12 +332,12 @@ int LuaUIObject::_SetParent( lua_State* pLua )
 int LuaUIObject::_SetPoint( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetPoint", pLua);
-    mFunc.Add(0, "point", LUA_TSTRING, VALUE_STRING);
-    mFunc.Add(1, "parentName", LUA_TSTRING, VALUE_STRING, true);
-    mFunc.Add(1, "parent", LUA_TUSERDATA, VALUE_NONE, true);
-    mFunc.Add(2, "relativePoint", LUA_TSTRING, VALUE_STRING, true);
-    mFunc.Add(3, "x", LUA_TNUMBER, VALUE_INT, true);
-    mFunc.Add(4, "y", LUA_TNUMBER, VALUE_INT, true);
+    mFunc.Add(0, "point", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(1, "parentName", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(1, "parent", Lua::TYPE_USERDATA, VALUE_NONE, true);
+    mFunc.Add(2, "relativePoint", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(3, "x", Lua::TYPE_NUMBER, VALUE_INT, true);
+    mFunc.Add(4, "y", Lua::TYPE_NUMBER, VALUE_INT, true);
     if (mFunc.Check())
     {
         // point
@@ -348,7 +348,7 @@ int LuaUIObject::_SetPoint( lua_State* pLua )
         s_ptr<UIObject> pParent;
         if (pArg->IsProvided())
         {
-            if (pArg->GetType() == LUA_TSTRING)
+            if (pArg->GetType() == Lua::TYPE_STRING)
             {
                 pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetS());
             }
@@ -382,7 +382,7 @@ int LuaUIObject::_SetPoint( lua_State* pLua )
 int LuaUIObject::_SetWidth( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetWidth", pLua);
-    mFunc.Add(0, "width", LUA_TNUMBER, VALUE_INT);
+    mFunc.Add(0, "width", Lua::TYPE_NUMBER, VALUE_INT);
     if (mFunc.Check())
     {
         pParent_->SetAbsWidth(mFunc.Get(0)->GetUI());

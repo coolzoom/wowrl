@@ -413,7 +413,7 @@
 	"frost_utils.h"
 	"frost_utils_uint.h"
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_uint.h
+1235063244 c:\programmation2\frost\include\utils\frost_utils_uint.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
@@ -435,7 +435,7 @@
 	"OgreArchiveManager.h"
 	"OgreStringVector.h"
 
-1231865670 c:\programmation2\frost\include\utils\frost_utils_directory.h
+1235130728 c:\programmation2\frost\include\utils\frost_utils_directory.h
 	"frost_utils.h"
 	"frost_utils_uint.h"
 	"frost_utils_str.h"
@@ -626,7 +626,7 @@
 	"OgreDataStream.h"
 	"OgreStringVector.h"
 
-1235060096 source:c:\programmation2\frost\src\utils\frost_utils_double.cpp
+1235135006 source:c:\programmation2\frost\src\utils\frost_utils_double.cpp
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
 	"frost_utils_float.h"
@@ -637,17 +637,16 @@
 	"frost_utils.h"
 	<math.h>
 	<float.h>
-	<OgreMath.h>
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_int.h
+1235063115 c:\programmation2\frost\include\utils\frost_utils_int.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_float.h
+1235063244 c:\programmation2\frost\include\utils\frost_utils_float.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1235061365 c:\programmation2\frost\include\utils\frost_utils_double.h
+1235063244 c:\programmation2\frost\include\utils\frost_utils_double.h
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
@@ -664,7 +663,7 @@
 1231777313 c:\programmation2\frost\include\utils\frost_utils_file.h
 	"frost_utils.h"
 
-1235060204 source:c:\programmation2\frost\src\utils\frost_utils_float.cpp
+1235135006 source:c:\programmation2\frost\src\utils\frost_utils_float.cpp
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
 	"frost_utils_float.h"
@@ -675,9 +674,8 @@
 	"frost_utils.h"
 	<math.h>
 	<float.h>
-	<OgreMath.h>
 
-1235060226 source:c:\programmation2\frost\src\utils\frost_utils_int.cpp
+1235135006 source:c:\programmation2\frost\src\utils\frost_utils_int.cpp
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
 	"frost_utils_float.h"
@@ -687,7 +685,6 @@
 	"frost_utils_array.h"
 	"frost_utils.h"
 	<math.h>
-	<OgreMath.h>
 
 1230117761 source:c:\programmation2\frost\src\utils\frost_utils_log.cpp
 	"frost_utils_log.h"
@@ -701,7 +698,7 @@
 	"frost_utils_ptr.h"
 	"frost_utils_str.h"
 
-1230117761 source:c:\programmation2\frost\src\utils\frost_utils_math.cpp
+1235134757 source:c:\programmation2\frost\src\utils\frost_utils_math.cpp
 	"frost_utils_math.h"
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
@@ -709,7 +706,7 @@
 	"frost_utils_double.h"
 	<math.h>
 
-1230117759 c:\programmation2\frost\include\utils\frost_utils_math.h
+1235134756 c:\programmation2\frost\include\utils\frost_utils_math.h
 
 1235060832 source:c:\programmation2\frost\src\utils\frost_utils_str.cpp
 	"frost_utils_int.h"
@@ -734,7 +731,7 @@
 	"frost_utils.h"
 	"frost_utils_bool.h"
 
-1235060312 source:c:\programmation2\frost\src\utils\frost_utils_uint.cpp
+1235135006 source:c:\programmation2\frost\src\utils\frost_utils_uint.cpp
 	"frost_utils_int.h"
 	"frost_utils_uint.h"
 	"frost_utils_float.h"
@@ -744,7 +741,6 @@
 	"frost_utils_array.h"
 	"frost_utils.h"
 	<math.h>
-	<OgreMath.h>
 
 1234543311 source:c:\programmation2\frost\src\utils\frost_utils_var.cpp
 	"frost_utils_var.h"
@@ -783,4 +779,125 @@
 
 1230117761 source:c:\programmation2\frost\src\utils\frost_utilsmanager.cpp
 	"frost_utilsmanager.h"
+
+1235130947 source:c:\programmation2\frost\src\utils\frost_utils_lua_argument.cpp
+	"frost_utils_lua_state.h"
+	"frost_utils_lua_function.h"
+	"frost_utils_stdhelper.h"
+
+1235138638 c:\programmation2\frost\include\utils\frost_utils_lua_state.h
+	"lua/lualib.h"
+	"lua/lauxlib.h"
+	"lua/lua.h"
+	"lua/lunar.h"
+	"frost_utils.h"
+	"frost_utils_manager.h"
+	"frost_utils_var.h"
+	"frost_utils_array.h"
+
+1230117760 c:\programmation2\frost\dependencies\lua\lualib.h
+	"lua.h"
+
+1230117760 c:\programmation2\frost\dependencies\lua\lua.h
+	<stdarg.h>
+	<stddef.h>
+	"luaconf.h"
+
+1230117760 c:\programmation2\frost\dependencies\lua\luaconf.h
+	<limits.h>
+	<stddef.h>
+	<unistd.h>
+	<io.h>
+	<stdio.h>
+	<stdio.h>
+	<readline/readline.h>
+	<readline/history.h>
+	<assert.h>
+	<math.h>
+	<unistd.h>
+
+1230117760 c:\programmation2\frost\dependencies\lua\lauxlib.h
+	<stddef.h>
+	<stdio.h>
+	"lua.h"
+
+1192734454 c:\programmation2\frost\dependencies\lua\lunar.h
+	"lua.h"
+	"lauxlib.h"
+	<string>
+
+1235133326 c:\programmation2\frost\include\utils\frost_utils_lua_function.h
+	"frost_utils.h"
+
+1235130728 c:\programmation2\frost\include\utils\frost_utils_stdhelper.h
+	"frost_utils.h"
+	"frost_utils_double.h"
+
+1235131710 source:c:\programmation2\frost\src\utils\frost_utils_lua_data.cpp
+	"frost_utils_lua_state.h"
+	"frost_utils_lua_function.h"
+
+1235137859 source:c:\programmation2\frost\src\utils\frost_utils_lua_state.cpp
+	"frost_utils_lua_state.h"
+	"frost_utils_lua_glues.h"
+	"frost_utils_file.h"
+
+1235137237 source:c:\programmation2\frost\src\utils\frost_utils_luamanager.cpp
+	"frost_utils_luamanager.h"
+	"frost_utils_lua_state.h"
+	"frost_utils_stdhelper.h"
+
+1235136795 c:\programmation2\frost\include\utils\frost_utils_luamanager.h
+	"frost_utils.h"
+	"frost_utils_manager.h"
+	"frost_utils_lua_state.h"
+
+1235131655 source:c:\programmation2\frost\src\utils\frost_utils_lua_returnvalue.cpp
+	"frost_utils_lua_state.h"
+	"frost_utils_lua_function.h"
+
+1235133339 source:c:\programmation2\frost\src\utils\frost_utils_lua_function.cpp
+	"frost_utils_lua_state.h"
+	"frost_utils_lua_function.h"
+	"frost_utils_luamanager.h"
+	"frost_utils_stdhelper.h"
+
+1235133164 c:\programmation2\frost\include\utils\frost_utils_lua_glues.h
+	"frost_utils_lua_state.h"
+
+1235133581 source:c:\programmation2\frost\src\utils\frost_utils_eventreceiver.cpp
+	"frost_utils_eventreceiver.h"
+	"frost_utils_eventmanager.h"
+
+1235133746 c:\programmation2\frost\include\utils\frost_utils_eventreceiver.h
+	"frost_utils.h"
+	"frost_utils_str.h"
+
+1235133774 c:\programmation2\frost\include\utils\frost_utils_eventmanager.h
+	"frost_utils.h"
+	"frost_utils_manager.h"
+
+1235133816 source:c:\programmation2\frost\src\utils\frost_utils_event.cpp
+	"frost_utils_event.h"
+	"frost_utils_var.h"
+
+1235133799 c:\programmation2\frost\include\utils\frost_utils_event.h
+	"frost_utils.h"
+	"frost_utils_str.h"
+	"frost_utils_bool.h"
+	"frost_utils_ptr.h"
+
+1235133857 source:c:\programmation2\frost\src\utils\frost_utils_eventmanager.cpp
+	"frost_utils_eventmanager.h"
+	"frost_utils_event.h"
+	"frost_utils_eventreceiver.h"
+	"frost_utils_stdhelper.h"
+	"frost_utils_int.h"
+
+1235133942 source:c:\programmation2\frost\src\utils\frost_utils_lua_glues.cpp
+	"frost_utils_lua_glues.h"
+	"frost_utils_lua_function.h"
+	"frost_utils_luamanager.h"
+	"frost_utils_eventmanager.h"
+	"frost_utils_event.h"
 

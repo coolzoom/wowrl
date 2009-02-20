@@ -7,6 +7,9 @@
 #ifndef FROST_UTILS_DIRECTORY_H
 #define FROST_UTILS_DIRECTORY_H
 
+// Iterates through a Directory's sub directories
+#define foreach_subdir(subdir, dir) for ((subdir) = (dir).GetNextSubDirectory(); (subdir); (subdir) = (dir).GetNextSubDirectory())
+
 #include "frost_utils.h"
 #include "frost_utils_uint.h"
 #include "frost_utils_str.h"

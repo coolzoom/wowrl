@@ -124,7 +124,7 @@ namespace Frost
         /** \param iMin The lower bound (minimum)
         *   \param iMax The upper bound (maximum)
         */
-        void          Random(const s_int& iMin = 0, const s_int& iMax = 1);
+        void          Randomize(const s_int& iMin = 0, const s_int& iMax = 1);
 
         /// Sets this int to infinite (positive).
         void          SetInfiniteMinus();
@@ -197,7 +197,7 @@ namespace Frost
         *   \param iMax The upper bound (maximum)
         *   \return A random int in the provided range
         */
-        static s_int Rand(const s_int& iMin = 0, const s_int& iMax = 1);
+        static s_int Random(const s_int& iMin = 0, const s_int& iMax = 1);
 
         static const s_str CLASS_NAME;
 

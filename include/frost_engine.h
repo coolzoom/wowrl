@@ -100,7 +100,7 @@ namespace Frost
         /// Returns the Lua state used by the engine.
         /** \return The Lua state used by the engine
         */
-        lua_State*          GetLua();
+        s_ptr<Lua::State>   GetLua();
 
         /// Returns the render window's width.
         /** \return The render window's width
@@ -140,7 +140,6 @@ namespace Frost
         */
         void                TakeScreenshot();
 
-        static s_str sLuaComString;
         static const s_str CLASS_NAME;
 
     protected :
@@ -187,6 +186,7 @@ namespace Frost
 
         // Managers
         s_ptr<UtilsManager>    pUtilsMgr_;
+        s_ptr<LuaManager>      pLuaMgr_;
         s_ptr<EventManager>    pEventMgr_;
         s_ptr<TimeManager>     pTimeMgr_;
         s_ptr<InputManager>    pInputMgr_;
@@ -206,7 +206,7 @@ namespace Frost
         s_ptr<Camera> pCamera_;
 
         // Lua
-        lua_State* pLua_;
+        s_ptr<Lua::State> pLua_;
 
         // OGRE variables
         s_refptr<Ogre::Root>      pRoot_;

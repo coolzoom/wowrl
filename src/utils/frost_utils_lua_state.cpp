@@ -1,0 +1,717 @@
+/* ###################################### */
+/* ###     Frost Engine, by Kalith    ### */
+/* ###################################### */
+/*            State::State source           */
+/*                                        */
+/*                                        */
+
+#include "frost_utils_lua_state.h"
+#include "frost_utils_lua_glues.h"
+#include "frost_utils_file.h"
+
+using namespace std;
+using namespace Frost;
+using namespace Frost::Lua;
+
+const luaL_Reg lualibs[] = {
+    {"", luaopen_base},
+    {LUA_LOADLIBNAME, luaopen_package},
+    {LUA_TABLIBNAME, luaopen_table},
+    {LUA_IOLIBNAME, luaopen_io},
+    {LUA_OSLIBNAME, luaopen_os},
+    {LUA_STRLIBNAME, luaopen_string},
+    //{LUA_MSTRLIBNAME, OpenString}, // Modified string lib
+    {LUA_MATHLIBNAME, luaopen_math},
+    {LUA_DBLIBNAME, luaopen_debug},
+    {NULL, NULL}
+};
+
+void OpenLibs( lua_State* pLua_ )
+{
+    for (const luaL_Reg* lib = lualibs; lib->func; lib++)
+    {
+        lua_pushcfunction(pLua_, lib->func);
+        lua_pushstring(pLua_, lib->name);
+        lua_call(pLua_, 1, 0);
+    }
+}
+
+const s_str State::CLASS_NAME = "Lua::State";
+
+State::State()
+{
+    pLua_ = lua_open();
+    if (pLua_ == NULL)
+    {
+        Error("Lua", "Error while initializing Lua.");
+        return;
+    }
+
+    OpenLibs(pLua_);
+
+    lua_atpanic(pLua_, l_Log);
+
+    NewTable();
+    SetGlobal("Functions");
+
+    Register("Log", l_Log);
+    Register("Error", l_ThrowError);
+    Register("RandomInt", l_RandomInt);
+    Register("RandomFloat", l_RandomFloat);
+    Register("StrReplace", l_StrReplace);
+    Register("StrCapitalStart", l_StrCapitalStart);
+    Register("GetGlobal", l_GetGlobal);
+    Register("RunScript", l_DoString);
+    Register("SendString", l_SendString);
+    Register("EmptyString", l_EmptyString);
+    Register("ConcTable", l_ConcTable);
+}
+
+State::~State()
+{
+    if (pLua_)
+        lua_close(pLua_);
+}
+
+lua_State* State::GetState()
+{
+    return pLua_;
+}
+
+s_str State::ConcTable( const s_str& sTable )
+{
+    /* [#] This function converts a LUA table into a formated string. It is used
+    *  to save the content of the table in the SavedVariables.
+    */
+    s_str s = "tbl = \"" + sTable + "\";\n"
+              "temp = \"\";\n"
+              "for k, v in pairs (" + sTable + ") do\n"
+                  "local s, t;\n"
+                  "if (type(k) == \"number\") then\ns = k;\nend\n"
+                  "if (type(k) == \"string\") then\ns = \"\\\"\"..k..\"\\\"\";\nend\n"
+                  "if (type(v) == \"number\") then\nt = v;\nend\n"
+                  "if (type(v) == \"string\") then\nt = \"\\\"\"..v..\"\\\"\";\nend\n"
+                  "if (type(v) == \"boolean\") then\nif v then\nt = \"'true'\";\nelse\nt = \"'false'\";\nend\nend\n"
+                  "if (type(v) == \"table\") then\n"
+                      "t = \"'table'\";\nSendString(s..\" \"..t..\" \");\nConcTable(temp, tbl..\"[\"..s..\"]\");\n"
+                  "else\n"
+                      "SendString(s..\" \"..t..\" \");\n"
+                  "end\n"
+              "end\n"
+              "SendString(\"'end' \");\n";
+
+    luaL_dostring(pLua_, s.c_str());
+
+    return sComString;
+}
+
+void State::CopyTable( s_ptr<State::State> pLua, const s_str& sSrcName, const s_str& sDestName )
+{
+    s_str sNewName;
+    if (sDestName == "") sNewName = sSrcName;
+    else                 sNewName = sDestName;
+
+    sComString = "";
+    pLua->DoString("str = \"\";\nstr = ConcTable(str, \"" + sSrcName + "\");\n");
+
+    s_str s = sComString;
+
+    if (s != "")
+    {
+        s_str sTab = "    ";
+        s_str sTable;
+        sTable = sNewName + " = {\n";
+        s_uint uiTableIndent = 1u;
+        s_bool bTableEnded = false;
+        s_uint uiLineNbr = 0u;
+        while (!bTableEnded)
+        {
+            if (uiLineNbr > 1000u)
+                break;
+
+            if (uiTableIndent == 0)
+            {
+                bTableEnded = true;
+            }
+            else
+            {
+                s_uint i = s.FindPos(" ");
+                s_str sKey = s.Extract(0, i);
+                s.Erase(0, ++i);
+                if (sKey == "'end'")
+                {
+                    uiTableIndent--;
+                    sTab = sTab.Extract(0, sTab.Length() - 4u);
+                    if (uiTableIndent == 0)
+                        sTable += "}\n";
+                    else
+                        sTable += sTab + "},\n";
+                }
+                else
+                {
+                    sKey = "[" + sKey + "]";
+
+                    i = s.FindPos(" ");
+                    s_str sValue = s.Extract(0, i);
+                    s.Erase(0, ++i);
+
+                    int iType;
+                    if (sValue == "'table'")
+                        iType = LUA_TTABLE;
+                    else
+                    {
+                        iType = LUA_TNUMBER;
+                        if (sValue.Find("\""))
+                        {
+                            iType = LUA_TSTRING;
+                        }
+                        else
+                        {
+                            if (sValue.Find("'"))
+                            {
+                                iType = LUA_TBOOLEAN;
+                                sValue.Trim('\'');
+                            }
+                        }
+                    }
+
+                    if (iType == LUA_TNUMBER)
+                    {
+                        sTable += sTab + sKey + " = " + sValue + ";\n";
+                    }
+                    else if (iType == LUA_TNIL)
+                    {
+                        sTable += sTab + sKey + " = nil;\n";
+                    }
+                    else if (iType == LUA_TBOOLEAN)
+                    {
+                        sTable += sTab + sKey + " = " + sValue + ";\n";
+                    }
+                    else if (iType == LUA_TSTRING)
+                    {
+                        sTable += sTab + sKey + " = " + sValue + ";\n";
+                    }
+                    else if (iType == LUA_TTABLE)
+                    {
+                        sTable += sTab + sKey + " = {\n";
+                        sTab += "    ";
+                    }
+                }
+            }
+        }
+
+        pLua->DoString(sTable);
+    }
+    else
+    {
+        pLua->NewTable();
+        pLua->SetGlobal(sNewName);
+    }
+}
+
+s_bool State::DoFile( const s_str& sFile )
+{
+    if (File::Exists(sFile))
+    {
+        int iError = luaL_dofile(pLua_, sFile.c_str());
+        if (iError) l_ThrowError(pLua_);
+
+        return (iError == 0);
+    }
+    else
+    {
+        Error("LUA", "Can't open \""+sFile+"\".");
+        return false;
+    }
+}
+
+s_bool State::DoString( const s_str& sStr )
+{
+    int iError = luaL_dostring(pLua_, sStr.c_str());
+    if (iError) l_ThrowError(pLua_);
+
+    return (iError == 0);
+}
+
+s_bool State::CallFunction( const s_str& sFunctionName )
+{
+    lua_getglobal(pLua_, sFunctionName.c_str());
+    if (lua_isfunction(pLua_, -1))
+    {
+        int iError = lua_pcall(pLua_, 0, 0, 0);
+        if (iError)
+        {
+            l_ThrowError(pLua_);
+            return false;
+        }
+    }
+    else
+    {
+        lua_pop(pLua_, 1);
+        return false;
+    }
+
+    return true;
+}
+
+s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
+{
+    lua_getglobal(pLua_, sFunctionName.c_str());
+    if (lua_isfunction(pLua_, -1))
+    {
+        for (s_uint i; i < lArgumentStack.GetSize(); i++)
+        {
+            const s_var& pArg = lArgumentStack[i];
+            if ((pArg.GetType() == VALUE_INT) ||
+                (pArg.GetType() == VALUE_UINT) ||
+                (pArg.GetType() == VALUE_FLOAT) ||
+                (pArg.GetType() == VALUE_DOUBLE))
+                lua_pushnumber(pLua_, pArg.GetF().Get());
+            else if (pArg.GetType() == VALUE_STRING)
+                lua_pushstring(pLua_, pArg.GetS().c_str());
+            else if (pArg.GetType() == VALUE_BOOL)
+                lua_pushboolean(pLua_, pArg.GetB().Get());
+            else
+                lua_pushnil(pLua_);
+        }
+
+        int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, 0);
+        if (iError)
+        {
+            l_ThrowError(pLua_);
+            return false;
+        }
+    }
+    else
+    {
+        lua_pop(pLua_, 1);
+        return false;
+    }
+
+    return true;
+}
+
+void State::Register( const s_str& sFunctionName, lua_CFunction mFunction )
+{
+    lua_register(pLua_, sFunctionName.c_str(), mFunction);
+}
+
+void State::PrintError( const s_str& sError )
+{
+    lua_Debug d;
+    lua_getstack(pLua_, 1, &d);
+    lua_getinfo(pLua_, "Sl" , &d);
+    s_str sDebugStr = s_str(d.short_src) + ", line " + s_str(d.currentline) + " : " + sError;
+    lua_pushstring(pLua_, sDebugStr.c_str());
+    l_ThrowError(pLua_);
+}
+
+void State::PushNumber( const s_int& iValue )
+{
+    lua_pushnumber(pLua_, iValue.Get());
+}
+
+void State::PushNumber( const s_uint& uiValue)
+{
+    lua_pushnumber(pLua_, uiValue.Get());
+}
+
+void State::PushNumber( const s_float& fValue )
+{
+    lua_pushnumber(pLua_, fValue.Get());
+}
+
+void State::PushNumber( const s_double& dValue )
+{
+    lua_pushnumber(pLua_, dValue.Get());
+}
+
+void State::PushBool( const s_bool& bValue )
+{
+    lua_pushboolean(pLua_, bValue.Get());
+}
+
+void State::PushString( const s_str& sValue )
+{
+    lua_pushstring(pLua_, sValue.c_str());
+}
+
+void State::PushNil( const s_uint& uiNumber )
+{
+    for (s_uint ui; ui < uiNumber; ui++)
+        lua_pushnil(pLua_);
+}
+
+void State::PushGlobal( const s_str& sName )
+{
+    lua_getglobal(pLua_, sName.c_str());
+}
+
+void State::SetGlobal( const s_str& sName )
+{
+    lua_setglobal(pLua_, sName.c_str());
+}
+
+void State::NewTable()
+{
+    lua_newtable(pLua_);
+}
+
+void State::Pop( const s_uint& uiNumber )
+{
+    lua_pop(pLua_, uiNumber.Get());
+}
+
+s_float State::GetNumber( const s_uint& uiIndex )
+{
+    return lua_tonumber(pLua_, uiIndex.Get());
+}
+
+s_bool State::GetBool( const s_uint& uiIndex )
+{
+    return lua_toboolean(pLua_, uiIndex.Get());
+}
+
+s_str State::GetString( const s_uint& uiIndex )
+{
+    return lua_tostring(pLua_, uiIndex.Get());
+}
+
+s_uint State::GetTop()
+{
+    return lua_gettop(pLua_);
+}
+
+Type State::GetType( const s_uint& uiIndex )
+{
+    int type = lua_type(pLua_, uiIndex.Get());
+    switch (type)
+    {
+        case LUA_TBOOLEAN : return Lua::TYPE_BOOLEAN;
+        case LUA_TFUNCTION : return Lua::TYPE_FUNCTION;
+        case LUA_TLIGHTUSERDATA : return Lua::TYPE_LIGHTUSERDATA;
+        case LUA_TNIL : return Lua::TYPE_NIL;
+        case LUA_TNONE : return Lua::TYPE_NONE;
+        case LUA_TNUMBER : return Lua::TYPE_NUMBER;
+        case LUA_TSTRING : return Lua::TYPE_STRING;
+        case LUA_TTABLE : return Lua::TYPE_TABLE;
+        case LUA_TTHREAD : return Lua::TYPE_THREAD;
+        case LUA_TUSERDATA : return Lua::TYPE_USERDATA;
+        default : return Lua::TYPE_NONE;
+    }
+}
+
+s_str State::GetTypeName( Type mType )
+{
+    switch (mType)
+    {
+        case Lua::TYPE_BOOLEAN : return lua_typename(pLua_, LUA_TBOOLEAN);
+        case Lua::TYPE_FUNCTION : return lua_typename(pLua_, LUA_TFUNCTION);
+        case Lua::TYPE_LIGHTUSERDATA : return lua_typename(pLua_, LUA_TLIGHTUSERDATA);
+        case Lua::TYPE_NIL : return lua_typename(pLua_, LUA_TNIL);
+        case Lua::TYPE_NONE : return lua_typename(pLua_, LUA_TNONE);
+        case Lua::TYPE_NUMBER : return lua_typename(pLua_, LUA_TNUMBER);
+        case Lua::TYPE_STRING : return lua_typename(pLua_, LUA_TSTRING);
+        case Lua::TYPE_TABLE : return lua_typename(pLua_, LUA_TTABLE);
+        case Lua::TYPE_THREAD : return lua_typename(pLua_, LUA_TTHREAD);
+        case Lua::TYPE_USERDATA : return lua_typename(pLua_, LUA_TUSERDATA);
+        default : return "";
+    }
+}
+
+s_int State::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue )
+{
+    s_int i;
+    lua_getglobal(pLua_, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+        {
+            PrintError("Missing " + sName + " attribute");
+            i = iDefaultValue;
+        }
+        else
+            i = iDefaultValue;
+    }
+    else if (!lua_isnumber(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        PrintError("\"" + sName + "\" is expected to be a number");
+        i = iDefaultValue;
+    }
+    else
+    {
+        i = (int)lua_tonumber(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return i;
+}
+
+s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue )
+{
+    s_float f;
+    lua_getglobal(pLua_, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+        {
+            PrintError("Missing " + sName + " attribute");
+            f = fDefaultValue;
+        }
+        else
+            f = fDefaultValue;
+    }
+    else if (!lua_isnumber(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        PrintError("\"" + sName + "\" is expected to be a number");
+        f = fDefaultValue;
+    }
+    else
+    {
+        f = lua_tonumber(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return f;
+}
+
+s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue )
+{
+    s_str s;
+    lua_getglobal(pLua_, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+        {
+            PrintError("Missing " + sName + " attribute");
+            s = sDefaultValue;
+        }
+        else
+            s = sDefaultValue;
+    }
+    else if (!lua_isstring(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        PrintError("\"" + sName + "\" is expected to be a string");
+        s = sDefaultValue;
+    }
+    else
+    {
+        s = lua_tostring(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return s;
+}
+
+s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue )
+{
+    s_bool b;
+    lua_getglobal(pLua_, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+        {
+            PrintError("Missing " + sName + " attribute");
+            b = bDefaultValue;
+        }
+        else
+            b = bDefaultValue;
+    }
+    else if (!lua_isboolean(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        PrintError("\"" + sName + "\" is expected to be a bool");
+        b = bDefaultValue;
+    }
+    else
+    {
+        b = lua_toboolean(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return b;
+}
+
+s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue, const s_bool& bSetValue )
+{
+    s_int i;
+    lua_getfield(pLua_, -1, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+            PrintError("Missing " + sName + " attribute");
+        else if (bSetValue)
+        {
+            SetFieldInt(sName, iDefaultValue);
+            i = iDefaultValue;
+        }
+        else
+            i = iDefaultValue;
+    }
+    else if (!lua_isnumber(pLua_, -1))
+    {
+        PrintError("Field is expected to be a number");
+        lua_pop(pLua_, 1);
+        i = iDefaultValue;
+    }
+    else
+    {
+        i = (int)lua_tonumber(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return i;
+}
+
+s_float State::GetFieldFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue, const s_bool& bSetValue )
+{
+    s_float f;
+    lua_getfield(pLua_, -1, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+            PrintError("Missing " + sName + " attribute");
+        else if (bSetValue)
+        {
+            SetFieldFloat(sName, fDefaultValue);
+            f = fDefaultValue;
+        }
+        else
+            f = fDefaultValue;
+    }
+    else if (!lua_isnumber(pLua_, -1))
+    {
+        PrintError("Field is expected to be a number");
+        lua_pop(pLua_, 1);
+        f = fDefaultValue;
+    }
+    else
+    {
+        f = lua_tonumber(pLua_, -1);
+        lua_pop(pLua_, 1);
+
+    }
+    return f;
+}
+
+s_str State::GetFieldString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue, const s_bool& bSetValue )
+{
+    s_str s;
+    lua_getfield(pLua_, -1, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+            PrintError("Missing " + sName + " attribute");
+        else if (bSetValue)
+        {
+            SetFieldString(sName, sDefaultValue);
+            s = sDefaultValue;
+        }
+        else
+            s = sDefaultValue;
+    }
+    else if (!lua_isstring(pLua_, -1))
+    {
+        PrintError("Field is expected to be a string");
+        lua_pop(pLua_, 1);
+        s = sDefaultValue;
+    }
+    else
+    {
+        s = lua_tostring(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return s;
+}
+
+s_bool State::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue, const s_bool& bSetValue )
+{
+    s_bool b;
+    lua_getfield(pLua_, -1, sName.c_str());
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+            PrintError("Missing " + sName + " attribute");
+        else if (bSetValue)
+        {
+            SetFieldBool(sName, bDefaultValue);
+            b = bDefaultValue;
+        }
+        else
+            b = bDefaultValue;
+    }
+    else if (!lua_isboolean(pLua_, -1))
+    {
+        PrintError("Field is expected to be a bool");
+        lua_pop(pLua_, 1);
+        b = bDefaultValue;
+    }
+    else
+    {
+        b = lua_toboolean(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return b;
+}
+
+void State::SetFieldInt( const s_str& sName, const s_int& iValue )
+{
+    lua_pushstring(pLua_, sName.c_str());
+    lua_pushnumber(pLua_, iValue.Get());
+    lua_settable(pLua_, -3);
+}
+
+void State::SetFieldFloat( const s_str& sName, const s_float& fValue )
+{
+    lua_pushstring(pLua_, sName.c_str());
+    lua_pushnumber(pLua_, fValue.Get());
+    lua_settable(pLua_, -3);
+}
+
+void State::SetFieldString( const s_str& sName, const s_str& sValue )
+{
+    lua_pushstring(pLua_, sName.c_str());
+    lua_pushstring(pLua_, sValue.c_str());
+    lua_settable(pLua_, -3);
+}
+
+void State::SetFieldBool( const s_str& sName, const s_bool& bValue )
+{
+    lua_pushstring(pLua_, sName.c_str());
+    lua_pushboolean(pLua_, bValue.Get());
+    lua_settable(pLua_, -3);
+}
+
+void State::SetFieldInt( const s_int& iID, const s_int& iValue )
+{
+    lua_pushnumber(pLua_, iID.Get());
+    lua_pushnumber(pLua_, iValue.Get());
+    lua_settable(pLua_, -3);
+}
+
+void State::SetFieldFloat( const s_int& iID, const s_float& fValue )
+{
+    lua_pushnumber(pLua_, iID.Get());
+    lua_pushnumber(pLua_, fValue.Get());
+    lua_settable(pLua_, -3);
+}
+
+void State::SetFieldString( const s_int& iID, const s_str& sValue )
+{
+    lua_pushnumber(pLua_, iID.Get());
+    lua_pushstring(pLua_, sValue.c_str());
+    lua_settable(pLua_, -3);
+}
+
+void State::SetFieldBool( const s_int& iID, const s_bool& bValue )
+{
+    lua_pushnumber(pLua_, iID.Get());
+    lua_pushboolean(pLua_, bValue.Get());
+    lua_settable(pLua_, -3);
+}

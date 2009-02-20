@@ -15,7 +15,6 @@
 #include "frost_guimanager.h"
 #include "frost_inputmanager.h"
 #include "frost_timemanager.h"
-#include "frost_event.h"
 
 using namespace std;
 using namespace Frost;
@@ -388,7 +387,7 @@ void Frame::NotifyScriptDefined( const s_str& sScriptName )
 
 void Frame::OnEvent( const Event& mEvent )
 {
-    lua_State* pLua = GUIManager::GetSingleton()->GetLua();
+    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
 
     // Lua handlers do not need direct arguments.
     // Instead, we set the value of some global variables
@@ -396,8 +395,8 @@ void Frame::OnEvent( const Event& mEvent )
     // that the user can use however he wants in his handler.
 
     // Set event name
-    lua_pushstring(pLua, mEvent.GetName().c_str());
-    lua_setglobal(pLua, "event");
+    pLua->PushString(mEvent.GetName());
+    pLua->SetGlobal("event");
 
     // Set arguments
     for (s_uint i; i < mEvent.GetNumParam(); i++)
@@ -407,29 +406,29 @@ void Frame::OnEvent( const Event& mEvent )
             (pArg->GetType() == VALUE_UINT) ||
             (pArg->GetType() == VALUE_FLOAT) ||
             (pArg->GetType() == VALUE_DOUBLE))
-            lua_pushnumber(pLua, pArg->GetF().Get());
+            pLua->PushNumber(pArg->GetF());
         else if (pArg->GetType() == VALUE_STRING)
-            lua_pushstring(pLua, pArg->GetS().c_str());
+            pLua->PushString(pArg->GetS());
         else if (pArg->GetType() == VALUE_BOOL)
-            lua_pushboolean(pLua, pArg->GetB().Get());
+            pLua->PushBool(pArg->GetB());
         else
-            lua_pushnil(pLua);
+            pLua->PushNil();
 
-        lua_setglobal(pLua, ("arg" + s_str(i)).c_str());
+        pLua->SetGlobal("arg"+i);
         i++;
     }
 
-    Lua::CallFunction(pLua, sName_+":OnEvent");
+    pLua->CallFunction(sName_+":OnEvent");
 }
 
 void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 {
     if (MAPFIND(sScriptName, lDefinedScriptList_))
     {
-        lua_State* pLua = GUIManager::GetSingleton()->GetLua();
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
 
-        lua_getglobal(pLua, sName_.c_str());
-        lua_setglobal(pLua, "this");
+        pLua->PushGlobal(sName_);
+        pLua->SetGlobal("this");
 
         if ((sScriptName == "KeyDown") ||
             (sScriptName == "KeyUp") )
@@ -437,8 +436,8 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             // Set key name
             if (pEvent != NULL)
             {
-                lua_pushstring(pLua, pEvent->Get(0)->GetS().c_str());
-                lua_setglobal(pLua, "arg1");
+                pLua->PushString(pEvent->Get(0)->GetS());
+                pLua->SetGlobal("arg1");
             }
         }
         else if (sScriptName == "MouseDown")
@@ -455,8 +454,8 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             if ( (mState == MOUSE_CLICKED) || (mState == MOUSE_LONG) )
                 sMouseState = "LeftButton";
 
-            lua_pushstring(pLua, sMouseState.c_str());
-            lua_setglobal(pLua, "arg1");
+            pLua->PushString(sMouseState);
+            pLua->SetGlobal("arg1");
         }
         else if (sScriptName == "MouseUp")
         {
@@ -472,17 +471,17 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             if (mState == MOUSE_UP)
                 sMouseState = "LeftButton";
 
-            lua_pushstring(pLua, sMouseState.c_str());
-            lua_setglobal(pLua, "arg1");
+            pLua->PushString(sMouseState);
+            pLua->SetGlobal("arg1");
         }
         else if (sScriptName == "Update")
         {
             // Set delta time
-            lua_pushnumber(pLua, TimeManager::GetSingleton()->GetDelta().Get());
-            lua_setglobal(pLua, "arg1");
+            pLua->PushNumber(TimeManager::GetSingleton()->GetDelta());
+            pLua->SetGlobal("arg1");
         }
 
-        Lua::CallFunction(pLua, sName_+":On"+sScriptName);
+        pLua->CallFunction(sName_+":On"+sScriptName);
     }
 
     if (sScriptName == "Load")
