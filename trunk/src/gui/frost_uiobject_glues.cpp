@@ -14,7 +14,7 @@ using namespace Frost::GUI;
 
 const s_str LuaUIObject::CLASS_NAME = "GUI::LuaUIObject";
 
-LuaUIObject::LuaUIObject(lua_State* pLua)
+LuaUIObject::LuaUIObject( lua_State* pLua )
 {
     s_str sName = lua_tostring(pLua, 1);
 
@@ -71,7 +71,7 @@ int LuaUIObject::_GetObjectType( lua_State* pLua )
 int LuaUIObject::_IsObjectType( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:IsObjectType", pLua, 1);
-    mFunc.Add(0, "type", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "object type", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
         s_bool bIsType = false;
@@ -177,7 +177,7 @@ int LuaUIObject::_GetParent( lua_State* pLua )
 int LuaUIObject::_GetPoint( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetPoint", pLua, 5);
-    mFunc.Add(0, "pointID", Lua::TYPE_NUMBER, VALUE_INT);
+    mFunc.Add(0, "point ID", Lua::TYPE_NUMBER, VALUE_INT);
     if (mFunc.Check())
     {
         s_ptr<Anchor> pAnchor = pParent_->GetPoint(mFunc.Get(0)->GetUI());
@@ -268,7 +268,7 @@ int LuaUIObject::_RebuildCache( lua_State* pLua )
 int LuaUIObject::_SetAllPoints( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetAllPoints", pLua);
-    mFunc.Add(0, "frameName", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(0, "frame name", Lua::TYPE_STRING, VALUE_STRING, true);
     mFunc.Add(0, "frame", Lua::TYPE_USERDATA, VALUE_NONE, true);
     if (mFunc.Check())
     {
@@ -306,7 +306,7 @@ int LuaUIObject::_SetHeight( lua_State* pLua )
 int LuaUIObject::_SetParent( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetParent", pLua);
-    mFunc.Add(0, "parentName", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(0, "parent name", Lua::TYPE_STRING, VALUE_STRING, true);
     mFunc.Add(0, "parent", Lua::TYPE_USERDATA, VALUE_NONE, true);
     if (mFunc.Check())
     {
@@ -333,11 +333,11 @@ int LuaUIObject::_SetPoint( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetPoint", pLua);
     mFunc.Add(0, "point", Lua::TYPE_STRING, VALUE_STRING);
-    mFunc.Add(1, "parentName", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(1, "parent name", Lua::TYPE_STRING, VALUE_STRING, true);
     mFunc.Add(1, "parent", Lua::TYPE_USERDATA, VALUE_NONE, true);
-    mFunc.Add(2, "relativePoint", Lua::TYPE_STRING, VALUE_STRING, true);
-    mFunc.Add(3, "x", Lua::TYPE_NUMBER, VALUE_INT, true);
-    mFunc.Add(4, "y", Lua::TYPE_NUMBER, VALUE_INT, true);
+    mFunc.Add(2, "relative point", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(3, "x offset", Lua::TYPE_NUMBER, VALUE_INT, true);
+    mFunc.Add(4, "y offset", Lua::TYPE_NUMBER, VALUE_INT, true);
     if (mFunc.Check())
     {
         // point

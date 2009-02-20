@@ -334,6 +334,11 @@ namespace Frost
             */
             void            SetID(const s_uint& uiID);
 
+            /// Creates the associated Lua glue.
+            /** \note This method is pure virtual : it must be overriden.
+            */
+            virtual void    CreateGlue() = 0;
+
             /// Returns this widget's Lua glue.
             /** \return This widget's Lua glue
             */

@@ -8,6 +8,9 @@
 #include "frost_utils_lua_state.h"
 #include "frost_utils_lua_glues.h"
 #include "frost_utils_file.h"
+#include "frost_utils_eventmanager.h"
+#include "frost_utils_event.h"
+#include "frost_utils_stdhelper.h"
 
 using namespace std;
 using namespace Frost;
@@ -235,7 +238,36 @@ s_bool State::DoString( const s_str& sStr )
 
 s_bool State::CallFunction( const s_str& sFunctionName )
 {
-    lua_getglobal(pLua_, sFunctionName.c_str());
+    vector<s_str> lWords = sFunctionName.Cut(":");
+    lua_getglobal(pLua_, lWords.front().c_str());
+
+    if (lWords.size() > 1)
+    {
+        lWords.erase(lWords.begin());
+        if (!lua_isnil(pLua_, -1))
+        {
+            vector<s_str>::iterator iterWords;
+            foreach (iterWords, lWords)
+            {
+                lua_getfield(pLua_, -1, iterWords->c_str());
+                if (lua_isnil(pLua_, -1))
+                {
+                    Error(CLASS_NAME,
+                        "\""+sFunctionName+"\" doesn't exist."
+                    );
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            Error(CLASS_NAME,
+                "\""+sFunctionName+"\" doesn't exist."
+            );
+            return false;
+        }
+    }
+
     if (lua_isfunction(pLua_, -1))
     {
         int iError = lua_pcall(pLua_, 0, 0, 0);
@@ -247,6 +279,9 @@ s_bool State::CallFunction( const s_str& sFunctionName )
     }
     else
     {
+        Error(CLASS_NAME,
+            "\""+sFunctionName+"\" is not a function."
+        );
         lua_pop(pLua_, 1);
         return false;
     }
@@ -256,7 +291,36 @@ s_bool State::CallFunction( const s_str& sFunctionName )
 
 s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
 {
-    lua_getglobal(pLua_, sFunctionName.c_str());
+    vector<s_str> lWords = sFunctionName.Cut(":");
+    lua_getglobal(pLua_, lWords.front().c_str());
+
+    if (lWords.size() > 1)
+    {
+        lWords.erase(lWords.begin());
+        if (!lua_isnil(pLua_, -1))
+        {
+            vector<s_str>::iterator iterWords;
+            foreach (iterWords, lWords)
+            {
+                lua_getfield(pLua_, -1, iterWords->c_str());
+                if (lua_isnil(pLua_, -1))
+                {
+                    Error(CLASS_NAME,
+                        "\""+sFunctionName+"\" doesn't exist."
+                    );
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            Error(CLASS_NAME,
+                "\""+sFunctionName+"\" doesn't exist."
+            );
+            return false;
+        }
+    }
+
     if (lua_isfunction(pLua_, -1))
     {
         for (s_uint i; i < lArgumentStack.GetSize(); i++)
@@ -284,6 +348,9 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
     }
     else
     {
+        Error(CLASS_NAME,
+            "\""+sFunctionName+"\" is not a function."
+        );
         lua_pop(pLua_, 1);
         return false;
     }
@@ -302,8 +369,12 @@ void State::PrintError( const s_str& sError )
     lua_getstack(pLua_, 1, &d);
     lua_getinfo(pLua_, "Sl" , &d);
     s_str sDebugStr = s_str(d.short_src) + ", line " + s_str(d.currentline) + " : " + sError;
-    lua_pushstring(pLua_, sDebugStr.c_str());
-    l_ThrowError(pLua_);
+    Log("# Error # : LUA : " + sDebugStr);
+
+    Event e("LUA_ERROR");
+    e.Add(s_var(sDebugStr));
+
+    EventManager::GetSingleton()->FireEvent(e);
 }
 
 void State::PushNumber( const s_int& iValue )
@@ -387,16 +458,16 @@ Type State::GetType( const s_uint& uiIndex )
     int type = lua_type(pLua_, uiIndex.Get());
     switch (type)
     {
-        case Lua::TYPE_BOOLEAN : return Lua::TYPE_BOOLEAN;
-        case Lua::TYPE_FUNCTION : return Lua::TYPE_FUNCTION;
-        case Lua::TYPE_LIGHTUSERDATA : return Lua::TYPE_LIGHTUSERDATA;
-        case Lua::TYPE_NIL : return Lua::TYPE_NIL;
-        case Lua::TYPE_NONE : return Lua::TYPE_NONE;
-        case Lua::TYPE_NUMBER : return Lua::TYPE_NUMBER;
-        case Lua::TYPE_STRING : return Lua::TYPE_STRING;
-        case Lua::TYPE_TABLE : return Lua::TYPE_TABLE;
-        case Lua::TYPE_THREAD : return Lua::TYPE_THREAD;
-        case Lua::TYPE_USERDATA : return Lua::TYPE_USERDATA;
+        case LUA_TBOOLEAN : return Lua::TYPE_BOOLEAN;
+        case LUA_TFUNCTION : return Lua::TYPE_FUNCTION;
+        case LUA_TLIGHTUSERDATA : return Lua::TYPE_LIGHTUSERDATA;
+        case LUA_TNIL : return Lua::TYPE_NIL;
+        case LUA_TNONE : return Lua::TYPE_NONE;
+        case LUA_TNUMBER : return Lua::TYPE_NUMBER;
+        case LUA_TSTRING : return Lua::TYPE_STRING;
+        case LUA_TTABLE : return Lua::TYPE_TABLE;
+        case LUA_TTHREAD : return Lua::TYPE_THREAD;
+        case LUA_TUSERDATA : return Lua::TYPE_USERDATA;
         default : return Lua::TYPE_NONE;
     }
 }
@@ -405,16 +476,16 @@ s_str State::GetTypeName( Type mType )
 {
     switch (mType)
     {
-        case Lua::TYPE_BOOLEAN : return lua_typename(pLua_, Lua::TYPE_BOOLEAN);
-        case Lua::TYPE_FUNCTION : return lua_typename(pLua_, Lua::TYPE_FUNCTION);
-        case Lua::TYPE_LIGHTUSERDATA : return lua_typename(pLua_, Lua::TYPE_LIGHTUSERDATA);
-        case Lua::TYPE_NIL : return lua_typename(pLua_, Lua::TYPE_NIL);
-        case Lua::TYPE_NONE : return lua_typename(pLua_, Lua::TYPE_NONE);
-        case Lua::TYPE_NUMBER : return lua_typename(pLua_, Lua::TYPE_NUMBER);
-        case Lua::TYPE_STRING : return lua_typename(pLua_, Lua::TYPE_STRING);
-        case Lua::TYPE_TABLE : return lua_typename(pLua_, Lua::TYPE_TABLE);
-        case Lua::TYPE_THREAD : return lua_typename(pLua_, Lua::TYPE_THREAD);
-        case Lua::TYPE_USERDATA : return lua_typename(pLua_, Lua::TYPE_USERDATA);
+        case Lua::TYPE_BOOLEAN : return lua_typename(pLua_, LUA_TBOOLEAN);
+        case Lua::TYPE_FUNCTION : return lua_typename(pLua_, LUA_TFUNCTION);
+        case Lua::TYPE_LIGHTUSERDATA : return lua_typename(pLua_, LUA_TLIGHTUSERDATA);
+        case Lua::TYPE_NIL : return lua_typename(pLua_, LUA_TNIL);
+        case Lua::TYPE_NONE : return lua_typename(pLua_, LUA_TNONE);
+        case Lua::TYPE_NUMBER : return lua_typename(pLua_, LUA_TNUMBER);
+        case Lua::TYPE_STRING : return lua_typename(pLua_, LUA_TSTRING);
+        case Lua::TYPE_TABLE : return lua_typename(pLua_, LUA_TTABLE);
+        case Lua::TYPE_THREAD : return lua_typename(pLua_, LUA_TTHREAD);
+        case Lua::TYPE_USERDATA : return lua_typename(pLua_, LUA_TUSERDATA);
         default : return "";
     }
 }

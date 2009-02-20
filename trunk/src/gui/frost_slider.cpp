@@ -6,6 +6,7 @@
 #include "gui/frost_gui_slider.h"
 
 #include "gui/frost_gui_frame.h"
+#include "frost_guimanager.h"
 
 using namespace std;
 using namespace Frost;
@@ -15,4 +16,14 @@ const s_str Slider::CLASS_NAME = "GUI::Slider";
 
 Slider::Slider() : Frame()
 {
+}
+
+void Slider::CreateGlue()
+{
+    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+    pLua->PushString(sName_);
+    LuaSlider* pNewGlue;
+    pGlue_ = pNewGlue = new LuaSlider(pLua->GetState());
+    Lunar<LuaSlider>::push(pLua->GetState(), pNewGlue);
+    pLua->SetGlobal(sName_);
 }

@@ -167,6 +167,7 @@
 		<Unit filename="include\frost_xml_document.h" />
 		<Unit filename="include\gui\frost_gui_anchor.h" />
 		<Unit filename="include\gui\frost_gui_button.h" />
+		<Unit filename="include\gui\frost_gui_editbox.h" />
 		<Unit filename="include\gui\frost_gui_fontstring.h" />
 		<Unit filename="include\gui\frost_gui_frame.h" />
 		<Unit filename="include\gui\frost_gui_gradient.h" />

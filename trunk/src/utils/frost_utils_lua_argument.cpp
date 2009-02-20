@@ -14,16 +14,8 @@ using namespace Frost::Lua;
 
 const s_str Argument::CLASS_NAME = "Lua::Argument";
 
-Argument::Argument()
-{
-    bSet_ = false;
-    pData_ = NULL;
-    pParent_ = NULL;
-}
-
 Argument::Argument( const s_str& sName, Lua::Type mLuaType, ValueType mType, s_ptr<Function> pParent )
 {
-    bSet_ = false;
     lData_.push_back(Data(sName, mLuaType, mType, this));
     pData_ = &lData_[0];
     pParent_ = pParent;
@@ -95,7 +87,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bo
                     pParent_->GetName() +
                     "\" must be a " +
                     s_str(pLua->GetTypeName(iterData->GetLuaType())) +
-                    " value (" +
+                    " (" +
                     iterData->GetName() +
                     ")."
                 );
@@ -126,7 +118,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bo
                     sEnum += " or a ";
 
                 sEnum += s_str(pLua->GetTypeName(iterData->GetLuaType())) +
-                    " value (" + iterData->GetName() + ")";
+                    " (" + iterData->GetName() + ")";
                 i++;
             }
             pLua->PrintError(

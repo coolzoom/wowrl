@@ -6,6 +6,7 @@
 #include "gui/frost_gui_texture.h"
 
 #include "gui/frost_gui_layeredregion.h"
+#include "frost_guimanager.h"
 
 using namespace std;
 using namespace Frost;
@@ -17,7 +18,17 @@ Texture::Texture() : LayeredRegion()
 {
 }
 
-// TODO : implémenter tout ça
+// TODO : implémenter
+
+void Texture::CreateGlue()
+{
+    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+    pLua->PushString(sName_);
+    LuaTexture* pNewGlue;
+    pGlue_ = pNewGlue = new LuaTexture(pLua->GetState());
+    Lunar<LuaTexture>::push(pLua->GetState(), pNewGlue);
+    pLua->SetGlobal(sName_);
+}
 
 TextureBlendMode Texture::GetBlendMode() const
 {

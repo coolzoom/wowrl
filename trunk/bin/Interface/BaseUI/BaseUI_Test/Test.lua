@@ -1,6 +1,7 @@
 
 ---------
-function BUI_HelpPageBox_OnEnterPressed()
+function Test_OnUpdate()
 ---------
-	
+    
+    
 end

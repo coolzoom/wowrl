@@ -45,5 +45,10 @@
                 </Size>
             </Frame>
         </Frames>
+        <Scripts>
+            <OnUpdate>
+                Test_OnUpdate();
+            </OnUpdate>
+        </Scripts>
 	</Frame>
 </Ui>

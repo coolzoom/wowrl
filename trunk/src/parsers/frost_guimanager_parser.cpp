@@ -77,6 +77,8 @@ namespace Frost
         if (!this->AddUIObject(pFrame))
             return false;
 
+        pFrame->CreateGlue();
+
         s_ptr<GUI::Frame> pParent = (GUI::Frame*)pFrame->GetParent().Get();
         if (pParent)
             pParent->AddChild(pFrame);

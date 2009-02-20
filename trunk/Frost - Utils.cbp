@@ -18,9 +18,6 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
-				<Linker>
-					<Add library="liblua5.1_d.a" />
-				</Linker>
 			</Target>
 			<Target title="Release_Win32">
 				<Option platforms="Windows;" />
@@ -36,7 +33,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="liblua5.1.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug_Linux">

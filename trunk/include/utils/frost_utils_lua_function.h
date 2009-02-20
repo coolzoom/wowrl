@@ -88,15 +88,11 @@ namespace Frost
         {
         public :
 
-            /// Default constructor.
-            Argument();
-
-            /// Main constructor.
-            /** \param sName    The name of this argument (used to print errors in the log)
+            /// Adds an alternative to this argument.
+            /** \param sName    The name of this alternative argument (used to print errors in the log)
             *   \param mLuaType The expected type in Lua
             *   \param mType    The C++ type you'll be using (conversion is done automatically)
             *   \param pParent  A pointer to the function that'll be using it
-            *   \note You shouldn't have to call it. Consider using Function instead.
             */
             Argument(const s_str& sName, Lua::Type mLuaType, ValueType mType, s_ptr<Function> pParent);
 
@@ -104,6 +100,7 @@ namespace Frost
             /** \param sName    The name of this alternative argument (used to print errors in the log)
             *   \param mLuaType The expected type in Lua
             *   \param mType    The C++ type you'll be using (conversion is done automatically)
+            *   \param pParent  A pointer to the function that'll be using it
             */
             void          Add(const s_str& sName, Lua::Type mLuaType, ValueType mType);
 
@@ -214,9 +211,9 @@ namespace Frost
 
         struct ArgumentList
         {
-            std::map<s_uint, Argument> lArg_;
-            std::map<s_uint, Argument> lOptional_;
-            s_uint                     uiRank_;
+            std::map< s_uint, s_ptr<Argument> > lArg_;
+            std::map< s_uint, s_ptr<Argument> > lOptional_;
+            s_uint                              uiRank_;
         };
 
         /// A helper to write Lua glues
@@ -250,6 +247,9 @@ namespace Frost
             *   \note Call this at the beginning of your glue
             */
             Function(const s_str& sName, s_ptr<Lua::State> pLua, const s_uint& uiReturnNbr = 0u);
+
+            /// Destructor.
+            ~Function();
 
             /// Adds an argument to that function.
             /** \param uiIndex    The index of this argument

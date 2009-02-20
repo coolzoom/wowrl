@@ -42,6 +42,16 @@ Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0
     uiLevel_ = 0u;
 }
 
+void Frame::CreateGlue()
+{
+    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+    pLua->PushString(sName_);
+    LuaFrame* pNewGlue;
+    pGlue_ = pNewGlue = new LuaFrame(pLua->GetState());
+    Lunar<LuaFrame>::push(pLua->GetState(), pNewGlue);
+    pLua->SetGlobal(sName_);
+}
+
 s_str Frame::Serialize( const s_str& sTab ) const
 {
     s_str sStr = UIObject::Serialize(sTab);
@@ -382,7 +392,9 @@ const s_bool& Frame::IsUserPlaced() const
 
 void Frame::NotifyScriptDefined( const s_str& sScriptName )
 {
-    lDefinedScriptList_[sScriptName] = true;
+    s_str sCutScriptName = sScriptName;
+    sCutScriptName.EraseFromStart(2);
+    lDefinedScriptList_[sCutScriptName] = true;
 }
 
 void Frame::OnEvent( const Event& mEvent )
@@ -431,7 +443,7 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
         pLua->SetGlobal("this");
 
         if ((sScriptName == "KeyDown") ||
-            (sScriptName == "KeyUp") )
+            (sScriptName == "KeyUp"))
         {
             // Set key name
             if (pEvent != NULL)
@@ -738,6 +750,9 @@ void Frame::Update()
 
         bBuildLayerList_ = false;
     }
+
+    if (IsVisible())
+        On("Update");
 
     // Update childrens
     map< s_uint, s_ptr<Frame> >::iterator iterChild;
