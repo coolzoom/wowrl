@@ -148,7 +148,6 @@
 		<Unit filename="include\frost_path_smoothpath.h" />
 		<Unit filename="include\frost_pathmanager.h" />
 		<Unit filename="include\frost_plane.h" />
-		<Unit filename="include\frost_profiler.h" />
 		<Unit filename="include\frost_scenemanager.h" />
 		<Unit filename="include\frost_sprite.h" />
 		<Unit filename="include\frost_spritemanager.h" />
@@ -159,8 +158,6 @@
 		<Unit filename="include\frost_terraindata.h" />
 		<Unit filename="include\frost_terrainstructs.h" />
 		<Unit filename="include\frost_text.h" />
-		<Unit filename="include\frost_timemanager.h" />
-		<Unit filename="include\frost_timers.h" />
 		<Unit filename="include\frost_unit.h" />
 		<Unit filename="include\frost_unitmanager.h" />
 		<Unit filename="include\frost_xml_block.h" />
@@ -197,12 +194,9 @@
 		<Unit filename="src\frost_materialmanager.cpp" />
 		<Unit filename="src\frost_movableobject.cpp" />
 		<Unit filename="src\frost_plane.cpp" />
-		<Unit filename="src\frost_profiler.cpp" />
 		<Unit filename="src\frost_scenemanager.cpp" />
 		<Unit filename="src\frost_terrain.cpp" />
 		<Unit filename="src\frost_terraindata.cpp" />
-		<Unit filename="src\frost_timemanager.cpp" />
-		<Unit filename="src\frost_timers.cpp" />
 		<Unit filename="src\frost_unit.cpp" />
 		<Unit filename="src\frost_unitmanager.cpp" />
 		<Unit filename="src\gui\frost_anchor.cpp" />

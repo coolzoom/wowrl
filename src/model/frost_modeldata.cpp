@@ -13,7 +13,6 @@
 #include "frost_materialmanager.h"
 #include "frost_material.h"
 #include "frost_gfx.h"
-#include "frost_timers.h"
 
 #include <OgreBone.h>
 #include <OgreMeshManager.h>

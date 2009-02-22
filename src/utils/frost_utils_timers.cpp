@@ -5,8 +5,8 @@
 /*                                        */
 /*                                        */
 
-#include "frost_timers.h"
-#include "frost_timemanager.h"
+#include "frost_utils_timers.h"
+#include "frost_utils_timemanager.h"
 
 using namespace std;
 
@@ -15,7 +15,7 @@ namespace Frost
     const s_str PeriodicTimer::CLASS_NAME = "PeriodicTimer";
     const s_str Timer::CLASS_NAME = "Timer";
 
-    PeriodicTimer::PeriodicTimer( s_double dDuration, TimerType mType, s_bool bTickFirst )
+    PeriodicTimer::PeriodicTimer( const s_double& dDuration, TimerType mType, const s_bool& bTickFirst )
     {
         dDuration_ = dDuration;
         if (bTickFirst) dElapsed_ = dDuration;

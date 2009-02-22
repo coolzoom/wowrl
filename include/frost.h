@@ -156,10 +156,6 @@ namespace Frost
     // frost_plane.h
     class  Plane;
 
-    // frost_profiler.h
-    class  Profiler;
-    class  Chrono;
-
     // frost_scenemanager.h
     class  SceneManager;
 
@@ -174,13 +170,6 @@ namespace Frost
 
     // frost_terraindata.h
     class  TerrainData;
-
-    // frost_timemanager.h
-    class  TimeManager;
-
-    // frost_timers.h
-    class  PeriodicTimer;
-    class  Timer;
 
     // frost_unit.h
     class  Unit;

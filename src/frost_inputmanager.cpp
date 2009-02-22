@@ -7,7 +7,6 @@
 /*                                        */
 
 #include "frost_inputmanager.h"
-#include "frost_timemanager.h"
 
 #include <OgreRenderWindow.h>
 #include <OIS/OISInputManager.h>
