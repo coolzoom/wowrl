@@ -8,7 +8,6 @@
 
 #include "frost_inputmanager.h"
 #include "frost_localemanager.h"
-#include "frost_timemanager.h"
 
 using namespace std;
 using namespace Frost;

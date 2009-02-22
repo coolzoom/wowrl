@@ -9,7 +9,9 @@
 #ifndef FROST_TIMERS_H
 #define FROST_TIMERS_H
 
-#include "frost.h"
+#include "frost_utils.h"
+#include "frost_utils_double.h"
+#include "frost_utils_bool.h"
 
 namespace Frost
 {
@@ -37,7 +39,7 @@ namespace Frost
         *   \param mType     See TimerType
         *   \param bTicks    The timer ticks immediately
         */
-        PeriodicTimer(s_double dDuration, TimerType mType, s_bool bTicks);
+        PeriodicTimer(const s_double& dDuration, TimerType mType, const s_bool& bTicks);
 
         /// Returns the time elapsed since the last tick.
         /** \return The time elapsed since last tick

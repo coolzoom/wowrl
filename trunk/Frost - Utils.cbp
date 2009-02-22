@@ -99,11 +99,14 @@
 		<Unit filename="include\utils\frost_utils_manager.h" />
 		<Unit filename="include\utils\frost_utils_math.h" />
 		<Unit filename="include\utils\frost_utils_point.h" />
+		<Unit filename="include\utils\frost_utils_profiler.h" />
 		<Unit filename="include\utils\frost_utils_ptr.h" />
 		<Unit filename="include\utils\frost_utils_refptr.h" />
 		<Unit filename="include\utils\frost_utils_stdhelper.h" />
 		<Unit filename="include\utils\frost_utils_str.h" />
 		<Unit filename="include\utils\frost_utils_tester.h" />
+		<Unit filename="include\utils\frost_utils_timemanager.h" />
+		<Unit filename="include\utils\frost_utils_timers.h" />
 		<Unit filename="include\utils\frost_utils_uint.h" />
 		<Unit filename="include\utils\frost_utils_var.h" />
 		<Unit filename="include\utils\frost_utils_vector.h" />
@@ -127,8 +130,11 @@
 		<Unit filename="src\utils\frost_utils_lua_state.cpp" />
 		<Unit filename="src\utils\frost_utils_luamanager.cpp" />
 		<Unit filename="src\utils\frost_utils_math.cpp" />
+		<Unit filename="src\utils\frost_utils_profiler.cpp" />
 		<Unit filename="src\utils\frost_utils_str.cpp" />
 		<Unit filename="src\utils\frost_utils_tester.cpp" />
+		<Unit filename="src\utils\frost_utils_timemanager.cpp" />
+		<Unit filename="src\utils\frost_utils_timers.cpp" />
 		<Unit filename="src\utils\frost_utils_uint.cpp" />
 		<Unit filename="src\utils\frost_utils_var.cpp" />
 		<Unit filename="src\utils\frost_utils_vector.cpp" />

@@ -14,7 +14,6 @@
 #include "gui/frost_gui_statusbar.h"
 #include "frost_guimanager.h"
 #include "frost_inputmanager.h"
-#include "frost_timemanager.h"
 
 using namespace std;
 using namespace Frost;

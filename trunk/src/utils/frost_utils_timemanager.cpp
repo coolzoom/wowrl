@@ -7,8 +7,9 @@
 /*  profiling.                            */
 /*                                        */
 
-#include "frost_timemanager.h"
-#include "frost_profiler.h"
+#include "frost_utils_timemanager.h"
+#include "frost_utils_profiler.h"
+#include "frost_utils_stdhelper.h"
 
 #include <OgreTimer.h>
 
@@ -138,7 +139,7 @@ namespace Frost
         return sTime;
     }
 
-    s_ptr<Profiler> TimeManager::GetProfiler( s_uint uiGroup, s_str sName, s_bool bRecord )
+    s_ptr<Profiler> TimeManager::GetProfiler( const s_uint& uiGroup, const s_str& sName, const s_bool& bRecord )
     {
         if (bProfiling_ == true)
         {
@@ -156,7 +157,7 @@ namespace Frost
             return s_ptr<Profiler>(NULL);
     }
 
-    void TimeManager::SetProfiling( s_bool bProfiling )
+    void TimeManager::SetProfiling( const s_bool& bProfiling )
     {
         // Update total profiling time
         if (bProfiling && !bProfiling_)
@@ -167,7 +168,7 @@ namespace Frost
         bProfiling_ = bProfiling;
     }
 
-    void TimeManager::Print( s_uint uiGroup )
+    void TimeManager::Print( const s_uint& uiGroup )
     {
         if (bProfiled_)
         {

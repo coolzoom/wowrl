@@ -1,5 +1,5 @@
 <Ui>
-	<Script file="Test.lua"/>
+    <Script file="Test.lua"/>
     
     <Frame name="Template_Child" virtual="true">
         <Anchors>
@@ -18,13 +18,13 @@
         </Frames>
     </Frame>
     
-	<Frame name="Test" parent="UIParent" hidden="false" movable="true" enableMouse="true" clampedToScreen="true">
+    <Frame name="Test" parent="UIParent" hidden="false" movable="true" enableMouse="true" clampedToScreen="true">
         <Size>
             <AbsDimension x="400" y="400"/>
         </Size>
-		<Anchors>
-			<Anchor point="BOTTOMRIGHT" relativeTo="UIParent" relativePoint="TOPLEFT"/>
-		</Anchors>
+        <Anchors>
+            <Anchor point="BOTTOMRIGHT" relativeTo="UIParent" relativePoint="TOPLEFT"/>
+        </Anchors>
         <Frames>
             <Frame name="$parent_Pin">
                 <Size>
@@ -50,5 +50,5 @@
                 Test_OnUpdate();
             </OnUpdate>
         </Scripts>
-	</Frame>
+    </Frame>
 </Ui>

@@ -9,7 +9,12 @@
 #ifndef FROST_PROFILER_H
 #define FROST_PROFILER_H
 
-#include "frost.h"
+#include "frost_utils.h"
+#include "frost_utils_str.h"
+#include "frost_utils_uint.h"
+#include "frost_utils_double.h"
+#include "frost_utils_bool.h"
+#include "frost_utils_ptr.h"
 
 namespace Frost
 {
@@ -28,25 +33,25 @@ namespace Frost
         *                it profiles)
         *   \param bRecord Store all timings in a list to print them later
         */
-        Profiler(s_uint iGroup, s_str sName, s_bool bRecord);
+        Profiler(const s_uint& iGroup, const s_str& sName, const s_bool& bRecord);
 
         /// Adds a timing.
         /** \param dTiming The timing
         */
-        void   AddTiming(s_double dTiming);
+        void          AddTiming(const s_double& dTiming);
 
         /// Prints timing infos.
         /** \param dTotal The total profiling time, used to calculate percentages.
         */
-        void   PrintProfile(s_double dTotal);
+        void          PrintProfile(const s_double& dTotal);
 
         /// Switches timings recording.
-        void   SetKeepRecords(s_bool bRecord);
+        void          SetKeepRecords(const s_bool& bRecord);
 
         /// Returns this profiler's group.
         /** \return This Profiler's group
         */
-        s_uint GetGroup();
+        const s_uint& GetGroup();
 
         static const s_str CLASS_NAME;
 
@@ -79,7 +84,7 @@ namespace Frost
     {
     public :
 
-        Chrono(s_ptr<Profiler> pProfiler, s_bool bStart = true);
+        Chrono(s_ptr<Profiler> pProfiler, const s_bool& bStart = true);
         ~Chrono();
 
         /// Returns the time elapsed since its creation.
@@ -94,7 +99,7 @@ namespace Frost
         /** \param bSend If set to false, the timer will only be
         *   paused and won't send data to the profiler.
         */
-        void     Stop(s_bool bSend = true);
+        void     Stop(const s_bool& bSend = true);
 
         static const s_str CLASS_NAME;
 

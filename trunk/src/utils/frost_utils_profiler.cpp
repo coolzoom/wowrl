@@ -5,8 +5,9 @@
 /*                                        */
 /*                                        */
 
-#include "frost_profiler.h"
-#include "frost_timemanager.h"
+#include "frost_utils_profiler.h"
+#include "frost_utils_timemanager.h"
+#include "frost_utils_stdhelper.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ namespace Frost
     const s_str Profiler::CLASS_NAME = "Profiler";
     const s_str Chrono::CLASS_NAME = "Chrono";
 
-    Profiler::Profiler( s_uint uiGroup, s_str sName, s_bool bRecord )
+    Profiler::Profiler( const s_uint& uiGroup, const s_str& sName, const s_bool& bRecord )
     {
         sName_ = sName;
         uiGroup_ = uiGroup;
@@ -27,7 +28,7 @@ namespace Frost
         dHighestTime_ = -1.0f;
     }
 
-    void Profiler::AddTiming( s_double dTime )
+    void Profiler::AddTiming( const s_double& dTime )
     {
         uiCallNbr_++;
 
@@ -47,12 +48,12 @@ namespace Frost
         }
     }
 
-    void Profiler::SetKeepRecords( s_bool bRecord )
+    void Profiler::SetKeepRecords( const s_bool& bRecord )
     {
         bRecord_ = bRecord;
     }
 
-    void Profiler::PrintProfile( s_double dProfileTime )
+    void Profiler::PrintProfile( const s_double& dProfileTime )
     {
         Log("  - "+ sName_ +" :");
         Log("     - call number : "+ uiCallNbr_ +" ("+ uiZeroTimings_ +" not timed)");
@@ -78,12 +79,12 @@ namespace Frost
         }
     }
 
-    s_uint Profiler::GetGroup()
+    const s_uint& Profiler::GetGroup()
     {
         return uiGroup_;
     }
 
-    Chrono::Chrono(s_ptr<Profiler> pProfiler, s_bool bStart)
+    Chrono::Chrono(s_ptr<Profiler> pProfiler, const s_bool& bStart)
     {
         if (bStart)
         {
@@ -121,7 +122,7 @@ namespace Frost
         }
     }
 
-    void Chrono::Stop( s_bool bSend )
+    void Chrono::Stop( const s_bool& bSend )
     {
         if (!bStopped_)
         {
