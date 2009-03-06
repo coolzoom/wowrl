@@ -29,7 +29,7 @@ namespace Frost
         map< s_uint, s_ptr<Light> >::iterator iterLight;
         foreach (iterLight, lLightList_)
         {
-            delete iterLight->second.Get();
+            iterLight->second.Delete();
         }
     }
 
@@ -61,7 +61,7 @@ namespace Frost
                 if (iterLight->second->GetID() == pLight->GetID())
                 {
                     // Everything went fine, delete and erase from map
-                    delete iterLight->second.Get();
+                    iterLight->second.Delete();
                     lLightList_.erase(iterLight);
                 }
             }

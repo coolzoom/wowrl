@@ -184,7 +184,7 @@ namespace Frost
             s_ptr<Decal> pListedDecal = lDecalList_[uiID];
             if (pListedDecal == pDecal)
             {
-                delete pDecal.Get();
+                pDecal.Delete();
                 lDecalList_.erase(iterDecal);
 
                 if (lDecalList_.empty())

@@ -371,55 +371,55 @@ namespace Frost
         // Parse attributes
         if (!this->ParseFrameAttributes_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse Size
         if (!this->ParseSizeBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse Anchors
         if (!this->ParseAnchorsBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse TitleRegion
         if (!this->ParseTitleRegionBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse Backdrop
         if (!this->ParseBackdropBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse HitRectInsets
         if (!this->ParseHitRectInsetsBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse Layers
         if (!this->ParseLayersBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse Frames
         if (!this->ParseFramesBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         // Parse Scripts
         if (!this->ParseScriptsBlock_(pFrame, pWidgetBlock))
         {
-            delete pFrame.Get(); return false;
+            pFrame.Delete(); return false;
         }
 
         return true;

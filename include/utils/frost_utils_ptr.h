@@ -61,6 +61,13 @@ namespace Frost
             pValue_ = NULL;
         }
 
+        /// Deletes the content of the pointer;
+        void Delete()
+        {
+            delete pValue_;
+            pValue_ = NULL;
+        }
+
         /// Returns a reference to the contained value.
         /** \return A reference to the contained value
         */

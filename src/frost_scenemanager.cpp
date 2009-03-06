@@ -26,13 +26,13 @@ namespace Frost
         map<s_uint, s_ptr<Plane> >::iterator iterPlane;
         foreach (iterPlane, lPlaneList_)
         {
-            delete iterPlane->second.Get();
+            iterPlane->second.Delete();
         }
 
         map<s_uint, s_ptr<Terrain> >::iterator iterTerrain;
         foreach (iterTerrain, lTerrainList_)
         {
-            delete iterTerrain->second.Get();
+            iterTerrain->second.Delete();
         }
     }
 
@@ -76,7 +76,7 @@ namespace Frost
                 if (iterPlane->second->GetID() == pPlane->GetID())
                 {
                     // Everything went fine, delete, erase from map and return
-                    delete iterPlane->second.Get();
+                    iterPlane->second.Delete();
                     lPlaneList_.erase(iterPlane);
                     return;
                 }
@@ -100,7 +100,7 @@ namespace Frost
                 if (iterTerrain->second->GetID() == pTerrain->GetID())
                 {
                     // Everything went fine, delete, erase from map and return
-                    delete iterTerrain->second.Get();
+                    iterTerrain->second.Delete();
                     lTerrainList_.erase(iterTerrain);
                     return;
                 }

@@ -35,7 +35,7 @@ UIObject::UIObject()
 
 UIObject::~UIObject()
 {
-    delete pGlue_.Get();
+    pGlue_.Delete();
 }
 
 s_ptr<LuaUIObject> UIObject::GetGlue()

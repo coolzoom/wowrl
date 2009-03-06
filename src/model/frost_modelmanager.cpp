@@ -27,7 +27,7 @@ namespace Frost
         map< s_str, s_ptr<ModelData> >::iterator iterModelData;
         foreach (iterModelData, lLoadedModelList_)
         {
-            delete iterModelData->second.Get();
+            iterModelData->second.Delete();
         }
     }
 

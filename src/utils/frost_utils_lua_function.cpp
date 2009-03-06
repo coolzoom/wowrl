@@ -33,11 +33,11 @@ Function::~Function()
     map< s_uint, s_ptr<Argument> >::iterator iter;
     foreach (iter, pArgList_->lOptional_)
     {
-        delete iter->second.Get();
+        iter->second.Delete();
     }
     foreach (iter, pArgList_->lArg_)
     {
-        delete iter->second.Get();
+        iter->second.Delete();
     }
 }
 

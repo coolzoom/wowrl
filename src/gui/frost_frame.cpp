@@ -165,7 +165,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                         "Couldn't add an inherited child to \""+sName_+"\", because its name was already taken : \""
                         +pNewChild->GetName()+"\". Skipped."
                     );
-                    delete pNewChild.Get();
+                    pNewChild.Delete();
                     continue;
                 }
                 this->AddChild(pNewChild);
