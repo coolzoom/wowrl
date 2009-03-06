@@ -42,6 +42,7 @@ namespace Frost
         */
         static void Delete()
         {
+            // We can't use s_ptr::Delete() here because the destructor is private.
             if (mMgr_)
                 delete mMgr_.Get();
             mMgr_ = NULL;

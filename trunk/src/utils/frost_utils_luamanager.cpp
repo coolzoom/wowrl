@@ -24,7 +24,7 @@ namespace Frost
         map< lua_State*, s_ptr<Lua::State> >::iterator iter;
         foreach (iter, lLuaStateList_)
         {
-            delete iter->second.Get();
+            iter->second.Delete();
         }
     }
 
@@ -41,7 +41,7 @@ namespace Frost
         iter = lLuaStateList_.find(pLua->GetState());
         if (iter != lLuaStateList_.end())
         {
-            delete iter->second.Get();
+            iter->second.Delete();
             lLuaStateList_.erase(iter);
         }
     }

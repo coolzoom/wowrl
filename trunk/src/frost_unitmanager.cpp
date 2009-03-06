@@ -29,7 +29,7 @@ namespace Frost
         map< s_uint, s_ptr<Unit> >::iterator iterUnit;
         foreach (iterUnit, lUnitList_)
         {
-            delete iterUnit->second.Get();
+            iterUnit->second.Delete();
         }
     }
 
@@ -72,7 +72,7 @@ namespace Frost
                 if (iterUnit->second->GetID() == pUnit->GetID())
                 {
                     // Everything went fine, delete and erase from map
-                    delete iterUnit->second.Get();
+                    iterUnit->second.Delete();
                     lUnitList_.erase(iterUnit);
                 }
             }

@@ -27,7 +27,7 @@ namespace Frost
         map<s_uint, s_ptr<Camera> >::iterator iterCamera;
         foreach (iterCamera, lCameraList_)
         {
-            delete iterCamera->second.Get();
+            iterCamera->second.Delete();
         }
 
         if (pMainCamera_)
@@ -140,7 +140,7 @@ namespace Frost
                 if (iterCamera->second->GetID() == pCamera->GetID())
                 {
                     // Everything went fine, delete and erase from map
-                    delete iterCamera->second.Get();
+                    iterCamera->second.Delete();
                     lCameraList_.erase(iterCamera);
                 }
             }

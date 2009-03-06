@@ -75,7 +75,7 @@ Block::~Block()
     multimap< s_str, s_ptr<Block> >::iterator iterBlock;
     foreach (iterBlock, lFoundBlockList_)
     {
-        delete iterBlock->second.Get();
+        iterBlock->second.Delete();
     }
 }
 

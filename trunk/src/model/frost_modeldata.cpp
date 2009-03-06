@@ -550,7 +550,7 @@ namespace Frost
         map< s_uint, s_ptr<ModelPart> >::iterator iterPart;
         foreach (iterPart, lModelPartList_)
         {
-            delete iterPart->second.Get();
+            iterPart->second.Delete();
         }
     }
 
