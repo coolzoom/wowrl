@@ -8,7 +8,7 @@
 #define FROST_UTILS_DIRECTORY_H
 
 // Iterates through a Directory's sub directories
-#define foreach_subdir(subdir, dir) for ((subdir) = (dir).GetNextSubDirectory(); (subdir); (subdir) = (dir).GetNextSubDirectory())
+#define foreach_dir(subdir, dir) for ((subdir) = (dir).GetNextSubDirectory(); (subdir); (subdir) = (dir).GetNextSubDirectory())
 
 #include "frost_utils.h"
 #include "frost_utils_uint.h"
@@ -39,6 +39,11 @@ namespace Frost
         */
         s_ptr<Directory> GetNextSubDirectory();
 
+        /// Returns the list of the contained files.
+        /** \return The list of the contained files
+        */
+        const std::vector<s_str>& GetFileList() const;
+
         /// Returns this directory's name.
         /** \return This directory's name
         *   \note For example : Interface/Base_UI.<br>
@@ -59,6 +64,8 @@ namespace Frost
 
         /// The sub-directory list
         std::vector<Directory> lSubDirectoryList_;
+        /// The contained file list
+        std::vector<s_str>     lFileList_;
         /// The sub-directory iterator
         s_uint uiIter_;
         /// This directory name

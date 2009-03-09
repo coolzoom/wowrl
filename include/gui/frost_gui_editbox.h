@@ -31,6 +31,9 @@ namespace Frost
 
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         class LuaEditBox : public LuaFrame
         {
         public :
@@ -80,6 +83,9 @@ namespace Frost
             s_ptr<EditBox> pEditBoxParent_;
 
         };
+
+        /** \endcond
+        */
     }
 }
 

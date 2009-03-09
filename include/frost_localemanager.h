@@ -20,11 +20,14 @@ namespace Frost
     friend class Manager<LocaleManager>;
     public :
 
-        s_str        GetLocalizedString(s_str sStr, s_str sGroup);
+        void         Initialize();
+
+        s_str        GetLocalizedString(const s_str& sStr);
         const s_str& GetLocale() const;
-        void         SetLocale(s_str sLocale);
+        void         SetLocale(const s_str& sLocale);
 
         s_bool       ReadConfig();
+        s_bool       ReadLocale();
 
         static const s_str CLASS_NAME;
 
@@ -53,10 +56,8 @@ namespace Frost
 
     private :
 
-        s_bool ReadLocale();
-
-        std::map< s_str, std::map<s_str, s_str> > lLocalizationTable_;
-        s_str sLocale_;
+        s_str             sLocale_;
+        s_ptr<Lua::State> pLua_;
     };
 }
 

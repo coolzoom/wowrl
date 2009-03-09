@@ -31,6 +31,9 @@ namespace Frost
 
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         class LuaLayeredRegion : public LuaUIObject
         {
         public :
@@ -49,6 +52,9 @@ namespace Frost
             s_ptr<LayeredRegion> pLayeredRegionParent_;
 
         };
+
+        /** \endcond
+        */
     }
 }
 

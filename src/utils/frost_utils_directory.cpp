@@ -34,6 +34,12 @@ namespace Frost
                 {
                     lSubDirectoryList_.push_back(Directory(sRelPath_ + "/" + (*iter)));
                 }
+
+                pSV = pArchive->list(false, false);
+                for (iter = pSV->begin(); iter != pSV->end(); iter++)
+                {
+                    lFileList_.push_back(sRelPath_ + "/" + (*iter));
+                }
             }
             else
                 Error(CLASS_NAME, "Couldn't create Archive for \""+sRelPath_+"\".");
@@ -56,6 +62,11 @@ namespace Frost
             uiIter_ = 0u;
 
         return pSub;
+    }
+
+    const std::vector<s_str>& Directory::GetFileList() const
+    {
+        return lFileList_;
     }
 
     const s_str& Directory::GetName() const

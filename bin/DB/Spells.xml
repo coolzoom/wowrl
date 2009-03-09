@@ -1,2 +1,43 @@
 <Spells>
+    <SpellFamily id="1"> <!-- Frostbolt -->
+        <Spell> <!-- Rank 1 -->
+            <UI name="SPELL_FROSTBOLT_NAME" description="SPELL_FROSTBOLT_DESC" icon="Icons/Spell_Frost_FrostBolt.png"/>
+            
+            <CastInfo castTime="1.5" rangeMax="30" target="HOSTILES">
+                <Cost type="MANA">
+                    <RelativeToBase val="0.16"/>
+                </Cost>
+            </CastInfo>
+            
+            <RegisteredCooldowns>
+                <Cooldown name="GLOBAL"/>
+                <Cooldown name="SCHOOL_FROST"/>
+            </RegisteredCooldowns>
+            
+            <Scripts>
+                <OnStatsChanged>
+                    this.damage_min = caster:GetBonus(18, this.family, "SCHOOL_FROST");
+                    this.damage_max = caster:GetBonus(20, this.family, "SCHOOL_FROST");
+                    this.school = GetLocalizedString("SCHOOL_FROST");
+                    this.slowdown_percent = 0.40;
+                    this.duration = 5;
+                </OnStatsChanged>
+
+                <OnCastBegin>
+                    caster:SetAttacking();
+                    caster:SetAnim(ANIM_READY_SPELL_DIRECTED);
+                </OnCastBegin>
+
+                <OnCasted>
+                    caster:CreateProjectile(target, "MAGE_FROSTBOLT");
+                    caster:SetAnim(ANIM_SPELL_CAST_DIRECTED);
+                </OnCasted>
+
+                <OnImpact>
+                    target:Damage(caster, this.id, RandomInt(this.damage_min, this.damage_max));
+                    target:AddBuff(caster, "BUFF_FROSTBOLT_1");
+                </OnImpact>
+            </Scripts>
+        </Spell>
+    </SpellFamily>
 </Spells>

@@ -17,6 +17,7 @@
 #include "gui/frost_gui_statusbar.h"
 #include "gui/frost_gui_fontstring.h"
 #include "gui/frost_gui_texture.h"
+#include "frost_unit.h"
 
 using namespace std;
 using namespace Frost;
@@ -45,4 +46,10 @@ void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
     Lunar<GUI::LuaLayeredRegion>::Register(pRawLua);
     Lunar<GUI::LuaTexture>::Register(pRawLua);
     Lunar<GUI::LuaFontString>::Register(pRawLua);
+}
+
+void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )
+{
+    lua_State* pRawLua = pLua->GetState();
+    Lunar<LuaUnit>::Register(pRawLua);
 }

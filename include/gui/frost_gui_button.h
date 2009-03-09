@@ -31,6 +31,9 @@ namespace Frost
 
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         class LuaButton : public LuaFrame
         {
         public :
@@ -87,6 +90,9 @@ namespace Frost
             s_ptr<Button> pButtonParent_;
 
         };
+
+        /** \endcond
+        */
     }
 }
 

@@ -119,6 +119,34 @@ namespace Frost
 
         return true;
     }
+
+    s_bool UnitManager::ParseSpellSchools()
+    {
+        XML::Document mDoc("DB/SpellSchools.xml", "DB/SpellSchools.def");
+        if (mDoc.Check())
+        {
+            s_ptr<XML::Block> pSchool;
+            foreach_named_block (pSchool, "School", mDoc.GetMainBlock())
+            {
+                s_str sSchool = pSchool->GetAttribute("name");
+                sSchool.ToUpper();
+                if (!VECTORFIND(sSchool, lSchoolList_))
+                {
+                    lSchoolList_.push_back(s_str::ToUpper(pSchool->GetAttribute("name")));
+                }
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "Spell school \""+sSchool+"\" has already been defined. Skipped."
+                    );
+                }
+            }
+
+            return true;
+        }
+        else
+            return false;
+    }
 }
 
 

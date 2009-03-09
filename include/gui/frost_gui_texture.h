@@ -175,6 +175,9 @@ namespace Frost
 
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         class LuaTexture : public LuaLayeredRegion
         {
         public :
@@ -206,6 +209,9 @@ namespace Frost
             s_ptr<Texture> pTextureParent_;
 
         };
+
+        /** \endcond
+        */
     }
 }
 

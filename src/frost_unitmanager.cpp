@@ -13,6 +13,7 @@
 #include "frost_model.h"
 #include "frost_materialmanager.h"
 #include "frost_material.h"
+#include "frost_lua.h"
 
 using namespace std;
 
@@ -31,6 +32,15 @@ namespace Frost
         {
             iterUnit->second.Delete();
         }
+
+        LuaManager::GetSingleton()->CloseLua(pLua_);
+    }
+
+    void UnitManager::Initialize()
+    {
+        pLua_ = LuaManager::GetSingleton()->CreateLua();
+        Lua::RegisterUnitClass(pLua_);
+        Lua::RegisterGlobalFuncs(pLua_);
     }
 
     s_ptr<Character> UnitManager::CreateCharacter( const s_str& sName, const s_str& sRace, CharGender mGender )
@@ -86,6 +96,17 @@ namespace Frost
         }
     }
 
+    s_ptr<Unit> UnitManager::GetUnitByID( const s_uint& uiID ) const
+    {
+        map< s_uint, s_ptr<Unit> >::const_iterator iterUnit = lUnitList_.find(uiID);
+        if (iterUnit != lUnitList_.end())
+        {
+            return iterUnit->second;
+        }
+        else
+            return NULL;
+    }
+
     void UnitManager::UpdateUnits( const s_float& fDelta )
     {
         map< s_uint, s_ptr<Unit> >::iterator iterUnit;
@@ -94,7 +115,9 @@ namespace Frost
             iterUnit->second->Update(fDelta);
         }
     }
+
+    const std::vector<s_str>& UnitManager::GetSpellSchoolList()
+    {
+        return lSchoolList_;
+    }
 }
-
-
-

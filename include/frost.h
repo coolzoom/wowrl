@@ -159,11 +159,22 @@ namespace Frost
     // frost_scenemanager.h
     class  SceneManager;
 
+    // frost_spell.h
+    class  Spell;
+
     // frost_sprite.h
     class  Sprite;
 
     // frost_spritemanager.h
     class  SpriteManager;
+
+    // frost_stats.h
+    template<class T>
+    class Bonus;
+    struct BonusSet;
+    template<class T>
+    class Characteristic;
+    struct Stats;
 
     // frost_terrain.h
     class  Terrain;

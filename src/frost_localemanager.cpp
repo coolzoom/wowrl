@@ -25,22 +25,20 @@ namespace Frost
 
     LocaleManager::~LocaleManager()
     {
+        LuaManager::GetSingleton()->CloseLua(pLua_);
     }
 
-    s_str LocaleManager::GetLocalizedString( s_str sStr, s_str sGroup )
+    void LocaleManager::Initialize()
     {
-        if (MAPFIND(sGroup, lLocalizationTable_))
-        {
-            s_ptr< map<s_str, s_str> > lSubLocTable = &lLocalizationTable_[sGroup];
-            if (MAPFIND(sStr, *lSubLocTable))
-            {
-                return (*lSubLocTable)[sStr];
-            }
-        }
-        return s_str("<")+sStr+s_str(">");
+        pLua_ = LuaManager::GetSingleton()->CreateLua();
     }
 
-    void LocaleManager::SetLocale( s_str sLocale )
+    s_str LocaleManager::GetLocalizedString( const s_str& sStr )
+    {
+        return pLua_->GetGlobalString(sStr, false, "<"+sStr+">");
+    }
+
+    void LocaleManager::SetLocale( const s_str& sLocale )
     {
         if (sLocale_ == "")
             sLocale_ = sLocale;
@@ -66,49 +64,12 @@ namespace Frost
 
     s_bool LocaleManager::ReadLocale()
     {
-        s_str sSection = "";
-        s_str sKey = "";
-        s_str sValue = "";
-
-        s_str sFile = s_str("Scripts/Locale_") + sLocale_ + s_str(".loc");
-        s_str sLine;
-        File mFile(sFile, FILE_I);
-
-        while (mFile.IsValid())
+        Directory mDir("Locale/"+sLocale_);
+        const vector<s_str>& lFileList = mDir.GetFileList();
+        vector<s_str>::const_iterator iter;
+        foreach (iter, lFileList)
         {
-            sLine = mFile.GetLine();
-            sLine.Trim(' ');
-
-            if (sLine != "")
-            {
-                if ((sLine.Trim('[') == 1) &&
-                    (sLine.Trim(']') == 1))
-                {
-                    // New section
-                    sSection = sLine;
-                }
-                else
-                {
-                    vector<s_str> lParams = sLine.Cut("=", 1);
-                    if (lParams.size() > 1)
-                    {
-                        s_str sTemp = lParams[0];
-                        sTemp.Trim(' ');
-                        sKey = sTemp;
-                        sTemp = lParams[1];
-                        sTemp.Trim(' ');
-                        sValue = sTemp;
-                        if (sValue.Trim('"') > 1)
-                        {
-                            // Store this entry
-                            if ( (sSection != "") && (sKey != "") )
-                            {
-                                lLocalizationTable_[sSection][sKey] = sValue;
-                            }
-                        }
-                    }
-                }
-            }
+            pLua_->DoFile(*iter);
         }
 
         return true;
