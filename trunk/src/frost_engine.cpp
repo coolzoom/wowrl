@@ -122,13 +122,15 @@ namespace Frost
         Log(s_str('#', sLine.Length())+"\n");
 
         // Load configuration
-        if (!pLua_->DoFile("Scripts/Config.lua"))
+        if (!pLua_->DoFile("Config.lua"))
             return false;
         if (!this->ReadConfig_())
             return false;
-        if (!pLocaleMgr_->ReadConfig())
-            return false;
         if (!pFontMgr_->ReadConfig())
+            return false;
+
+        pLocaleMgr_->Initialize();
+        if (!pLocaleMgr_->ReadConfig())
             return false;
 
         // Create the root path
@@ -140,6 +142,11 @@ namespace Frost
 
         // Load shaders
         if (!LoadShaders_())
+            return false;
+
+        pUnitMgr_->Initialize();
+
+        if (!pUnitMgr_->ParseSpellSchools())
             return false;
 
         if (!pUnitMgr_->ParseCharacterModels())

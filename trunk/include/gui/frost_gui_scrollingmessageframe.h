@@ -31,6 +31,9 @@ namespace Frost
 
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         class LuaScrollingMessageFrame : public LuaFrame
         {
         public :
@@ -72,6 +75,9 @@ namespace Frost
             s_ptr<ScrollingMessageFrame> pSMFParent_;
 
         };
+
+        /** \endcond
+        */
     }
 }
 

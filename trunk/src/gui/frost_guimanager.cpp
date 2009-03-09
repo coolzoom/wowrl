@@ -24,7 +24,6 @@ namespace Frost
 
     GUIManager::GUIManager()
     {
-        pLua_ = NULL;
     }
 
     GUIManager::~GUIManager()
@@ -258,7 +257,7 @@ namespace Frost
         Directory mDir(sDirectory);
         s_ptr<Directory> pSubDir;
 
-        foreach_subdir (pSubDir, mDir)
+        foreach_dir (pSubDir, mDir)
         {
             this->LoadAddOnTOC_(pSubDir->GetName(), sDirectory);
         }

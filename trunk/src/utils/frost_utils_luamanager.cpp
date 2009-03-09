@@ -37,12 +37,15 @@ namespace Frost
 
     void LuaManager::CloseLua( s_ptr<Lua::State> pLua )
     {
-        map< lua_State*, s_ptr<Lua::State> >::iterator iter;
-        iter = lLuaStateList_.find(pLua->GetState());
-        if (iter != lLuaStateList_.end())
+        if (pLua)
         {
-            iter->second.Delete();
-            lLuaStateList_.erase(iter);
+            map< lua_State*, s_ptr<Lua::State> >::iterator iter;
+            iter = lLuaStateList_.find(pLua->GetState());
+            if (iter != lLuaStateList_.end())
+            {
+                iter->second.Delete();
+                lLuaStateList_.erase(iter);
+            }
         }
     }
 

@@ -14,10 +14,10 @@
 #include "frost_utils_log.h"
 
 #include <sstream>
+#include <algorithm>
 
 #ifdef FROST_LINUX
     #include <cstdlib>
-    #include <algorithm>
 #endif
 
 using namespace std;
@@ -663,6 +663,16 @@ namespace Frost
         return s_uint((uint)sValue_.size());
     }
 
+    void s_str::ToLower()
+    {
+        std::transform(sValue_.begin(), sValue_.end(), sValue_.begin(), ::tolower);
+    }
+
+    void s_str::ToUpper()
+    {
+        std::transform(sValue_.begin(), sValue_.end(), sValue_.begin(), ::toupper);
+    }
+
     s_uint s_str::Trim( const char& cPattern )
     {
         s_uint uiCount;
@@ -705,5 +715,19 @@ namespace Frost
         mContainer.Push(*this);
         mContainer.Push(sValue);
         return mContainer;
+    }
+
+    s_str s_str::ToLower( const s_str& sValue )
+    {
+        s_str sCopy = sValue;
+        sCopy.ToLower();
+        return sCopy;
+    }
+
+    s_str s_str::ToUpper( const s_str& sValue )
+    {
+        s_str sCopy = sValue;
+        sCopy.ToUpper();
+        return sCopy;
     }
 }

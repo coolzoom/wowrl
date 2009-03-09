@@ -243,6 +243,12 @@ namespace Frost
         */
         s_uint              Size() const;
 
+        /// Makes this string completely lower case.
+        void                ToLower();
+
+        /// Makes this string completely UPPER CASE.
+        void                ToUpper();
+
         /// Removes the surrounding characters matching the provided pattern.
         /** \param cPattern The character to remove
         *   \return The number of character erased
@@ -301,6 +307,18 @@ namespace Frost
 
         static char cDummy;
         static const s_str CLASS_NAME;
+
+        /// Makes the provided string lower case.
+        /** \param sValue The string to modify
+        *   \return The lower cased string
+        */
+        static s_str ToLower(const s_str& sValue);
+
+        /// Makes the provided string UPPER CASE.
+        /** \param sValue The string to modify
+        *   \return The upper cased string
+        */
+        static s_str ToUpper(const s_str& sValue);
 
     private :
 

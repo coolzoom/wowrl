@@ -31,6 +31,9 @@ namespace Frost
 
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         class LuaFontString : public LuaLayeredRegion
         {
         public :
@@ -74,6 +77,9 @@ namespace Frost
             s_ptr<FontString> pFontStringParent_;
 
         };
+
+        /** \endcond
+        */
     }
 }
 

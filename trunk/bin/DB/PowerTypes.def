@@ -1,0 +1,16 @@
+<-------------------->
+<-- FILE STRUCTURE -->
+<-------------------->
+
+<PowerTypes>
+    <PowerType name regenType n:tickDuration="2.0" n:rate="1">
+        <n[.,1]:Scripts>
+            <n[.,1]:OnSpellCasted>
+            </OnSpellCasted>
+            <n[.,1]:OnUnitSpawn>
+            </OnUnitSpawn>
+            <n[.,1]:OnTick>
+            </OnTick>
+        </Scripts>
+    </PowerType>
+</PowerTypes>

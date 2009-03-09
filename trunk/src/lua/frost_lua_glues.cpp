@@ -50,7 +50,7 @@ int Frost::l_GetLocalizedString( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sID = mFunc.Get(0)->GetS();
-        mFunc.Push(Lua::ReturnValue(LocaleManager::GetSingleton()->GetLocalizedString(sID, "UI")));
+        mFunc.Push(Lua::ReturnValue(LocaleManager::GetSingleton()->GetLocalizedString(sID)));
     }
 
     return mFunc.Return();

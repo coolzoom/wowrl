@@ -420,6 +420,9 @@ namespace Frost
             s_ptr<Frame> pParentFrame_;
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         /// Frame Lua glue
         class LuaFrame : public LuaUIObject
         {
@@ -500,6 +503,9 @@ namespace Frost
 
             s_ptr<Frame> pFrameParent_;
         };
+
+        /** \endcond
+        */
     }
 }
 

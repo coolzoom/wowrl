@@ -1,0 +1,22 @@
+<HealthTypes>
+    <HealthType name="HEALTH" regenType="TICK" tickDuration="2.0">
+        <Scripts>
+            <OnUnitSpawn>
+                unit:FillHealthGauge();
+            </OnUnitSpawn>
+            <OnTick>
+                local coef;
+                if (unit:IsInCombat()) then
+                    coef = unit:GetInCombatHealthRegenRatio();
+                else
+                    coef = unit:GetHealthRegenRatio();
+                end
+                if (unit:IsSitting()) then
+                    coef = coef*1.33;
+                end
+                
+                unit:AddHealth(math.ceil(coef*(unit:GetSpirit()*unit:GetSpiritHealthRegenRatio() + 6)));
+            </OnTick>
+        </Scripts>
+    </HealthType>
+</HealthTypes>

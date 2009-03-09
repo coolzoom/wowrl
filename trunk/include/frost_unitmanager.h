@@ -21,29 +21,51 @@ namespace Frost
     friend class Manager<UnitManager>;
     public :
 
+        /// Prepares this class for being used.
+        void                      Initialize();
+
         /// Creates a new Character.
-        s_ptr<Character> CreateCharacter(const s_str& sName, const s_str& sRace, CharGender mGender);
+        s_ptr<Character>          CreateCharacter(const s_str& sName, const s_str& sRace, CharGender mGender);
 
         /// Creates a new Creature.
-        s_ptr<Creature>  CreateCreature(const s_str& sName);
+        s_ptr<Creature>           CreateCreature(const s_str& sName);
 
         /// Deletes a particular Unit.
-        void             DeleteUnit(s_ptr<Unit> pUnit);
+        void                      DeleteUnit(s_ptr<Unit> pUnit);
+
+        /// Returns the Unit associated to the provided ID.
+        /** \param uiID The ID
+        *   \return The Unit associated to the provided ID (NULL if none)
+        */
+        s_ptr<Unit>               GetUnitByID(const s_uint& uiID) const;
 
         /// Reads CharacterModels.xml.
-        s_bool           ParseCharacterModels();
+        s_bool                    ParseCharacterModels();
 
         /// Reads Races.xml.
-        s_bool           ParseRaces();
+        s_bool                    ParseRaces();
 
         /// Reads CreatureModels.xml.
-        s_bool           ParseCreatureModels();
+        s_bool                    ParseCreatureModels();
+
+        /// Reads SpellSchools.xml.
+        s_bool                    ParseSpellSchools();
+
+        /// Returns the complete list of spell school.
+        /** \return The complete list of spell school
+        */
+        const std::vector<s_str>& GetSpellSchoolList();
+
+        /// Returns the Lua::State used in spell scripts.
+        /** \return The Lua::State used in spell scripts
+        */
+        s_ptr<Lua::State>         GetLua();
 
         /// Updates all units.
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by Engine.
         */
-        void             UpdateUnits(const s_float& fDelta);
+        void                      UpdateUnits(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 
@@ -75,6 +97,10 @@ namespace Frost
         s_uint                          uiCounter_;
         std::map< s_uint, s_ptr<Unit> > lUnitList_;
         std::map<s_str, Race>           lRaceList_;
+
+        std::vector<s_str> lSchoolList_;
+
+        s_ptr<Lua::State> pLua_;
 
     };
 }

@@ -149,11 +149,13 @@
 		<Unit filename="include\frost_pathmanager.h" />
 		<Unit filename="include\frost_plane.h" />
 		<Unit filename="include\frost_scenemanager.h" />
+		<Unit filename="include\frost_spell.h" />
 		<Unit filename="include\frost_sprite.h" />
 		<Unit filename="include\frost_spritemanager.h" />
 		<Unit filename="include\frost_stableheaders.h">
 			<Option compile="1" />
 		</Unit>
+		<Unit filename="include\frost_stats.h" />
 		<Unit filename="include\frost_terrain.h" />
 		<Unit filename="include\frost_terraindata.h" />
 		<Unit filename="include\frost_terrainstructs.h" />
@@ -195,9 +197,12 @@
 		<Unit filename="src\frost_movableobject.cpp" />
 		<Unit filename="src\frost_plane.cpp" />
 		<Unit filename="src\frost_scenemanager.cpp" />
+		<Unit filename="src\frost_spell.cpp" />
+		<Unit filename="src\frost_stats.cpp" />
 		<Unit filename="src\frost_terrain.cpp" />
 		<Unit filename="src\frost_terraindata.cpp" />
 		<Unit filename="src\frost_unit.cpp" />
+		<Unit filename="src\frost_unit_glues.cpp" />
 		<Unit filename="src\frost_unitmanager.cpp" />
 		<Unit filename="src\gui\frost_anchor.cpp" />
 		<Unit filename="src\gui\frost_button.cpp" />

@@ -1,0 +1,42 @@
+<PowerTypes>
+    <PowerType name="MANA" regenType="TICK" tickDuration="2.0">
+        <Scripts>
+            <OnSpellCasted>
+                if (spell.chaneled) then
+                    unit.stopRegenTime = GetTime() + math.max(spell.castTime, 5.0);
+                else
+                    unit.stopRegenTime = GetTime() + 5.0;
+                end
+            </OnSpellCasted>
+            <OnUnitSpawn>
+                unit:FillPowerGauge();
+            </OnUnitSpawn>
+            <OnTick>
+                if (unit.stopRegenTime) then
+                    if (GetTime() > unit.stopRegenTime) then
+                        unit.stopRegenTime = nil;
+                    end
+                end
+                if not(unit.stopRegenTime) then
+                    unit:AddPower(math.ceil(2*unit:GetManaRegenRatio()*(0.001 + math.sqrt(unit:GetIntellect())*unit:GetSpirit()*unit:GetBaseRegen())));
+                end
+            </OnTick>
+        </Scripts>
+    </PowerType>
+    <PowerType name="RAGE" regenType="NONE"/>
+    </PowerType>
+    <PowerType name="ENERGY" regenType="CONTINUOUS" rate="10"/>
+        <Scripts>
+            <OnUnitSpawn>
+                unit:FillPowerGauge();
+            </OnUnitSpawn>
+        </Scripts>
+    </PowerType>
+    <PowerType name="FOCUS" regenType="CONTINUOUS" rate="6.125"/>
+        <Scripts>
+            <OnUnitSpawn>
+                unit:FillPowerGauge();
+            </OnUnitSpawn>
+        </Scripts>
+    </PowerType>
+</PowerTypes>

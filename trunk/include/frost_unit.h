@@ -10,6 +10,7 @@
 #define FROST_UNIT_H
 
 #include "frost.h"
+#include "frost_stats.h"
 
 namespace Frost
 {
@@ -164,15 +165,46 @@ namespace Frost
         s_bool          bTurnRight_;
         s_bool          bTurn_;
         s_float         fCumuledYaw_;
+        s_float         fJumpHeight_;
+        s_float         fJumpDuration_;
+        s_float         fForwardRunSpeed_;
+        s_float         fForwardWalkSpeed_;
+        s_float         fBackwardRunSpeed_;
+        s_float         fBackwardWalkSpeed_;
+        s_float         fTurnRate_;
 
-        s_float fJumpHeight_;
-        s_float fJumpDuration_;
-        s_float fForwardRunSpeed_;
-        s_float fForwardWalkSpeed_;
-        s_float fBackwardRunSpeed_;
-        s_float fBackwardWalkSpeed_;
-        s_float fTurnRate_;
+        Stats           mStats;
     };
+
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
+
+    class LuaUnit
+    {
+    public :
+
+        LuaUnit(lua_State* pLua);
+
+        int _AddBuff(lua_State*);
+        int _Damage(lua_State*);
+        int _SetAnim(lua_State*);
+        int _SetAttacking(lua_State*);
+
+        int    GetDataTable(lua_State*);
+        static const char className[];
+        static Lunar<LuaUnit>::RegType methods[];
+        static const s_str CLASS_NAME;
+
+    private :
+
+        s_ptr<Unit> pParent_;
+
+        lua_State*  pLua_;
+        int         iRef_;
+    };
+
+    /** \endcond
+    */
 }
 
 #endif

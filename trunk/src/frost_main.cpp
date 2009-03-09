@@ -251,9 +251,6 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 
             LightManager::GetSingleton()->SetAmbient(Color(150, 150, 150));
 
-            // Parse temporary script
-            GUIManager::GetSingleton()->GetLua()->DoFile("Scripts/Temp.lua");
-
             // Populate the world !
 
             // Create a Unit

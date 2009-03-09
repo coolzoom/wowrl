@@ -31,6 +31,9 @@ namespace Frost
 
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         class LuaStatusBar : public LuaFrame
         {
         public :
@@ -58,6 +61,9 @@ namespace Frost
             s_ptr<StatusBar> pStatusBarParent_;
 
         };
+
+        /** \endcond
+        */
     }
 }
 

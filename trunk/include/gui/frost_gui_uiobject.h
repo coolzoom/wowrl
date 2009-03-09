@@ -382,6 +382,9 @@ namespace Frost
             s_bool bUpdateDimensions_;
         };
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+
         /// UIObject Lua glue
         class LuaUIObject
         {
@@ -437,6 +440,9 @@ namespace Frost
             lua_State*  pLua_;
             int         iRef_;
         };
+
+        /** \endcond
+        */
     }
 }
 

@@ -15,15 +15,20 @@ namespace Frost
 {
     namespace Lua
     {
-        /// Allow a Lua state to use Frost's global functions
+        /// Allows a Lua::State to use Frost's global functions
         /** \param pLua The Lua state to use
         */
         void    RegisterGlobalFuncs(s_ptr<Lua::State> pLua);
 
-        /// Allow a Lua state to use Frost's GUI classes
+        /// Allows a Lua::State to use Frost's GUI classes
         /** \param pLua The Lua state to use
         */
         void    RegisterGUIClasses(s_ptr<Lua::State> pLua);
+
+        /// Allows a Lua::State to use Frost's Unit class
+        /** \param pLua The Lua state to use
+        */
+        void    RegisterUnitClass(s_ptr<Lua::State> pLua);
     }
 
     // Global glues
