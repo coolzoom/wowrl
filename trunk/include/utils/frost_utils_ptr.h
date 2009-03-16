@@ -39,6 +39,13 @@ namespace Frost
             pValue_ = pValue;
         }
 
+        /// Constructor.
+        template<class N>
+        explicit s_ptr(const s_ptr<N>& mPointer)
+        {
+            pValue_ = (T*)mPointer.Get();
+        }
+
         /// Returns the contained pointer.
         /** \return The contained pointer
         */
