@@ -6,7 +6,7 @@
 #include "gui/frost_gui_uiobject.h"
 
 #include "gui/frost_gui_frame.h"
-#include "frost_guimanager.h"
+#include "gui/frost_guimanager.h"
 #include "frost_material.h"
 
 using namespace std;

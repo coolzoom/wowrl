@@ -5,7 +5,7 @@
 /*                                        */
 /*                                        */
 
-#include "frost_guimanager.h"
+#include "gui/frost_guimanager.h"
 
 #include "gui/frost_gui_anchor.h"
 #include "gui/frost_gui_uiobject.h"

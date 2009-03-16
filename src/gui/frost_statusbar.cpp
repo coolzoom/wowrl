@@ -6,7 +6,7 @@
 #include "gui/frost_gui_statusbar.h"
 
 #include "gui/frost_gui_frame.h"
-#include "frost_guimanager.h"
+#include "gui/frost_guimanager.h"
 
 using namespace std;
 using namespace Frost;
