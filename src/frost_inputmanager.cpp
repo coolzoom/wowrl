@@ -358,7 +358,6 @@ namespace Frost
                         bLastDragged_ = true;
 
                     lMouseState_[i] = MOUSE_DRAGGED; // dragged
-
                 }
             }
             else if (MouseIsReleased((MouseButton)i, true))
@@ -373,6 +372,164 @@ namespace Frost
 
         if (!bNewDragged)
             bLastDragged_ = false;
+
+        // Send events :
+        // Keyboard
+        s_ptr<EventManager> pEventMgr = EventManager::GetSingleton();
+        Event mKeyboardEvent;
+        mKeyboardEvent.SetOncePerFrame(true);
+        mKeyboardEvent.Add(s_var(s_uint()));
+        s_bool bEvent;
+        for (uint i = 0; i < 256; i++)
+        {
+            if (KeyIsDown((KeyCode)i))
+            {
+                mKeyboardEvent.SetName("KEY_DOWN");
+                bEvent = true;
+            }
+            else if (KeyIsReleased((KeyCode)i))
+            {
+                mKeyboardEvent.SetName("KEY_RELEASED");
+                bEvent = true;
+            }
+            else if (KeyIsPressed((KeyCode)i))
+            {
+                mKeyboardEvent.SetName("KEY_PRESSED");
+                bEvent = true;
+            }
+
+            if (bEvent)
+            {
+                mKeyboardEvent[0].SetUI(s_uint(i));
+                pEventMgr->FireEvent(mKeyboardEvent);
+                bEvent = false;
+            }
+
+            if (KeyIsDownLong((KeyCode)i))
+            {
+                mKeyboardEvent.SetName("KEY_DOWN_LONG");
+                mKeyboardEvent[0].SetUI(s_uint(i));
+                pEventMgr->FireEvent(mKeyboardEvent);
+            }
+        }
+
+        /*s_ptr<Event> pKeyboardEvent;
+        for (uint i = 0; i < 256; i++)
+        {
+            if (KeyIsDownLong((KeyCode)i))
+            {
+                pKeyboardEvent = new Event("KEY_DOWN_LONG", true);
+            }
+            else if (KeyIsDown((KeyCode)i))
+            {
+                pKeyboardEvent = new Event("KEY_DOWN", true);
+            }
+            else if (KeyIsReleased((KeyCode)i))
+            {
+                pKeyboardEvent = new Event("KEY_RELEASED", true);
+            }
+            else if (KeyIsPressed((KeyCode)i))
+            {
+                pKeyboardEvent = new Event("KEY_PRESSED", true);
+            }
+
+            if (pKeyboardEvent)
+            {
+                pKeyboardEvent->Add(s_uint(i));
+                pEventMgr->FireEvent(*pKeyboardEvent);
+                pKeyboardEvent.Delete();
+            }
+        }*/
+
+        // Mouse
+        if ( (fDMX_ != 0.0f) || (fDMY_ != 0.0f) )
+        {
+            Event mMouseMovedEvent("MOUSE_MOVED", true);
+            mMouseMovedEvent.Add(fDMX_);
+            mMouseMovedEvent.Add(fDMY_);
+            pEventMgr->FireEvent(mMouseMovedEvent);
+        }
+
+        Event mMouseEvent;
+        mMouseEvent.SetOncePerFrame(true);
+        mMouseEvent.Add(s_var(s_uint()));
+        //s_bool bEvent;
+        for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; i++)
+        {
+            if (MouseIsDown((MouseButton)i))
+            {
+                mMouseEvent.SetName("MOUSE_DOWN");
+                bEvent = true;
+            }
+            else if (MouseIsReleased((MouseButton)i))
+            {
+                mMouseEvent.SetName("MOUSE_RELEASED");
+                bEvent = true;
+            }
+            else if (MouseIsPressed((MouseButton)i))
+            {
+                mMouseEvent.SetName("MOUSE_PRESSED");
+                bEvent = true;
+            }
+            else if (MouseIsDoubleClicked((MouseButton)i))
+            {
+                mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
+                bEvent = true;
+            }
+
+            if (bEvent)
+            {
+                mMouseEvent[0].SetUI(s_uint(i));
+                pEventMgr->FireEvent(mMouseEvent);
+                bEvent = false;
+            }
+
+            if (MouseIsDownLong((MouseButton)i))
+            {
+                mMouseEvent.SetName("MOUSE_DOWN_LONG");
+                mMouseEvent[0].SetUI(s_uint(i));
+                pEventMgr->FireEvent(mMouseEvent);
+            }
+        }
+
+        /*s_ptr<Event> pMouseEvent;
+        for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; i++)
+        {
+            if (MouseIsDownLong((MouseButton)i))
+            {
+                pMouseEvent = new Event("MOUSE_DOWN_LONG", true);
+            }
+            else if (MouseIsDown((MouseButton)i))
+            {
+                pMouseEvent = new Event("MOUSE_DOWN", true);
+            }
+            else if (MouseIsReleased((MouseButton)i))
+            {
+                pMouseEvent = new Event("MOUSE_RELEASED", true);
+            }
+            else if (MouseIsPressed((MouseButton)i))
+            {
+                pMouseEvent = new Event("MOUSE_PRESSED", true);
+            }
+            else if (MouseIsDoubleClicked((MouseButton)i))
+            {
+                pMouseEvent = new Event("MOUSE_DOUBLE_CLICKED", true);
+            }
+
+            if (pMouseEvent)
+            {
+                pMouseEvent->Add(s_uint(i));
+                pEventMgr->FireEvent(*pMouseEvent);
+                pMouseEvent.Delete();
+            }
+        }*/
+
+        if (iMWheel_ != 0)
+        {
+            Event mMouseWheelEvent("MOUSE_WHEEL", true);
+            mMouseWheelEvent.Add(iMWheel_);
+            pEventMgr->FireEvent(mMouseWheelEvent);
+        }
     }
 
     void InputManager::SetDoubleclickTime( s_double dDoubleclickTime )
