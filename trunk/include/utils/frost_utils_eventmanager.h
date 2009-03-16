@@ -46,6 +46,9 @@ namespace Frost
         /// Tells this manager to clear the fired Events list.
         void FrameEnded();
 
+        /// Enables/disables debug output in the log file.
+        void ToggleDebugOutput();
+
         static const s_str CLASS_NAME;
 
     protected :
@@ -75,6 +78,8 @@ namespace Frost
 
         std::multimap< s_str, s_ptr<EventReceiver> > lReceiverList_;
         std::vector<s_str>                           lFiredEventList_;
+
+        s_bool bDebugOutput_;
     };
 
 }

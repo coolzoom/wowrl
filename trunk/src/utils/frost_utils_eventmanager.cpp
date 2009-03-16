@@ -86,6 +86,9 @@ namespace Frost
             // Check if this event should only be fired once per frame.
             if (!VECTORFIND(mEvent.GetName(), lFiredEventList_))
             {
+                if (bDebugOutput_)
+                    Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" is being fired...");
+
                 // Now, tell all these EventReceivers that this Event has occured.
                 pair< multimap< s_str, s_ptr<EventReceiver> >::iterator,
                       multimap< s_str, s_ptr<EventReceiver> >::iterator > mIterPair;
@@ -98,6 +101,9 @@ namespace Frost
 
                 if (!mEvent.IsOncePerFrame())
                     lFiredEventList_.push_back(mEvent.GetName());
+
+                if (bDebugOutput_)
+                    Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" has been fired.");
             }
         }
     }
@@ -105,5 +111,10 @@ namespace Frost
     void EventManager::FrameEnded()
     {
         lFiredEventList_.clear();
+    }
+
+    void EventManager::ToggleDebugOutput()
+    {
+        bDebugOutput_ = !bDebugOutput_;
     }
 }
