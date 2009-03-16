@@ -116,17 +116,19 @@
 			<Add directory="lib" />
 			<Add directory="bin" />
 		</Linker>
+		<Unit filename="include\camera\frost_camera.h" />
+		<Unit filename="include\camera\frost_camera_chasingcamera.h" />
+		<Unit filename="include\camera\frost_camera_freecamera.h" />
+		<Unit filename="include\camera\frost_camera_topcamera.h" />
+		<Unit filename="include\camera\frost_cameramanager.h" />
 		<Unit filename="include\frost.h" />
 		<Unit filename="include\frost_animmanager.h" />
-		<Unit filename="include\frost_camera.h" />
-		<Unit filename="include\frost_cameramanager.h" />
 		<Unit filename="include\frost_character.h" />
 		<Unit filename="include\frost_creature.h" />
 		<Unit filename="include\frost_decal.h" />
 		<Unit filename="include\frost_engine.h" />
 		<Unit filename="include\frost_fontmanager.h" />
 		<Unit filename="include\frost_gfx.h" />
-		<Unit filename="include\frost_guimanager.h" />
 		<Unit filename="include\frost_inputmanager.h" />
 		<Unit filename="include\frost_lib_std.h" />
 		<Unit filename="include\frost_lib_utils.h" />
@@ -142,6 +144,7 @@
 		<Unit filename="include\frost_modelmanager.h" />
 		<Unit filename="include\frost_modelstructs.h" />
 		<Unit filename="include\frost_movableobject.h" />
+		<Unit filename="include\frost_node.h" />
 		<Unit filename="include\frost_path.h" />
 		<Unit filename="include\frost_path_directpath.h" />
 		<Unit filename="include\frost_path_manualpath.h" />
@@ -179,8 +182,11 @@
 		<Unit filename="ressources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="src\frost_camera.cpp" />
-		<Unit filename="src\frost_cameramanager.cpp" />
+		<Unit filename="src\camera\frost_camera.cpp" />
+		<Unit filename="src\camera\frost_camera_chasingcamera.cpp" />
+		<Unit filename="src\camera\frost_camera_freecamera.cpp" />
+		<Unit filename="src\camera\frost_camera_topcamera.cpp" />
+		<Unit filename="src\camera\frost_cameramanager.cpp" />
 		<Unit filename="src\frost_character.cpp" />
 		<Unit filename="src\frost_creature.cpp" />
 		<Unit filename="src\frost_decal.cpp" />
@@ -195,6 +201,7 @@
 		<Unit filename="src\frost_material.cpp" />
 		<Unit filename="src\frost_materialmanager.cpp" />
 		<Unit filename="src\frost_movableobject.cpp" />
+		<Unit filename="src\frost_node.cpp" />
 		<Unit filename="src\frost_plane.cpp" />
 		<Unit filename="src\frost_scenemanager.cpp" />
 		<Unit filename="src\frost_spell.cpp" />

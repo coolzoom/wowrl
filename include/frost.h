@@ -24,6 +24,15 @@ namespace Frost
     // frost_camera.h
     class  Camera;
 
+    // frost_camera_chasingcamera.h
+    class  ChasingCamera;
+
+    // frost_camera_freecamera.h
+    class  FreeCamera;
+
+    // frost_camera_topcamera.h
+    class  TopCamera;
+
     // frost_cameramanager.h
     class  CameraManager;
 
@@ -134,6 +143,9 @@ namespace Frost
 
     // frost_movableobject.h
     class  MovableObject;
+
+    // frost_node.h
+    class  Node;
 
     // frost_path.h
     class  Path;
