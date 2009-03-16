@@ -125,7 +125,8 @@ namespace Frost
         {
             if (pMainCamera_ != pCamera)
             {
-                pMainCamera_->NotifyMainCamera(false);
+                if (pMainCamera_)
+                    pMainCamera_->NotifyMainCamera(false);
                 pMainCamera_ = pCamera;
                 pMainCamera_->NotifyMainCamera(true);
 

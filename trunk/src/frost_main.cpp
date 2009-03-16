@@ -63,7 +63,7 @@ enum CameraType
     CAMERA_TOP
 };
 
-CameraType mCamType = CAMERA_FREE;
+CameraType mCamType = CAMERA_UNIT;
 
 s_bool FrameFunc()
 {
@@ -154,7 +154,9 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             //pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
             pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
             pModel = pChar->GetBodyModel().Get();
-            pCam = pFrost->GetFreeCamera();
+            //pCam = pFrost->GetFreeCamera();
+            pCam = pChar->GetCamera();
+            CameraManager::GetSingleton()->SetMainCamera(pCam);
 
             // The ground
             s_refptr<Material> pGroundMat = MaterialManager::GetSingleton()->CreateMaterial3D(

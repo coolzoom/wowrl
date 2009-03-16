@@ -179,6 +179,7 @@
 		<Unit filename="include\gui\frost_gui_statusbar.h" />
 		<Unit filename="include\gui\frost_gui_texture.h" />
 		<Unit filename="include\gui\frost_gui_uiobject.h" />
+		<Unit filename="include\gui\frost_guimanager.h" />
 		<Unit filename="ressources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
