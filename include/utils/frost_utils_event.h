@@ -24,6 +24,9 @@ namespace Frost
     {
     public :
 
+        /// Default constructor.
+        Event();
+
         /// Constructor.
         /** \param sName         The name of this event
         *   \param bOncePerFrame 'true' if you allow several events of
@@ -31,6 +34,18 @@ namespace Frost
         *                        frame
         */
         Event(const s_str& sName, const s_bool& bOncePerFrame = false);
+
+        /// Sets this Event's name.
+        /** \param sName The name of this Event
+        */
+        void SetName(const s_str& sName);
+
+        /// Sets whether this Event can only be fired once per frame.
+        /** \param bOncePerFrame 'true' if you allow several events of
+        *                        this type to be fired during the same
+        *                        frame
+        */
+        void SetOncePerFrame(const s_bool& bOncePerFrame);
 
         /// Adds a parameter to this event.
         /** \param mValue The value
@@ -56,6 +71,10 @@ namespace Frost
         /** \return 'true' if this should only be fired once per frame
         */
         const s_bool& IsOncePerFrame() const;
+
+        s_var& operator [] (const s_uint& uiIndex);
+
+        const s_var& operator [] (const s_uint& uiIndex) const;
 
         static const s_str CLASS_NAME;
 
