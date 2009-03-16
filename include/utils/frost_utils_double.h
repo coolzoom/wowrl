@@ -220,6 +220,7 @@ namespace Frost
         static const s_double NaN;
         static const s_double INFPLUS;
         static const s_double INFMINUS;
+        static const s_double PI;
         static       double   dDummy;
 
         /// Returns the lowest value of the two provided ones.
