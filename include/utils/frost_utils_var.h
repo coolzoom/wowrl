@@ -50,6 +50,7 @@ namespace Frost
     public :
 
         s_var();
+        s_var(const s_var& vValue);
         s_var(const s_int& iValue);
         s_var(const s_uint& uiValue);
         s_var(const s_float& fValue);

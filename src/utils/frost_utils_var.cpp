@@ -19,6 +19,28 @@ namespace Frost
         pPtr_ = NULL;
     }
 
+    s_var::s_var( const s_var& vValue )
+    {
+        mType_ = vValue.mType_;
+        if (vValue.pPtr_)
+        {
+            if (vValue.mType_ == VALUE_INT)
+                pPtr_ = new s_int(*((s_int*)vValue.pPtr_));
+            else if (vValue.mType_ == VALUE_UINT)
+                pPtr_ = new s_uint(*((s_uint*)vValue.pPtr_));
+            else if (vValue.mType_ == VALUE_FLOAT)
+                pPtr_ = new s_float(*((s_float*)vValue.pPtr_));
+            else if (vValue.mType_ == VALUE_DOUBLE)
+                pPtr_ = new s_double(*((s_double*)vValue.pPtr_));
+            else if (vValue.mType_ == VALUE_BOOL)
+                pPtr_ = new s_bool(*((s_bool*)vValue.pPtr_));
+            else if (vValue.mType_ == VALUE_STRING)
+                pPtr_ = new s_str(*((s_str*)vValue.pPtr_));
+            else if (vValue.mType_ == VALUE_POINTER)
+                pPtr_ = vValue.pPtr_;
+        }
+    }
+
     s_var::~s_var()
     {
         Delete_();
@@ -36,7 +58,7 @@ namespace Frost
         pPtr_ = new s_uint(uiValue);
     }
 
-    s_var::s_var(const s_float& fValue)
+    s_var::s_var( const s_float& fValue )
     {
         mType_ = VALUE_FLOAT;
         pPtr_ = new s_float(fValue);
