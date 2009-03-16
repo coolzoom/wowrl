@@ -24,6 +24,7 @@ namespace Frost
     const s_float s_float::NaN = s_float(FLOAT_NAN);
     const s_float s_float::INFPLUS = s_float(FLOAT_INF_PLUS);
     const s_float s_float::INFMINUS = s_float(FLOAT_INF_MINUS);
+    const s_float s_float::PI       = 3.141592f;
     float s_float::fDummy = 0.0f;
 
     s_float::s_float()

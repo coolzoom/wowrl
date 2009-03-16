@@ -24,6 +24,7 @@ namespace Frost
     const s_double s_double::NaN      = s_double(DOUBLE_NAN);
     const s_double s_double::INFPLUS  = s_double(DOUBLE_INF_PLUS);
     const s_double s_double::INFMINUS = s_double(DOUBLE_INF_MINUS);
+    const s_double s_double::PI       = 3.141592653589793;
     double s_double::dDummy           = 0.0;
 
     s_double::s_double()
