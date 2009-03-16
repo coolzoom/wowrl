@@ -4,12 +4,12 @@
 #include "frost_modelmanager.h"
 #include "frost_animmanager.h"
 #include "frost_fontmanager.h"
-#include "frost_guimanager.h"
+#include "gui/frost_guimanager.h"
 #include "frost_sprite.h"
 #include "frost_spritemanager.h"
 #include "frost_inputmanager.h"
-#include "frost_cameramanager.h"
-#include "frost_camera.h"
+#include "camera/frost_cameramanager.h"
+#include "camera/frost_camera.h"
 #include "frost_path_directpath.h"
 #include "frost_path_smoothpath.h"
 #include "frost_pathmanager.h"
@@ -56,7 +56,14 @@ s_float fCamSpeed = 20.0f;
 s_bool bCameraMovedAlone;
 s_bool bAdjustCamDir;
 
-s_bool bUnitControlled = false;
+enum CameraType
+{
+    CAMERA_FREE,
+    CAMERA_UNIT,
+    CAMERA_TOP
+};
+
+CameraType mCamType = CAMERA_FREE;
 
 s_bool FrameFunc()
 {
@@ -76,136 +83,26 @@ s_bool FrameFunc()
         GUIManager::GetSingleton()->PrintUI();
     }
 
-    if (bUnitControlled)
+    if (pInputMgr->KeyIsPressed(KEY_F1))
     {
-        if (pInputMgr->KeyIsPressed(KEY_SPACE))
-        {
-            pChar->Jump();
-        }
-
-        if (pInputMgr->KeyIsPressed(KEY_W))
-        {
-            pChar->SetMoveForward(true);
-        }
-
-        if (pInputMgr->KeyIsReleased(KEY_W))
-        {
-            pChar->SetMoveForward(false);
-        }
-
-        if (pInputMgr->KeyIsPressed(KEY_S))
-        {
-            pChar->SetMoveBackward(true);
-        }
-
-        if (pInputMgr->KeyIsReleased(KEY_S))
-        {
-            pChar->SetMoveBackward(false);
-        }
-
-        if (pInputMgr->KeyIsPressed(KEY_A))
-        {
-            pChar->SetMoveLeft(true);
-        }
-
-        if (pInputMgr->KeyIsReleased(KEY_A))
-        {
-            pChar->SetMoveLeft(false);
-        }
-
-        if (pInputMgr->KeyIsPressed(KEY_D))
-        {
-            pChar->SetMoveRight(true);
-        }
-
-        if (pInputMgr->KeyIsReleased(KEY_D))
-        {
-            pChar->SetMoveRight(false);
-        }
-
-        if (pInputMgr->KeyIsPressed(KEY_DIVIDE))
-        {
-            pChar->ToggleWalking();
-        }
-
-        if (pInputMgr->MouseIsDown(MOUSE_LEFT))
-        {
-            fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
-            fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
-
-            pChar->RotateCamera(fCoefX, fCoefY);
-        }
-
-        if ( pInputMgr->MouseIsPressed(MOUSE_RIGHT) || pInputMgr->MouseIsReleased(MOUSE_RIGHT))
-            pChar->ToggleTurning();
-
-        if (pInputMgr->MouseIsDown(MOUSE_RIGHT))
-        {
-            fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
-            fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
-
-            pChar->RotateModel(fCoefX, fCoefY);
-        }
-
-        if (pInputMgr->WheelIsRolled())
-        {
-            fZoom = -s_float(pInputMgr->GetMWheel())/120.0f;
-            pChar->ZoomCamera(fZoom);
-        }
-    }
-    else
-    {
-        if (pInputMgr->KeyIsDown(KEY_W))
-        {
-            pCam->Translate(Vector::UNIT_Z*(-fCamSpeed)*s_float(pTimeMgr->GetDelta()), true);
-        }
-
-        if (pInputMgr->KeyIsDown(KEY_S))
-        {
-            pCam->Translate(Vector::UNIT_Z*fCamSpeed*s_float(pTimeMgr->GetDelta()), true);
-        }
-
-        if (pInputMgr->KeyIsDown(KEY_A))
-        {
-            pCam->Translate(Vector::UNIT_X*(-fCamSpeed)*s_float(pTimeMgr->GetDelta()), true);
-        }
-
-        if (pInputMgr->KeyIsDown(KEY_D))
-        {
-            pCam->Translate(Vector::UNIT_X*fCamSpeed*s_float(pTimeMgr->GetDelta()), true);
-        }
-
-        if (pInputMgr->KeyIsDown(KEY_Q))
-        {
-            pCam->Translate(Vector::UNIT_Y*fCamSpeed*s_float(pTimeMgr->GetDelta()), true);
-        }
-
-        if (pInputMgr->KeyIsDown(KEY_E))
-        {
-            pCam->Translate(Vector::UNIT_Y*(-fCamSpeed)*s_float(pTimeMgr->GetDelta()), true);
-        }
-
-        if ( pInputMgr->MouseIsDown(MOUSE_LEFT) || pInputMgr->MouseIsDown(MOUSE_RIGHT) )
-        {
-            fCoefX = -pInputMgr->GetMDPosX()/s_float(pFrost->GetScreenWidth());
-            fCoefY = -pInputMgr->GetMDPosY()/s_float(pFrost->GetScreenWidth());
-
-            pCam->Yaw(fCoefX);
-            pCam->Pitch(fCoefY);
-        }
-    }
-
-    if (pInputMgr->KeyIsPressed(KEY_C))
-    {
-        bUnitControlled = !bUnitControlled;
-        if (bUnitControlled)
-        {
-            pCam = pChar->GetCamera();
-        }
+        if (mCamType == CAMERA_TOP)
+            mCamType = CAMERA_FREE;
         else
+            mCamType = CameraType(mCamType+1);
+
+        switch (mCamType)
         {
-            pCam = pFrost->GetCamera();
+            case CAMERA_FREE :
+                pCam = pFrost->GetFreeCamera();
+                break;
+            case CAMERA_UNIT :
+                pCam = pChar->GetCamera();
+                break;
+            case CAMERA_TOP :
+                pCam = pFrost->GetTopCamera();
+                break;
         }
+
         CameraManager::GetSingleton()->SetMainCamera(pCam);
     }
 
@@ -257,7 +154,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             //pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
             pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
             pModel = pChar->GetBodyModel().Get();
-            pCam = pFrost->GetCamera();
+            pCam = pFrost->GetFreeCamera();
 
             // The ground
             s_refptr<Material> pGroundMat = MaterialManager::GetSingleton()->CreateMaterial3D(

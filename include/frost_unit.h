@@ -119,6 +119,11 @@ namespace Frost
         */
         s_refptr<Model>  GetBodyModel();
 
+        /// Returns this Unit's node.
+        /** \return This Unit's node
+        */
+        s_ptr<Node>      GetNode();
+
         /// Returns this Unit's ID.
         /** \return This Unit's ID
         */
@@ -146,6 +151,7 @@ namespace Frost
         s_str           sName_;
         s_refptr<Model> pBodyModel_;
         s_ptr<Camera>   pCamera_;
+        s_ptr<Node>     pNode_;
         s_bool          bCameraMovedAlone_;
 
         s_bool          bJumping_;

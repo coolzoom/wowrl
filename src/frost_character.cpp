@@ -12,7 +12,7 @@
 #include "frost_animmanager.h"
 #include "frost_materialmanager.h"
 #include "frost_material.h"
-#include "frost_camera.h"
+#include "camera/frost_camera.h"
 
 using namespace std;
 
@@ -82,12 +82,12 @@ namespace Frost
             }
         }
 
-        // Attach the unit's camera to the model
-        pCamera_->Attach(s_ptr<Model>(pBodyModel_.Get()));
+        pBodyModel_->Attach(s_ptr<MovableObject>(pNode_));
     }
 
     Character::~Character()
     {
+        pBodyModel_->Detach();
     }
 
     s_ptr<ModelPart> Character::GetModelPart( const s_uint& uiCategory, const s_uint& uiVariation )

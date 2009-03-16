@@ -75,8 +75,7 @@ namespace Frost
         );
     }
 
-
-    void MovableObject::Attach( s_ptr<MovableObject> pObject )
+    void MovableObject::Attach( s_ptr<MovableObject> pObject, const s_bool& bInheritRot, const s_bool& bInheritScale )
     {
         if (pObject)
         {
@@ -85,15 +84,15 @@ namespace Frost
             {
                 pTargetNode_->getParent()->removeChild(pTargetNode_.Get());
                 pParent_->GetOgreNode()->addChild(pTargetNode_.Get());
-                pTargetNode_->setInheritOrientation(false);
-                pTargetNode_->setInheritScale(false);
+                pTargetNode_->setInheritOrientation(bInheritRot.Get());
+                pTargetNode_->setInheritScale(bInheritScale.Get());
             }
             else
             {
                 pNode_->getParent()->removeChild(pNode_.Get());
                 pParent_->GetOgreNode()->addChild(pNode_.Get());
-                pNode_->setInheritOrientation(false);
-                pNode_->setInheritScale(false);
+                pNode_->setInheritOrientation(bInheritRot.Get());
+                pNode_->setInheritScale(bInheritScale.Get());
             }
             bInherits_ = true;
         }
@@ -132,7 +131,7 @@ namespace Frost
         }
         else
         {
-            Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode();
+            pTargetNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode();
             pTargetNode_->setPosition(Vector::FrostToOgre(mOrbitCenter_));
         }
         pTargetNode_->setFixedYawAxis(true);

@@ -7,17 +7,17 @@
 
 #include "frost_inputmanager.h"
 #include "frost_fontmanager.h"
-#include "frost_guimanager.h"
+#include "gui/frost_guimanager.h"
 #include "frost_localemanager.h"
 #include "frost_spritemanager.h"
 #include "frost_pathmanager.h"
 #include "frost_modelmanager.h"
-#include "frost_cameramanager.h"
+#include "camera/frost_cameramanager.h"
 #include "frost_scenemanager.h"
 #include "frost_materialmanager.h"
 #include "frost_lightmanager.h"
 #include "frost_unitmanager.h"
-#include "frost_camera.h"
+#include "camera/frost_camera.h"
 #include "frost_lua.h"
 
 
@@ -116,6 +116,8 @@ namespace Frost
         pLog_->setTimeStampEnabled(false);
         pUtilsMgr_->SetLogFunction(&PrintInLog);
 
+        //pEventMgr_->ToggleDebugOutput();
+
         s_str sLine = "# Starting Frost Engine (" + sGameVersion_ + ") #";
         Log(s_str('#', sLine.Length()));
         Log(sLine);
@@ -176,10 +178,12 @@ namespace Frost
         // Load the UI
         pGUIMgr_->LoadUI();
 
-        // Create the camera
-        pCamera_ = pCameraMgr_->CreateCamera(Vector(3, 4, 3));
-        pCamera_->SetDirection(Vector(-1, -1, -1));
-        pCameraMgr_->SetMainCamera(pCamera_);
+        // Create the free camera
+        pFreeCamera_ = s_ptr<Camera>(pCameraMgr_->CreateFreeCamera(Vector(3, 4, 3)));
+        pCameraMgr_->SetMainCamera(pFreeCamera_);
+
+        // Create the top camera
+        pTopCamera_ = s_ptr<Camera>(pCameraMgr_->CreateTopCamera());
 
         return true;
     }
@@ -485,9 +489,14 @@ namespace Frost
         return pLog_;
     }
 
-    s_ptr<Camera> Engine::GetCamera()
+    s_ptr<Camera> Engine::GetFreeCamera()
     {
-        return pCamera_;
+        return pFreeCamera_;
+    }
+
+    s_ptr<Camera> Engine::GetTopCamera()
+    {
+        return pTopCamera_;
     }
 
     s_ptr<Ogre::SceneManager> Engine::GetOgreSceneManager()
