@@ -248,17 +248,17 @@ namespace Frost
 
         // Keyboard
         s_double dDoubleclickTime_;
-        s_double lDoubleclickDelay_[3];
-        s_double lKeyDelay_[256];
-        s_bool   lKeyLong_[256];
-        s_bool   lKeyBuf_[256];
-        s_bool   lKeyBufOld_[256];
+        s_array<s_double,3>   lDoubleclickDelay_;
+        s_array<s_double,256> lKeyDelay_;
+        s_array<s_bool,256>   lKeyLong_;
+        s_array<s_bool,256>   lKeyBuf_;
+        s_array<s_bool,256>   lKeyBufOld_;
 
-        s_bool   bCtrlPressed_;
-        s_bool   bShiftPressed_;
-        s_bool   bAltPressed_;
-        s_bool   bKey_;
-        char     cChar_;
+        s_bool bCtrlPressed_;
+        s_bool bShiftPressed_;
+        s_bool bAltPressed_;
+        s_bool bKey_;
+        char   cChar_;
 
         std::vector<s_uint> lDownStack_;
         std::vector<s_uint> lUpStack_;
@@ -270,7 +270,7 @@ namespace Frost
         s_bool     lMouseBufOld_[INPUT_MOUSE_BUTTON_NUMBER];
         MouseState lMouseState_[INPUT_MOUSE_BUTTON_NUMBER];
 
-        s_float fMX_, fMY_;
+        s_float fMX_,  fMY_;
         s_float fDMX_, fDMY_;
         s_int   iMWheel_;
         s_bool  bWheelRolled_;
