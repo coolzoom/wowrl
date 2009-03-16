@@ -33,12 +33,15 @@ namespace Frost
         virtual ~MovableObject();
 
         /// Attaches this object to another.
-        /** \param pObject The new parent
+        /** \param pObject       The new parent
+        *   \param bInheritRot   'true' if you want your object to
+        *                        rotate along with the other
+        *   \param bInheritScale 'true' if you want your object to
+        *                        be scaled along with the other
         *   \note If you move pObject, this object will follow it,
-        *         but pObject wont move if you move this object.<br>
-        *         Enables inheritance.
+        *         but pObject wont move if you move this object.
         */
-        virtual void          Attach(s_ptr<MovableObject> pObject);
+        virtual void          Attach(s_ptr<MovableObject> pObject, const s_bool& bInheritRot = true, const s_bool& bInheritScale = true);
 
         /// Removes the link this object had with its parent.
         /** \note Disables inheritance.

@@ -112,10 +112,15 @@ namespace Frost
         */
         const s_uint&       GetScreenHeight() const;
 
-        /// Returns the base camera.
-        /** \return The base camera
+        /// Returns the base camera (free).
+        /** \return The base camera (free)
         */
-        s_ptr<Camera>       GetCamera();
+        s_ptr<Camera>       GetFreeCamera();
+
+        /// Returns the classic top-down camera.
+        /** \return The classic top-down camera
+        */
+        s_ptr<Camera>       GetTopCamera();
 
         /// Returns the Ogre::RenderWindow used by the engine.
         /** \return The Ogre::RenderWindow used by the engine
@@ -202,8 +207,9 @@ namespace Frost
         s_ptr<LightManager>    pLightMgr_;
         s_ptr<UnitManager>     pUnitMgr_;
 
-        // Base camera
-        s_ptr<Camera> pCamera_;
+        // Base cameras
+        s_ptr<Camera> pFreeCamera_;
+        s_ptr<Camera> pTopCamera_;
 
         // Lua
         s_ptr<Lua::State> pLua_;

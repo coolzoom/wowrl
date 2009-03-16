@@ -10,8 +10,10 @@
 #include "frost_modelmanager.h"
 #include "frost_model.h"
 #include "frost_animmanager.h"
-#include "frost_cameramanager.h"
-#include "frost_camera.h"
+#include "frost_scenemanager.h"
+#include "frost_node.h"
+#include "camera/frost_cameramanager.h"
+#include "camera/frost_camera.h"
 
 using namespace std;
 
@@ -30,13 +32,14 @@ namespace Frost
         fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f),
         fTurnRate_(0.385f)
     {
-        pCamera_ = CameraManager::GetSingleton()->CreateCamera(Vector(0, 4, 5));
-        pCamera_->OrbitAround(Vector(0, 2, 0), true);
+        pNode_ = SceneManager::GetSingleton()->CreateNode();
+        pCamera_ = s_ptr<Camera>(CameraManager::GetSingleton()->CreateChasingCamera(this));
     }
 
     Unit::~Unit()
     {
-
+        SceneManager::GetSingleton()->DeleteNode(pNode_);
+        CameraManager::GetSingleton()->DeleteCamera(pCamera_);
     }
 
     void Unit::Jump()
@@ -70,12 +73,12 @@ namespace Frost
                 {
                     if (mLMovementType_ == LMOVEMENT_STRAFE_LEFT)
                     {
-                        pBodyModel_->Yaw(0.125f-fCumuledYaw_);
+                        pNode_->Yaw(0.125f-fCumuledYaw_);
                         fCumuledYaw_ = 0.125f;
                     }
                     else if (mLMovementType_ == LMOVEMENT_STRAFE_RIGHT)
                     {
-                        pBodyModel_->Yaw(-0.125f-fCumuledYaw_);
+                        pNode_->Yaw(-0.125f-fCumuledYaw_);
                         fCumuledYaw_ = -0.125f;
                     }
                     else
@@ -93,12 +96,12 @@ namespace Frost
                 {
                     if (mLMovementType_ == LMOVEMENT_STRAFE_LEFT)
                     {
-                        pBodyModel_->Yaw(-0.125f-fCumuledYaw_);
+                        pNode_->Yaw(-0.125f-fCumuledYaw_);
                         fCumuledYaw_ = -0.125f;
                     }
                     else if (mLMovementType_ == LMOVEMENT_STRAFE_RIGHT)
                     {
-                        pBodyModel_->Yaw(-0.125f-fCumuledYaw_);
+                        pNode_->Yaw(-0.125f-fCumuledYaw_);
                         fCumuledYaw_ = 0.125f;
                     }
 
@@ -121,12 +124,12 @@ namespace Frost
                     {
                         if (mLMovementType_ == LMOVEMENT_STRAFE_LEFT)
                         {
-                            pBodyModel_->Yaw(0.25f-fCumuledYaw_);
+                            pNode_->Yaw(0.25f-fCumuledYaw_);
                             fCumuledYaw_ = 0.25f;
                         }
                         else
                         {
-                            pBodyModel_->Yaw(-0.25f-fCumuledYaw_);
+                            pNode_->Yaw(-0.25f-fCumuledYaw_);
                             fCumuledYaw_ = -0.25f;
                         }
                         pBodyModel_->GetAnimMgr()->SetSpeed(1.0f);
@@ -212,7 +215,7 @@ namespace Frost
             {
                 if (mMovementType_ == MOVEMENT_NONE)
                 {
-                    pBodyModel_->Yaw(0.25f-fCumuledYaw_);
+                    pNode_->Yaw(0.25f-fCumuledYaw_);
                     fCumuledYaw_ = 0.25f;
                     if (bWalk_)
                         pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
@@ -221,12 +224,12 @@ namespace Frost
                 }
                 else if (mMovementType_ == MOVEMENT_FORWARD)
                 {
-                    pBodyModel_->Yaw(0.125f-fCumuledYaw_);
+                    pNode_->Yaw(0.125f-fCumuledYaw_);
                     fCumuledYaw_ = 0.125f;
                 }
                 else if (mMovementType_ == MOVEMENT_BACKWARD)
                 {
-                    pBodyModel_->Yaw(-0.125f-fCumuledYaw_);
+                    pNode_->Yaw(-0.125f-fCumuledYaw_);
                     fCumuledYaw_ = -0.125f;
                 }
                 break;
@@ -235,7 +238,7 @@ namespace Frost
             {
                 if (mMovementType_ == MOVEMENT_NONE)
                 {
-                    pBodyModel_->Yaw(-0.25f-fCumuledYaw_);
+                    pNode_->Yaw(-0.25f-fCumuledYaw_);
                     fCumuledYaw_ = -0.25f;
                     if (bWalk_)
                         pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
@@ -244,12 +247,12 @@ namespace Frost
                 }
                 else if (mMovementType_ == MOVEMENT_FORWARD)
                 {
-                    pBodyModel_->Yaw(-0.125f-fCumuledYaw_);
+                    pNode_->Yaw(-0.125f-fCumuledYaw_);
                     fCumuledYaw_ = -0.125f;
                 }
                 else if (mMovementType_ == MOVEMENT_BACKWARD)
                 {
-                    pBodyModel_->Yaw(0.125f-fCumuledYaw_);
+                    pNode_->Yaw(0.125f-fCumuledYaw_);
                     fCumuledYaw_ = 0.125f;
                 }
                 break;
@@ -272,7 +275,7 @@ namespace Frost
             }
             case LMOVEMENT_NONE :
             {
-                pBodyModel_->Yaw(-fCumuledYaw_);
+                pNode_->Yaw(-fCumuledYaw_);
                 fCumuledYaw_ = 0.0f;
                 if (mMovementType_ == MOVEMENT_NONE)
                 {
@@ -486,6 +489,10 @@ namespace Frost
         return pBodyModel_;
     }
 
+    s_ptr<Node> Unit::GetNode()
+    {
+        return pNode_;
+    }
 
     void Unit::ZoomCamera( const s_float& fZoom )
     {
@@ -506,11 +513,11 @@ namespace Frost
         {
             Vector mDirection = pCamera_->GetDirection(false);
             mDirection.Y(0.0f);
-            pBodyModel_->SetDirection(mDirection);
+            pNode_->SetDirection(mDirection);
             bCameraMovedAlone_ = false;
         }
 
-        pBodyModel_->Yaw(fYaw);
+        pNode_->Yaw(fYaw);
         pCamera_->Yaw(fYaw);
         pCamera_->Pitch(fPitch);
     }
@@ -539,7 +546,7 @@ namespace Frost
                 if (mJumpTimer_.GetElapsed() > s_double(fJumpDuration_))
                 {
                     bJumping_ = false;
-                    pBodyModel_->SetPosition(mJumpPosition_+mJumpHMovement_);
+                    pNode_->SetPosition(mJumpPosition_+mJumpHMovement_);
                     switch (mMovementType_)
                     {
                         case MOVEMENT_FORWARD :
@@ -636,15 +643,13 @@ namespace Frost
                         }
                     }
 
-                    pBodyModel_->SetPosition(
-                        Vector(
-                            mJumpPosition_.X()+mJumpHMovement_.X(),
-                            mJumpPosition_.Y() +
-                            s_float(JUMP_COEF_1*mJumpTimer_.GetElapsed()*mJumpTimer_.GetElapsed() +
-                            JUMP_COEF_2*mJumpTimer_.GetElapsed()),
-                            mJumpPosition_.Z()+mJumpHMovement_.Z()
-                        )
-                    );
+                    pNode_->SetPosition(Vector(
+                        mJumpPosition_.X() + mJumpHMovement_.X(),
+                        mJumpPosition_.Y() +
+                        s_float(JUMP_COEF_1*mJumpTimer_.GetElapsed()*mJumpTimer_.GetElapsed() +
+                        JUMP_COEF_2*mJumpTimer_.GetElapsed()),
+                        mJumpPosition_.Z() + mJumpHMovement_.Z()
+                    ));
                 }
             }
         }
@@ -654,14 +659,14 @@ namespace Frost
             case LMOVEMENT_TURN_LEFT :
             {
                 s_float fAngle = s_float(s_double(fTurnRate_)*TimeManager::GetSingleton()->GetDelta());
-                pBodyModel_->Yaw(fAngle);
+                pNode_->Yaw(fAngle);
                 pCamera_->Yaw(fAngle);
                 break;
             }
             case LMOVEMENT_TURN_RIGHT :
             {
                 s_float fAngle = s_float(s_double(-fTurnRate_)*TimeManager::GetSingleton()->GetDelta());
-                pBodyModel_->Yaw(fAngle);
+                pNode_->Yaw(fAngle);
                 pCamera_->Yaw(fAngle);
                 break;
             }
@@ -670,7 +675,7 @@ namespace Frost
                 if (mMovementType_ == MOVEMENT_NONE)
                 {
                     if (bWalk_)
-                        pBodyModel_->Translate(
+                        pNode_->Translate(
                             Vector(
                                 0.0f,
                                 0.0f,
@@ -680,7 +685,7 @@ namespace Frost
                             true
                         );
                     else
-                        pBodyModel_->Translate(
+                        pNode_->Translate(
                             Vector(
                                 0.0f,
                                 0.0f,
@@ -697,7 +702,7 @@ namespace Frost
                 if (mMovementType_ == MOVEMENT_NONE)
                 {
                     if (bWalk_)
-                        pBodyModel_->Translate(
+                        pNode_->Translate(
                             Vector(
                                 0.0f,
                                 0.0f,
@@ -707,7 +712,7 @@ namespace Frost
                             true
                         );
                     else
-                        pBodyModel_->Translate(
+                        pNode_->Translate(
                             Vector(
                                 0.0f,
                                 0.0f,
@@ -730,7 +735,7 @@ namespace Frost
             case MOVEMENT_FORWARD :
             {
                 if (bWalk_)
-                    pBodyModel_->Translate(
+                    pNode_->Translate(
                         Vector(
                             0.0f,
                             0.0f,
@@ -740,7 +745,7 @@ namespace Frost
                         true
                     );
                 else
-                    pBodyModel_->Translate(
+                    pNode_->Translate(
                         Vector(
                             0.0f,
                             0.0f,
@@ -755,7 +760,7 @@ namespace Frost
             case MOVEMENT_BACKWARD :
             {
                 if (bWalk_)
-                    pBodyModel_->Translate(
+                    pNode_->Translate(
                         Vector(
                             0.0f,
                             0.0f,
@@ -765,7 +770,7 @@ namespace Frost
                         true
                     );
                 else
-                    pBodyModel_->Translate(
+                    pNode_->Translate(
                         Vector(
                             0.0f,
                             0.0f,
