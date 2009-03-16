@@ -55,6 +55,11 @@ namespace Frost
             return lArray_.size();
         }
 
+        T& operator[] (const s_uint& uiIndex)
+        {
+            return lArray_[uiIndex.Get()];
+        }
+
         const T& operator[] (const s_uint& uiIndex) const
         {
             return lArray_[uiIndex.Get()];
@@ -144,6 +149,14 @@ namespace Frost
         }
 
         T& operator [] (const s_uint& uiIndex)
+        {
+            if (uiIndex < N)
+                return lArray_[uiIndex.Get()];
+            else
+                return mDummy;
+        }
+
+        const T& operator [] (const s_uint& uiIndex) const
         {
             if (uiIndex < N)
                 return lArray_[uiIndex.Get()];
