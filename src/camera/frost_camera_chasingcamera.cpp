@@ -23,7 +23,7 @@ namespace Frost
 
     ChasingCamera::~ChasingCamera()
     {
-        Detach();
+        //Detach();
     }
 
     void ChasingCamera::NotifyMainCamera( const s_bool& bMainCamera )
@@ -50,16 +50,17 @@ namespace Frost
 
     void ChasingCamera::OnEvent( const Event& mEvent )
     {
-        // TODO : tester tout ça
         if (mEvent.GetName() == "KEY_PRESSED")
         {
             KeyCode mKey = KeyCode(mEvent[0].GetUI().Get());
             if (mKey == KEY_W)
             {
+                Log("forward !");
                 pUnit_->SetMoveForward(true);
             }
             else if (mKey == KEY_S)
             {
+                Log("stop forward");
                 pUnit_->SetMoveBackward(true);
             }
             else if (mKey == KEY_A)
@@ -119,7 +120,11 @@ namespace Frost
         else if ( (mEvent.GetName() == "MOUSE_PRESSED") || (mEvent.GetName() == "MOUSE_RELEASED") )
         {
             if (MouseButton(mEvent[0].GetUI().Get()) == MOUSE_RIGHT)
+            {
                 pUnit_->ToggleTurning();
+                if (mEvent.GetName() == "MOUSE_PRESSED")
+                    pUnit_->RotateModel(0.0f, 0.0f);
+            }
         }
         else if (mEvent.GetName() == "MOUSE_WHEEL")
         {

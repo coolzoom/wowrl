@@ -790,5 +790,7 @@ namespace Frost
 
         if (pBodyModel_)
             pBodyModel_->Update(fDelta);
+
+        Log("pos : "+pNode_->GetPosition());
     }
 }
