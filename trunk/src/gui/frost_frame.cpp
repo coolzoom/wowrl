@@ -12,7 +12,7 @@
 #include "gui/frost_gui_scrollingmessageframe.h"
 #include "gui/frost_gui_slider.h"
 #include "gui/frost_gui_statusbar.h"
-#include "frost_guimanager.h"
+#include "gui/frost_guimanager.h"
 #include "frost_inputmanager.h"
 
 using namespace std;
