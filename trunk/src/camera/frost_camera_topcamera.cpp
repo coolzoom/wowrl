@@ -58,21 +58,21 @@ namespace Frost
             KeyCode mKey = KeyCode(mEvent[0].GetUI().Get());
             if (mKey == KEY_W)
             {
-                Vector mTranslation = GetDirection();
+                Vector mTranslation = GetDirection(false);
                 mTranslation.Y(0.0f); mTranslation.Normalize();
                 mTranslation *= fSpeed_*s_float(TimeManager::GetSingleton()->GetDelta());
                 pTargetNode_->translate(Vector::FrostToOgre(mTranslation));
             }
             else if (mKey == KEY_S)
             {
-                Vector mTranslation = GetDirection();
+                Vector mTranslation = GetDirection(false);
                 mTranslation.Y(0.0f); mTranslation.Normalize();
                 mTranslation *= -fSpeed_*s_float(TimeManager::GetSingleton()->GetDelta());
                 pTargetNode_->translate(Vector::FrostToOgre(mTranslation));
             }
             else if (mKey == KEY_A)
             {
-                Vector mTranslation = GetDirection();
+                Vector mTranslation = GetDirection(false);
                 mTranslation.Y(0.0f);
                 mTranslation.Rotate(0.25, Vector::UNIT_Y);
                 mTranslation.Normalize();
@@ -81,7 +81,7 @@ namespace Frost
             }
             else if (mKey == KEY_D)
             {
-                Vector mTranslation = GetDirection();
+                Vector mTranslation = GetDirection(false);
                 mTranslation.Y(0.0f);
                 mTranslation.Rotate(0.25, Vector::UNIT_Y);
                 mTranslation.Normalize();

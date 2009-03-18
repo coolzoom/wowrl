@@ -56,8 +56,8 @@ namespace Frost
                 pBodyModel_->GetAnimMgr()->SetSpeed(1.0f);
                 pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_START);
                 pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
-                mJumpPosition_ = pBodyModel_->GetPosition();
-                mJumpDirection_ = pBodyModel_->GetDirection();
+                mJumpPosition_ = pNode_->GetPosition();
+                mJumpDirection_ = pNode_->GetDirection();
             }
         }
     }
@@ -790,7 +790,5 @@ namespace Frost
 
         if (pBodyModel_)
             pBodyModel_->Update(fDelta);
-
-        Log("pos : "+pNode_->GetPosition());
     }
 }
