@@ -90,44 +90,74 @@ namespace Frost
 
     void s_var::SetI( const s_int& iValue )
     {
-        Delete_();
-        mType_ = VALUE_INT;
-        pPtr_ = new s_int(iValue);
+        if (mType_ == VALUE_INT)
+            *(s_int*)pPtr_ = iValue;
+        else
+        {
+            Delete_();
+            mType_ = VALUE_INT;
+            pPtr_ = new s_int(iValue);
+        }
     }
 
     void s_var::SetUI( const s_uint& uiValue )
     {
-        Delete_();
-        mType_ = VALUE_UINT;
-        pPtr_ = new s_uint(uiValue);
+        if (mType_ == VALUE_UINT)
+            *(s_uint*)pPtr_ = uiValue;
+        else
+        {
+            Delete_();
+            mType_ = VALUE_UINT;
+            pPtr_ = new s_uint(uiValue);
+        }
     }
 
     void s_var::SetF( const s_float& fValue )
     {
-        Delete_();
-        mType_ = VALUE_FLOAT;
-        pPtr_ = new s_float(fValue);
+        if (mType_ == VALUE_FLOAT)
+            *(s_float*)pPtr_ = fValue;
+        else
+        {
+            Delete_();
+            mType_ = VALUE_FLOAT;
+            pPtr_ = new s_float(fValue);
+        }
     }
 
     void s_var::SetD( const s_double& dValue )
     {
-        Delete_();
-        mType_ = VALUE_DOUBLE;
-        pPtr_ = new s_double(dValue);
+        if (mType_ == VALUE_DOUBLE)
+            *(s_double*)pPtr_ = dValue;
+        else
+        {
+            Delete_();
+            mType_ = VALUE_DOUBLE;
+            pPtr_ = new s_double(dValue);
+        }
     }
 
     void s_var::SetB( const s_bool& bValue )
     {
-        Delete_();
-        mType_ = VALUE_BOOL;
-        pPtr_ = new s_bool(bValue);
+        if (mType_ == VALUE_BOOL)
+            *(s_bool*)pPtr_ = bValue;
+        else
+        {
+            Delete_();
+            mType_ = VALUE_BOOL;
+            pPtr_ = new s_bool(bValue);
+        }
     }
 
     void s_var::SetS( const s_str& sValue )
     {
-        Delete_();
-        mType_ = VALUE_STRING;
-        pPtr_ = new s_str(sValue);
+        if (mType_ == VALUE_STRING)
+            *(s_str*)pPtr_ = sValue;
+        else
+        {
+            Delete_();
+            mType_ = VALUE_STRING;
+            pPtr_ = new s_str(sValue);
+        }
     }
 
     void s_var::SetP( void* pValue )
@@ -277,24 +307,49 @@ namespace Frost
 
     s_var& s_var::operator = ( const s_var& vValue )
     {
-        Delete_();
-        mType_ = vValue.mType_;
-        if (vValue.pPtr_)
+        if (vValue.mType_ == mType_)
         {
-            if (vValue.mType_ == VALUE_INT)
-                pPtr_ = new s_int(*((s_int*)vValue.pPtr_));
-            else if (vValue.mType_ == VALUE_UINT)
-                pPtr_ = new s_uint(*((s_uint*)vValue.pPtr_));
-            else if (vValue.mType_ == VALUE_FLOAT)
-                pPtr_ = new s_float(*((s_float*)vValue.pPtr_));
-            else if (vValue.mType_ == VALUE_DOUBLE)
-                pPtr_ = new s_double(*((s_double*)vValue.pPtr_));
-            else if (vValue.mType_ == VALUE_BOOL)
-                pPtr_ = new s_bool(*((s_bool*)vValue.pPtr_));
-            else if (vValue.mType_ == VALUE_STRING)
-                pPtr_ = new s_str(*((s_str*)vValue.pPtr_));
-            else if (vValue.mType_ == VALUE_POINTER)
-                pPtr_ = vValue.pPtr_;
+            if (vValue.pPtr_)
+            {
+                if (vValue.mType_ == VALUE_INT)
+                    *(s_int*)pPtr_ = *(s_int*)vValue.pPtr_;
+                else if (vValue.mType_ == VALUE_UINT)
+                    *(s_uint*)pPtr_ = *(s_uint*)vValue.pPtr_;
+                else if (vValue.mType_ == VALUE_FLOAT)
+                    *(s_float*)pPtr_ = *(s_float*)vValue.pPtr_;
+                else if (vValue.mType_ == VALUE_DOUBLE)
+                    *(s_double*)pPtr_ = *(s_double*)vValue.pPtr_;
+                else if (vValue.mType_ == VALUE_BOOL)
+                    *(s_bool*)pPtr_ = *(s_bool*)vValue.pPtr_;
+                else if (vValue.mType_ == VALUE_STRING)
+                    *(s_str*)pPtr_ = *(s_str*)vValue.pPtr_;
+                else if (vValue.mType_ == VALUE_POINTER)
+                    pPtr_ = vValue.pPtr_;
+            }
+        }
+        else
+        {
+            Delete_();
+            mType_ = vValue.mType_;
+            if (vValue.pPtr_)
+            {
+                if (vValue.mType_ == VALUE_INT)
+                    pPtr_ = new s_int(*((s_int*)vValue.pPtr_));
+                else if (vValue.mType_ == VALUE_UINT)
+                    pPtr_ = new s_uint(*((s_uint*)vValue.pPtr_));
+                else if (vValue.mType_ == VALUE_FLOAT)
+                    pPtr_ = new s_float(*((s_float*)vValue.pPtr_));
+                else if (vValue.mType_ == VALUE_DOUBLE)
+                    pPtr_ = new s_double(*((s_double*)vValue.pPtr_));
+                else if (vValue.mType_ == VALUE_BOOL)
+                    pPtr_ = new s_bool(*((s_bool*)vValue.pPtr_));
+                else if (vValue.mType_ == VALUE_STRING)
+                    pPtr_ = new s_str(*((s_str*)vValue.pPtr_));
+                else if (vValue.mType_ == VALUE_POINTER)
+                    pPtr_ = vValue.pPtr_;
+            }
+            else
+                pPtr_ = NULL;
         }
 
         return *this;
