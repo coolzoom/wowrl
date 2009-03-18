@@ -377,17 +377,11 @@ namespace Frost
         // Keyboard
         s_ptr<EventManager> pEventMgr = EventManager::GetSingleton();
         Event mKeyboardEvent;
-        mKeyboardEvent.SetOncePerFrame(true);
         mKeyboardEvent.Add(s_var(s_uint()));
         s_bool bEvent;
         for (uint i = 0; i < 256; i++)
         {
-            if (KeyIsDown((KeyCode)i))
-            {
-                mKeyboardEvent.SetName("KEY_DOWN");
-                bEvent = true;
-            }
-            else if (KeyIsReleased((KeyCode)i))
+            if (KeyIsReleased((KeyCode)i))
             {
                 mKeyboardEvent.SetName("KEY_RELEASED");
                 bEvent = true;
@@ -405,6 +399,12 @@ namespace Frost
                 bEvent = false;
             }
 
+            if (KeyIsDown((KeyCode)i))
+            {
+                mKeyboardEvent.SetName("KEY_DOWN");
+                mKeyboardEvent[0].SetUI(s_uint(i));
+                pEventMgr->FireEvent(mKeyboardEvent);
+            }
             if (KeyIsDownLong((KeyCode)i))
             {
                 mKeyboardEvent.SetName("KEY_DOWN_LONG");
@@ -451,17 +451,11 @@ namespace Frost
         }
 
         Event mMouseEvent;
-        mMouseEvent.SetOncePerFrame(true);
         mMouseEvent.Add(s_var(s_uint()));
         //s_bool bEvent;
         for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; i++)
         {
-            if (MouseIsDown((MouseButton)i))
-            {
-                mMouseEvent.SetName("MOUSE_DOWN");
-                bEvent = true;
-            }
-            else if (MouseIsReleased((MouseButton)i))
+            if (MouseIsReleased((MouseButton)i))
             {
                 mMouseEvent.SetName("MOUSE_RELEASED");
                 bEvent = true;
@@ -471,17 +465,26 @@ namespace Frost
                 mMouseEvent.SetName("MOUSE_PRESSED");
                 bEvent = true;
             }
-            else if (MouseIsDoubleClicked((MouseButton)i))
-            {
-                mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
-                bEvent = true;
-            }
 
             if (bEvent)
             {
                 mMouseEvent[0].SetUI(s_uint(i));
                 pEventMgr->FireEvent(mMouseEvent);
                 bEvent = false;
+            }
+
+            if (MouseIsDown((MouseButton)i))
+            {
+                mMouseEvent.SetName("MOUSE_DOWN");
+                mMouseEvent[0].SetUI(s_uint(i));
+                pEventMgr->FireEvent(mMouseEvent);
+            }
+
+            if (MouseIsDoubleClicked((MouseButton)i))
+            {
+                mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
+                mMouseEvent[0].SetUI(s_uint(i));
+                pEventMgr->FireEvent(mMouseEvent);
             }
 
             if (MouseIsDownLong((MouseButton)i))
