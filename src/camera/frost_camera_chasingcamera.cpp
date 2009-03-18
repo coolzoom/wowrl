@@ -55,12 +55,10 @@ namespace Frost
             KeyCode mKey = KeyCode(mEvent[0].GetUI().Get());
             if (mKey == KEY_W)
             {
-                Log("forward !");
                 pUnit_->SetMoveForward(true);
             }
             else if (mKey == KEY_S)
             {
-                Log("stop forward");
                 pUnit_->SetMoveBackward(true);
             }
             else if (mKey == KEY_A)
