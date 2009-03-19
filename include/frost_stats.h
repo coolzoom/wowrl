@@ -76,15 +76,147 @@ namespace Frost
     template<class T>
     const s_str Bonus<T>::CLASS_NAME = "Bonus";
 
+    /// Specialization of the Bonus class.
+    template<>
+    class Bonus<s_var>
+    {
+    public :
+
+        /// Default constructor.
+        Bonus() : fMul_(1.0f)
+        {
+        }
+
+        /// Constructor (integer).
+        Bonus(const s_int& mAdd, const s_float& fMul) : mAdd_(mAdd), fMul_(fMul)
+        {
+        }
+
+        /// Constructor (float).
+        Bonus(const s_float& mAdd, const s_float& fMul) : mAdd_(mAdd), fMul_(fMul)
+        {
+        }
+
+        /// Returns the additive bonus (integer).
+        /** \return The additive bonus (integer)
+        */
+        s_int GetAddBonusI() const
+        {
+            return mAdd_.GetI();
+        }
+
+        /// Returns the additive bonus (float).
+        /** \return The additive bonus (float)
+        */
+        s_float GetAddBonusF() const
+        {
+            return mAdd_.GetF();
+        }
+
+        /// Returns the multiplicative bonus.
+        /** \return The multiplicative bonus
+        */
+        const s_float& GetMulBonus() const
+        {
+            return fMul_;
+        }
+
+        /// Checks if the contained value is an integer.
+        /** \return 'true' if the contained value is an integer
+        */
+        s_bool IsInteger() const
+        {
+            return (mAdd_.GetType() == VALUE_INT);
+        }
+
+        Bonus operator + (const Bonus& mValue) const
+        {
+            if (IsInteger() && mValue.IsInteger())
+                return Bonus(mAdd_.GetI() + mValue.mAdd_.GetI(), fMul_ + mValue.fMul_);
+            else if (!IsInteger() && !mValue.IsInteger())
+                return Bonus(mAdd_.GetF() + mValue.mAdd_.GetF(), fMul_ + mValue.fMul_);
+            else
+            {
+                Warning(CLASS_NAME, "Trying to add two bonuses with different types.");
+                return Bonus();
+            }
+        }
+
+        Bonus operator - (const Bonus& mValue) const
+        {
+            if (IsInteger() && mValue.IsInteger())
+                return Bonus(mAdd_.GetI() - mValue.mAdd_.GetI(), fMul_ - mValue.fMul_);
+            else if (!IsInteger() && !mValue.IsInteger())
+                return Bonus(mAdd_.GetF() - mValue.mAdd_.GetF(), fMul_ - mValue.fMul_);
+            else
+            {
+                Warning(CLASS_NAME, "Trying to substract two bonuses with different types.");
+                return Bonus();
+            }
+        }
+
+        void operator += (const Bonus& mValue)
+        {
+            if (IsInteger() && mValue.IsInteger())
+            {
+                mAdd_.SetI(mAdd_.GetI() + mValue.mAdd_.GetI());
+                fMul_ += mValue.fMul_;
+            }
+            else if (!IsInteger() && !mValue.IsInteger())
+            {
+                mAdd_.SetF(mAdd_.GetF() + mValue.mAdd_.GetF());
+                fMul_ += mValue.fMul_;
+            }
+            else
+            {
+                Warning(CLASS_NAME, "Trying to add two bonuses with different types.");
+            }
+        }
+
+        void operator -= (const Bonus& mValue)
+        {
+            if (IsInteger() && mValue.IsInteger())
+            {
+                mAdd_.SetI(mAdd_.GetI() - mValue.mAdd_.GetI());
+                fMul_ -= mValue.fMul_;
+            }
+            else if (!IsInteger() && !mValue.IsInteger())
+            {
+                mAdd_.SetF(mAdd_.GetF() - mValue.mAdd_.GetF());
+                fMul_ -= mValue.fMul_;
+            }
+            else
+            {
+                Warning(CLASS_NAME, "Trying to substract two bonuses with different types.");
+            }
+        }
+
+        static const s_str CLASS_NAME;
+
+    private :
+
+        s_var   mAdd_;
+        s_float fMul_;
+    };
+
+    template<>
+    const s_str Bonus<s_var>::CLASS_NAME = "Bonus<s_var>";
+
     /// Holds an Item's statistics.
     struct BonusSet
     {
         BonusSet();
 
-        Bonus<s_int> iMaxHealth;
-        Bonus<s_int> iMaxPower;
+        // Generic bonuses (needed by the engine)
+        Bonus<s_int>   iMaxHealth;
+        Bonus<s_int>   iMaxPower;
+        Bonus<s_int>   iHealthRenegeration;
+        Bonus<s_int>   iPowerRegeneration;
+        Bonus<s_float> fMovementSpeedPercent;
 
-        Bonus<s_int> iAgility;
+        // Dynamic bonuses
+        std::map< s_str, Bonus<s_var> > lBonusList;
+        /*Bonus<s_int> iAgility;
         Bonus<s_int> iStamina;
         Bonus<s_int> iIntellect;
         Bonus<s_int> iSpirit;
@@ -104,12 +236,7 @@ namespace Frost
         std::map< s_str, Bonus<s_float> > lSpellResistancePercent;
         std::map< s_str, Bonus<s_float> > lSpellCriticalHitChance;
         std::map< s_str, Bonus<s_float> > lSpellHitChance;
-        std::map< s_str, Bonus<s_int> >   lSpellPenetration;
-
-        Bonus<s_int> iHealthRenegeration;
-        Bonus<s_int> iPowerRegeneration;
-
-        Bonus<s_float> fMovementSpeedPercent;
+        std::map< s_str, Bonus<s_int> >   lSpellPenetration;*/
 
         static const s_str CLASS_NAME;
     };
@@ -161,6 +288,67 @@ namespace Frost
     template<class T>
     const s_str Characteristic<T>::CLASS_NAME = "Characteristic";
 
+    /// Specialization of the Characteristic class.
+    template<>
+    class Characteristic<s_var>
+    {
+    public :
+
+        Characteristic()
+        {
+        }
+
+        s_int GetBaseValueI() const
+        {
+            return mValue_.GetI();
+        }
+
+        s_float GetBaseValueF() const
+        {
+            return mValue_.GetF();
+        }
+
+        s_int GetBonusI() const
+        {
+            return s_int(s_float(mValue_.GetI() + mBonus_.GetAddBonusI())*mBonus_.GetMulBonus()) - mValue_.GetI();
+        }
+
+        s_float GetBonusF() const
+        {
+            return (mValue_.GetF() + mBonus_.GetAddBonusF())*mBonus_.GetMulBonus() - mValue_.GetF();
+        }
+
+        s_int GetValueI() const
+        {
+            return s_int(s_float(mValue_.GetI() + mBonus_.GetAddBonusI())*mBonus_.GetMulBonus());
+        }
+
+        s_float GetValueF() const
+        {
+            return (mValue_.GetF() + mBonus_.GetAddBonusF())*mBonus_.GetMulBonus();
+        }
+
+        void AddBonus(const Bonus<s_var>& mBonus)
+        {
+            mBonus_ += mBonus;
+        }
+
+        void RemoveBonus(const Bonus<s_var>& mBonus)
+        {
+            mBonus_ -= mBonus;
+        }
+
+        static const s_str CLASS_NAME;
+
+    private :
+
+        s_var        mValue_;
+        Bonus<s_var> mBonus_;
+    };
+
+    template<>
+    const s_str Characteristic<s_var>::CLASS_NAME = "Characteristic<s_var>";
+
     /// Holds a Unit's statistics.
     struct Stats
     {
@@ -169,10 +357,16 @@ namespace Frost
         void AddBonusSet(BonusSet& mBonusSet);
         void RemoveBonusSet(BonusSet& mBonusSet);
 
-        Characteristic<s_int> iMaxHealth;
-        Characteristic<s_int> iMaxPower;
+        // Generic characteristics (needed by the engine)
+        Characteristic<s_int>   iMaxHealth;
+        Characteristic<s_int>   iMaxPower;
+        Characteristic<s_int>   iHealthRenegeration;
+        Characteristic<s_int>   iPowerRegeneration;
+        Characteristic<s_float> fMovementSpeedPercent;
 
-        Characteristic<s_int> iAgility;
+        // Dynamic characteristics
+        std::map< s_str, Characteristic<s_var> > lCharactList;
+        /*Characteristic<s_int> iAgility;
         Characteristic<s_int> iStamina;
         Characteristic<s_int> iIntellect;
         Characteristic<s_int> iSpirit;
@@ -192,12 +386,7 @@ namespace Frost
         std::map< s_str, Characteristic<s_float> > lSpellResistancePercent;
         std::map< s_str, Characteristic<s_float> > lSpellCriticalHitChance;
         std::map< s_str, Characteristic<s_float> > lSpellHitChance;
-        std::map< s_str, Characteristic<s_int> >   lSpellPenetration;
-
-        Characteristic<s_int> iHealthRenegeration;
-        Characteristic<s_int> iPowerRegeneration;
-
-        Characteristic<s_float> fMovementSpeedPercent;
+        std::map< s_str, Characteristic<s_int> >   lSpellPenetration;*/
 
         static const s_str CLASS_NAME;
     };

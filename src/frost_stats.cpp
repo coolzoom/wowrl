@@ -28,8 +28,26 @@ namespace Frost
     {
         iMaxHealth.AddBonus(mBonusSet.iMaxHealth);
         iMaxPower.AddBonus(mBonusSet.iMaxPower);
+        iHealthRenegeration.AddBonus(mBonusSet.iHealthRenegeration);
+        iPowerRegeneration.AddBonus(mBonusSet.iPowerRegeneration);
+        fMovementSpeedPercent.AddBonus(mBonusSet.fMovementSpeedPercent);
 
-        iAgility.AddBonus(mBonusSet.iAgility);
+        map< s_str, Bonus<s_var> >::iterator iterBonus;
+        foreach (iterBonus, mBonusSet.lBonusList)
+        {
+            if (MAPFIND(iterBonus->first, lCharactList))
+            {
+                lCharactList[iterBonus->first].AddBonus(iterBonus->second);
+            }
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Characteristic \""+iterBonus->first+"\" doesn't exist."
+                );
+            }
+        }
+
+        /*iAgility.AddBonus(mBonusSet.iAgility);
         iStamina.AddBonus(mBonusSet.iStamina);
         iIntellect.AddBonus(mBonusSet.iIntellect);
         iSpirit.AddBonus(mBonusSet.iSpirit);
@@ -54,20 +72,33 @@ namespace Frost
             lSpellCriticalHitChance[*iterSchool].AddBonus(mBonusSet.lSpellCriticalHitChance[*iterSchool]);
             lSpellHitChance[*iterSchool].AddBonus(mBonusSet.lSpellHitChance[*iterSchool]);
             lSpellPenetration[*iterSchool].AddBonus(mBonusSet.lSpellPenetration[*iterSchool]);
-        }
-
-        iHealthRenegeration.AddBonus(mBonusSet.iHealthRenegeration);
-        iPowerRegeneration.AddBonus(mBonusSet.iPowerRegeneration);
-
-        fMovementSpeedPercent.AddBonus(mBonusSet.fMovementSpeedPercent);
+        }*/
     }
 
     void Stats::RemoveBonusSet( BonusSet& mBonusSet )
     {
         iMaxHealth.RemoveBonus(mBonusSet.iMaxHealth);
         iMaxPower.RemoveBonus(mBonusSet.iMaxPower);
+        iHealthRenegeration.RemoveBonus(mBonusSet.iHealthRenegeration);
+        iPowerRegeneration.RemoveBonus(mBonusSet.iPowerRegeneration);
+        fMovementSpeedPercent.RemoveBonus(mBonusSet.fMovementSpeedPercent);
 
-        iAgility.RemoveBonus(mBonusSet.iAgility);
+        map< s_str, Bonus<s_var> >::iterator iterBonus;
+        foreach (iterBonus, mBonusSet.lBonusList)
+        {
+            if (MAPFIND(iterBonus->first, lCharactList))
+            {
+                lCharactList[iterBonus->first].RemoveBonus(iterBonus->second);
+            }
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Characteristic \""+iterBonus->first+"\" doesn't exist."
+                );
+            }
+        }
+
+        /*iAgility.RemoveBonus(mBonusSet.iAgility);
         iStamina.RemoveBonus(mBonusSet.iStamina);
         iIntellect.RemoveBonus(mBonusSet.iIntellect);
         iSpirit.RemoveBonus(mBonusSet.iSpirit);
@@ -89,11 +120,6 @@ namespace Frost
             lSpellCriticalHitChance[*iterSchool].RemoveBonus(mBonusSet.lSpellCriticalHitChance[*iterSchool]);
             lSpellHitChance[*iterSchool].RemoveBonus(mBonusSet.lSpellHitChance[*iterSchool]);
             lSpellPenetration[*iterSchool].RemoveBonus(mBonusSet.lSpellPenetration[*iterSchool]);
-        }
-
-        iHealthRenegeration.RemoveBonus(mBonusSet.iHealthRenegeration);
-        iPowerRegeneration.RemoveBonus(mBonusSet.iPowerRegeneration);
-
-        fMovementSpeedPercent.RemoveBonus(mBonusSet.fMovementSpeedPercent);
+        }*/
     }
 }

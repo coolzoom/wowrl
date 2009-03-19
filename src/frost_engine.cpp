@@ -92,13 +92,13 @@ namespace Frost
             if (sMessage[0] == '|' && sMessage[1] == 't')
             {
                 sNewMessage = sMessage;
-                sNewMessage.Erase(0, 2);
+                sNewMessage.EraseFromStart(2);
             }
             else
             {
                 s_str sStamps = TimeManager::GetSingleton()->GetPlayTime() + " : ";
                 sNewMessage = sStamps+sMessage;
-                sNewMessage.Replace("\n", s_str("\n") + sStamps);
+                sNewMessage.Replace("\n", "\n"+sStamps);
             }
 
             Engine::GetSingleton()->GetLog()->logMessage(sNewMessage.Get());
@@ -469,7 +469,7 @@ namespace Frost
         return true;
     }
 
-    s_var Engine::GetConstant( s_str sName ) const
+    s_var Engine::GetConstant( const s_str& sName ) const
     {
         s_var vValue;
         if (sName == "MaxComputedPaths")
@@ -541,6 +541,4 @@ namespace Frost
         sFileName += ".jpg";
         pRenderWindow_->writeContentsToFile(sFileName.Get());
     }
-
-
 }

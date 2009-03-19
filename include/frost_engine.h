@@ -73,7 +73,7 @@ namespace Frost
         /// Sets whether the game should be paused or not.
         /** \param bPause 'true' if you want to pause the game
         */
-        void                PauseGame(s_bool bPause);
+        void                PauseGame(const s_bool& bPause);
 
         /// Checks if the game is paused.
         /** \return 'true' if the game is paused
@@ -84,7 +84,7 @@ namespace Frost
         /** \param sConstantName The name of the constant you're searching for
         *   \return An untyped value containing the value you asked
         */
-        s_var               GetConstant(s_str sConstantName) const;
+        s_var               GetConstant(const s_str& sConstantName) const;
 
         /// Returns the Ogre::Log used to print infos in the log.
         /** \return The Ogre::Log used to print infos in the log.
