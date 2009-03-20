@@ -109,6 +109,11 @@ namespace Frost
         */
         void             RotateModel(const s_float& fYaw, const s_float& fPitch);
 
+        /// Returns the position of this Unit in the world.
+        /** \return The position of this Unit in the world
+        */
+        Vector           GetPosition() const;
+
         /// Returns the Camera associated to this Unit.
         /** \return The Camera associated to this Unit
         */

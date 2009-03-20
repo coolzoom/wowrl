@@ -522,6 +522,11 @@ namespace Frost
         pCamera_->Pitch(fPitch);
     }
 
+    Vector Unit::GetPosition() const
+    {
+        return pNode_->GetPosition(false);
+    }
+
     s_ptr<Camera> Unit::GetCamera()
     {
         return pCamera_;
