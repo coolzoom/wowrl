@@ -59,17 +59,22 @@ namespace Frost
         */
         s_bool         IsNull() const;
 
+        /// Checks if this vector only contains NaN attributes.
+        /** \return 'true' if this vector only contains NaN attributes
+        */
+        s_bool         IsNaN() const;
+
         /// Returns the norm of this vector.
         /** \return The norm of this vector
-        *   \note GetLenght() does exactly the same thing.
+        *   \note GetLength() does exactly the same thing.
         */
         const s_float& GetNorm();
 
-        /// Returns the lenght of this vector.
-        /** \return The lenght of this vector
+        /// Returns the length of this vector.
+        /** \return The length of this vector
         *   \note GetNorm() does exactly the same thing.
         */
-        const s_float& GetLenght();
+        const s_float& GetLength();
 
         /// Returns this vector divided by its norm.
         /** \return This vector divided by its norm
@@ -85,6 +90,9 @@ namespace Frost
         *   \note Uses Ogre::Quaternion.
         */
         void           Rotate(const s_float& fAngle, const Vector& mAxis);
+
+        /// Makes this vector invalid.
+        void           SetNaN();
 
         /// Returns a const reference to the X coordinate.
         /** \return A const reference to the X coordinate

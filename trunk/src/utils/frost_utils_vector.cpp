@@ -56,7 +56,15 @@ namespace Frost
         if (!bRebuildNorm_)
             return fNorm_.IsNull();
         else
-            return ( (fX_.IsNull()) && (fY_.IsNull()) && (fZ_.IsNull()) );
+            return (fX_.IsNull() && fY_.IsNull() && fZ_.IsNull());
+    }
+
+    s_bool Vector::IsNaN() const
+    {
+        if (!bRebuildNorm_)
+            return fNorm_.IsNaN();
+        else
+            return (fX_.IsNaN() && fY_.IsNaN() && fZ_.IsNaN());
     }
 
     const s_float& Vector::GetNorm()
@@ -65,7 +73,7 @@ namespace Frost
         return fNorm_;
     }
 
-    const s_float& Vector::GetLenght()
+    const s_float& Vector::GetLength()
     {
         UpdateNorm_();
         return fNorm_;
@@ -88,15 +96,25 @@ namespace Frost
 
     void Vector::Rotate( const s_float& fAngle, const Vector& mAxis )
     {
-        Ogre::Quaternion mQuad(
-            Ogre::Radian(fAngle.GetRad().Get()),
-            FrostToOgre(mAxis)
-        );
+        // Code extracted from Ogre for optimum performance
+        s_float fHalfAngle = 0.5*fAngle;
+        s_float fSin = sin(fHalfAngle.GetRad());
+        s_float w = cos(fHalfAngle.GetRad());
+        Vector mNAxis = fSin*mAxis;
 
-        Ogre::Vector3 mTemp = FrostToOgre(*this);
-        mTemp = mQuad*mTemp;
+        Vector uv, uuv;
+		uv = mNAxis ^ (*this);
+		uuv = mNAxis ^ uv;
+		uv *= 2.0f*w;
+		uuv *= 2.0f;
 
-        (*this) = OgreToFrost(mTemp);
+		(*this) += uv + uuv;
+    }
+
+    void Vector::SetNaN()
+    {
+        fNorm_ = fX_ = fY_ = fZ_ = s_float::NaN;
+        bRebuildNorm_ = false;
     }
 
     const s_float& Vector::X() const
@@ -125,7 +143,6 @@ namespace Frost
     {
         bRebuildNorm_ = true;
         return fY_;
-
     }
 
     void Vector::Y( const s_float& fY )
@@ -153,15 +170,24 @@ namespace Frost
 
     bool Vector::operator! () const
     {
-        return (!fX_.IsValid() || !fY_.IsValid() || !fZ_.IsValid());
+        if (!bRebuildNorm_)
+            return fNorm_.IsValid();
+        else
+            return (!fX_.IsValid() || !fY_.IsValid() || !fZ_.IsValid());
     }
 
     Vector::operator MemberFn() const
     {
-        if (fX_.IsValid() && fY_.IsValid() && fZ_.IsValid())
-            return &Vector::Normalize;
+        if (!bRebuildNorm_)
+            if (fNorm_.IsValid())
+                return &Vector::Normalize;
+            else
+                return NULL;
         else
-            return NULL;
+            if (fX_.IsValid() && fY_.IsValid() && fZ_.IsValid())
+                return &Vector::Normalize;
+            else
+                return NULL;
     }
 
     Vector Vector::operator - () const
@@ -219,9 +245,9 @@ namespace Frost
 
     Vector Vector::operator ^ (const Vector& mVec) const
     {
-        return Vector(fY_*mVec.Z() - fZ_*mVec.Y(),
-                      fZ_*mVec.X() - fX_*mVec.Z(),
-                      fX_*mVec.Y() - fY_*mVec.X());
+        return Vector(fY_*mVec.fZ_ - fZ_*mVec.fY_,
+                      fZ_*mVec.fX_ - fX_*mVec.fZ_,
+                      fX_*mVec.fY_ - fY_*mVec.fX_);
     }
 
     void Vector::operator += ( const Vector& mVec )
@@ -267,11 +293,6 @@ namespace Frost
 
     Ogre::Vector3 Vector::FrostToOgre( const Vector &mVector )
     {
-        /*return Ogre::Vector3(
-            mVector.Y().Get(),
-            mVector.Z().Get(),
-            mVector.X().Get()
-        );*/
         return Ogre::Vector3(
             mVector.X().Get(),
             mVector.Y().Get(),
@@ -281,7 +302,6 @@ namespace Frost
 
     Vector Vector::OgreToFrost( const Ogre::Vector3 &mVector )
     {
-        //return Vector(mVector.z, mVector.x, mVector.y);
         return Vector(mVector.x, mVector.y, mVector.z);
     }
 
