@@ -594,6 +594,22 @@ namespace Frost
         }
     }
 
+    void s_double::Clamp( const s_double& dMin, const s_double& dMax )
+    {
+        if (IsValid() && dMax.IsValid() && dMin.IsValid())
+            dValue_ = (dValue_ < dMax.Get()) ? ((dValue_ > dMin.Get()) ? dValue_ : dMin.Get()) : dMax.Get();
+        else
+            SetNaN();
+    }
+
+    s_double s_double::Clamp( const s_double& dValue, const s_double& dMin, const s_double& dMax )
+    {
+        if (dValue.IsValid() && dMax.IsValid() && dMin.IsValid())
+            return (dValue < dMax) ? ((dValue > dMin) ? dValue : dMin) : dMax;
+        else
+            return s_double::NaN;
+    }
+
     s_int s_double::Sign()
     {
         if (IsValid())
