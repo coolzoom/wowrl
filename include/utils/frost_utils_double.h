@@ -57,6 +57,12 @@ namespace Frost
         explicit s_double(const std::string& sValue);
         explicit s_double(const s_str& sValue);
 
+        /// Adjusts this double's value to be contained into the provided interval.
+        /** \param dMin The minimum value
+        *   \param dMax The maximum value
+        */
+        void             Clamp(const s_double& dMin, const s_double& dMax);
+
         /// Converts this double to a angle in radian.
         /** \note It is assumed that the previous value was an angle in degree.
         */
@@ -222,6 +228,14 @@ namespace Frost
         static const s_double INFMINUS;
         static const s_double PI;
         static       double   dDummy;
+
+        /// Clamps the provided value into the provided interval.
+        /** \param dValue The value to clamp
+        *   \param dMin   The minimum value
+        *   \param dMax   The maximum value
+        *   \return The clamped value
+        */
+        static s_double Clamp(const s_double& dValue, const s_double& dMin, const s_double& dMax);
 
         /// Returns the lowest value of the two provided ones.
         /** \param dLeft  The first value

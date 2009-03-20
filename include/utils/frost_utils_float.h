@@ -58,6 +58,12 @@ namespace Frost
         explicit s_float(const std::string& sValue);
         explicit s_float(const s_str& sValue);
 
+        /// Adjusts this float's value to be contained into the provided interval.
+        /** \param fMin The minimum value
+        *   \param fMax The maximum value
+        */
+        void            Clamp(const s_float& fMin, const s_float& fMax);
+
         /// Converts this float to a angle in radian.
         /** \note It is assumed that the previous value was an angle in degree.
         */
@@ -223,6 +229,14 @@ namespace Frost
         static const s_float INFMINUS;
         static const s_float PI;
         static       float   fDummy;
+
+        /// Clamps the provided value into the provided interval.
+        /** \param fValue The value to clamp
+        *   \param fMin   The minimum value
+        *   \param fMax   The maximum value
+        *   \return The clamped value
+        */
+        static s_float Clamp(const s_float& fValue, const s_float& fMin, const s_float& fMax);
 
         /// Returns the lowest value of the two provided ones.
         /** \param fLeft  The first value

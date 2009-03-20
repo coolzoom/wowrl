@@ -613,6 +613,22 @@ namespace Frost
             return s_int(s_int::INTEGER_NAN);
     }
 
+    void s_float::Clamp( const s_float& fMin, const s_float& fMax )
+    {
+        if (IsValid() && fMax.IsValid() && fMin.IsValid())
+            fValue_ = (fValue_ < fMax.Get()) ? ((fValue_ > fMin.Get()) ? fValue_ : fMin.Get()) : fMax.Get();
+        else
+            SetNaN();
+    }
+
+    s_float s_float::Clamp( const s_float& fValue, const s_float& fMin, const s_float& fMax )
+    {
+        if (fValue.IsValid() && fMax.IsValid() && fMin.IsValid())
+            return (fValue < fMax) ? ((fValue > fMin) ? fValue : fMin) : fMax;
+        else
+            return s_float::NaN;
+    }
+
     s_float s_float::Min( const s_float& fLeft, const s_float& fRight )
     {
         if (fLeft >= fRight)
