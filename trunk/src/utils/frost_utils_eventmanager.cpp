@@ -99,7 +99,7 @@ namespace Frost
                     iterReceiver->second->OnEvent(mEvent);
                 }
 
-                if (!mEvent.IsOncePerFrame())
+                if (mEvent.IsOncePerFrame())
                     lFiredEventList_.push_back(mEvent.GetName());
 
                 if (bDebugOutput_)
