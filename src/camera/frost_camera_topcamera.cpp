@@ -15,7 +15,7 @@ using namespace std;
 namespace Frost
 {
     TopCamera::TopCamera( const s_uint& uiID ) :
-        Camera(uiID), fSpeed_(20.0f)
+        Camera(uiID), fSpeed_(20.0f), mDestination_(Vector::NaN)
     {
         SetPosition(Vector(2, 8, 2));
         OrbitAround(Vector(0, 0, 0), true);
@@ -62,6 +62,7 @@ namespace Frost
                 mTranslation.Y(0.0f); mTranslation.Normalize();
                 mTranslation *= fSpeed_*s_float(TimeManager::GetSingleton()->GetDelta());
                 pTargetNode_->translate(Vector::FrostToOgre(mTranslation));
+                mDestination_.SetNaN();
             }
             else if (mKey == KEY_S)
             {
@@ -69,6 +70,7 @@ namespace Frost
                 mTranslation.Y(0.0f); mTranslation.Normalize();
                 mTranslation *= -fSpeed_*s_float(TimeManager::GetSingleton()->GetDelta());
                 pTargetNode_->translate(Vector::FrostToOgre(mTranslation));
+                mDestination_.SetNaN();
             }
             else if (mKey == KEY_A)
             {
@@ -78,6 +80,7 @@ namespace Frost
                 mTranslation.Normalize();
                 mTranslation *= fSpeed_*s_float(TimeManager::GetSingleton()->GetDelta());
                 pTargetNode_->translate(Vector::FrostToOgre(mTranslation));
+                mDestination_.SetNaN();
             }
             else if (mKey == KEY_D)
             {
@@ -87,6 +90,7 @@ namespace Frost
                 mTranslation.Normalize();
                 mTranslation *= -fSpeed_*s_float(TimeManager::GetSingleton()->GetDelta());
                 pTargetNode_->translate(Vector::FrostToOgre(mTranslation));
+                mDestination_.SetNaN();
             }
         }
         else if (mEvent.GetName() == "MOUSE_MOVED")
@@ -101,6 +105,29 @@ namespace Frost
         else if (mEvent.GetName() == "MOUSE_WHEEL")
         {
             Translate(Vector::UNIT_Z*(-s_float(mEvent[0].GetI())/120.0f), true);
+        }
+    }
+
+    void TopCamera::MoveTo( const Vector& mDestination )
+    {
+        mDestination_ = mDestination;
+    }
+
+    void TopCamera::Update( const s_float& fDelta )
+    {
+        if (!mDestination_.IsNaN())
+        {
+            Vector mTranslation = mDestination_ - Vector::OgreToFrost(pTargetNode_->_getDerivedPosition());
+            if (mTranslation.GetNorm().IsNull())
+            {
+                mDestination_.SetNaN();
+            }
+            else
+            {
+                mTranslation *= fSpeed_*s_float(TimeManager::GetSingleton()->GetDelta())*
+                    s_float::Clamp(mTranslation.GetNorm()/30.0f, 0.1f, 1.0f);
+                pTargetNode_->translate(Vector::FrostToOgre(mTranslation));
+            }
         }
     }
 }
