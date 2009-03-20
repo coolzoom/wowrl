@@ -39,24 +39,37 @@ namespace Frost
 
         /// Sets the movement speed of this camera.
         /** \param fSpeed The new speed of this camera
-        *   \note Default is 20.0f
+        *   \note Default is 20.0f.
         */
         void SetSpeed(const s_float& fSpeed);
 
         /// Returns the movement speed of this camera.
         /** \return The movement speed of this camera
-        *   \note Default is 20.0f
+        *   \note Default is 20.0f.
         */
         const s_float& GetSpeed() const;
+
+        /// Makes this camera move to particular point in the world.
+        /** \param mDestination The point to go to
+        *   \note This point should be on the ground.
+        */
+        void MoveTo(const Vector& mDestination);
 
         /// Called whenever an Event occurs.
         /** \param mEvent The Event which has occured
         */
         virtual void OnEvent(const Event& mEvent);
 
+        /// Updates this Camera's parameters.
+        /** \param fDelta The time elapsed since the last call
+        *   \note Automatically called by CameraManager.
+        */
+        virtual void Update(const s_float& fDelta);
+
     private :
 
         s_float fSpeed_;
+        Vector  mDestination_;
 
     };
 }
