@@ -141,7 +141,7 @@ namespace Frost
         pNode_->getParent()->removeChild(pNode_.Get());
         pTargetNode_->addChild(pNode_.Get());
 
-        pNode_->setPosition(Ogre::Vector3(0, 0, (mPosition - mOrbitCenter_).GetLenght().Get()));
+        pNode_->setPosition(Ogre::Vector3(0, 0, (mPosition - mOrbitCenter_).GetLength().Get()));
         pNode_->setFixedYawAxis(true);
         pNode_->lookAt(Ogre::Vector3(0, 0, 0), Ogre::SceneNode::TS_PARENT);
     }

@@ -10,6 +10,7 @@
 #include "frost_inputmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include "camera/frost_camera_topcamera.h"
 #include "frost_path_directpath.h"
 #include "frost_path_smoothpath.h"
 #include "frost_pathmanager.h"
@@ -63,7 +64,7 @@ enum CameraType
     CAMERA_TOP
 };
 
-CameraType mCamType = CAMERA_UNIT;
+CameraType mCamType = CAMERA_TOP;
 
 s_bool FrameFunc()
 {
@@ -81,6 +82,15 @@ s_bool FrameFunc()
     if (pInputMgr->KeyIsPressed(KEY_P))
     {
         GUIManager::GetSingleton()->PrintUI();
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_R))
+    {
+        if (mCamType == CAMERA_TOP)
+        {
+            s_ptr<TopCamera> pTop = s_ptr<TopCamera>(pCam);
+            pTop->MoveTo(pChar->GetPosition());
+        }
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -154,8 +164,19 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             //pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
             pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
             pModel = pChar->GetBodyModel().Get();
-            //pCam = pFrost->GetFreeCamera();
-            pCam = pChar->GetCamera();
+
+            switch (mCamType)
+            {
+                case CAMERA_FREE :
+                    pCam = pFrost->GetFreeCamera();
+                    break;
+                case CAMERA_UNIT :
+                    pCam = pChar->GetCamera();
+                    break;
+                case CAMERA_TOP :
+                    pCam = pFrost->GetTopCamera();
+                    break;
+            }
             CameraManager::GetSingleton()->SetMainCamera(pCam);
 
             // The ground

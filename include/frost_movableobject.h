@@ -164,7 +164,7 @@ namespace Frost
         */
         s_ptr<Ogre::SceneNode> GetOgreNode();
 
-        /// Update this node's parameters.
+        /// Update this object's parameters.
         /** \param fDelta The time elapsed since the last call
         *   \note Should be called by the derived class.
         */

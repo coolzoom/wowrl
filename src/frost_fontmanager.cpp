@@ -54,7 +54,7 @@ namespace Frost
             else
             {
                 Error(CLASS_NAME, "Unknown font file : \""+sFontFile+"\"");
-                return s_ptr<Ogre::Font>(NULL);
+                return NULL;
             }
         }
     }
