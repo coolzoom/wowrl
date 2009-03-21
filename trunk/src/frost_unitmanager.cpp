@@ -14,6 +14,8 @@
 #include "frost_materialmanager.h"
 #include "frost_material.h"
 #include "frost_lua.h"
+#include "frost_healthtype.h"
+#include "frost_powertype.h"
 
 using namespace std;
 
@@ -119,5 +121,81 @@ namespace Frost
     const std::vector<s_str>& UnitManager::GetSpellSchoolList()
     {
         return lSchoolList_;
+    }
+
+    s_ptr<const Class> UnitManager::GetClassByName( const s_str& sClassName ) const
+    {
+        map<s_str, Class>::const_iterator iter = lClassList_.find(sClassName);
+        if (iter != lClassList_.end())
+        {
+            return &(iter->second);
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "No Class found with the name \""+sClassName+"\"."
+            );
+            return NULL;
+        }
+    }
+
+    s_ptr<const HealthType> UnitManager::GetHealthTypeByName( const s_str& sHealthTypeName ) const
+    {
+        map<s_str, HealthType>::const_iterator iter = lHealthTypeList_.find(sHealthTypeName);
+        if (iter != lHealthTypeList_.end())
+        {
+            return &(iter->second);
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "No HealthType found with the name \""+sHealthTypeName+"\"."
+            );
+            return NULL;
+        }
+    }
+
+    s_ptr<const PowerType> UnitManager::GetPowerTypeByName( const s_str& sPowerTypeName ) const
+    {
+        map<s_str, PowerType>::const_iterator iter = lPowerTypeList_.find(sPowerTypeName);
+        if (iter != lPowerTypeList_.end())
+        {
+            return &(iter->second);
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "No PowerType found with the name \""+sPowerTypeName+"\"."
+            );
+            return NULL;
+        }
+    }
+
+    s_bool UnitManager::ParseData()
+    {
+        if (!ParseSpellSchools_())
+            return false;
+
+        if (!ParseCharacterModels_())
+            return false;
+
+        if (!ParseRaces_())
+            return false;
+
+        if (!ParseClasses_())
+            return false;
+
+        if (!ParseHealthTypes_())
+            return false;
+
+        if (!ParsePowerTypes_())
+            return false;
+
+        return true;
+    }
+
+    s_ptr<Lua::State> UnitManager::GetLua()
+    {
+        return pLua_;
     }
 }

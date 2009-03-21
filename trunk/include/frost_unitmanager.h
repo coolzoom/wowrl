@@ -39,22 +39,33 @@ namespace Frost
         */
         s_ptr<Unit>               GetUnitByID(const s_uint& uiID) const;
 
-        /// Reads CharacterModels.xml.
-        s_bool                    ParseCharacterModels();
-
-        /// Reads Races.xml.
-        s_bool                    ParseRaces();
-
-        /// Reads CreatureModels.xml.
-        s_bool                    ParseCreatureModels();
-
-        /// Reads SpellSchools.xml.
-        s_bool                    ParseSpellSchools();
+        /// Reads all xml files related to Units.
+        /** \return 'true' if everything went fine
+        */
+        s_bool                    ParseData();
 
         /// Returns the complete list of spell school.
         /** \return The complete list of spell school
         */
         const std::vector<s_str>& GetSpellSchoolList();
+
+        /// Returns the Class linked to the provided name.
+        /** \param sClassName The name of the Class to get
+        *   \return The Class
+        */
+        s_ptr<const Class>        GetClassByName(const s_str& sClassName) const;
+
+        /// Returns the HealthType linked to the provided name.
+        /** \param sHealthTypeName The name of the HealthType to get
+        *   \return The HealthType
+        */
+        s_ptr<const HealthType>   GetHealthTypeByName(const s_str& sHealthTypeName) const;
+
+        /// Returns the PowerType linked to the provided name.
+        /** \param sPowerTypeName The name of the PowerType to get
+        *   \return The PowerType
+        */
+        s_ptr<const PowerType>    GetPowerTypeByName(const s_str& sPowerTypeName) const;
 
         /// Returns the Lua::State used in spell scripts.
         /** \return The Lua::State used in spell scripts
@@ -94,9 +105,20 @@ namespace Frost
 
     private :
 
+        s_bool ParseCharacterModels_();
+        s_bool ParseRaces_();
+        s_bool ParseClasses_();
+        s_bool ParseHealthTypes_();
+        s_bool ParsePowerTypes_();
+        s_bool ParseCreatureModels_();
+        s_bool ParseSpellSchools_();
+
         s_uint                          uiCounter_;
         std::map< s_uint, s_ptr<Unit> > lUnitList_;
         std::map<s_str, Race>           lRaceList_;
+        std::map<s_str, Class>          lClassList_;
+        std::map<s_str, HealthType>     lHealthTypeList_;
+        std::map<s_str, PowerType>      lPowerTypeList_;
 
         std::vector<s_str> lSchoolList_;
 

@@ -349,7 +349,7 @@ namespace Frost
             {
                 // Create the function in Lua
                 s_str sStr;
-                sStr += "function "+ pFrame->GetName() + ":" + pScriptBlock->GetName() + "()\n";
+                sStr += "function " + pFrame->GetName() + ":" + pScriptBlock->GetName() + "()\n";
                 sStr += pScriptBlock->GetValue() + "\n";
                 sStr += "end";
                 pLua_->DoString(sStr);

@@ -14,6 +14,9 @@
 #include "frost_node.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include "frost_unitmanager.h"
+#include "frost_healthtype.h"
+#include "frost_powertype.h"
 
 using namespace std;
 
@@ -29,8 +32,7 @@ namespace Frost
         mJumpMovementType_(MOVEMENT_NONE), mLMovementType_(LMOVEMENT_NONE),
         bTurn_(true), fJumpHeight_(1.4f), fJumpDuration_(0.9f),
         fForwardRunSpeed_(6.5f), fForwardWalkSpeed_(2.5f),
-        fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f),
-        fTurnRate_(0.385f)
+        fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f), fTurnRate_(0.385f)
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
         pCamera_ = s_ptr<Camera>(CameraManager::GetSingleton()->CreateChasingCamera(this));
@@ -40,6 +42,25 @@ namespace Frost
     {
         SceneManager::GetSingleton()->DeleteNode(pNode_);
         CameraManager::GetSingleton()->DeleteCamera(pCamera_);
+    }
+
+    void Unit::SetClass(const s_str& sClassName)
+    {
+        mClass_ = *UnitManager::GetSingleton()->GetClassByName(sClassName);
+        pHealthType_ = s_refptr<HealthTypeInstance>(new HealthTypeInstance(this, mClass_.sHealthType));
+        pPowerType_ = s_refptr<PowerTypeInstance>(new PowerTypeInstance(this, mClass_.sPowerType));
+    }
+
+    void Unit::SetClass(const Class& mClass)
+    {
+        mClass_ = mClass;
+        pHealthType_ = s_refptr<HealthTypeInstance>(new HealthTypeInstance(this, mClass_.sHealthType));
+        pPowerType_ = s_refptr<PowerTypeInstance>(new PowerTypeInstance(this, mClass_.sPowerType));
+    }
+
+    const Class& Unit::GetClass() const
+    {
+        return mClass_;
     }
 
     void Unit::Jump()
@@ -537,12 +558,30 @@ namespace Frost
         return uiID_;
     }
 
+    s_str Unit::GetLuaID() const
+    {
+        return "U_"+uiID_;
+    }
+
     void Unit::OnEvent(const Event& mEvent)
     {
 
     }
 
     void Unit::Update( const s_float& fDelta )
+    {
+        if (pHealthType_)
+            pHealthType_->Update(fDelta);
+        if (pPowerType_)
+            pPowerType_->Update(fDelta);
+
+        UpdateMovement_(fDelta);
+
+        if (pBodyModel_)
+            pBodyModel_->Update(fDelta);
+    }
+
+    void Unit::UpdateMovement_( const s_float fDelta )
     {
         if (bJumping_)
         {
@@ -792,8 +831,5 @@ namespace Frost
                 break;
             }
         }
-
-        if (pBodyModel_)
-            pBodyModel_->Update(fDelta);
     }
 }
