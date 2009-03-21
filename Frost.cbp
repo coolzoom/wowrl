@@ -129,6 +129,7 @@
 		<Unit filename="include\frost_engine.h" />
 		<Unit filename="include\frost_fontmanager.h" />
 		<Unit filename="include\frost_gfx.h" />
+		<Unit filename="include\frost_healthtype.h" />
 		<Unit filename="include\frost_inputmanager.h" />
 		<Unit filename="include\frost_lib_std.h" />
 		<Unit filename="include\frost_lib_utils.h" />
@@ -151,6 +152,7 @@
 		<Unit filename="include\frost_path_smoothpath.h" />
 		<Unit filename="include\frost_pathmanager.h" />
 		<Unit filename="include\frost_plane.h" />
+		<Unit filename="include\frost_powertype.h" />
 		<Unit filename="include\frost_scenemanager.h" />
 		<Unit filename="include\frost_spell.h" />
 		<Unit filename="include\frost_sprite.h" />
@@ -194,6 +196,7 @@
 		<Unit filename="src\frost_engine.cpp" />
 		<Unit filename="src\frost_fontmanager.cpp" />
 		<Unit filename="src\frost_gfx.cpp" />
+		<Unit filename="src\frost_healthtype.cpp" />
 		<Unit filename="src\frost_inputmanager.cpp" />
 		<Unit filename="src\frost_light.cpp" />
 		<Unit filename="src\frost_lightmanager.cpp" />
@@ -204,6 +207,7 @@
 		<Unit filename="src\frost_movableobject.cpp" />
 		<Unit filename="src\frost_node.cpp" />
 		<Unit filename="src\frost_plane.cpp" />
+		<Unit filename="src\frost_powertype.cpp" />
 		<Unit filename="src\frost_scenemanager.cpp" />
 		<Unit filename="src\frost_spell.cpp" />
 		<Unit filename="src\frost_stats.cpp" />

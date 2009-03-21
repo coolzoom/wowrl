@@ -148,13 +148,7 @@ namespace Frost
 
         pUnitMgr_->Initialize();
 
-        if (!pUnitMgr_->ParseSpellSchools())
-            return false;
-
-        if (!pUnitMgr_->ParseCharacterModels())
-            return false;
-
-        if (!pUnitMgr_->ParseRaces())
+        if (!pUnitMgr_->ParseData())
             return false;
 
         // Initialize the input manager

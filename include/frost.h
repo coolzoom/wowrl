@@ -113,6 +113,10 @@ namespace Frost
     struct AddOn;
     class  GUIManager;
 
+    // frost_healthtype.h
+    struct HealthType;
+    class  HealthTypeInstance;
+
     // frost_inputmanager.h
     class  InputManager;
 
@@ -168,6 +172,10 @@ namespace Frost
     // frost_plane.h
     class  Plane;
 
+    // frost_powertype.h
+    struct PowerType;
+    class  PowerTypeInstance;
+
     // frost_scenemanager.h
     class  SceneManager;
 
@@ -195,6 +203,7 @@ namespace Frost
     class  TerrainData;
 
     // frost_unit.h
+    struct Class;
     class  Unit;
 
     // frost_unitmanager.h

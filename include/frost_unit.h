@@ -30,6 +30,13 @@ namespace Frost
         LMOVEMENT_TURN_RIGHT,
     };
 
+    struct Class
+    {
+        s_str sName;
+        s_str sHealthType;
+        s_str sPowerType;
+    };
+
     /// Abstract interractive object
     /** Can be either a Character or a Creature.<br>
     *   A Unit can move on its own and interract with
@@ -49,6 +56,21 @@ namespace Frost
 
         /// Destructor.
         virtual ~Unit();
+
+        /// Changes this Unit's Class.
+        /** \param sClassName The name of the new Class
+        */
+        void             SetClass(const s_str& sClassName);
+
+        /// Changes this Unit's Class.
+        /** \param mClass The new Class
+        */
+        void             SetClass(const Class& mClass);
+
+        /// Returns this Unit's Class.
+        /** \return This Unit's Class
+        */
+        const Class&     GetClass() const;
 
         /// Makes this Unit jump.
         void             Jump();
@@ -134,6 +156,11 @@ namespace Frost
         */
         const s_uint&    GetID() const;
 
+        /// Returns the ID that represents this Unit in the Lua code.
+        /** \return The ID that represents this Unit in the Lua code
+        */
+        s_str            GetLuaID() const;
+
         /// Called whenever an Event occurs.
         /** \param mEvent The Event which has occured
         */
@@ -152,8 +179,16 @@ namespace Frost
         void SetMovement_(Movement mMovementType);
         void SetLateralMovement_(LateralMovement mLMovementType);
 
-        s_uint          uiID_;
-        s_str           sName_;
+        void UpdateMovement_(const s_float fDelta);
+
+        s_uint uiID_;
+        s_str  sName_;
+
+        Class                        mClass_;
+        s_refptr<HealthTypeInstance> pHealthType_;
+        s_refptr<PowerTypeInstance>  pPowerType_;
+        Stats                        mStats_;
+
         s_refptr<Model> pBodyModel_;
         s_ptr<Camera>   pCamera_;
         s_ptr<Node>     pNode_;
@@ -183,8 +218,6 @@ namespace Frost
         s_float         fBackwardRunSpeed_;
         s_float         fBackwardWalkSpeed_;
         s_float         fTurnRate_;
-
-        Stats           mStats;
     };
 
     /** \cond NOT_REMOVE_FROM_DOC
