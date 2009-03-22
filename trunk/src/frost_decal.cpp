@@ -134,8 +134,7 @@ namespace Frost
     {
         if (pOgrePass_ && !bShown_)
         {
-            //pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
-            //pOgrePass_->setDepthCheckEnabled(false);
+            pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
             pTUS_ = pOgrePass_->createTextureUnitState(sTextureFile_.Get());
             pTUS_->setProjectiveTexturing(true, pOgreFrustum_.Get());
             pTUS_->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
@@ -150,13 +149,15 @@ namespace Frost
         if (pOgrePass_ && bShown_)
         {
             pOgrePass_->removeTextureUnitState(pOgrePass_->getTextureUnitStateIndex(pTUS_.Get()));
-            /*if (pOgrePass_->getNumTextureUnitStates() == 0)
-            {
-                pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_FAIL);
-            }*/
+            pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_FAIL);
 
             bShown_ = false;
         }
+    }
+
+    const s_bool& Decal::IsShown() const
+    {
+        return bShown_;
     }
 
     const s_uint& Decal::GetID() const
