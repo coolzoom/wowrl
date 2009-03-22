@@ -28,10 +28,10 @@ namespace Frost
     const s_str Unit::CLASS_NAME = "Unit";
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
-        uiID_(uiID), sName_(sName), mMovementType_(MOVEMENT_NONE),
-        mJumpMovementType_(MOVEMENT_NONE), mLMovementType_(LMOVEMENT_NONE),
-        bTurn_(true), fJumpHeight_(1.4f), fJumpDuration_(0.9f),
-        fForwardRunSpeed_(6.5f), fForwardWalkSpeed_(2.5f),
+        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN),
+        mMovementType_(MOVEMENT_NONE), mJumpMovementType_(MOVEMENT_NONE),
+        mLMovementType_(LMOVEMENT_NONE), bTurn_(true), fJumpHeight_(1.4f),
+        fJumpDuration_(0.9f), fForwardRunSpeed_(6.5f), fForwardWalkSpeed_(2.5f),
         fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f), fTurnRate_(0.385f)
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
@@ -40,8 +40,9 @@ namespace Frost
 
     Unit::~Unit()
     {
-        SceneManager::GetSingleton()->DeleteNode(pNode_);
         CameraManager::GetSingleton()->DeleteCamera(pCamera_);
+        SceneManager::GetSingleton()->DeleteNode(pNode_);
+        pGlue_.Delete();
     }
 
     void Unit::SetClass(const s_str& sClassName)
@@ -61,6 +62,103 @@ namespace Frost
     const Class& Unit::GetClass() const
     {
         return mClass_;
+    }
+
+    void Unit::AddHealth( const s_float& fHealthAdd )
+    {
+        fHealth_ += fHealthAdd;
+        s_float fMaxHealth = mStats_.fMaxHealth.GetValue();
+        if (fHealth_ > fMaxHealth)
+            fHealth_ = fMaxHealth;
+        if (fHealth_ < 0.0f)
+            fHealth_ = 0.0f;
+    }
+
+    void Unit::FillHealthGauge()
+    {
+        fHealth_ = mStats_.fMaxHealth.GetValue();
+    }
+
+    const s_float& Unit::GetHealth() const
+    {
+        return fHealth_;
+    }
+
+    s_float Unit::GetMaxHealth() const
+    {
+        return mStats_.fMaxHealth.GetValue();
+    }
+
+    s_float Unit::GetHealthRegenRatio() const
+    {
+        return mStats_.fHealthRegenRatio.GetValue();
+    }
+
+    void Unit::AddPower( const s_float& fPowerAdd )
+    {
+        fPower_ += fPowerAdd;
+        s_float fMaxPower = mStats_.fMaxPower.GetValue();
+        if (fPower_ > fMaxPower)
+            fPower_ = fMaxPower;
+        if (fPower_ < 0.0f)
+            fPower_ = 0.0f;
+    }
+
+    void Unit::FillPowerGauge()
+    {
+        fPower_ = mStats_.fMaxPower.GetValue();
+    }
+
+    const s_float& Unit::GetPower() const
+    {
+        return fPower_;
+    }
+
+    s_float Unit::GetMaxPower() const
+    {
+        return mStats_.fMaxPower.GetValue();
+    }
+
+    s_float Unit::GetPowerRegenRatio() const
+    {
+        return mStats_.fPowerRegenRatio.GetValue();
+    }
+
+    void Unit::SetStat( const s_str& sStatName, const s_int& iValue )
+    {
+        mStats_.lCharactList[sStatName].SetBaseValue(iValue);
+    }
+
+    void Unit::SetStat( const s_str& sStatName, const s_float& fValue )
+    {
+        mStats_.lCharactList[sStatName].SetBaseValue(fValue);
+    }
+
+    s_var Unit::GetStat( const s_str& sStatName ) const
+    {
+        map< s_str, Characteristic<s_var> >::const_iterator iter = mStats_.lCharactList.find(sStatName);
+        if (iter != mStats_.lCharactList.end())
+        {
+            s_var vReturn;
+            if (iter->second.IsInteger())
+                vReturn.SetI(iter->second.GetValueI());
+            else
+                vReturn.SetF(iter->second.GetValueF());
+
+            return vReturn;
+        }
+        else
+            return s_var(NULL);
+    }
+
+    void Unit::SetLevel( const s_uint& uiLevel )
+    {
+        uiLevel_ = uiLevel;
+    }
+
+    const s_uint& Unit::GetLevel() const
+    {
+        return uiLevel_;
     }
 
     void Unit::Jump()
@@ -561,6 +659,27 @@ namespace Frost
     s_str Unit::GetLuaID() const
     {
         return "U_"+uiID_;
+    }
+
+    void Unit::PushOnLua( s_ptr<Lua::State> pLua ) const
+    {
+        pLua->PushGlobal(GetLuaID());
+        pLua->SetGlobal("unit");
+        pLua->PushNil();
+        pLua->SetGlobal("character");
+        pLua->PushNil();
+        pLua->SetGlobal("creature");
+    }
+
+    void Unit::CreateGlue()
+    {
+        // TODO :  ## finir ça
+        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
+        pLua->PushNumber(GetID());
+        LuaUnit* pNewGlue;
+        pGlue_ = pNewGlue = new LuaUnit(pLua->GetState());
+        Lunar<LuaUnit>::push(pLua->GetState(), pNewGlue);
+        pLua->SetGlobal(GetLuaID());
     }
 
     void Unit::OnEvent(const Event& mEvent)

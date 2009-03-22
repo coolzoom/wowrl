@@ -53,6 +53,7 @@ namespace Frost
         {
             pCharacter = new Character(uiCounter_, sName, lRaceList_[sRace], mGender);
             lUnitList_[uiCounter_] = pCharacter;
+            pCharacter->CreateGlue();
             uiCounter_++;
         }
         else
@@ -67,6 +68,7 @@ namespace Frost
     {
         s_ptr<Creature> pCreature = new Creature(uiCounter_, sName);
         lUnitList_[uiCounter_] = pCreature;
+        pCreature->CreateGlue();
         uiCounter_++;
 
         return pCreature;
@@ -106,7 +108,12 @@ namespace Frost
             return iterUnit->second;
         }
         else
+        {
+            Warning(CLASS_NAME,
+                "No unit found with the ID : "+uiID+"."
+            );
             return NULL;
+        }
     }
 
     void UnitManager::UpdateUnits( const s_float& fDelta )

@@ -191,7 +191,9 @@
 		<Unit filename="src\camera\frost_camera_topcamera.cpp" />
 		<Unit filename="src\camera\frost_cameramanager.cpp" />
 		<Unit filename="src\frost_character.cpp" />
+		<Unit filename="src\frost_character_glues.cpp" />
 		<Unit filename="src\frost_creature.cpp" />
+		<Unit filename="src\frost_creature_glues.cpp" />
 		<Unit filename="src\frost_decal.cpp" />
 		<Unit filename="src\frost_engine.cpp" />
 		<Unit filename="src\frost_fontmanager.cpp" />
