@@ -168,7 +168,12 @@ int Lua::l_DoString( lua_State* pLua )
     {
         s_str sScript = mFunc.Get(0)->GetS();
         int iError = luaL_dostring(pLua, sScript.c_str());
-        if (iError) l_ThrowError(pLua);
+        if (iError == LUA_ERRRUN)
+            l_ThrowError(pLua);
+        else if (iError == LUA_ERRMEM)
+            Error("Lua", "Memory error.");
+        else
+            Error("Lua", "Unhandled error.");
     }
 
     return mFunc.Return();
