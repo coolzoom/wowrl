@@ -53,6 +53,15 @@ namespace Frost
         }
     }
 
+    Material::~Material()
+    {
+        map< s_uint, s_ptr<Decal> >::iterator iterDecal;
+        foreach (iterDecal, lDecalList_)
+        {
+            iterDecal->second.Delete();
+        }
+    }
+
     void Material::SetAlphaReject( const s_bool& bEnable )
     {
         if (!bAlphaReject_ && bEnable)
@@ -130,22 +139,9 @@ namespace Frost
         );
     }
 
-    void Material::CreateDecalPass_()
-    {
-        pDecalPass_ = pOgreMat_->getTechnique(0)->createPass();
-        pDecalPass_->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-        pDecalPass_->setDepthBias(1);
-        pDecalPass_->setLightingEnabled(false);
-    }
-
     s_ptr<Decal> Material::AddDecal( s_ptr<Decal> pDecal )
     {
-        if (!pDecalPass_)
-        {
-            this->CreateDecalPass_();
-        }
-
-        s_ptr<Decal> pNewDecal = new Decal(*pDecal, uiDecalCounter_, pDecalPass_);
+        s_ptr<Decal> pNewDecal = new Decal(*pDecal, uiDecalCounter_, pOgreMat_);
         lDecalList_[uiDecalCounter_] = pNewDecal;
         uiDecalCounter_++;
 
@@ -161,12 +157,7 @@ namespace Frost
 
     s_ptr<Decal> Material::AddDecal( const s_str& sTextureFile )
     {
-        if (!pDecalPass_)
-        {
-            this->CreateDecalPass_();
-        }
-
-        s_ptr<Decal> pDecal = new Decal(sTextureFile, uiDecalCounter_, pDecalPass_);
+        s_ptr<Decal> pDecal = new Decal(sTextureFile, uiDecalCounter_, pOgreMat_);
         lDecalList_[uiDecalCounter_] = pDecal;
         uiDecalCounter_++;
 
@@ -186,12 +177,6 @@ namespace Frost
             {
                 pDecal.Delete();
                 lDecalList_.erase(iterDecal);
-
-                if (lDecalList_.empty())
-                {
-                    pOgreMat_->getTechnique(0)->removePass(pDecalPass_->getIndex());
-                    pDecalPass_ = NULL;
-                }
             }
         }
 

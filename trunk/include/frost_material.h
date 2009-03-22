@@ -27,8 +27,11 @@ namespace Frost
     {
     public :
 
-        /// Constructor
+        /// Constructor.
         Material(const s_uint& uiID, MaterialType mType, s_ptr<Ogre::Material> pOgreMat);
+
+        /// Destructor.
+        ~Material();
 
         /// Sets whether alpha rejecting should be on or off.
         /** \param bEnable 'true' to enable
@@ -125,7 +128,7 @@ namespace Frost
 
     private :
 
-        void CreateDecalPass_();
+        s_ptr<Ogre::Pass> CreateDecalPass_();
 
         s_uint                 uiID_;
         MaterialType           mType_;
@@ -136,7 +139,6 @@ namespace Frost
 
         s_bool                 bAlphaReject_;
         s_bool                 bHardwareSkinning_;
-        s_ptr<Ogre::Pass>      pDecalPass_;
 
         std::map< s_uint, s_ptr<Decal> > lDecalList_;
         s_uint                           uiDecalCounter_;

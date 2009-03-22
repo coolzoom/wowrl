@@ -73,6 +73,11 @@ namespace Frost
             pEntity_->setMaterialName("Default3D");
     }
 
+    s_refptr<Material> Plane::GetMaterial()
+    {
+        return pMaterial_;
+    }
+
     const s_uint& Plane::GetID() const
     {
         return uiID_;

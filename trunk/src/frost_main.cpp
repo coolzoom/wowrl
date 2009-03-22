@@ -22,6 +22,12 @@
 #include "frost_light.h"
 #include "frost_unitmanager.h"
 #include "frost_character.h"
+#include "frost_decal.h"
+
+#include <OgreMaterial.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
+
 
 #include <OgreException.h>
 
@@ -188,14 +194,31 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pPlane = SceneManager::GetSingleton()->CreatePlane();
             pPlane->SetMaterial(pGroundMat);
 
-            // Some light
-            /*pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
-            pLight1->SetPosition(Vector(5, 0, 1));
-            pLight1->SetColor(Color(255, 0, 0));
-            pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
-            pLight1->SetRange(100.0f);
+            s_ptr<Decal> pDecal = pGroundMat->AddDecal("Textures/UnitShadow.png");
+            pDecal->Attach(s_ptr<MovableObject>(pChar->GetBodyModel().Get()), false, true);
+            pDecal->SetPosition(Vector(0, 5, 0));
+            pDecal->SetDirection(Vector(0, -1, 0));
+            pDecal->SetProjection(DECAL_PROJECTION_ORTHO);
+            pDecal->SetScale(1.8f);
+            pDecal->SetDiffuse(Color(128, 255, 255, 255));
 
-            pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+            s_ptr<Decal> pDecal2 = pGroundMat->AddDecal("Textures/UnitSelection.png");
+            pDecal2->Attach(s_ptr<MovableObject>(pChar->GetBodyModel().Get()), false, true);
+            pDecal2->SetPosition(Vector(0, 5, 0));
+            pDecal2->SetDirection(Vector(0, -1, 0));
+            pDecal2->SetProjection(DECAL_PROJECTION_ORTHO);
+            pDecal2->SetScale(1.5f);
+            pDecal2->SetDiffuse(Color(0, 255, 0));
+            pDecal2->SetAmbient(Color(0, 255, 0));
+
+            // Some light
+            pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+            pLight1->SetPosition(Vector(0, 5, 0));
+            pLight1->SetColor(Color(255, 255, 255));
+            pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
+            pLight1->SetRange(50.0f);
+
+            /*pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
             pLight2->SetPosition(Vector(0, 5, 1));
             pLight2->SetColor(Color(0, 255, 0));
             pLight2->SetAttenuation(0.0f, 0.125f, 0.0f);

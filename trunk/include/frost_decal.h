@@ -6,6 +6,12 @@
 
 namespace Frost
 {
+    enum DecalProjection
+    {
+        DECAL_PROJECTION_PERSP,
+        DECAL_PROJECTION_ORTHO
+    };
+
     class Decal : public MovableObject
     {
     public :
@@ -13,20 +19,20 @@ namespace Frost
         /// Default constructor.
         /** \param sTextureFile The file containing the texture to draw
         *   \param uiID         The ID to give to that decal (must be unique in the Material)
-        *   \param pOgrePass    The material pass on which the decal will be applied
+        *   \param pOgreMat     The material on which the decal will be applied
         *   \note The last two parameters are here for the Material class to create its
         *         own decals. If you want to create a temporary decal, only use the first
         *         parameter.
         */
-        Decal(const s_str& sTextureFile, const s_uint& uiID = s_uint::INF, s_ptr<Ogre::Pass> pOgrePass = NULL);
+        Decal(const s_str& sTextureFile, const s_uint& uiID = s_uint::INF, s_ptr<Ogre::Material> pOgreMat = NULL);
 
         /// Copy constructor.
-        /** \param mDecal    The base decal to copy
-        *   \param uiID      The ID to give to that decal (must be unique in the Material)
-        *   \param pOgrePass The material pass on which the decal will be applied
+        /** \param mDecal   The base decal to copy
+        *   \param uiID     The ID to give to that decal (must be unique in the Material)
+        *   \param pOgreMat The material on which the decal will be applied
         *   \note You shouldn't have to call this.
         */
-        Decal(const Decal& mDecal, const s_uint& uiID, s_ptr<Ogre::Pass> pPass);
+        Decal(const Decal& mDecal, const s_uint& uiID, s_ptr<Ogre::Material> pOgreMat);
 
         /// Destructor.
         virtual ~Decal();
@@ -36,6 +42,48 @@ namespace Frost
 
         /// Makes this Decal invisible on its Material.
         void                    Hide();
+
+        /// Sets the scale of the projection.
+        /** \param fScale The scale of the projection
+        */
+        void                    SetScale(const s_float& fScale);
+
+        /// Returns the scale of the projection.
+        /** \return The scale of the projection
+        */
+        const s_float&          GetScale() const;
+
+        /// Sets this Decal's diffuse color.
+        /** \param mColor The diffuse color
+        */
+        void                    SetDiffuse(const Color& mColor);
+
+        /// Returns this Decal's color.
+        /** \return This Decal's color
+        */
+        Color                   GetDiffuse() const;
+
+        /// Sets this Decal's self illumination color.
+        /** \param mColor The self illumination color
+        *   \note Alpha isn't taken into account
+        */
+        void                    SetSelfIllumination(const Color& mColor);
+
+        /// Sets this Decal's ambient color.
+        /** \param mColor The ambient color
+        *   \note Alpha isn't taken into account
+        */
+        void                    SetAmbient(const Color& mColor);
+
+        /// Set the Decal's projection mode.
+        /** \param mProjection The new projection mode
+        */
+        void                    SetProjection(const DecalProjection& mProjection);
+
+        /// Returns the Decal's projection mode.
+        /** \return The Decal's projection mode
+        */
+        const DecalProjection&  GetProjection() const;
 
         /// Returns this Decal's ID.
         /** \return This Decal's ID
@@ -68,12 +116,15 @@ namespace Frost
 
         s_uint uiID_;
 
+        s_ptr<Ogre::Material>         pOgreMat_;
         s_ptr<Ogre::Pass>             pOgrePass_;
         s_ptr<Ogre::TextureUnitState> pTUS_;
         s_uint                        uiTUSIndex_;
         s_refptr<Ogre::Frustum>       pOgreFrustum_;
+        s_float                       fScale_;
         s_str                         sTextureFile_;
         s_bool                        bShown_;
+        DecalProjection               mProjection_;
 
     };
 }

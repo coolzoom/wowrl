@@ -50,6 +50,11 @@ namespace Frost
         */
         void SetMaterial(s_refptr<Material> pMat);
 
+        /// Returns this Plane's Material.
+        /** \return This Plane's Material
+        */
+        s_refptr<Material> GetMaterial();
+
         /// Returns this Plane's unique ID.
         /** \return This Plane's unique ID
         */
