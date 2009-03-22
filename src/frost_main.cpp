@@ -55,6 +55,8 @@ s_ptr<Light>         pLight1;
 s_ptr<Light>         pLight2;
 s_ptr<Light>         pLight3;
 
+s_ptr<Decal>         pSelectionDecal;
+
 s_float fCoefX = M_PI_4;
 s_float fCoefY = M_PI_4;
 s_float fZoom = 1.0f;
@@ -92,7 +94,10 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_R))
     {
-        pChar->AddPower(-50000.0f);
+        if (pSelectionDecal->IsShown())
+            pSelectionDecal->Hide();
+        else
+            pSelectionDecal->Show();
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -202,14 +207,14 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pDecal->SetScale(1.8f);
             pDecal->SetDiffuse(Color(128, 255, 255, 255));
 
-            s_ptr<Decal> pDecal2 = pGroundMat->AddDecal("Textures/UnitSelection.png");
-            pDecal2->Attach(s_ptr<MovableObject>(pChar->GetBodyModel().Get()), false, true);
-            pDecal2->SetPosition(Vector(0, 5, 0));
-            pDecal2->SetDirection(Vector(0, -1, 0));
-            pDecal2->SetProjection(DECAL_PROJECTION_ORTHO);
-            pDecal2->SetScale(1.5f);
-            pDecal2->SetDiffuse(Color(0, 255, 0));
-            pDecal2->SetAmbient(Color(0, 255, 0));
+            pSelectionDecal = pGroundMat->AddDecal("Textures/UnitSelection.png");
+            pSelectionDecal->Attach(s_ptr<MovableObject>(pChar->GetBodyModel().Get()), false, true);
+            pSelectionDecal->SetPosition(Vector(0, 5, 0));
+            pSelectionDecal->SetDirection(Vector(0, -1, 0));
+            pSelectionDecal->SetProjection(DECAL_PROJECTION_ORTHO);
+            pSelectionDecal->SetScale(1.5f);
+            pSelectionDecal->SetDiffuse(Color(0, 255, 0));
+            pSelectionDecal->SetAmbient(Color(0, 255, 0));
 
             // Some light
             pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);

@@ -43,6 +43,11 @@ namespace Frost
         /// Makes this Decal invisible on its Material.
         void                    Hide();
 
+        /// Checks if this Decal is shown.
+        /** \return 'true' if this Decal is shown
+        */
+        const s_bool&           IsShown() const;
+
         /// Sets the scale of the projection.
         /** \param fScale The scale of the projection
         */
