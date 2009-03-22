@@ -18,6 +18,8 @@
 #include "gui/frost_gui_fontstring.h"
 #include "gui/frost_gui_texture.h"
 #include "frost_unit.h"
+#include "frost_character.h"
+#include "frost_creature.h"
 
 using namespace std;
 using namespace Frost;
@@ -52,4 +54,6 @@ void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )
 {
     lua_State* pRawLua = pLua->GetState();
     Lunar<LuaUnit>::Register(pRawLua);
+    Lunar<LuaCharacter>::Register(pRawLua);
+    Lunar<LuaCreature>::Register(pRawLua);
 }

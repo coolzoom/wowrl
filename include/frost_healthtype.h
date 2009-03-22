@@ -60,6 +60,7 @@ namespace Frost
 
         s_ptr<const HealthType> pParent_;
         s_ptr<Unit>             pUnit_;
+        s_refptr<PeriodicTimer> pTimer_;
 
     };
 }

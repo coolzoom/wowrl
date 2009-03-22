@@ -58,8 +58,9 @@ namespace Frost
 
     private :
 
-        s_ptr<const PowerType> pParent_;
-        s_ptr<Unit>            pUnit_;
+        s_ptr<const PowerType>  pParent_;
+        s_ptr<Unit>             pUnit_;
+        s_refptr<PeriodicTimer> pTimer_;
 
     };
 }

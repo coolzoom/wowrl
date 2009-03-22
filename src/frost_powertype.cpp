@@ -17,6 +17,8 @@ namespace Frost
         pUnit_(pUnit)
     {
         pParent_ = UnitManager::GetSingleton()->GetPowerTypeByName(sPowerName);
+        if (pParent_->mRegenType == POWER_REGEN_TICK)
+            pTimer_ = s_refptr<PeriodicTimer>(new PeriodicTimer(s_double(pParent_->fRegenTickDuration), TIMER_START_FIRST, false));
         this->On("UnitSpawn");
     }
 
@@ -31,8 +33,7 @@ namespace Frost
         {
             s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
 
-            pLua->PushGlobal(pUnit_->GetLuaID());
-            pLua->SetGlobal("unit");
+            pUnit_->PushOnLua(pLua);
 
             pLua->CallFunction(pParent_->sName+":On"+sScriptName);
         }
@@ -40,5 +41,22 @@ namespace Frost
 
     void PowerTypeInstance::Update( const s_float& fDelta )
     {
+        switch (pParent_->mRegenType)
+        {
+            case POWER_REGEN_TICK :
+            {
+                if (pTimer_->Ticks())
+                {
+                    this->On("Tick");
+                }
+                break;
+            }
+            case POWER_REGEN_CONTINUOUS :
+            {
+                pUnit_->AddPower(fDelta*pParent_->fRegenRate);
+                break;
+            }
+            default : break;
+        }
     }
 }

@@ -17,6 +17,8 @@ namespace Frost
         pUnit_(pUnit)
     {
         pParent_ = UnitManager::GetSingleton()->GetHealthTypeByName(sHealthName);
+        if (pParent_->mRegenType == HEALTH_REGEN_TICK)
+            pTimer_ = s_refptr<PeriodicTimer>(new PeriodicTimer(s_double(pParent_->fRegenTickDuration), TIMER_START_FIRST, false));
         this->On("UnitSpawn");
     }
 
@@ -31,8 +33,7 @@ namespace Frost
         {
             s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
 
-            pLua->PushGlobal(pUnit_->GetLuaID());
-            pLua->SetGlobal("unit");
+            pUnit_->PushOnLua(pLua);
 
             pLua->CallFunction(pParent_->sName+":On"+sScriptName);
         }
@@ -40,5 +41,22 @@ namespace Frost
 
     void HealthTypeInstance::Update( const s_float& fDelta )
     {
+        switch (pParent_->mRegenType)
+        {
+            case HEALTH_REGEN_TICK :
+            {
+                if (pTimer_->Ticks())
+                {
+                    this->On("Tick");
+                }
+                break;
+            }
+            case HEALTH_REGEN_CONTINUOUS :
+            {
+                pUnit_->AddHealth(fDelta*pParent_->fRegenRate);
+                break;
+            }
+            default : break;
+        }
     }
 }

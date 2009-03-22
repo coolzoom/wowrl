@@ -146,6 +146,9 @@ namespace Frost
 
     s_bool UnitManager::ParseHealthTypes_()
     {
+        if (!pLua_->DoFile("DB/HealthTypeScripts.lua"))
+            return false;
+
         XML::Document mDoc("DB/HealthTypes.xml", "DB/HealthTypes.def");
         if (mDoc.Check())
         {
@@ -179,7 +182,7 @@ namespace Frost
                 }
 
                 // Create the Lua object
-                pLua_->PushString(mHealthType.sName);
+                pLua_->NewTable();
                 pLua_->SetGlobal(mHealthType.sName);
 
                 s_ptr<XML::Block> pScripts = pHealthType->GetBlock("Scripts");
@@ -220,6 +223,9 @@ namespace Frost
 
     s_bool UnitManager::ParsePowerTypes_()
     {
+        if (!pLua_->DoFile("DB/PowerTypeScripts.lua"))
+            return false;
+
         XML::Document mDoc("DB/PowerTypes.xml", "DB/PowerTypes.def");
         if (mDoc.Check())
         {
@@ -253,7 +259,7 @@ namespace Frost
                 }
 
                 // Create the Lua object
-                pLua_->PushString(mPowerType.sName);
+                pLua_->NewTable();
                 pLua_->SetGlobal(mPowerType.sName);
 
                 s_ptr<XML::Block> pScripts = pPowerType->GetBlock("Scripts");
