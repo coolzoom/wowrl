@@ -39,9 +39,11 @@ namespace Frost
     // frost_character.h
     struct Race;
     class  Character;
+    class  LuaCharacter;
 
     // frost_creature.h
     class  Creature;
+    class  LuaCreature;
 
     // frost_decal.h
     class  Decal;
@@ -190,10 +192,10 @@ namespace Frost
 
     // frost_stats.h
     template<class T>
-    class Bonus;
+    class  Bonus;
     struct BonusSet;
     template<class T>
-    class Characteristic;
+    class  Characteristic;
     struct Stats;
 
     // frost_terrain.h
@@ -205,6 +207,7 @@ namespace Frost
     // frost_unit.h
     struct Class;
     class  Unit;
+    class  LuaUnit;
 
     // frost_unitmanager.h
     class  UnitManager;

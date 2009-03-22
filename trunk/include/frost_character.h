@@ -72,8 +72,8 @@ namespace Frost
     public :
 
         /// Constructor.
-        /** \param uiID  This Unit's unique ID
-        *   \param sName This Unit's name
+        /** \param uiID  This Character's unique ID
+        *   \param sName This Character's name
         *   \note You shouldn't have to call this. Use the
         *         UnitManager instead.
         */
@@ -81,6 +81,11 @@ namespace Frost
 
         /// Destructor.
         ~Character();
+
+        /// Returns this Character's Race.
+        /** \return This Character's Race
+        */
+        const Race&      GetRace();
 
         /// Returns a sub-model of the body model.
         /** \param uiCategory  The kind of sub-model you want
@@ -95,7 +100,15 @@ namespace Frost
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by UnitManager.
         */
-        void Update(const s_float& fDelta);
+        virtual void     Update(const s_float& fDelta);
+
+        /// Pushes this Character on the provided Lua::State.
+        /** \param pLua The State on which to push the Character
+        */
+        virtual void     PushOnLua(s_ptr<Lua::State> pLua) const;
+
+        /// Creates the associated Lua glue.
+        virtual void     CreateGlue();
 
         static const s_str CLASS_NAME;
 
@@ -104,6 +117,29 @@ namespace Frost
         CharGender mGender_;
         Race       mRace_;
     };
+
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
+
+    class LuaCharacter : public LuaUnit
+    {
+    public :
+
+        LuaCharacter(lua_State* pLua);
+
+        int _GetRace(lua_State*);
+
+        static const char className[];
+        static Lunar<LuaCharacter>::RegType methods[];
+        static const s_str CLASS_NAME;
+
+    private :
+
+        s_ptr<Character> pParentCharacter_;
+    };
+
+    /** \endcond
+    */
 }
 
 #endif

@@ -13,6 +13,7 @@
 #include "frost_materialmanager.h"
 #include "frost_material.h"
 #include "camera/frost_camera.h"
+#include "frost_unitmanager.h"
 
 using namespace std;
 
@@ -90,6 +91,21 @@ namespace Frost
         pBodyModel_->Detach();
     }
 
+    void Character::CreateGlue()
+    {
+        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
+        pLua->PushNumber(GetID());
+        LuaCharacter* pNewGlue;
+        pGlue_ = pNewGlue = new LuaCharacter(pLua->GetState());
+        Lunar<LuaCharacter>::push(pLua->GetState(), pNewGlue);
+        pLua->SetGlobal(GetLuaID());
+    }
+
+    const Race& Character::GetRace()
+    {
+        return mRace_;
+    }
+
     s_ptr<ModelPart> Character::GetModelPart( const s_uint& uiCategory, const s_uint& uiVariation )
     {
         s_uint uiID = uiVariation;
@@ -101,6 +117,16 @@ namespace Frost
         }
 
         return pBodyModel_->GetModelPart(uiID);
+    }
+
+    void Character::PushOnLua( s_ptr<Lua::State> pLua ) const
+    {
+        pLua->PushGlobal(GetLuaID());
+        pLua->SetGlobal("unit");
+        pLua->PushGlobal(GetLuaID());
+        pLua->SetGlobal("character");
+        pLua->PushNil();
+        pLua->SetGlobal("creature");
     }
 
     void Character::Update( const s_float& fDelta )

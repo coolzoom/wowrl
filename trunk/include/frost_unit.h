@@ -72,6 +72,82 @@ namespace Frost
         */
         const Class&     GetClass() const;
 
+        /// Adds some health points to this Unit's total health.
+        /** \param fHealthAdd The number of health points to add
+        */
+        void             AddHealth(const s_float& fHealthAdd);
+
+        /// Sets this Unit's current health points to the maximum possible.
+        void             FillHealthGauge();
+
+        /// Returns this Unit's total health value.
+        /** \return This Unit's total health value
+        */
+        const s_float&   GetHealth() const;
+
+        /// Returns this Unit's maximum health value.
+        /** \return This Unit's maximum health value
+        */
+        s_float          GetMaxHealth() const;
+
+        /// Returns this Unit's health regen ratio.
+        /** \return This Unit's health regen ratio
+        */
+        s_float          GetHealthRegenRatio() const;
+
+        /// Adds some power points to this Unit's total power.
+        /** \param fHealthAdd The number of power points to add
+        */
+        void             AddPower(const s_float& fPowerAdd);
+
+        /// Sets this Unit's current power points to the maximum possible.
+        void             FillPowerGauge();
+
+        /// Returns this Unit's total power value.
+        /** \return This Unit's total power value
+        */
+        const s_float&   GetPower() const;
+
+        /// Returns this Unit's maximum power value.
+        /** \return This Unit's maximum power value
+        */
+        s_float          GetMaxPower() const;
+
+        /// Returns this Unit's power regen ratio.
+        /** \return This Unit's power regen ratio
+        */
+        s_float          GetPowerRegenRatio() const;
+
+        /// Sets one of this Unit's stat.
+        /** \param sStatName The code name of this stat
+        *   \param iValue    The new value to give to this stat
+        */
+        void             SetStat(const s_str& sStatName, const s_int& iValue);
+
+        /// Sets one of this Unit's stat.
+        /** \param sStatName The code name of this stat
+        *   \param fValue    The new value to give to this stat
+        */
+        void             SetStat(const s_str& sStatName, const s_float& fValue);
+
+        /// Returns one of this Unit's stat.
+        /** \param sStatName The code name of this stat
+        *   \return The stat value
+        */
+        s_var            GetStat(const s_str& sStatName) const;
+
+        /// Sets this Unit's level.
+        /** \param uiLevel The new level
+        *   \note Pass NaN if you want to give no level to this Unit.
+        */
+        void             SetLevel(const s_uint& uiLevel);
+
+        /// Returns this Unit's level.
+        /** \return This Unit's level
+        *   \note Returns NaN if this Unit has no level.
+        */
+        const s_uint&    GetLevel() const;
+
         /// Makes this Unit jump.
         void             Jump();
 
@@ -161,6 +237,14 @@ namespace Frost
         */
         s_str            GetLuaID() const;
 
+        /// Creates the associated Lua glue.
+        virtual void     CreateGlue();
+
+        /// Pushes this Unit on the provided Lua::State.
+        /** \param pLua The State on which to push the Unit
+        */
+        virtual void     PushOnLua(s_ptr<Lua::State> pLua) const;
+
         /// Called whenever an Event occurs.
         /** \param mEvent The Event which has occured
         */
@@ -184,10 +268,15 @@ namespace Frost
         s_uint uiID_;
         s_str  sName_;
 
+        s_ptr<LuaUnit> pGlue_;
+
         Class                        mClass_;
         s_refptr<HealthTypeInstance> pHealthType_;
+        s_float                      fHealth_;
         s_refptr<PowerTypeInstance>  pPowerType_;
+        s_float                      fPower_;
         Stats                        mStats_;
+        s_uint                       uiLevel_;
 
         s_refptr<Model> pBodyModel_;
         s_ptr<Camera>   pCamera_;
@@ -230,7 +319,19 @@ namespace Frost
         LuaUnit(lua_State* pLua);
 
         int _AddBuff(lua_State*);
+        int _AddHealth(lua_State*);
+        int _AddPower(lua_State*);
         int _Damage(lua_State*);
+        int _FillHealthGauge(lua_State*);
+        int _FillPowerGauge(lua_State*);
+        int _GetClass(lua_State*);
+        int _GetHealthRegenRatio(lua_State*);
+        int _GetLevel(lua_State*);
+        int _GetPowerRegenRatio(lua_State*);
+        int _GetStat(lua_State*);
+        int _GetUnitType(lua_State*);
+        int _IsInCombat(lua_State*);
+        int _IsSitting(lua_State*);
         int _SetAnim(lua_State*);
         int _SetAttacking(lua_State*);
 
@@ -239,7 +340,7 @@ namespace Frost
         static Lunar<LuaUnit>::RegType methods[];
         static const s_str CLASS_NAME;
 
-    private :
+    protected :
 
         s_ptr<Unit> pParent_;
 

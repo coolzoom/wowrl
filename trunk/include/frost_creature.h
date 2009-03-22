@@ -25,8 +25,8 @@ namespace Frost
     public :
 
         /// Constructor.
-        /** \param uiID  This Unit's unique ID
-        *   \param sName This Unit's name
+        /** \param uiID  This Creature's unique ID
+        *   \param sName This Creature's name
         *   \note You shouldn't have to call this. Use the
         *         UnitManager instead.
         */
@@ -44,7 +44,15 @@ namespace Frost
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by UnitManager.
         */
-        void Update(const s_float& fDelta);
+        virtual void     Update(const s_float& fDelta);
+
+        /// Pushes this Creature on the provided Lua::State.
+        /** \param pLua The State on which to push the Creature
+        */
+        virtual void     PushOnLua(s_ptr<Lua::State> pLua) const;
+
+        /// Creates the associated Lua glue.
+        virtual void     CreateGlue();
 
         static const s_str CLASS_NAME;
 
@@ -52,6 +60,29 @@ namespace Frost
 
 
     };
+
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
+
+    class LuaCreature : public LuaUnit
+    {
+    public :
+
+        LuaCreature(lua_State* pLua);
+
+
+
+        static const char className[];
+        static Lunar<LuaCreature>::RegType methods[];
+        static const s_str CLASS_NAME;
+
+    private :
+
+        s_ptr<Creature> pParentCreature_;
+    };
+
+    /** \endcond
+    */
 }
 
 #endif
