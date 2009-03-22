@@ -22,6 +22,7 @@ namespace Frost
         else dElapsed_ = 0.0;
         mType_ = mType;
         bPaused_ = true;
+        bFirstTick_ = true;
         if (mType == TIMER_START_NOW) Start();
     }
 
@@ -33,13 +34,22 @@ namespace Frost
             return dElapsed_;
     }
 
+    const s_double& PeriodicTimer::GetPeriod() const
+    {
+        return dDuration_;
+    }
+
+    const s_bool& PeriodicTimer::IsPaused() const
+    {
+        return bPaused_;
+    }
+
     s_bool PeriodicTimer::Ticks()
     {
-        static s_bool bFirstTick = true;
-        if ( (mType_ == TIMER_START_FIRST) && bFirstTick )
+        if ( (mType_ == TIMER_START_FIRST) && bFirstTick_ )
         {
             Start();
-            bFirstTick = false;
+            bFirstTick_ = false;
         }
 
         if (!bPaused_)
@@ -102,6 +112,11 @@ namespace Frost
             return dElapsed_ + TimeManager::GetSingleton()->GetTime() - dStart_;
         else
             return dElapsed_;
+    }
+
+    const s_bool& Timer::IsPaused() const
+    {
+        return bPaused_;
     }
 
     void Timer::Stop()

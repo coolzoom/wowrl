@@ -44,24 +44,34 @@ namespace Frost
         /// Returns the time elapsed since the last tick.
         /** \return The time elapsed since last tick
         */
-        s_double GetElapsed();
+        s_double        GetElapsed();
+
+        /// Returns the period of the PeriodicTimer.
+        /** \return The period of the PeriodicTimer
+        */
+        const s_double& GetPeriod() const;
+
+        /// Cheks if this PeriodicTimer is paused.
+        /** \return 'true' if this PeriodicTimer is paused
+        */
+        const s_bool&   IsPaused() const;
 
         /// Checks if the timer's period has been reached.
         /** \return 'true' if the period has been reached
         */
-        s_bool   Ticks();
+        s_bool          Ticks();
 
         /// Pauses the timer and resets it.
-        void     Stop();
+        void            Stop();
 
         /// Starts the timer but doesn't reset it.
-        void     Start();
+        void            Start();
 
         /// Pauses the timer.
-        void     Pause();
+        void            Pause();
 
         /// Resets the timer but doesn't pause it.
-        void     Zero();
+        void            Zero();
 
         static const s_str CLASS_NAME;
 
@@ -71,6 +81,7 @@ namespace Frost
         s_double dStart_;
         s_double dDuration_;
         s_bool   bPaused_;
+        s_bool   bFirstTick_;
 
         TimerType mType_;
     };
@@ -87,19 +98,24 @@ namespace Frost
         /// Returns the total time elapsed.
         /** \return The total time elapsed.
         */
-        s_double GetElapsed();
+        s_double      GetElapsed();
+
+        /// Cheks if this Timer is paused.
+        /** \return 'true' if this Timer is paused
+        */
+        const s_bool& IsPaused() const;
 
         /// Starts this timer.
-        void     Start(const s_bool& bReset = false);
+        void          Start(const s_bool& bReset = false);
 
         /// Pauses this timer.
-        void     Pause();
+        void          Pause();
 
         /// Stops this timer.
-        void     Stop();
+        void          Stop();
 
         /// Resets this timer (doesn't pause it).
-        void     Zero();
+        void          Zero();
 
         static const s_str CLASS_NAME;
 
