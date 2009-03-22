@@ -32,6 +32,8 @@ ReturnValue::ReturnValue( const s_var& val )
              (val.GetType() == VALUE_FLOAT) ||
              (val.GetType() == VALUE_DOUBLE))
         mType = RETURN_NUMBER;
+    else
+        mType = RETURN_NIL;
 
     vValue = val;
 }

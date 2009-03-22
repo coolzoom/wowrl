@@ -52,7 +52,7 @@ State::State()
 
     OpenLibs(pLua_);
 
-    lua_atpanic(pLua_, l_Log);
+    //lua_atpanic(pLua_, l_Log);
 
     NewTable();
     SetGlobal("Functions");
@@ -217,9 +217,7 @@ s_bool State::DoFile( const s_str& sFile )
     if (File::Exists(sFile))
     {
         int iError = luaL_dofile(pLua_, sFile.c_str());
-        if (iError) l_ThrowError(pLua_);
-
-        return (iError == 0);
+        return HandleError(iError);
     }
     else
     {
@@ -231,9 +229,19 @@ s_bool State::DoFile( const s_str& sFile )
 s_bool State::DoString( const s_str& sStr )
 {
     int iError = luaL_dostring(pLua_, sStr.c_str());
-    if (iError) l_ThrowError(pLua_);
+    return HandleError(iError);
+}
 
-    return (iError == 0);
+
+s_bool State::HandleError( int iError )
+{
+    if (iError != 0)
+    {
+        l_ThrowError(pLua_);
+        return false;
+    }
+    else
+        return true;
 }
 
 s_bool State::CallFunction( const s_str& sFunctionName )
@@ -271,11 +279,9 @@ s_bool State::CallFunction( const s_str& sFunctionName )
     if (lua_isfunction(pLua_, -1))
     {
         int iError = lua_pcall(pLua_, 0, 0, 0);
-        if (iError)
-        {
-            l_ThrowError(pLua_);
+        if (!HandleError(iError))
             return false;
-        }
+        //lua_call(pLua_, 0, 0);
     }
     else
     {
@@ -340,11 +346,8 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
         }
 
         int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, 0);
-        if (iError)
-        {
-            l_ThrowError(pLua_);
+        if (!HandleError(iError))
             return false;
-        }
     }
     else
     {
@@ -366,9 +369,16 @@ void State::Register( const s_str& sFunctionName, lua_CFunction mFunction )
 void State::PrintError( const s_str& sError )
 {
     lua_Debug d;
-    lua_getstack(pLua_, 1, &d);
-    lua_getinfo(pLua_, "Sl" , &d);
-    s_str sDebugStr = s_str(d.short_src) + ", line " + s_str(d.currentline) + " : " + sError;
+    int i = lua_getstack(pLua_, 1, &d);
+    s_str sDebugStr;
+    if (i != 0)
+    {
+        lua_getinfo(pLua_, "Sl" , &d);
+        sDebugStr = s_str(d.short_src) + ", line " + s_str(d.currentline) + " : " + sError;
+    }
+    else
+        sDebugStr = sError;
+
     Log("# Error # : LUA : " + sDebugStr);
 
     Event e("LUA_ERROR");

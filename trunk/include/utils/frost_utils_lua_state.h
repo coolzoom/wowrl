@@ -377,6 +377,12 @@ namespace Frost
             */
             void    SetFieldBool(const s_int& iID, const s_bool& bValue);
 
+            /// Handles an error code returned from a call to Lua
+            /** \param iError The error code
+            *   \return 'true' if everything went fine (no error)
+            */
+            s_bool  HandleError(int iError);
+
             static const s_str CLASS_NAME;
 
             s_str sComString;
