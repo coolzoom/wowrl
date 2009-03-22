@@ -208,10 +208,10 @@ namespace Frost
         BonusSet();
 
         // Generic bonuses (needed by the engine)
-        Bonus<s_int>   iMaxHealth;
-        Bonus<s_int>   iMaxPower;
-        Bonus<s_int>   iHealthRenegeration;
-        Bonus<s_int>   iPowerRegeneration;
+        Bonus<s_float> fMaxHealth;
+        Bonus<s_float> fMaxPower;
+        Bonus<s_float> fHealthRegenRatio;
+        Bonus<s_float> fPowerRegenRatio;
         Bonus<s_float> fMovementSpeedPercent;
 
         // Dynamic bonuses
@@ -250,6 +250,11 @@ namespace Frost
 
         Characteristic()
         {
+        }
+
+        void SetBaseValue(const T& mValue)
+        {
+            mValue_ = mValue;
         }
 
         const T& GetBaseValue() const
@@ -298,6 +303,16 @@ namespace Frost
         {
         }
 
+        void SetBaseValue(const s_var& mValue)
+        {
+            mValue_ = mValue;
+        }
+
+        const s_var& GetBaseValue() const
+        {
+            return mValue_;
+        }
+
         s_int GetBaseValueI() const
         {
             return mValue_.GetI();
@@ -338,6 +353,11 @@ namespace Frost
             mBonus_ -= mBonus;
         }
 
+        s_bool IsInteger() const
+        {
+            return mBonus_.IsInteger();
+        }
+
         static const s_str CLASS_NAME;
 
     private :
@@ -358,10 +378,10 @@ namespace Frost
         void RemoveBonusSet(BonusSet& mBonusSet);
 
         // Generic characteristics (needed by the engine)
-        Characteristic<s_int>   iMaxHealth;
-        Characteristic<s_int>   iMaxPower;
-        Characteristic<s_int>   iHealthRenegeration;
-        Characteristic<s_int>   iPowerRegeneration;
+        Characteristic<s_float> fMaxHealth;
+        Characteristic<s_float> fMaxPower;
+        Characteristic<s_float> fHealthRegenRatio;
+        Characteristic<s_float> fPowerRegenRatio;
         Characteristic<s_float> fMovementSpeedPercent;
 
         // Dynamic characteristics

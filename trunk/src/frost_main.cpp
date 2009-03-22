@@ -86,11 +86,7 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_R))
     {
-        if (mCamType == CAMERA_TOP)
-        {
-            s_ptr<TopCamera> pTop = s_ptr<TopCamera>(pCam);
-            pTop->MoveTo(pChar->GetPosition());
-        }
+        pChar->AddPower(-50000.0f);
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -163,6 +159,10 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             // Create a Unit
             //pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
             pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
+            pChar->SetClass("MAGE");
+            pChar->SetLevel(51);
+            pChar->SetStat("SPIRIT", s_int(50));
+            pChar->SetStat("INTELLECT", s_int(50));
             pModel = pChar->GetBodyModel().Get();
 
             switch (mCamType)

@@ -5,17 +5,22 @@
                 unit:FillHealthGauge();
             </OnUnitSpawn>
             <OnTick>
-                local coef;
-                if (unit:IsInCombat()) then
-                    coef = unit:GetInCombatHealthRegenRatio();
-                else
-                    coef = unit:GetHealthRegenRatio();
-                end
-                if (unit:IsSitting()) then
-                    coef = coef*1.33;
+                local fCoef = 0.0;
+                if (character) then
+                    if (character:GetRace() == "TROLL") then
+                        fCoef = 0.1;
+                    end
                 end
                 
-                unit:AddHealth(math.ceil(coef*(unit:GetSpirit()*unit:GetSpiritHealthRegenRatio() + 6)));
+                if (not(unit:IsInCombat())) then
+                    fCoef = fCoef + 1.0;
+                end
+                
+                if (unit:IsSitting()) then
+                    fCoef = fCoef*1.33;
+                end
+                
+                unit:AddHealth(math.ceil(fCoef*unit:GetHealthRegenRatio()*(unit:GetStat("SPIRIT")*GetSpiritHealthRegenCoef(unit) + 6)));
             </OnTick>
         </Scripts>
     </HealthType>

@@ -10,5 +10,5 @@
             <n[.,1]:OnTick>
             </OnTick>
         </Scripts>
-    </PowerType>
+    </HealthType>
 </HealthTypes>

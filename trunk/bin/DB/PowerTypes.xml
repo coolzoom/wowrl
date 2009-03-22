@@ -10,6 +10,7 @@
             </OnSpellCasted>
             <OnUnitSpawn>
                 unit:FillPowerGauge();
+                unit.stopRegenTime = nil;
             </OnUnitSpawn>
             <OnTick>
                 if (unit.stopRegenTime) then
@@ -18,21 +19,20 @@
                     end
                 end
                 if not(unit.stopRegenTime) then
-                    unit:AddPower(math.ceil(2*unit:GetManaRegenRatio()*(0.001 + math.sqrt(unit:GetIntellect())*unit:GetSpirit()*unit:GetBaseRegen())));
+                    unit:AddPower(math.ceil(2*unit:GetPowerRegenRatio()*(0.001 + math.sqrt(unit:GetStat("INTELLECT"))*unit:GetStat("SPIRIT")*GetBaseRegen(unit))));
                 end
             </OnTick>
         </Scripts>
     </PowerType>
     <PowerType name="RAGE" regenType="NONE"/>
-    </PowerType>
-    <PowerType name="ENERGY" regenType="CONTINUOUS" rate="10"/>
+    <PowerType name="ENERGY" regenType="CONTINUOUS" rate="10">
         <Scripts>
             <OnUnitSpawn>
                 unit:FillPowerGauge();
             </OnUnitSpawn>
         </Scripts>
     </PowerType>
-    <PowerType name="FOCUS" regenType="CONTINUOUS" rate="6.125"/>
+    <PowerType name="FOCUS" regenType="CONTINUOUS" rate="6.125">
         <Scripts>
             <OnUnitSpawn>
                 unit:FillPowerGauge();
