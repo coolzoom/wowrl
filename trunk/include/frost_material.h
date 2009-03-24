@@ -55,6 +55,23 @@ namespace Frost
         */
         void            SetTilling(const s_float& fTileFactorH, const s_float& fTileFactorV);
 
+        /// Sets this Material's diffuse color.
+        /** \param mColor The diffuse color
+        */
+        void            SetDiffuse(const Color& mColor);
+
+        /// Sets this Material's self illumination color.
+        /** \param mColor The self illumination color
+        *   \note Alpha isn't taken into account
+        */
+        void            SetSelfIllumination(const Color& mColor);
+
+        /// Sets this Material's ambient color.
+        /** \param mColor The ambient color
+        *   \note Alpha isn't taken into account
+        */
+        void            SetAmbient(const Color& mColor);
+
         /// Adds a new Decal to this Material.
         /** \param pDecal The new decal
         *   \return The new Decal, copied from the provided one.
@@ -133,6 +150,7 @@ namespace Frost
         s_uint                 uiID_;
         MaterialType           mType_;
         s_ptr<Ogre::Material>  pOgreMat_;
+        s_ptr<Ogre::Pass>      pDefaultPass_;
         s_str                  sName_;
         s_float                fWidth_;
         s_float                fHeight_;

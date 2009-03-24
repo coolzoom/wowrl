@@ -31,6 +31,7 @@ namespace Frost
             s_ptr<Ogre::Technique> pTech = pOgreMat->getTechnique(0);
             if (pTech)
             {
+                pDefaultPass_ = pTech->getPass(0);
                 for (uint i = 0; i < pTech->getNumPasses(); i++)
                 {
                     s_ptr<Ogre::Pass> pPass = pTech->getPass(i);
@@ -66,16 +67,14 @@ namespace Frost
     {
         if (!bAlphaReject_ && bEnable)
         {
-            s_ptr<Ogre::Pass> pPass = pOgreMat_->getTechnique(0)->getPass(0);
-            pPass->setAlphaRejectSettings(Ogre::CMPF_GREATER, 200);
-            pPass->setCullingMode(Ogre::CULL_NONE);
+            pDefaultPass_->setAlphaRejectSettings(Ogre::CMPF_GREATER, 200);
+            pDefaultPass_->setCullingMode(Ogre::CULL_NONE);
             bAlphaReject_ = bEnable;
         }
         else if (bAlphaReject_ && !bEnable)
         {
-            s_ptr<Ogre::Pass> pPass = pOgreMat_->getTechnique(0)->getPass(0);
-            pPass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
-            pPass->setCullingMode(Ogre::CULL_CLOCKWISE);
+            pDefaultPass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
+            pDefaultPass_->setCullingMode(Ogre::CULL_CLOCKWISE);
             bAlphaReject_ = bEnable;
         }
     }
@@ -84,11 +83,10 @@ namespace Frost
     {
         if (!bHardwareSkinning_ && bEnable)
         {
-            s_ptr<Ogre::Pass> pPass = pOgreMat_->getTechnique(0)->getPass(0);
-            pPass->setVertexProgram("Skinning_VS");
-            pPass->setFragmentProgram("Skinning_PS");
+            pDefaultPass_->setVertexProgram("Skinning_VS");
+            pDefaultPass_->setFragmentProgram("Skinning_PS");
 
-            Ogre::GpuProgramParametersSharedPtr pParams = pPass->getVertexProgramParameters();
+            Ogre::GpuProgramParametersSharedPtr pParams = pDefaultPass_->getVertexProgramParameters();
             pParams->setNamedAutoConstant(
                 "mViewProj",
                 Ogre::GpuProgramParameters::ACT_VIEWPROJ_MATRIX
@@ -98,7 +96,7 @@ namespace Frost
                 Ogre::GpuProgramParameters::ACT_WORLD_MATRIX_ARRAY_3x4
             );
 
-            pParams = pPass->getFragmentProgramParameters();
+            pParams = pDefaultPass_->getFragmentProgramParameters();
             pParams->setNamedAutoConstant(
                 "mLightPos",
                 Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY,
@@ -106,7 +104,7 @@ namespace Frost
             );
             pParams->setNamedAutoConstant(
                 "mLightDiffuseColor",
-                Ogre::GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR_ARRAY,
+                Ogre::GpuProgramParameters::ACT_DERIVED_LIGHT_DIFFUSE_COLOUR_ARRAY,
                 5
             );
             pParams->setNamedAutoConstant(
@@ -116,16 +114,15 @@ namespace Frost
             );
             pParams->setNamedAutoConstant(
                 "mAmbient",
-                Ogre::GpuProgramParameters::ACT_AMBIENT_LIGHT_COLOUR
+                Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR
             );
 
             bHardwareSkinning_ = bEnable;
         }
         else if (bHardwareSkinning_ && !bEnable)
         {
-            s_ptr<Ogre::Pass> pPass = pOgreMat_->getTechnique(0)->getPass(0);
-            pPass->setVertexProgram("");
-            pPass->setFragmentProgram("");
+            pDefaultPass_->setVertexProgram("");
+            pDefaultPass_->setFragmentProgram("");
 
             bHardwareSkinning_ = bEnable;
         }
@@ -133,9 +130,37 @@ namespace Frost
 
     void Material::SetTilling( const s_float& fTileFactorH, const s_float& fTileFactorV )
     {
-        pOgreMat_->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureScale(
+        pDefaultPass_->getTextureUnitState(0)->setTextureScale(
             fTileFactorH.Get(),
             fTileFactorV.Get()
+        );
+    }
+
+    void Material::SetDiffuse( const Color& mColor )
+    {
+        pDefaultPass_->setDiffuse(
+            mColor.GetR().Get()/255.0f,
+            mColor.GetG().Get()/255.0f,
+            mColor.GetB().Get()/255.0f,
+            mColor.GetA().Get()/255.0f
+        );
+    }
+
+    void Material::SetSelfIllumination( const Color& mColor )
+    {
+        pDefaultPass_->setSelfIllumination(
+            mColor.GetR().Get()/255.0f,
+            mColor.GetG().Get()/255.0f,
+            mColor.GetB().Get()/255.0f
+        );
+    }
+
+    void Material::SetAmbient( const Color& mColor )
+    {
+        pDefaultPass_->setAmbient(
+            mColor.GetR().Get()/255.0f,
+            mColor.GetG().Get()/255.0f,
+            mColor.GetB().Get()/255.0f
         );
     }
 
