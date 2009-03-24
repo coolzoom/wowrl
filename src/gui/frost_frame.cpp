@@ -99,7 +99,7 @@ s_bool Frame::CanUseScript( const s_str& sScriptName ) const
 
 void Frame::CopyFrom( s_ptr<UIObject> pObj )
 {
-    // TODO : tester ça (et ptet l'écrire mieu, comme l'autre avec les fonctions)
+    // TODO : Tester ça (et ptet l'écrire mieu, comme l'autre avec les fonctions)
     UIObject::CopyFrom(pObj);
 
     if (pObj->GetObjectType() == "Frame")
@@ -173,7 +173,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             }
         }
 
-        // TODO : Copy me
+        // TODO : Frame : copier les arts
         //map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
 
         bBuildStrataList_ = true;

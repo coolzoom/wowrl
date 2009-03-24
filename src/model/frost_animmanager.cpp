@@ -130,7 +130,7 @@ namespace Frost
             pActualAnim_->pAnim->setWeight(1.0f);
         }
 
-        // TODO calculer la bbox
+        // TODO : Model : calculer la bbox
     }
 
     void AnimManager::SetAnim( AnimID mID, AnimPriority mPriority, s_bool bQueued )

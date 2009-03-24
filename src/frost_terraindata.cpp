@@ -13,10 +13,11 @@ namespace Frost
 {
     const s_str TerrainData::CLASS_NAME = "TerrainData";
 
-    // TODO : définir une specification (données requises)
-    // TODO : définir un format de fichier (données stoquées)
-    // TODO : créer un editeur de terrain capable de lire/écrire dans ce format
-    // TODO : écrire le code de loading de ce format
+    // TODO : Terminer les terrains
+    // # définir une specification (données requises)
+    // # définir un format de fichier (données stoquées)
+    // # créer un editeur de terrain capable de lire/écrire dans ce format
+    // # écrire le code de loading de ce format
 
     TerrainData::TerrainData(const s_str& sFile)
     {
