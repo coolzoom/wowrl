@@ -18,7 +18,7 @@ Texture::Texture() : LayeredRegion()
 {
 }
 
-// TODO : implémenter
+// TODO : Implémenter GUI::Texture
 
 void Texture::CreateGlue()
 {
