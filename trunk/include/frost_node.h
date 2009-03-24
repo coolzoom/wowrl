@@ -31,11 +31,6 @@ namespace Frost
         /// Destructor.
         ~Node();
 
-        /// Returns the associated Ogre::SceneNode.
-        /** \return The associated Ogre::SceneNode
-        */
-        s_ptr<Ogre::SceneNode> GetOgreNode();
-
         /// Returns this camera's ID.
         /** \return This camera's ID
         */

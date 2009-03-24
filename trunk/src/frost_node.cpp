@@ -23,11 +23,6 @@ namespace Frost
     {
     }
 
-    s_ptr<Ogre::SceneNode> Node::GetOgreNode()
-    {
-        return pNode_;
-    }
-
     const s_uint& Node::GetID()
     {
         return uiID_;
