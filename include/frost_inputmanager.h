@@ -181,37 +181,39 @@ namespace Frost
         void           Update();
 
         // Keyboard
-        char           GetChar(s_bool bFormated, s_bool bForce = false) const;
-        s_bool         GetKey(s_bool bForce = false) const;
-        s_bool         KeyIsDown(KeyCode mKey, s_bool bForce = false) const;
-        s_bool         KeyIsDownLong(KeyCode mKey, s_bool bForce = false) const;
-        s_bool         KeyIsPressed(KeyCode mKey, s_bool bForce = false) const;
-        s_bool         KeyIsReleased(KeyCode mKey, s_bool bForce = false) const;
+        char            GetChar(s_bool bFormated, s_bool bForce = false) const;
+        s_bool          GetKey(s_bool bForce = false) const;
+        s_bool          KeyIsDown(KeyCode mKey, s_bool bForce = false) const;
+        s_bool          KeyIsDownLong(KeyCode mKey, s_bool bForce = false) const;
+        const s_double& GetKeyDownDuration(KeyCode mKey) const;
+        s_bool          KeyIsPressed(KeyCode mKey, s_bool bForce = false) const;
+        s_bool          KeyIsReleased(KeyCode mKey, s_bool bForce = false) const;
 
-        std::string    GetKeyString(KeyCode mKey) const;
+        std::string     GetKeyString(KeyCode mKey) const;
 
-        s_uint         GetNextUp();
-        s_uint         GetNextDown();
+        s_uint          GetNextUp();
+        s_uint          GetNextDown();
 
         // Special keys
-        const s_bool&  AltPressed() const;
-        const s_bool&  ShiftPressed() const;
-        const s_bool&  CtrlPressed() const;
+        const s_bool&   AltPressed() const;
+        const s_bool&   ShiftPressed() const;
+        const s_bool&   CtrlPressed() const;
 
         // Mouse
-        s_bool         MouseIsDown(MouseButton mID, s_bool bForce = false) const;
-        s_bool         MouseIsDownLong(MouseButton mID, s_bool bForce = false) const;
-        s_bool         MouseIsPressed(MouseButton mID, s_bool bForce = false) const;
-        s_bool         MouseIsReleased(MouseButton mID, s_bool bForce = false) const;
-        s_bool         MouseIsDoubleClicked(MouseButton mID, s_bool bForce = false) const;
-        s_bool         WheelIsRolled(s_bool bForce = false) const;
-        const s_bool&  MouseLastDragged() const;
-        MouseState     GetMouseState(MouseButton mID) const;
-        const s_float& GetMPosX() const;
-        const s_float& GetMPosY() const;
-        const s_float& GetMDPosX() const;
-        const s_float& GetMDPosY() const;
-        const s_int&   GetMWheel() const;
+        s_bool          MouseIsDown(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsDownLong(MouseButton mID, s_bool bForce = false) const;
+        const s_double& GetMouseDownDuration(MouseButton mKey) const;
+        s_bool          MouseIsPressed(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsReleased(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsDoubleClicked(MouseButton mID, s_bool bForce = false) const;
+        s_bool          WheelIsRolled(s_bool bForce = false) const;
+        const s_bool&   MouseLastDragged() const;
+        MouseState      GetMouseState(MouseButton mID) const;
+        const s_float&  GetMPosX() const;
+        const s_float&  GetMPosY() const;
+        const s_float&  GetMDPosX() const;
+        const s_float&  GetMDPosY() const;
+        const s_int&    GetMWheel() const;
 
         // Parameters
         void           SetDoubleclickTime(s_double dDoubleclickTime);

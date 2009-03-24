@@ -158,6 +158,11 @@ namespace Frost
             return (lKeyBuf_[mKey] && lKeyLong_[mKey]);
     }
 
+    const s_double& InputManager::GetKeyDownDuration( KeyCode mKey ) const
+    {
+        return lKeyDelay_[mKey];
+    }
+
     s_bool InputManager::KeyIsPressed( KeyCode mKey, s_bool bForce ) const
     {
         if (!bForce && bFocus_)
@@ -189,6 +194,11 @@ namespace Frost
             return false;
         else
             return (lMouseBuf_[mID] && lMouseLong_[mID]);
+    }
+
+    const s_double& InputManager::GetMouseDownDuration( MouseButton mID ) const
+    {
+        return lMouseDelay_[mID];
     }
 
     s_bool InputManager::MouseIsPressed( MouseButton mID, s_bool bForce ) const
@@ -259,25 +269,6 @@ namespace Frost
         if (lMouseBuf_[MOUSE_MIDDLE])
             lDoubleclickDelay_[MOUSE_MIDDLE] = dDoubleclickTime_;
 
-        bKey_ = false;
-        for (uint i = 0; i < 256; i++)
-        {
-            lKeyBuf_[i] = pKeyboard_->isKeyDown((OIS::KeyCode)i);
-
-            if (KeyIsPressed((KeyCode)i))
-                lDownStack_.push_back(i);
-            if (KeyIsReleased((KeyCode)i))
-                lUpStack_.push_back(i);
-            if (lKeyBuf_[i])
-                bKey_ = true;
-        }
-
-        OIS::MouseState mMouseState = pMouse_->getMouseState();
-        for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; i++)
-        {
-            lMouseBuf_[i] = mMouseState.buttonDown((OIS::MouseButtonID)i);
-        }
-
         // Update delays
         for (uint i = 0; i < 256; i++)
         {
@@ -306,6 +297,26 @@ namespace Frost
                 lMouseDelay_[i] = 0.0;
                 lMouseLong_[i] = false;
             }
+        }
+
+        // Update key states
+        bKey_ = false;
+        for (uint i = 0; i < 256; i++)
+        {
+            lKeyBuf_[i] = pKeyboard_->isKeyDown((OIS::KeyCode)i);
+
+            if (KeyIsPressed((KeyCode)i))
+                lDownStack_.push_back(i);
+            if (KeyIsReleased((KeyCode)i))
+                lUpStack_.push_back(i);
+            if (lKeyBuf_[i])
+                bKey_ = true;
+        }
+
+        OIS::MouseState mMouseState = pMouse_->getMouseState();
+        for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; i++)
+        {
+            lMouseBuf_[i] = mMouseState.buttonDown((OIS::MouseButtonID)i);
         }
 
         if (KeyIsDown(KEY_LCONTROL, true) || KeyIsDown(KEY_RCONTROL, true))
