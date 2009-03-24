@@ -22,12 +22,8 @@
 #include "frost_light.h"
 #include "frost_unitmanager.h"
 #include "frost_character.h"
+#include "frost_node.h"
 #include "frost_decal.h"
-
-#include <OgreMaterial.h>
-#include <OgreTechnique.h>
-#include <OgrePass.h>
-
 
 #include <OgreException.h>
 

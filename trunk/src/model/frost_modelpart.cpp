@@ -61,6 +61,11 @@ namespace Frost
         }
     }
 
+    s_refptr<Material> ModelPart::GetMaterial()
+    {
+        return pMaterial_;
+    }
+
     void ModelPart::AddSubEntity( const s_uint& uiID )
     {
         lSubEntity_.push_back(uiID);

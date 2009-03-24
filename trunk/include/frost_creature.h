@@ -12,8 +12,32 @@
 #include "frost.h"
 #include "frost_unit.h"
 
+#include <OgreUserDefinedObject.h>
+
 namespace Frost
 {
+    /// Makes the link between Creature and Ogre::MovableObject.
+    class CreatureOgreInterface : public Ogre::UserDefinedObject
+    {
+    public :
+
+        /// Constructor.
+        CreatureOgreInterface(s_ptr<Creature> pModel);
+
+        /// Inherited from UserDefinedObject.
+        virtual const Ogre::String& getTypeName() const;
+
+        /// Returns the associated Creature.
+        /** \return The associated Creature
+        */
+        s_ptr<Creature> GetCreature() const;
+
+    private :
+
+        s_ptr<Creature> pCreature_;
+
+    };
+
     /// A non playable character
     /** Can be the boss of an instance, a boar, or a bird...<br>
     *   It's not actually an non playable character, since the
@@ -58,6 +82,7 @@ namespace Frost
 
     private :
 
+        CreatureOgreInterface mInterface_;
 
     };
 

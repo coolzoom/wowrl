@@ -19,7 +19,7 @@ namespace Frost
 {
     const s_str Plane::CLASS_NAME = "Plane";
 
-    Plane::Plane( const s_uint& uiID ) : uiID_(uiID)
+    Plane::Plane( const s_uint& uiID ) : mInterface_(this), uiID_(uiID)
     {
         // Use the default plane mesh, link it to our node
         pEntity_ = Engine::GetSingleton()->GetOgreSceneManager()->createEntity(
@@ -27,9 +27,10 @@ namespace Frost
         );
         pNode_->attachObject(pEntity_.Get());
         pEntity_->setMaterialName("Default3D");
+        pEntity_->setUserObject(&mInterface_);
     }
 
-    Plane::Plane( const s_uint& uiID, const s_float& fWidth, const s_float& fHeight, const s_float& fDensity ) : uiID_(uiID)
+    Plane::Plane( const s_uint& uiID, const s_float& fWidth, const s_float& fHeight, const s_float& fDensity ) : mInterface_(this), uiID_(uiID)
     {
         // Create the mesh
         Ogre::Plane mPlane(Ogre::Vector3::UNIT_Y, 0);
@@ -81,5 +82,20 @@ namespace Frost
     const s_uint& Plane::GetID() const
     {
         return uiID_;
+    }
+
+    PlaneOgreInterface::PlaneOgreInterface( s_ptr<Plane> pPlane ) : pPlane_(pPlane)
+    {
+    }
+
+    const Ogre::String& PlaneOgreInterface::getTypeName() const
+    {
+        static Ogre::String sName = "PLANE";
+        return sName;
+    }
+
+    s_ptr<Plane> PlaneOgreInterface::GetPlane() const
+    {
+        return pPlane_;
     }
 }

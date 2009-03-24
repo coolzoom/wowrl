@@ -24,7 +24,7 @@ namespace Frost
     const s_str CharacterModelInfo::CLASS_NAME = "CharacterModelInfo";
 
     Character::Character( const s_uint& uiID, const s_str& sName, const Race& mRace, CharGender mGender ) :
-        Unit(uiID, sName), mGender_(mGender), mRace_(mRace)
+       Unit(uiID, sName), mInterface_(this), mGender_(mGender), mRace_(mRace)
     {
         // Get the gender
         s_ptr<CharacterModelInfo> pCharModelInfo;
@@ -84,6 +84,7 @@ namespace Frost
         }
 
         pBodyModel_->Attach(s_ptr<MovableObject>(pNode_));
+        pBodyModel_->SetUserObject(&mInterface_);
     }
 
     Character::~Character()
@@ -132,5 +133,20 @@ namespace Frost
     void Character::Update( const s_float& fDelta )
     {
         Unit::Update(fDelta);
+    }
+
+    CharacterOgreInterface::CharacterOgreInterface( s_ptr<Character> pCharacter ) : pCharacter_(pCharacter)
+    {
+    }
+
+    const Ogre::String& CharacterOgreInterface::getTypeName() const
+    {
+        static Ogre::String sName = "CHARACTER";
+        return sName;
+    }
+
+    s_ptr<Character> CharacterOgreInterface::GetCharacter() const
+    {
+        return pCharacter_;
     }
 }

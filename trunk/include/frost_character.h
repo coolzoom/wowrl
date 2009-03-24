@@ -12,6 +12,8 @@
 #include "frost.h"
 #include "frost_unit.h"
 
+#include <OgreUserDefinedObject.h>
+
 namespace Frost
 {
     enum ModelPartCategory
@@ -59,6 +61,28 @@ namespace Frost
         CharacterModelInfo mFemaleModelInfo;
 
         static const s_str CLASS_NAME;
+    };
+
+    /// Makes the link between Character and Ogre::MovableObject.
+    class CharacterOgreInterface : public Ogre::UserDefinedObject
+    {
+    public :
+
+        /// Constructor.
+        CharacterOgreInterface(s_ptr<Character> pModel);
+
+        /// Inherited from UserDefinedObject.
+        virtual const Ogre::String& getTypeName() const;
+
+        /// Returns the associated Character.
+        /** \return The associated Character
+        */
+        s_ptr<Character> GetCharacter() const;
+
+    private :
+
+        s_ptr<Character> pCharacter_;
+
     };
 
     /// A player controlled Unit
@@ -113,6 +137,8 @@ namespace Frost
         static const s_str CLASS_NAME;
 
     private :
+
+        CharacterOgreInterface mInterface_;
 
         CharGender mGender_;
         Race       mRace_;

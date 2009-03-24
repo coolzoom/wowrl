@@ -17,6 +17,7 @@
 #include "frost_unitmanager.h"
 #include "frost_healthtype.h"
 #include "frost_powertype.h"
+#include "frost_material.h"
 
 using namespace std;
 
@@ -159,6 +160,28 @@ namespace Frost
     const s_uint& Unit::GetLevel() const
     {
         return uiLevel_;
+    }
+
+    void Unit::NotifySelected( const s_bool& bSelected )
+    {
+        if (bSelected != bSelected_)
+        {
+            bSelected_ = bSelected;
+            Log(sName_+" is "+bSelected_.GetAsString("", "not ")+"selected");
+            if (bSelected_)
+            {
+                pBodyModel_->GetMaterial()->SetSelfIllumination(Color(255, 255, 255));
+            }
+            else
+            {
+                pBodyModel_->GetMaterial()->SetSelfIllumination(Color(0, 0, 0));
+            }
+        }
+    }
+
+    const s_bool& Unit::IsSelected() const
+    {
+        return bSelected_;
     }
 
     void Unit::Jump()
@@ -673,7 +696,6 @@ namespace Frost
 
     void Unit::CreateGlue()
     {
-        // TODO :  ## finir ça
         s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushNumber(GetID());
         LuaUnit* pNewGlue;
