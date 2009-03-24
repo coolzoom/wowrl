@@ -72,6 +72,9 @@ namespace Frost
         {
             pKeyboard_ = static_cast<OIS::Keyboard*>(pOgreInputMgr_->createInputObject(OIS::OISKeyboard, true));
             pMouse_ = static_cast<OIS::Mouse*>(pOgreInputMgr_->createInputObject(OIS::OISMouse, true));
+            const OIS::MouseState& mState = pMouse_->getMouseState();
+            mState.width = pWindow->getWidth();
+            mState.height = pWindow->getHeight();
 
             return true;
         }
