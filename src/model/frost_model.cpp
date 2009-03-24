@@ -96,6 +96,11 @@ namespace Frost
         return pEntity_;
     }
 
+    void Model::SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj)
+    {
+        pEntity_->setUserObject(pObj.Get());
+    }
+
     void Model::Show()
     {
         pEntity_->setVisible(true);
@@ -126,6 +131,16 @@ namespace Frost
         {
             pEntity_->getSubEntity(i)->setMaterialName(pMat->GetOgreMaterialName().Get());
         }
+    }
+
+    s_refptr<Material> Model::GetMaterial()
+    {
+        return pMaterial_;
+    }
+
+    const std::map< s_uint, s_ptr<ModelPart> >& Model::GetModelPartList() const
+    {
+        return lModelPartList_;
     }
 
     void Model::Update(const s_float& fDelta)

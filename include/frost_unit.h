@@ -148,6 +148,16 @@ namespace Frost
         */
         const s_uint&    GetLevel() const;
 
+        /// Tells this Unit's it has been selected/deselected.
+        /** \param bSelected 'true' if the Unit has been selected
+        */
+        void             NotifySelected(const s_bool& bSelected);
+
+        /// Checks if this Unit is selected.
+        /** \return 'true' if this Unit is selected
+        */
+        const s_bool&    IsSelected() const;
+
         /// Makes this Unit jump.
         void             Jump();
 
@@ -282,6 +292,8 @@ namespace Frost
         s_ptr<Camera>   pCamera_;
         s_ptr<Node>     pNode_;
         s_bool          bCameraMovedAlone_;
+
+        s_bool          bSelected_;
 
         s_bool          bJumping_;
         Vector          mJumpPosition_;

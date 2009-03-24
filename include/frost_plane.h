@@ -12,8 +12,32 @@
 #include "frost.h"
 #include "frost_movableobject.h"
 
+#include <OgreUserDefinedObject.h>
+
 namespace Frost
 {
+    /// Makes the link between Plane and Ogre::MovableObject.
+    class PlaneOgreInterface : public Ogre::UserDefinedObject
+    {
+    public :
+
+        /// Constructor.
+        PlaneOgreInterface(s_ptr<Plane> pModel);
+
+        /// Inherited from UserDefinedObject.
+        virtual const Ogre::String& getTypeName() const;
+
+        /// Returns the associated Plane.
+        /** \return The associated Plane
+        */
+        s_ptr<Plane> GetPlane() const;
+
+    private :
+
+        s_ptr<Plane> pPlane_;
+
+    };
+
     /// A plane mesh
     class Plane : public MovableObject
     {
@@ -63,6 +87,8 @@ namespace Frost
         static const s_str CLASS_NAME;
 
     private :
+
+        PlaneOgreInterface mInterface_;
 
         s_uint               uiID_;
         s_ptr<Ogre::Entity> pEntity_;

@@ -13,7 +13,7 @@
 
 namespace Frost
 {
-    // TODO : finir ça
+    // TODO : Créer une classe de dessin de texte
     /// Used to draw some text on the screen
     /**
     */

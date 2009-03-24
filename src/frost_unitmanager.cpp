@@ -16,6 +16,12 @@
 #include "frost_lua.h"
 #include "frost_healthtype.h"
 #include "frost_powertype.h"
+#include "frost_inputmanager.h"
+#include "camera/frost_cameramanager.h"
+#include "camera/frost_camera.h"
+
+#include <OgreRay.h>
+#include <OgreSceneManager.h>
 
 using namespace std;
 
@@ -118,6 +124,60 @@ namespace Frost
 
     void UnitManager::UpdateUnits( const s_float& fDelta )
     {
+        // Handle selection
+        s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
+        s_ptr<Engine>       pFrost = Engine::GetSingleton();
+
+        // Single click selection
+        if (pInputMgr->MouseIsReleased(MOUSE_LEFT))
+        {
+            if (pInputMgr->GetMouseDownDuration(MOUSE_LEFT) < 0.2f)
+            {
+                Ogre::Ray mRay = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera()->getCameraToViewportRay(
+                    (pInputMgr->GetMPosX()/s_float(pFrost->GetScreenWidth())).Get(),
+                    (pInputMgr->GetMPosY()/s_float(pFrost->GetScreenHeight())).Get()
+                );
+                s_ptr<Ogre::RaySceneQuery> pRayQuery = pFrost->GetOgreSceneManager()->createRayQuery(mRay);
+
+                pRayQuery->setSortByDistance(true);
+                Ogre::RaySceneQueryResult& mRes = pRayQuery->execute();
+                Ogre::RaySceneQueryResult::iterator iter = mRes.begin();
+                s_ptr<Unit> pUnit;
+                if (iter != mRes.end())
+                {
+                    foreach (iter, mRes)
+                    {
+                        s_ptr<Ogre::MovableObject> pObject = iter->movable;
+                        s_ptr<Ogre::UserDefinedObject> pMyObject = pObject->getUserObject();
+                        s_str sType = pMyObject->getTypeName();
+                        if (sType == "CHARACTER")
+                        {
+                            pUnit = s_ptr<CharacterOgreInterface>(pMyObject)->GetCharacter();
+                        }
+                        else if (sType == "CREATURE")
+                        {
+                            pUnit = s_ptr<CreatureOgreInterface>(pMyObject)->GetCreature();
+                        }
+                    }
+                }
+                pFrost->GetOgreSceneManager()->destroyQuery(pRayQuery.Get());
+
+                map< s_uint, s_ptr<Unit> >::iterator iterUnit;
+                foreach (iterUnit, lSelectedUnitList_)
+                {
+                    iterUnit->second->NotifySelected(false);
+                }
+                lSelectedUnitList_.empty();
+
+                if (pUnit)
+                {
+                    pUnit->NotifySelected(true);
+                    lSelectedUnitList_[pUnit->GetID()] = pUnit;
+                }
+            }
+        }
+
+        // Update units
         map< s_uint, s_ptr<Unit> >::iterator iterUnit;
         foreach (iterUnit, lUnitList_)
         {
