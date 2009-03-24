@@ -5,7 +5,7 @@ void main_vs(
               float4 iPosition       : POSITION,
               float3 iNormal         : NORMAL,
               float4 iWeight         : BLENDWEIGHT,
-              float4   iBone         : BLENDINDICES,
+              float4 iBone           : BLENDINDICES,
               float2 iTexture        : TEXCOORD0,
 
             // Outputs
