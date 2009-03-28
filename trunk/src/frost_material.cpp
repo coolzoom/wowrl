@@ -7,6 +7,7 @@
 
 #include "frost_material.h"
 
+#include <OgreMaterialManager.h>
 #include <OgreMaterial.h>
 #include <OgreTechnique.h>
 #include <OgrePass.h>
@@ -61,6 +62,8 @@ namespace Frost
         {
             iterDecal->second.Delete();
         }
+
+        Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
     }
 
     void Material::SetAlphaReject( const s_bool& bEnable )
