@@ -33,9 +33,6 @@ namespace Frost
         for (uint i = 0; i < 4; i++)
             mQuad_.lVertexArray[i].mColor = mColor_;
 
-        fX1_ = 0.0f;
-        fY1_ = 0.0f;
-
         if (pMat != NULL)
         {
             mQuad_.pMat = pMat;
@@ -45,8 +42,10 @@ namespace Frost
                 uiTexWidth_ = s_uint(pMat->GetWidth());
                 uiTexHeight_ = s_uint(pMat->GetHeight());
 
-                fX2_ = fWidth_ = s_float(uiTexWidth_);
-                fY2_ = fHeight_ = s_float(uiTexHeight_);
+                fX1_ = 0.0f;
+                fY1_ = 0.0f;
+                fX3_ = fWidth_ = s_float(uiTexWidth_);
+                fY3_ = fHeight_ = s_float(uiTexHeight_);
 
                 UpdateUVs_();
 
@@ -73,8 +72,8 @@ namespace Frost
 
         fX1_ = 0.0f;
         fY1_ = 0.0f;
-        fX2_ = fWidth_ = fWidth;
-        fY2_ = fHeight_ = fHeight;
+        fX3_ = fWidth_ = fWidth;
+        fY3_ = fHeight_ = fHeight;
 
         if (pMat != NULL)
         {
@@ -111,8 +110,8 @@ namespace Frost
 
         fX1_ = fU;
         fY1_ = fV;
-        fX2_ = fWidth_ = fWidth;
-        fY2_ = fHeight_ = fHeight;
+        fX3_ = fWidth_ = fWidth;
+        fY3_ = fHeight_ = fHeight;
 
         if (pMat != NULL)
         {
@@ -149,8 +148,8 @@ namespace Frost
 
         fX1_ = 0.0f;
         fY1_ = 0.0f;
-        fX2_ = fWidth_ = fWidth;
-        fY2_ = fHeight_ = fHeight;
+        fX3_ = fWidth_ = fWidth;
+        fY3_ = fHeight_ = fHeight;
 
         mQuad_.pMat = MaterialManager::GetSingleton()->GetDefault2D();
         bUsingMaterial_ = false;
@@ -227,6 +226,26 @@ namespace Frost
         SpriteManager::GetSingleton()->RenderQuad(mQuad_);
     }
 
+    void Sprite::Render2V( const s_float& fX1, const s_float& fY1, const s_float& fX3, const s_float& fY3 )
+    {
+        mQuad_.lVertexArray[0].Set(fX1, fY1);
+        mQuad_.lVertexArray[1].Set(fX3, fY1);
+        mQuad_.lVertexArray[2].Set(fX3, fY3);
+        mQuad_.lVertexArray[3].Set(fX1, fY3);
+
+        SpriteManager::GetSingleton()->RenderQuad(mQuad_);
+    }
+
+    void Sprite::Render4V( const s_float& fX1, const s_float& fY1, const s_float& fX2, const s_float& fY2, const s_float& fX3, const s_float& fY3, const s_float& fX4, const s_float& fY4 )
+    {
+        mQuad_.lVertexArray[0].Set(fX1, fY1);
+        mQuad_.lVertexArray[1].Set(fX2, fY2);
+        mQuad_.lVertexArray[2].Set(fX3, fY3);
+        mQuad_.lVertexArray[3].Set(fX4, fY4);
+
+        SpriteManager::GetSingleton()->RenderQuad(mQuad_);
+    }
+
     void Sprite::SetColor( const Color& mColor, const s_uint& uiIndex )
     {
         if (!uiIndex.IsValid())
@@ -255,23 +274,121 @@ namespace Frost
         fHotSpotY_ = fY;
     }
 
-    void Sprite::SetTextureRect( const s_array<s_float,4>& lTextureRect )
+    void Sprite::SetTextureRect( const s_array<s_float,4>& lTextureRect, const s_bool& bNormalized )
     {
-        fX1_ = lTextureRect.Get(0);
-        fY1_ = lTextureRect.Get(1);
-        fX2_ = lTextureRect.Get(2);
-        fY2_ = lTextureRect.Get(3);
+        bUsing8Coords_ = false;
+
+        if (bNormalized)
+        {
+            if (bUsingMaterial_)
+            {
+                fX1_ = lTextureRect[0]*s_float(uiTexWidth_);
+                fY1_ = lTextureRect[1]*s_float(uiTexHeight_);
+                fX3_ = lTextureRect[2]*s_float(uiTexWidth_);
+                fY3_ = lTextureRect[3]*s_float(uiTexHeight_);
+            }
+        }
+        else
+        {
+            fX1_ = lTextureRect[0];
+            fY1_ = lTextureRect[1];
+            fX3_ = lTextureRect[2];
+            fY3_ = lTextureRect[3];
+        }
 
         if (bUsingMaterial_)
             UpdateUVs_();
     }
 
-    void Sprite::SetTextureRect( const s_float& fX1, const s_float& fY1, const s_float& fX2, const s_float& fY2 )
+    void Sprite::SetTextureRect( const s_float& fX1, const s_float& fY1, const s_float& fX3, const s_float& fY3, const s_bool& bNormalized )
     {
-        fX1_ = fX1;
-        fY1_ = fY1;
-        fX2_ = fX2;
-        fY2_ = fY2;
+        bUsing8Coords_ = false;
+
+        if (bNormalized)
+        {
+            if (bUsingMaterial_)
+            {
+                fX1_ = fX1*s_float(uiTexWidth_);
+                fY1_ = fY1*s_float(uiTexHeight_);
+                fX3_ = fX3*s_float(uiTexWidth_);
+                fY3_ = fY3*s_float(uiTexHeight_);
+            }
+        }
+        else
+        {
+            fX1_ = fX1;
+            fY1_ = fY1;
+            fX3_ = fX3;
+            fY3_ = fY3;
+        }
+
+        if (bUsingMaterial_)
+            UpdateUVs_();
+    }
+
+    void Sprite::SetTextureCoords( const s_array<s_float,8>& lTextureRect, const s_bool& bNormalized )
+    {
+        bUsing8Coords_ = true;
+
+        if (bNormalized)
+        {
+            if (bUsingMaterial_)
+            {
+                fX1_ = lTextureRect[0]*s_float(uiTexWidth_);
+                fY1_ = lTextureRect[1]*s_float(uiTexHeight_);
+                fX2_ = lTextureRect[2]*s_float(uiTexWidth_);
+                fY2_ = lTextureRect[3]*s_float(uiTexHeight_);
+                fX3_ = lTextureRect[4]*s_float(uiTexWidth_);
+                fY3_ = lTextureRect[5]*s_float(uiTexHeight_);
+                fX4_ = lTextureRect[6]*s_float(uiTexWidth_);
+                fY4_ = lTextureRect[7]*s_float(uiTexHeight_);
+            }
+        }
+        else
+        {
+            fX1_ = lTextureRect[0];
+            fY1_ = lTextureRect[1];
+            fX2_ = lTextureRect[2];
+            fY2_ = lTextureRect[3];
+            fX3_ = lTextureRect[4];
+            fY3_ = lTextureRect[5];
+            fX4_ = lTextureRect[6];
+            fY4_ = lTextureRect[7];
+        }
+
+        if (bUsingMaterial_)
+            UpdateUVs_();
+    }
+
+    void Sprite::SetTextureCoords( const s_float& fX1, const s_float& fY1, const s_float& fX2, const s_float& fY2, const s_float& fX3, const s_float& fY3, const s_float& fX4, const s_float& fY4, const s_bool& bNormalized )
+    {
+        bUsing8Coords_ = true;
+
+        if (bNormalized)
+        {
+            if (bUsingMaterial_)
+            {
+                fX1_ = fX1*s_float(uiTexWidth_);
+                fY1_ = fY1*s_float(uiTexHeight_);
+                fX2_ = fX2*s_float(uiTexWidth_);
+                fY2_ = fY2*s_float(uiTexHeight_);
+                fX3_ = fX3*s_float(uiTexWidth_);
+                fY3_ = fY3*s_float(uiTexHeight_);
+                fX4_ = fX4*s_float(uiTexWidth_);
+                fY4_ = fY4*s_float(uiTexHeight_);
+            }
+        }
+        else
+        {
+            fX1_ = fX1;
+            fY1_ = fY1;
+            fX2_ = fX2;
+            fY2_ = fY2;
+            fX3_ = fX3;
+            fY3_ = fY3;
+            fX4_ = fX4;
+            fY4_ = fY4;
+        }
 
         if (bUsingMaterial_)
             UpdateUVs_();
@@ -286,7 +403,7 @@ namespace Frost
 
         if (bAdjustUVs)
         {
-            fX2_ = fX1_ + fWidth_;
+            fX3_ = fX1_ + fWidth_;
             UpdateUVs_();
         }
     }
@@ -300,26 +417,27 @@ namespace Frost
 
         if (bAdjustUVs)
         {
-            fY1_ = fY2_ - fHeight_;
+            fY1_ = fY3_ - fHeight_;
             UpdateUVs_();
         }
     }
 
     void Sprite::SetDimensions(const s_float& fWidth, const s_float& fHeight, const s_bool& bAdjustUVs )
     {
-        if (fWidth <= 0.0f)
+        if (fWidth < 1.0f)
             fWidth_ = 1.0f;
         else
             fWidth_ = fWidth;
-        if (fHeight.IsNull() || fHeight < 0.0f)
+
+        if (fHeight < 1.0f)
             fHeight_ = 1.0f;
         else
             fHeight_ = fHeight;
 
         if (bAdjustUVs)
         {
-            fX2_ = fX1_ + fWidth_;
-            fY1_ = fY2_ - fHeight_;
+            fX3_ = fX1_ + fWidth_;
+            fY1_ = fY3_ - fHeight_;
             UpdateUVs_();
         }
     }
@@ -336,7 +454,15 @@ namespace Frost
 
     s_array<s_float,4> Sprite::GetTextureRect() const
     {
-        return s_array<s_float,4>((fX1_, fY1_, fX2_, fY2_));
+        return s_array<s_float,4>((fX1_, fY1_, fX3_, fY3_));
+    }
+
+    s_array<s_float,8> Sprite::GetTextureCoords() const
+    {
+        if (bUsing8Coords_)
+            return s_array<s_float,8>((fX1_, fY1_, fX2_, fY2_, fX3_, fY3_, fX4_, fY4_));
+        else
+            return s_array<s_float,8>((fX1_, fY1_, fX3_, fY1_, fX3_, fY3_, fX1_, fY3_));
     }
 
     const s_float& Sprite::GetWidth() const
@@ -356,14 +482,33 @@ namespace Frost
 
     void Sprite::UpdateUVs_()
     {
-        s_float fTX1 = fX1_/s_float(uiTexWidth_);
-        s_float fTY1 = fY1_/s_float(uiTexHeight_);
-        s_float fTX2 = fX2_/s_float(uiTexWidth_);
-        s_float fTY2 = fY2_/s_float(uiTexHeight_);
+        if (bUsing8Coords_)
+        {
+            s_float fTX1 = fX1_/s_float(uiTexWidth_);
+            s_float fTY1 = fY1_/s_float(uiTexHeight_);
+            s_float fTX2 = fX2_/s_float(uiTexWidth_);
+            s_float fTY2 = fY2_/s_float(uiTexHeight_);
+            s_float fTX3 = fX3_/s_float(uiTexWidth_);
+            s_float fTY3 = fY3_/s_float(uiTexHeight_);
+            s_float fTX4 = fX4_/s_float(uiTexWidth_);
+            s_float fTY4 = fY4_/s_float(uiTexHeight_);
 
-        mQuad_.lVertexArray[0].SetUV(fTX1, fTY1);
-        mQuad_.lVertexArray[1].SetUV(fTX2, fTY1);
-        mQuad_.lVertexArray[2].SetUV(fTX2, fTY2);
-        mQuad_.lVertexArray[3].SetUV(fTX1, fTY2);
+            mQuad_.lVertexArray[0].SetUV(fTX1, fTY1);
+            mQuad_.lVertexArray[1].SetUV(fTX2, fTY2);
+            mQuad_.lVertexArray[2].SetUV(fTX3, fTY3);
+            mQuad_.lVertexArray[3].SetUV(fTX4, fTY4);
+        }
+        else
+        {
+            s_float fTX1 = fX1_/s_float(uiTexWidth_);
+            s_float fTY1 = fY1_/s_float(uiTexHeight_);
+            s_float fTX3 = fX3_/s_float(uiTexWidth_);
+            s_float fTY3 = fY3_/s_float(uiTexHeight_);
+
+            mQuad_.lVertexArray[0].SetUV(fTX1, fTY1);
+            mQuad_.lVertexArray[1].SetUV(fTX3, fTY1);
+            mQuad_.lVertexArray[2].SetUV(fTX3, fTY3);
+            mQuad_.lVertexArray[3].SetUV(fTX1, fTY3);
+        }
     }
 }

@@ -6,11 +6,21 @@
 /*                                        */
 
 
+// # Note # :
+// This class is inspired by HGE's hgeSprite class.
+// HGE is a simple and fast 2D drawing library. I have
+// been using it before switching to Ogre3D, and I
+// really liked the synthax.
+//
+// More infos about HGE :
+// http://hge.relishgames.com/
+
 #ifndef FROST_SPRITE_H
 #define FROST_SPRITE_H
 
 #include "frost.h"
 #include "frost_gfx.h"
+#include "frost_material.h"
 
 namespace Frost
 {
@@ -67,13 +77,9 @@ namespace Frost
         *         ... will create a 32x32 Sprite which takes its texture from
         *         the pixel located by (52, 28) on the texture.
         */
-        Sprite(
-            s_refptr<Material> pMat,
-            const s_float& fU,
-            const s_float& fV,
-            const s_float& fWidth,
-            const s_float& fHeight
-        );
+        Sprite(s_refptr<Material> pMat,
+               const s_float& fU, const s_float& fV,
+               const s_float& fWidth, const s_float& fHeight);
 
         /// Constructor.
         /** \param fWidth  The width of the Sprite
@@ -84,13 +90,13 @@ namespace Frost
         */
         Sprite(const s_float& fWidth, const s_float& fHeight, const Color& mColor);
 
-        /// Renders this Sprite on the screen.
+        /// Renders this Sprite on the current render target.
         /** \param fX The horizontal position
         *   \param fY The vertical position
         */
         void Render(const s_float& fX, const s_float& fY);
 
-        /// Deforms this Sprite and render it on the screen.
+        /// Deforms this Sprite and render it on the current render target.
         /** \param fX      The horizontal position
         *   \param fY      The vertical position
         *   \param fRot    The rotation to apply (angle in radian)
@@ -98,13 +104,35 @@ namespace Frost
         *   \param fVScale The vertical scale to apply
         *   \note This function doesn't store the deformation.
         */
-        void RenderEx(
-            const s_float& fX,
-            const s_float& fY,
-            const s_float& fRot,
-            const s_float& fHScale = 1.0f,
-            const s_float& fVScale = 1.0f
-        );
+        void RenderEx(const s_float& fX, const s_float& fY,
+                      const s_float& fRot,
+                      const s_float& fHScale = 1.0f, const s_float& fVScale = 1.0f);
+
+        /// Stretches this this Sprite and render it on the current render target.
+        /** \param fX1 The top-left corner horizontal position
+        *   \param fY1 The top-left corner vertical position
+        *   \param fX3 The bottom-right corner horizontal position
+        *   \param fY3 The bottom-right corner vertical position
+        *   \note This function doesn't store the deformation.
+        */
+        void Render2V(const s_float& fX1, const s_float& fY1,
+                      const s_float& fX3, const s_float& fY3);
+
+        /// Stretches this this Sprite and render it on the current render target.
+        /** \param fX1 The top-left corner horizontal position
+        *   \param fY1 The top-left corner vertical position
+        *   \param fX2 The top-right corner horizontal position
+        *   \param fY2 The top-right corner vertical position
+        *   \param fX3 The bottom-right corner horizontal position
+        *   \param fY3 The bottom-right corner vertical position
+        *   \param fX4 The bottom-left corner horizontal position
+        *   \param fY4 The bottom-left corner vertical position
+        *   \note This function doesn't store the deformation.
+        */
+        void Render4V(const s_float& fX1, const s_float& fY1,
+                      const s_float& fX2, const s_float& fY2,
+                      const s_float& fX3, const s_float& fY3,
+                      const s_float& fX4, const s_float& fY4);
 
         /// Changes the color of this sprite.
         /** \param mColor The new color
@@ -134,27 +162,55 @@ namespace Frost
 
         /// Changes this Sprite's texture rectangle.
         /** \param lTextureRect The new texture rect
+        *   \param bNormalized  'true' if the coords are already clamped to [0, 1]
         *   \note Texture rectangle is the zone of the texture you want to display.<br>
         *         Note that it doesn't need to be adjusted to this Sprite's dimensions.
         *         The texture will then be stretched to fit the Sprite's dimensions.
         */
-        void SetTextureRect(const s_array<s_float,4>& lTextureRect);
+        void SetTextureRect(const s_array<s_float,4>& lTextureRect, const s_bool& bNormalized = false);
 
         /// Changes this Sprite's texture rectangle.
         /** \param fX1 The rect's top left horizontal position
         *   \param fY1 The rect's top left vertical position
-        *   \param fX2 The rect's bottom right horizontal position
-        *   \param fY2 The rect's bottom right vertical position
+        *   \param fX3 The rect's bottom right horizontal position
+        *   \param fY3 The rect's bottom right vertical position
+        *   \param bNormalized  'true' if the coords are already clamped to [0, 1]
         *   \note Texture rectangle is the zone of the texture you want to display.<br>
         *         Note that it doesn't need to be adjusted to this Sprite's dimensions.
         *         The texture will then be stretched to fit the Sprite's dimensions.
         */
-        void SetTextureRect(
-            const s_float& fX1,
-            const s_float& fY1,
-            const s_float& fX2,
-            const s_float& fY2
-        );
+        void SetTextureRect(const s_float& fX1, const s_float& fY1,
+                            const s_float& fX3, const s_float& fY3,
+                            const s_bool& bNormalized = false);
+
+        /// Changes this Sprite's texture coordinates.
+        /** \param lTextureCoords The new texture coordinates
+        *   \param bNormalized  'true' if the coords are already clamped to [0, 1]
+        *   \note Texture rectangle is the zone of the texture you want to display.<br>
+        *         Note that it doesn't need to be adjusted to this Sprite's dimensions.
+        *         The texture will then be stretched to fit the Sprite's dimensions.
+        */
+        void SetTextureCoords(const s_array<s_float,8>& lTextureCoords, const s_bool& bNormalized = false);
+
+        /// Changes this Sprite's texture coordinates.
+        /** \param fX1 The sprites's top left horizontal position
+        *   \param fY1 The sprites's top left vertical position
+        *   \param fX2 The sprites's top right horizontal position
+        *   \param fY2 The sprites's top right vertical position
+        *   \param fX3 The sprites's bottom right horizontal position
+        *   \param fY3 The sprites's bottom right vertical position
+        *   \param fX4 The sprites's bottom left horizontal position
+        *   \param fY4 The sprites's bottom left vertical position
+        *   \param bNormalized  'true' if the coords are already clamped to [0, 1]
+        *   \note Texture rectangle is the zone of the texture you want to display.<br>
+        *         Note that it doesn't need to be adjusted to this Sprite's dimensions.
+        *         The texture will then be stretched to fit the Sprite's dimensions.
+        */
+        void SetTextureCoords(const s_float& fX1, const s_float& fY1,
+                              const s_float& fX2, const s_float& fY2,
+                              const s_float& fX3, const s_float& fY3,
+                              const s_float& fX4, const s_float& fY4,
+                              const s_bool& bNormalized = false);
 
         /// Changes this Sprite's width.
         /** \param fWidth     The new width
@@ -179,11 +235,7 @@ namespace Frost
         *   \note If you adjust texture coordinates, you texture won't be deformed.
         *         Else, it will be streched to fit the new dimensions.
         */
-        void SetDimensions(
-            const s_float& fWidth,
-            const s_float& fHeight,
-            const s_bool& bAdjustUVs = false
-        );
+        void SetDimensions(const s_float& fWidth, const s_float& fHeight, const s_bool& bAdjustUVs = false);
 
         /// Returns this Sprite's color.
         /** \return This Sprite's color
@@ -200,10 +252,15 @@ namespace Frost
         */
         s_array<s_float,4> GetTextureRect() const;
 
+        /// Returns this Sprite's texture coordinates.
+        /** \return This Sprite's texture coordinates
+        */
+        s_array<s_float,8> GetTextureCoords() const;
+
         /// Returns this Sprite's width.
         /** \return This Sprite's width
         */
-        const s_float&     GetWidth() const ;
+        const s_float&     GetWidth() const;
 
         /// Returns this Sprite's height.
         /** \return This Sprite's height
@@ -227,10 +284,13 @@ namespace Frost
         Color              mColor_;
         s_float            fX1_, fY1_;
         s_float            fX2_, fY2_;
+        s_float            fX3_, fY3_;
+        s_float            fX4_, fY4_;
         s_float            fWidth_, fHeight_;
         s_float            fHotSpotX_, fHotSpotY_;
-        s_uint               uiTexWidth_, uiTexHeight_;
+        s_uint             uiTexWidth_, uiTexHeight_;
         s_bool             bUsingMaterial_;
+        s_bool             bUsing8Coords_;
         s_refptr<Material> pMaterial_;
     };
 }
