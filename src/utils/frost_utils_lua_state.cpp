@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*            State::State source           */
+/*            Lua::State source           */
 /*                                        */
 /*                                        */
 
@@ -83,7 +83,7 @@ lua_State* State::GetState()
 
 s_str State::ConcTable( const s_str& sTable )
 {
-    /* [#] This function converts a LUA table into a formated string. It is used
+    /* [#] This function converts a Lua table into a formated string. It is used
     *  to save the content of the table in the SavedVariables.
     */
     s_str s = "tbl = \"" + sTable + "\";\n"
@@ -221,7 +221,7 @@ s_bool State::DoFile( const s_str& sFile )
     }
     else
     {
-        Error("LUA", "Can't open \""+sFile+"\".");
+        Error("Lua", "Can't open \""+sFile+"\".");
         return false;
     }
 }
@@ -232,12 +232,11 @@ s_bool State::DoString( const s_str& sStr )
     return HandleError(iError);
 }
 
-
 s_bool State::HandleError( int iError )
 {
     if (iError != 0)
     {
-        l_ThrowError(pLua_);
+        l_ThrowInternalError(pLua_);
         return false;
     }
     else
@@ -248,9 +247,11 @@ s_bool State::CallFunction( const s_str& sFunctionName )
 {
     vector<s_str> lWords = sFunctionName.Cut(":");
     lua_getglobal(pLua_, lWords.front().c_str());
+    s_uint uiCounter = 1;
 
     if (lWords.size() > 1)
     {
+
         lWords.erase(lWords.begin());
         if (!lua_isnil(pLua_, -1))
         {
@@ -258,11 +259,13 @@ s_bool State::CallFunction( const s_str& sFunctionName )
             foreach (iterWords, lWords)
             {
                 lua_getfield(pLua_, -1, iterWords->c_str());
+                uiCounter++;
                 if (lua_isnil(pLua_, -1))
                 {
                     Error(CLASS_NAME,
                         "\""+sFunctionName+"\" doesn't exist."
                     );
+                    Pop(uiCounter);
                     return false;
                 }
             }
@@ -272,6 +275,7 @@ s_bool State::CallFunction( const s_str& sFunctionName )
             Error(CLASS_NAME,
                 "\""+sFunctionName+"\" doesn't exist."
             );
+            Pop(uiCounter);
             return false;
         }
     }
@@ -280,18 +284,22 @@ s_bool State::CallFunction( const s_str& sFunctionName )
     {
         int iError = lua_pcall(pLua_, 0, 0, 0);
         if (!HandleError(iError))
+        {
+            Pop(uiCounter);
             return false;
-        //lua_call(pLua_, 0, 0);
+        }
+        uiCounter--;
     }
     else
     {
         Error(CLASS_NAME,
             "\""+sFunctionName+"\" is not a function."
         );
-        lua_pop(pLua_, 1);
+        Pop(uiCounter);
         return false;
     }
 
+    Pop(uiCounter);
     return true;
 }
 
@@ -299,6 +307,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
 {
     vector<s_str> lWords = sFunctionName.Cut(":");
     lua_getglobal(pLua_, lWords.front().c_str());
+    s_uint uiCounter = 1;
 
     if (lWords.size() > 1)
     {
@@ -309,11 +318,13 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
             foreach (iterWords, lWords)
             {
                 lua_getfield(pLua_, -1, iterWords->c_str());
+                uiCounter++;
                 if (lua_isnil(pLua_, -1))
                 {
                     Error(CLASS_NAME,
                         "\""+sFunctionName+"\" doesn't exist."
                     );
+                    Pop(uiCounter);
                     return false;
                 }
             }
@@ -323,6 +334,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
             Error(CLASS_NAME,
                 "\""+sFunctionName+"\" doesn't exist."
             );
+            Pop(uiCounter);
             return false;
         }
     }
@@ -347,17 +359,22 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
 
         int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, 0);
         if (!HandleError(iError))
+        {
+            Pop(uiCounter);
             return false;
+        }
+        uiCounter--;
     }
     else
     {
         Error(CLASS_NAME,
             "\""+sFunctionName+"\" is not a function."
         );
-        lua_pop(pLua_, 1);
+        Pop(uiCounter);
         return false;
     }
 
+    Pop(uiCounter);
     return true;
 }
 
@@ -379,7 +396,7 @@ void State::PrintError( const s_str& sError )
     else
         sDebugStr = sError;
 
-    Log("# Error # : LUA : " + sDebugStr);
+    Log("# Error # : Lua : " + sDebugStr);
 
     Event e("LUA_ERROR");
     e.Add(s_var(sDebugStr));

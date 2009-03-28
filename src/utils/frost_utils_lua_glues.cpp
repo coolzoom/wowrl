@@ -14,7 +14,7 @@ using namespace std;
 using namespace Frost;
 
 /* [#] The following functions are called "glues". They aren't used in C++ but
-*  in the LUA environnement. To get a description of what they do, you can refer
+*  in the Lua environnement. To get a description of what they do, you can refer
 *  to :
 *                 http://www.wowwiki.com/World_of_Warcraft_API
 *
@@ -56,7 +56,7 @@ int Lua::l_ThrowError( lua_State* pLua )
     mFunc.Add(0, "caption", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
-        Log("# Error # : LUA : " + mFunc.Get(0)->GetS());
+        Log("# Error # : Lua : " + mFunc.Get(0)->GetS());
 
         Event e("LUA_ERROR");
         e.Add(s_var(mFunc.Get(0)->GetS()));
@@ -67,13 +67,31 @@ int Lua::l_ThrowError( lua_State* pLua )
     return mFunc.Return();
 }
 
+int Lua::l_ThrowInternalError( lua_State* pLua )
+{
+    if (lua_isstring(pLua, -1))
+    {
+        s_str sError = lua_tostring(pLua, -1);
+        Log("# Error # : Lua : " + sError);
+
+        Event e("LUA_ERROR");
+        e.Add(sError);
+
+        EventManager::GetSingleton()->FireEvent(e);
+    }
+    else
+        Error("Lua", "Unhandled error.");
+
+    return 0;
+}
+
 int Lua::l_Log( lua_State* pLua )
 {
     Lua::Function mFunc("Log", pLua);
     mFunc.Add(0, "caption", Lua::TYPE_STRING, VALUE_STRING);
     if (mFunc.Check())
     {
-        Log("# LUA # : " + mFunc.Get(0)->GetS());
+        Log("# Lua # : " + mFunc.Get(0)->GetS());
     }
 
     return mFunc.Return();
@@ -169,7 +187,7 @@ int Lua::l_DoString( lua_State* pLua )
         s_str sScript = mFunc.Get(0)->GetS();
         int iError = luaL_dostring(pLua, sScript.c_str());
         if (iError == LUA_ERRRUN)
-            l_ThrowError(pLua);
+            l_ThrowInternalError(pLua);
         else if (iError == LUA_ERRMEM)
             Error("Lua", "Memory error.");
         else
