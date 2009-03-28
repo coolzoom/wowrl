@@ -70,6 +70,9 @@ namespace Frost
             /// Destructor.
             virtual ~UIObject();
 
+            /// Renders this widget on the current render target.
+            virtual void    Render() = 0;
+
             /// Updates this widget's logic.
             virtual void    Update();
 
@@ -273,13 +276,11 @@ namespace Frost
             *   \param iX             The horizontal offset
             *   \param iY             The vertical offset
             */
-            void            SetAbsPoint(
-                                AnchorPoint mPoint,
-                                s_ptr<UIObject> pObj,
-                                AnchorPoint mRelativePoint,
-                                const s_int& iX,
-                                const s_int& iY
-            );
+            void            SetAbsPoint(AnchorPoint mPoint,
+                                        s_ptr<UIObject> pObj,
+                                        AnchorPoint mRelativePoint,
+                                        const s_int& iX,
+                                        const s_int& iY);
 
             /// Creates/modifies an anchor.
             /** \param mPoint         The anchor point for this object
@@ -288,13 +289,11 @@ namespace Frost
             *   \param fX             The horizontal offset
             *   \param fY             The vertical offset
             */
-            void            SetRelPoint(
-                                AnchorPoint mPoint,
-                                s_ptr<UIObject> pObj,
-                                AnchorPoint mRelativePoint,
-                                const s_float& fX,
-                                const s_float& fY
-            );
+            void            SetRelPoint(AnchorPoint mPoint,
+                                        s_ptr<UIObject> pObj,
+                                        AnchorPoint mRelativePoint,
+                                        const s_float& fX,
+                                        const s_float& fY);
 
             /// Adds/replaces an anchor.
             /** \param mAnchor The Anchor to add

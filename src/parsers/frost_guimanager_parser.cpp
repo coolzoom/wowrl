@@ -10,6 +10,7 @@
 #include "gui/frost_gui_anchor.h"
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_frame.h"
+#include "gui/frost_gui_texture.h"
 
 #include "frost_xml_document.h"
 
@@ -79,7 +80,7 @@ namespace Frost
 
         pFrame->CreateGlue();
 
-        s_ptr<GUI::Frame> pParent = (GUI::Frame*)pFrame->GetParent().Get();
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pFrame->GetParent());
         if (pParent)
             pParent->AddChild(pFrame);
 
@@ -127,6 +128,8 @@ namespace Frost
 
         if (pMainBlock->GetAttribute("hidden") == "true")
             pFrame->Hide();
+        if (pMainBlock->GetAttribute("setAllPoints") == "true")
+            pFrame->SetAllPoints(pParent);
         pFrame->SetAlpha(s_float(pMainBlock->GetAttribute("alpha")));
         pFrame->SetTopLevel(s_bool(pMainBlock->GetAttribute("toplevel")));
         pFrame->SetMovable(s_bool(pMainBlock->GetAttribute("movable")));
@@ -134,6 +137,44 @@ namespace Frost
         pFrame->SetFrameStrata(pMainBlock->GetAttribute("frameStrata"));
         pFrame->EnableMouse(s_bool(pMainBlock->GetAttribute("enableMouse")));
         pFrame->EnableKeyboard(s_bool(pMainBlock->GetAttribute("enableKeyboard")));
+
+        return true;
+    }
+
+    s_bool GUIManager::ParseTextureAttributes_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pMainBlock )
+    {
+        // TODO : Implementer l'héritage pour Texture
+        s_str sName = pMainBlock->GetAttribute("name");
+        if (!sName.IsEmpty(true))
+        {
+            pTexture->SetName(sName);
+        }
+        else
+        {
+            Error(CLASS_NAME,
+                "Can't create an UIObject with a blank name. Skipped."
+            );
+            return false;
+        }
+
+        if (!this->AddUIObject(pTexture))
+            return false;
+
+        //pTexture->CreateGlue();
+
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pTexture->GetParent());
+        if (pParent)
+            pParent->AddRegion(pTexture);
+
+        if (pMainBlock->GetAttribute("hidden") == "true")
+            pTexture->Hide();
+        if (pMainBlock->GetAttribute("setAllPoints") == "true")
+            pTexture->SetAllPoints(pParent);
+
+        s_str sFile = pMainBlock->GetAttribute("file");
+        if (!sFile.IsEmpty())
+            pTexture->SetTexture(sFile);
+        pTexture->SetBlendMode(pMainBlock->GetAttribute("alphaMode"));
 
         return true;
     }
@@ -275,18 +316,16 @@ namespace Frost
             foreach_block (pLayerBlock, pLayersBlock)
             {
                 s_str sLevel = pLayerBlock->GetAttribute("level");
-                s_ptr<XML::Block> pArtBlock;
-                foreach_block (pArtBlock, pLayerBlock)
+                s_ptr<XML::Block> pRegionBlock;
+                foreach_block (pRegionBlock, pLayerBlock)
                 {
-                    if (pArtBlock->GetName() == "FontString")
+                    if (pRegionBlock->GetName() == "FontString")
                     {
-                        if (!this->ParseFontStringBlock_(pFrame, sLevel, pArtBlock))
-                            return false;
+                        this->ParseFontStringBlock_(pFrame, sLevel, pRegionBlock);
                     }
-                    else if (pArtBlock->GetName() == "Texture")
+                    else if (pRegionBlock->GetName() == "Texture")
                     {
-                        if (!this->ParseTextureBlock_(pFrame, sLevel, pArtBlock))
-                            return false;
+                        this->ParseTextureBlock_(pFrame, sLevel, pRegionBlock);
                     }
                 }
             }
@@ -305,33 +344,27 @@ namespace Frost
             {
                 if (pElemBlock->GetName() == "Frame")
                 {
-                    if (!this->ParseFrameBlock_(pFrame, pElemBlock))
-                        return false;
+                    this->ParseFrameBlock_(pFrame, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "Button")
                 {
-                    if (!this->ParseButtonBlock_(pFrame, pElemBlock))
-                        return false;
+                    this->ParseButtonBlock_(pFrame, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "EditBox")
                 {
-                    if (!this->ParseEditBoxBlock_(pFrame, pElemBlock))
-                        return false;
+                    this->ParseEditBoxBlock_(pFrame, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "ScrollingMessageFrame")
                 {
-                    if (!this->ParseSMFBlock_(pFrame, pElemBlock))
-                        return false;
+                    this->ParseSMFBlock_(pFrame, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "Slider")
                 {
-                    if (!this->ParseSliderBlock_(pFrame, pElemBlock))
-                        return false;
+                    this->ParseSliderBlock_(pFrame, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "StatusBar")
                 {
-                    if (!this->ParseStatusBarBlock_(pFrame, pElemBlock))
-                        return false;
+                    this->ParseStatusBarBlock_(pFrame, pElemBlock);
                 }
             }
         }
@@ -361,6 +394,24 @@ namespace Frost
         return true;
     }
 
+    s_bool GUIManager::ParseTexCoordsBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock )
+    {
+        // TODO : parse TexCoords
+        return true;
+    }
+
+    s_bool GUIManager::ParseColorBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock )
+    {
+        // TODO : parse Color
+        return true;
+    }
+
+    s_bool GUIManager::ParseGradientBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock )
+    {
+        // TODO : parse Gradient
+        return true;
+    }
+
     s_bool GUIManager::ParseFrameBlock_( s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock )
     {
         s_ptr<GUI::Frame> pFrame = new GUI::Frame();
@@ -374,53 +425,14 @@ namespace Frost
             pFrame.Delete(); return false;
         }
 
-        // Parse Size
-        if (!this->ParseSizeBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
-
-        // Parse Anchors
-        if (!this->ParseAnchorsBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
-
-        // Parse TitleRegion
-        if (!this->ParseTitleRegionBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
-
-        // Parse Backdrop
-        if (!this->ParseBackdropBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
-
-        // Parse HitRectInsets
-        if (!this->ParseHitRectInsetsBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
-
-        // Parse Layers
-        if (!this->ParseLayersBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
-
-        // Parse Frames
-        if (!this->ParseFramesBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
-
-        // Parse Scripts
-        if (!this->ParseScriptsBlock_(pFrame, pWidgetBlock))
-        {
-            pFrame.Delete(); return false;
-        }
+        this->ParseSizeBlock_(pFrame, pWidgetBlock);
+        this->ParseAnchorsBlock_(pFrame, pWidgetBlock);
+        this->ParseTitleRegionBlock_(pFrame, pWidgetBlock);
+        this->ParseBackdropBlock_(pFrame, pWidgetBlock);
+        this->ParseHitRectInsetsBlock_(pFrame, pWidgetBlock);
+        this->ParseLayersBlock_(pFrame, pWidgetBlock);
+        this->ParseFramesBlock_(pFrame, pWidgetBlock);
+        this->ParseScriptsBlock_(pFrame, pWidgetBlock);
 
         return true;
     }
@@ -463,7 +475,48 @@ namespace Frost
 
     s_bool GUIManager::ParseTextureBlock_( s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock )
     {
-        // TODO : parse Texture
+        s_ptr<GUI::Texture> pTexture = new GUI::Texture();
+        pTexture->SetDrawLayer(sLevel);
+
+        if (pParent)
+            pTexture->SetParent(pParent);
+
+            // Parse attributes
+        if (!this->ParseTextureAttributes_(pTexture, pArtBlock))
+        {
+            pTexture.Delete(); return false;
+        }
+
+        // Parse Size
+        if (!this->ParseSizeBlock_(pTexture, pArtBlock))
+        {
+            pTexture.Delete(); return false;
+        }
+
+        // Parse Anchors
+        if (!this->ParseAnchorsBlock_(pTexture, pArtBlock))
+        {
+            pTexture.Delete(); return false;
+        }
+
+        // Parse TexCoords
+        if (!this->ParseTexCoordsBlock_(pTexture, pArtBlock))
+        {
+            pTexture.Delete(); return false;
+        }
+
+        // Parse Color
+        if (!this->ParseColorBlock_(pTexture, pArtBlock))
+        {
+            pTexture.Delete(); return false;
+        }
+
+        // Parse Gradient
+        if (!this->ParseGradientBlock_(pTexture, pArtBlock))
+        {
+            pTexture.Delete(); return false;
+        }
+
         return true;
     }
 
@@ -485,33 +538,27 @@ namespace Frost
                 }
                 else if (pElemBlock->GetName() == "Frame")
                 {
-                    if (!this->ParseFrameBlock_(NULL, pElemBlock))
-                        return;
+                    this->ParseFrameBlock_(NULL, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "Button")
                 {
-                    if (!this->ParseButtonBlock_(NULL, pElemBlock))
-                        return;
+                    this->ParseButtonBlock_(NULL, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "EditBox")
                 {
-                    if (!this->ParseEditBoxBlock_(NULL, pElemBlock))
-                        return;
+                    this->ParseEditBoxBlock_(NULL, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "ScrollingMessageFrame")
                 {
-                    if (!this->ParseSMFBlock_(NULL, pElemBlock))
-                        return;
+                    this->ParseSMFBlock_(NULL, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "Slider")
                 {
-                    if (!this->ParseSliderBlock_(NULL, pElemBlock))
-                        return;
+                    this->ParseSliderBlock_(NULL, pElemBlock);
                 }
                 else if (pElemBlock->GetName() == "StatusBar")
                 {
-                    if (!this->ParseStatusBarBlock_(NULL, pElemBlock))
-                        return;
+                    this->ParseStatusBarBlock_(NULL, pElemBlock);
                 }
             }
         }

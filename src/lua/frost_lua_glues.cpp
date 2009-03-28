@@ -14,7 +14,7 @@ using namespace Frost;
 using namespace Frost::Lua;
 
 /* [#] The following functions are called "glues". They aren't used in C++ but
-*  in the LUA environnement. To get a description of what they do, you can refer
+*  in the Lua environnement. To get a description of what they do, you can refer
 *  to :
 *                 http://www.wowwiki.com/World_of_Warcraft_API
 *

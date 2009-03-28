@@ -35,6 +35,7 @@ UIObject::UIObject()
 
 UIObject::~UIObject()
 {
+    GUIManager::GetSingleton()->RemoveUIObject(this);
     pGlue_.Delete();
 }
 

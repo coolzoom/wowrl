@@ -20,10 +20,31 @@ LayeredRegion::LayeredRegion() : UIObject()
 
 LayerType LayeredRegion::GetDrawLayer()
 {
-    return LAYER_ARTWORK;
+    return mLayer_;
 }
 
 void LayeredRegion::SetDrawLayer(LayerType mLayer)
 {
+    mLayer_ = mLayer;
+}
 
+void LayeredRegion::SetDrawLayer(const s_str& sLayer)
+{
+    if (sLayer == "ARTWORK")
+        mLayer_ = LAYER_ARTWORK;
+    else if (sLayer == "BACKDROUND")
+        mLayer_ = LAYER_BACKGROUND;
+    else if (sLayer == "BORDER")
+        mLayer_ = LAYER_BORDER;
+    else if (sLayer == "HIGHLIGHT")
+        mLayer_ = LAYER_HIGHLIGHT;
+    else if (sLayer == "OVERLAY")
+        mLayer_ = LAYER_OVERLAY;
+    else
+    {
+        Warning(lType_.back(),
+            "Uknown layer type : \""+sLayer+"\". Using \"ARTWORK\"."
+        );
+        mLayer_ = LAYER_ARTWORK;
+    }
 }

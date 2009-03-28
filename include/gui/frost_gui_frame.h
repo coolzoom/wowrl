@@ -66,6 +66,12 @@ namespace Frost
             /// Constructor.
             Frame();
 
+            /// Destructor.
+            virtual ~Frame();
+
+            /// Renders this widget on the current render target.
+            virtual void        Render();
+
             /// Updates this widget's logic.
             virtual void        Update();
 
@@ -121,6 +127,16 @@ namespace Frost
             *   \return 'true' if this script is defined
             */
             s_bool              HasScript(const s_str& sScriptName) const;
+
+            /// Adds a LayeredRegion to this Frame's children.
+            /** \param pRegion The LayeredRegion to add
+            */
+            void                AddRegion(s_ptr<LayeredRegion> pRegion);
+
+            /// Removes a LayeredRegion from this Frame's children.
+            /** \param pRegion The LayeredRegion to remove
+            */
+            void                RemoveRegion(s_ptr<LayeredRegion> pRegion);
 
             /// Adds a Frame to this Frame's children.
             /** \param pChild The Frame to add

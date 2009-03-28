@@ -41,6 +41,80 @@ Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0
     uiLevel_ = 0u;
 }
 
+Frame::~Frame()
+{
+    map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+    foreach (iterRegion, lRegionList_)
+    {
+        iterRegion->second.Delete();
+    }
+
+    map< s_uint, s_ptr<Frame> >::iterator iterChild;
+    foreach (iterChild, lChildList_)
+    {
+        iterChild->second.Delete();
+    }
+}
+
+void Frame::Render()
+{
+    // Render backdrop
+    // ...
+
+    // Render child regions
+    map<LayerType, Layer>::iterator iterLayer;
+    foreach (iterLayer, lLayerList_)
+    {
+        Layer& mLayer = iterLayer->second;
+        if (!mLayer.bDisabled)
+        {
+            map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+            foreach (iterRegion, mLayer.lRegionList)
+            {
+                s_ptr<LayeredRegion> pRegion = iterRegion->second;
+                if (pRegion->IsShown())
+                    pRegion->Render();
+            }
+        }
+    }
+
+    // Render child frames
+    map<FrameStrata, Strata>::iterator iterStrata;
+    foreach (iterStrata, lStrataList_)
+    {
+        Strata& mStrata = iterStrata->second;
+
+        map<s_uint, Level>::iterator iterLevel;
+        foreach (iterLevel, mStrata.lLevelList)
+        {
+            Level& mLevel = iterLevel->second;
+
+            map< s_uint, s_ptr<Frame> >::iterator iterFrame;
+            foreach (iterFrame, mLevel.lFrameList)
+            {
+                s_ptr<Frame> pFrame = iterFrame->second;
+                if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
+                {
+                    if (pFrame->IsShown())
+                        pFrame->Render();
+                }
+            }
+
+            if (mLevel.pTopLevel)
+            {
+                if (mLevel.pTopLevel->IsShown())
+                    mLevel.pTopLevel->Render();
+            }
+        }
+
+        if (mStrata.pTopStrata)
+        {
+            if (mStrata.pTopStrata->IsShown())
+                mStrata.pTopStrata->Render();
+        }
+    }
+}
+
 void Frame::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
@@ -221,6 +295,45 @@ s_bool Frame::HasScript( const s_str& sScriptName ) const
     return MAPFIND(sScriptName, lDefinedScriptList_);
 }
 
+void Frame::AddRegion( s_ptr<LayeredRegion> pRegion )
+{
+    if (pRegion)
+    {
+        if (!MAPFIND(pRegion->GetID(), lRegionList_))
+        {
+            lRegionList_[pRegion->GetID()] = pRegion;
+            FireBuildLayerList_();
+        }
+        else
+        {
+            Warning(lType_.back(),
+                "Trying to add \""+pRegion->GetName()+"\" to \""+sName_+"\"'s children, "
+                "but it was already one of this Frame's children."
+            );
+        }
+    }
+}
+
+void Frame::RemoveRegion( s_ptr<LayeredRegion> pRegion )
+{
+    if (pRegion)
+    {
+        map< s_uint, s_ptr<LayeredRegion> >::iterator iter = lRegionList_.find(pRegion->GetID());
+        if (iter != lRegionList_.end())
+        {
+            lRegionList_.erase(iter);
+            FireBuildLayerList_();
+        }
+        else
+        {
+            Warning(lType_.back(),
+                "Trying to remove \""+pRegion->GetName()+"\" from \""+sName_+"\"'s children, "
+                "but it was not one of this Frame's children."
+            );
+        }
+    }
+}
+
 void Frame::AddChild( s_ptr<Frame> pChild )
 {
     if (pChild)
@@ -228,6 +341,7 @@ void Frame::AddChild( s_ptr<Frame> pChild )
         if (!MAPFIND(pChild->GetID(), lChildList_))
         {
             lChildList_[pChild->GetID()] = pChild;
+            FireBuildStrataList_();
         }
         else
         {
@@ -247,6 +361,7 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
         if (iter != lChildList_.end())
         {
             lChildList_.erase(iter);
+            FireBuildStrataList_();
         }
         else
         {
@@ -752,6 +867,13 @@ void Frame::Update()
 
     if (IsVisible())
         On("Update");
+
+    // Update regions
+    map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+    foreach (iterRegion, lRegionList_)
+    {
+        iterRegion->second->Update();
+    }
 
     // Update childrens
     map< s_uint, s_ptr<Frame> >::iterator iterChild;
