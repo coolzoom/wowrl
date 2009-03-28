@@ -28,6 +28,12 @@ namespace Frost
 
     GUIManager::~GUIManager()
     {
+        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        foreach (iterObj, lMainObjectList_)
+        {
+            iterObj->second.Delete();
+        }
+
         LuaManager::GetSingleton()->CloseLua(pLua_);
     }
 
@@ -83,6 +89,9 @@ namespace Frost
                 (*lNamedList)[pObj->GetName()] = pObj;
                 pObj->SetID(i);
 
+                if (!pObj->IsVirtual() && !pObj->GetParent())
+                    lMainObjectList_[i] = pObj;
+
                 return true;
             }
             else
@@ -107,7 +116,27 @@ namespace Frost
         if (iterObj != lObjectList_.end())
         {
             lObjectList_.erase(iterObj);
-            lNamedObjectList_.erase(lNamedObjectList_.find(pObj->GetName()));
+            if (pObj->IsVirtual())
+            {
+                map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamed = lNamedVirtualObjectList_.find(pObj->GetName());
+                if (iterNamed != lNamedVirtualObjectList_.end())
+                {
+                    lNamedVirtualObjectList_.erase(lNamedVirtualObjectList_.find(pObj->GetName()));
+                }
+            }
+            else
+            {
+                map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamed = lNamedObjectList_.find(pObj->GetName());
+                if (iterNamed != lNamedObjectList_.end())
+                {
+                    lNamedObjectList_.erase(lNamedObjectList_.find(pObj->GetName()));
+                }
+                iterObj = lMainObjectList_.find(pObj->GetID());
+                if (iterObj != lMainObjectList_.end())
+                {
+                    lMainObjectList_.erase(iterObj);
+                }
+            }
         }
     }
 
@@ -334,13 +363,21 @@ namespace Frost
     {
     }
 
+    void GUIManager::RenderUI()
+    {
+        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        foreach (iterObj, lMainObjectList_)
+        {
+            iterObj->second->Render();
+        }
+    }
+
     void GUIManager::Update( const s_float& fDelta )
     {
-        map< s_str, s_ptr<GUI::UIObject> >::iterator iterObj;
-        foreach (iterObj, lNamedObjectList_)
+        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        foreach (iterObj, lMainObjectList_)
         {
-            if (!iterObj->second->GetParent())
-                iterObj->second->Update();
+            iterObj->second->Update();
         }
     }
 

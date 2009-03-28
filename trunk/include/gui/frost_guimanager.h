@@ -56,6 +56,7 @@ namespace Frost
         void                 LoadUI();
         void                 CloseUI();
         void                 ReloadUI();
+        void                 RenderUI();
 
         void                 Update(const s_float& fDelta);
 
@@ -94,16 +95,24 @@ namespace Frost
 
         // Attribute parsers
         s_bool ParseFrameAttributes_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
+        s_bool ParseTextureAttributes_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pMainBlock);
 
-        // Block parsers
+        // General block parsers
         s_bool ParseSizeBlock_(s_ptr<GUI::UIObject> pObject, s_ptr<XML::Block> pMainBlock);
         s_bool ParseAnchorsBlock_(s_ptr<GUI::UIObject> pObject, s_ptr<XML::Block> pMainBlock);
+
+        // Widget block parsers
         s_bool ParseTitleRegionBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseBackdropBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseHitRectInsetsBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseLayersBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseFramesBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseScriptsBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
+
+        // Texture block parsers
+        s_bool ParseTexCoordsBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock);
+        s_bool ParseColorBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock);
+        s_bool ParseGradientBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock);
 
         // Widget parsers
         s_bool ParseFrameBlock_(s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock);
@@ -113,7 +122,7 @@ namespace Frost
         s_bool ParseSliderBlock_(s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock);
         s_bool ParseStatusBarBlock_(s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock);
 
-        // Art parsers
+        // Region parsers
         s_bool ParseFontStringBlock_(s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
         s_bool ParseTextureBlock_(s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
 
@@ -123,6 +132,7 @@ namespace Frost
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
 
         std::map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
+        std::map< s_uint, s_ptr<GUI::UIObject> > lMainObjectList_;
 
         std::map<s_str, AddOn> lAddOnList_;
     };

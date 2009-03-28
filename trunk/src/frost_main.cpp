@@ -131,8 +131,7 @@ s_bool RenderFunc()
 
         pSpriteMgr->Clear(Color(0, 0, 0, 0));
 
-        // And the sprite another time
-        pSprite->Render(0, 0);
+        GUIManager::GetSingleton()->RenderUI();
 
     pSpriteMgr->End();
 
@@ -232,10 +231,10 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pLight3->SetRange(100.0f);*/
 
             // UI
-            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
+            /*s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
                 "UI-UnitFrame.png"
             );
-            pSprite = s_refptr<Sprite>(new Sprite(pMat, 256, 128));
+            pSprite = s_refptr<Sprite>(new Sprite(pMat, 256, 128));*/
 
             /*mRTarget = GFX::CreateRenderTarget("RttTex", 256, 128);
             Material* pMat2 = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(

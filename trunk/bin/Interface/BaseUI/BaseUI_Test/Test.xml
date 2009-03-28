@@ -1,5 +1,5 @@
 <Ui>
-    <Script file="Test.lua"/>
+    <!Script file="Test.lua"/>
     
     <Frame name="Template_Child" virtual="true">
         <Anchors>
@@ -23,7 +23,7 @@
             <AbsDimension x="400" y="400"/>
         </Size>
         <Anchors>
-            <Anchor point="BOTTOMRIGHT" relativeTo="UIParent" relativePoint="TOPLEFT"/>
+            <Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="TOPLEFT"/>
         </Anchors>
         <Frames>
             <Frame name="$parent_Pin">
@@ -33,21 +33,23 @@
                 <Anchors>
                     <Anchor point="CENTER"/>
                 </Anchors>
-            </Frame>
-            <Frame name="$parent_Child1" inherits="Template_Child">
-                <Size>
-                    <AbsDimension x="200" y="200"/>
-                </Size>
-            </Frame>
-            <Frame name="$parent_Child2" inherits="Template_Child">
-                <Size>
-                    <AbsDimension x="100" y="100"/>
-                </Size>
+                <Layers>
+                    <Layer>
+                        <Texture name="$parent_Texture" file="Textures/UI/UI-CloseButton-Up.png" setAllPoints="true">
+                        </Texture>
+                    </Layer>
+                </Layers>
             </Frame>
         </Frames>
+        <Layers>
+            <Layer>
+                <Texture name="$parent_Texture" file="Textures/UI/UI-CloseButton-Up.png" setAllPoints="true">
+                </Texture>
+            </Layer>
+        </Layers>
         <Scripts>
             <OnUpdate>
-                Test_OnUpdate();
+                --Test_OnUpdate();
             </OnUpdate>
         </Scripts>
     </Frame>

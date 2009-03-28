@@ -24,10 +24,13 @@ namespace Frost
 
             LayerType GetDrawLayer();
             void SetDrawLayer(LayerType mLayer);
+            void SetDrawLayer(const s_str& sLayer);
 
             static const s_str CLASS_NAME;
 
         protected :
+
+            LayerType mLayer_;
 
         };
 

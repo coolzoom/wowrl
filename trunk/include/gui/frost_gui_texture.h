@@ -12,6 +12,7 @@
 #include "frost.h"
 #include "gui/frost_gui_layeredregion.h"
 #include "gui/frost_gui_gradient.h"
+#include "frost_sprite.h"
 
 namespace Frost
 {
@@ -42,6 +43,9 @@ namespace Frost
 
             /// Constructor.
             Texture();
+
+            /// Renders this widget on the current render target.
+            virtual void              Render();
 
             /// Returns this Textures's blending mode.
             /** \return This Textures's blending mode
@@ -91,12 +95,17 @@ namespace Frost
             */
             void                      SetBlendMode(TextureBlendMode mBlendMode);
 
+            /// Sets this Texture's blending mode.
+            /** \param sBlendMode The new blending mode
+            */
+            void                      SetBlendMode(const s_str& sBlendMode);
+
             /// Makes this Texture appear without any color.
             /** \param bIsDesaturated 'true' if you want to remove colors
             *   \note Only available on certain graphic cards (most of modern ones
             *         are capable of this).
             */
-            void                      SetDesaturated(const s_bool& bIsDesaturated) const;
+            void                      SetDesaturated(const s_bool& bIsDesaturated);
 
             /// Adds a Gradient effect to this Texture.
             /** \param mGradient The Gradient to add
@@ -161,6 +170,8 @@ namespace Frost
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_refptr<Sprite>   pSprite_;
 
             TextureType        mType_;
             TextureBlendMode   mBlendMode_;
