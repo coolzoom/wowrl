@@ -36,6 +36,14 @@ namespace Frost
         s_refptr<Material> CreateMaterial2D(const s_str& sName, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB);
 
         /// Creates a new Material (for 2D rendering).
+        /** \param sName  The name of the new Material
+        *   \param mColor The color of this Material
+        *   \return The new Material
+        *   \note Creates a blank Material filled with a color
+        */
+        s_refptr<Material> CreateMaterial2D(const s_str& sName, const Color& mColor);
+
+        /// Creates a new Material (for 2D rendering).
         /** \param sFileName The file name of the texture to use
         *   \return The new Material
         *   \note Automatically loads the texture if needed.

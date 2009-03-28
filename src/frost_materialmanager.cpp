@@ -60,6 +60,11 @@ namespace Frost
         return pMat;
     }
 
+    s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sName, const Color& mColor )
+    {
+        return this->CreateMaterial2D(sName, mColor.GetR(), mColor.GetG(), mColor.GetB());
+    }
+
     s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sFileName )
     {
         s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
