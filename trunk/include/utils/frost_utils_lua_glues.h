@@ -22,6 +22,7 @@ namespace Frost
         int l_DoString(lua_State* pLua);
 
         int l_ThrowError(lua_State* pLua);
+        int l_ThrowInternalError(lua_State* pLua);
         int l_Log(lua_State* pLua);
         int l_SendString(lua_State* pLua);
         int l_EmptyString(lua_State* pLua);
