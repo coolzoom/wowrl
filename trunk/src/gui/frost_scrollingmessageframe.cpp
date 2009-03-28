@@ -14,6 +14,8 @@ using namespace Frost::GUI;
 
 const s_str ScrollingMessageFrame::CLASS_NAME = "GUI::ScrollingMessageFrame";
 
+// TODO : Implementer ScrollingMessageFrame
+
 ScrollingMessageFrame::ScrollingMessageFrame() : Frame()
 {
 }

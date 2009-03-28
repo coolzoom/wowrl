@@ -14,6 +14,8 @@ using namespace Frost::GUI;
 
 const s_str FontString::CLASS_NAME = "GUI::FontString";
 
+// TODO : Implementer FontString
+
 FontString::FontString() : LayeredRegion()
 {
 }

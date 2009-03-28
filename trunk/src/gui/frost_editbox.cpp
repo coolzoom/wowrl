@@ -14,6 +14,8 @@ using namespace Frost::GUI;
 
 const s_str EditBox::CLASS_NAME = "GUI::EditBox";
 
+// TODO : Implementer EditBox
+
 EditBox::EditBox() : Frame()
 {
 }
