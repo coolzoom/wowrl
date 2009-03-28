@@ -58,7 +58,7 @@ Frame::~Frame()
 
 void Frame::Render()
 {
-    // Render backdrop
+    // TODO : Frame : Implementer et faire le rendu du backdrop
     // ...
 
     // Render child regions
@@ -173,7 +173,7 @@ s_bool Frame::CanUseScript( const s_str& sScriptName ) const
 
 void Frame::CopyFrom( s_ptr<UIObject> pObj )
 {
-    // TODO : Tester ça (et ptet l'écrire mieu, comme l'autre avec les fonctions)
+    // TODO : Frame : Ré-écrire le code d'héritage ?
     UIObject::CopyFrom(pObj);
 
     if (pObj->GetObjectType() == "Frame")
@@ -247,7 +247,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             }
         }
 
-        // TODO : Frame : copier les arts
+        // TODO : Frame : Copier les regions
         //map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
 
         bBuildStrataList_ = true;

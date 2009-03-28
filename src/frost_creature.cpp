@@ -16,6 +16,10 @@ using namespace std;
 
 namespace Frost
 {
+    // TODO : Creature : Implémenter les drops
+    // TODO : Creature : Implémenter l'aggro
+    // TODO : Creature : Implémenter l'IA
+
     const s_str Creature::CLASS_NAME = "Creature";
 
     Creature::Creature( const s_uint& uiID, const s_str& sName ) :

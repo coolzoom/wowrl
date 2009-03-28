@@ -14,6 +14,8 @@ using namespace Frost::GUI;
 
 const s_str StatusBar::CLASS_NAME = "GUI::StatusBar";
 
+// TODO : Implementer StatusBar
+
 StatusBar::StatusBar() : Frame()
 {
 }

@@ -130,7 +130,7 @@ namespace Frost
             pActualAnim_->pAnim->setWeight(1.0f);
         }
 
-        // TODO : Model : calculer la bbox
+        // TODO : Model : Calculer la bounding box animée
     }
 
     void AnimManager::SetAnim( AnimID mID, AnimPriority mPriority, s_bool bQueued )
