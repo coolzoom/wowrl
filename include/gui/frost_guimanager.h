@@ -127,6 +127,7 @@ namespace Frost
         s_bool ParseTextureBlock_(s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
 
         s_ptr<Lua::State> pLua_;
+        s_bool            bClosed_;
 
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
         std::map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
