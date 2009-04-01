@@ -56,6 +56,9 @@ namespace Frost
         mClass_ = *UnitManager::GetSingleton()->GetClassByName(sClassName);
         pHealthType_ = s_refptr<HealthTypeInstance>(new HealthTypeInstance(this, mClass_.sHealthType));
         pPowerType_ = s_refptr<PowerTypeInstance>(new PowerTypeInstance(this, mClass_.sPowerType));
+
+        pHealthType_->On("UnitSpawn");
+        pPowerType_->On("UnitSpawn");
     }
 
     void Unit::SetClass(const Class& mClass)
@@ -63,6 +66,9 @@ namespace Frost
         mClass_ = mClass;
         pHealthType_ = s_refptr<HealthTypeInstance>(new HealthTypeInstance(this, mClass_.sHealthType));
         pPowerType_ = s_refptr<PowerTypeInstance>(new PowerTypeInstance(this, mClass_.sPowerType));
+
+        pHealthType_->On("UnitSpawn");
+        pPowerType_->On("UnitSpawn");
     }
 
     const Class& Unit::GetClass() const
@@ -75,14 +81,25 @@ namespace Frost
         fHealth_ += fHealthAdd;
         s_float fMaxHealth = mStats_.fMaxHealth.GetValue();
         if (fHealth_ > fMaxHealth)
+        {
             fHealth_ = fMaxHealth;
+            pHealthType_->On("Max");
+        }
         if (fHealth_ < 0.0f)
+        {
             fHealth_ = 0.0f;
+            pHealthType_->On("Min");
+        }
     }
 
     void Unit::FillHealthGauge()
     {
         fHealth_ = mStats_.fMaxHealth.GetValue();
+    }
+
+    void Unit::EmptyHealthGauge()
+    {
+        fHealth_ = 0.0f;
     }
 
     const s_float& Unit::GetHealth() const
@@ -105,14 +122,25 @@ namespace Frost
         fPower_ += fPowerAdd;
         s_float fMaxPower = mStats_.fMaxPower.GetValue();
         if (fPower_ > fMaxPower)
+        {
             fPower_ = fMaxPower;
+            pPowerType_->On("Max");
+        }
         if (fPower_ < 0.0f)
+        {
             fPower_ = 0.0f;
+            pPowerType_->On("Min");
+        }
     }
 
     void Unit::FillPowerGauge()
     {
         fPower_ = mStats_.fMaxPower.GetValue();
+    }
+
+    void Unit::EmptyPowerGauge()
+    {
+        fPower_ = 0.0f;
     }
 
     const s_float& Unit::GetPower() const
@@ -128,6 +156,35 @@ namespace Frost
     s_float Unit::GetPowerRegenRatio() const
     {
         return mStats_.fPowerRegenRatio.GetValue();
+    }
+
+    void Unit::Die()
+    {
+        if (!bDead_)
+        {
+            bDead_ = true;
+
+            pHealthType_->On("UnitDeath");
+            pPowerType_->On("UnitDeath");
+
+            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_DEATH, ANIM_PRIORITY_BACKGROUND);
+        }
+    }
+
+    const s_bool& Unit::IsDead()
+    {
+        return bDead_;
+    }
+
+    void Unit::Resurrect()
+    {
+        if (bDead_)
+        {
+            bDead_ = false;
+
+            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+            pBodyModel_->GetAnimMgr()->Play();
+        }
     }
 
     void Unit::SetStat( const s_str& sStatName, const s_int& iValue )
@@ -172,7 +229,6 @@ namespace Frost
         if (bSelected != bSelected_)
         {
             bSelected_ = bSelected;
-            Log(sName_+" is "+bSelected_.GetAsString("", "not ")+"selected");
             if (bSelected_)
             {
                 pBodyModel_->GetMaterial()->SetSelfIllumination(Color(255, 255, 255));
@@ -793,7 +849,6 @@ namespace Frost
                                 }
                             }
                             break;
-
                         }
                     }
                 }

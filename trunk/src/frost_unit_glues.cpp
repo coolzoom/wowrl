@@ -101,6 +101,42 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaUnit::_EmptyHealthGauge( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:EmptyHealthGauge", pLua);
+
+        if (mFunc.Check())
+        {
+            pParent_->EmptyHealthGauge();
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_EmptyPowerGauge( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:EmptyPowerGauge", pLua);
+
+        if (mFunc.Check())
+        {
+            pParent_->EmptyPowerGauge();
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_Die( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:Die", pLua);
+
+        if (mFunc.Check())
+        {
+            pParent_->Die();
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaUnit::_GetClass( lua_State* pLua )
     {
         Lua::Function mFunc("Unit:GetClass", pLua, 1);
@@ -238,6 +274,9 @@ namespace Frost
         method(Unit, Damage),
         method(Unit, FillHealthGauge),
         method(Unit, FillPowerGauge),
+        method(Unit, EmptyHealthGauge),
+        method(Unit, EmptyPowerGauge),
+        method(Unit, Die),
         method(Unit, GetClass),
         method(Unit, GetHealthRegenRatio),
         method(Unit, GetLevel),
@@ -248,7 +287,6 @@ namespace Frost
         method(Unit, IsSitting),
         method(Unit, SetAnim),
         method(Unit, SetAttacking),
-
 
         {0,0}
     };

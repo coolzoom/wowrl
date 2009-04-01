@@ -90,10 +90,12 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_R))
     {
-        if (pSelectionDecal->IsShown())
-            pSelectionDecal->Hide();
-        else
-            pSelectionDecal->Show();
+        pChar->Resurrect();
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_E))
+    {
+        pChar->AddHealth(-2000.0f);
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -170,6 +172,8 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pChar->SetStat("SPIRIT", s_int(50));
             pChar->SetStat("INTELLECT", s_int(50));
             pModel = pChar->GetBodyModel().Get();
+
+            Log("max health : "+pChar->GetMaxHealth());
 
             switch (mCamType)
             {

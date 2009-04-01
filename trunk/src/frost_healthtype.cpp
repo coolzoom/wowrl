@@ -19,7 +19,6 @@ namespace Frost
         pParent_ = UnitManager::GetSingleton()->GetHealthTypeByName(sHealthName);
         if (pParent_->mRegenType == HEALTH_REGEN_TICK)
             pTimer_ = s_refptr<PeriodicTimer>(new PeriodicTimer(s_double(pParent_->fRegenTickDuration), TIMER_START_FIRST, false));
-        this->On("UnitSpawn");
     }
 
     const s_str& HealthTypeInstance::GetHealthTypeName() const

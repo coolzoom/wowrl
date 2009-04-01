@@ -80,6 +80,9 @@ namespace Frost
         /// Sets this Unit's current health points to the maximum possible.
         void             FillHealthGauge();
 
+        /// Sets this Unit's current health points to zero.
+        void             EmptyHealthGauge();
+
         /// Returns this Unit's total health value.
         /** \return This Unit's total health value
         */
@@ -103,6 +106,9 @@ namespace Frost
         /// Sets this Unit's current power points to the maximum possible.
         void             FillPowerGauge();
 
+        /// Sets this Unit's current power points to zero.
+        void             EmptyPowerGauge();
+
         /// Returns this Unit's total power value.
         /** \return This Unit's total power value
         */
@@ -117,6 +123,23 @@ namespace Frost
         /** \return This Unit's power regen ratio
         */
         s_float          GetPowerRegenRatio() const;
+
+        /// Makes this Unit die.
+        /** \note The Unit has to be alive, else this function will have
+        *         no effect.
+        */
+        void             Die();
+
+        /// Checks if this Unit is dead.
+        /** \return 'true' if this Unit is dead
+        */
+        const s_bool&    IsDead();
+
+        /// Resurrects this Unit.
+        /** \note The Unit has to be dead, else this function will have
+        *         no effect.
+        */
+        void             Resurrect();
 
         /// Sets one of this Unit's stat.
         /** \param sStatName The code name of this stat
@@ -294,6 +317,7 @@ namespace Frost
         s_bool          bCameraMovedAlone_;
 
         s_bool          bSelected_;
+        s_bool          bDead_;
 
         s_bool          bJumping_;
         Vector          mJumpPosition_;
@@ -336,6 +360,9 @@ namespace Frost
         int _Damage(lua_State*);
         int _FillHealthGauge(lua_State*);
         int _FillPowerGauge(lua_State*);
+        int _EmptyHealthGauge(lua_State*);
+        int _EmptyPowerGauge(lua_State*);
+        int _Die(lua_State*);
         int _GetClass(lua_State*);
         int _GetHealthRegenRatio(lua_State*);
         int _GetLevel(lua_State*);
