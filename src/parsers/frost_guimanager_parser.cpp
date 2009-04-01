@@ -90,31 +90,19 @@ namespace Frost
             s_ptr<GUI::UIObject> pObj = this->GetUIObjectByName(sInheritance, true);
             if (pObj)
             {
-                if (pObj->GetParent())
+                const vector<s_str>& lFrameTypes = pFrame->GetObjectTypeList();
+                if (VECTORFIND(pObj->GetObjectType(), lFrameTypes))
                 {
-                    Error(CLASS_NAME,
-                        "\""+pFrame->GetName()+"\" cannot inherit "
-                        "from \""+sInheritance+"\" because this virtual "
-                        +pObj->GetObjectType()+" has a parent. Skipped."
-                    );
-                    return false;
+                    // Inherit from the other Frame
+                    pFrame->CopyFrom(pObj);
                 }
                 else
                 {
-                    const vector<s_str>& lFrameTypes = pFrame->GetObjectTypeList();
-                    if (VECTORFIND(pObj->GetObjectType(), lFrameTypes))
-                    {
-                        // Inherit from the other Frame
-                        pFrame->CopyFrom(pObj);
-                    }
-                    else
-                    {
-                        Error(CLASS_NAME,
-                            "\""+pFrame->GetName()+"\" ("+pFrame->GetObjectType()+") cannot inherit "
-                            "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
-                        );
-                        return false;
-                    }
+                    Error(CLASS_NAME,
+                        "\""+pFrame->GetName()+"\" ("+pFrame->GetObjectType()+") cannot inherit "
+                        "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
+                    );
+                    return false;
                 }
             }
             else
