@@ -279,8 +279,7 @@ namespace Frost
 
     /// Animation manager
     /** This class manages a single model's animation.<br>
-    *   It is instanciated for each Model in the game, which
-    *   is also instanciated for each Unit.<br>
+    *   It is instanciated for each Model in the game.<br>
     *   <b>Note</b> : This is not a singleton.
     */
     class AnimManager
@@ -313,7 +312,7 @@ namespace Frost
         /// Returns the actual animation's ID.
         /** \return The actual animation's ID
         */
-        s_uint     GetAnimID() const;
+        s_uint           GetAnimID() const;
 
         /// The main function : puts a new animation on the queue.
         /** \param mID       The new animation's ID
@@ -326,41 +325,47 @@ namespace Frost
         *         stops the actual one and starts playing the new one.<br>
         *         If the new animation has a lower priority, it is just
         *         stored in the queue, and will play when no other animation
-        *         has a higher priority.
+        *         has a higher priority.<br>
+        *         If you use the ANIM_PRIORITY_BACKGROUND priority, then this
+        *         animation will be used whenever there is nothing to play
+        *         (for example : "stand", "run", "dead", ... should always uses
+        *         this priority).<br><br>
+        *         When you set an animation, all other animations in lower
+        *         priority queues will be erased (except the BACKGROUND one).
         */
-        void       SetAnim(AnimID mID, AnimPriority mPriority = ANIM_PRIORITY_HIGH, s_bool bQueued = false);
+        void             SetAnim(AnimID mID, AnimPriority mPriority = ANIM_PRIORITY_HIGH, s_bool bQueued = false);
 
         /// Plays the actual animation.
         /** \note If it's already being played, the timer is reset and
         *         the animation starts over at its beginnging.
         */
-        void           Play();
+        void             Play();
 
         /// Pauses the actual animation.
-        void           Pause();
+        void             Pause();
 
         /// Checks if the actual animation is paused.
         /** \return 'true' if the  actual animation is paused
         */
-        const s_bool&  IsPaused() const;
+        const s_bool&    IsPaused() const;
 
         /// Plays the animation from the end to the beginning.
-        void           Reverse();
+        void             Reverse();
 
         /// Sets the animation play speed.
         /** \param fSpeed The new speed (1.0f is normal speed)
         */
-        void           SetSpeed(const s_float& fSpeed);
+        void             SetSpeed(const s_float& fSpeed);
 
         /// Returns the animation play speed.
         /** \return The animation play speed
         */
-        const s_float& GetSpeed() const;
+        const s_float&   GetSpeed() const;
 
         /// Updates the actual animation.
         /** \note Automatically called by ModelManager.
         */
-        void           Update(s_float fDelta);
+        void             Update(s_float fDelta);
 
         static const s_str CLASS_NAME;
 
