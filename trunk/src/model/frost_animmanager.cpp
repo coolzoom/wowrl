@@ -267,7 +267,7 @@ namespace Frost
                                     if (iterQueue->second.empty())
                                         lQueueList_.erase(iterQueue);
                                 }
-                                else if (uiBackgroundAnimID_.IsValid())
+                                else if (uiBackgroundAnimID_.IsValid() && mActualPriority_ != ANIM_PRIORITY_BACKGROUND)
                                 {
                                     ChooseAnim(uiBackgroundAnimID_);
                                     mActualPriority_ = ANIM_PRIORITY_BACKGROUND;
