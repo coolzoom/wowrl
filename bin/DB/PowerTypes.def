@@ -9,6 +9,12 @@
             </OnSpellCasted>
             <n[.,1]:OnUnitSpawn>
             </OnUnitSpawn>
+            <n[.,1]:OnUnitDeath>
+            </OnUnitDeath>
+            <n[.,1]:OnMax>
+            </OnMax>
+            <n[.,1]:OnMin>
+            </OnMin>
             <n[.,1]:OnTick>
             </OnTick>
         </Scripts>

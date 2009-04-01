@@ -4,6 +4,12 @@
             <OnUnitSpawn>
                 unit:FillHealthGauge();
             </OnUnitSpawn>
+            <OnUnitDeath>
+                unit:EmptyHealthGauge();
+            </OnUnitDeath>
+            <OnMin>
+                unit:Die();
+            </OnMin>
             <OnTick>
                 local fCoef = 0.0;
                 if (character) then

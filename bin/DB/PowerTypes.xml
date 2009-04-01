@@ -12,6 +12,10 @@
                 unit:FillPowerGauge();
                 unit.stopRegenTime = nil;
             </OnUnitSpawn>
+            <OnUnitDeath>
+                unit:EmptyPowerGauge();
+                unit.stopRegenTime = nil;
+            </OnUnitDeath>
             <OnTick>
                 if (unit.stopRegenTime) then
                     if (GetTime() > unit.stopRegenTime) then
@@ -24,12 +28,21 @@
             </OnTick>
         </Scripts>
     </PowerType>
-    <PowerType name="RAGE" regenType="NONE"/>
+    <PowerType name="RAGE" regenType="NONE">
+        <Scripts>
+            <OnUnitDeath>
+                unit:EmptyPowerGauge();
+            </OnUnitDeath>
+        </Scripts>
+    </PowerType>
     <PowerType name="ENERGY" regenType="CONTINUOUS" rate="10">
         <Scripts>
             <OnUnitSpawn>
                 unit:FillPowerGauge();
             </OnUnitSpawn>
+            <OnUnitDeath>
+                unit:EmptyPowerGauge();
+            </OnUnitDeath>
         </Scripts>
     </PowerType>
     <PowerType name="FOCUS" regenType="CONTINUOUS" rate="6.125">
@@ -37,6 +50,9 @@
             <OnUnitSpawn>
                 unit:FillPowerGauge();
             </OnUnitSpawn>
+            <OnUnitDeath>
+                unit:EmptyPowerGauge();
+            </OnUnitDeath>
         </Scripts>
     </PowerType>
 </PowerTypes>
