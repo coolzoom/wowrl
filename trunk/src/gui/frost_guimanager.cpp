@@ -28,20 +28,12 @@ namespace Frost
 
     GUIManager::~GUIManager()
     {
-        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
-        foreach (iterObj, lMainObjectList_)
-        {
-            iterObj->second.Delete();
-        }
-
-        LuaManager::GetSingleton()->CloseLua(pLua_);
+        CloseUI();
     }
 
     void GUIManager::Initialize()
     {
-        pLua_ = LuaManager::GetSingleton()->CreateLua();
-        Lua::RegisterGUIClasses(pLua_);
-        Lua::RegisterGlobalFuncs(pLua_);
+        bClosed_ = true;
     }
 
     s_bool GUIManager::AddUIObject( s_ptr<GUI::UIObject> pObj )
@@ -351,16 +343,47 @@ namespace Frost
 
     void GUIManager::LoadUI()
     {
-        this->LoadAddOnDirectory_("Interface/BaseUI");
-        this->LoadAddOnDirectory_("Interface/AddOns");
+        if (bClosed_)
+        {
+            pLua_ = LuaManager::GetSingleton()->CreateLua();
+            Lua::RegisterGUIClasses(pLua_);
+            Lua::RegisterGlobalFuncs(pLua_);
+
+            this->LoadAddOnDirectory_("Interface/BaseUI");
+            this->LoadAddOnDirectory_("Interface/AddOns");
+
+            bClosed_ = false;
+        }
     }
 
     void GUIManager::CloseUI()
     {
+        if (!bClosed_)
+        {
+            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lMainObjectList_.begin();
+            while (iterObj != lMainObjectList_.end())
+            {
+                iterObj->second.Delete();
+                iterObj = lMainObjectList_.begin();
+            }
+
+            map< s_str, s_ptr<GUI::UIObject> >::iterator iterVirtual = lNamedVirtualObjectList_.begin();
+            while (iterVirtual != lNamedVirtualObjectList_.end())
+            {
+                iterVirtual->second.Delete();
+                iterVirtual = lNamedVirtualObjectList_.begin();
+            }
+
+            LuaManager::GetSingleton()->CloseLua(pLua_);
+
+            bClosed_ = true;
+        }
     }
 
     void GUIManager::ReloadUI()
     {
+        CloseUI();
+        LoadUI();
     }
 
     void GUIManager::RenderUI()
