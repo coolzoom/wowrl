@@ -22,7 +22,7 @@ namespace Frost
 
     Stats::Stats()
     {
-        // Note : Default values are there for testing purposes.
+        // NOTE : Default values are there for testing purposes.
         fMaxHealth.SetBaseValue(1000.0f);
         fMaxPower.SetBaseValue(2000.0f);
         fHealthRegenRatio.SetBaseValue(1.0f);

@@ -30,7 +30,6 @@ namespace Frost
 
     // TODO : Unit : Implémenter les sors
     // TODO : Unit : Implémenter le mouvement (+pathfinding)
-    // TODO : Unit : Implémenter la mort
     // TODO : Unit : Implémenter les buffs
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
