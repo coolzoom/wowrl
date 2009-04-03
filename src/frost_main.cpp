@@ -173,8 +173,6 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pChar->SetStat("INTELLECT", s_int(50));
             pModel = pChar->GetBodyModel().Get();
 
-            Log("max health : "+pChar->GetMaxHealth());
-
             switch (mCamType)
             {
                 case CAMERA_FREE :
