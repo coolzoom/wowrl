@@ -148,6 +148,22 @@ namespace Frost
                 return mDummy;
         }
 
+        T& operator [] (const uint& uiIndex)
+        {
+            if (uiIndex < N)
+                return lArray_[uiIndex];
+            else
+                return mDummy;
+        }
+
+        const T& operator [] (const uint& uiIndex) const
+        {
+            if (uiIndex < N)
+                return lArray_[uiIndex];
+            else
+                return mDummy;
+        }
+
         T& operator [] (const s_uint& uiIndex)
         {
             if (uiIndex < N)
