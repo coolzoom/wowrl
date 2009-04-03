@@ -332,12 +332,14 @@ namespace Frost
         vector< s_ptr<AddOn> >::iterator iterAddOn;
         foreach (iterAddOn, lCoreAddOnStack)
         {
-            this->LoadAddOnFiles_(*iterAddOn);
+            if ((*iterAddOn)->bEnabled)
+                this->LoadAddOnFiles_(*iterAddOn);
         }
 
         foreach (iterAddOn, lAddOnStack)
         {
-            this->LoadAddOnFiles_(*iterAddOn);
+            if ((*iterAddOn)->bEnabled)
+                this->LoadAddOnFiles_(*iterAddOn);
         }
     }
 
