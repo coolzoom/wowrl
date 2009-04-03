@@ -72,6 +72,13 @@ namespace Frost
         */
         void            SetAmbient(const Color& mColor);
 
+        /// Sets this Material's polygon render type.
+        /** \param bWireframe 'true' if you only want to render
+        *                     the polygons' edges, 'false' if you
+        *                     want to render the model normally.
+        */
+        void            SetWireframe(const s_bool& bWireframe);
+
         /// Adds a new Decal to this Material.
         /** \param pDecal The new decal
         *   \return The new Decal, copied from the provided one.

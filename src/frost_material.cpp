@@ -167,6 +167,14 @@ namespace Frost
         );
     }
 
+    void Material::SetWireframe( const s_bool& bWireframe )
+    {
+        if (bWireframe)
+            pDefaultPass_->setPolygonMode(Ogre::PM_WIREFRAME);
+        else
+            pDefaultPass_->setPolygonMode(Ogre::PM_SOLID);
+    }
+
     s_ptr<Decal> Material::AddDecal( s_ptr<Decal> pDecal )
     {
         s_ptr<Decal> pNewDecal = new Decal(*pDecal, uiDecalCounter_, pOgreMat_);
