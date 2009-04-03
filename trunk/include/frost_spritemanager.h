@@ -188,12 +188,6 @@ namespace Frost
         */
         void PrepareForRender_(s_bool bGeneral = true);
 
-        /// Converts a set of asbolute coordinates for rendering.
-        /** \param x A reference to the first coordinate
-        *   \param y A reference to the second one
-        */
-        void Convert_(float &x, float &y);
-
         /// Renders the main target on the screen.
         s_bool RenderMainTarget_();
 
