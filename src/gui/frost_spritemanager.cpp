@@ -162,7 +162,7 @@ namespace Frost
 
     /** \cond NOT_REMOVE_FROM_DOC
     */
-    void WriteVertex( float* &pBuffer, uint* &pColorBuffer, Frost::Vertex &mV )
+    inline void WriteVertex( float* &pBuffer, uint* &pColorBuffer, Frost::Vertex &mV )
     {
         *pBuffer = mV.fX.Get();  // x
         pBuffer++;
@@ -307,7 +307,62 @@ namespace Frost
         }
         else
         {
-            pRS_->_setProjectionMatrix(Ogre::Matrix4::IDENTITY);
+            Ogre::Matrix4 mProj = Ogre::Matrix4::IDENTITY;
+            if (mAxisType_ == AXIS_DOWN)
+            {
+                if (bRenderTargets_)
+                {
+                    mProj.setScale(Ogre::Vector3(
+                        2.0f/mRenderTarget_.pOgreRenderTarget->getWidth(),
+                        -2.0f/mRenderTarget_.pOgreRenderTarget->getHeight(),
+                        1.0f
+                    ));
+                }
+                else
+                {
+                    mProj.setScale(Ogre::Vector3(
+                        f2_ScreenWidth_.Get(),
+                        -f2_ScreenHeight_.Get(),
+                        1.0f
+                    ));
+                }
+                mProj = Ogre::Matrix4::getTrans(
+                    fXOffset_.Get() - 1.0f,
+                    fYOffset_.Get() + 1.0f,
+                    0.0f
+                )*mProj;
+            }
+            else
+            {
+                if (bRenderTargets_)
+                {
+                    mProj.setScale(Ogre::Vector3(
+                        2.0f/mRenderTarget_.pOgreRenderTarget->getWidth(),
+                        2.0f/mRenderTarget_.pOgreRenderTarget->getHeight(),
+                        1.0f
+                    ));
+                    mProj = Ogre::Matrix4::getTrans(
+                        fXOffset_.Get() - 1.0f,
+                        -2.0f*mRenderTarget_.uiHeight.Get()/mRenderTarget_.pOgreRenderTarget->getHeight() + fYOffset_.Get() + 1.0f,
+                        0.0f
+                    )*mProj;
+                }
+                else
+                {
+                    mProj.setScale(Ogre::Vector3(
+                        f2_ScreenWidth_.Get(),
+                        f2_ScreenHeight_.Get(),
+                        1.0f
+                    ));
+                    mProj = Ogre::Matrix4::getTrans(
+                        fXOffset_.Get() - 1.0f,
+                        fYOffset_.Get() - 1.0f,
+                        0.0f
+                    )*mProj;
+                }
+            }
+
+            pRS_->_setProjectionMatrix(mProj);
             pRS_->_setCullingMode(Ogre::CULL_NONE);
         }
     }
@@ -375,7 +430,7 @@ namespace Frost
         if (pRenderFunc_)
         {
             // Set up...
-            PrepareForRender_();
+            PrepareForRender_(true);
 
             return (*pRenderFunc_)();
         }
@@ -431,46 +486,9 @@ namespace Frost
         mColorBuffer_.setNull();
     }
 
-    void SpriteManager::Convert_( float &x, float &y )
-    {
-        if (mAxisType_ == AXIS_DOWN)
-        {
-            if (!bRenderTargets_)
-            {
-                x = x*f2_ScreenWidth_.Get(); x += fXOffset_.Get() - 1.0f;
-                y = -y*f2_ScreenHeight_.Get(); y += 1.0f + fYOffset_.Get();
-            }
-            else
-            {
-                x = 2.0f*x/mRenderTarget_.pOgreRenderTarget->getWidth() - 1.0f + fXOffset_.Get();
-                y = -2.0f*y/mRenderTarget_.pOgreRenderTarget->getHeight() + 1.0f + fYOffset_.Get();
-            }
-        }
-        else
-        {
-            if (!bRenderTargets_)
-            {
-                x = x*f2_ScreenWidth_.Get(); x += fXOffset_.Get() - 1.0f;
-                y = y*f2_ScreenHeight_.Get(); y += fYOffset_.Get() - 1.0f;
-            }
-            else
-            {
-                x = 2.0f*x/mRenderTarget_.pOgreRenderTarget->getWidth() - 1.0f + fXOffset_.Get();
-                y = 2.0f*(y - mRenderTarget_.uiHeight.Get())/mRenderTarget_.pOgreRenderTarget->getHeight() + 1.0f + fYOffset_.Get();
-            }
-        }
-    }
-
     void SpriteManager::RenderQuad( const Quad &mQuad )
     {
         lQuadList_.push_back(mQuad);
-        Quad& pQuad = lQuadList_.back();
-
-        // Convert coordinates
-        Convert_(pQuad.lVertexArray[0].fX.GetR(), pQuad.lVertexArray[0].fY.GetR());
-        Convert_(pQuad.lVertexArray[1].fX.GetR(), pQuad.lVertexArray[1].fY.GetR());
-        Convert_(pQuad.lVertexArray[2].fX.GetR(), pQuad.lVertexArray[2].fY.GetR());
-        Convert_(pQuad.lVertexArray[3].fX.GetR(), pQuad.lVertexArray[3].fY.GetR());
     }
 
     void SpriteManager::SetRenderFunction( Function pRenderFunc )
