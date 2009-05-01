@@ -103,7 +103,7 @@ s_str State::ConcTable( const s_str& sTable )
               "end\n"
               "SendString(\"'end' \");\n";
 
-    luaL_dostring(pLua_, s.c_str());
+    luaL_dostring(pLua_, s.GetASCII().c_str());
 
     return sComString;
 }
@@ -216,7 +216,7 @@ s_bool State::DoFile( const s_str& sFile )
 {
     if (File::Exists(sFile))
     {
-        int iError = luaL_dofile(pLua_, sFile.c_str());
+        int iError = luaL_dofile(pLua_, sFile.GetASCII().c_str());
         return HandleError(iError);
     }
     else
@@ -228,7 +228,7 @@ s_bool State::DoFile( const s_str& sFile )
 
 s_bool State::DoString( const s_str& sStr )
 {
-    int iError = luaL_dostring(pLua_, sStr.c_str());
+    int iError = luaL_dostring(pLua_, sStr.GetASCII().c_str());
     return HandleError(iError);
 }
 
@@ -246,7 +246,7 @@ s_bool State::HandleError( int iError )
 s_bool State::CallFunction( const s_str& sFunctionName )
 {
     vector<s_str> lWords = sFunctionName.Cut(":");
-    lua_getglobal(pLua_, lWords.front().c_str());
+    lua_getglobal(pLua_, lWords.front().GetASCII().c_str());
     s_uint uiCounter = 1;
 
     if (lWords.size() > 1)
@@ -258,7 +258,7 @@ s_bool State::CallFunction( const s_str& sFunctionName )
             vector<s_str>::iterator iterWords;
             foreach (iterWords, lWords)
             {
-                lua_getfield(pLua_, -1, iterWords->c_str());
+                lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
                 uiCounter++;
                 if (lua_isnil(pLua_, -1))
                 {
@@ -306,7 +306,7 @@ s_bool State::CallFunction( const s_str& sFunctionName )
 s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
 {
     vector<s_str> lWords = sFunctionName.Cut(":");
-    lua_getglobal(pLua_, lWords.front().c_str());
+    lua_getglobal(pLua_, lWords.front().GetASCII().c_str());
     s_uint uiCounter = 1;
 
     if (lWords.size() > 1)
@@ -317,7 +317,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
             vector<s_str>::iterator iterWords;
             foreach (iterWords, lWords)
             {
-                lua_getfield(pLua_, -1, iterWords->c_str());
+                lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
                 uiCounter++;
                 if (lua_isnil(pLua_, -1))
                 {
@@ -350,7 +350,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
                 (pArg.GetType() == VALUE_DOUBLE))
                 lua_pushnumber(pLua_, pArg.GetF().Get());
             else if (pArg.GetType() == VALUE_STRING)
-                lua_pushstring(pLua_, pArg.GetS().c_str());
+                lua_pushstring(pLua_, pArg.GetS().GetASCII().c_str());
             else if (pArg.GetType() == VALUE_BOOL)
                 lua_pushboolean(pLua_, pArg.GetB().Get());
             else
@@ -380,7 +380,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
 
 void State::Register( const s_str& sFunctionName, lua_CFunction mFunction )
 {
-    lua_register(pLua_, sFunctionName.c_str(), mFunction);
+    lua_register(pLua_, sFunctionName.GetASCII().c_str(), mFunction);
 }
 
 void State::PrintError( const s_str& sError )
@@ -431,7 +431,7 @@ void State::PushBool( const s_bool& bValue )
 
 void State::PushString( const s_str& sValue )
 {
-    lua_pushstring(pLua_, sValue.c_str());
+    lua_pushstring(pLua_, sValue.GetASCII().c_str());
 }
 
 void State::PushNil( const s_uint& uiNumber )
@@ -442,12 +442,12 @@ void State::PushNil( const s_uint& uiNumber )
 
 void State::PushGlobal( const s_str& sName )
 {
-    lua_getglobal(pLua_, sName.c_str());
+    lua_getglobal(pLua_, sName.GetASCII().c_str());
 }
 
 void State::SetGlobal( const s_str& sName )
 {
-    lua_setglobal(pLua_, sName.c_str());
+    lua_setglobal(pLua_, sName.GetASCII().c_str());
 }
 
 void State::NewTable()
@@ -520,7 +520,7 @@ s_str State::GetTypeName( Type mType )
 s_int State::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue )
 {
     s_int i;
-    lua_getglobal(pLua_, sName.c_str());
+    lua_getglobal(pLua_, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -549,7 +549,7 @@ s_int State::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_
 s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue )
 {
     s_float f;
-    lua_getglobal(pLua_, sName.c_str());
+    lua_getglobal(pLua_, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -578,7 +578,7 @@ s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, cons
 s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue )
 {
     s_str s;
-    lua_getglobal(pLua_, sName.c_str());
+    lua_getglobal(pLua_, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -607,7 +607,7 @@ s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const
 s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue )
 {
     s_bool b;
-    lua_getglobal(pLua_, sName.c_str());
+    lua_getglobal(pLua_, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -636,7 +636,7 @@ s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const 
 s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue, const s_bool& bSetValue )
 {
     s_int i;
-    lua_getfield(pLua_, -1, sName.c_str());
+    lua_getfield(pLua_, -1, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -667,7 +667,7 @@ s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_i
 s_float State::GetFieldFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue, const s_bool& bSetValue )
 {
     s_float f;
-    lua_getfield(pLua_, -1, sName.c_str());
+    lua_getfield(pLua_, -1, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -699,7 +699,7 @@ s_float State::GetFieldFloat( const s_str& sName, const s_bool& bCritical, const
 s_str State::GetFieldString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue, const s_bool& bSetValue )
 {
     s_str s;
-    lua_getfield(pLua_, -1, sName.c_str());
+    lua_getfield(pLua_, -1, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -730,7 +730,7 @@ s_str State::GetFieldString( const s_str& sName, const s_bool& bCritical, const 
 s_bool State::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue, const s_bool& bSetValue )
 {
     s_bool b;
-    lua_getfield(pLua_, -1, sName.c_str());
+    lua_getfield(pLua_, -1, sName.GetASCII().c_str());
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
@@ -760,28 +760,28 @@ s_bool State::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s
 
 void State::SetFieldInt( const s_str& sName, const s_int& iValue )
 {
-    lua_pushstring(pLua_, sName.c_str());
+    lua_pushstring(pLua_, sName.GetASCII().c_str());
     lua_pushnumber(pLua_, iValue.Get());
     lua_settable(pLua_, -3);
 }
 
 void State::SetFieldFloat( const s_str& sName, const s_float& fValue )
 {
-    lua_pushstring(pLua_, sName.c_str());
+    lua_pushstring(pLua_, sName.GetASCII().c_str());
     lua_pushnumber(pLua_, fValue.Get());
     lua_settable(pLua_, -3);
 }
 
 void State::SetFieldString( const s_str& sName, const s_str& sValue )
 {
-    lua_pushstring(pLua_, sName.c_str());
-    lua_pushstring(pLua_, sValue.c_str());
+    lua_pushstring(pLua_, sName.GetASCII().c_str());
+    lua_pushstring(pLua_, sValue.GetASCII().c_str());
     lua_settable(pLua_, -3);
 }
 
 void State::SetFieldBool( const s_str& sName, const s_bool& bValue )
 {
-    lua_pushstring(pLua_, sName.c_str());
+    lua_pushstring(pLua_, sName.GetASCII().c_str());
     lua_pushboolean(pLua_, bValue.Get());
     lua_settable(pLua_, -3);
 }
@@ -803,7 +803,7 @@ void State::SetFieldFloat( const s_int& iID, const s_float& fValue )
 void State::SetFieldString( const s_int& iID, const s_str& sValue )
 {
     lua_pushnumber(pLua_, iID.Get());
-    lua_pushstring(pLua_, sValue.c_str());
+    lua_pushstring(pLua_, sValue.GetASCII().c_str());
     lua_settable(pLua_, -3);
 }
 

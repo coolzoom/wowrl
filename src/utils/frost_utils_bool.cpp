@@ -28,7 +28,7 @@ namespace Frost
         bValue_ = bValue;
     }
 
-    s_bool::s_bool( const char* sValue )
+    s_bool::s_bool( const string_object& sValue )
     {
         if ((s_str(sValue) == BOOL_TRUE) ||
             (s_str(sValue) == BOOL_ONE)  ||
@@ -38,7 +38,7 @@ namespace Frost
             bValue_ = false;
     }
 
-    s_bool::s_bool( const string& sValue )
+    s_bool::s_bool( const string_element* sValue )
     {
         if ((s_str(sValue) == BOOL_TRUE) ||
             (s_str(sValue) == BOOL_ONE)  ||
@@ -92,15 +92,28 @@ namespace Frost
         return (!bValue_);
     }
 
-    s_str operator+ ( const char* sLeft, const s_bool& bRight )
+    s_str operator+ ( const string_element* sLeft, const s_bool& bRight )
     {
         return s_str(sLeft) << bRight;
     }
 
-    s_str s_bool::operator+ ( const char* sValue ) const
+    s_str s_bool::operator+ ( const string_element* sValue ) const
     {
         return s_str(*this) + sValue;
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const s_bool& bRight )
+        {
+            return s_str(sLeft) << bRight;
+        }
+
+        s_str s_bool::operator+ ( const char* sValue ) const
+        {
+            return s_str(*this) + sValue;
+        }
+    #endif
+
 
     s_str s_bool::operator+ ( const s_str& sValue ) const
     {

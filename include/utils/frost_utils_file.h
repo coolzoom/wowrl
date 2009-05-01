@@ -22,6 +22,18 @@ namespace Frost
         FILE_O
     };
 
+    #ifdef USE_UNICODE
+        typedef wchar_t string_element;
+        typedef std::wstring string_object;
+        typedef std::wstringstream string_stream;
+        typedef std::wfstream file_stream;
+    #else
+        typedef char string_element;
+        typedef std::string string_object;
+        typedef std::stringstream string_stream;
+        typedef std::fstream file_stream;
+    #endif
+
     /// A tool to input some data
     /** Built upon std::fstream, this class offers
     *   almost the exact same possibilities. The
@@ -97,7 +109,7 @@ namespace Frost
         /// Returns the next character.
         /** \return The next character
         */
-        char        Get();
+        string_element Get();
 
         /// Extracts a block(n-1) of unformated data until \\n is found.
         /** \param[out] sBuffer A buffer string object
@@ -115,33 +127,33 @@ namespace Frost
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
-        void        Get(char* sBuffer, const s_uint& uiSize);
+        void        Get(string_element* sBuffer, const s_uint& uiSize);
 
         /// Extracts a block(n) of unformated data.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
-        void        Read(char* sBuffer, const s_uint& uiSize);
+        void        Read(string_element* sBuffer, const s_uint& uiSize);
 
         /// Extracts a block(n-1) of unformated data until a character is found.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         *   \param      cDelim  Extraction should stop when this char is encountered
         */
-        void        Get(s_str& sBuffer, const s_uint& uiSize, const char& cDelim);
+        void        Get(s_str& sBuffer, const s_uint& uiSize, const string_element& cDelim);
 
         /// Writes down a char array into the file.
         /** \param sBuffer The char array (can be a casted type)
         *   \param uiSize  The number of char to write to the file
         *   \note This function changes the writing position
         */
-        void        Write(const char* sBuffer, const s_uint& uiSize);
+        void        Write(const string_element* sBuffer, const s_uint& uiSize);
 
         /// Writes down a single char into the file.
         /** \param cChar The char to write down
         *   \note This function changes the writing position
         */
-        void        Write(const char& cChar);
+        void        Write(const string_element& cChar);
 
         /// Forces writing everything to the file.
         void        Flush();
@@ -158,9 +170,9 @@ namespace Frost
     private :
 
         /// The file stream object
-        std::fstream mFile_;
+        file_stream mFile_;
         /// The name of this file
-        s_str        sName_;
+        s_str       sName_;
     };
 }
 

@@ -131,22 +131,25 @@ namespace Frost
         iValue_ = 0;
     }
 
-    s_int::s_int( const char* sValue )
+    s_int::s_int( const string_element* sValue )
     {
         mType_ = INTEGER;
-        iValue_ = atoi(sValue);
+        string_stream s(sValue);
+        s >> iValue_;
     }
 
-    s_int::s_int( const string& sValue )
+    s_int::s_int( const string_object& sValue )
     {
         mType_ = INTEGER;
-        iValue_ = atoi(sValue.c_str());
+        string_stream s(sValue);
+        s >> iValue_;
     }
 
     s_int::s_int( const s_str& sValue )
     {
         mType_ = INTEGER;
-        iValue_ = atoi(sValue.c_str());
+        string_stream s(sValue.Get());
+        s >> iValue_;
     }
 
     s_int::IntegerType s_int::GetType() const
@@ -703,15 +706,27 @@ namespace Frost
             return s_int(INTEGER_NAN);
     }
 
-    s_str operator+ ( const char* sLeft, const s_int& iRight )
+    s_str operator+ ( const string_element* sLeft, const s_int& iRight )
     {
         return s_str(sLeft) << iRight;
     }
 
-    s_str s_int::operator+ ( const char* sValue ) const
+    s_str s_int::operator+ ( const string_element* sValue ) const
     {
         return s_str(*this) + sValue;
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const s_int& iRight )
+        {
+            return s_str(sLeft) << iRight;
+        }
+
+        s_str s_int::operator+ ( const char* sValue ) const
+        {
+            return s_str(*this) + sValue;
+        }
+    #endif
 
     s_str s_int::operator+ ( const s_str& sValue ) const
     {

@@ -13,9 +13,6 @@
 #include "frost_utils.h"
 #include "frost_utils_log.h"
 
-#include <sstream>
-#include <algorithm>
-
 #ifdef FROST_LINUX
     #include <cstdlib>
 #endif
@@ -24,33 +21,53 @@ using namespace std;
 
 namespace Frost
 {
-    char s_str::cDummy = '\0';
+    string_element s_str::cDummy = STRING('\0');
     const s_str s_str::CLASS_NAME = "s_str";
 
     s_str::s_str()
     {
-        sValue_ = "";
+        sValue_ = STRING("");
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
     }
 
-    s_str::s_str( const string& sValue )
+
+    s_str::s_str( const string_object& sValue )
     {
         sValue_ = sValue;
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
     }
 
-    s_str::s_str( const char* sValue )
+    #ifdef USE_UNICODE
+        s_str::s_str( const string& sValue )
+        {
+            const uchar* str = reinterpret_cast<const uchar*>(sValue.c_str());
+            sValue_ = wstring(str, str + sValue.size());
+            mIntConvType_ = CONV_DECIMAL;
+            mBoolConvType_ = CONV_TRUE_FALSE;
+        }
+
+        s_str::s_str( const char* sValue )
+        {
+            string s = sValue;
+            const uchar* str = reinterpret_cast<const uchar*>(s.c_str());
+            sValue_ = wstring(str, str + s.size());
+            mIntConvType_ = CONV_DECIMAL;
+            mBoolConvType_ = CONV_TRUE_FALSE;
+        }
+    #endif
+
+    s_str::s_str( const string_element* sValue )
     {
         sValue_ = sValue;
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
     }
 
-    s_str::s_str( const char& cValue, const s_uint& uiCharNbr )
+    s_str::s_str( const string_element& cValue, const s_uint& uiCharNbr )
     {
-        sValue_ = string(uiCharNbr.Get(), cValue);
+        sValue_ = string_object(uiCharNbr.Get(), cValue);
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
     }
@@ -59,7 +76,7 @@ namespace Frost
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(iValue);
     }
 
@@ -67,7 +84,7 @@ namespace Frost
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(uiValue);
     }
 
@@ -75,7 +92,7 @@ namespace Frost
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(fValue);
     }
 
@@ -83,7 +100,7 @@ namespace Frost
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(dValue);
     }
 
@@ -91,15 +108,15 @@ namespace Frost
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(bValue);
     }
 
-    s_str::s_str( const char& cValue )
+    s_str::s_str( const string_element& cValue )
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator+=(cValue);
     }
 
@@ -107,44 +124,44 @@ namespace Frost
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(iValue);
 
         while (sValue_.length() < uiCharNbr.Get())
-            sValue_ = '0' + sValue_;
+            sValue_ = STRING('0') + sValue_;
     }
 
     s_str::s_str(const s_uint& uiValue, const s_uint& uiCharNbr)
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(uiValue);
 
         while (sValue_.length() < uiCharNbr.Get())
-            sValue_ = '0' + sValue_;
+            sValue_ = STRING('0') + sValue_;
     }
 
     s_str::s_str(const s_float& fValue, const s_uint& uiCharNbr)
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(fValue);
 
         while (sValue_.length() < uiCharNbr.Get())
-            sValue_ = '0' + sValue_;
+            sValue_ = STRING('0') + sValue_;
     }
 
     s_str::s_str(const s_double& dValue, const s_uint& uiCharNbr)
     {
         mIntConvType_ = CONV_DECIMAL;
         mBoolConvType_ = CONV_TRUE_FALSE;
-        sValue_ = "";
+        sValue_ = STRING("");
         this->operator<<(dValue);
 
         while (sValue_.length() < uiCharNbr.Get())
-            sValue_ = '0' + sValue_;
+            sValue_ = STRING('0') + sValue_;
     }
 
     void s_str::Clear()
@@ -165,7 +182,7 @@ namespace Frost
                 s_bool bEmpty = true;
                 for (uint i = 0; i < sValue_.length(); i++)
                 {
-                    if ( (sValue_[i] != ' ') && (sValue_[i] != '	') )
+                    if ( (sValue_[i] != STRING(' ')) && (sValue_[i] != STRING('	')) )
                     {
                         bEmpty = false;
                         break;
@@ -183,7 +200,7 @@ namespace Frost
 
     s_bool s_str::IsNumber() const
     {
-        stringstream mTemp(sValue_);
+        string_stream mTemp(sValue_);
         double dValue;
         mTemp >> dValue;
         return !mTemp.fail();
@@ -194,27 +211,27 @@ namespace Frost
         switch (mBoolConvType_)
         {
             case CONV_TRUE_FALSE :
-                return ((sValue_ == "false") || (sValue_ == "true"));
+                return ((sValue_ == STRING("false")) || (sValue_ == STRING("true")));
             case CONV_1_0 :
-                return ((sValue_ == "0")     || (sValue_ == "1"));
+                return ((sValue_ == STRING("0"))     || (sValue_ == STRING("1")));
             case CONV_YES_NO :
-                return ((sValue_ == "no")    || (sValue_ == "yes"));
+                return ((sValue_ == STRING("no"))    || (sValue_ == STRING("yes")));
             default :
                 return false;
         }
     }
 
-    char& s_str::operator[] ( const s_uint& uiIndex )
+    string_element& s_str::operator[] ( const s_uint& uiIndex )
     {
-        if (uiIndex.Get() < sValue_.size())
+        if ( uiIndex.IsValid() &&  (uiIndex.Get() < sValue_.size()) )
             return sValue_[uiIndex.Get()];
         else
             return cDummy;
     }
 
-    const char& s_str::operator[] ( const s_uint& uiIndex ) const
+    const string_element& s_str::operator[] ( const s_uint& uiIndex ) const
     {
-        if (uiIndex.Get() < sValue_.size())
+        if ( uiIndex.IsValid() && (uiIndex.Get() < sValue_.size()) )
             return sValue_[uiIndex.Get()];
         else
             return cDummy;
@@ -225,17 +242,26 @@ namespace Frost
         return s_str(sValue_ + mValue.sValue_);
     }
 
-    s_str s_str::operator+ ( const char& cValue ) const
+    s_str s_str::operator+ ( const string_element& cValue ) const
     {
-        string sTemp = sValue_;
+        string_object sTemp = sValue_;
         sTemp.append(1, cValue);
         return s_str(sTemp);
     }
 
-    s_str s_str::operator+ (const char* sValue) const
+    s_str s_str::operator+ (const string_element* sValue) const
     {
         return s_str(sValue_ + sValue);
     }
+
+    #ifdef USE_UNICODE
+        s_str s_str::operator+ (const char* sValue) const
+        {
+            string s = sValue;
+            const uchar* str = reinterpret_cast<const uchar*>(s.c_str());
+            return sValue_ + wstring(str, str + s.size());
+        }
+    #endif
 
     s_str s_str::operator+ (const s_int& iValue) const
     {
@@ -266,7 +292,7 @@ namespace Frost
     {
         if (uiNumber.Get() < sValue_.size())
         {
-            string sTemp = sValue_;
+            string_object sTemp = sValue_;
             sTemp = sTemp.substr(0, sTemp.size()-uiNumber.Get());
             return s_str(sTemp);
         }
@@ -279,7 +305,7 @@ namespace Frost
         sValue_ += mValue.sValue_;
     }
 
-    void s_str::operator+= ( const char& cValue )
+    void s_str::operator+= ( const string_element& cValue )
     {
         sValue_.append(1, cValue);
     }
@@ -289,7 +315,7 @@ namespace Frost
         if (uiNumber.Get() < sValue_.size())
             sValue_ = sValue_.substr(0, sValue_.size()-uiNumber.Get());
         else
-            sValue_ = "";
+            sValue_ = STRING("");
     }
 
     bool s_str::operator== ( const s_str& mValue ) const
@@ -336,60 +362,39 @@ namespace Frost
         return *this;
     }
 
-    s_str& s_str::operator<< ( const char* sValue )
+    s_str& s_str::operator<< ( const string_element* sValue )
     {
         sValue_ += sValue;
         return *this;
     }
 
-    #ifdef FROST_LINUX
-    // Code taken from : http://www.jb.man.ac.uk/~slowe/cpp/itoa.html
-    char* itoa ( int iValue, char* sResult, int iBase )
-    {
-        // Check that the base is valid
-        if (iBase < 2 || iBase > 16)
-        {
-            *sResult = 0;
-            return sResult;
-        }
-
-        char* sOut = sResult;
-        int iQuotient = iValue;
-
-        do
-        {
-            *sOut = "0123456789abcdef"[ std::abs( iQuotient % iBase ) ];
-
-            ++sOut;
-
-            iQuotient /= iBase;
-
-        } while (iQuotient);
-
-        // Only apply negative sign for base 10
-        if ( iValue < 0 && iBase == 10) *sOut++ = '-';
-
-        std::reverse(sResult, sOut);
-        *sOut = 0;
-
-        return sResult;
-
-    }
-    #endif
-
     s_str& s_str::operator<< ( const int& iValue )
     {
-        unsigned int uiBase = 10;
+        string_stream sStream;
+
         switch (mIntConvType_)
         {
-            case CONV_DECIMAL : uiBase = 10; break;
-            case CONV_HEXA : uiBase = 16; break;
-            case CONV_BIN : uiBase = 2; break;
+            case CONV_DECIMAL :
+            {
+                sStream << iValue;
+                break;
+            }
+            case CONV_HEXA :
+            {
+                sStream << hex << iValue;
+                break;
+            }
+            case CONV_BIN :
+            {
+                // TODO
+                break;
+            }
         }
-        char* sTemp = new char[12];
-        itoa(iValue, sTemp, uiBase);
-        sValue_ += sTemp;
-        delete sTemp;
+
+        string_object sValue;
+        sStream >> sValue;
+        sValue_ += sValue;
+
         return *this;
     }
 
@@ -400,7 +405,7 @@ namespace Frost
 
     s_str& s_str::operator<< ( const float& fValue )
     {
-        ostringstream sStream;
+        string_stream sStream;
         sStream << fValue;
         sValue_ += sStream.str();
         return *this;
@@ -408,7 +413,7 @@ namespace Frost
 
     s_str& s_str::operator<< ( const double& dValue )
     {
-        ostringstream sStream;
+        string_stream sStream;
         sStream << dValue;
         sValue_ += sStream.str();
         return *this;
@@ -416,19 +421,19 @@ namespace Frost
 
     s_str& s_str::operator<< ( const bool& bValue )
     {
-        string sChoice[2] = { "", "" };
+        string_object sChoice[2] = { STRING(""), STRING("") };
         switch (mBoolConvType_)
         {
-            case CONV_TRUE_FALSE : sChoice[0] = "false"; sChoice[1] = "true"; break;
-            case CONV_1_0 : sChoice[0] = "0"; sChoice[1] = "1"; break;
-            case CONV_YES_NO : sChoice[0] = "no"; sChoice[1] = "yes"; break;
+            case CONV_TRUE_FALSE : sChoice[0] = STRING("false"); sChoice[1] = STRING("true"); break;
+            case CONV_1_0 : sChoice[0] = STRING("0"); sChoice[1] = STRING("1"); break;
+            case CONV_YES_NO : sChoice[0] = STRING("no"); sChoice[1] = STRING("yes"); break;
         }
 
         sValue_ += sChoice[(int)bValue];
         return *this;
     }
 
-    s_str& s_str::operator<< ( const char& cValue )
+    s_str& s_str::operator<< ( const string_element& cValue )
     {
         this->operator+=(cValue);
         return *this;
@@ -563,7 +568,7 @@ namespace Frost
 
     void s_str::CapitalStart( const s_bool& bCapitalStart )
     {
-        char cFirst = (*this)[0];
+        string_element cFirst = (*this)[0];
         if (bCapitalStart)
             (*this)[0] = toupper(cFirst);
         else
@@ -612,7 +617,7 @@ namespace Frost
     void s_str::Erase( const s_uint& uiStart, const s_uint& uiNbr )
     {
         if (!uiNbr.IsValid())
-            sValue_.erase(uiStart.Get(), string::npos);
+            sValue_.erase(uiStart.Get(), string_object::npos);
         else
             sValue_.erase(uiStart.Get(), uiNbr.Get());
     }
@@ -620,7 +625,7 @@ namespace Frost
     void s_str::EraseRange( const s_uint& uiStart, const s_uint& uiEnd )
     {
         if (!uiEnd.IsValid())
-            sValue_.erase(uiStart.Get(), string::npos);
+            sValue_.erase(uiStart.Get(), string_object::npos);
         else
             sValue_.erase(uiStart.Get(), (uiEnd-uiStart).Get());
     }
@@ -640,7 +645,7 @@ namespace Frost
     s_str s_str::Extract( const s_uint& uiStart, const s_uint& uiNbr ) const
     {
         if (!uiNbr.IsValid())
-            return s_str(sValue_.substr(uiStart.Get(), string::npos));
+            return s_str(sValue_.substr(uiStart.Get(), string_object::npos));
         else
             return s_str(sValue_.substr(uiStart.Get(), uiNbr.Get()));
     }
@@ -648,9 +653,18 @@ namespace Frost
     s_str s_str::ExtractRange( const s_uint& uiStart, const s_uint& uiEnd ) const
     {
         if (!uiEnd.IsValid())
-            return s_str(sValue_.substr(uiStart.Get(), string::npos));
+            return s_str(sValue_.substr(uiStart.Get(), string_object::npos));
         else
             return s_str(sValue_.substr(uiStart.Get(), (uiEnd-uiStart).Get()));
+    }
+
+    s_uint s_str::HexToUInt() const
+    {
+        uint i;
+        string_stream s;
+        s << sValue_;
+        s >> hex >> i;
+        return i;
     }
 
     s_uint s_str::Length() const
@@ -673,7 +687,7 @@ namespace Frost
         std::transform(sValue_.begin(), sValue_.end(), sValue_.begin(), ::toupper);
     }
 
-    s_uint s_str::Trim( const char& cPattern )
+    s_uint s_str::Trim( const string_element& cPattern )
     {
         s_uint uiCount;
         while ((*this)[0] == cPattern)
@@ -704,10 +718,17 @@ namespace Frost
         return uiCount;
     }
 
-    s_str operator+( const char* sLeft, const s_str& sRight)
+    s_str operator+ ( const string_element* sLeft, const s_str& sRight )
     {
         return s_str(sLeft) + sRight;
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const s_str& sRight )
+        {
+            return s_str(sLeft) + sRight;
+        }
+    #endif
 
     s_ctnr<s_str> s_str::operator, ( const s_str& sValue ) const
     {
@@ -729,5 +750,177 @@ namespace Frost
         s_str sCopy = sValue;
         sCopy.ToUpper();
         return sCopy;
+    }
+
+    s_str::iterator::iterator()
+    {
+    }
+
+    s_str::iterator::iterator(s_str* pParent, const s_uint& uiPos)
+    {
+        pParent_ = pParent;
+        uiPos_ = uiPos;
+    }
+
+    string_element& s_str::iterator::operator * ()
+    {
+        return (*pParent_)[uiPos_];
+    }
+
+    s_str::iterator& s_str::iterator::operator ++ ()
+    {
+        ++uiPos_;
+        if (uiPos_ == pParent_->Length())
+            uiPos_ = s_uint::NaN;
+
+        return *this;
+    }
+
+    s_str::iterator  s_str::iterator::operator ++ (int)
+    {
+        uiPos_++;
+        if (uiPos_ == pParent_->Length())
+            uiPos_ = s_uint::NaN;
+
+        return *this;
+    }
+
+    s_str::iterator& s_str::iterator::operator -- ()
+    {
+        if (uiPos_ != 0)
+            --uiPos_;
+
+        return *this;
+    }
+
+    s_str::iterator  s_str::iterator::operator -- (int)
+    {
+        if (uiPos_ != 0)
+            uiPos_--;
+
+        return *this;
+    }
+
+    s_bool s_str::iterator::operator != (s_str::iterator iter)
+    {
+        if (uiPos_.IsNaN())
+        {
+            if (iter.uiPos_.IsNaN())
+                return (pParent_ != iter.pParent_);
+            else
+                return true;
+        }
+        else
+        {
+            if (iter.uiPos_.IsNaN())
+                return true;
+            else
+                return (pParent_ != iter.pParent_) && (uiPos_ != iter.uiPos_);
+        }
+    }
+
+    s_str::const_iterator::const_iterator()
+    {
+    }
+
+    s_str::const_iterator::const_iterator(const s_str* pParent, const s_uint& uiPos)
+    {
+        pParent_ = pParent;
+        uiPos_ = uiPos;
+    }
+
+    const string_element& s_str::const_iterator::operator * ()
+    {
+        return (*pParent_)[uiPos_];
+    }
+
+    s_str::const_iterator& s_str::const_iterator::operator ++ ()
+    {
+        ++uiPos_;
+        if (uiPos_ == pParent_->Length())
+            uiPos_ = s_uint::NaN;
+
+        return *this;
+    }
+
+    s_str::const_iterator  s_str::const_iterator::operator ++ (int)
+    {
+        uiPos_++;
+        if (uiPos_ == pParent_->Length())
+            uiPos_ = s_uint::NaN;
+
+        return *this;
+    }
+
+    s_str::const_iterator& s_str::const_iterator::operator -- ()
+    {
+        if (uiPos_ != 0)
+            --uiPos_;
+
+        return *this;
+    }
+
+    s_str::const_iterator  s_str::const_iterator::operator -- (int)
+    {
+        if (uiPos_ != 0)
+            uiPos_--;
+
+        return *this;
+    }
+
+    s_bool s_str::const_iterator::operator != (s_str::const_iterator iter)
+    {
+        if (uiPos_.IsNaN())
+        {
+            if (iter.uiPos_.IsNaN())
+                return (pParent_ != iter.pParent_);
+            else
+                return true;
+        }
+        else
+        {
+            if (iter.uiPos_.IsNaN())
+                return true;
+            else
+                return (pParent_ != iter.pParent_) && (uiPos_ != iter.uiPos_);
+        }
+    }
+
+    s_str::iterator s_str::begin()
+    {
+        return iterator(this, 0);
+    }
+
+    s_str::const_iterator s_str::begin() const
+    {
+        return const_iterator(this, 0);
+    }
+
+    s_str::iterator s_str::end()
+    {
+        return iterator(this, s_uint::NaN);
+    }
+
+    s_str::const_iterator s_str::end() const
+    {
+        return const_iterator(this, s_uint::NaN);
+    }
+
+    string s_str::GetASCII() const
+    {
+        #ifdef USE_UNICODE
+            return string(sValue_.c_str(), sValue_.c_str() + sValue_.size());
+        #else
+            return sValue_;
+        #endif
+    }
+
+    wstring s_str::GetUnicode() const
+    {
+        #ifdef USE_UNICODE
+            return sValue_;
+        #else
+            return wstring(sValue_.c_str(), sValue_.c_str() + sValue_.size());
+        #endif
     }
 }

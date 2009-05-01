@@ -21,6 +21,18 @@ namespace Frost
     class s_str;
     template<class T> class s_ctnr;
 
+    #ifdef USE_UNICODE
+        typedef wchar_t string_element;
+        typedef std::wstring string_object;
+        typedef std::wstringstream string_stream;
+        typedef std::wfstream file_stream;
+    #else
+        typedef char string_element;
+        typedef std::string string_object;
+        typedef std::stringstream string_stream;
+        typedef std::fstream file_stream;
+    #endif
+
     enum IntegerConversionType
     {
         CONV_DECIMAL,
@@ -41,7 +53,10 @@ namespace Frost
     *   They simplify conversions (mostly to string),
     *   allow easy access to math/string functions and
     *   implements new functions that are not present
-    *   in the standard libraries.
+    *   in the standard libraries.<br>
+    *   This class can be compiled to use either Unicode
+    *   or ASCII characters. Just set the preprocessor
+    *   directive USE_UNICODE.
     */
     class s_str
     {
@@ -50,15 +65,27 @@ namespace Frost
         /// Constructor.
         s_str();
 
-        /// std::string constructor.
+        /// Constructor.
         /** \param sValue The string to use
         */
-        s_str(const std::string& sValue);
+        s_str(const string_object& sValue);
 
-        /// const char* constructor.
+        /// Constructor.
         /** \param sValue The string to use
         */
-        s_str(const char* sValue);
+        s_str(const string_element* sValue);
+
+        #ifdef USE_UNICODE
+            /// Constructor.
+            /** \param sValue The string to use
+            */
+            s_str(const std::string& sValue);
+
+            /// Constructor.
+            /** \param sValue The string to use
+            */
+            s_str(const char* sValue);
+        #endif
 
         /// s_int conversion constructor.
         /** \param iValue The s_int to convert
@@ -113,17 +140,17 @@ namespace Frost
         */
         explicit s_str(const s_bool& bValue);
 
-        /// char conversion constructor.
-        /** \param cValue The char to convert
+        /// char/wchar_t conversion constructor.
+        /** \param cValue The char/wchar_t to convert
         */
-        explicit s_str(const char& cValue);
+        explicit s_str(const string_element& cValue);
 
-        /// char conversion constructor.
-        /** \param cValue    The char to convert
+        /// char/wchar_t conversion constructor.
+        /** \param cValue    The char/wchar_t to convert
         *   \param uiCharNbr The number of time to copy this
         *                    character
         */
-        explicit s_str(const char& cValue, const s_uint& uiCharNbr);
+        explicit s_str(const string_element& cValue, const s_uint& uiCharNbr);
 
         /// Changes the case of the first character.
         /** \param bCapitalStart If 'true', the first character will be
@@ -204,17 +231,33 @@ namespace Frost
         /// Returns a const reference to the string.
         /** \return A const reference to the string
         */
-        inline const std::string& Get() const { return sValue_; }
+        inline const string_object& Get() const { return sValue_; }
+
+        /// Returns the string converted to ASCII.
+        /** \return The string converted to ASCII
+        */
+        std::string GetASCII() const;
+
+        /// Returns the string converted to Unicode.
+        /** \return The string converted to Unicode
+        */
+        std::wstring GetUnicode() const;
 
         /// Returns a C-style string.
         /** \return A C-style string
         */
-        inline const char*  c_str() const { return sValue_.c_str(); }
+        inline const string_element* c_str() const { return sValue_.c_str(); }
 
         /// Returns a reference to the string.
         /** \return A reference to the string
         */
-        inline std::string& GetR() { return sValue_; }
+        inline string_object& GetR() { return sValue_; }
+
+        /// Returns this string converted to a uint
+        /** \return This string converted to a uint
+        *   \note Assumes this string is an hexadecimal number : '0F', 'FF', '12A0', ...
+        */
+        s_uint              HexToUInt() const;
 
         /// Checks if the string is empty.
         /** \param bIgnoreSpaces Set to 'true' if you want a string to be reported as
@@ -253,7 +296,7 @@ namespace Frost
         /** \param cPattern The character to remove
         *   \return The number of character erased
         */
-        s_uint              Trim(const char& cPattern);
+        s_uint              Trim(const string_element& cPattern);
 
         /// Replaces a pattern by another string.
         /** \param sPattern     The string to search for
@@ -262,11 +305,14 @@ namespace Frost
         */
         s_uint              Replace(const s_str& sPattern, const s_str& sReplacement);
 
-        char&               operator [] (const s_uint& uiIndex);
-        const char&         operator [] (const s_uint& uiIndex) const;
+        string_element&     operator [] (const s_uint& uiIndex);
+        const string_element& operator [] (const s_uint& uiIndex) const;
         s_str               operator +  (const s_str& mValue) const;
+        s_str               operator +  (const string_element* sValue) const;
+        #ifdef USE_UNICODE
         s_str               operator +  (const char* sValue) const;
-        s_str               operator +  (const char& cValue) const;
+        #endif
+        s_str               operator +  (const string_element& cValue) const;
         s_str               operator +  (const s_int& iValue) const;
         s_str               operator +  (const s_uint& uiValue) const;
         s_str               operator +  (const s_float& fValue) const;
@@ -274,7 +320,7 @@ namespace Frost
         s_str               operator +  (const s_bool& bValue) const;
         s_str               operator -  (const s_uint& uiNumber) const;
         void                operator += (const s_str& mValue);
-        void                operator += (const char& cValue);
+        void                operator += (const string_element& cValue);
         void                operator -= (const s_uint& uiNumber);
 
         bool                operator == (const s_str& mValue) const;
@@ -287,13 +333,13 @@ namespace Frost
         s_str&              operator =  (const s_str& mValue);
 
         s_str&              operator << (const s_str& mValue);
-        s_str&              operator << (const char* sValue);
+        s_str&              operator << (const string_element* sValue);
         s_str&              operator << (const int& iValue);
         s_str&              operator << (const uint& uiValue);
         s_str&              operator << (const float& fValue);
         s_str&              operator << (const double& dValue);
         s_str&              operator << (const bool& bValue);
-        s_str&              operator << (const char& cValue);
+        s_str&              operator << (const string_element& cValue);
         s_str&              operator << (const void* pValue);
         s_str&              operator << (const s_int& iValue);
         s_str&              operator << (const s_uint& uiValue);
@@ -305,7 +351,7 @@ namespace Frost
 
         s_ctnr<s_str>       operator ,  (const s_str& sValue) const;
 
-        static char cDummy;
+        static string_element cDummy;
         static const s_str CLASS_NAME;
 
         /// Makes the provided string lower case.
@@ -320,20 +366,77 @@ namespace Frost
         */
         static s_str ToUpper(const s_str& sValue);
 
+        // For STL iteration macros compatibility :
+        class iterator
+        {
+        public :
+
+            iterator();
+            iterator(s_str* pParent, const s_uint& uiPos);
+
+            string_element& operator * ();
+            iterator& operator ++ ();
+            iterator  operator ++ (int);
+            iterator& operator -- ();
+            iterator  operator -- (int);
+            s_bool iterator::operator != (iterator iter);
+
+        private :
+
+            s_str* pParent_;
+            s_uint uiPos_;
+
+        };
+
+        class const_iterator
+        {
+        public :
+
+            const_iterator();
+            const_iterator(const s_str* pParent, const s_uint& uiPos);
+
+            const string_element& operator * ();
+            const_iterator& operator ++ ();
+            const_iterator  operator ++ (int);
+            const_iterator& operator -- ();
+            const_iterator  operator -- (int);
+            s_bool const_iterator::operator != (const_iterator iter);
+
+        private :
+
+            const s_str* pParent_;
+            s_uint uiPos_;
+
+        };
+
+        iterator begin();
+        const_iterator begin() const;
+        iterator end();
+        const_iterator end() const;
+
     private :
 
-        std::string           sValue_;
+        string_object         sValue_;
         IntegerConversionType mIntConvType_;
         BoolConversionType    mBoolConvType_;
 
     };
 
-    s_str operator+ (const char* sLeft, const s_str& sRight);
-    s_str operator+ (const char* sLeft, const s_int& iRight);
-    s_str operator+ (const char* sLeft, const s_uint& uiRight);
-    s_str operator+ (const char* sLeft, const s_float& fRight);
-    s_str operator+ (const char* sLeft, const s_double& dRight);
-    s_str operator+ (const char* sLeft, const s_bool& bRight);
+    s_str operator+ (const string_element* sLeft, const s_str& sRight);
+    s_str operator+ (const string_element* sLeft, const s_int& iRight);
+    s_str operator+ (const string_element* sLeft, const s_uint& uiRight);
+    s_str operator+ (const string_element* sLeft, const s_float& fRight);
+    s_str operator+ (const string_element* sLeft, const s_double& dRight);
+    s_str operator+ (const string_element* sLeft, const s_bool& bRight);
+
+    #ifdef USE_UNICODE
+        s_str operator+ (const char* sLeft, const s_str& sRight);
+        s_str operator+ (const char* sLeft, const s_int& iRight);
+        s_str operator+ (const char* sLeft, const s_uint& uiRight);
+        s_str operator+ (const char* sLeft, const s_float& fRight);
+        s_str operator+ (const char* sLeft, const s_double& dRight);
+        s_str operator+ (const char* sLeft, const s_bool& bRight);
+    #endif
 }
 
 #endif

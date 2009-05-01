@@ -305,10 +305,17 @@ namespace Frost
         return Vector(mVector.x, mVector.y, mVector.z);
     }
 
-    s_str operator + (const char* sLeft, const Vector& mRight)
+    s_str operator + (const string_element* sLeft, const Vector& mRight)
     {
         return s_str(sLeft)+mRight;
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ (const char* sLeft, const Vector& mRight)
+        {
+            return s_str(sLeft)+mRight;
+        }
+    #endif
 
     s_str operator + (const s_str& sLeft, const Vector& mRight)
     {

@@ -23,16 +23,16 @@ namespace Frost
         sName_ = sRelPath_.Cut("/").back();
 
         s_ptr<Ogre::Archive> pFrostMain = Ogre::ArchiveManager::getSingleton().load("./", "FileSystem");
-        if (pFrostMain->exists(sRelPath_.Get()))
+        if (pFrostMain->exists(sRelPath_.GetASCII()))
         {
-            s_ptr<Ogre::Archive> pArchive = Ogre::ArchiveManager::getSingleton().load(sRelPath_.Get(), "FileSystem");
+            s_ptr<Ogre::Archive> pArchive = Ogre::ArchiveManager::getSingleton().load(sRelPath_.GetASCII(), "FileSystem");
             if (pArchive)
             {
                 Ogre::StringVectorPtr pSV = pArchive->list(false, true);
                 Ogre::StringVector::iterator iter;
                 for (iter = pSV->begin(); iter != pSV->end(); iter++)
                 {
-                    lSubDirectoryList_.push_back(Directory(sRelPath_ + "/" + (*iter)));
+                    lSubDirectoryList_.push_back(Directory(sRelPath_ + "/" + s_str(*iter)));
                 }
 
                 pSV = pArchive->list(false, false);

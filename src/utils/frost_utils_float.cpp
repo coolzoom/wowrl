@@ -127,22 +127,25 @@ namespace Frost
         fValue_ = 0.0f;
     }
 
-    s_float::s_float( const char* sValue )
+    s_float::s_float( const string_element* sValue )
     {
         mType_ = FLOAT;
-        fValue_ = atof(sValue);
+        string_stream s(sValue);
+        s >> fValue_;
     }
 
-    s_float::s_float( const string& sValue )
+    s_float::s_float( const string_object& sValue )
     {
         mType_ = FLOAT;
-        fValue_ = atof(sValue.c_str());
+        string_stream s(sValue);
+        s >> fValue_;
     }
 
     s_float::s_float( const s_str& sValue )
     {
         mType_ = FLOAT;
-        fValue_ = atof(sValue.c_str());
+        string_stream s(sValue.Get());
+        s >> fValue_;
     }
 
     s_float::FloatType s_float::GetType() const
@@ -662,15 +665,27 @@ namespace Frost
             return s_float(FLOAT_NAN);
     }
 
-    s_str operator+ ( const char* sLeft, const s_float& fRight )
+    s_str operator+ ( const string_element* sLeft, const s_float& fRight )
     {
         return s_str(sLeft) << fRight;
     }
 
-    s_str s_float::operator+ ( const char* sValue ) const
+    s_str s_float::operator+ ( const string_element* sValue ) const
     {
         return s_str(*this) + sValue;
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const s_float& fRight )
+        {
+            return s_str(sLeft) << fRight;
+        }
+
+        s_str s_float::operator+ ( const char* sValue ) const
+        {
+            return s_str(*this) + sValue;
+        }
+    #endif
 
     s_str s_float::operator+ ( const s_str& sValue ) const
     {
