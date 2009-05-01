@@ -19,6 +19,18 @@ namespace Frost
     class s_str;
     template<class T> class s_ctnr;
 
+    #ifdef USE_UNICODE
+        typedef wchar_t string_element;
+        typedef std::wstring string_object;
+        typedef std::wstringstream string_stream;
+        typedef std::wfstream file_stream;
+    #else
+        typedef char string_element;
+        typedef std::string string_object;
+        typedef std::stringstream string_stream;
+        typedef std::fstream file_stream;
+    #endif
+
     /// Base type : float
     /** Frost's base types are made to allow simpler
     *   manipulation of numbers, booleans and strings.
@@ -54,8 +66,8 @@ namespace Frost
         explicit s_float(const s_int& iValue);
         explicit s_float(const s_uint& uiValue);
         explicit s_float(const s_bool& bValue);
-        explicit s_float(const char* sValue);
-        explicit s_float(const std::string& sValue);
+        explicit s_float(const string_element* sValue);
+        explicit s_float(const string_object& sValue);
         explicit s_float(const s_str& sValue);
 
         /// Adjusts this float's value to be contained into the provided interval.
@@ -71,13 +83,13 @@ namespace Frost
 
         /// Converts this float to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
-        *         (1 = 2*PI rad = 360°).
+        *         (1 = 2*PI rad = 360Â°).
         */
         s_float         GetRad() const;
 
         /// Converts this float to an angle in degree.
         /** \note It is assumed that the previous value was a non dimensionnal angle
-        *         (1 = 2*PI rad = 360°).
+        *         (1 = 2*PI rad = 360Â°).
         */
         s_float         GetDeg() const;
 
@@ -189,13 +201,13 @@ namespace Frost
         /// Converts this float to an angle in degree.
         /** \param bNegativeAllowed 'true' if you allow negative return values
         *   \note It is assumed that the previous value was a non dimensionnal angle
-        *         (1 = 2*PI rad = 360°).
+        *         (1 = 2*PI rad = 360Â°).
         */
         void            ToDeg(const s_bool& bNegativeAllowed = true);
 
         /// Converts this float to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
-        *         (1 = 2*PI rad = 360°).
+        *         (1 = 2*PI rad = 360Â°).
         */
         void            ToRad();
 
@@ -210,7 +222,10 @@ namespace Frost
         void            operator *= (const s_float& fValue);
         void            operator /= (const s_float& fValue);
 
-        s_str           operator +  (const char* sValue) const;
+        s_str           operator +  (const string_element* sValue) const;
+        #ifdef USE_UNICODE
+            s_str       operator +  (const char* sValue) const;
+        #endif
         s_str           operator +  (const s_str& sValue) const;
 
         bool            operator == (const s_float& fValue) const;

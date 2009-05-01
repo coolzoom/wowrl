@@ -121,22 +121,25 @@ namespace Frost
         dValue_ = 0.0;
     }
 
-    s_double::s_double( const char* sValue )
+    s_double::s_double( const string_element* sValue )
     {
         mType_ = DOUBLE;
-        dValue_ = atof(sValue);
+        string_stream s(sValue);
+        s >> dValue_;
     }
 
-    s_double::s_double( const string& sValue )
+    s_double::s_double( const string_object& sValue )
     {
         mType_ = DOUBLE;
-        dValue_ = atof(sValue.c_str());
+        string_stream s(sValue);
+        s >> dValue_;
     }
 
     s_double::s_double( const s_str& sValue )
     {
         mType_ = DOUBLE;
-        dValue_ = atof(sValue.c_str());
+        string_stream s(sValue.Get());
+        s >> dValue_;
     }
 
     s_double::DoubleType s_double::GetType() const
@@ -656,15 +659,27 @@ namespace Frost
             return s_double(DOUBLE_NAN);
     }
 
-    s_str operator+ ( const char* sLeft, const s_double& fRight )
+    s_str operator+ ( const string_element* sLeft, const s_double& fRight )
     {
         return s_str(sLeft) << fRight;
     }
 
-    s_str s_double::operator+ ( const char* sValue ) const
+    s_str s_double::operator+ ( const string_element* sValue ) const
     {
         return s_str((*this)) + sValue;
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const s_double& fRight )
+        {
+            return s_str(sLeft) << fRight;
+        }
+
+        s_str s_double::operator+ ( const char* sValue ) const
+        {
+            return s_str((*this)) + sValue;
+        }
+    #endif
 
     s_str s_double::operator+ ( const s_str& sValue ) const
     {

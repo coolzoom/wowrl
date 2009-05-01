@@ -292,7 +292,7 @@ namespace Frost
                 return s_str(s_uint((uint)(long)pPtr_));
         }
 
-        return s_str('\0');
+        return s_str("\0");
     }
 
     void* s_var::GetP() const
@@ -381,7 +381,7 @@ namespace Frost
         pPtr_= NULL;
     }
 
-    s_str operator + ( const char* sLeft, const s_var& vRight )
+    s_str operator + ( const string_element* sLeft, const s_var& vRight )
     {
         switch (vRight.GetType())
         {
@@ -395,6 +395,23 @@ namespace Frost
             default : return s_str(sLeft) + "<none>";
         }
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const s_var& vRight )
+        {
+            switch (vRight.GetType())
+            {
+                case VALUE_INT : return s_str(sLeft) + vRight.GetI();
+                case VALUE_UINT : return s_str(sLeft) + vRight.GetUI();
+                case VALUE_FLOAT : return s_str(sLeft) + vRight.GetF();
+                case VALUE_DOUBLE : return s_str(sLeft) + vRight.GetD();
+                case VALUE_BOOL : return s_str(sLeft) + vRight.GetB();
+                case VALUE_STRING : return s_str(sLeft) + vRight.GetS();
+                case VALUE_POINTER : return s_str(sLeft) << vRight.GetP();
+                default : return s_str(sLeft) + "<none>";
+            }
+        }
+    #endif
 
     s_str operator + ( const s_str& sLeft, const s_var& vRight )
     {

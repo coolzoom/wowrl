@@ -44,7 +44,7 @@ int Lua::l_ConcTable( lua_State* pLua )
     s_str t = lua_tostring(pLua, 1);
     s_str s = LuaManager::GetSingleton()->GetState(pLua)->ConcTable(lua_tostring(pLua, 2));
     s = t+s;
-    lua_pushstring(pLua, s.c_str());
+    lua_pushstring(pLua, s.GetASCII().c_str());
 
     return 1;
 }
@@ -171,7 +171,7 @@ int Lua::l_GetGlobal( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sName = mFunc.Get(0)->GetS();
-        lua_getglobal(pLua, sName.c_str());
+        lua_getglobal(pLua, sName.GetASCII().c_str());
         mFunc.Push(Lua::ReturnValue(RETURN_OBJECT));
     }
 
@@ -185,7 +185,7 @@ int Lua::l_DoString( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sScript = mFunc.Get(0)->GetS();
-        int iError = luaL_dostring(pLua, sScript.c_str());
+        int iError = luaL_dostring(pLua, sScript.GetASCII().c_str());
         if (iError == LUA_ERRRUN)
             l_ThrowInternalError(pLua);
         else if (iError == LUA_ERRMEM)

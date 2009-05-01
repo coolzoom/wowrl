@@ -121,10 +121,12 @@ namespace Frost
         uiValue_ = 0u;
     }
 
-    s_uint::s_uint( const char* sValue )
+    s_uint::s_uint( const string_element* sValue )
     {
-        s_int i = atoi(sValue);
-        if (i < 0u)
+        int i;
+        string_stream s(sValue);
+        s >> i;
+        if (i < 0)
         {
             mType_ = INTEGER_INF;
             uiValue_ = 0u;
@@ -132,14 +134,16 @@ namespace Frost
         else
         {
             mType_ = INTEGER;
-            uiValue_ = static_cast<uint>(i.Get());
+            uiValue_ = static_cast<uint>(i);
         }
     }
 
-    s_uint::s_uint( const string& sValue )
+    s_uint::s_uint( const string_object& sValue )
     {
-        s_int i = atoi(sValue.c_str());
-        if (i < 0u)
+        int i;
+        string_stream s(sValue);
+        s >> i;
+        if (i < 0)
         {
             mType_ = INTEGER_INF;
             uiValue_ = 0u;
@@ -147,14 +151,16 @@ namespace Frost
         else
         {
             mType_ = INTEGER;
-            uiValue_ = static_cast<uint>(i.Get());
+            uiValue_ = static_cast<uint>(i);
         }
     }
 
     s_uint::s_uint( const s_str& sValue )
     {
-        s_int i = atoi(sValue.c_str());
-        if (i < 0u)
+        int i;
+        string_stream s(sValue.Get());
+        s >> i;
+        if (i < 0)
         {
             mType_ = INTEGER_INF;
             uiValue_ = 0u;
@@ -162,7 +168,7 @@ namespace Frost
         else
         {
             mType_ = INTEGER;
-            uiValue_ = static_cast<uint>(i.Get());
+            uiValue_ = static_cast<uint>(i);
         }
     }
 
@@ -586,15 +592,27 @@ namespace Frost
             return s_uint(INTEGER_NAN);
     }
 
-    s_str operator+ ( const char* sLeft, const s_uint& uiRight )
+    s_str operator+ ( const string_element* sLeft, const s_uint& uiRight )
     {
         return s_str(sLeft) << uiRight;
     }
 
-    s_str s_uint::operator+ ( const char* sValue ) const
+    s_str s_uint::operator+ ( const string_element* sValue ) const
     {
         return s_str(*this) + sValue;
     }
+
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const s_uint& uiRight )
+        {
+            return s_str(sLeft) << uiRight;
+        }
+
+        s_str s_uint::operator+ ( const char* sValue ) const
+        {
+            return s_str(*this) + sValue;
+        }
+    #endif
 
     s_str s_uint::operator+ ( const s_str& sValue ) const
     {

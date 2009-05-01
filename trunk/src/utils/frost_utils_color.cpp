@@ -112,12 +112,19 @@ namespace Frost
         uiR_ =  (((uchar)uiColor_.Get()) & 0xFF);
     }
 
-    s_str operator + (const char* sLeft, const Color& mRight)
+    s_str operator+ ( const string_element* sLeft, const Color& mRight )
     {
         return s_str(sLeft) + mRight;
     }
 
-    s_str operator + (const s_str& sLeft, const Color& mRight)
+    #ifdef USE_UNICODE
+        s_str operator+ ( const char* sLeft, const Color& mRight )
+        {
+            return s_str(sLeft) + mRight;
+        }
+    #endif
+
+    s_str operator+ (const s_str& sLeft, const Color& mRight)
     {
         s_str sTemp;
         sTemp += "(a:"+s_str(mRight.GetA());

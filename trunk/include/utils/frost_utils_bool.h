@@ -14,6 +14,18 @@ namespace Frost
     class s_str;
     template<class T> class s_ctnr;
 
+    #ifdef USE_UNICODE
+        typedef wchar_t string_element;
+        typedef std::wstring string_object;
+        typedef std::wstringstream string_stream;
+        typedef std::wfstream file_stream;
+    #else
+        typedef char string_element;
+        typedef std::string string_object;
+        typedef std::stringstream string_stream;
+        typedef std::fstream file_stream;
+    #endif
+
     /// Base type : boolean
     /** Frost's base types are made to allow simpler
     *   manipulation of numbers, booleans and strings.
@@ -28,8 +40,8 @@ namespace Frost
 
         s_bool();
         s_bool(const bool& bValue);
-        explicit s_bool(const char* sValue);
-        explicit s_bool(const std::string& sValue);
+        explicit s_bool(const string_element* sValue);
+        explicit s_bool(const string_object& sValue);
         explicit s_bool(const s_str& sValue);
 
         /// Returns a const reference to the boolean.
@@ -56,7 +68,10 @@ namespace Frost
         bool           operator == (const s_bool& bValue) const;
         bool           operator != (const s_bool& bValue) const;
 
-        s_str          operator +  (const char* sValue) const;
+        s_str          operator +  (const string_element* sValue) const;
+        #ifdef USE_UNICODE
+            s_str      operator +  (const char* sValue) const;
+        #endif
         s_str          operator +  (const s_str& sValue) const;
 
         s_bool&        operator =  (const s_bool& bValue);

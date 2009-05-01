@@ -19,6 +19,20 @@
 					<Add option="-g" />
 				</Compiler>
 			</Target>
+			<Target title="Debug_Win32_Unicode">
+				<Option platforms="Windows;" />
+				<Option output="lib\libutils_unicode_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj_Utils\Debug_Unicode\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DUSE_UNICODE" />
+				</Compiler>
+			</Target>
 			<Target title="Release_Win32">
 				<Option platforms="Windows;" />
 				<Option output="lib\libutils" prefix_auto="1" extension_auto="1" />
@@ -30,6 +44,23 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Release_Win32_Unicode">
+				<Option platforms="Windows;" />
+				<Option output="lib\libutils_unicode" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj_Utils\Release_Unicode\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DUSE_UNICODE" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -71,6 +102,13 @@
 				</Linker>
 			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="Linux" targets="Debug_Linux;Release_Linux;" />
+			<Add alias="Linux ANSI" targets="Debug_Linux;Release_Linux;" />
+			<Add alias="Win32" targets="Debug_Win32;Debug_Win32_Unicode;Release_Win32;Release_Win32_Unicode;" />
+			<Add alias="Win32 ANSI" targets="Debug_Win32;Release_Win32;" />
+			<Add alias="Win32 Unicode" targets="Debug_Win32_Unicode;Release_Win32_Unicode;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add directory="include\utils" />
 			<Add directory="dependencies" />
