@@ -19,7 +19,8 @@ namespace Frost
         MATERIAL_2D_PLAIN,
         MATERIAL_2D_RT,
         MATERIAL_3D,
-        MATERIAL_3D_PLAIN
+        MATERIAL_3D_PLAIN,
+        MATERIAL_UNKNOWN
     };
 
     /// A wrapper around Ogre's material
