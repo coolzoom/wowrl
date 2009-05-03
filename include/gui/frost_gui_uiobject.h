@@ -374,8 +374,8 @@ namespace Frost
             s_bool  bIsWidthAbs_;
             s_bool  bIsHeightAbs_;
 
-            RenderTarget       mTarget_;
-            s_refptr<Material> pMaterial_;
+            s_ptr<RenderTarget> pTarget_;
+            s_refptr<Material>     pMaterial_;
 
             s_bool bUpdateBorders_;
             s_bool bUpdateDimensions_;

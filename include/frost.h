@@ -54,11 +54,6 @@ namespace Frost
     // frost_fontmanager.h
     class  FontManager;
 
-    // frost_gfx.h
-    struct RenderTarget;
-    struct Vertex;
-    struct Quad;
-
     namespace GUI
     {
         // frost_gui_anchor.h
@@ -188,6 +183,9 @@ namespace Frost
     class  Sprite;
 
     // frost_spritemanager.h
+    struct Vertex;
+    struct Quad;
+    class  RenderTarget;
     class  SpriteManager;
 
     // frost_stats.h

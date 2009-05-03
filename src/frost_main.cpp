@@ -41,7 +41,7 @@ s_ptr<Model>  pModel;
 
 s_refptr<Sprite> pSprite;
 s_refptr<Sprite> pSprite2;
-RenderTarget     mRTarget;
+s_ptr<RenderTarget> pRTarget;
 
 s_refptr<SmoothPath> pPath;
 s_ptr<Camera>        pCam;
@@ -141,7 +141,8 @@ s_bool RenderFunc()
 }
 
 // To Do List :
-
+// TODO : terminer s_str
+// TODO : terminer Text
 #ifdef FROST_LINUX
 int main(int argc, char *argv[])
 #else

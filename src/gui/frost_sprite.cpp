@@ -30,12 +30,14 @@ namespace Frost
     {
         mColor_ = Color(255, 255, 255, 255);
 
+        pQuad_ = s_refptr<Quad>(new Quad());
+
         for (uint i = 0; i < 4; i++)
-            mQuad_.lVertexArray[i].mColor = mColor_;
+            pQuad_->lVertexArray[i].mColor = mColor_;
 
         if (pMat != NULL)
         {
-            mQuad_.pMat = pMat;
+            pQuad_->pMat = pMat;
 
             if (!pMat->IsPlain())
             {
@@ -58,7 +60,7 @@ namespace Frost
         }
         else
         {
-            mQuad_.pMat = MaterialManager::GetSingleton()->GetDefault2D();
+            pQuad_->pMat = MaterialManager::GetSingleton()->GetDefault2D();
             Error(CLASS_NAME, "Can't create a Sprite with no material and dimension.");
         }
     }
@@ -67,8 +69,10 @@ namespace Frost
     {
         mColor_ = Color(255, 255, 255, 255);
 
+        pQuad_ = s_refptr<Quad>(new Quad());
+
         for (uint i = 0; i < 4; i++)
-            mQuad_.lVertexArray[i].mColor = mColor_;
+            pQuad_->lVertexArray[i].mColor = mColor_;
 
         fX1_ = 0.0f;
         fY1_ = 0.0f;
@@ -77,7 +81,7 @@ namespace Frost
 
         if (pMat != NULL)
         {
-            mQuad_.pMat = pMat;
+            pQuad_->pMat = pMat;
 
             if (!pMat->IsPlain())
             {
@@ -88,14 +92,14 @@ namespace Frost
             }
         }
         else
-            mQuad_.pMat = MaterialManager::GetSingleton()->GetDefault2D();
+            pQuad_->pMat = MaterialManager::GetSingleton()->GetDefault2D();
 
         if (!bUsingMaterial_)
         {
-            mQuad_.lVertexArray[0].SetUV(0, 0);
-            mQuad_.lVertexArray[1].SetUV(1, 0);
-            mQuad_.lVertexArray[2].SetUV(1, 1);
-            mQuad_.lVertexArray[3].SetUV(0, 1);
+            pQuad_->lVertexArray[0].SetUV(0, 0);
+            pQuad_->lVertexArray[1].SetUV(1, 0);
+            pQuad_->lVertexArray[2].SetUV(1, 1);
+            pQuad_->lVertexArray[3].SetUV(0, 1);
         }
         else
             UpdateUVs_();
@@ -105,8 +109,10 @@ namespace Frost
     {
         mColor_ = Color(255, 255, 255, 255);
 
+        pQuad_ = s_refptr<Quad>(new Quad());
+
         for (uint i = 0; i < 4; i++)
-            mQuad_.lVertexArray[i].mColor = mColor_;
+            pQuad_->lVertexArray[i].mColor = mColor_;
 
         fX1_ = fU;
         fY1_ = fV;
@@ -115,7 +121,7 @@ namespace Frost
 
         if (pMat != NULL)
         {
-            mQuad_.pMat = pMat;
+            pQuad_->pMat = pMat;
 
             if (!pMat->IsPlain())
             {
@@ -126,14 +132,14 @@ namespace Frost
             }
         }
         else
-            mQuad_.pMat = MaterialManager::GetSingleton()->GetDefault2D();
+            pQuad_->pMat = MaterialManager::GetSingleton()->GetDefault2D();
 
         if (!bUsingMaterial_)
         {
-            mQuad_.lVertexArray[0].SetUV(0, 0);
-            mQuad_.lVertexArray[1].SetUV(1, 0);
-            mQuad_.lVertexArray[2].SetUV(1, 1);
-            mQuad_.lVertexArray[3].SetUV(0, 1);
+            pQuad_->lVertexArray[0].SetUV(0, 0);
+            pQuad_->lVertexArray[1].SetUV(1, 0);
+            pQuad_->lVertexArray[2].SetUV(1, 1);
+            pQuad_->lVertexArray[3].SetUV(0, 1);
         }
         else
             UpdateUVs_();
@@ -143,21 +149,23 @@ namespace Frost
     {
         mColor_ = mColor;
 
+        pQuad_ = s_refptr<Quad>(new Quad());
+
         for (uint i = 0; i < 4; i++)
-            mQuad_.lVertexArray[i].mColor = mColor_;
+            pQuad_->lVertexArray[i].mColor = mColor_;
 
         fX1_ = 0.0f;
         fY1_ = 0.0f;
         fX3_ = fWidth_ = fWidth;
         fY3_ = fHeight_ = fHeight;
 
-        mQuad_.pMat = MaterialManager::GetSingleton()->GetDefault2D();
+        pQuad_->pMat = MaterialManager::GetSingleton()->GetDefault2D();
         bUsingMaterial_ = false;
 
-        mQuad_.lVertexArray[0].SetUV(0, 0);
-        mQuad_.lVertexArray[1].SetUV(1, 0);
-        mQuad_.lVertexArray[2].SetUV(1, 1);
-        mQuad_.lVertexArray[3].SetUV(0, 1);
+        pQuad_->lVertexArray[0].SetUV(0, 0);
+        pQuad_->lVertexArray[1].SetUV(1, 0);
+        pQuad_->lVertexArray[2].SetUV(1, 1);
+        pQuad_->lVertexArray[3].SetUV(0, 1);
     }
 
     void Sprite::Render( const s_float& fX, const s_float& fY )
@@ -176,12 +184,12 @@ namespace Frost
             y2 = fY - fHotSpotY_;
         }
 
-        mQuad_.lVertexArray[0].Set(x1, y1);
-        mQuad_.lVertexArray[1].Set(x2, y1);
-        mQuad_.lVertexArray[2].Set(x2, y2);
-        mQuad_.lVertexArray[3].Set(x1, y2);
+        pQuad_->lVertexArray[0].Set(x1, y1);
+        pQuad_->lVertexArray[1].Set(x2, y1);
+        pQuad_->lVertexArray[2].Set(x2, y2);
+        pQuad_->lVertexArray[3].Set(x1, y2);
 
-        SpriteManager::GetSingleton()->RenderQuad(mQuad_);
+        SpriteManager::GetSingleton()->RenderQuad(*pQuad_);
     }
 
     void Sprite::RenderEx( const s_float& fX, const s_float& fY, const s_float& fRot, const s_float& fHScale, const s_float& fVScale )
@@ -210,40 +218,40 @@ namespace Frost
             s_float cost = cosf(fRot.Get());
             s_float sint = sinf(fRot.Get());
 
-            mQuad_.lVertexArray[0].Set(x1*cost - y1*sint + fX, x1*sint + y1*cost + fY);
-            mQuad_.lVertexArray[1].Set(x2*cost - y1*sint + fX, x2*sint + y1*cost + fY);
-            mQuad_.lVertexArray[2].Set(x2*cost - y2*sint + fX, x2*sint + y2*cost + fY);
-            mQuad_.lVertexArray[3].Set(x1*cost - y2*sint + fX, x1*sint + y2*cost + fY);
+            pQuad_->lVertexArray[0].Set(x1*cost - y1*sint + fX, x1*sint + y1*cost + fY);
+            pQuad_->lVertexArray[1].Set(x2*cost - y1*sint + fX, x2*sint + y1*cost + fY);
+            pQuad_->lVertexArray[2].Set(x2*cost - y2*sint + fX, x2*sint + y2*cost + fY);
+            pQuad_->lVertexArray[3].Set(x1*cost - y2*sint + fX, x1*sint + y2*cost + fY);
         }
         else
         {
-            mQuad_.lVertexArray[0].Set(x1 + fX, y1 + fY);
-            mQuad_.lVertexArray[1].Set(x2 + fX, y1 + fY);
-            mQuad_.lVertexArray[2].Set(x2 + fX, y2 + fY);
-            mQuad_.lVertexArray[3].Set(x1 + fX, y2 + fY);
+            pQuad_->lVertexArray[0].Set(x1 + fX, y1 + fY);
+            pQuad_->lVertexArray[1].Set(x2 + fX, y1 + fY);
+            pQuad_->lVertexArray[2].Set(x2 + fX, y2 + fY);
+            pQuad_->lVertexArray[3].Set(x1 + fX, y2 + fY);
         }
 
-        SpriteManager::GetSingleton()->RenderQuad(mQuad_);
+        SpriteManager::GetSingleton()->RenderQuad(*pQuad_);
     }
 
     void Sprite::Render2V( const s_float& fX1, const s_float& fY1, const s_float& fX3, const s_float& fY3 )
     {
-        mQuad_.lVertexArray[0].Set(fX1, fY1);
-        mQuad_.lVertexArray[1].Set(fX3, fY1);
-        mQuad_.lVertexArray[2].Set(fX3, fY3);
-        mQuad_.lVertexArray[3].Set(fX1, fY3);
+        pQuad_->lVertexArray[0].Set(fX1, fY1);
+        pQuad_->lVertexArray[1].Set(fX3, fY1);
+        pQuad_->lVertexArray[2].Set(fX3, fY3);
+        pQuad_->lVertexArray[3].Set(fX1, fY3);
 
-        SpriteManager::GetSingleton()->RenderQuad(mQuad_);
+        SpriteManager::GetSingleton()->RenderQuad(*pQuad_);
     }
 
     void Sprite::Render4V( const s_float& fX1, const s_float& fY1, const s_float& fX2, const s_float& fY2, const s_float& fX3, const s_float& fY3, const s_float& fX4, const s_float& fY4 )
     {
-        mQuad_.lVertexArray[0].Set(fX1, fY1);
-        mQuad_.lVertexArray[1].Set(fX2, fY2);
-        mQuad_.lVertexArray[2].Set(fX3, fY3);
-        mQuad_.lVertexArray[3].Set(fX4, fY4);
+        pQuad_->lVertexArray[0].Set(fX1, fY1);
+        pQuad_->lVertexArray[1].Set(fX2, fY2);
+        pQuad_->lVertexArray[2].Set(fX3, fY3);
+        pQuad_->lVertexArray[3].Set(fX4, fY4);
 
-        SpriteManager::GetSingleton()->RenderQuad(mQuad_);
+        SpriteManager::GetSingleton()->RenderQuad(*pQuad_);
     }
 
     void Sprite::SetColor( const Color& mColor, const s_uint& uiIndex )
@@ -252,11 +260,11 @@ namespace Frost
         {
             mColor_ = mColor;
             for (uint i = 0; i < 4; i++)
-                mQuad_.lVertexArray[i].mColor = mColor_;
+                pQuad_->lVertexArray[i].mColor = mColor_;
         }
         else if (uiIndex < 4)
         {
-            mQuad_.lVertexArray[uiIndex.Get()].mColor = mColor_;
+            pQuad_->lVertexArray[uiIndex.Get()].mColor = mColor_;
         }
         else
             Warning(CLASS_NAME, "Second parameter of SetColor mustn't be greater than 3.");
@@ -477,7 +485,7 @@ namespace Frost
 
     s_refptr<Material> Sprite::GetMaterial()
     {
-        return mQuad_.pMat;
+        return pQuad_->pMat;
     }
 
     void Sprite::UpdateUVs_()
@@ -493,10 +501,10 @@ namespace Frost
             s_float fTX4 = fX4_/s_float(uiTexWidth_);
             s_float fTY4 = fY4_/s_float(uiTexHeight_);
 
-            mQuad_.lVertexArray[0].SetUV(fTX1, fTY1);
-            mQuad_.lVertexArray[1].SetUV(fTX2, fTY2);
-            mQuad_.lVertexArray[2].SetUV(fTX3, fTY3);
-            mQuad_.lVertexArray[3].SetUV(fTX4, fTY4);
+            pQuad_->lVertexArray[0].SetUV(fTX1, fTY1);
+            pQuad_->lVertexArray[1].SetUV(fTX2, fTY2);
+            pQuad_->lVertexArray[2].SetUV(fTX3, fTY3);
+            pQuad_->lVertexArray[3].SetUV(fTX4, fTY4);
         }
         else
         {
@@ -505,10 +513,10 @@ namespace Frost
             s_float fTX3 = fX3_/s_float(uiTexWidth_);
             s_float fTY3 = fY3_/s_float(uiTexHeight_);
 
-            mQuad_.lVertexArray[0].SetUV(fTX1, fTY1);
-            mQuad_.lVertexArray[1].SetUV(fTX3, fTY1);
-            mQuad_.lVertexArray[2].SetUV(fTX3, fTY3);
-            mQuad_.lVertexArray[3].SetUV(fTX1, fTY3);
+            pQuad_->lVertexArray[0].SetUV(fTX1, fTY1);
+            pQuad_->lVertexArray[1].SetUV(fTX3, fTY1);
+            pQuad_->lVertexArray[2].SetUV(fTX3, fTY3);
+            pQuad_->lVertexArray[3].SetUV(fTX1, fTY3);
         }
     }
 }
