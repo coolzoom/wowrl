@@ -28,7 +28,7 @@ namespace Frost
 {
     const s_str Unit::CLASS_NAME = "Unit";
 
-    // TODO : Unit : Implémenter les sors
+    // TODO : Unit : Implémenter les sorts
     // TODO : Unit : Implémenter le mouvement (+pathfinding)
     // TODO : Unit : Implémenter les buffs
 
