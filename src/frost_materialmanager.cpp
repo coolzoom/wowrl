@@ -37,6 +37,14 @@ namespace Frost
         pDefault3D_ = CreateMaterial3D("Default3D", 255, 255, 255);
     }
 
+    s_refptr<Material> MaterialManager::CreateMaterial( s_ptr<Ogre::Material> pOgreMat )
+    {
+        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_UNKNOWN, pOgreMat));
+        uiCounter_++;
+
+        return pMat;
+    }
+
     s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sName, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB )
     {
         s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
