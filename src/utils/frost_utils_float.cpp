@@ -592,6 +592,21 @@ namespace Frost
         }
     }
 
+    s_float s_float::Round( const s_float& fValue, const RoundType& mRoundType )
+    {
+        switch (mRoundType)
+        {
+            case ROUND_CEIL :
+                return s_float(ceil(fValue.fValue_));
+            case ROUND_MID :
+                return s_float(round(fValue.fValue_));
+            case ROUND_FLOOR :
+                return s_float(floor(fValue.fValue_));
+            default :
+                return s_float::NaN;
+        }
+    }
+
     void s_float::Saturate( const s_float& fMin, const s_float& fMax )
     {
         if (IsValid() && fMin.IsValid() && fMax.IsValid())
