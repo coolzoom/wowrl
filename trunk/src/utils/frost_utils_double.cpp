@@ -586,6 +586,21 @@ namespace Frost
         }
     }
 
+    s_double s_double::Round( const s_double& dValue, const RoundType& mRoundType )
+    {
+        switch (mRoundType)
+        {
+            case ROUND_CEIL :
+                return s_double(ceil(dValue.dValue_));
+            case ROUND_MID :
+                return s_double(round(dValue.dValue_));
+            case ROUND_FLOOR :
+                return s_double(floor(dValue.dValue_));
+            default :
+                return s_double::NaN;
+        }
+    }
+
     void s_double::Saturate( const s_double& dMin, const s_double& dMax )
     {
         if (IsValid() && dMin.IsValid() && dMax.IsValid())

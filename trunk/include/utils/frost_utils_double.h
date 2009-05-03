@@ -273,6 +273,11 @@ namespace Frost
         */
         static s_double Random(const s_double& dMin = 0.0, const s_double& dMax = 1.0);
 
+        /// Rounds a double value.
+        /** \param mRoundType How to round the value (see RoundType)
+        */
+        static s_double Round(const s_double& fValue, const RoundType& mRoundType = ROUND_MID);
+
         static const s_str CLASS_NAME;
 
     private :
