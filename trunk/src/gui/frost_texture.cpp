@@ -9,6 +9,7 @@
 #include "gui/frost_guimanager.h"
 #include "frost_materialmanager.h"
 #include "frost_material.h"
+#include "frost_spritemanager.h"
 
 using namespace std;
 using namespace Frost;

@@ -49,6 +49,7 @@
 #include <OgreMatrix4.h>
 #include <OgreHardwareBufferManager.h>
 #include <OgreHardwareVertexBuffer.h>
+#include <OgreHardwarePixelBuffer.h>
 
 #define OGRE2D_MINIMAL_HARDWARE_BUFFER_SIZE 120
 
@@ -56,6 +57,7 @@ using namespace std;
 
 namespace Frost
 {
+    const s_str RenderTarget::CLASS_NAME = "RenderTarget";
     const s_str SpriteManager::CLASS_NAME = "SpriteManager";
 
     /** \cond NOT_REMOVE_FROM_DOC
@@ -67,6 +69,118 @@ namespace Frost
     };
     /** \endcond
     */
+
+    Quad::Quad()
+    {
+    }
+
+    RenderTarget::RenderTarget( const s_uint& uiID, const s_uint& uiWidth, const s_uint& uiHeight )
+    {
+        uiID_ = uiID;
+        uiWidth_ = uiWidth;
+        uiHeight_ = uiHeight;
+        uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
+        uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
+
+        Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
+            ("_AutoNamedTarget:"+uiID_).Get(), "Frost", Ogre::TEX_TYPE_2D,
+            uiRealWidth_.Get(), uiRealHeight_.Get(),
+            0, Ogre::PF_A8B8G8R8, Ogre::TU_RENDERTARGET
+        );
+        hResourceHandle_ = pTexture->getHandle();
+
+        pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
+        pOgreRenderTarget_->addViewport(0);
+    }
+
+    RenderTarget::RenderTarget( const s_uint& uiID, const s_str& sName, const s_uint& uiWidth, const s_uint& uiHeight )
+    {
+        uiID_ = uiID;
+        uiWidth_ = uiWidth;
+        uiHeight_ = uiHeight;
+        uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
+        uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
+
+        Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
+            sName.Get(), "Frost", Ogre::TEX_TYPE_2D,
+            uiRealWidth_.Get(), uiRealHeight_.Get(),
+            0, Ogre::PF_A8B8G8R8, Ogre::TU_RENDERTARGET
+        );
+        hResourceHandle_ = pTexture->getHandle();
+
+        pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
+        pOgreRenderTarget_->addViewport(0);
+    }
+
+    RenderTarget::~RenderTarget()
+    {
+        Ogre::TextureManager::getSingleton().remove(
+            hResourceHandle_
+        );
+    }
+
+    const s_uint& RenderTarget::GetWidth() const
+    {
+        return uiWidth_;
+    }
+
+    const s_uint& RenderTarget::GetHeight() const
+    {
+        return uiHeight_;
+    }
+
+    void RenderTarget::SetDimensions( const s_uint& uiWidth, const s_uint& uiHeight )
+    {
+        s_uint uiNewWidth = uiWidth.GetNearestPowerOfTwo();
+        s_uint uiNewHeight = uiHeight.GetNearestPowerOfTwo();
+        if ((uiRealWidth_ < uiNewWidth) ||
+            (uiRealHeight_ < uiNewHeight))
+        {
+            // The current render target is too small...
+            // Let's delete it and create a bigger one
+            Ogre::TextureManager::getSingleton().remove(
+                hResourceHandle_
+            );
+            uiRealWidth_ = uiNewWidth;
+            uiRealHeight_ = uiNewHeight;
+            Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
+                ("_AutoNamedTarget:"+uiID_).Get(), "Frost", Ogre::TEX_TYPE_2D,
+                uiRealWidth_.Get(), uiRealHeight_.Get(),
+                0, Ogre::PF_A8B8G8R8, Ogre::TU_RENDERTARGET
+            );
+            hResourceHandle_ = pTexture->getHandle();
+
+            pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
+            pOgreRenderTarget_->addViewport(0);
+        }
+        else
+        {
+            // There was already one, with a correct size
+            // Just change its virtual size
+            uiWidth_ = uiWidth;
+            uiHeight_ = uiHeight;
+        }
+    }
+
+    const s_uint& RenderTarget::GetRealWidth() const
+    {
+        return uiRealWidth_;
+    }
+
+    const s_uint& RenderTarget::GetRealHeight() const
+    {
+        return uiRealHeight_;
+    }
+
+    s_ptr<Ogre::RenderTarget> RenderTarget::GetOgreRenderTarget()
+    {
+        return pOgreRenderTarget_;
+    }
+
+    const s_uint& RenderTarget::GetID()
+    {
+        return uiID_;
+    }
 
     SpriteManager::SpriteManager()
     {
@@ -109,7 +223,7 @@ namespace Frost
 
         pSceneMgr_->addRenderQueueListener(this);
 
-        mMainTarget_ = GFX::CreateRenderTarget(
+        pMainTarget_ = CreateRenderTarget(
             "_TargetMain", s_uint(fWidth), s_uint(fHeight)
         );
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT("_TargetMain");
@@ -129,30 +243,15 @@ namespace Frost
 
         s_uint uiWidth = s_uint(fWidth);
         s_uint uiHeight = s_uint(fHeight);
-        if (!mMainTarget_.pOgreRenderTarget)
+        if (!pMainTarget_)
         {
-            // There was no main render target
-            // Let's create one
-            mMainTarget_ = GFX::CreateRenderTarget(
-                "_TargetMain", uiWidth, uiHeight
-            );
-        }
-        else if ((s_uint((uint)mMainTarget_.pOgreRenderTarget->getWidth()) < uiWidth.GetNearestPowerOfTwo()) ||
-            (s_uint((uint)mMainTarget_.pOgreRenderTarget->getHeight()) < uiHeight.GetNearestPowerOfTwo()))
-        {
-            // There was already one, but it was too small
-            // Let's delete the old one and create another bigger one
-            GFX::DeleteRenderTarget("_TargetMain");
-            mMainTarget_ = GFX::CreateRenderTarget(
+            pMainTarget_ = CreateRenderTarget(
                 "_TargetMain", uiWidth, uiHeight
             );
         }
         else
         {
-            // There was already one, with a correct size
-            // Just change its virtual size
-            mMainTarget_.uiWidth = uiWidth;
-            mMainTarget_.uiHeight = uiHeight;
+            pMainTarget_->SetDimensions(uiWidth, uiHeight);
         }
 
         pMainSprite_ = s_refptr<Sprite>(new Sprite(
@@ -313,8 +412,8 @@ namespace Frost
                 if (bRenderTargets_)
                 {
                     mProj.setScale(Ogre::Vector3(
-                        2.0f/mRenderTarget_.pOgreRenderTarget->getWidth(),
-                        -2.0f/mRenderTarget_.pOgreRenderTarget->getHeight(),
+                        2.0f/pRenderTarget_->GetRealWidth().Get(),
+                        -2.0f/pRenderTarget_->GetRealHeight().Get(),
                         1.0f
                     ));
                 }
@@ -337,13 +436,13 @@ namespace Frost
                 if (bRenderTargets_)
                 {
                     mProj.setScale(Ogre::Vector3(
-                        2.0f/mRenderTarget_.pOgreRenderTarget->getWidth(),
-                        2.0f/mRenderTarget_.pOgreRenderTarget->getHeight(),
+                        2.0f/pRenderTarget_->GetRealWidth().Get(),
+                        2.0f/pRenderTarget_->GetRealHeight().Get(),
                         1.0f
                     ));
                     mProj = Ogre::Matrix4::getTrans(
                         fXOffset_.Get() - 1.0f,
-                        -2.0f*mRenderTarget_.uiHeight.Get()/mRenderTarget_.pOgreRenderTarget->getHeight() + fYOffset_.Get() + 1.0f,
+                        (-2.0f*pRenderTarget_->GetHeight().Get())/pRenderTarget_->GetRealHeight().Get() + fYOffset_.Get() + 1.0f,
                         0.0f
                     )*mProj;
                 }
@@ -375,15 +474,15 @@ namespace Frost
             if (!pRenderTarget)
             {
                 // The main target...
-                mRenderTarget_ = mMainTarget_;
+                pRenderTarget_ = pMainTarget_;
             }
             else
             {
                 // ... or the provided one if any
-                mRenderTarget_ = *pRenderTarget;
+                pRenderTarget_ = pRenderTarget;
             }
 
-            pRS_->_setViewport(mRenderTarget_.pOgreRenderTarget->getViewport(0));
+            pRS_->_setViewport(pRenderTarget_->GetOgreRenderTarget()->getViewport(0));
 
             PrepareForRender_(false);
 
@@ -398,7 +497,7 @@ namespace Frost
             // Draw everything on the render target
             RenderBuffers_(true);
 
-            mRenderTarget_.pOgreRenderTarget = NULL;
+            pRenderTarget_ = NULL;
             bFrameStarted_ = false;
         }
     }
@@ -504,5 +603,50 @@ namespace Frost
     const AxisType& SpriteManager::GetYAxisType() const
     {
         return mAxisType_;
+    }
+
+    s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_str& sTargetName, const s_uint& uiWidth, const s_uint& uiHeight )
+    {
+        s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
+            uiTargetCounter_, sTargetName, uiWidth, uiHeight
+        );
+        uiTargetCounter_++;
+
+        return pRTarget;
+    }
+
+    s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_uint& uiWidth, const s_uint& uiHeight )
+    {
+        s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
+            uiTargetCounter_, uiWidth, uiHeight
+        );
+        uiTargetCounter_++;
+
+        return pRTarget;
+    }
+
+    void SpriteManager::DeleteRenderTarget( s_ptr<RenderTarget> pTarget )
+    {
+        if (pTarget)
+        {
+            map< s_uint, s_ptr<RenderTarget> >::iterator iterRenderTarget;
+            iterRenderTarget = lRenderTargetList_.find(pTarget->GetID());
+
+            if (iterRenderTarget != lRenderTargetList_.end())
+            {
+                if (iterRenderTarget->second->GetID() == pTarget->GetID())
+                {
+                    // Everything went fine, delete, erase from map and return
+                    iterRenderTarget->second.Delete();
+                    lRenderTargetList_.erase(iterRenderTarget);
+                    return;
+                }
+            }
+
+            Warning(CLASS_NAME,
+                "Trying to call DeleteRenderTarget on a RenderTarget that has not been created by SpriteManager (ID:"+pTarget->GetID()+")."
+            );
+        }
+
     }
 }

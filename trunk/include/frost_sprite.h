@@ -93,6 +93,8 @@ namespace Frost
         /// Renders this Sprite on the current render target.
         /** \param fX The horizontal position
         *   \param fY The vertical position
+        *   \note Must be called between SpriteManager::Begin() and
+        *         SpriteManager::End().
         */
         void Render(const s_float& fX, const s_float& fY);
 
@@ -102,7 +104,9 @@ namespace Frost
         *   \param fRot    The rotation to apply (angle in radian)
         *   \param fHScale The horizontal scale to apply
         *   \param fVScale The vertical scale to apply
-        *   \note This function doesn't store the deformation.
+        *   \note This function doesn't store the deformation.<br>
+        *         Must be called between SpriteManager::Begin() and
+        *         SpriteManager::End().
         */
         void RenderEx(const s_float& fX, const s_float& fY,
                       const s_float& fRot,
@@ -113,7 +117,9 @@ namespace Frost
         *   \param fY1 The top-left corner vertical position
         *   \param fX3 The bottom-right corner horizontal position
         *   \param fY3 The bottom-right corner vertical position
-        *   \note This function doesn't store the deformation.
+        *   \note This function doesn't store the deformation.<br>
+        *         Must be called between SpriteManager::Begin() and
+        *         SpriteManager::End().
         */
         void Render2V(const s_float& fX1, const s_float& fY1,
                       const s_float& fX3, const s_float& fY3);
@@ -127,7 +133,9 @@ namespace Frost
         *   \param fY3 The bottom-right corner vertical position
         *   \param fX4 The bottom-left corner horizontal position
         *   \param fY4 The bottom-left corner vertical position
-        *   \note This function doesn't store the deformation.
+        *   \note This function doesn't store the deformation.<br>
+        *         Must be called between SpriteManager::Begin() and
+        *         SpriteManager::End().
         */
         void Render4V(const s_float& fX1, const s_float& fY1,
                       const s_float& fX2, const s_float& fY2,
@@ -280,7 +288,7 @@ namespace Frost
         /// Updates this Sprite's texture coordinates
         void UpdateUVs_();
 
-        Quad               mQuad_;
+        s_refptr<Quad>     pQuad_;
         Color              mColor_;
         s_float            fX1_, fY1_;
         s_float            fX2_, fY2_;
