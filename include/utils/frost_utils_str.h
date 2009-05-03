@@ -318,6 +318,22 @@ namespace Frost
         */
         s_uint              Replace(const s_str& sPattern, const s_str& sReplacement);
 
+        /// Adds a new character at the end of the string.
+        /** \param cChar The character to add
+        */
+        void                PushBack(const string_element& cChar);
+
+        /// Adds a new character at the beginning of the string.
+        /** \param cChar The character to add
+        */
+        void                PushFront(const string_element& cChar);
+
+        /// Adds a new character somewhere in the string.
+        /** \param cChar The character to add
+        *   \param uiPos The position at which to insert the char
+        */
+        void                Insert(const string_element& cChar, const s_uint& uiPos);
+
         string_element&     operator [] (const s_uint& uiIndex);
         const string_element& operator [] (const s_uint& uiIndex) const;
         s_str               operator +  (const s_str& mValue) const;
@@ -388,6 +404,11 @@ namespace Frost
             iterator(s_str* pParent, const s_uint& uiPos);
 
             string_element& operator * ();
+            iterator  operator + (const s_int& iOffset) const;
+            iterator  operator + (const s_uint& uiOffset) const;
+            iterator  operator - (const s_int& iOffset) const;
+            iterator  operator - (const s_uint& uiOffset) const;
+            s_uint    operator - (const iterator& iter) const;
             iterator& operator ++ ();
             iterator  operator ++ (int);
             iterator& operator -- ();
@@ -409,6 +430,11 @@ namespace Frost
             const_iterator(const s_str* pParent, const s_uint& uiPos);
 
             const string_element& operator * ();
+            const_iterator  operator + (const s_int& iOffset) const;
+            const_iterator  operator + (const s_uint& uiOffset) const;
+            const_iterator  operator - (const s_int& iOffset) const;
+            const_iterator  operator - (const s_uint& uiOffset) const;
+            s_uint          operator - (const const_iterator& iter) const;
             const_iterator& operator ++ ();
             const_iterator  operator ++ (int);
             const_iterator& operator -- ();
