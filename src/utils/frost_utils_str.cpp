@@ -600,6 +600,30 @@ namespace Frost
         return lPieces;
     }
 
+    std::vector<s_str> s_str::CutEach( const s_str& sDelim, const s_uint& uiMaxCut ) const
+    {
+        vector<s_str> lPieces;
+        s_uint uiPos = FindPos(sDelim);
+        s_uint uiLastPos;
+        s_uint uiCount;
+        s_uint uiCurSize;
+        while (uiPos.IsValid())
+        {
+            uiCurSize = uiPos - uiLastPos;
+            lPieces.push_back(Extract(uiLastPos, uiCurSize));
+            uiLastPos = uiPos + sDelim.Length();
+            uiPos = FindPos(sDelim, uiLastPos);
+            uiCount++;
+
+            if (uiCount >= uiMaxCut)
+                break;
+        }
+
+        lPieces.push_back(Extract(uiLastPos));
+
+        return lPieces;
+    }
+
     s_uint s_str::CountOccurences( const s_str& sPattern ) const
     {
         s_uint uiCount;

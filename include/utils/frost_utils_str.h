@@ -162,14 +162,27 @@ namespace Frost
         void                Clear();
 
         /// Cuts this string everytime the delineator is found.
-        /** \param sDelim   The delineator
-        *   \param uiMaxCut The maximum number of occurences
+        /** \param sDelim            The delineator
+        *   \param uiMaxCut          The maximum number of occurences.
         *   \return A vector containing the separated strings
         *   \note If the delineator is not found in the string, this function
         *         returns the whole string, unchanged.
-        *   \note Removes the delineator from the sub-strings.
+        *   \note Removes the delineator from the sub-strings.<br>
+        *         This function <b>groups</b> occurences of the delineator.
         */
         std::vector<s_str>  Cut(const s_str& sDelim, const s_uint& uiMaxCut = s_uint::INF) const;
+
+        /// Cuts this string everytime the delineator is found.
+        /** \param sDelim            The delineator
+        *   \param uiMaxCut          The maximum number of occurences.
+        *   \return A vector containing the separated strings
+        *   \note If the delineator is not found in the string, this function
+        *         returns the whole string, unchanged.
+        *   \note Removes the delineator from the sub-strings.<br>
+        *         This function cuts the string <b>each time</b> the delineator
+        *         is found.
+        */
+        std::vector<s_str>  CutEach(const s_str& sDelim, const s_uint& uiMaxCut = s_uint::INF) const;
 
         /// Counts the number of time a certain pattern is found on the string.
         /** \param sPattern The string to search for
