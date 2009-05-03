@@ -20,9 +20,23 @@ namespace Frost
     friend class Manager<FontManager>;
     public :
 
-        s_ptr<Ogre::Font> GetFont(s_str sFontFile, s_uint iSize);
+        /// Creates or retreives an Ogre::Font.
+        /** \param sFontFile The path to the .tff file
+        *   \param uiSize    The size at which to render the font
+        *   \note This function will create the font if it doens't exists,
+        *         or return a pointer to it if has already been created.
+        */
+        s_ptr<Ogre::Font> GetFont(const s_str& sFontFile, const s_uint& uiSize);
+
+        /// Returns the name of the default font.
+        /** \return The name of the default font
+        *   \note This value is read from config files.
+        */
         const s_str& GetDefaultFont() const;
 
+        /// Reads the configuration files.
+        /** \return 'true' if everything went fine
+        */
         s_bool       ReadConfig();
 
         static const s_str CLASS_NAME;

@@ -29,9 +29,9 @@ namespace Frost
     {
     }
 
-    s_ptr<Ogre::Font> FontManager::GetFont(s_str sFontFile, s_uint uiSize)
+    s_ptr<Ogre::Font> FontManager::GetFont(const s_str& sFontFile, const s_uint& uiSize)
     {
-        s_str sID = sFontFile + "|" + s_str(uiSize);
+        s_str sID = sFontFile + "|" + uiSize;
         if (MAPFIND(sID, lFontList_))
         {
             return lFontList_[sID];
@@ -46,6 +46,7 @@ namespace Frost
                 pFnt->setTrueTypeSize(uiSize.Get());
                 pFnt->setTrueTypeResolution(96);
                 pFnt->addCodePointRange(Ogre::Font::CodePointRange(33, 255));
+                pFnt->load();
 
                 lFontList_[sID] = pFnt.getPointer();
 
