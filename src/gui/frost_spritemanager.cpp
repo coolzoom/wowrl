@@ -72,18 +72,20 @@ namespace Frost
 
     Quad::Quad()
     {
+        pMat = MaterialManager::GetSingleton()->GetDefault2D();
     }
 
     RenderTarget::RenderTarget( const s_uint& uiID, const s_uint& uiWidth, const s_uint& uiHeight )
     {
         uiID_ = uiID;
+        sName_ = "_AutoNamedTarget:"+uiID_;
         uiWidth_ = uiWidth;
         uiHeight_ = uiHeight;
         uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
         uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
 
         Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
-            ("_AutoNamedTarget:"+uiID_).Get(), "Frost", Ogre::TEX_TYPE_2D,
+            sName_.Get(), "Frost", Ogre::TEX_TYPE_2D,
             uiRealWidth_.Get(), uiRealHeight_.Get(),
             0, Ogre::PF_A8B8G8R8, Ogre::TU_RENDERTARGET
         );
@@ -96,13 +98,14 @@ namespace Frost
     RenderTarget::RenderTarget( const s_uint& uiID, const s_str& sName, const s_uint& uiWidth, const s_uint& uiHeight )
     {
         uiID_ = uiID;
+        sName_ = sName;
         uiWidth_ = uiWidth;
         uiHeight_ = uiHeight;
         uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
         uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
 
         Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
-            sName.Get(), "Frost", Ogre::TEX_TYPE_2D,
+            sName_.Get(), "Frost", Ogre::TEX_TYPE_2D,
             uiRealWidth_.Get(), uiRealHeight_.Get(),
             0, Ogre::PF_A8B8G8R8, Ogre::TU_RENDERTARGET
         );
@@ -114,9 +117,7 @@ namespace Frost
 
     RenderTarget::~RenderTarget()
     {
-        Ogre::TextureManager::getSingleton().remove(
-            hResourceHandle_
-        );
+        Ogre::TextureManager::getSingleton().remove(hResourceHandle_);
     }
 
     const s_uint& RenderTarget::GetWidth() const
@@ -129,7 +130,7 @@ namespace Frost
         return uiHeight_;
     }
 
-    void RenderTarget::SetDimensions( const s_uint& uiWidth, const s_uint& uiHeight )
+    s_bool RenderTarget::SetDimensions( const s_uint& uiWidth, const s_uint& uiHeight )
     {
         s_uint uiNewWidth = uiWidth.GetNearestPowerOfTwo();
         s_uint uiNewHeight = uiHeight.GetNearestPowerOfTwo();
@@ -152,6 +153,7 @@ namespace Frost
 
             pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
             pOgreRenderTarget_->addViewport(0);
+            return true;
         }
         else
         {
@@ -159,6 +161,7 @@ namespace Frost
             // Just change its virtual size
             uiWidth_ = uiWidth;
             uiHeight_ = uiHeight;
+            return false;
         }
     }
 
@@ -182,14 +185,25 @@ namespace Frost
         return uiID_;
     }
 
+    const s_str& RenderTarget::GetName()
+    {
+        return sName_;
+    }
+
     SpriteManager::SpriteManager()
     {
         pRenderFunc_ = NULL;
-        mAxisType_ = AXIS_UP;
+        mAxisType_ = AXIS_DOWN;
     }
 
     SpriteManager::~SpriteManager()
     {
+        map< s_uint, s_ptr<RenderTarget> >::iterator iterTarget;
+        foreach (iterTarget, lRenderTargetList_)
+        {
+            iterTarget->second.Delete();
+        }
+
         if (!mHardwareBuffer_.isNull())
             DestroyHardwareBuffers_();
     }
@@ -231,6 +245,8 @@ namespace Frost
         pMainSprite_ = s_refptr<Sprite>(new Sprite(
             pMat, fWidth, fHeight
         ));
+
+        bRenderTargets_ = true;
     }
 
     void SpriteManager::SetWindowSize( const s_float& fWidth, const s_float& fHeight )
@@ -488,6 +504,13 @@ namespace Frost
 
             bFrameStarted_ = true;
         }
+        else
+        {
+            Warning(CLASS_NAME,
+                "Calling Begin(), but there is already something beeing rendered... ("+
+                pRenderTarget.IsValid().GetAsString(pRenderTarget->GetName(), "main target).")
+            );
+        }
     }
 
     void SpriteManager::End()
@@ -499,6 +522,12 @@ namespace Frost
 
             pRenderTarget_ = NULL;
             bFrameStarted_ = false;
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "Calling End(), but there was no corresponding Begin() call..."
+            );
         }
     }
 
@@ -520,12 +549,14 @@ namespace Frost
         pMainSprite_->Render(0, 0);
 
         RenderBuffers_();
+
+        bRenderTargets_ = true;
+
         return true;
     }
 
     s_bool SpriteManager::RenderTargets()
     {
-        bRenderTargets_ = true;
         if (pRenderFunc_)
         {
             // Set up...
