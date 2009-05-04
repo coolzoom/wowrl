@@ -112,6 +112,14 @@ namespace Frost
         uiR_ =  (((uchar)uiColor_.Get()) & 0xFF);
     }
 
+    Color Color::Random( const s_bool& bRandomAlpha )
+    {
+        if (bRandomAlpha)
+            return Color(s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255));
+        else
+            return Color(s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255));
+    }
+
     s_str operator+ ( const string_element* sLeft, const Color& mRight )
     {
         return s_str(sLeft) + mRight;

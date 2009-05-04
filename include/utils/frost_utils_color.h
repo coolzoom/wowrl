@@ -94,6 +94,13 @@ namespace Frost
         */
         void          Set(const s_uint& uiColor);
 
+        /// Creates a random color.
+        /** \param bRandomAlpha 'true' to randomize the alpha chanel too,
+        *                       'false' to make it opaque (alpha = 255)
+        *   \return A random color
+        */
+        static Color  Random(const s_bool& bRandomAlpha = false);
+
         static const s_str CLASS_NAME;
 
     private :
