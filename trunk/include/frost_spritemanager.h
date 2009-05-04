@@ -96,8 +96,10 @@ namespace Frost
         /// Sets this render target's dimensions.
         /** \param uiWidth This render target's width
         *   \param uiHeight This render target's height
+        *   \return 'true' if the function had to re-create a
+        *           new render target
         */
-        void                      SetDimensions(const s_uint& uiWidth, const s_uint& uiHeight);
+        s_bool                    SetDimensions(const s_uint& uiWidth, const s_uint& uiHeight);
 
         /// Returns this render target's real width.
         /** \return This render target's real width
@@ -123,11 +125,17 @@ namespace Frost
         */
         const s_uint&             GetID();
 
+        /// Returns this RenderTarget's name.
+        /** \return This RenderTarget's name
+        */
+        const s_str&              GetName();
+
         static const s_str CLASS_NAME;
 
     private :
 
         s_uint                    uiID_;
+        s_str                     sName_;
         s_ptr<Ogre::RenderTarget> pOgreRenderTarget_;
         ulong                     hResourceHandle_;
         s_uint                    uiRealWidth_;
@@ -154,8 +162,9 @@ namespace Frost
         {
         }
 
-        Vertex()
+        Vertex() : mColor(255, 255, 255)
         {
+
         }
 
         void Set(const s_float& x, const s_float& y)
