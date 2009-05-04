@@ -62,6 +62,12 @@ namespace Frost
         */
         s_refptr<Material> CreateMaterial2DFromRT(const s_str& sRenderTargetName);
 
+        /// Creates a new Material (for 2D rendering).
+        /** \param pRenderTarget The render target to use
+        *   \return The new Material
+        */
+        s_refptr<Material> CreateMaterial2DFromRT(s_ptr<RenderTarget> pRenderTarget);
+
         /// Returns the default Material (for 2D rendering).
         /** \return The default Material (for 2D rendering)
         */
