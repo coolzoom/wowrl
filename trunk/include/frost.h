@@ -202,6 +202,10 @@ namespace Frost
     // frost_terraindata.h
     class  TerrainData;
 
+    // frost_text.h
+    struct Line;
+    class  Text;
+
     // frost_unit.h
     struct Class;
     class  Unit;

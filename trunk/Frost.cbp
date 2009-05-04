@@ -20,6 +20,8 @@
 					<Add option="-fexceptions" />
 					<Add option="-fident" />
 					<Add option="-D_DEBUG" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add option="-Wl,--enable-runtime-pseudo-reloc" />
@@ -46,6 +48,8 @@
 					<Add option="-fexceptions" />
 					<Add option="-fident" />
 					<Add option="-DNDEBUG" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -104,8 +108,6 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-DWIN32" />
-			<Add option="-D_WINDOWS" />
 			<Add directory="..\ogre\OgreMain\include" />
 			<Add directory="include" />
 			<Add directory="..\ogre\Dependencies\include" />
