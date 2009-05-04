@@ -24,8 +24,10 @@
 #include "frost_character.h"
 #include "frost_node.h"
 #include "frost_decal.h"
+#include "frost_text.h"
 
 #include <OgreException.h>
+#include <OgreFont.h>
 
 #ifndef FROST_LINUX
     #include <windows.h>
@@ -39,27 +41,19 @@ s_ptr<Character> pChar;
 s_ptr<Character> pChar2;
 s_ptr<Model>  pModel;
 
-s_refptr<Sprite> pSprite;
-s_refptr<Sprite> pSprite2;
+s_ptr<Sprite> pSprite;
+s_ptr<Sprite> pRTSprite;
 s_ptr<RenderTarget> pRTarget;
+s_ptr<Text>   pText;
 
-s_refptr<SmoothPath> pPath;
-s_ptr<Camera>        pCam;
+s_ptr<Camera> pCam;
 
-s_ptr<Plane>         pPlane;
-s_ptr<Light>         pLight1;
-s_ptr<Light>         pLight2;
-s_ptr<Light>         pLight3;
+s_ptr<Plane>  pPlane;
+s_ptr<Light>  pLight1;
+s_ptr<Light>  pLight2;
+s_ptr<Light>  pLight3;
 
-s_ptr<Decal>         pSelectionDecal;
-
-s_float fCoefX = M_PI_4;
-s_float fCoefY = M_PI_4;
-s_float fZoom = 1.0f;
-s_float fCamSpeed = 20.0f;
-
-s_bool bCameraMovedAlone;
-s_bool bAdjustCamDir;
+s_ptr<Decal>  pSelectionDecal;
 
 enum CameraType
 {
@@ -90,12 +84,12 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_R))
     {
-        pChar->Resurrect();
+        //pChar->Resurrect();
     }
 
     if (pInputMgr->KeyIsPressed(KEY_E))
     {
-        pChar->AddHealth(-2000.0f);
+        //pChar->AddHealth(-2000.0f);
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -128,12 +122,28 @@ s_bool RenderFunc()
 {
     static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
 
+    pText->Update();
+
+    pSpriteMgr->Begin(pRTarget);
+
+        pSpriteMgr->Clear(Color(0, 0, 0, 0));
+
+        //pText->Render(0, 0);
+
+    pSpriteMgr->End();
+
     // Render in the main target
     pSpriteMgr->Begin();
 
         pSpriteMgr->Clear(Color(0, 0, 0, 0));
 
-        GUIManager::GetSingleton()->RenderUI();
+        //GUIManager::GetSingleton()->RenderUI();
+
+        //pRTSprite->Render(0, 0);
+
+        pText->Render(0, 0);
+
+        //pSprite->Render(10, 10);
 
     pSpriteMgr->End();
 
@@ -141,8 +151,6 @@ s_bool RenderFunc()
 }
 
 // To Do List :
-// TODO : terminer s_str
-// TODO : terminer Text
 #ifdef FROST_LINUX
 int main(int argc, char *argv[])
 #else
@@ -221,6 +229,12 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
             pLight1->SetRange(50.0f);
 
+            s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 16));
+            pTxt->SetWidth(100);
+            //pTxt->SetHeight(32);
+            pTxt->SetText("Hello, my name is |cFFFF0000John|r, I live in the USA !");
+            pText = pTxt.Get();
+
             /*pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
             pLight2->SetPosition(Vector(0, 5, 1));
             pLight2->SetColor(Color(0, 255, 0));
@@ -235,15 +249,20 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 
             // UI
             /*s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
-                "UI-UnitFrame.png"
+                "Textures/UI/UI-CloseButton-Up.png"
+            );*/
+            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial(
+                pText->GetOgreFont()->getMaterial().get()
             );
-            pSprite = s_refptr<Sprite>(new Sprite(pMat, 256, 128));*/
+            s_refptr<Sprite> pSpr = s_refptr<Sprite>(new Sprite(pMat));
+            pSprite = pSpr.Get();
 
-            /*mRTarget = GFX::CreateRenderTarget("RttTex", 256, 128);
-            Material* pMat2 = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
-                "RttTex"
+            pRTarget = SpriteManager::GetSingleton()->CreateRenderTarget("RttTex", 256, 128);
+            s_refptr<Material> pMat2 = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
+                pRTarget
             );
-            pSprite2 = new Sprite(pMat2, 256, 128);*/
+            s_refptr<Sprite> pSpr2 = s_refptr<Sprite>(new Sprite(pMat2, 256, 128));
+            pRTSprite = pSpr2.Get();
 
             // Enter the main loop
             pFrost->Loop();
@@ -259,6 +278,9 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
                 );
             #endif
         }
+
+        pText.SetNull();
+        pSprite.SetNull();
 
         // Close the engine
         Engine::Delete();
