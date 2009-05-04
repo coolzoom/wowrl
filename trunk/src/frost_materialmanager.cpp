@@ -7,6 +7,7 @@
 
 #include "frost_materialmanager.h"
 #include "frost_material.h"
+#include "frost_spritemanager.h"
 
 #include <OgreMaterialManager.h>
 #include <OgreTextureManager.h>
@@ -111,6 +112,34 @@ namespace Frost
 
     s_refptr<Material> MaterialManager::CreateMaterial2DFromRT( const s_str& sRenderTargetName )
     {
+        s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
+            (sRenderTargetName+"_2D_"+uiCounter_).Get(), "Frost"
+        ).get();
+
+        s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
+        pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
+        pPass->createTextureUnitState()->setTextureName(sRenderTargetName.Get());
+        pPass->setCullingMode(Ogre::CULL_NONE);
+        pPass->setTextureFiltering(Ogre::TFO_NONE);
+        pPass->setSeparateSceneBlending(
+            Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, // color
+            Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA  // alpha
+        );
+
+        pOgreMat->load();
+        pOgreMat->setLightingEnabled(false);
+        pOgreMat->setDepthCheckEnabled(false);
+        pOgreMat->setCullingMode(Ogre::CULL_NONE);
+
+        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_2D_RT, pOgreMat));
+        uiCounter_++;
+
+        return pMat;
+    }
+
+    s_refptr<Material> MaterialManager::CreateMaterial2DFromRT( s_ptr<RenderTarget> pRenderTarget )
+    {
+        s_str sRenderTargetName = pRenderTarget->GetName();
         s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
             (sRenderTargetName+"_2D_"+uiCounter_).Get(), "Frost"
         ).get();
