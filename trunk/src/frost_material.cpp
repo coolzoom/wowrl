@@ -63,7 +63,10 @@ namespace Frost
             iterDecal->second.Delete();
         }
 
-        Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
+        if (mType_ != MATERIAL_UNKNOWN)
+        {
+            Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
+        }
     }
 
     void Material::SetAlphaReject( const s_bool& bEnable )
@@ -235,6 +238,11 @@ namespace Frost
     s_ptr<Ogre::Material> Material::GetOgreMaterial()
     {
         return pOgreMat_;
+    }
+
+    s_ptr<Ogre::Pass> Material::GetDefaultPass()
+    {
+        return pDefaultPass_;
     }
 
     const s_str& Material::GetOgreMaterialName() const

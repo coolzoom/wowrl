@@ -125,6 +125,12 @@ namespace Frost
         */
         s_ptr<Ogre::Material> GetOgreMaterial();
 
+        /// Returns the default Ogre::Pass.
+        /** \return The default Ogre::Pass
+        *   \note This is simply the first pass.
+        */
+        s_ptr<Ogre::Pass> GetDefaultPass();
+
         /// Returns the name of the wrapped Ogre::Material.
         /** \return The name of the wrapped Ogre::Material
         */
