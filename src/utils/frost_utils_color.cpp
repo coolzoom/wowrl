@@ -120,6 +120,16 @@ namespace Frost
             return Color(s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255));
     }
 
+    s_bool Color::operator == ( const Color& mColor ) const
+    {
+        return (uiA_ == mColor.uiA_) && (uiR_ == mColor.uiR_) && (uiG_ == mColor.uiG_) && (uiB_ == mColor.uiB_);
+    }
+
+    s_bool Color::operator != ( const Color& mColor ) const
+    {
+        return (uiA_ != mColor.uiA_) || (uiR_ != mColor.uiR_) || (uiG_ != mColor.uiG_) || (uiB_ != mColor.uiB_);
+    }
+
     s_str operator+ ( const string_element* sLeft, const Color& mRight )
     {
         return s_str(sLeft) + mRight;
