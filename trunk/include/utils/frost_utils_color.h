@@ -94,6 +94,9 @@ namespace Frost
         */
         void          Set(const s_uint& uiColor);
 
+        s_bool operator == (const Color& mColor) const;
+        s_bool operator != (const Color& mColor) const;
+
         /// Creates a random color.
         /** \param bRandomAlpha 'true' to randomize the alpha chanel too,
         *                       'false' to make it opaque (alpha = 255)
