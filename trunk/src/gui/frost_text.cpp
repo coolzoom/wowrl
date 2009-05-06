@@ -64,8 +64,11 @@ namespace Frost
 
     void Text::SetText( const s_str& sText )
     {
-        sText_ = sText;
-        bUpdateCache_ = true;
+        if (sText_ != sText)
+        {
+            sText_ = sText;
+            bUpdateCache_ = true;
+        }
     }
 
     const s_str& Text::GetText() const
@@ -75,10 +78,12 @@ namespace Frost
 
     void Text::SetColor( const Color& mColor, const s_bool& bForceColor )
     {
-        mColor_ = mColor;
-        bForceColor_ = bForceColor;
-
-        bUpdateCache_ = true;
+        if ( (mColor_ != mColor) || bForceColor_ != bForceColor )
+        {
+            mColor_ = mColor;
+            bForceColor_ = bForceColor;
+            bUpdateCache_ = true;
+        }
     }
 
     const Color& Text::GetColor() const
@@ -88,23 +93,29 @@ namespace Frost
 
     void Text::SetDimensions( const s_float& fW, const s_float& fH )
     {
-        fW_ = fW; fH_ = fH;
-
-        bUpdateCache_ = true;
+        if ( (fW_ != fW) || (fH_ != fH) )
+        {
+            fW_ = fW; fH_ = fH;
+            bUpdateCache_ = true;
+        }
     }
 
     void Text::SetWidth( const s_float& fW )
     {
-        fW_ = fW;
-
-        bUpdateCache_ = true;
+        if (fW_ != fW)
+        {
+            fW_ = fW;
+            bUpdateCache_ = true;
+        }
     }
 
     void Text::SetHeight( const s_float& fH )
     {
-        fH_ = fH;
-
-        bUpdateCache_ = true;
+        if (fH_ != fH)
+        {
+            fH_ = fH;
+            bUpdateCache_ = true;
+        }
     }
 
     const s_float& Text::GetWidth() const
@@ -171,9 +182,11 @@ namespace Frost
 
     void Text::SetTracking( const s_float& fTracking )
     {
-        fTracking_ = fTracking;
-
-        bUpdateCache_ = true;
+        if (fTracking_ != fTracking)
+        {
+            fTracking_ = fTracking;
+            bUpdateCache_ = true;
+        }
     }
 
     const s_float& Text::GetTracking() const
@@ -183,14 +196,30 @@ namespace Frost
 
     void Text::SetLineSpacing( const s_float& fLineSpacing )
     {
-        fLineSpacing_ = fLineSpacing;
-
-        bUpdateCache_ = true;
+        if (fLineSpacing_ != fLineSpacing)
+        {
+            fLineSpacing_ = fLineSpacing;
+            bUpdateCache_ = true;
+        }
     }
 
     const s_float& Text::GetLineSpacing() const
     {
         return fLineSpacing_;
+    }
+
+    void Text::SetRemoveStartingSpaces( const s_bool& bRemoveStartingSpaces )
+    {
+        if (bRemoveStartingSpaces_ != bRemoveStartingSpaces)
+        {
+            bRemoveStartingSpaces_ = bRemoveStartingSpaces;
+            bUpdateCache_ = true;
+        }
+    }
+
+    const s_bool& Text::GetRemoveStartingSpaces() const
+    {
+        return bRemoveStartingSpaces_;
     }
 
     void Text::Update()
@@ -243,7 +272,7 @@ namespace Frost
     {
         lLineList_.clear();
 
-        s_uint uiMaxLineNbr;
+        s_uint uiMaxLineNbr, uiCounter;
         if (fH_.IsValid())
             uiMaxLineNbr = s_uint(s_float::Round(fH_/(fSize_*fLineSpacing_), s_float::ROUND_FLOOR));
         else
@@ -266,11 +295,31 @@ namespace Frost
                     {
                         if (*iterChar1 == 'r')
                         {
+                            lFormatList_[uiCounter+mLine.sCaption.Length()].mColorAction = COLOR_ACTION_RESET;
                             continue;
                         }
                         else if (*iterChar1 == 'c')
                         {
-                            iterChar1 = iterChar1+s_uint(8u);
+                            s_str sColorPart;
+                            iterChar1++;
+                            sColorPart += *iterChar1; iterChar1++;
+                            sColorPart += *iterChar1; iterChar1++;
+                            s_uint uiA = sColorPart.HexToUInt();
+                            sColorPart.Clear();
+                            sColorPart += *iterChar1; iterChar1++;
+                            sColorPart += *iterChar1; iterChar1++;
+                            s_uint uiR = sColorPart.HexToUInt();
+                            sColorPart.Clear();
+                            sColorPart += *iterChar1; iterChar1++;
+                            sColorPart += *iterChar1; iterChar1++;
+                            s_uint uiG = sColorPart.HexToUInt();
+                            sColorPart.Clear();
+                            sColorPart += *iterChar1; iterChar1++;
+                            sColorPart += *iterChar1;
+                            s_uint uiB = sColorPart.HexToUInt();
+
+                            lFormatList_[uiCounter+mLine.sCaption.Length()].mColorAction = COLOR_ACTION_SET;
+                            lFormatList_[uiCounter+mLine.sCaption.Length()].mColor = Color(uiA, uiR, uiG, uiB);
                             continue;
                         }
                         else if (*iterChar1 == '|')
@@ -281,8 +330,12 @@ namespace Frost
                         break;
                 }
 
-                mLine.fWidth += GetCharacterWidth(*iterChar1);
+                if (*iterChar1 == ' ')
+                    mLine.fWidth += fSpaceWidth_;
+                else
+                    mLine.fWidth += GetCharacterWidth(*iterChar1);
                 mLine.sCaption += *iterChar1;
+
                 if (mLine.fWidth > fW_)
                 {
                     if (mLine.sCaption.FindPos(" ").IsValid())
@@ -293,25 +346,47 @@ namespace Frost
                         s_str sErasedString;
                         s_uint uiCharToErase;
                         s_float fErasedWidth;
+                        s_bool bLastWasWord;
                         while ( (mLine.fWidth > fW_) && (iterChar2 != mLine.sCaption.begin()) )
                         {
                             iterChar2--;
                             if (*iterChar2 == ' ')
                             {
-                                mLine.fWidth -= fErasedWidth + GetCharacterWidth(*iterChar2);
-                                fErasedWidth = 0.0f;
-                                uiCharToErase++;
+                                if ( bLastWasWord && (mLine.fWidth-fErasedWidth < fW_) && !bRemoveStartingSpaces_ )
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    mLine.fWidth -= fErasedWidth + fSpaceWidth_;
+                                    sErasedString.PushFront(*iterChar2);
+                                    fErasedWidth = 0.0f;
+                                    uiCharToErase++;
+                                }
                             }
                             else
                             {
                                 fErasedWidth += GetCharacterWidth(*iterChar2);
                                 sErasedString.PushFront(*iterChar2);
                                 uiCharToErase++;
+                                bLastWasWord = true;
                             }
                         }
+
+                        if (bRemoveStartingSpaces_)
+                        {
+                            while (*iterChar2 == ' ')
+                            {
+                                uiCharToErase--;
+                                sErasedString.EraseFromStart(1);
+                                iterChar2++;
+                            }
+                        }
+
                         mLine.sCaption.EraseFromEnd(uiCharToErase);
 
                         lLines.push_back(mLine);
+                        uiCounter += mLine.sCaption.Length();
                         mLine.fWidth = GetStringWidth(sErasedString);
                         mLine.sCaption = sErasedString;
                     }
@@ -330,7 +405,6 @@ namespace Frost
                             mLine.fWidth -= GetCharacterWidth(*iterChar2);
                             uiCharToErase++;
                         }
-
                         mLine.sCaption.EraseFromEnd(uiCharToErase);
                         mLine.sCaption << "...";
 
@@ -346,6 +420,7 @@ namespace Frost
                         {
                             iterChar1--;
                             lLines.push_back(mLine);
+                            uiCounter += mLine.sCaption.Length();
                             mLine.fWidth = 0.0f;
                             mLine.sCaption = "";
                         }
@@ -360,10 +435,6 @@ namespace Frost
                 lLineList_.push_back(*iterLine);
                 if (s_uint(lLineList_.size()) == uiMaxLineNbr)
                 {
-                    foreach (iterLine, lLineList_)
-                    {
-                        Log(iterLine->sCaption);
-                    }
                     return;
                 }
             }
@@ -429,8 +500,9 @@ namespace Frost
         mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
             mColor_;
 
-        // TODO : afficher la couleur (ça marche pas)
-        // TODO : uniformiser l'espace entre les lettres ? (l'espace marche pas)
+        // TODO : améliorer l'espace entre les lettres ?
+
+        s_uint uiCounter;
 
         vector<Line>::iterator iterLine;
         foreach (iterLine, lLineList_)
@@ -438,66 +510,55 @@ namespace Frost
             s_str::iterator iterChar;
             foreach (iterChar, iterLine->sCaption)
             {
-                if (*iterChar == '|')
+                // Format our text
+                if (MAPFIND(uiCounter, lFormatList_))
                 {
-                    iterChar++;
-                    if (iterChar != iterLine->sCaption.end())
+                    s_ptr<Format> f = &lFormatList_[uiCounter];
+                    switch (f->mColorAction)
                     {
-                        if ( (*iterChar == 'c' ) && !bForceColor_ )
-                        {
-                            // New color
-                            iterChar = iterChar + s_uint(8u);
-                            if (iterChar != iterLine->sCaption.end())
-                            {
-                                s_uint uiIterPos = iterChar - iterLine->sCaption.begin() - 7;
-                                s_str sColorPart = iterLine->sCaption.Extract(uiIterPos, 2);
-                                s_uint uiA = sColorPart.HexToUInt();
-                                sColorPart = iterLine->sCaption.Extract(uiIterPos+2, 2);
-                                s_uint uiR = sColorPart.HexToUInt();
-                                sColorPart = iterLine->sCaption.Extract(uiIterPos+4, 2);
-                                s_uint uiG = sColorPart.HexToUInt();
-                                sColorPart = iterLine->sCaption.Extract(uiIterPos+6, 2);
-                                s_uint uiB = sColorPart.HexToUInt();
-
-                                mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-                                mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
-                                    Color(uiA, uiR, uiG, uiB);
-                            }
-                            continue;
-                        }
-                        else if ( (*iterChar == 'r') && !bForceColor_ )
-                        {
-                            // Default color
+                        case COLOR_ACTION_SET :
+                            mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                            mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
+                                f->mColor;
+                            break;
+                        case COLOR_ACTION_RESET :
                             mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
                             mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
                                 mColor_;
-
-                            continue;
-                        }
-                        else if (*iterChar == '|')
-                        {
-                        }
+                            break;
+                        default : break;
                     }
-                    else
-                        break;
                 }
 
-                const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)*iterChar);
-                s_float fCharWidth = GetCharacterWidth((uint)*iterChar);
-                s_float fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
-                s_float fYAdjust = -fCharHeight/2+fSize_/2;
-                mQuad.lVertexArray[0].Set(fX, fY+fYAdjust);
-                mQuad.lVertexArray[0].SetUV(mUVRect.left, mUVRect.top);
-                mQuad.lVertexArray[1].Set(fX+fCharWidth, fY+fYAdjust);
-                mQuad.lVertexArray[1].SetUV(mUVRect.right, mUVRect.top);
-                mQuad.lVertexArray[2].Set(fX+fCharWidth, fY+fYAdjust+fCharHeight);
-                mQuad.lVertexArray[2].SetUV(mUVRect.right, mUVRect.bottom);
-                mQuad.lVertexArray[3].Set(fX, fY+fYAdjust+fCharHeight);
-                mQuad.lVertexArray[3].SetUV(mUVRect.left, mUVRect.bottom);
+                s_float fCharWidth, fCharHeight;
 
-                pSpriteMgr->RenderQuad(mQuad);
+                // Render the character on the screen
+                if (*iterChar == ' ')
+                {
+                    fCharWidth = fSpaceWidth_;
+                }
+                else
+                {
+                    const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)*iterChar);
+                    fCharWidth = GetCharacterWidth((uint)*iterChar);
+                    fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
+                    s_float fYOffset = -fCharHeight/2+fSize_/2;
+
+                    mQuad.lVertexArray[0].Set(fX,            fY+fYOffset);
+                    mQuad.lVertexArray[1].Set(fX+fCharWidth, fY+fYOffset);
+                    mQuad.lVertexArray[2].Set(fX+fCharWidth, fY+fYOffset+fCharHeight);
+                    mQuad.lVertexArray[3].Set(fX,            fY+fYOffset+fCharHeight);
+
+                    mQuad.lVertexArray[0].SetUV(mUVRect.left,  mUVRect.top);
+                    mQuad.lVertexArray[1].SetUV(mUVRect.right, mUVRect.top);
+                    mQuad.lVertexArray[2].SetUV(mUVRect.right, mUVRect.bottom);
+                    mQuad.lVertexArray[3].SetUV(mUVRect.left,  mUVRect.bottom);
+
+                    pSpriteMgr->RenderQuad(mQuad);
+                }
 
                 fX += fCharWidth + fTracking_;
+                uiCounter++;
             }
 
 			fY += fSize_*fLineSpacing_;

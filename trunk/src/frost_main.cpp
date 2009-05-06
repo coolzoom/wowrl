@@ -231,8 +231,9 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 
             s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 16));
             pTxt->SetWidth(100);
+            pTxt->SetRemoveStartingSpaces(true);
             //pTxt->SetHeight(32);
-            pTxt->SetText("Hello, my name is |cFFFF0000John|r, I live in the USA !");
+            pTxt->SetText("Hello, my |cFF0000FFname|r is |cFFFF0000John|r, I live |cFF00FF00in my beloved|r USA !");
             pText = pTxt.Get();
 
             /*pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);

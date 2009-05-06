@@ -13,11 +13,28 @@
 
 namespace Frost
 {
-    /// Contains several formated strings
+    /// Contains a string that will be drawn on a line
     struct Line
     {
         s_str   sCaption;
         s_float fWidth;
+    };
+
+    enum ColorAction
+    {
+        COLOR_ACTION_NONE,
+        COLOR_ACTION_SET,
+        COLOR_ACTION_RESET
+    };
+
+    /// Contains information about the text at a given position
+    struct Format
+    {
+        Format() : mColorAction(COLOR_ACTION_NONE)
+        {}
+
+        Color       mColor;
+        ColorAction mColorAction;
     };
 
     /// Used to draw some text on the screen
@@ -141,6 +158,23 @@ namespace Frost
         */
         const s_float& GetLineSpacing() const;
 
+        /// Allows removal of a line's starting spaces.
+        /** \param bRemoveStartingSpaces 'true' to remove them
+        *   \note The text box does word wrapping : it cuts too long
+        *         lines only between words. But sometimes, the rendered
+        *         text must be cut between several spaces. By default,
+        *         the algorithm puts cuted spaces at the beginning of
+        *         the next line. You can change this behavior by setting
+        *         this function to 'true'.
+        */
+        void           SetRemoveStartingSpaces(const s_bool& bRemoveStartingSpaces);
+
+        /// Checks if starting spaces removing is active.
+        /** \return 'true' if starting spaces removing is active
+        */
+        const s_bool&  GetRemoveStartingSpaces() const;
+
+
         /// Returns this Text's cache.
         /** \return This Text's cache
         *   \note The cache contains the rendered text.
@@ -181,11 +215,13 @@ namespace Frost
         s_float fTracking_;
         s_float fLineSpacing_;
         s_float fSpaceWidth_;
+        s_bool  bRemoveStartingSpaces_;
         Color mColor_;
         s_bool bForceColor_;
         s_float fW_, fH_;
         s_str sText_;
         std::vector<Line> lLineList_;
+        std::map<s_uint, Format> lFormatList_;
         s_ptr<Ogre::Font> pOgreFont_;
         s_refptr<Material> pFontMat_;
 
