@@ -204,6 +204,7 @@ namespace Frost
 
     // frost_text.h
     struct Line;
+    struct Format;
     class  Text;
 
     // frost_unit.h
