@@ -122,6 +122,7 @@ s_bool RenderFunc()
 {
     static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
 
+    pText->SetText("FPS : "+TimeManager::GetSingleton()->GetFPS());
     pText->Update();
 
     pSpriteMgr->Begin(pRTarget);
@@ -141,7 +142,7 @@ s_bool RenderFunc()
 
         //pRTSprite->Render(0, 0);
 
-        pText->Render(0, 0);
+        pText->Render(2, 2);
 
         //pSprite->Render(10, 10);
 
@@ -229,11 +230,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
             pLight1->SetRange(50.0f);
 
-            s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 16));
-            pTxt->SetWidth(100);
-            pTxt->SetRemoveStartingSpaces(true);
-            //pTxt->SetHeight(32);
-            pTxt->SetText("Hello, my |cFF0000FFname|r is |cFFFF0000John|r, I live |cFF00FF00in my beloved|r USA !");
+            s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 10));
             pText = pTxt.Get();
 
             /*pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
