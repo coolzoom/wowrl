@@ -268,8 +268,40 @@ namespace Frost
         return pOgreFont_;
     }
 
+    void GetFormat( s_str::iterator& iterChar, Format& mFormat )
+    {
+        if (*iterChar == 'r')
+        {
+            mFormat.mColorAction = COLOR_ACTION_RESET;
+        }
+        else if (*iterChar == 'c')
+        {
+            s_str sColorPart;
+            iterChar++;
+            sColorPart += *iterChar; iterChar++;
+            sColorPart += *iterChar; iterChar++;
+            s_uint uiA = sColorPart.HexToUInt();
+            sColorPart.Clear();
+            sColorPart += *iterChar; iterChar++;
+            sColorPart += *iterChar; iterChar++;
+            s_uint uiR = sColorPart.HexToUInt();
+            sColorPart.Clear();
+            sColorPart += *iterChar; iterChar++;
+            sColorPart += *iterChar; iterChar++;
+            s_uint uiG = sColorPart.HexToUInt();
+            sColorPart.Clear();
+            sColorPart += *iterChar; iterChar++;
+            sColorPart += *iterChar;
+            s_uint uiB = sColorPart.HexToUInt();
+
+            mFormat.mColorAction = COLOR_ACTION_SET;
+            mFormat.mColor = Color(uiA, uiR, uiG, uiB);
+        }
+    }
+
     void Text::UpdateLines_()
     {
+        // Update the line list, read format tags, do word wrapping, ...
         lLineList_.clear();
 
         s_uint uiMaxLineNbr, uiCounter;
@@ -282,48 +314,26 @@ namespace Frost
         vector<s_str>::iterator iterManual;
         foreach (iterManual, lManualLineList)
         {
+            // Make a temporary line array
             vector<Line> lLines;
-
             Line mLine;
+
             s_str::iterator iterChar1;
             foreach (iterChar1, *iterManual)
             {
+                // Read format tags
                 if (*iterChar1 == '|')
                 {
                     iterChar1++;
                     if (iterChar1 != iterManual->end())
                     {
-                        if (*iterChar1 == 'r')
+                        if (*iterChar1 == '|')
                         {
-                            lFormatList_[uiCounter+mLine.sCaption.Length()].mColorAction = COLOR_ACTION_RESET;
-                            continue;
                         }
-                        else if (*iterChar1 == 'c')
+                        else
                         {
-                            s_str sColorPart;
-                            iterChar1++;
-                            sColorPart += *iterChar1; iterChar1++;
-                            sColorPart += *iterChar1; iterChar1++;
-                            s_uint uiA = sColorPart.HexToUInt();
-                            sColorPart.Clear();
-                            sColorPart += *iterChar1; iterChar1++;
-                            sColorPart += *iterChar1; iterChar1++;
-                            s_uint uiR = sColorPart.HexToUInt();
-                            sColorPart.Clear();
-                            sColorPart += *iterChar1; iterChar1++;
-                            sColorPart += *iterChar1; iterChar1++;
-                            s_uint uiG = sColorPart.HexToUInt();
-                            sColorPart.Clear();
-                            sColorPart += *iterChar1; iterChar1++;
-                            sColorPart += *iterChar1;
-                            s_uint uiB = sColorPart.HexToUInt();
-
-                            lFormatList_[uiCounter+mLine.sCaption.Length()].mColorAction = COLOR_ACTION_SET;
-                            lFormatList_[uiCounter+mLine.sCaption.Length()].mColor = Color(uiA, uiR, uiG, uiB);
+                            GetFormat(iterChar1, lFormatList_[uiCounter+mLine.sCaption.Length()]);
                             continue;
-                        }
-                        else if (*iterChar1 == '|')
-                        {
                         }
                     }
                     else
@@ -338,6 +348,7 @@ namespace Frost
 
                 if (mLine.fWidth > fW_)
                 {
+                    // Whoops, the line is too long...
                     if (mLine.sCaption.FindPos(" ").IsValid())
                     {
                         // There are several words on this line, we'll
@@ -408,27 +419,55 @@ namespace Frost
                         mLine.sCaption.EraseFromEnd(uiCharToErase);
                         mLine.sCaption << "...";
 
+                        s_str::iterator iterTemp = iterChar1;
                         iterChar1 = iterManual->begin() + iterManual->FindPos(" ", iterChar1 - iterManual->begin());
-                        while (iterChar1 != iterManual->end())
-                        {
-                            if ((*iterChar1) == ' ')
-                                iterChar1++;
-                            else
-                                break;
-                        }
+
                         if (iterChar1 != iterManual->end())
                         {
-                            iterChar1--;
-                            lLines.push_back(mLine);
-                            uiCounter += mLine.sCaption.Length();
-                            mLine.fWidth = 0.0f;
-                            mLine.sCaption = "";
+                            // Read cutted format tags
+                            for (; iterTemp != iterChar1; iterTemp++)
+                            {
+                                if ((*iterTemp) == '|')
+                                {
+                                    iterTemp++;
+                                    if (iterTemp != iterChar1)
+                                    {
+                                        if ((*iterTemp) == '|')
+                                        {
+                                        }
+                                        else
+                                        {
+                                            GetFormat(iterTemp, lFormatList_[uiCounter+mLine.sCaption.Length()]);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Look for the next word
+                            while (iterChar1 != iterManual->end())
+                            {
+                                if ((*iterChar1) == ' ')
+                                    iterChar1++;
+                                else
+                                    break;
+                            }
+
+                            // Add the line
+                            if (iterChar1 != iterManual->end())
+                            {
+                                iterChar1--;
+                                lLines.push_back(mLine);
+                                uiCounter += mLine.sCaption.Length();
+                                mLine.fWidth = 0.0f;
+                                mLine.sCaption = "";
+                            }
                         }
                     }
                 }
             }
             lLines.push_back(mLine);
 
+            // Add the maximum number of line to this Text
             vector<Line>::iterator iterLine;
             foreach (iterLine, lLines)
             {
@@ -499,8 +538,6 @@ namespace Frost
         mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
         mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
             mColor_;
-
-        // TODO : améliorer l'espace entre les lettres ?
 
         s_uint uiCounter;
 
