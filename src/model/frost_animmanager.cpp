@@ -98,37 +98,42 @@ namespace Frost
         pOldAnim_ = pActualAnim_;
 
         map<s_uint, AnimationSequence>::iterator iterAnim = lAnimList_.find(uiID);
-        s_ptr<AnimationSequence> pAS = &(iterAnim->second);
-        if (pAS->lSequence.size() > 1)
+        if (iterAnim != lAnimList_.end())
         {
-            s_uint uiRnd = s_uint::Random(0u, 10u);
-            if (uiRnd > 8)
-                uiRnd.Randomize(1, pAS->lSequence.size()-1);
-            else
-                uiRnd = 0u;
-            pActualAnim_ = &pAS->lSequence[uiRnd.Get()];
-        }
-        else
-            pActualAnim_ = &pAS->lSequence[0];
-
-        pActualAnim_->pAnim->setEnabled(true);
-        pActualAnim_->pAnim->setTimePosition(0.0f);
-
-        if (pOldAnim_ != pActualAnim_)
-        {
-            if (pOldAnim_ != NULL)
+            s_ptr<AnimationSequence> pAS = &(iterAnim->second);
+            if (pAS->lSequence.size() > 1)
             {
-                pOldAnim_->pAnim->setEnabled(true);
-                pOldAnim_->pAnim->setWeight(1.0f);
+                s_uint uiRnd = s_uint::Random(0u, 10u);
+                if (uiRnd > 8)
+                    uiRnd.Randomize(1, pAS->lSequence.size()-1);
+                else
+                    uiRnd = 0u;
+                pActualAnim_ = &pAS->lSequence[uiRnd.Get()];
             }
-            pActualAnim_->pAnim->setWeight(0.0f);
-            bTransition_ = true;
-            fBlend_ = 0.0f;
+            else
+                pActualAnim_ = &pAS->lSequence[0];
+
+            pActualAnim_->pAnim->setEnabled(true);
+            pActualAnim_->pAnim->setTimePosition(0.0f);
+
+            if (pOldAnim_ != pActualAnim_)
+            {
+                if (pOldAnim_ != NULL)
+                {
+                    pOldAnim_->pAnim->setEnabled(true);
+                    pOldAnim_->pAnim->setWeight(1.0f);
+                }
+                pActualAnim_->pAnim->setWeight(0.0f);
+                bTransition_ = true;
+                fBlend_ = 0.0f;
+            }
+            else
+            {
+                pActualAnim_->pAnim->setWeight(1.0f);
+            }
         }
         else
-        {
-            pActualAnim_->pAnim->setWeight(1.0f);
-        }
+            pActualAnim_ = NULL;
 
         // TODO : Model : Calculer la bounding box animée
     }
