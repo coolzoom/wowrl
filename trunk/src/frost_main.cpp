@@ -89,7 +89,7 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_E))
     {
-        //pChar->AddHealth(-2000.0f);
+        pModel->GetAnimMgr()->SetAnim(ANIM_SLEEP, ANIM_PRIORITY_HIGH);
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -142,7 +142,7 @@ s_bool RenderFunc()
 
         //pRTSprite->Render(0, 0);
 
-        pText->Render(2, 2);
+        pText->Render(s_float(pFrost->GetScreenWidth())-2-pText->GetTextWidth(), s_float(pFrost->GetScreenHeight())-18);
 
         //pSprite->Render(10, 10);
 
@@ -230,7 +230,8 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
             pLight1->SetRange(50.0f);
 
-            s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 10));
+            s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 16));
+            pTxt->SetAlignment(ALIGN_RIGHT);
             pText = pTxt.Get();
 
             /*pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
