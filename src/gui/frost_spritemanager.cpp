@@ -279,9 +279,9 @@ namespace Frost
     */
     inline void WriteVertex( float* &pBuffer, uint* &pColorBuffer, Frost::Vertex &mV )
     {
-        *pBuffer = mV.fX.Get();  // x
+        *pBuffer = s_float::Round(mV.fX).Get();  // x
         pBuffer++;
-        *pBuffer = mV.fY.Get();  // y
+        *pBuffer = s_float::Round(mV.fY).Get();  // y
         pBuffer++;
         *pBuffer = -1;           // z
         pBuffer++;
