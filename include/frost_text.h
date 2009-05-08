@@ -37,6 +37,13 @@ namespace Frost
         ColorAction mColorAction;
     };
 
+    enum Alignment
+    {
+        ALIGN_LEFT,
+        ALIGN_CENTER,
+        ALIGN_RIGHT
+    };
+
     /// Used to draw some text on the screen
     /**
     */
@@ -133,6 +140,16 @@ namespace Frost
         */
         s_float        GetTextHeight() const;
 
+        /// Sets text alignment.
+        /** \param mAlign The new alignment
+        */
+        void           SetAlignment(const Alignment& mAlign);
+
+        /// Returns the text aligment.
+        /** \return The text alignment
+        */
+        const Alignment& GetAlignment() const;
+
         /// Sets this Text's tracking.
         /** \param fTracking The new tracking
         *   \note Tracking is the space between each character. Default
@@ -173,7 +190,6 @@ namespace Frost
         /** \return 'true' if starting spaces removing is active
         */
         const s_bool&  GetRemoveStartingSpaces() const;
-
 
         /// Returns this Text's cache.
         /** \return This Text's cache
@@ -220,6 +236,7 @@ namespace Frost
         s_bool bForceColor_;
         s_float fW_, fH_;
         s_str sText_;
+        Alignment mAlign_;
         std::vector<Line> lLineList_;
         std::map<s_uint, Format> lFormatList_;
         s_ptr<Ogre::Font> pOgreFont_;

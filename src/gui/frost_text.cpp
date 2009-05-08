@@ -28,6 +28,7 @@ namespace Frost
     Text::Text( const s_str& sFileName, const s_float& fSize )
     {
         fW_ = fH_ = s_float::INFPLUS;
+        mAlign_ = ALIGN_LEFT;
         fLineSpacing_ = 1.0f;
         fTracking_ = 0.0f;
         sFileName_ = sFileName;
@@ -180,6 +181,16 @@ namespace Frost
         return fSize_;
     }
 
+    void Text::SetAlignment( const Alignment& mAlign )
+    {
+        mAlign_ = mAlign;
+    }
+
+    const Alignment& Text::GetAlignment() const
+    {
+        return mAlign_;
+    }
+
     void Text::SetTracking( const s_float& fTracking )
     {
         if (fTracking_ != fTracking)
@@ -245,14 +256,15 @@ namespace Frost
             s_float fUMax = s_float(pCache_->GetWidth())/s_float(pCache_->GetRealWidth());
             s_float fVMax = s_float(pCache_->GetHeight())/s_float(pCache_->GetRealHeight());
 
-            mQuad.lVertexArray[0].Set(fX, fY);
-            mQuad.lVertexArray[0].SetUV(0, 0);
+            mQuad.lVertexArray[0].Set(fX,                              fY);
             mQuad.lVertexArray[1].Set(fX+s_float(pCache_->GetWidth()), fY);
-            mQuad.lVertexArray[1].SetUV(fUMax, 0);
             mQuad.lVertexArray[2].Set(fX+s_float(pCache_->GetWidth()), fY+s_float(pCache_->GetHeight()));
+            mQuad.lVertexArray[3].Set(fX,                              fY+s_float(pCache_->GetHeight()));
+
+            mQuad.lVertexArray[0].SetUV(0,     0);
+            mQuad.lVertexArray[1].SetUV(fUMax, 0);
             mQuad.lVertexArray[2].SetUV(fUMax, fVMax);
-            mQuad.lVertexArray[3].Set(fX, fY+s_float(pCache_->GetHeight()));
-            mQuad.lVertexArray[3].SetUV(0, fVMax);
+            mQuad.lVertexArray[3].SetUV(0,     fVMax);
 
             SpriteManager::GetSingleton()->RenderQuad(mQuad);
         }
@@ -466,6 +478,7 @@ namespace Frost
                 }
             }
             lLines.push_back(mLine);
+            uiCounter += mLine.sCaption.Length();
 
             // Add the maximum number of line to this Text
             vector<Line>::iterator iterLine;
@@ -532,7 +545,7 @@ namespace Frost
         pSpriteMgr->Begin(pCache_);
         pSpriteMgr->Clear(Color(0, 0, 0, 0));
 
-        s_float fX = 0, fY = 0;
+        s_float fX, fY = 0;
         Quad mQuad;
         mQuad.pMat = pFontMat_;
         mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
@@ -544,6 +557,19 @@ namespace Frost
         vector<Line>::iterator iterLine;
         foreach (iterLine, lLineList_)
         {
+            switch (mAlign_)
+            {
+                case ALIGN_LEFT :
+                    fX = 0;
+                    break;
+                case ALIGN_CENTER :
+                    fX = (fWidth - iterLine->fWidth)/2;
+                    break;
+                case ALIGN_RIGHT :
+                    fX = (fWidth - iterLine->fWidth);
+                    break;
+            }
+
             s_str::iterator iterChar;
             foreach (iterChar, iterLine->sCaption)
             {
@@ -599,7 +625,6 @@ namespace Frost
             }
 
 			fY += fSize_*fLineSpacing_;
-			fX = 0;
         }
 
         pSpriteMgr->End();
