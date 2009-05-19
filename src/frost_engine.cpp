@@ -50,7 +50,7 @@ namespace Frost
         srand((unsigned)time(0));
 
         // Initialize OGRE
-        pRoot_ = s_refptr<Ogre::Root>(new Ogre::Root("", ""));
+        pRoot_ = new Ogre::Root("", "");
 
         // Create singletons;
         pUtilsMgr_    = UtilsManager::GetSingleton();
@@ -294,10 +294,8 @@ namespace Frost
                 pRenderWindow_->destroy();
                 pRenderWindow_ = NULL;
             }
-            if (pRoot_)
-            {
-                pRoot_.SetNull();
-            }
+
+            pRoot_.Delete();
 
             bShutDown_ = true;
         }

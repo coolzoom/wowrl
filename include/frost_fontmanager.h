@@ -64,6 +64,12 @@ namespace Frost
         */
         ~FontManager();
 
+        /// Copy constructor
+        FontManager(const FontManager& mMgr);
+
+        /// Assignment operator
+        FontManager& operator = (const FontManager& mMgr);
+
     private :
 
         s_str sDefaultFont_;

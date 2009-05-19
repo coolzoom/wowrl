@@ -78,6 +78,12 @@ namespace Frost
         */
         virtual ~LuaManager();
 
+        /// Copy constructor
+        LuaManager(const LuaManager& mMgr);
+
+        /// Assignment operator
+        LuaManager& operator = (const LuaManager& mMgr);
+
     private :
 
         s_ptr<Lua::State>                         pDefaultLua_;

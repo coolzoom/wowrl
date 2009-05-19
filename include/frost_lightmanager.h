@@ -20,7 +20,6 @@ namespace Frost
     friend class Manager<LightManager>;
     public :
 
-
         /// Initializes this manager.
         void         Initialize();
 
@@ -77,6 +76,12 @@ namespace Frost
         *         automatically done by Engine).
         */
         ~LightManager();
+
+        /// Copy constructor
+        LightManager(const LightManager& mMgr);
+
+        /// Assignment operator
+        LightManager& operator = (const LightManager& mMgr);
 
     private :
 

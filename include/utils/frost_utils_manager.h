@@ -14,7 +14,6 @@
 #define FROST_MANAGER_H
 
 #include "frost_utils_ptr.h"
-#include "frost_utils_str.h"
 
 namespace Frost
 {
@@ -22,17 +21,18 @@ namespace Frost
     template<class T>
     class Manager
     {
+    friend class s_ptr< Manager<T> >;
     public :
 
         /// Returns a pointer to the singleton
         /** \note The singleton will be created on the very first call.
         */
-        static const s_ptr<T>& GetSingleton()
+        static s_ptr<T> GetSingleton()
         {
-            if (!mMgr_)
-                mMgr_ = s_ptr<T>(new T());
+            if (!pMgr_)
+                pMgr_ = new T();
 
-            return mMgr_;
+            return pMgr_;
         }
 
         /// Deletes the singleton
@@ -42,10 +42,7 @@ namespace Frost
         */
         static void Delete()
         {
-            // We can't use s_ptr::Delete() here because the destructor is private.
-            if (mMgr_)
-                delete mMgr_.Get();
-            mMgr_ = NULL;
+            delete pMgr_.Get(); pMgr_.SetNull();
         }
 
     protected :
@@ -71,16 +68,19 @@ namespace Frost
         ~Manager() {}
 
         /// Copy constructor
-        Manager(const Manager &mMgr) {}
+        Manager(const Manager& mMgr);
+
+        /// Assignment operator
+        Manager& operator = (const Manager& mMgr);
 
     private :
 
-        static s_ptr<T> mMgr_;
+        static s_ptr<T> pMgr_;
 
     };
 
     template<class T>
-    s_ptr<T> Manager<T>::mMgr_ = s_ptr<T>(NULL);
+    s_ptr<T> Manager<T>::pMgr_ = NULL;
 }
 
 #endif

@@ -108,6 +108,12 @@ namespace Frost
         */
         ~CameraManager();
 
+        /// Copy constructor
+        CameraManager(const CameraManager& mMgr);
+
+        /// Assignment operator
+        CameraManager& operator = (const CameraManager& mMgr);
+
     private:
 
         std::map< s_uint, s_ptr<Camera> > lCameraList_;
