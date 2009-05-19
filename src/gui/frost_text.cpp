@@ -181,12 +181,12 @@ namespace Frost
         return fSize_;
     }
 
-    void Text::SetAlignment( const Alignment& mAlign )
+    void Text::SetAlignment( const Text::Alignment& mAlign )
     {
         mAlign_ = mAlign;
     }
 
-    const Alignment& Text::GetAlignment() const
+    const Text::Alignment& Text::GetAlignment() const
     {
         return mAlign_;
     }
@@ -280,11 +280,11 @@ namespace Frost
         return pOgreFont_;
     }
 
-    void GetFormat( s_str::iterator& iterChar, Format& mFormat )
+    void GetFormat( s_str::iterator& iterChar, Text::Format& mFormat )
     {
         if (*iterChar == 'r')
         {
-            mFormat.mColorAction = COLOR_ACTION_RESET;
+            mFormat.mColorAction = Text::COLOR_ACTION_RESET;
         }
         else if (*iterChar == 'c')
         {
@@ -306,7 +306,7 @@ namespace Frost
             sColorPart += *iterChar;
             s_uint uiB = sColorPart.HexToUInt();
 
-            mFormat.mColorAction = COLOR_ACTION_SET;
+            mFormat.mColorAction = Text::COLOR_ACTION_SET;
             mFormat.mColor = Color(uiA, uiR, uiG, uiB);
         }
     }

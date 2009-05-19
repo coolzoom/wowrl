@@ -13,43 +13,43 @@
 
 namespace Frost
 {
-    /// Contains a string that will be drawn on a line
-    struct Line
-    {
-        s_str   sCaption;
-        s_float fWidth;
-    };
-
-    enum ColorAction
-    {
-        COLOR_ACTION_NONE,
-        COLOR_ACTION_SET,
-        COLOR_ACTION_RESET
-    };
-
-    /// Contains information about the text at a given position
-    struct Format
-    {
-        Format() : mColorAction(COLOR_ACTION_NONE)
-        {}
-
-        Color       mColor;
-        ColorAction mColorAction;
-    };
-
-    enum Alignment
-    {
-        ALIGN_LEFT,
-        ALIGN_CENTER,
-        ALIGN_RIGHT
-    };
-
     /// Used to draw some text on the screen
     /**
     */
     class Text
     {
     public :
+    
+        /// Contains a string that will be drawn on a line
+        struct Line
+        {
+            s_str   sCaption;
+            s_float fWidth;
+        };
+
+        enum ColorAction
+        {
+            COLOR_ACTION_NONE,
+            COLOR_ACTION_SET,
+            COLOR_ACTION_RESET
+        };
+
+        /// Contains information about the text at a given position
+        struct Format
+        {
+            Format() : mColorAction(COLOR_ACTION_NONE)
+            {}
+
+            Color       mColor;
+            ColorAction mColorAction;
+        };
+
+        enum Alignment
+        {
+            ALIGN_LEFT,
+            ALIGN_CENTER,
+            ALIGN_RIGHT
+        };
 
         /// Constructor.
         /** \param sFileName The path to the .ttf file to use
