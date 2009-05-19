@@ -360,6 +360,9 @@ namespace Frost
         // Do the real render!
         list<VertexChunk>::iterator itCurrChunk;
 
+        if (bCallBeginEnd)
+            Ogre::Root::getSingleton().getRenderSystem()->_beginFrame();
+
         mRenderOp_.vertexData->vertexStart = 0;
         foreach (itCurrChunk, lChunkList)
         {
@@ -367,11 +370,8 @@ namespace Frost
 
             for (uint i = 0; i < itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0)->getNumPasses(); i++)
             {
-                pSceneMgr_->manualRender(
-                    &mRenderOp_,
-                    itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0)->getPass(i),
-                    bCallBeginEnd
-                );
+                pSceneMgr_->_setPass(itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0)->getPass(i));
+                Ogre::Root::getSingleton().getRenderSystem()->_render(mRenderOp_);
             }
 
             mRenderOp_.vertexData->vertexStart += itCurrChunk->uiVertexCount;
@@ -379,6 +379,9 @@ namespace Frost
 
         // Sprites go home!
         lQuadList_.clear();
+
+        if (bCallBeginEnd)
+            Ogre::Root::getSingleton().getRenderSystem()->_endFrame();
     }
 
     void SpriteManager::PrepareForRender_( s_bool bGeneral )
@@ -548,7 +551,7 @@ namespace Frost
 
         pMainSprite_->Render(0, 0);
 
-        RenderBuffers_();
+        RenderBuffers_(false);
 
         bRenderTargets_ = true;
 

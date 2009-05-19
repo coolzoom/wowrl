@@ -138,7 +138,7 @@ s_bool RenderFunc()
 
         pSpriteMgr->Clear(Color(0, 0, 0, 0));
 
-        //GUIManager::GetSingleton()->RenderUI();
+        GUIManager::GetSingleton()->RenderUI();
 
         //pRTSprite->Render(0, 0);
 
@@ -231,7 +231,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pLight1->SetRange(50.0f);
 
             s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 16));
-            pTxt->SetAlignment(ALIGN_RIGHT);
+            pTxt->SetAlignment(Text::ALIGN_RIGHT);
             pText = pTxt.Get();
 
             /*pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
