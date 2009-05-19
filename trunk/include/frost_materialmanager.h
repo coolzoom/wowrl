@@ -120,6 +120,12 @@ namespace Frost
         */
         ~MaterialManager();
 
+        /// Copy constructor
+        MaterialManager(const MaterialManager& mMgr);
+
+        /// Assignment operator
+        MaterialManager& operator = (const MaterialManager& mMgr);
+
     private :
 
         s_uint uiCounter_;

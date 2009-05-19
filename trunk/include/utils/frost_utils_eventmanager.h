@@ -74,6 +74,12 @@ namespace Frost
         */
         ~EventManager();
 
+        /// Copy constructor
+        EventManager(const EventManager& mMgr);
+
+        /// Assignment operator
+        EventManager& operator = (const EventManager& mMgr);
+
     private :
 
         std::multimap< s_str, s_ptr<EventReceiver> > lReceiverList_;

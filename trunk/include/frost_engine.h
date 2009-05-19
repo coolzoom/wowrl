@@ -168,6 +168,12 @@ namespace Frost
         */
         ~Engine();
 
+        /// Copy constructor
+        Engine(const Engine& mMgr);
+
+        /// Assignment operator
+        Engine& operator = (const Engine& mMgr);
+
     private :
 
         s_bool ReadConfig_();
@@ -215,7 +221,7 @@ namespace Frost
         s_ptr<Lua::State> pLua_;
 
         // OGRE variables
-        s_refptr<Ogre::Root>      pRoot_;
+        s_ptr<Ogre::Root>         pRoot_;
         s_ptr<Ogre::SceneManager> pOgreSceneMgr_;
         s_ptr<Ogre::RenderWindow> pRenderWindow_;
         s_ptr<Ogre::Log>          pLog_;

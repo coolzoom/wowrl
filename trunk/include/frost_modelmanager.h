@@ -98,6 +98,12 @@ namespace Frost
         */
         ~ModelManager();
 
+        /// Copy constructor
+        ModelManager(const ModelManager& mMgr);
+
+        /// Assignment operator
+        ModelManager& operator = (const ModelManager& mMgr);
+
     private :
 
         std::map< s_str, std::map<s_str, s_str> > lModelNameToFileMap_;

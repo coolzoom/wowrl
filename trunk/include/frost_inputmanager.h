@@ -244,6 +244,12 @@ namespace Frost
         */
         ~InputManager();
 
+        /// Copy constructor
+        InputManager(const InputManager& mMgr);
+
+        /// Assignment operator
+        InputManager& operator = (const InputManager& mMgr);
+
     private :
 
         s_bool bFocus_;

@@ -85,6 +85,12 @@ namespace Frost
         */
         ~GUIManager();
 
+        /// Copy constructor
+        GUIManager(const GUIManager& mMgr);
+
+        /// Assignment operator
+        GUIManager& operator = (const GUIManager& mMgr);
+
     private :
 
         void LoadAddOnTOC_(const s_str& sAddOnName, const s_str& sAddOnFolder);

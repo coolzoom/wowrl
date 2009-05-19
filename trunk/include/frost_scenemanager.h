@@ -100,6 +100,12 @@ namespace Frost
         */
         ~SceneManager();
 
+        /// Copy constructor
+        SceneManager(const SceneManager& mMgr);
+
+        /// Assignment operator
+        SceneManager& operator = (const SceneManager& mMgr);
+
     private :
 
         std::map< s_uint, s_ptr<Plane> > lPlaneList_;

@@ -48,6 +48,12 @@ namespace Frost
         */
         virtual ~UtilsManager();
 
+        /// Copy constructor
+        UtilsManager(const UtilsManager& mMgr);
+
+        /// Assignment operator
+        UtilsManager& operator = (const UtilsManager& mMgr);
+
     private :
 
         LogFunction pLogFunction_;

@@ -66,6 +66,12 @@ namespace Frost
         */
         ~PathManager();
 
+        /// Copy constructor
+        PathManager(const PathManager& mMgr);
+
+        /// Assignment operator
+        PathManager& operator = (const PathManager& mMgr);
+
     private:
 
         s_uint uiCounter_;

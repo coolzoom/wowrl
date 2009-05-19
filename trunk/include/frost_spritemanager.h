@@ -336,6 +336,12 @@ namespace Frost
         */
         ~SpriteManager();
 
+        /// Copy constructor
+        SpriteManager(const SpriteManager& mMgr);
+
+        /// Assignment operator
+        SpriteManager& operator = (const SpriteManager& mMgr);
+
     private :
 
         /// Renders all the 2D data stored in the hardware buffers.

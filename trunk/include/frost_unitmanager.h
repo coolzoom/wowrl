@@ -103,6 +103,12 @@ namespace Frost
         */
         ~UnitManager();
 
+        /// Copy constructor
+        UnitManager(const UnitManager& mMgr);
+
+        /// Assignment operator
+        UnitManager& operator = (const UnitManager& mMgr);
+
     private :
 
         s_bool ParseCharacterModels_();

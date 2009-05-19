@@ -54,6 +54,12 @@ namespace Frost
         */
         ~LocaleManager();
 
+        /// Copy constructor
+        LocaleManager(const LocaleManager& mMgr);
+
+        /// Assignment operator
+        LocaleManager& operator = (const LocaleManager& mMgr);
+
     private :
 
         s_str             sLocale_;

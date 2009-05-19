@@ -165,6 +165,12 @@ namespace Frost
         */
         ~TimeManager();
 
+        /// Copy constructor
+        TimeManager(const TimeManager& mMgr);
+
+        /// Assignment operator
+        TimeManager& operator = (const TimeManager& mMgr);
+
     private :
 
         s_refptr<Ogre::Timer> pTimer_;
