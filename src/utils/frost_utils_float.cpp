@@ -12,8 +12,9 @@
 #include "frost_utils_array.h"
 #include "frost_utils.h"
 
-#include <math.h>
-#include <float.h>
+#include <cmath>
+#include <cfloat>
+#include <cstdlib>
 
 using namespace std;
 

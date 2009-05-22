@@ -134,7 +134,7 @@ s_bool Function::Check( const s_bool& bPrintError )
             s_str sError;
             foreach (iterArgList, lArgListStack_)
             {
-                s_str sArguments = "\n  - ["+s_uint(iterArgList->lArg_.size())+"] : ";
+                s_str sArguments = "\n  - ["+s_uint((uint)iterArgList->lArg_.size())+"] : ";
                 map< s_uint, s_ptr<Argument> >::iterator iterArg;
                 foreach (iterArg, iterArgList->lArg_)
                 {
@@ -211,7 +211,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                 s_str sError;
                 foreach (iterArgList, lArgListStack_)
                 {
-                    s_str sArguments = "\n  - ["+s_uint(iterArgList->lArg_.size())+"] : ";
+                    s_str sArguments = "\n  - ["+s_uint((uint)iterArgList->lArg_.size())+"] : ";
                     map< s_uint, s_ptr<Argument> >::iterator iterArg;
                     foreach (iterArg, iterArgList->lArg_)
                     {

@@ -199,9 +199,6 @@ namespace Frost
         s_float fMul_;
     };
 
-    template<>
-    const s_str Bonus<s_var>::CLASS_NAME = "Bonus<s_var>";
-
     /// Holds an Item's statistics.
     struct BonusSet
     {
@@ -365,9 +362,6 @@ namespace Frost
         s_var        mValue_;
         Bonus<s_var> mBonus_;
     };
-
-    template<>
-    const s_str Characteristic<s_var>::CLASS_NAME = "Characteristic<s_var>";
 
     /// Holds a Unit's statistics.
     struct Stats

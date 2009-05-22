@@ -134,7 +134,7 @@ s_str Frame::Serialize( const s_str& sTab ) const
         if (lChildList_.size() == 1)
             sStr << sTab << "  Child : \n";
         else
-            sStr << sTab << "  Children : " << lChildList_.size() << "\n";
+            sStr << sTab << "  Children : " << (uint)lChildList_.size() << "\n";
         sStr << sTab << "  |-####\n";
 
         map< s_uint, s_ptr<Frame> >::const_iterator iterChild;

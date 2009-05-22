@@ -13,6 +13,8 @@ using namespace std;
 namespace Frost
 {
     const s_str BonusSet::CLASS_NAME = "BonusSet";
+    const s_str Bonus<s_var>::CLASS_NAME = "Bonus<s_var>";
+    const s_str Characteristic<s_var>::CLASS_NAME = "Characteristic<s_var>";
 
     BonusSet::BonusSet()
     {

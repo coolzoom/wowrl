@@ -77,7 +77,7 @@ namespace XML
         /// Copy constructor.
         /** \param mValue The Block to copy
         */
-        Block::Block(const Block& mValue);
+        Block(const Block& mValue);
 
         /// Destructor.
         ~Block();
