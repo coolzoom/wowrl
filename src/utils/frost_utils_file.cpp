@@ -88,6 +88,9 @@ namespace Frost
     {
         s_str sTemp;
         getline(mFile_, sTemp.GetR());
+        #ifdef FROST_LINUX
+            sTemp.Replace("\r", "");
+        #endif
         return sTemp;
     }
 
