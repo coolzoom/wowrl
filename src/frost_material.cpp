@@ -27,12 +27,20 @@ namespace Frost
         pOgreMat_ = pOgreMat;
         sName_ = pOgreMat_->getName();
 
+        if ( (mType == MATERIAL_2D) || (mType == MATERIAL_2D_PLAIN) )
+        {
+            pDefaultPass_ = pOgreMat->getTechnique(0)->getPass(1);
+        }
+        else
+        {
+            pDefaultPass_ = pOgreMat->getTechnique(0)->getPass(0);
+        }
+
         if ((mType != MATERIAL_2D_PLAIN) && (mType != MATERIAL_3D_PLAIN))
         {
             s_ptr<Ogre::Technique> pTech = pOgreMat->getTechnique(0);
             if (pTech)
             {
-                pDefaultPass_ = pTech->getPass(0);
                 for (uint i = 0; i < pTech->getNumPasses(); i++)
                 {
                     s_ptr<Ogre::Pass> pPass = pTech->getPass(i);
@@ -150,6 +158,23 @@ namespace Frost
             mColor.GetB().Get()/255.0f,
             mColor.GetA().Get()/255.0f
         );
+    }
+
+    void Material::SetDesaturated( const s_bool& bIsDesaturated )
+    {
+        if (bIsDesaturated_ != bIsDesaturated)
+        {
+            bIsDesaturated_ = bIsDesaturated;
+
+            if (bIsDesaturated_)
+            {
+                pDefaultPass_->setFragmentProgram("GUI_Desaturation_PS");
+            }
+            else
+            {
+                pDefaultPass_->setFragmentProgram("");
+            }
+        }
     }
 
     void Material::SetSelfIllumination( const Color& mColor )

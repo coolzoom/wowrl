@@ -327,18 +327,6 @@ namespace Frost
         pProgram->setParameter("entry_point", "main_vs");
         pProgram->setParameter("target", "vs_2_0");
         pProgram->setParameter("column_major_matrices", "false");
-        /*if (pProgram->isSupported())
-        {
-            Ogre::GpuProgramParametersSharedPtr pParams = pProgram->createParameters();
-            pParams->setNamedAutoConstant(
-                "mViewProj",
-                Ogre::GpuProgramParameters::ACT_VIEWPROJ_MATRIX
-            );
-            pParams->setNamedAutoConstant(
-                "mBoneMat",
-                Ogre::GpuProgramParameters::ACT_WORLD_MATRIX_ARRAY_3x4
-            );
-        }*/
 
         // GLSL vertex shader
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
@@ -377,9 +365,7 @@ namespace Frost
         {
             Ogre::GpuProgramParametersSharedPtr pParams = pProgram->createParameters();
             int i = 0;
-            pParams->setNamedConstant(
-                "mTexture", &i, 1, 1
-            );
+            pParams->setNamedConstant("mTexture", &i, 1, 1);
         }
 
         // Unified pixel shader
@@ -391,12 +377,38 @@ namespace Frost
         pUProgram->addDelegateProgram("Skinning_GLSL_PS");
         pUProgram->load();
 
-        /*Ogre::MaterialSerializer* pSerializer = new Ogre::MaterialSerializer();
-        ifstream* pFile = new ifstream();
-        pFile->open("shader.txt", ios::in | ios::binary);
-        Ogre::FileStreamDataStream* pStream = new Ogre::FileStreamDataStream(pFile);
-        Ogre::DataStreamPtr mPtr = Ogre::DataStreamPtr(pStream);
-        delete pSerializer;*/
+        // --------
+        // GUI : desaturation pixel shaders
+        // --------
+
+        // HLSL pixel shader
+        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "GUI_Desaturation_HLSL_PS", "Frost", "hlsl", Ogre::GPT_FRAGMENT_PROGRAM
+        ).get();
+        pProgram->setSourceFile("Shaders/GUI_Desaturation_ps.hlsl");
+        pProgram->setParameter("entry_point", "main_ps");
+        pProgram->setParameter("target", "ps_2_0");
+
+        // GLSL pixel shader
+        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "GUI_Desaturation_GLSL_PS", "Frost", "glsl", Ogre::GPT_FRAGMENT_PROGRAM
+        ).get();
+        pProgram->setSourceFile("Shaders/GUI_Desaturation_ps.glsl");
+        if (pProgram->isSupported())
+        {
+            Ogre::GpuProgramParametersSharedPtr pParams = pProgram->createParameters();
+            int i = 0;
+            pParams->setNamedConstant("mTexture", &i, 1, 1);
+        }
+
+        // Unified pixel shader
+        pUProgram = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
+            Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "GUI_Desaturation_PS", "Frost", "unified", Ogre::GPT_FRAGMENT_PROGRAM
+        ).get());
+        pUProgram->addDelegateProgram("GUI_Desaturation_HLSL_PS");
+        pUProgram->addDelegateProgram("GUI_Desaturation_GLSL_PS");
+        pUProgram->load();
 
         return true;
     }

@@ -61,6 +61,11 @@ namespace Frost
         */
         void            SetDiffuse(const Color& mColor);
 
+        /// Makes this Material render without any color.
+        /** \param bIsDesaturated 'true' if you want to remove colors
+        */
+        void            SetDesaturated(const s_bool& bIsDesaturated);
+
         /// Sets this Material's self illumination color.
         /** \param mColor The self illumination color
         *   \note Alpha isn't taken into account
@@ -171,6 +176,7 @@ namespace Frost
 
         s_bool                 bAlphaReject_;
         s_bool                 bHardwareSkinning_;
+        s_bool                 bIsDesaturated_;
 
         std::map< s_uint, s_ptr<Decal> > lDecalList_;
         s_uint                           uiDecalCounter_;
