@@ -13,6 +13,7 @@
 
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_anchor.h"
+#include "gui/frost_gui_frame.h"
 #include "frost_lua.h"
 
 using namespace std;
@@ -353,6 +354,12 @@ namespace Frost
 
             this->LoadAddOnDirectory_("Interface/BaseUI");
             this->LoadAddOnDirectory_("Interface/AddOns");
+
+            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterUIObject;
+            foreach (iterUIObject, lMainObjectList_)
+            {
+                s_ptr<GUI::Frame>(iterUIObject->second)->On("Load");
+            }
 
             bClosed_ = false;
         }
