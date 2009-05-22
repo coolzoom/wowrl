@@ -21,12 +21,22 @@ Texture::Texture() : LayeredRegion()
 {
 }
 
+s_str Texture::Serialize(const s_str& sTab) const
+{
+    s_str sStr = UIObject::Serialize(sTab);
+
+    return sStr;
+}
+
 void Texture::Render()
 {
-    pSprite_->Render2V(
-        s_float(lBorderList_[BORDER_LEFT]), s_float(lBorderList_[BORDER_TOP]),
-        s_float(lBorderList_[BORDER_RIGHT]), s_float(lBorderList_[BORDER_BOTTOM])
-    );
+    if (pSprite_)
+    {
+        pSprite_->Render2V(
+            s_float(lBorderList_[BORDER_LEFT]), s_float(lBorderList_[BORDER_TOP]),
+            s_float(lBorderList_[BORDER_RIGHT]), s_float(lBorderList_[BORDER_BOTTOM])
+        );
+    }
 }
 
 void Texture::CreateGlue()
@@ -102,6 +112,24 @@ void Texture::SetDesaturated( const s_bool& bIsDesaturated )
 
 void Texture::SetGradient( const Gradient& mGradient )
 {
+    mGradient_ = mGradient;
+    s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
+    pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
+
+    if (mGradient_.GetOrientation() == ORIENTATION_HORIZONTAL)
+    {
+        pSprite_->SetColor(mGradient_.GetMinColor(), 0);
+        pSprite_->SetColor(mGradient_.GetMinColor(), 3);
+        pSprite_->SetColor(mGradient_.GetMaxColor(), 1);
+        pSprite_->SetColor(mGradient_.GetMaxColor(), 2);
+    }
+    else
+    {
+        pSprite_->SetColor(mGradient_.GetMinColor(), 0);
+        pSprite_->SetColor(mGradient_.GetMinColor(), 1);
+        pSprite_->SetColor(mGradient_.GetMaxColor(), 2);
+        pSprite_->SetColor(mGradient_.GetMaxColor(), 3);
+    }
 }
 
 void Texture::SetTexCoord( const s_array<s_float,4>& lCoordinates )
@@ -148,10 +176,20 @@ void Texture::SetColor( const Color& mColor )
     pSprite_.SetNull(); // Deletes the old sprite and its material
 
     s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", mColor);
-    pSprite_ = s_refptr<Sprite>(new Sprite(pMat));
+    pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
 }
 
 void Texture::SetVertexColor( const Color& mColor )
 {
-    pSprite_->SetColor(mColor);
+    if (pSprite_)
+    {
+        pSprite_->SetColor(mColor);
+    }
+    else
+    {
+        Error(CLASS_NAME,
+            "Trying to set vertex color of an uninitialized Texture : "+
+            sName_+"."
+        );
+    }
 }

@@ -23,6 +23,21 @@ Gradient::Gradient( GradientOrientation mOrientation, const Color& mMinColor, co
 {
 }
 
+const Color& Gradient::GetMinColor() const
+{
+    return mMinColor_;
+}
+
+const Color& Gradient::GetMaxColor() const
+{
+    return mMaxColor_;
+}
+
+GradientOrientation Gradient::GetOrientation() const
+{
+    return mOrientation_;
+}
+
 const s_bool& Gradient::IsEmpty() const
 {
     return bIsEmpty_;

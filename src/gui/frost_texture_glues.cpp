@@ -142,12 +142,12 @@ int LuaTexture::_SetGradient( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetGradient", pLua);
     mFunc.Add(0, "orientation", Lua::TYPE_STRING, VALUE_STRING);
-    mFunc.Add(1, "min red", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(2, "min green", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(3, "min blue", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(4, "max red", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(5, "max green", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(6, "max blue", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "min red", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(2, "min green", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(3, "min blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(4, "max red", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(5, "max green", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(6, "max blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
     if (mFunc.Check())
     {
         s_str sOrientation = mFunc.Get(0)->GetS();
@@ -166,8 +166,16 @@ int LuaTexture::_SetGradient( lua_State* pLua )
 
         pTextureParent_->SetGradient(Gradient(
             mOrientation,
-            Color(mFunc.Get(1)->GetUI(), mFunc.Get(2)->GetUI(), mFunc.Get(3)->GetUI()),
-            Color(mFunc.Get(4)->GetUI(), mFunc.Get(5)->GetUI(), mFunc.Get(6)->GetUI())
+            Color(
+                s_uint(255*mFunc.Get(1)->GetF()),
+                s_uint(255*mFunc.Get(2)->GetF()),
+                s_uint(255*mFunc.Get(3)->GetF())
+            ),
+            Color(
+                s_uint(255*mFunc.Get(4)->GetF()),
+                s_uint(255*mFunc.Get(5)->GetF()),
+                s_uint(255*mFunc.Get(6)->GetF())
+            )
         ));
     }
 
@@ -178,14 +186,14 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetGradientAlpha", pLua);
     mFunc.Add(0, "orientation", Lua::TYPE_STRING, VALUE_STRING);
-    mFunc.Add(1, "min red", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(2, "min green", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(3, "min blue", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(4, "min alpha", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(5, "max red", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(6, "max green", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(7, "max blue", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(8, "max alpha", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(1, "min red", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(2, "min green", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(3, "min blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(4, "min alpha", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(5, "max red", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(6, "max green", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(7, "max blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(8, "max alpha", Lua::TYPE_NUMBER, VALUE_FLOAT);
     if (mFunc.Check())
     {
         s_str sOrientation = mFunc.Get(0)->GetS();
@@ -204,8 +212,18 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 
         pTextureParent_->SetGradient(Gradient(
             mOrientation,
-            Color(mFunc.Get(4)->GetUI(), mFunc.Get(1)->GetUI(), mFunc.Get(2)->GetUI(), mFunc.Get(3)->GetUI()),
-            Color(mFunc.Get(8)->GetUI(), mFunc.Get(5)->GetUI(), mFunc.Get(6)->GetUI(), mFunc.Get(7)->GetUI())
+            Color(
+                s_uint(255*mFunc.Get(4)->GetF()),
+                s_uint(255*mFunc.Get(1)->GetF()),
+                s_uint(255*mFunc.Get(2)->GetF()),
+                s_uint(255*mFunc.Get(3)->GetF())
+            ),
+            Color(
+                s_uint(255*mFunc.Get(8)->GetF()),
+                s_uint(255*mFunc.Get(5)->GetF()),
+                s_uint(255*mFunc.Get(6)->GetF()),
+                s_uint(255*mFunc.Get(7)->GetF())
+            )
         ));
     }
 
@@ -215,19 +233,19 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 int LuaTexture::_SetTexCoord( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetTexCoord", pLua);
-    mFunc.Add(0, "top-left X", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(1, "top-left Y", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(2, "bottom-right X", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(3, "bottom-right Y", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(0, "top-left X", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(1, "top-left Y", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(2, "bottom-right X", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(3, "bottom-right Y", Lua::TYPE_NUMBER, VALUE_FLOAT);
     mFunc.NewParamSet();
-    mFunc.Add(0, "top-left X", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(1, "top-left Y", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(2, "top-right X", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(3, "top-right Y", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(4, "bottom-right X", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(5, "bottom-right Y", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(6, "bottom-left X", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(7, "bottom-left Y", Lua::TYPE_NUMBER, VALUE_UINT);
+    mFunc.Add(0, "top-left X", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(1, "top-left Y", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(2, "top-right X", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(3, "top-right Y", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(4, "bottom-right X", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(5, "bottom-right Y", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(6, "bottom-left X", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(7, "bottom-left Y", Lua::TYPE_NUMBER, VALUE_FLOAT);
 
     if (mFunc.Check())
     {
@@ -272,10 +290,10 @@ int LuaTexture::_SetTexture( lua_State* pLua )
     Lua::Function mFunc("Texture:SetTexture", pLua);
     mFunc.Add(0, "texture", Lua::TYPE_STRING, VALUE_STRING);
     mFunc.NewParamSet();
-    mFunc.Add(0, "red", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(1, "green", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(2, "blue", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, VALUE_UINT, true);
+    mFunc.Add(0, "red", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(1, "green", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(2, "blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, VALUE_FLOAT, true);
 
     if (mFunc.Check())
     {
@@ -291,18 +309,18 @@ int LuaTexture::_SetTexture( lua_State* pLua )
             if (mFunc.IsProvided(3))
             {
                 mColor = Color(
-                    mFunc.Get(3)->GetUI(),
-                    mFunc.Get(0)->GetUI(),
-                    mFunc.Get(1)->GetUI(),
-                    mFunc.Get(2)->GetUI()
+                    s_uint(255*mFunc.Get(3)->GetF()),
+                    s_uint(255*mFunc.Get(0)->GetF()),
+                    s_uint(255*mFunc.Get(1)->GetF()),
+                    s_uint(255*mFunc.Get(2)->GetF())
                 );
             }
             else
             {
                 mColor = Color(
-                    mFunc.Get(0)->GetUI(),
-                    mFunc.Get(1)->GetUI(),
-                    mFunc.Get(2)->GetUI()
+                    s_uint(255*mFunc.Get(0)->GetF()),
+                    s_uint(255*mFunc.Get(1)->GetF()),
+                    s_uint(255*mFunc.Get(2)->GetF())
                 );
             }
             pTextureParent_->SetColor(mColor);
@@ -315,30 +333,34 @@ int LuaTexture::_SetTexture( lua_State* pLua )
 int LuaTexture::_SetVertexColor( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetVertexColor", pLua);
-    mFunc.Add(0, "red", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(1, "green", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(2, "blue", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, VALUE_UINT, true);
+    mFunc.Add(0, "red", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(1, "green", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(2, "blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, VALUE_FLOAT, true);
 
-    Color mColor;
-    if (mFunc.IsProvided(3))
+    if (mFunc.Check())
     {
-        mColor = Color(
-            mFunc.Get(3)->GetUI(),
-            mFunc.Get(0)->GetUI(),
-            mFunc.Get(1)->GetUI(),
-            mFunc.Get(2)->GetUI()
-        );
+        Color mColor;
+        if (mFunc.IsProvided(3))
+        {
+            mColor = Color(
+                s_uint(255*mFunc.Get(3)->GetF()),
+                s_uint(255*mFunc.Get(0)->GetF()),
+                s_uint(255*mFunc.Get(1)->GetF()),
+                s_uint(255*mFunc.Get(2)->GetF())
+            );
+        }
+        else
+        {
+            mColor = Color(
+                s_uint(255*mFunc.Get(0)->GetF()),
+                s_uint(255*mFunc.Get(1)->GetF()),
+                s_uint(255*mFunc.Get(2)->GetF())
+            );
+        }
+
+        pTextureParent_->SetVertexColor(mColor);
     }
-    else
-    {
-        mColor = Color(
-            mFunc.Get(0)->GetUI(),
-            mFunc.Get(1)->GetUI(),
-            mFunc.Get(2)->GetUI()
-        );
-    }
-    pTextureParent_->SetColor(mColor);
 
     return mFunc.Return();
 }

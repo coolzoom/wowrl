@@ -38,6 +38,25 @@ namespace Frost
             */
             Gradient(GradientOrientation mOrientation, const Color& mMinColor, const Color& mMaxColor);
 
+            /// Returns the Gradient's min colors.
+            /** \return The Gradient's min colors
+            *   \note In horizontal mode, this is the left color, and
+            *         in vertical mode this is the top one.
+            */
+            const Color& GetMinColor() const;
+
+            /// Returns the Gradient's max colors.
+            /** \return The Gradient's max colors
+            *   \note In horizontal mode, this is the right color, and
+            *         in vertical mode this is the bottom one.
+            */
+            const Color& GetMaxColor() const;
+
+            /// Returns the Gradient's orientation.
+            /** \return The Gradient's orientation
+            */
+            GradientOrientation GetOrientation() const;
+
             /// Checks if this Gradient is an empty one.
             /** \return 'true' if this Gradient is an empty one
             */

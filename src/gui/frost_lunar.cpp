@@ -207,6 +207,56 @@ namespace GUI
     const char LuaTexture::className[] = "Texture";
     Lunar<LuaTexture>::RegType LuaTexture::methods[] = {
         {"dt", &LuaTexture::GetDataTable},
+
+        // UIObject (inherited)
+        method(Texture, GetAlpha),
+        method(Texture, GetName),
+        method(Texture, GetObjectType),
+        method(Texture, IsObjectType),
+        method(Texture, SetAlpha),
+
+        method(Texture, ClearAllPoints),
+        method(Texture, GetBottom),
+        method(Texture, GetCenter),
+        method(Texture, GetHeight),
+        method(Texture, GetLeft),
+        method(Texture, GetNumPoint),
+        method(Texture, GetParent),
+        method(Texture, GetPoint),
+        method(Texture, GetRight),
+        method(Texture, GetTop),
+        method(Texture, GetWidth),
+        method(Texture, Hide),
+        method(Texture, IsShown),
+        method(Texture, IsVisible),
+        method(Texture, RebuildCache),
+        method(Texture, SetAllPoints),
+        method(Texture, SetHeight),
+        method(Texture, SetParent),
+        method(Texture, SetPoint),
+        method(Texture, SetWidth),
+        method(Texture, Show),
+
+        method(Texture, RebuildCache),
+
+        // LayeredRegion (inherited)
+
+        // Texture
+        method(Texture, GetBlendMode),
+        method(Texture, GetTexCoord),
+        method(Texture, GetTexCoordModifiesRect),
+        method(Texture, GetTexture),
+        method(Texture, GetVertexColor),
+        method(Texture, IsDesaturated),
+        method(Texture, SetBlendMode),
+        method(Texture, SetDesaturated),
+        method(Texture, SetGradient),
+        method(Texture, SetGradientAlpha),
+        method(Texture, SetTexCoord),
+        method(Texture, SetTexCoordModifiesRect),
+        method(Texture, SetTexture),
+        method(Texture, SetVertexColor),
+
         {0,0}
     };
 
