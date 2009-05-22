@@ -53,11 +53,22 @@ namespace Frost
         ).get();
 
         s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
+        pPass->setSeparateSceneBlending(
+            Ogre::SBF_ZERO, Ogre::SBF_DEST_ALPHA, // color
+            Ogre::SBF_ZERO, Ogre::SBF_ONE         // alpha
+        );
+
+        pPass = pOgreMat->getTechnique(0)->createPass();
         pPass->setDiffuse(
             Ogre::ColourValue(uiR.Get()/255.0f, uiG.Get()/255.0f, uiB.Get()/255.0f)
         );
         pPass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
         pPass->setCullingMode(Ogre::CULL_NONE);
+        pPass->setSeparateSceneBlending(
+            Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, // color
+            Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA           // alpha
+        );
+
         pOgreMat->load();
         pOgreMat->setLightingEnabled(false);
         pOgreMat->setDepthCheckEnabled(false);
