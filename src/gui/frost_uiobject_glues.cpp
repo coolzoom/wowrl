@@ -16,7 +16,7 @@ const s_str LuaUIObject::CLASS_NAME = "GUI::LuaUIObject";
 
 LuaUIObject::LuaUIObject( lua_State* pLua )
 {
-    s_str sName = lua_tostring(pLua, 1);
+    s_str sName = lua_tostring(pLua, -1);
 
     lua_newtable(pLua);
     iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);
