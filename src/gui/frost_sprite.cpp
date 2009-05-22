@@ -264,7 +264,7 @@ namespace Frost
         }
         else if (uiIndex < 4)
         {
-            pQuad_->lVertexArray[uiIndex.Get()].mColor = mColor_;
+            pQuad_->lVertexArray[uiIndex.Get()].mColor = mColor;
         }
         else
             Warning(CLASS_NAME, "Second parameter of SetColor mustn't be greater than 3.");
