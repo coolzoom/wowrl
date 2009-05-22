@@ -108,8 +108,6 @@ namespace Frost
 
             /// Makes this Texture appear without any color.
             /** \param bIsDesaturated 'true' if you want to remove colors
-            *   \note Only available on certain graphic cards (most of modern ones
-            *         are capable of this).
             */
             void                      SetDesaturated(const s_bool& bIsDesaturated);
 

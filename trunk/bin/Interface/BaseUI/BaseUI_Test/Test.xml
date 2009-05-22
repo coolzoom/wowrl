@@ -53,7 +53,7 @@
         </Layers>
         <Scripts>
             <OnLoad>
-                Test_Pin_Texture:SetVertexColor(1, 0, 0);
+                Test_Pin_Texture:SetDesaturated(true);
             </OnLoad>
         </Scripts>
     </Frame>

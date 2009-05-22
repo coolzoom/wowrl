@@ -367,11 +367,26 @@ namespace Frost
         foreach (itCurrChunk, lChunkList)
         {
             mRenderOp_.vertexData->vertexCount = itCurrChunk->uiVertexCount;
-
-            for (uint i = 0; i < itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0)->getNumPasses(); i++)
+            s_ptr<Ogre::Technique> pTech = itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0);
+            for (uint i = 0; i < pTech->getNumPasses(); i++)
             {
-                pSceneMgr_->_setPass(itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0)->getPass(i));
-                Ogre::Root::getSingleton().getRenderSystem()->_render(mRenderOp_);
+                Ogre::Pass* pPass = pTech->getPass(i);
+                pSceneMgr_->_setPass(pPass);
+                if (pPass->isProgrammable())
+                {
+                    Ogre::AutoParamDataSource mDataSource;
+                    mDataSource.setCurrentViewport(pRenderTarget_->GetOgreRenderTarget()->getViewport(0));
+                    mDataSource.setCurrentRenderTarget(pRenderTarget_->GetOgreRenderTarget().Get());
+                    mDataSource.setCurrentSceneManager(pSceneMgr_.Get());
+                    mDataSource.setWorldMatrices(&Ogre::Matrix4::IDENTITY, 1);
+                    pPass->_updateAutoParamsNoLights(&mDataSource);
+                    if (pPass->hasFragmentProgram())
+                    {
+                        pRS_->bindGpuProgramParameters(Ogre::GPT_FRAGMENT_PROGRAM,
+                            pPass->getFragmentProgramParameters());
+                    }
+                }
+                pRS_->_render(mRenderOp_);
             }
 
             mRenderOp_.vertexData->vertexStart += itCurrChunk->uiVertexCount;

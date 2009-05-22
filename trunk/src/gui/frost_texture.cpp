@@ -107,7 +107,17 @@ void Texture::SetBlendMode( const s_str& sBlendMode )
 
 void Texture::SetDesaturated( const s_bool& bIsDesaturated )
 {
-    bIsDesaturated_ = bIsDesaturated;
+    if (pSprite_)
+    {
+        bIsDesaturated_ = bIsDesaturated;
+        pSprite_->GetMaterial()->SetDesaturated(bIsDesaturated_);
+    }
+    else
+    {
+        Error(CLASS_NAME,
+            "Trying to desaturate an uninitialized Texture : "+sName_+"."
+        );
+    }
 }
 
 void Texture::SetGradient( const Gradient& mGradient )
