@@ -129,6 +129,22 @@ s_str Frame::Serialize( const s_str& sTab ) const
 {
     s_str sStr = UIObject::Serialize(sTab);
 
+    if (!lRegionList_.empty())
+    {
+        if (lChildList_.size() == 1)
+            sStr << sTab << "  Region : \n";
+        else
+            sStr << sTab << "  Regions : " << (uint)lRegionList_.size() << "\n";
+        sStr << sTab << "  |-####\n";
+
+        map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
+        foreach (iterRegion, lRegionList_)
+        {
+            sStr << iterRegion->second->Serialize(sTab+"  | ");
+            sStr << sTab << "  |-####\n";
+        }
+    }
+
     if (!lChildList_.empty())
     {
         if (lChildList_.size() == 1)

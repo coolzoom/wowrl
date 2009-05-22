@@ -79,7 +79,8 @@ namespace Frost
         if (!this->AddUIObject(pFrame))
             return false;
 
-        pFrame->CreateGlue();
+        if (!pFrame->IsVirtual())
+            pFrame->CreateGlue();
 
         s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pFrame->GetParent());
         if (pParent)
@@ -149,9 +150,11 @@ namespace Frost
         if (!this->AddUIObject(pTexture))
             return false;
 
-        //pTexture->CreateGlue();
-
         s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pTexture->GetParent());
+
+        if (pParent && !pParent->IsVirtual())
+            pTexture->CreateGlue();
+
         if (pParent)
             pParent->AddRegion(pTexture);
 
@@ -397,7 +400,58 @@ namespace Frost
 
     s_bool GUIManager::ParseGradientBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock )
     {
-        // TODO : parse Gradient
+        s_ptr<XML::Block> pGradientBlock = pTextureBlock->GetBlock("Gradient");
+        if (pGradientBlock)
+        {
+            s_str sOrientation = pGradientBlock->GetAttribute("orientation");
+            GUI::GradientOrientation mOrient;
+            if (sOrientation == "HORIZONTAL")
+                mOrient = GUI::ORIENTATION_HORIZONTAL;
+            else if (sOrientation == "VERTICAL")
+                mOrient = GUI::ORIENTATION_VERTICAL;
+            else
+            {
+                Error(CLASS_NAME,
+                    "Unknown gradient orientation for "+pTexture->GetName()+" : \""+sOrientation+"\"."
+                );
+                return false;
+            }
+
+            Color mMinColor, mMaxColor;
+            s_ptr<XML::Block> pMinColorBlock = pGradientBlock->GetBlock("MinColor");
+            if (pMinColorBlock)
+            {
+                mMinColor.SetA(s_uint(255*s_float(pMinColorBlock->GetAttribute("a"))));
+                mMinColor.SetR(s_uint(255*s_float(pMinColorBlock->GetAttribute("r"))));
+                mMinColor.SetG(s_uint(255*s_float(pMinColorBlock->GetAttribute("g"))));
+                mMinColor.SetB(s_uint(255*s_float(pMinColorBlock->GetAttribute("b"))));
+            }
+            else
+            {
+                Error(CLASS_NAME,
+                    "Missins \"MinColor\" block in "+pTexture->GetName()+"'s gradient."
+                );
+                return false;
+            }
+
+            s_ptr<XML::Block> pMaxColorBlock = pGradientBlock->GetBlock("MaxColor");
+            if (pMaxColorBlock)
+            {
+                mMaxColor.SetA(s_uint(255*s_float(pMaxColorBlock->GetAttribute("a"))));
+                mMaxColor.SetR(s_uint(255*s_float(pMaxColorBlock->GetAttribute("r"))));
+                mMaxColor.SetG(s_uint(255*s_float(pMaxColorBlock->GetAttribute("g"))));
+                mMaxColor.SetB(s_uint(255*s_float(pMaxColorBlock->GetAttribute("b"))));
+            }
+            else
+            {
+                Error(CLASS_NAME,
+                    "Missins \"MaxColor\" block in "+pTexture->GetName()+"'s gradient."
+                );
+                return false;
+            }
+
+            pTexture->SetGradient(GUI::Gradient(mOrient, mMinColor, mMaxColor));
+        }
         return true;
     }
 
