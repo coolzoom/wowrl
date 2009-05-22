@@ -86,6 +86,9 @@ void Texture::SetBlendMode( TextureBlendMode mBlendMode )
 
 void Texture::SetBlendMode( const s_str& sBlendMode )
 {
+    Warning(lType_.back(),
+        "Texture::SetBlendMode is not yet implemented."
+    );
     if (sBlendMode == "BLEND")
         mBlendMode_ = BLEND_BLEND;
     else if (sBlendMode == "ADD")
@@ -114,7 +117,7 @@ void Texture::SetDesaturated( const s_bool& bIsDesaturated )
     }
     else
     {
-        Error(CLASS_NAME,
+        Error(lType_.back(),
             "Trying to desaturate an uninitialized Texture : "+sName_+"."
         );
     }
@@ -173,7 +176,7 @@ void Texture::SetTexture( const s_str& sFile )
     }
     else
     {
-        Error(CLASS_NAME,
+        Error(lType_.back(),
             "Cannot find file \""+sFile+"\". Using white texture instead."
         );
         pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
@@ -197,7 +200,7 @@ void Texture::SetVertexColor( const Color& mColor )
     }
     else
     {
-        Error(CLASS_NAME,
+        Error(lType_.back(),
             "Trying to set vertex color of an uninitialized Texture : "+
             sName_+"."
         );
