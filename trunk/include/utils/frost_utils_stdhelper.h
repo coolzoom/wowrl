@@ -16,7 +16,7 @@
 #define MAPFIND(key, map) ((map).find(key) != (map).end())
 
 // Returns 'true' if the key is found in the vector/list/deque
-#define VECTORFIND(key, vector) (find((vector).begin(), (vector).end(), key) != (vector).end())
+#define VECTORFIND(key, vector) (std::find((vector).begin(), (vector).end(), key) != (vector).end())
 
 // Iterates through an stl container
 #define foreach(iter, container) for ((iter) = (container).begin(); (iter) != (container).end(); (iter)++)

@@ -14,10 +14,7 @@
 #include "frost_utils_log.h"
 
 #include <algorithm>
-
-#ifdef FROST_LINUX
-    #include <cstdlib>
-#endif
+#include <cstdlib>
 
 using namespace std;
 
@@ -446,7 +443,13 @@ namespace Frost
         if (pValue == NULL)
             return this->operator<<("NULL");
         else
-            return this->operator<<(s_uint((uint)pValue));
+        {
+            #ifdef WIN32
+                return this->operator<<(s_uint((uint)pValue));
+            #else
+                return this->operator<<(s_uint((uint)(ulong)pValue));
+            #endif
+        }
     }
 
     s_str& s_str::operator<< ( const s_int& iValue )

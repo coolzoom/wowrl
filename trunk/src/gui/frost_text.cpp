@@ -485,7 +485,7 @@ namespace Frost
             foreach (iterLine, lLines)
             {
                 lLineList_.push_back(*iterLine);
-                if (s_uint(lLineList_.size()) == uiMaxLineNbr)
+                if (s_uint((uint)lLineList_.size()) == uiMaxLineNbr)
                 {
                     return;
                 }

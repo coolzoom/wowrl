@@ -10,7 +10,7 @@
 #include "frost_utils_float.h"
 #include "frost_utils_double.h"
 
-#include <math.h>
+#include <cmath>
 
 namespace Frost
 {

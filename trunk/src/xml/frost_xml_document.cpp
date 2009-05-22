@@ -60,14 +60,6 @@ const s_uint& Document::GetLineNbr() const
 
 s_bool Document::CheckLineSynthax_( s_str& sLine )
 {
-    #ifdef FROST_LINUX
-    // Fix line endings
-    if ((sLine.Length() > 0u) && (sLine.Get(sLine.Length() - 1u) == '\r'))
-    {
-        sLine.EraseFromEnd(1u);
-    }
-    #endif
-
     s_uint uiPos = sLine.FindPos("<");
     if (uiPos.IsValid())
     {

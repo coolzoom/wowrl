@@ -413,7 +413,7 @@ namespace Frost
             iterator  operator ++ (int);
             iterator& operator -- ();
             iterator  operator -- (int);
-            s_bool iterator::operator != (iterator iter);
+            s_bool    operator != (iterator iter);
 
         private :
 
@@ -439,7 +439,7 @@ namespace Frost
             const_iterator  operator ++ (int);
             const_iterator& operator -- ();
             const_iterator  operator -- (int);
-            s_bool const_iterator::operator != (const_iterator iter);
+            s_bool          operator != (const_iterator iter);
 
         private :
 

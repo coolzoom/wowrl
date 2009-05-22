@@ -102,10 +102,16 @@ namespace Frost
             }
 
             Engine::GetSingleton()->GetLog()->logMessage(sNewMessage.Get());
+            #ifdef _DEBUG
+                printf("%s\n", sNewMessage.c_str());
+            #endif
         }
         else
         {
             Engine::GetSingleton()->GetLog()->logMessage(sMessage.Get());
+            #ifdef _DEBUG
+                printf("%s\n", sMessage.c_str());
+            #endif
         }
     }
 
@@ -126,8 +132,10 @@ namespace Frost
         // Load configuration
         if (!pLua_->DoFile("Config.lua"))
             return false;
+
         if (!this->ReadConfig_())
             return false;
+
         if (!pFontMgr_->ReadConfig())
             return false;
 

@@ -12,6 +12,8 @@
 
 #include "frost_utils_int.h"
 
+#include <algorithm>
+
 using namespace std;
 
 namespace Frost
