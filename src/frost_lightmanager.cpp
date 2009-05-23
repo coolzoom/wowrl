@@ -8,7 +8,6 @@
 #include "frost_lightmanager.h"
 
 #include "frost_light.h"
-#include "frost_gfx.h"
 
 #include "OgreSceneManager.h"
 
@@ -36,7 +35,7 @@ namespace Frost
     void LightManager::Initialize()
     {
         Engine::GetSingleton()->GetOgreSceneManager()->setAmbientLight(
-            GFX::FrostToOgreColor(mAmbient_)
+            Color::FrostToOgre(mAmbient_)
         );
     }
 
@@ -88,7 +87,7 @@ namespace Frost
     {
         mAmbient_ = mAmbient;
         Engine::GetSingleton()->GetOgreSceneManager()->setAmbientLight(
-            GFX::FrostToOgreColor(mAmbient_)
+            Color::FrostToOgre(mAmbient_)
         );
     }
 

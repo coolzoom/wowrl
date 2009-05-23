@@ -6,7 +6,6 @@
 /*                                        */
 
 #include "frost_light.h"
-#include "frost_gfx.h"
 
 #include <OgreSceneManager.h>
 #include <OgreLight.h>
@@ -58,13 +57,13 @@ namespace Frost
     void Light::SetColor( const Color& mDiffuse )
     {
         mDiffuse_ = mDiffuse;
-        pOgreLight_->setDiffuseColour(GFX::FrostToOgreColor(mDiffuse_));
+        pOgreLight_->setDiffuseColour(Color::FrostToOgre(mDiffuse_));
     }
 
     void Light::SetSpecularColor( const Color& mSpecular )
     {
         mSpecular_ = mSpecular;
-        pOgreLight_->setSpecularColour(GFX::FrostToOgreColor(mSpecular_));
+        pOgreLight_->setSpecularColour(Color::FrostToOgre(mSpecular_));
     }
 
     const Color& Light::GetColor() const
