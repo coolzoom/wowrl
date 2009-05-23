@@ -227,12 +227,12 @@ namespace Frost
         #endif
         s_str            operator +  (const s_str& sValue) const;
 
-        bool             operator == (const s_double& dValue) const;
-        bool             operator != (const s_double& dValue) const;
-        bool             operator <  (const s_double& dValue) const;
-        bool             operator >  (const s_double& dValue) const;
-        bool             operator <= (const s_double& dValue) const;
-        bool             operator >= (const s_double& dValue) const;
+        s_bool           operator == (const s_double& dValue) const;
+        s_bool           operator != (const s_double& dValue) const;
+        s_bool           operator <  (const s_double& dValue) const;
+        s_bool           operator >  (const s_double& dValue) const;
+        s_bool           operator <= (const s_double& dValue) const;
+        s_bool           operator >= (const s_double& dValue) const;
 
         s_double&        operator =  (const s_double& dValue);
 

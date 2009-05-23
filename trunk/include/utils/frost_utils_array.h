@@ -180,7 +180,7 @@ namespace Frost
                 return mDummy;
         }
 
-        bool operator == (const s_array& mValue)
+        s_bool operator == (const s_array& mValue)
         {
             for (uint i = 0; i < N; i++)
             {
@@ -189,6 +189,17 @@ namespace Frost
             }
 
             return true;
+        }
+
+        s_bool operator != (const s_array& mValue)
+        {
+            for (uint i = 0; i < N; i++)
+            {
+                if (lArray_[i] != mValue[i])
+                    return true;
+            }
+
+            return false;
         }
 
         s_array& operator = (const s_array& mValue)

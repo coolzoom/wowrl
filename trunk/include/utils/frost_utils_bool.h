@@ -65,8 +65,8 @@ namespace Frost
         typedef        const bool& (s_bool::*MemberFn)() const;
         operator       MemberFn() const;
 
-        bool           operator == (const s_bool& bValue) const;
-        bool           operator != (const s_bool& bValue) const;
+        s_bool         operator == (const s_bool& bValue) const;
+        s_bool         operator != (const s_bool& bValue) const;
 
         s_str          operator +  (const string_element* sValue) const;
         #ifdef USE_UNICODE

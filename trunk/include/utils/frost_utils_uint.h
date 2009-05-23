@@ -157,18 +157,18 @@ namespace Frost
 
         s_str          operator +  (const string_element* sValue) const;
         #ifdef USE_UNICODE
-            s_str      operator +  (const char* sValue) const;
+        s_str          operator +  (const char* sValue) const;
         #endif
         s_str          operator +  (const s_str& sValue) const;
 
         s_uint&        operator << (const s_uint& uiValue);
 
-        bool           operator == (const s_uint& uiValue) const;
-        bool           operator != (const s_uint& uiValue) const;
-        bool           operator <  (const s_uint& uiValue) const;
-        bool           operator >  (const s_uint& uiValue) const;
-        bool           operator <= (const s_uint& uiValue) const;
-        bool           operator >= (const s_uint& uiValue) const;
+        s_bool         operator == (const s_uint& uiValue) const;
+        s_bool         operator != (const s_uint& uiValue) const;
+        s_bool         operator <  (const s_uint& uiValue) const;
+        s_bool         operator >  (const s_uint& uiValue) const;
+        s_bool         operator <= (const s_uint& uiValue) const;
+        s_bool         operator >= (const s_uint& uiValue) const;
 
         s_uint&        operator =  (const s_uint& uiValue);
 

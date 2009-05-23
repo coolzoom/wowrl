@@ -352,12 +352,12 @@ namespace Frost
         void                operator += (const string_element& cValue);
         void                operator -= (const s_uint& uiNumber);
 
-        bool                operator == (const s_str& mValue) const;
-        bool                operator != (const s_str& mValue) const;
-        bool                operator <  (const s_str& mValue) const;
-        bool                operator >  (const s_str& mValue) const;
-        bool                operator <= (const s_str& mValue) const;
-        bool                operator >= (const s_str& mValue) const;
+        s_bool              operator == (const s_str& mValue) const;
+        s_bool              operator != (const s_str& mValue) const;
+        s_bool              operator <  (const s_str& mValue) const;
+        s_bool              operator >  (const s_str& mValue) const;
+        s_bool              operator <= (const s_str& mValue) const;
+        s_bool              operator >= (const s_str& mValue) const;
 
         s_str&              operator =  (const s_str& mValue);
 
@@ -380,6 +380,8 @@ namespace Frost
 
         s_ctnr<s_str>       operator ,  (const s_str& sValue) const;
 
+        static const s_str EMPTY;
+
         static string_element cDummy;
         static const s_str CLASS_NAME;
 
@@ -396,6 +398,10 @@ namespace Frost
         static s_str ToUpper(const s_str& sValue);
 
         // For STL iteration macros compatibility :
+
+        /// "stl like" s_str iterator
+        /** Safely iterates through an s_str.
+        */
         class iterator
         {
         public :
@@ -422,6 +428,10 @@ namespace Frost
 
         };
 
+        /// "stl like" s_str iterator
+        /** Safely iterates through an s_str.<br>
+        *   Ensures it is not modified.
+        */
         class const_iterator
         {
         public :
@@ -448,9 +458,10 @@ namespace Frost
 
         };
 
-        iterator begin();
+        iterator       begin();
         const_iterator begin() const;
-        iterator end();
+
+        iterator       end();
         const_iterator end() const;
 
     private :

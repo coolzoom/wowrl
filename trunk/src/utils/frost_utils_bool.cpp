@@ -71,12 +71,12 @@ namespace Frost
             return NULL;
     }
 
-    bool s_bool::operator== ( const s_bool& mValue ) const
+    s_bool s_bool::operator== ( const s_bool& mValue ) const
     {
         return (bValue_ == mValue.bValue_);
     }
 
-    bool s_bool::operator!= ( const s_bool& mValue ) const
+    s_bool s_bool::operator!= ( const s_bool& mValue ) const
     {
         return (bValue_ != mValue.bValue_);
     }

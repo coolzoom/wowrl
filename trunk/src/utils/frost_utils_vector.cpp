@@ -262,12 +262,12 @@ namespace Frost
         bRebuildNorm_ = true;
     }
 
-    bool Vector::operator == ( const Vector& mVec ) const
+    s_bool Vector::operator == ( const Vector& mVec ) const
     {
         return ( (fX_ == mVec.fX_) && (fY_ == mVec.fY_) && (fZ_ == mVec.fZ_) );
     }
 
-    bool Vector::operator != ( const Vector& mVec ) const
+    s_bool Vector::operator != ( const Vector& mVec ) const
     {
         return ( (fX_ != mVec.fX_) || (fY_ != mVec.fY_) || (fZ_ != mVec.fZ_) );
     }

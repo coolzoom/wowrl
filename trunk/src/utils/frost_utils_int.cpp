@@ -435,7 +435,7 @@ namespace Frost
         *this = *this % mValue;
     }
 
-    bool s_int::operator== ( const s_int& mValue ) const
+    s_bool s_int::operator== ( const s_int& mValue ) const
     {
         if (mValue.IsNaN() || IsNaN())
             return false;
@@ -448,7 +448,7 @@ namespace Frost
         }
     }
 
-    bool s_int::operator!= ( const s_int& mValue ) const
+    s_bool s_int::operator!= ( const s_int& mValue ) const
     {
         if (mValue.IsNaN() || IsNaN())
             return false;
@@ -461,7 +461,7 @@ namespace Frost
         }
     }
 
-    bool s_int::operator< ( const s_int& mValue ) const
+    s_bool s_int::operator< ( const s_int& mValue ) const
     {
         if (mValue.IsNaN() || IsNaN())
             return false;
@@ -484,7 +484,7 @@ namespace Frost
         }
     }
 
-    bool s_int::operator> ( const s_int& mValue ) const
+    s_bool s_int::operator> ( const s_int& mValue ) const
     {
         if (mValue.IsNaN() || IsNaN())
             return false;
@@ -507,7 +507,7 @@ namespace Frost
         }
     }
 
-    bool s_int::operator<= ( const s_int& mValue ) const
+    s_bool s_int::operator<= ( const s_int& mValue ) const
     {
         if (mValue.IsNaN() || IsNaN())
             return false;
@@ -530,7 +530,7 @@ namespace Frost
         }
     }
 
-    bool s_int::operator>= ( const s_int& mValue ) const
+    s_bool s_int::operator>= ( const s_int& mValue ) const
     {
         if (mValue.IsNaN() || IsNaN())
             return false;
