@@ -12,14 +12,23 @@ namespace Frost
 {
     const s_str Color::CLASS_NAME = "Color";
 
+    const Color Color::BLACK = Color(0  , 0  ,0   );
+    const Color Color::WHITE = Color(255, 255, 255);
+    const Color Color::RED   = Color(255, 0  , 0  );
+    const Color Color::GREEN = Color(0  , 255, 0  );
+    const Color Color::BLUE  = Color(0  , 0  , 255);
+    const Color Color::VOID  = Color(0);
+    const Color Color::NaN   = Color(s_uint::NaN);
+
     Color::Color()
     {
-        uiA_ = 255u;
+        uiA_ = 255;
+        BuildUIColor_();
     }
 
     Color::Color( const s_uint& uiR, const s_uint& uiG, const s_uint& uiB )
     {
-        uiA_ = 255u;
+        uiA_ = 255;
         uiR_ = uiR;
         uiG_ = uiG;
         uiB_ = uiB;

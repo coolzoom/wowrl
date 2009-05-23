@@ -177,12 +177,12 @@ namespace Frost
 
         s_int&        operator << (const s_uint& uiValue);
 
-        bool          operator == (const s_int& iValue) const;
-        bool          operator != (const s_int& iValue) const;
-        bool          operator <  (const s_int& iValue) const;
-        bool          operator >  (const s_int& iValue) const;
-        bool          operator <= (const s_int& iValue) const;
-        bool          operator >= (const s_int& iValue) const;
+        s_bool        operator == (const s_int& iValue) const;
+        s_bool        operator != (const s_int& iValue) const;
+        s_bool        operator <  (const s_int& iValue) const;
+        s_bool        operator >  (const s_int& iValue) const;
+        s_bool        operator <= (const s_int& iValue) const;
+        s_bool        operator >= (const s_int& iValue) const;
 
         s_int&        operator =  (const s_int& iValue);
 

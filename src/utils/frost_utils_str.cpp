@@ -22,6 +22,7 @@ namespace Frost
 {
     string_element s_str::cDummy = STRING('\0');
     const s_str s_str::CLASS_NAME = "s_str";
+    const s_str s_str::EMPTY = "";
 
     s_str::s_str()
     {
@@ -317,32 +318,32 @@ namespace Frost
             sValue_ = STRING("");
     }
 
-    bool s_str::operator== ( const s_str& mValue ) const
+    s_bool s_str::operator== ( const s_str& mValue ) const
     {
         return (sValue_ == mValue.sValue_);
     }
 
-    bool s_str::operator!= ( const s_str& mValue ) const
+    s_bool s_str::operator!= ( const s_str& mValue ) const
     {
         return (sValue_ != mValue.sValue_);
     }
 
-    bool s_str::operator< ( const s_str& mValue ) const
+    s_bool s_str::operator< ( const s_str& mValue ) const
     {
         return (sValue_ < mValue.sValue_);
     }
 
-    bool s_str::operator> ( const s_str& mValue ) const
+    s_bool s_str::operator> ( const s_str& mValue ) const
     {
         return (sValue_ > mValue.sValue_);
     }
 
-    bool s_str::operator<= ( const s_str& mValue ) const
+    s_bool s_str::operator<= ( const s_str& mValue ) const
     {
         return (sValue_ <= mValue.sValue_);
     }
 
-    bool s_str::operator>= ( const s_str& mValue ) const
+    s_bool s_str::operator>= ( const s_str& mValue ) const
     {
         return (sValue_ >= mValue.sValue_);
     }
@@ -385,7 +386,7 @@ namespace Frost
             }
             case CONV_BIN :
             {
-                // TODO
+                // TODO : Implementer la conversion en binaire, si necessaire
                 break;
             }
         }

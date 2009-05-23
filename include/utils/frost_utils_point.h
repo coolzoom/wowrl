@@ -64,11 +64,11 @@ namespace Frost
             mX_ -= mPoint.mX_; mY_ -= mPoint.mY_;
         }
 
-        bool operator == (const Point& mPoint) const
+        s_bool operator == (const Point& mPoint) const
         {
             return ( (mX_ == mPoint.mX_) && (mY_ == mPoint.mY_) );
         }
-        bool operator != (const Point& mPoint) const
+        s_bool operator != (const Point& mPoint) const
         {
             return !( (mX_ == mPoint.mX_) && (mY_ == mPoint.mY_) );
         }

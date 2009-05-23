@@ -124,7 +124,7 @@ namespace Frost
         /** \param pValue The pointer to test
         */
         template<class N>
-        bool operator == (s_ptr<N> pValue)
+        s_bool operator == (s_ptr<N> pValue)
         {
             return (pValue_ == pValue.Get());
         }
@@ -132,7 +132,7 @@ namespace Frost
         /// Checks if this pointer equals another
         /** \param pValue The pointer to test
         */
-        bool operator == (T* pValue)
+        s_bool operator == (T* pValue)
         {
             return (pValue_ == pValue);
         }
@@ -141,7 +141,7 @@ namespace Frost
         /** \param pValue The pointer to test
         */
         template<class N>
-        bool operator != (s_ptr<N> pValue)
+        s_bool operator != (s_ptr<N> pValue)
         {
             return (pValue_ != pValue.Get());
         }
@@ -149,7 +149,7 @@ namespace Frost
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
         */
-        bool operator != (T* pValue)
+        s_bool operator != (T* pValue)
         {
             return (pValue_ != pValue);
         }

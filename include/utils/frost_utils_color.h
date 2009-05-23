@@ -104,6 +104,14 @@ namespace Frost
         */
         static Color  Random(const s_bool& bRandomAlpha = false);
 
+        static const Color BLACK;
+        static const Color WHITE;
+        static const Color RED;
+        static const Color GREEN;
+        static const Color BLUE;
+        static const Color VOID;
+        static const Color NaN;
+
         static const s_str CLASS_NAME;
 
     private :

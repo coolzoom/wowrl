@@ -157,8 +157,8 @@ namespace Frost
         void           operator += (const Vector& mVec);
         void           operator -= (const Vector& mVec);
 
-        bool           operator == (const Vector& mVec) const;
-        bool           operator != (const Vector& mVec) const;
+        s_bool         operator == (const Vector& mVec) const;
+        s_bool         operator != (const Vector& mVec) const;
 
         Vector&        operator =  (const Vector& mVec);
 
