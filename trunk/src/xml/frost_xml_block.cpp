@@ -99,7 +99,36 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
 {
     if (!sAttributes.IsEmpty())
     {
-        vector<s_str> lAttribs = sAttributes.Cut(" ");
+        vector<s_str> lAttribs;
+        s_str::const_iterator iterStr;
+        s_str sAttr;
+        s_bool bString = false;
+        foreach (iterStr, sAttributes)
+        {
+            if (*iterStr == '"')
+            {
+                sAttr += *iterStr;
+                bString = !bString;
+            }
+            else if (*iterStr == ' ')
+            {
+                if (!bString)
+                {
+                    if (!sAttr.IsEmpty())
+                        lAttribs.push_back(sAttr);
+                    sAttr = "";
+                }
+                else
+                    sAttr += *iterStr;
+            }
+            else
+            {
+                sAttr += *iterStr;
+            }
+        }
+        if (!sAttr.IsEmpty())
+            lAttribs.push_back(sAttr);
+
         vector<s_str>::iterator iterAttr;
         foreach (iterAttr, lAttribs)
         {

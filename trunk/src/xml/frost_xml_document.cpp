@@ -321,7 +321,36 @@ s_bool Document::LoadDefinition_()
                             s_str sAttribs = lWords.back();
                             sAttribs.Replace(" =", "=");
                             sAttribs.Replace("= ", "=");
-                            lAttribs = sAttribs.Cut(" ");
+
+                            s_str::iterator iterStr;
+                            s_str sAttr;
+                            s_bool bString = false;
+                            foreach (iterStr, sAttribs)
+                            {
+                                if (*iterStr == '"')
+                                {
+                                    sAttr += *iterStr;
+                                    bString = !bString;
+                                }
+                                else if (*iterStr == ' ')
+                                {
+                                    if (!bString)
+                                    {
+                                        if (!sAttr.IsEmpty())
+                                            lAttribs.push_back(sAttr);
+                                        sAttr = "";
+                                    }
+                                    else
+                                        sAttr += *iterStr;
+                                }
+                                else
+                                {
+                                    sAttr += *iterStr;
+                                }
+                            }
+
+                            if (!sAttr.IsEmpty())
+                                lAttribs.push_back(sAttr);
                         }
 
                         if (pParent)
