@@ -6,6 +6,8 @@
 #include "frost_utils_color.h"
 #include "frost_utils_str.h"
 
+#include <OgreColourValue.h>
+
 using namespace std;
 
 namespace Frost
@@ -70,7 +72,7 @@ namespace Frost
         return uiB_;
     }
 
-    const s_uint& Color::Get() const
+    const s_uint& Color::GetPacked() const
     {
         return uiColor_;
     }
@@ -99,7 +101,7 @@ namespace Frost
         BuildUIColor_();
     }
 
-    void Color::Set( const s_uint& uiColor )
+    void Color::SetPacked( const s_uint& uiColor )
     {
         uiColor_ = uiColor;
         BuildABGRColor_();
@@ -127,6 +129,20 @@ namespace Frost
             return Color(s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255));
         else
             return Color(s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255));
+    }
+
+    Ogre::ColourValue Color::FrostToOgre( const Color& mColor )
+    {
+        Ogre::ColourValue mOgreColor;
+        mOgreColor.setAsARGB(mColor.GetPacked().Get());
+        return mOgreColor;
+    }
+
+    Color Color::OgreToFrost( const Ogre::ColourValue& mOgreColor )
+    {
+        Color mColor;
+        mColor.SetPacked(mOgreColor.getAsARGB());
+        return mColor;
     }
 
     s_bool Color::operator == ( const Color& mColor ) const
