@@ -10,6 +10,11 @@
 #include "frost_utils.h"
 #include "frost_utils_uint.h"
 
+namespace Ogre
+{
+    class ColourValue;
+}
+
 namespace Frost
 {
     /// Color container
@@ -67,7 +72,7 @@ namespace Frost
         /// Returns the packed ARGB value.
         /** \return The packed ARGB value
         */
-        const s_uint& Get() const;
+        const s_uint& GetPacked() const;
 
         /// Sets the alpha component.
         /** \param uiA The alpha component
@@ -92,7 +97,7 @@ namespace Frost
         /// Sets the packed ARGB component.
         /** \param uiColor packed ARGB component.
         */
-        void          Set(const s_uint& uiColor);
+        void          SetPacked(const s_uint& uiColor);
 
         s_bool operator == (const Color& mColor) const;
         s_bool operator != (const Color& mColor) const;
@@ -103,6 +108,18 @@ namespace Frost
         *   \return A random color
         */
         static Color  Random(const s_bool& bRandomAlpha = false);
+
+        /// Converts a Frost color to an Ogre one.
+        /** \param mColor The color to convert
+        *   \return The Ogre color
+        */
+        static Ogre::ColourValue FrostToOgre(const Color& mColor);
+
+        /// Converts an Ogre color to a Frost one.
+        /** \param mColor The color to convert
+        *   \return The Frost color
+        */
+        static Color OgreToFrost(const Ogre::ColourValue& mColor);
 
         static const Color BLACK;
         static const Color WHITE;
