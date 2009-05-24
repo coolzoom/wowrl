@@ -107,6 +107,11 @@ namespace Frost
         BuildABGRColor_();
     }
 
+    s_bool Color::IsValid() const
+    {
+        return uiColor_.IsValid();
+    }
+
     void Color::BuildUIColor_()
     {
         uiColor_ =  ((uchar)uiA_.Get()) << 24;
