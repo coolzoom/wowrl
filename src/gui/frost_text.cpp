@@ -1,23 +1,24 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*               XXXX source              */
+/*               Text source              */
 /*                                        */
-/*  ## : ...                              */
 /*                                        */
 
 #include "frost_text.h"
-
-#include <OgreFont.h>
-#include <OgreFontManager.h>
-#include <OgreRenderTarget.h>
-#include <OgrePass.h>
 
 #include "frost_fontmanager.h"
 #include "frost_spritemanager.h"
 #include "frost_materialmanager.h"
 #include "frost_material.h"
 #include "frost_sprite.h"
+
+#include <OgreFont.h>
+#include <OgreFontManager.h>
+#include <OgreRenderTarget.h>
+#include <OgrePass.h>
+
+#undef VOID
 
 using namespace std;
 
@@ -39,19 +40,7 @@ namespace Frost
         {
             bReady_ = true;
 
-            pFontMat_ = MaterialManager::GetSingleton()->CreateMaterial(pOgreFont_->getMaterial().get());
-            s_ptr<Ogre::Pass> pPass = pFontMat_->GetDefaultPass();
-            pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
-            pPass->setCullingMode(Ogre::CULL_NONE);
-            pPass->setTextureFiltering(Ogre::TFO_NONE);
-            pPass->setSeparateSceneBlending(
-                Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA,
-                Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA
-            );
-
-            pFontMat_->GetOgreMaterial()->setLightingEnabled(false);
-            pFontMat_->GetOgreMaterial()->setDepthCheckEnabled(false);
-            pFontMat_->GetOgreMaterial()->setCullingMode(Ogre::CULL_NONE);
+            pFontMat_ = MaterialManager::GetSingleton()->CreateMaterial2D(pOgreFont_->getMaterial().get());
 
             fSpaceWidth_ = GetCharacterWidth((uint)'0');
         }
@@ -61,6 +50,16 @@ namespace Frost
     {
         pRTMat_.SetNull();
         SpriteManager::GetSingleton()->DeleteRenderTarget(pCache_);
+    }
+
+    const s_str& Text::GetFontName() const
+    {
+        return sFileName_;
+    }
+
+    const s_float& Text::GetFontSize() const
+    {
+        return fSize_;
     }
 
     void Text::SetText( const s_str& sText )
@@ -132,6 +131,8 @@ namespace Frost
     s_float Text::GetTextWidth() const
     {
         s_float fWidth;
+        s_float fMaxWidth = s_float::INFMINUS;
+
         if (bReady_)
         {
             s_str::const_iterator iterChar;
@@ -139,6 +140,13 @@ namespace Frost
             {
                 if (*iterChar == ' ')
                     fWidth += fSpaceWidth_;
+                else if (*iterChar == '\n')
+                {
+                    if (fWidth > fMaxWidth)
+                        fMaxWidth = fWidth;
+
+                    fWidth = 0.0f;
+                }
                 else
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
             }
@@ -147,9 +155,22 @@ namespace Frost
         return fWidth;
     }
 
+    s_float Text::GetTextHeight() const
+    {
+        s_float fHeight;
+
+        if (bReady_)
+        {
+            fHeight = s_float(sText_.CountOccurences("\n")+1)*fSize_;
+        }
+
+        return fHeight;
+    }
+
     s_float Text::GetStringWidth( const s_str& sString ) const
     {
         s_float fWidth;
+        s_float fMaxWidth = s_float::INFMINUS;
         if (bReady_)
         {
             s_str::const_iterator iterChar;
@@ -157,6 +178,13 @@ namespace Frost
             {
                 if (*iterChar == ' ')
                     fWidth += fSpaceWidth_;
+                else if (*iterChar == '\n')
+                {
+                    if (fWidth > fMaxWidth)
+                        fMaxWidth = fWidth;
+
+                    fWidth = 0.0f;
+                }
                 else
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
             }
@@ -174,11 +202,6 @@ namespace Frost
         }
         else
             return 0.0f;
-    }
-
-    s_float Text::GetTextHeight() const
-    {
-        return fSize_;
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
@@ -543,7 +566,7 @@ namespace Frost
         }
 
         pSpriteMgr->Begin(pCache_);
-        pSpriteMgr->Clear(Color(0, 0, 0, 0));
+        pSpriteMgr->Clear(Color::VOID);
 
         s_float fX, fY = 0;
         Quad mQuad;
@@ -574,7 +597,7 @@ namespace Frost
             foreach (iterChar, iterLine->sCaption)
             {
                 // Format our text
-                if (MAPFIND(uiCounter, lFormatList_))
+                if (MAPFIND(uiCounter, lFormatList_) && !bForceColor_)
                 {
                     s_ptr<Format> f = &lFormatList_[uiCounter];
                     switch (f->mColorAction)
