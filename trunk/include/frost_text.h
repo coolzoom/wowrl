@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*              XXXX header               */
+/*              Text header               */
 /*                                        */
 /*                                        */
 
@@ -9,7 +9,6 @@
 #define FROST_TEXT_H
 
 #include "frost.h"
-#include "frost_gfx.h"
 
 namespace Frost
 {
@@ -19,7 +18,7 @@ namespace Frost
     class Text
     {
     public :
-    
+
         /// Contains a string that will be drawn on a line
         struct Line
         {
@@ -59,6 +58,16 @@ namespace Frost
 
         /// Destructor.
         ~Text();
+
+        /// Returns the path to the .ttf file.
+        /** \return The path to the .ttf file
+        */
+        const s_str&   GetFontName() const;
+
+        /// Returns the size of the font.
+        /** \return The size of the font
+        */
+        const s_float&  GetFontSize() const;
 
         /// Set the text to render.
         /** \param sText The text to render
@@ -117,7 +126,7 @@ namespace Frost
 
         /// Returns the length of the text.
         /** \return The length of the text
-        *   \note Ignores the text box.
+        *   \note Ignores the text box, but not manual line jumps.
         */
         s_float        GetTextWidth() const;
 
@@ -135,8 +144,9 @@ namespace Frost
         */
         s_float        GetCharacterWidth(const s_uint& uiChar) const;
 
-        /// Returns the height of one character.
-        /** \return The height of one character
+        /// Returns the height of the text.
+        /** \return The height of one text
+        *   \note Ignores the text box, but not manual line jumps.
         */
         s_float        GetTextHeight() const;
 
