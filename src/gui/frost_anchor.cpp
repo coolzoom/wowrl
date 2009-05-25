@@ -222,16 +222,18 @@ s_str Anchor::Serialize( const s_str& sTab ) const
 {
     s_str sStr;
 
-    sStr << sTab << "  |   Point : "           << GetStringPoint(mPoint_) << "\n";
+    sStr << sTab << "  |   # Point      : " << GetStringPoint(mPoint_) << "\n";
     if (pParent_)
-        sStr << sTab << "  |   Parent : "      << pParent_->GetName() << "\n";
+    sStr << sTab << "  |   # Parent     : " << pParent_->GetName();
     else
-        sStr << sTab << "  |   Parent : none\n";
+    sStr << sTab << "  |   # Parent     : none";
     if (!sParent_.IsEmpty())
-        sStr << sTab << "  |   Parent raw name : " << sParent_ << "\n";
-    sStr << sTab << "  |   Parent point : "    << GetStringPoint(mParentPoint_) << "\n";
-    sStr << sTab << "  |   Offset X : "        << iAbsOffX_ << "\n";
-    sStr << sTab << "  |   Offset Y : "        << iAbsOffY_ << "\n";
+    sStr << " (raw name : " << sParent_ << ")\n";
+    else
+    sStr << "\n";
+    sStr << sTab << "  |   # Rel. point : " << GetStringPoint(mParentPoint_) << "\n";
+    sStr << sTab << "  |   # Offset X   : " << iAbsOffX_ << "\n";
+    sStr << sTab << "  |   # Offset Y   : " << iAbsOffY_ << "\n";
 
     return sStr;
 }

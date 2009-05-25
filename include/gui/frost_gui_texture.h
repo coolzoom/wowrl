@@ -44,6 +44,9 @@ namespace Frost
             /// Constructor.
             Texture();
 
+            /// Destructor.
+            ~Texture();
+
             /// Prints all relevant information about this widget in a string.
             /** \param sTab The offset to give to all lines
             *   \return All relevant information about this widget
@@ -51,7 +54,7 @@ namespace Frost
             s_str                     Serialize(const s_str& sTab) const;
 
             /// Renders this widget on the current render target.
-            virtual void              Render();
+            void                      Render();
 
             /// Returns this Textures's blending mode.
             /** \return This Textures's blending mode
@@ -169,7 +172,7 @@ namespace Frost
             void                      SetVertexColor(const Color& mColor);
 
             /// Returns this widget's Lua glue.
-            virtual void              CreateGlue();
+            void                      CreateGlue();
 
             static const s_str CLASS_NAME;
 
@@ -199,7 +202,9 @@ namespace Frost
 
             LuaTexture(lua_State* pLua);
 
-            // Glues
+            // LayeredRegion
+            int _SetVertexColor(lua_State*);
+            // Texture
             int _GetBlendMode(lua_State*);
             int _GetTexCoord(lua_State*);
             int _GetTexCoordModifiesRect(lua_State*);
@@ -213,7 +218,7 @@ namespace Frost
             int _SetTexCoord(lua_State*);
             int _SetTexCoordModifiesRect(lua_State*);
             int _SetTexture(lua_State*);
-            int _SetVertexColor(lua_State*);
+
 
             static const char className[];
             static Lunar<LuaTexture>::RegType methods[];

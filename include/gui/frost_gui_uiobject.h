@@ -11,7 +11,6 @@
 
 #include "frost.h"
 #include "frost_gui_anchor.h"
-#include "frost_gfx.h"
 
 namespace Frost
 {
@@ -347,12 +346,13 @@ namespace Frost
 
         protected :
 
-            void UpdateBorders_();
-            void UpdateDimensions_();
+            void         MakeBorders_(s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize);
+            virtual void UpdateBorders_();
+            virtual void UpdateDimensions_();
 
             s_str           sName_;
             s_uint          uiID_;
-            ObjectType      mType_;
+            ObjectType      mObjectType_;
             s_ptr<UIObject> pParent_;
 
             s_bool          bVirtual_;
@@ -363,6 +363,7 @@ namespace Frost
             std::vector<s_str> lType_;
 
             std::map<AnchorPoint, Anchor> lAnchorList_;
+            s_array<s_bool, 4>            lDefinedBorderList_;
             s_array<s_int, 4>             lBorderList_;
 
             s_float fAlpha_;
@@ -397,6 +398,7 @@ namespace Frost
 
             s_ptr<UIObject> GetParent();
 
+            // UIObject
             int _GetAlpha(lua_State*);
             int _GetName(lua_State*);
             int _GetObjectType(lua_State*);

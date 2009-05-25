@@ -26,7 +26,7 @@ const s_str Strata::CLASS_NAME = "GUI::Strata";
 
 Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
 {
-    mType_ = OJBECT_TYPE_FRAME;
+    mObjectType_ = OJBECT_TYPE_FRAME;
     lType_.push_back("Frame");
 
     mStrata_ = STRATA_MEDIUM;
@@ -132,32 +132,32 @@ s_str Frame::Serialize( const s_str& sTab ) const
     if (!lRegionList_.empty())
     {
         if (lChildList_.size() == 1)
-            sStr << sTab << "  Region : \n";
+            sStr << sTab << "  # Region : \n";
         else
-            sStr << sTab << "  Regions : " << (uint)lRegionList_.size() << "\n";
-        sStr << sTab << "  |-####\n";
+            sStr << sTab << "  # Regions     : " << (uint)lRegionList_.size() << "\n";
+        sStr << sTab << "  |-###\n";
 
         map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
         foreach (iterRegion, lRegionList_)
         {
             sStr << iterRegion->second->Serialize(sTab+"  | ");
-            sStr << sTab << "  |-####\n";
+            sStr << sTab << "  |-###\n";
         }
     }
 
     if (!lChildList_.empty())
     {
         if (lChildList_.size() == 1)
-            sStr << sTab << "  Child : \n";
+            sStr << sTab << "  # Child : \n";
         else
-            sStr << sTab << "  Children : " << (uint)lChildList_.size() << "\n";
-        sStr << sTab << "  |-####\n";
+            sStr << sTab << "  # Children    : " << (uint)lChildList_.size() << "\n";
+        sStr << sTab << "  |-###\n";
 
         map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
         foreach (iterChild, lChildList_)
         {
             sStr << iterChild->second->Serialize(sTab+"  | ");
-            sStr << sTab << "  |-####\n";
+            sStr << sTab << "  |-###\n";
         }
     }
 
@@ -901,5 +901,5 @@ void Frame::Update()
 
 void Frame::UpdateMaterial( const s_bool& bForceUpdate )
 {
-    ((UIObject*)this)->UpdateMaterial(bForceUpdate);
+    UIObject::UpdateMaterial(bForceUpdate);
 }

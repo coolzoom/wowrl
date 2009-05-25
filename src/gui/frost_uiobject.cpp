@@ -18,7 +18,7 @@ const s_str UIObject::CLASS_NAME = "GUI::UIObject";
 
 UIObject::UIObject()
 {
-    mType_ = OJBECT_TYPE_UIOBJECT;
+    mObjectType_ = OJBECT_TYPE_UIOBJECT;
     lType_.push_back("UIObject");
 
     fAlpha_ = 1.0f;
@@ -54,31 +54,37 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 {
     s_str sStr;
 
-    sStr << sTab << "  Name : "        << sName_ << " ("+bReady_.GetAsString("ready", "not ready")+")\n";
-    sStr << sTab << "  ID : "          << uiID_ << "\n";
-    sStr << sTab << "  Type : "        << lType_.back() << "\n";
+    sStr << sTab << "  # Name        : "        << sName_ << " ("+bReady_.GetAsString("ready", "not ready")+")\n";
+    sStr << sTab << "  # ID          : "        << uiID_ << "\n";
+    sStr << sTab << "  # Type        : "        << lType_.back() << "\n";
     if (pParent_)
-        sStr << sTab << "  Parent : "  << pParent_->GetName() << "\n";
+    sStr << sTab << "  # Parent      : "  << pParent_->GetName() << "\n";
     else
-        sStr << sTab << "  Parent : none\n";
-    sStr << sTab << "  Num anchors : " << s_int((int)lAnchorList_.size()) << "\n";
+    sStr << sTab << "  # Parent      : none\n";
+    sStr << sTab << "  # Num anchors : " << s_int((int)lAnchorList_.size()) << "\n";
     if (!lAnchorList_.empty())
     {
-        sStr << sTab << "  |-####\n";
+        sStr << sTab << "  |-###\n";
         map<AnchorPoint, Anchor>::const_iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
             sStr << iterAnchor->second.Serialize(sTab);
-            sStr << sTab << "  |-####\n";
+            sStr << sTab << "  |-###\n";
         }
     }
-    sStr << sTab << "  Borders : "     << lBorderList_ << "\n";
-    sStr << sTab << "  Alpha : "       << fAlpha_ << "\n";
-    sStr << sTab << "  Shown : "       << bIsShown_ << "\n";
-    sStr << sTab << "  Abs width : "   << uiAbsWidth_ << "\n";
-    sStr << sTab << "  Abs height : "  << uiAbsHeight_ << "\n";
-    sStr << sTab << "  Rel width : "   << fRelWidth_ << "\n";
-    sStr << sTab << "  Rel height : "  << fRelHeight_ << "\n";
+    sStr << sTab << "  # Borders :\n";
+    sStr << sTab << "  |-###\n";
+    sStr << sTab << "  |   # left   : " << lBorderList_[BORDER_LEFT] << "\n";
+    sStr << sTab << "  |   # top    : " << lBorderList_[BORDER_TOP] << "\n";
+    sStr << sTab << "  |   # right  : " << lBorderList_[BORDER_RIGHT] << "\n";
+    sStr << sTab << "  |   # bottom : " << lBorderList_[BORDER_BOTTOM] << "\n";
+    sStr << sTab << "  |-###\n";
+    sStr << sTab << "  # Alpha       : "       << fAlpha_ << "\n";
+    sStr << sTab << "  # Shown       : "       << bIsShown_ << "\n";
+    sStr << sTab << "  # Abs width   : "  << uiAbsWidth_ << "\n";
+    sStr << sTab << "  # Abs height  : "  << uiAbsHeight_ << "\n";
+    sStr << sTab << "  # Rel width   : "  << fRelWidth_ << "\n";
+    sStr << sTab << "  # Rel height  : "  << fRelHeight_ << "\n";
 
     return sStr;
 }
@@ -265,35 +271,40 @@ s_ptr<UIObject> UIObject::GetParent()
 
 const s_int& UIObject::GetBottom() const
 {
-    return lBorderList_.Get(BORDER_BOTTOM);
+    return lBorderList_[BORDER_BOTTOM];
 }
 
 Point<s_int> UIObject::GetCenter() const
 {
     return Point<s_int>(
-        (lBorderList_.Get(BORDER_LEFT) + s_int(uiAbsWidth_/2u)).Get(),
-        (lBorderList_.Get(BORDER_TOP) + s_int(uiAbsHeight_/2u)).Get()
+        (lBorderList_[BORDER_LEFT] + s_int(uiAbsWidth_/2u)).Get(),
+        (lBorderList_[BORDER_TOP] + s_int(uiAbsHeight_/2u)).Get()
     );
 }
 
 const s_int& UIObject::GetLeft() const
 {
-    return lBorderList_.Get(BORDER_LEFT);
+    return lBorderList_[BORDER_LEFT];
 }
 
 const s_int& UIObject::GetRight() const
 {
-    return lBorderList_.Get(BORDER_RIGHT);
+    return lBorderList_[BORDER_RIGHT];
 }
 
 const s_int& UIObject::GetTop() const
 {
-    return lBorderList_.Get(BORDER_TOP);
+    return lBorderList_[BORDER_TOP];
 }
 
 void UIObject::ClearAllPoints()
 {
     lAnchorList_.clear();
+
+    lDefinedBorderList_[BORDER_LEFT]   =
+    lDefinedBorderList_[BORDER_TOP]    =
+    lDefinedBorderList_[BORDER_RIGHT]  =
+    lDefinedBorderList_[BORDER_BOTTOM] = false;
 }
 
 void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
@@ -307,6 +318,11 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 
         mAnchor = Anchor(this, ANCHOR_BOTTOMRIGHT, pObj, ANCHOR_BOTTOMRIGHT);
         lAnchorList_[ANCHOR_BOTTOMRIGHT] = mAnchor;
+
+        lDefinedBorderList_[BORDER_LEFT]   =
+        lDefinedBorderList_[BORDER_TOP]    =
+        lDefinedBorderList_[BORDER_RIGHT]  =
+        lDefinedBorderList_[BORDER_BOTTOM] = true;
 
         FireUpdateBorders();
     }
@@ -335,6 +351,39 @@ void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
         pAnchor->SetAbsOffset(iX, iY);
     }
 
+    switch (mPoint)
+    {
+        case ANCHOR_TOPLEFT :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        case ANCHOR_TOP :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            break;
+        case ANCHOR_TOPRIGHT :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_RIGHT :
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_BOTTOMRIGHT :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_BOTTOM :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            break;
+        case ANCHOR_BOTTOMLEFT :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        case ANCHOR_LEFT :
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        default : break;
+    }
+
     FireUpdateBorders();
 }
 
@@ -355,12 +404,79 @@ void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
         pAnchor->SetRelOffset(fX, fY);
     }
 
+    switch (mPoint)
+    {
+        case ANCHOR_TOPLEFT :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        case ANCHOR_TOP :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            break;
+        case ANCHOR_TOPRIGHT :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_RIGHT :
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_BOTTOMRIGHT :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_BOTTOM :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            break;
+        case ANCHOR_BOTTOMLEFT :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        case ANCHOR_LEFT :
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        default : break;
+    }
+
     FireUpdateBorders();
 }
 
 void UIObject::SetPoint( const Anchor& mAnchor )
 {
     lAnchorList_[mAnchor.GetPoint()] = mAnchor;
+    switch (mAnchor.GetPoint())
+    {
+        case ANCHOR_TOPLEFT :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        case ANCHOR_TOP :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            break;
+        case ANCHOR_TOPRIGHT :
+            lDefinedBorderList_[BORDER_TOP] = true;
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_RIGHT :
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_BOTTOMRIGHT :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            lDefinedBorderList_[BORDER_RIGHT] = true;
+            break;
+        case ANCHOR_BOTTOM :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            break;
+        case ANCHOR_BOTTOMLEFT :
+            lDefinedBorderList_[BORDER_BOTTOM] = true;
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        case ANCHOR_LEFT :
+            lDefinedBorderList_[BORDER_LEFT] = true;
+            break;
+        default : break;
+    }
+
+    FireUpdateBorders();
 }
 
 s_uint UIObject::GetNumPoint() const
@@ -436,7 +552,7 @@ void UIObject::UpdateDimensions_()
     }
 }
 
-void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize, s_bool& bReady )
+void UIObject::MakeBorders_( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize )
 {
     if (!iMin.IsValid() && !iMax.IsValid())
     {
@@ -448,10 +564,10 @@ void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& i
                 iMax = iCenter + iSize/2;
             }
             else
-                bReady = false;
+                bReady_ = false;
         }
         else
-            bReady = false;
+            bReady_ = false;
     }
     else if (!iMax.IsValid())
     {
@@ -466,7 +582,7 @@ void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& i
                 iMax = iMin + 2*(iCenter-iMin);
             }
             else
-                bReady = false;
+                bReady_ = false;
         }
     }
     else if (!iMin.IsValid())
@@ -482,12 +598,12 @@ void MakeBorders( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& i
                 iMin = iMax - 2*(iMax-iCenter);
             }
             else
-                bReady = false;
+                bReady_ = false;
         }
     }
 
     if (iMin >= iMax)
-        bReady = false;
+        bReady_ = false;
 }
 
 void UIObject::UpdateBorders_()
@@ -554,8 +670,8 @@ void UIObject::UpdateBorders_()
             }
         }
 
-        MakeBorders(iTop, iBottom, iYCenter, s_int(uiAbsHeight_), bReady_);
-        MakeBorders(iLeft, iRight, iXCenter, s_int(uiAbsWidth_), bReady_);
+        MakeBorders_(iTop, iBottom, iYCenter, s_int(uiAbsHeight_));
+        MakeBorders_(iLeft, iRight, iXCenter, s_int(uiAbsWidth_));
 
         if (bReady_)
         {
