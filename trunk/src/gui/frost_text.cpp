@@ -28,7 +28,7 @@ namespace Frost
 
     Text::Text( const s_str& sFileName, const s_float& fSize )
     {
-        fW_ = fH_ = s_float::INFPLUS;
+        fBoxW_ = fBoxH_ = s_float::INFPLUS;
         mAlign_ = ALIGN_LEFT;
         fLineSpacing_ = 1.0f;
         fTracking_ = 0.0f;
@@ -48,8 +48,6 @@ namespace Frost
 
     Text::~Text()
     {
-        pRTMat_.SetNull();
-        SpriteManager::GetSingleton()->DeleteRenderTarget(pCache_);
     }
 
     const s_str& Text::GetFontName() const
@@ -60,6 +58,12 @@ namespace Frost
     const s_float& Text::GetFontSize() const
     {
         return fSize_;
+    }
+
+    s_float Text::GetLineHeight() const
+    {
+        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)'0');
+        return (mUVRect.bottom - mUVRect.top)*pFontMat_->GetWidth();
     }
 
     void Text::SetText( const s_str& sText )
@@ -78,12 +82,8 @@ namespace Frost
 
     void Text::SetColor( const Color& mColor, const s_bool& bForceColor )
     {
-        if ( (mColor_ != mColor) || bForceColor_ != bForceColor )
-        {
-            mColor_ = mColor;
-            bForceColor_ = bForceColor;
-            bUpdateCache_ = true;
-        }
+        mColor_ = mColor;
+        bForceColor_ = bForceColor;
     }
 
     const Color& Text::GetColor() const
@@ -93,39 +93,63 @@ namespace Frost
 
     void Text::SetDimensions( const s_float& fW, const s_float& fH )
     {
-        if ( (fW_ != fW) || (fH_ != fH) )
+        if ( (fBoxW_ != fW) || (fBoxH_ != fH) )
         {
-            fW_ = fW; fH_ = fH;
+            fBoxW_ = fW; fBoxH_ = fH;
             bUpdateCache_ = true;
         }
     }
 
-    void Text::SetWidth( const s_float& fW )
+    void Text::SetBoxWidth( const s_float& fBoxW )
     {
-        if (fW_ != fW)
+        if (fBoxW_ != fBoxW)
         {
-            fW_ = fW;
+            fBoxW_ = fBoxW;
             bUpdateCache_ = true;
         }
     }
 
-    void Text::SetHeight( const s_float& fH )
+    void Text::SetBoxHeight( const s_float& fBoxH )
     {
-        if (fH_ != fH)
+        if (fBoxH_ != fBoxH)
         {
-            fH_ = fH;
+            fBoxH_ = fBoxH;
             bUpdateCache_ = true;
         }
     }
 
-    const s_float& Text::GetWidth() const
+    const s_float& Text::GetWidth()
     {
+        if (bUpdateCache_)
+        {
+            UpdateLines_();
+            UpdateCache_();
+            bUpdateCache_ = false;
+        }
+
         return fW_;
     }
 
-    const s_float& Text::GetHeight() const
+    const s_float& Text::GetHeight()
     {
+        if (bUpdateCache_)
+        {
+            UpdateLines_();
+            UpdateCache_();
+            bUpdateCache_ = false;
+        }
+
         return fH_;
+    }
+
+    const s_float& Text::GetBoxWidth() const
+    {
+        return fBoxW_;
+    }
+
+    const s_float& Text::GetBoxHeight() const
+    {
+        return fBoxH_;
     }
 
     s_float Text::GetTextWidth() const
@@ -161,7 +185,7 @@ namespace Frost
 
         if (bReady_)
         {
-            fHeight = s_float(sText_.CountOccurences("\n")+1)*fSize_;
+            fHeight = s_float(sText_.CountOccurences("\n")+1)*GetLineHeight();
         }
 
         return fHeight;
@@ -256,51 +280,57 @@ namespace Frost
         return bRemoveStartingSpaces_;
     }
 
-    void Text::Update()
-    {
-        if (bUpdateCache_ && bReady_)
-        {
-            UpdateLines_();
-            UpdateCache_();
-            bUpdateCache_ = false;
-        }
-    }
-
     void Text::Render( const s_float& fX, const s_float& fY )
     {
-        if (bReady_ && pCache_)
+        if (bReady_)
         {
+            if (bUpdateCache_)
+            {
+                UpdateLines_();
+                UpdateCache_();
+                bUpdateCache_ = false;
+            }
+
             Quad mQuad;
-            mQuad.pMat = pRTMat_;
-            mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-            mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
-                Color(255, 255, 255);
+            mQuad.pMat = pFontMat_;
 
-            s_float fUMax = s_float(pCache_->GetWidth())/s_float(pCache_->GetRealWidth());
-            s_float fVMax = s_float(pCache_->GetHeight())/s_float(pCache_->GetRealHeight());
+            vector<Letter>::iterator iterLetter;
+            foreach (iterLetter, lLetterCache_)
+            {
+                mQuad.lVertexArray[0].Set(iterLetter->fX1+fX, iterLetter->fY1+fY);
+                mQuad.lVertexArray[1].Set(iterLetter->fX2+fX, iterLetter->fY1+fY);
+                mQuad.lVertexArray[2].Set(iterLetter->fX2+fX, iterLetter->fY2+fY);
+                mQuad.lVertexArray[3].Set(iterLetter->fX1+fX, iterLetter->fY2+fY);
 
-            mQuad.lVertexArray[0].Set(fX,                              fY);
-            mQuad.lVertexArray[1].Set(fX+s_float(pCache_->GetWidth()), fY);
-            mQuad.lVertexArray[2].Set(fX+s_float(pCache_->GetWidth()), fY+s_float(pCache_->GetHeight()));
-            mQuad.lVertexArray[3].Set(fX,                              fY+s_float(pCache_->GetHeight()));
+                mQuad.lVertexArray[0].SetUV(iterLetter->fU1, iterLetter->fV1);
+                mQuad.lVertexArray[1].SetUV(iterLetter->fU2, iterLetter->fV1);
+                mQuad.lVertexArray[2].SetUV(iterLetter->fU2, iterLetter->fV2);
+                mQuad.lVertexArray[3].SetUV(iterLetter->fU1, iterLetter->fV2);
 
-            mQuad.lVertexArray[0].SetUV(0,     0);
-            mQuad.lVertexArray[1].SetUV(fUMax, 0);
-            mQuad.lVertexArray[2].SetUV(fUMax, fVMax);
-            mQuad.lVertexArray[3].SetUV(0,     fVMax);
+                if (!iterLetter->mColor.IsNaN() && !bForceColor_)
+                {
+                    mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                    mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = iterLetter->mColor;
+                }
+                else
+                {
+                    mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                    mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = mColor_;
+                }
 
-            SpriteManager::GetSingleton()->RenderQuad(mQuad);
+                SpriteManager::GetSingleton()->RenderQuad(mQuad);
+            }
         }
-    }
-
-    s_ptr<RenderTarget> Text::GetCache()
-    {
-        return pCache_;
     }
 
     s_ptr<Ogre::Font> Text::GetOgreFont()
     {
         return pOgreFont_;
+    }
+
+    s_refptr<Material> Text::GetMaterial()
+    {
+        return pFontMat_;
     }
 
     void GetFormat( s_str::iterator& iterChar, Text::Format& mFormat )
@@ -340,8 +370,8 @@ namespace Frost
         lLineList_.clear();
 
         s_uint uiMaxLineNbr, uiCounter;
-        if (fH_.IsValid())
-            uiMaxLineNbr = s_uint(s_float::Round(fH_/(fSize_*fLineSpacing_), s_float::ROUND_FLOOR));
+        if (fBoxH_.IsValid())
+            uiMaxLineNbr = s_uint(s_float::Round(fBoxH_/(GetLineHeight()*fLineSpacing_), s_float::ROUND_FLOOR));
         else
             uiMaxLineNbr = s_uint::INF;
 
@@ -381,7 +411,7 @@ namespace Frost
                     mLine.fWidth += GetCharacterWidth(*iterChar1);
                 mLine.sCaption += *iterChar1;
 
-                if (mLine.fWidth > fW_)
+                if (mLine.fWidth > fBoxW_)
                 {
                     // Whoops, the line is too long...
                     if (mLine.sCaption.FindPos(" ").IsValid())
@@ -393,12 +423,12 @@ namespace Frost
                         s_uint uiCharToErase;
                         s_float fErasedWidth;
                         s_bool bLastWasWord;
-                        while ( (mLine.fWidth > fW_) && (iterChar2 != mLine.sCaption.begin()) )
+                        while ( (mLine.fWidth > fBoxW_) && (iterChar2 != mLine.sCaption.begin()) )
                         {
                             iterChar2--;
                             if (*iterChar2 == ' ')
                             {
-                                if ( bLastWasWord && (mLine.fWidth-fErasedWidth < fW_) && !bRemoveStartingSpaces_ )
+                                if ( bLastWasWord && (mLine.fWidth-fErasedWidth < fBoxW_) && !bRemoveStartingSpaces_ )
                                 {
                                     break;
                                 }
@@ -445,7 +475,7 @@ namespace Frost
                         s_str::iterator iterChar2 = mLine.sCaption.end();
                         s_str sErasedWord;
                         s_uint uiCharToErase;
-                        while ( (mLine.fWidth + fWordWidth > fW_) && (iterChar2 != mLine.sCaption.begin()) )
+                        while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.begin()) )
                         {
                             iterChar2--;
                             mLine.fWidth -= GetCharacterWidth(*iterChar2);
@@ -518,64 +548,28 @@ namespace Frost
 
     void Text::UpdateCache_()
     {
-        s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
-
-        s_float fWidth, fHeight;
-        if (fW_.IsValid())
+        if (fBoxW_.IsValid())
         {
-            // The text will be adjusted to fit in the imposed horizontal
-            // space, so the render target doesn't need to be larger than this.
-            fWidth = fW_;
-
-            if (fH_.IsValid())
-            {
-                // Same thing for the vertical space.
-                fHeight = fH_;
-            }
-            else
-            {
-                // The text will be able to grow vertically as it needs,
-                // so we calculate the number of line it will take.
-                fHeight = lLineList_.size()*fSize_;
-            }
+            fW_ = fBoxW_;
         }
         else
         {
-            // We're free to take as much horizontal space as we need,
-            // we need to draw everything, so let's take the maximum.
+            fW_ = 0;
             vector<Line>::iterator iterLine;
             foreach (iterLine, lLineList_)
             {
-                fWidth = s_float::Max(fWidth, iterLine->fWidth);
+                fW_ = s_float::Max(fW_, iterLine->fWidth);
             }
-            // The text will be drawn on a single line, so no need to
-            // ask for more than a character's height.
-            fHeight = lLineList_.size()*fSize_;
         }
-
-        // Create/update the render target
-        if (!pCache_)
-        {
-            pCache_ = pSpriteMgr->CreateRenderTarget(s_uint(fWidth), s_uint(fHeight));
-            pRTMat_ = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(pCache_);
-        }
-        else
-        {
-            if (pCache_->SetDimensions(s_uint(fWidth), s_uint(fHeight)))
-                pRTMat_ = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(pCache_);
-        }
-
-        pSpriteMgr->Begin(pCache_);
-        pSpriteMgr->Clear(Color::VOID);
 
         s_float fX, fY = 0;
-        Quad mQuad;
-        mQuad.pMat = pFontMat_;
-        mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-        mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
-            mColor_;
-
         s_uint uiCounter;
+
+        lLetterCache_.clear();
+
+        Letter mLetter;
+
+        Color mColor = Color(s_uint::NaN);
 
         vector<Line>::iterator iterLine;
         foreach (iterLine, lLineList_)
@@ -586,10 +580,10 @@ namespace Frost
                     fX = 0;
                     break;
                 case ALIGN_CENTER :
-                    fX = (fWidth - iterLine->fWidth)/2;
+                    fX = (fW_ - iterLine->fWidth)/2;
                     break;
                 case ALIGN_RIGHT :
-                    fX = (fWidth - iterLine->fWidth);
+                    fX = (fW_ - iterLine->fWidth);
                     break;
             }
 
@@ -597,20 +591,16 @@ namespace Frost
             foreach (iterChar, iterLine->sCaption)
             {
                 // Format our text
-                if (MAPFIND(uiCounter, lFormatList_) && !bForceColor_)
+                if (MAPFIND(uiCounter, lFormatList_))
                 {
                     s_ptr<Format> f = &lFormatList_[uiCounter];
                     switch (f->mColorAction)
                     {
                         case COLOR_ACTION_SET :
-                            mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-                            mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
-                                f->mColor;
+                            mColor = f->mColor;
                             break;
                         case COLOR_ACTION_RESET :
-                            mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-                            mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor =
-                                mColor_;
+                            mColor = Color(s_uint::NaN);
                             break;
                         default : break;
                     }
@@ -618,7 +608,7 @@ namespace Frost
 
                 s_float fCharWidth, fCharHeight;
 
-                // Render the character on the screen
+                // Add the character to the cache
                 if (*iterChar == ' ')
                 {
                     fCharWidth = fSpaceWidth_;
@@ -630,26 +620,24 @@ namespace Frost
                     fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
                     s_float fYOffset = -fCharHeight/2+fSize_/2;
 
-                    mQuad.lVertexArray[0].Set(fX,            fY+fYOffset);
-                    mQuad.lVertexArray[1].Set(fX+fCharWidth, fY+fYOffset);
-                    mQuad.lVertexArray[2].Set(fX+fCharWidth, fY+fYOffset+fCharHeight);
-                    mQuad.lVertexArray[3].Set(fX,            fY+fYOffset+fCharHeight);
+                    mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
+                    mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fCharHeight;
 
-                    mQuad.lVertexArray[0].SetUV(mUVRect.left,  mUVRect.top);
-                    mQuad.lVertexArray[1].SetUV(mUVRect.right, mUVRect.top);
-                    mQuad.lVertexArray[2].SetUV(mUVRect.right, mUVRect.bottom);
-                    mQuad.lVertexArray[3].SetUV(mUVRect.left,  mUVRect.bottom);
+                    mLetter.fU1 = mUVRect.left;  mLetter.fV1 = mUVRect.top;
+                    mLetter.fU2 = mUVRect.right; mLetter.fV2 = mUVRect.bottom;
 
-                    pSpriteMgr->RenderQuad(mQuad);
+                    mLetter.mColor = mColor;
+
+                    lLetterCache_.push_back(mLetter);
                 }
 
                 fX += fCharWidth + fTracking_;
                 uiCounter++;
             }
 
-			fY += fSize_*fLineSpacing_;
+			fY += GetLineHeight()*fLineSpacing_;
         }
 
-        pSpriteMgr->End();
+        fH_ = fY;
     }
 }
