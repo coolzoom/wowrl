@@ -12,7 +12,6 @@
 #include "frost_modelstructs.h"
 #include "frost_materialmanager.h"
 #include "frost_material.h"
-#include "frost_gfx.h"
 
 #include <OgreBone.h>
 #include <OgreMeshManager.h>

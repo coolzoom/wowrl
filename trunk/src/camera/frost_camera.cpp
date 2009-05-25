@@ -7,7 +7,6 @@
 
 #include "camera/frost_camera.h"
 #include "frost_engine.h"
-#include "frost_gfx.h"
 #include "frost_pathmanager.h"
 #include "frost_path.h"
 
