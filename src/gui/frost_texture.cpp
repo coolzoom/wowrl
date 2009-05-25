@@ -19,6 +19,12 @@ const s_str Texture::CLASS_NAME = "GUI::Texture";
 
 Texture::Texture() : LayeredRegion()
 {
+    mObjectType_ = OJBECT_TYPE_TEXTURE;
+    lType_.push_back("Texture");
+}
+
+Texture::~Texture()
+{
 }
 
 s_str Texture::Serialize(const s_str& sTab) const
@@ -71,7 +77,15 @@ const s_str& Texture::GetTexture() const
 
 const Color& Texture::GetVertexColor() const
 {
-    return pSprite_->GetColor();
+    if (pSprite_)
+        return pSprite_->GetColor();
+    else
+    {
+        Error(lType_.back(),
+            "Trying to call GetVertexColor on an uninitialized Texture : "+sName_+"."
+        );
+        return Color::NaN;
+    }
 }
 
 const s_bool& Texture::IsDesaturated() const
@@ -147,14 +161,32 @@ void Texture::SetGradient( const Gradient& mGradient )
 
 void Texture::SetTexCoord( const s_array<s_float,4>& lCoordinates )
 {
-    pSprite_->SetTextureRect(lCoordinates);
-    lTexCoord_ = pSprite_->GetTextureCoords();
+    if (pSprite_)
+    {
+        pSprite_->SetTextureRect(lCoordinates);
+        lTexCoord_ = pSprite_->GetTextureCoords();
+    }
+    else
+    {
+        Error(lType_.back(),
+            "Trying to call SetTexCoord on an uninitialized Texture : "+sName_+"."
+        );
+    }
 }
 
 void Texture::SetTexCoord( const s_array<s_float,8>& lCoordinates )
 {
-    pSprite_->SetTextureCoords(lCoordinates);
-    lTexCoord_ = pSprite_->GetTextureCoords();
+    if (pSprite_)
+    {
+        pSprite_->SetTextureCoords(lCoordinates);
+        lTexCoord_ = pSprite_->GetTextureCoords();
+    }
+    else
+    {
+        Error(lType_.back(),
+            "Trying to call SetTexCoord on an uninitialized Texture : "+sName_+"."
+        );
+    }
 }
 
 void Texture::SetTexCoordModifiesRect( const s_bool& bTexCoordModifiesRect )
