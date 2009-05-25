@@ -27,14 +27,7 @@ namespace Frost
         pOgreMat_ = pOgreMat;
         sName_ = pOgreMat_->getName();
 
-        if ( (mType == MATERIAL_2D) || (mType == MATERIAL_2D_PLAIN) )
-        {
-            pDefaultPass_ = pOgreMat->getTechnique(0)->getPass(1);
-        }
-        else
-        {
-            pDefaultPass_ = pOgreMat->getTechnique(0)->getPass(0);
-        }
+        pDefaultPass_ = pOgreMat->getTechnique(0)->getPass(0);
 
         if ((mType != MATERIAL_2D_PLAIN) && (mType != MATERIAL_3D_PLAIN))
         {
@@ -263,6 +256,21 @@ namespace Frost
     s_ptr<Ogre::Material> Material::GetOgreMaterial()
     {
         return pOgreMat_;
+    }
+
+    void Material::SetDefaultPass( const s_uint& uiIndex )
+    {
+        if (uiIndex < pOgreMat_->getTechnique(0)->getNumPasses())
+            pDefaultPass_ = pOgreMat_->getTechnique(0)->getPass(uiIndex.Get());
+        else
+        {
+            Warning(CLASS_NAME,
+                "Calling SetDefaultPass() with a too high index : "+uiIndex+" (only "+
+                s_uint((uint)pOgreMat_->getTechnique(0)->getNumPasses())+" pass"+
+                (s_uint((uint)pOgreMat_->getTechnique(0)->getNumPasses()) > 1).GetAsString("es", "")+
+                " available)."
+            );
+        }
     }
 
     s_ptr<Ogre::Pass> Material::GetDefaultPass()

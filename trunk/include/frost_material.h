@@ -42,7 +42,8 @@ namespace Frost
 
         /// Sets whether hardware skinning should be on or off.
         /** \param bEnable 'true' to enable
-        *   \note Only works for 3D materials.
+        *   \note Only works for 3D materials.<br>
+        *         Not compatible with SetDesaturated().
         */
         void            SetHardwareSkinning(const s_bool& bEnable);
 
@@ -63,6 +64,7 @@ namespace Frost
 
         /// Makes this Material render without any color.
         /** \param bIsDesaturated 'true' if you want to remove colors
+        *   \note Not compatible with SetHardwareSkinning().
         */
         void            SetDesaturated(const s_bool& bIsDesaturated);
 
@@ -129,6 +131,11 @@ namespace Frost
         /** \return The wrapped Ogre::Material
         */
         s_ptr<Ogre::Material> GetOgreMaterial();
+
+        /// Sets a new default pass.
+        /** \param uiIndex The index of the new pass
+        */
+        void            SetDefaultPass(const s_uint& uiIndex);
 
         /// Returns the default Ogre::Pass.
         /** \return The default Ogre::Pass
