@@ -291,7 +291,7 @@ namespace Frost
         *pBuffer = mV.fTY.Get(); // v
         pBuffer++;
 
-        *pColorBuffer = mV.mColor.Get().Get();  // argb
+        *pColorBuffer = mV.mColor.GetPacked().Get();  // argb
         pColorBuffer++;
     }
     /** \endcond
@@ -379,6 +379,7 @@ namespace Frost
                     mDataSource.setCurrentRenderTarget(pRenderTarget_->GetOgreRenderTarget().Get());
                     mDataSource.setCurrentSceneManager(pSceneMgr_.Get());
                     mDataSource.setWorldMatrices(&Ogre::Matrix4::IDENTITY, 1);
+                    mDataSource.setCurrentPass(pPass);
                     pPass->_updateAutoParamsNoLights(&mDataSource);
                     if (pPass->hasFragmentProgram())
                     {
@@ -552,7 +553,7 @@ namespace Frost
     void SpriteManager::Clear( const Color& mColor )
     {
         Ogre::Root::getSingleton().getRenderSystem()->clearFrameBuffer(
-            Ogre::FBT_COLOUR, GFX::FrostToOgreColor(mColor)
+            Ogre::FBT_COLOUR, Color::FrostToOgre(mColor)
         );
     }
 

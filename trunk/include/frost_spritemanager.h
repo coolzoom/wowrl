@@ -42,7 +42,6 @@
 #define FROST_SPRITEMANAGER_H
 
 #include "frost.h"
-#include "frost_gfx.h"
 
 #include <OgreRenderOperation.h>
 #include <OgreHardwareVertexBuffer.h>
