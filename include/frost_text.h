@@ -50,6 +50,15 @@ namespace Frost
             ALIGN_RIGHT
         };
 
+        struct Letter
+        {
+            s_float fX1, fY1;
+            s_float fX2, fY2;
+            s_float fU1, fV1;
+            s_float fU2, fV2;
+            Color   mColor;
+        };
+
         /// Constructor.
         /** \param sFileName The path to the .ttf file to use
         *   \param fSize    The size of the font (in point)
@@ -67,7 +76,12 @@ namespace Frost
         /// Returns the size of the font.
         /** \return The size of the font
         */
-        const s_float&  GetFontSize() const;
+        const s_float& GetFontSize() const;
+
+        /// Returns the height of one line (constant).
+        /** \return The height of one line (constant)
+        */
+        s_float        GetLineHeight() const;
 
         /// Set the text to render.
         /** \param sText The text to render
@@ -103,26 +117,38 @@ namespace Frost
         void           SetDimensions(const s_float& fW, const s_float& fH);
 
         /// Sets the width of the text box.
-        /** \param fW The new witdh
+        /** \param fBoxW The new witdh
         *   \note To remove it, use s_float::NaN.
         */
-        void           SetWidth(const s_float& fW);
+        void           SetBoxWidth(const s_float& fBoxW);
 
         /// Sets the height of the text box.
-        /** \param fH The new height
+        /** \param fBoxH The new height
         *   \note To remove it, use s_float::NaN.
         */
-        void           SetHeight(const s_float& fH);
+        void           SetBoxHeight(const s_float& fBoxH);
+
+        /// Returns the width of the rendered text.
+        /** \return The width of the rendered text
+        *   \note Takes the text box into account if any.
+        */
+        const s_float& GetWidth();
+
+        /// Returns the height of the rendered text.
+        /** \return The height of the rendered text
+        *   \note Takes the text box into account if any.
+        */
+        const s_float& GetHeight();
 
         /// Returns the width of the text box.
         /** \return The width of the text box
         */
-        const s_float& GetWidth() const;
+        const s_float& GetBoxWidth() const;
 
         /// Returns the height of the text box.
         /** \return The height of the text box
         */
-        const s_float& GetHeight() const;
+        const s_float& GetBoxHeight() const;
 
         /// Returns the length of the text.
         /** \return The length of the text
@@ -201,32 +227,23 @@ namespace Frost
         */
         const s_bool&  GetRemoveStartingSpaces() const;
 
-        /// Returns this Text's cache.
-        /** \return This Text's cache
-        *   \note The cache contains the rendered text.
-        */
-        s_ptr<RenderTarget> GetCache();
-
         /// Returns this Text's font.
         /** \return This Text's font
         */
         s_ptr<Ogre::Font> GetOgreFont();
 
+        /// Returns this Text's material.
+        /** \return This Text's material
+        */
+        s_refptr<Material> GetMaterial();
+
         /// Renders this Text at the given position.
         /** \param fX The horizontal position of the top left corner
         *   \param fY The vertical position of the top left corner
-        *   \note This function only draws a single sprite on the screen.<br>
-        *         Must be called between SpriteManager::Begin() and
+        *   \note Must be called between SpriteManager::Begin() and
         *         SpriteManager::End().
         */
         void          Render(const s_float& fX, const s_float& fY);
-
-        /// Updates this Text's cache.
-        /** \note Do not call this function between SpriteManager::Begin()
-        *         and SpriteManager::End() : it uses its own render target
-        *         so, it has to call Begin/End by itself.
-        */
-        void          Update();
 
         static const s_str CLASS_NAME;
 
@@ -235,27 +252,28 @@ namespace Frost
         void UpdateLines_();
         void UpdateCache_();
 
-        s_str sFileName_;
-        s_bool bReady_;
-        s_float fSize_;
-        s_float fTracking_;
-        s_float fLineSpacing_;
-        s_float fSpaceWidth_;
-        s_bool  bRemoveStartingSpaces_;
-        Color mColor_;
-        s_bool bForceColor_;
-        s_float fW_, fH_;
-        s_str sText_;
+        s_str     sFileName_;
+        s_bool    bReady_;
+        s_float   fSize_;
+        s_float   fTracking_;
+        s_float   fLineSpacing_;
+        s_float   fSpaceWidth_;
+        s_bool    bRemoveStartingSpaces_;
+        Color     mColor_;
+        s_bool    bForceColor_;
+        s_float   fW_, fH_;
+        s_float   fBoxW_, fBoxH_;
+        s_str     sText_;
         Alignment mAlign_;
-        std::vector<Line> lLineList_;
+
+        std::vector<Line>        lLineList_;
         std::map<s_uint, Format> lFormatList_;
-        s_ptr<Ogre::Font> pOgreFont_;
+
+        s_ptr<Ogre::Font>  pOgreFont_;
         s_refptr<Material> pFontMat_;
 
-        s_bool bUpdateCache_;
-        s_bool bUpdateCacheContent_;
-        s_ptr<RenderTarget> pCache_;
-        s_refptr<Material>  pRTMat_;
+        s_bool              bUpdateCache_;
+        std::vector<Letter> lLetterCache_;
 
     };
 }
