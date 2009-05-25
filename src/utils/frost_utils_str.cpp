@@ -838,19 +838,6 @@ namespace Frost
         }
         return iterator(pParent_, uiNewPos);
     }
-
-    s_str::iterator s_str::iterator::operator + ( const s_uint& uiOffset ) const
-    {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
-        {
-            uiNewPos += uiOffset;
-            if (uiNewPos > pParent_->Length())
-                uiNewPos = s_uint::NaN;
-        }
-        return iterator(pParent_, uiNewPos);
-    }
-
     s_str::iterator s_str::iterator::operator - ( const s_int& iOffset ) const
     {
         s_uint uiNewPos = uiPos_;
@@ -874,27 +861,14 @@ namespace Frost
         return iterator(pParent_, uiNewPos);
     }
 
-    s_str::iterator s_str::iterator::operator - ( const s_uint& uiOffset ) const
+    s_int s_str::iterator::operator - ( const s_str::iterator& iter ) const
     {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
+        if (iter.pParent_ == pParent_)
         {
-            if (uiOffset < uiNewPos)
-                uiNewPos -= uiOffset;
-            else
-                uiNewPos = 0u;
-        }
-        return iterator(pParent_, uiNewPos);
-    }
-
-    s_uint s_str::iterator::operator - ( const s_str::iterator& iter ) const
-    {
-        if ( (iter.pParent_ == pParent_) && (iter.uiPos_ < uiPos_) )
-        {
-            return uiPos_-iter.uiPos_;
+            return s_int(uiPos_)-s_int(iter.uiPos_);
         }
         else
-            return 0;
+            return s_int::NaN;
     }
 
     s_str::iterator& s_str::iterator::operator ++ ()
@@ -1008,18 +982,6 @@ namespace Frost
         return const_iterator(pParent_, uiNewPos);
     }
 
-    s_str::const_iterator s_str::const_iterator::operator + ( const s_uint& uiOffset ) const
-    {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
-        {
-            uiNewPos += uiOffset;
-            if (uiNewPos > pParent_->Length())
-                uiNewPos = s_uint::NaN;
-        }
-        return const_iterator(pParent_, uiNewPos);
-    }
-
     s_str::const_iterator s_str::const_iterator::operator - ( const s_int& iOffset ) const
     {
         s_uint uiNewPos = uiPos_;
@@ -1043,28 +1005,14 @@ namespace Frost
         return const_iterator(pParent_, uiNewPos);
     }
 
-    s_str::const_iterator s_str::const_iterator::operator - ( const s_uint& uiOffset ) const
+    s_int s_str::const_iterator::operator - ( const s_str::const_iterator& iter ) const
     {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
+        if (iter.pParent_ == pParent_)
         {
-            if (uiOffset < uiNewPos)
-                uiNewPos -= uiOffset;
-            else
-                uiNewPos = 0u;
-        }
-        return const_iterator(pParent_, uiNewPos);
-    }
-
-
-    s_uint s_str::const_iterator::operator - ( const s_str::const_iterator& iter ) const
-    {
-        if ( (iter.pParent_ == pParent_) && (iter.uiPos_ < uiPos_) )
-        {
-            return uiPos_-iter.uiPos_;
+            return s_int(uiPos_)-s_int(iter.uiPos_);
         }
         else
-            return 0;
+            return s_int::NaN;
     }
 
     s_str::const_iterator& s_str::const_iterator::operator ++ ()

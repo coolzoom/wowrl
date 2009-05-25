@@ -411,10 +411,8 @@ namespace Frost
 
             string_element& operator * ();
             iterator  operator + (const s_int& iOffset) const;
-            iterator  operator + (const s_uint& uiOffset) const;
             iterator  operator - (const s_int& iOffset) const;
-            iterator  operator - (const s_uint& uiOffset) const;
-            s_uint    operator - (const iterator& iter) const;
+            s_int     operator - (const iterator& iter) const;
             iterator& operator ++ ();
             iterator  operator ++ (int);
             iterator& operator -- ();
@@ -441,10 +439,8 @@ namespace Frost
 
             const string_element& operator * ();
             const_iterator  operator + (const s_int& iOffset) const;
-            const_iterator  operator + (const s_uint& uiOffset) const;
             const_iterator  operator - (const s_int& iOffset) const;
-            const_iterator  operator - (const s_uint& uiOffset) const;
-            s_uint          operator - (const const_iterator& iter) const;
+            s_int           operator - (const const_iterator& iter) const;
             const_iterator& operator ++ ();
             const_iterator  operator ++ (int);
             const_iterator& operator -- ();
