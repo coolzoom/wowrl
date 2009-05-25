@@ -920,7 +920,7 @@ s_bool Document::Check()
             uiLineNbr_++;
         }
 
-        if (pParent)
+        if (pParent && bValid_)
         {
             while (pParent)
             {
