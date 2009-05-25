@@ -90,20 +90,18 @@ namespace Frost
 
     s_bool CameraManager::CheckSettings()
     {
-        Tester mGood;
-
         if (pMainCamera_ == NULL)
         {
             Error(CLASS_NAME, "No main camera defined.");
-            mGood = false;
+            return false;
         }
         if (pViewport_ == NULL)
         {
             Error(CLASS_NAME, "Viewport not created.");
-            mGood = false;
+            return false;
         }
 
-        if (mGood && bNewViewport_)
+        if (bNewViewport_)
         {
             map< s_uint, s_ptr<Camera> >::iterator iterCamera;
             foreach (iterCamera, lCameraList_)
@@ -116,7 +114,7 @@ namespace Frost
             bNewViewport_ = false;
         }
 
-        return mGood;
+        return true;
     }
 
     void CameraManager::SetMainCamera( s_ptr<Camera> pCamera )

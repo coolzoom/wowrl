@@ -20,7 +20,6 @@
 #include "camera/frost_camera.h"
 #include "frost_lua.h"
 
-
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>

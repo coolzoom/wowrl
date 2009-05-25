@@ -35,7 +35,6 @@
 #include "utils/frost_utils_directory.h"
 #include "utils/frost_utils_file.h"
 #include "utils/frost_utils_point.h"
-#include "utils/frost_utils_tester.h"
 
 #include "utils/frost_utils_event.h"
 #include "utils/frost_utils_eventreceiver.h"
