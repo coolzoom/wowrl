@@ -16,6 +16,8 @@ const s_str LayeredRegion::CLASS_NAME = "GUI::LayeredRegion";
 
 LayeredRegion::LayeredRegion() : UIObject()
 {
+    mObjectType_ = OJBECT_TYPE_LAYEREDREGION;
+    lType_.push_back("LayeredRegion");
 }
 
 LayerType LayeredRegion::GetDrawLayer()
