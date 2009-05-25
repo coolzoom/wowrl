@@ -107,25 +107,37 @@ namespace Frost
         BuildABGRColor_();
     }
 
-    s_bool Color::IsValid() const
+    s_bool Color::IsNaN() const
     {
-        return uiColor_.IsValid();
+        return uiColor_.IsNaN();
     }
 
     void Color::BuildUIColor_()
     {
-        uiColor_ =  ((uchar)uiA_.Get()) << 24;
-        uiColor_ += ((uchar)uiB_.Get()) << 16;
-        uiColor_ += ((uchar)uiG_.Get()) << 8;
-        uiColor_ += ((uchar)uiR_.Get());
+        if (!uiA_.IsNaN() && !uiB_.IsNaN() && !uiG_.IsNaN() && !uiR_.IsNaN())
+        {
+            uiColor_ =  ((uchar)uiA_.Get()) << 24;
+            uiColor_ += ((uchar)uiB_.Get()) << 16;
+            uiColor_ += ((uchar)uiG_.Get()) << 8;
+            uiColor_ += ((uchar)uiR_.Get());
+        }
+        else
+            uiColor_ = s_uint::NaN;
     }
 
     void Color::BuildABGRColor_()
     {
-        uiA_ = ((((uchar)uiColor_.Get()) >> 24) & 0xFF);
-        uiB_ = ((((uchar)uiColor_.Get()) >> 16) & 0xFF);
-        uiG_ = ((((uchar)uiColor_.Get()) >> 8) & 0xFF);
-        uiR_ =  (((uchar)uiColor_.Get()) & 0xFF);
+        if (!uiColor_.IsNaN())
+        {
+            uiA_ = ((((uchar)uiColor_.Get()) >> 24) & 0xFF);
+            uiB_ = ((((uchar)uiColor_.Get()) >> 16) & 0xFF);
+            uiG_ = ((((uchar)uiColor_.Get()) >> 8) & 0xFF);
+            uiR_ =  (((uchar)uiColor_.Get()) & 0xFF);
+        }
+        else
+        {
+            uiA_ = uiB_ = uiG_ = uiR_ = s_uint::NaN;
+        }
     }
 
     Color Color::Random( const s_bool& bRandomAlpha )
@@ -179,7 +191,7 @@ namespace Frost
         sTemp += ", r:"+s_str(mRight.GetR());
         sTemp += ", g:"+s_str(mRight.GetG());
         sTemp += ", b:"+s_str(mRight.GetB());
-        sTemp += ")";
+        sTemp += ", packed:"+s_str(mRight.GetPacked())+")";
         return sLeft + sTemp;
     }
 }
