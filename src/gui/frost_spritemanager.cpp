@@ -342,8 +342,7 @@ namespace Frost
             // Remember this chunk
             mThisChunk.uiVertexCount += 6u;
             itCurrQuad++;
-            if ((itCurrQuad == itEndQuad) ||
-                (mThisChunk.pMat->GetOgreMaterial() != itCurrQuad->pMat->GetOgreMaterial()))
+            if ( (itCurrQuad == itEndQuad) || (mThisChunk.pMat->GetOgreMaterial() != itCurrQuad->pMat->GetOgreMaterial()) )
             {
                 lChunkList.push_back(mThisChunk);
                 if (itCurrQuad != itEndQuad)
@@ -368,6 +367,7 @@ namespace Frost
         {
             mRenderOp_.vertexData->vertexCount = itCurrChunk->uiVertexCount;
             s_ptr<Ogre::Technique> pTech = itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0);
+
             for (uint i = 0; i < pTech->getNumPasses(); i++)
             {
                 Ogre::Pass* pPass = pTech->getPass(i);

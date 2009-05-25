@@ -11,6 +11,7 @@
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_frame.h"
 #include "gui/frost_gui_texture.h"
+#include "gui/frost_gui_fontstring.h"
 #include "frost_spritemanager.h"
 
 #include "frost_xml_document.h"
@@ -166,7 +167,79 @@ namespace Frost
         s_str sFile = pMainBlock->GetAttribute("file");
         if (!sFile.IsEmpty())
             pTexture->SetTexture(sFile);
-        pTexture->SetBlendMode(pMainBlock->GetAttribute("alphaMode"));
+
+        //pTexture->SetBlendMode(pMainBlock->GetAttribute("alphaMode"));
+
+        return true;
+    }
+
+    s_bool GUIManager::ParseFontStringAttributes_( s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pMainBlock )
+    {
+        // TODO : Implementer l'héritage pour FontString
+        s_str sName = pMainBlock->GetAttribute("name");
+        if (!sName.IsEmpty(true))
+        {
+            pFontString->SetName(sName);
+        }
+        else
+        {
+            Error(CLASS_NAME,
+                "Can't create an UIObject with a blank name. Skipped."
+            );
+            return false;
+        }
+
+        if (!this->AddUIObject(pFontString))
+            return false;
+
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pFontString->GetParent());
+
+        if (pParent && !pParent->IsVirtual())
+            pFontString->CreateGlue();
+
+        if (pParent)
+            pParent->AddRegion(pFontString);
+
+        if (pMainBlock->GetAttribute("hidden") == "true")
+            pFontString->Hide();
+        if (pMainBlock->GetAttribute("setAllPoints") == "true")
+            pFontString->SetAllPoints(pParent);
+
+        pFontString->SetFont(
+            pMainBlock->GetAttribute("font"),
+            s_uint(pMainBlock->GetAttribute("fontHeight"))
+        );
+
+        pFontString->SetText(pMainBlock->GetAttribute("text"));
+        pFontString->SetNonSpaceWrap(s_bool(pMainBlock->GetAttribute("nonspacewrap")));
+        pFontString->SetSpacing(s_float(pMainBlock->GetAttribute("spacing")));
+
+        const s_str& sOutline = pMainBlock->GetAttribute("outline");
+        if ( (sOutline == "NORMAL") || (sOutline == "THICK") )
+            pFontString->SetOutlined(true);
+        else if (sOutline == "NONE")
+            pFontString->SetOutlined(false);
+        else
+        {
+            Warning(CLASS_NAME,
+                "Unkown outline type for "+pFontString->GetName()+" : \""+sOutline+"\"."
+            );
+        }
+
+        const s_str& sJustifyH = pMainBlock->GetAttribute("justifyH");
+        if (sJustifyH == "LEFT")
+            pFontString->SetJustifyH(Text::ALIGN_LEFT);
+        else if (sJustifyH == "CENTER")
+            pFontString->SetJustifyH(Text::ALIGN_CENTER);
+        else if (sJustifyH == "RIGHT")
+            pFontString->SetJustifyH(Text::ALIGN_RIGHT);
+        else
+        {
+            Warning(CLASS_NAME,
+                "Unkown horizontal justify behavior for "+pFontString->GetName()+
+                " : \""+sJustifyH+"\"."
+            );
+        }
 
         return true;
     }
@@ -392,9 +465,18 @@ namespace Frost
         return true;
     }
 
-    s_bool GUIManager::ParseColorBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock )
+    s_bool GUIManager::ParseTextureColorBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock )
     {
-        // TODO : parse Color
+        s_ptr<XML::Block> pColorBlock = pTextureBlock->GetBlock("Color");
+        if (pColorBlock)
+        {
+            pTexture->SetColor(Color(
+                s_uint(s_float(pColorBlock->GetAttribute("a"))*255),
+                s_uint(s_float(pColorBlock->GetAttribute("r"))*255),
+                s_uint(s_float(pColorBlock->GetAttribute("g"))*255),
+                s_uint(s_float(pColorBlock->GetAttribute("b"))*255)
+            ));
+        }
         return true;
     }
 
@@ -455,6 +537,53 @@ namespace Frost
         return true;
     }
 
+
+    s_bool GUIManager::ParseFontStringColorBlock_( s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pFontStringBlock )
+    {
+        s_ptr<XML::Block> pColorBlock = pFontStringBlock->GetBlock("Color");
+        if (pColorBlock)
+        {
+            pFontString->SetTextColor(Color(
+                s_uint(s_float(pColorBlock->GetAttribute("a"))*255),
+                s_uint(s_float(pColorBlock->GetAttribute("r"))*255),
+                s_uint(s_float(pColorBlock->GetAttribute("g"))*255),
+                s_uint(s_float(pColorBlock->GetAttribute("b"))*255)
+            ));
+        }
+        return true;
+    }
+
+
+    s_bool GUIManager::ParseShadowBlock_( s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pFontStringBlock )
+    {
+        s_ptr<XML::Block> pShadowBlock = pFontStringBlock->GetBlock("Shadow");
+        if (pShadowBlock)
+        {
+            pFontString->SetShadow(true);
+            s_ptr<XML::Block> pColorBlock = pShadowBlock->GetBlock("Color");
+            if (pColorBlock)
+            {
+                pFontString->SetShadowColor(Color(
+                    s_uint(s_float(pColorBlock->GetAttribute("a"))*255),
+                    s_uint(s_float(pColorBlock->GetAttribute("r"))*255),
+                    s_uint(s_float(pColorBlock->GetAttribute("g"))*255),
+                    s_uint(s_float(pColorBlock->GetAttribute("b"))*255)
+                ));
+            }
+
+            s_ptr<XML::Block> pOffsetBlock = pShadowBlock->GetBlock("Offset");
+            if (pOffsetBlock)
+            {
+                pFontString->SetShadowOffsets(
+                    s_int(pOffsetBlock->GetAttribute("x")),
+                    s_int(pOffsetBlock->GetAttribute("y"))
+                );
+            }
+        }
+
+        return true;
+    }
+
     s_bool GUIManager::ParseFrameBlock_( s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock )
     {
         s_ptr<GUI::Frame> pFrame = new GUI::Frame();
@@ -512,7 +641,42 @@ namespace Frost
 
     s_bool GUIManager::ParseFontStringBlock_( s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock )
     {
-        // TODO : parse FontString
+        s_ptr<GUI::FontString> pFontString = new GUI::FontString();
+        pFontString->SetDrawLayer(sLevel);
+
+        if (pParent)
+            pFontString->SetParent(pParent);
+
+        // Parse attributes
+        if (!this->ParseFontStringAttributes_(pFontString, pArtBlock))
+        {
+            pFontString.Delete(); return false;
+        }
+
+        // Parse Size
+        if (!this->ParseSizeBlock_(pFontString, pArtBlock))
+        {
+            pFontString.Delete(); return false;
+        }
+
+        // Parse Anchors
+        if (!this->ParseAnchorsBlock_(pFontString, pArtBlock))
+        {
+            pFontString.Delete(); return false;
+        }
+
+        // Parse Color
+        if (!this->ParseFontStringColorBlock_(pFontString, pArtBlock))
+        {
+            pFontString.Delete(); return false;
+        }
+
+        // Parse Shadow
+        if (!this->ParseShadowBlock_(pFontString, pArtBlock))
+        {
+            pFontString.Delete(); return false;
+        }
+
         return true;
     }
 
@@ -524,7 +688,7 @@ namespace Frost
         if (pParent)
             pTexture->SetParent(pParent);
 
-            // Parse attributes
+        // Parse attributes
         if (!this->ParseTextureAttributes_(pTexture, pArtBlock))
         {
             pTexture.Delete(); return false;
@@ -549,7 +713,7 @@ namespace Frost
         }
 
         // Parse Color
-        if (!this->ParseColorBlock_(pTexture, pArtBlock))
+        if (!this->ParseTextureColorBlock_(pTexture, pArtBlock))
         {
             pTexture.Delete(); return false;
         }

@@ -25,7 +25,7 @@
         <Anchors>
             <Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="TOPLEFT"/>
         </Anchors>
-        <Frames>
+        <!Frames>
             <Frame name="$parent_Pin">
                 <Size>
                     <AbsDimension x="50" y="50"/>
@@ -50,8 +50,20 @@
                     </Gradient>
                 </Texture>
             </Layer>
+            <Layer level="HIGHLIGHT">
+                <FontString name="$parent_Text1" font="Fonts/Calibri.ttf" fontHeight="16" justifyH="LEFT" outline="NORMAL" text="Bonjour a tous, ici John Connor. Je vous previens que la Terre va bientot exploser, que vous le vouliez ou non... Pour l'empecher, verifiez que ce TextBox marche correctement.">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="RIGHT"/>
+                        <Anchor point="TOPRIGHT" relativePoint="RIGHT">
+                            <Offset>
+                                <AbsDimension x="200"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
         </Layers>
-        <Scripts>
+        <!Scripts>
             <OnLoad>
                 Test_Pin_Texture:SetDesaturated(true);
             </OnLoad>

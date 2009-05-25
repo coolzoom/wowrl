@@ -19,7 +19,6 @@
 #define FROST_SPRITE_H
 
 #include "frost.h"
-#include "frost_gfx.h"
 #include "frost_material.h"
 
 namespace Frost

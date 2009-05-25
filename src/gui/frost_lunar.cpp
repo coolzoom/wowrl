@@ -263,6 +263,68 @@ namespace GUI
     const char LuaFontString::className[] = "FontString";
     Lunar<LuaFontString>::RegType LuaFontString::methods[] = {
         {"dt", &LuaFontString::GetDataTable},
+
+        // UIObject (inherited)
+        method(FontString, GetAlpha),
+        method(FontString, GetName),
+        method(FontString, GetObjectType),
+        method(FontString, IsObjectType),
+        method(FontString, SetAlpha),
+
+        method(FontString, ClearAllPoints),
+        method(FontString, GetBottom),
+        method(FontString, GetCenter),
+        method(FontString, GetHeight),
+        method(FontString, GetLeft),
+        method(FontString, GetNumPoint),
+        method(FontString, GetParent),
+        method(FontString, GetPoint),
+        method(FontString, GetRight),
+        method(FontString, GetTop),
+        method(FontString, GetWidth),
+        method(FontString, Hide),
+        method(FontString, IsShown),
+        method(FontString, IsVisible),
+        method(FontString, RebuildCache),
+        method(FontString, SetAllPoints),
+        method(FontString, SetHeight),
+        method(FontString, SetParent),
+        method(FontString, SetPoint),
+        method(FontString, SetWidth),
+        method(FontString, Show),
+
+        method(FontString, RebuildCache),
+
+        // LayeredRegion (inherited)
+
+        // FontInstance
+        method(FontString, GetFont),
+        method(FontString, GetFontObject),
+        method(FontString, GetJustifyH),
+        method(FontString, GetJustifyV),
+        method(FontString, GetShadowColor),
+        method(FontString, GetShadowOffset),
+        method(FontString, GetSpacing),
+        method(FontString, GetTextColor),
+        method(FontString, SetFont),
+        method(FontString, SetFontObject),
+        method(FontString, SetJustifyH),
+        method(FontString, SetJustifyV),
+        method(FontString, SetShadowColor),
+        method(FontString, SetShadowOffset),
+        method(FontString, SetSpacing),
+        method(FontString, SetTextColor),
+
+        // FontString
+        method(FontString, CanNonSpaceWrap),
+        method(FontString, GetStringHeight),
+        method(FontString, GetStringWidth),
+        method(FontString, GetText),
+        method(FontString, SetAlphaGradient),
+        method(FontString, SetNonSpaceWrap),
+        method(FontString, SetText),
+        method(FontString, SetTextHeight),
+
         {0,0}
     };
 }
