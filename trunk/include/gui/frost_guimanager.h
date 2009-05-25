@@ -102,6 +102,7 @@ namespace Frost
         // Attribute parsers
         s_bool ParseFrameAttributes_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseTextureAttributes_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pMainBlock);
+        s_bool ParseFontStringAttributes_(s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pMainBlock);
 
         // General block parsers
         s_bool ParseSizeBlock_(s_ptr<GUI::UIObject> pObject, s_ptr<XML::Block> pMainBlock);
@@ -117,8 +118,12 @@ namespace Frost
 
         // Texture block parsers
         s_bool ParseTexCoordsBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock);
-        s_bool ParseColorBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock);
+        s_bool ParseTextureColorBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock);
         s_bool ParseGradientBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock);
+
+        // FontString block parsers
+        s_bool ParseShadowBlock_(s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pFontStringBlock);
+        s_bool ParseFontStringColorBlock_(s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pFontStringBlock);
 
         // Widget parsers
         s_bool ParseFrameBlock_(s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock);

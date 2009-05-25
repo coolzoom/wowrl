@@ -2,7 +2,7 @@
 <-- PRE-DEFINITIONS -->
 <--------------------->
 
-<d:FontString name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" text="" n:spacing="0.0" outline="NONE" b:monochrome="false" b:nonspacewrap="false" justifyV="MIDDLE" justifyH="CENTER" n:maxLines="0" font="" n:bytes="255">
+<d:FontString name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" n:fontHeight="0" text="" n:spacing="0.0" outline="NONE" b:monochrome="false" b:nonspacewrap="false" justifyV="MIDDLE" justifyH="CENTER" n:maxLines="0" font="" n:bytes="255">
     
     <n[.,1]:Size>
         <n[*]:AbsDimension n:x="-1"  n:y="-1"/>
@@ -18,19 +18,11 @@
         </Anchor>
     </Anchors>
     
-    <n[.,1]:FontHeight>
-        <n[*]:AbsValue n:x/>
-        <n[*]:RelValue n:x/>
-    </FontHeight>
-    
     <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
     
     <n[.,1]:Shadow>
         <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
-        <n[.,1]:Offset>
-            <n[*]:AbsDimension n:x="0"   n:y="0"/>
-            <n[*]:RelDimension n:x="0.0" n:y="0.0"/>
-        </Offset>
+        <n[.,1]:Offset n:x="0" n:y="0"/>
     </Shadow>
     
 </FontString>

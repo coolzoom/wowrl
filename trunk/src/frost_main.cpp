@@ -27,11 +27,6 @@
 #include "frost_text.h"
 
 #include <OgreException.h>
-#include <OgreFont.h>
-
-#ifndef FROST_LINUX
-    #include <windows.h>
-#endif
 
 using namespace std;
 using namespace Frost;
@@ -123,28 +118,25 @@ s_bool RenderFunc()
     static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
 
     pText->SetText("FPS : "+TimeManager::GetSingleton()->GetFPS());
-    pText->Update();
 
     pSpriteMgr->Begin(pRTarget);
 
-        pSpriteMgr->Clear(Color(0, 0, 0, 0));
+        pSpriteMgr->Clear(Color::VOID);
 
-        //pText->Render(0, 0);
+        //pSprite->Render(0, 0);
 
     pSpriteMgr->End();
 
     // Render in the main target
     pSpriteMgr->Begin();
 
-        pSpriteMgr->Clear(Color(0, 0, 0, 0));
+        pSpriteMgr->Clear(Color::VOID);
 
         GUIManager::GetSingleton()->RenderUI();
 
-        //pRTSprite->Render(0, 0);
-
         pText->Render(s_float(pFrost->GetScreenWidth())-2-pText->GetTextWidth(), s_float(pFrost->GetScreenHeight())-18);
 
-        //pSprite->Render(10, 10);
+        pRTSprite->Render(0, 0);
 
     pSpriteMgr->End();
 
@@ -155,6 +147,7 @@ s_bool RenderFunc()
 #ifdef FROST_LINUX
 int main(int argc, char *argv[])
 #else
+#include <windows.h>
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 #endif
 {
@@ -250,17 +243,18 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             /*s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
                 "Textures/UI/UI-CloseButton-Up.png"
             );*/
-            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial(
-                pText->GetOgreFont()->getMaterial().get()
+            /*s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
+                "UI-UnitFrame.png"
             );
             s_refptr<Sprite> pSpr = s_refptr<Sprite>(new Sprite(pMat));
             pSprite = pSpr.Get();
+            pSprite->SetColor(Color(128, 255, 255, 255));*/
 
-            pRTarget = SpriteManager::GetSingleton()->CreateRenderTarget("RttTex", 256, 128);
+            pRTarget = SpriteManager::GetSingleton()->CreateRenderTarget("RttTex", 1024, 768);
             s_refptr<Material> pMat2 = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
                 pRTarget
             );
-            s_refptr<Sprite> pSpr2 = s_refptr<Sprite>(new Sprite(pMat2, 256, 128));
+            s_refptr<Sprite> pSpr2 = s_refptr<Sprite>(new Sprite(pMat2, 1024, 768));
             pRTSprite = pSpr2.Get();
 
             // Enter the main loop
