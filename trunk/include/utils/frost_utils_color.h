@@ -99,11 +99,10 @@ namespace Frost
         */
         void          SetPacked(const s_uint& uiColor);
 
-        /// Sets if this Color is valid.
-        /** \return 'true' if this Color is valid
-        *   \note The only Color which is not valid is Color::NaN.
+        /// Sets if this Color has a NaN chanel.
+        /** \return 'true' if this Color has a NaN chanel
         */
-        s_bool        IsValid() const;
+        s_bool        IsNaN() const;
 
         s_bool operator == (const Color& mColor) const;
         s_bool operator != (const Color& mColor) const;
