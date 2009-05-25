@@ -30,6 +30,12 @@ namespace Frost
         */
         s_refptr<Material> CreateMaterial(s_ptr<Ogre::Material> pOgreMat);
 
+        /// Creates a Material to wrap an existing Ogre::Material.
+        /** \param pOgreMat The Ogre::Material to wrap
+        *   \note Also performs needed adjustments for 2D rendering
+        */
+        s_refptr<Material> CreateMaterial2D(s_ptr<Ogre::Material> pOgreMat);
+
         /// Creates a new Material (for 2D rendering).
         /** \param sName The name of the new Material
         *   \param uiR   The red component
