@@ -44,6 +44,12 @@ namespace Frost
 
             fSpaceWidth_ = GetCharacterWidth((uint)'0');
         }
+        else
+        {
+            Error(CLASS_NAME,
+                "Error initializing \""+sFileName+"\" (size : "+fSize+")."
+            );
+        }
     }
 
     Text::~Text()
@@ -159,9 +165,10 @@ namespace Frost
 
         if (bReady_)
         {
-            s_str::const_iterator iterChar;
+            s_str::const_iterator iterChar, iterNext;
             foreach (iterChar, sText_)
             {
+                iterNext = iterChar + 1;
                 if (*iterChar == ' ')
                     fWidth += fSpaceWidth_;
                 else if (*iterChar == '\n')
@@ -172,7 +179,14 @@ namespace Frost
                     fWidth = 0.0f;
                 }
                 else
+                {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
+                    if (iterNext != sText_.end())
+                    {
+                        if (*iterNext != ' ' && *iterNext != '\n')
+                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                    }
+                }
             }
         }
 
@@ -197,20 +211,27 @@ namespace Frost
         s_float fMaxWidth = s_float::INFMINUS;
         if (bReady_)
         {
-            s_str::const_iterator iterChar;
+            s_str::const_iterator iterChar, iterNext;
             foreach (iterChar, sString)
             {
+                iterNext = iterChar + 1;
                 if (*iterChar == ' ')
                     fWidth += fSpaceWidth_;
                 else if (*iterChar == '\n')
                 {
                     if (fWidth > fMaxWidth)
                         fMaxWidth = fWidth;
-
                     fWidth = 0.0f;
                 }
                 else
+                {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
+                    if (iterNext != sString.end())
+                    {
+                        if (*iterNext != ' ' && *iterNext != '\n')
+                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                    }
+                }
             }
         }
 
@@ -226,6 +247,34 @@ namespace Frost
         }
         else
             return 0.0f;
+    }
+
+    s_float Text::GetCharacterKerning( const s_uint& uiChar1, const s_uint& uiChar2 ) const
+    {
+        if (bReady_)
+        {
+            const Ogre::Font::GlyphInfo& mInfo = pOgreFont_->getGlyphInfo(uiChar1.Get());
+            map<Ogre::Font::CodePoint, Ogre::Vector2>::const_iterator iter = mInfo.kerningTable.find(uiChar2.Get());
+            if (iter != mInfo.kerningTable.end())
+            {
+                return iter->second.x*pFontMat_->GetWidth();
+            }
+            else
+            {
+                if (uiChar2 != 0)
+                {
+                    Error(CLASS_NAME,
+                        "Couldn't find kerning information for character "+uiChar2+"."
+                    );
+                }
+
+                return 0.0f;
+            }
+        }
+        else
+        {
+            return 0.0f;
+        }
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
@@ -408,7 +457,15 @@ namespace Frost
                 if (*iterChar1 == ' ')
                     mLine.fWidth += fSpaceWidth_;
                 else
+                {
                     mLine.fWidth += GetCharacterWidth(*iterChar1);
+                    s_str::iterator iterNext = iterChar1 + 1;
+                    if (iterNext != iterManual->end())
+                    {
+                        if (*iterNext != ' ')
+                            mLine.fWidth += GetCharacterKerning((uint)*iterChar1, (uint)*iterNext);
+                    }
+                }
                 mLine.sCaption += *iterChar1;
 
                 if (mLine.fWidth > fBoxW_)
@@ -485,12 +542,12 @@ namespace Frost
                         mLine.sCaption << "...";
 
                         s_str::iterator iterTemp = iterChar1;
-                        iterChar1 = iterManual->begin() + iterManual->FindPos(" ", iterChar1 - iterManual->begin());
+                        iterChar1 = iterManual->begin() + s_int(iterManual->FindPos(" ", s_uint(iterChar1 - iterManual->begin())));
 
                         if (iterChar1 != iterManual->end())
                         {
                             // Read cutted format tags
-                            for (; iterTemp != iterChar1; iterTemp++)
+                            while (iterTemp != iterChar1)
                             {
                                 if ((*iterTemp) == '|')
                                 {
@@ -506,6 +563,7 @@ namespace Frost
                                         }
                                     }
                                 }
+                                iterTemp++;
                             }
 
                             // Look for the next word
