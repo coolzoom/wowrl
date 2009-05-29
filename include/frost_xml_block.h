@@ -154,7 +154,7 @@ namespace XML
         void          SetParent(s_ptr<Block> pParent);
 
         /// Sets this Block's Document.
-        /** \param pParent The Document this Block belongs to
+        /** \param pDoc The Document this Block belongs to
         *   \note Only used in definition and loading stages.
         */
         void          SetDocument(s_ptr<Document> pDoc);

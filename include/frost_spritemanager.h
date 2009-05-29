@@ -213,7 +213,7 @@ namespace Frost
         *   \param fHeight   The height of the rendering region
         *   \note Automatically called by Engine.
         */
-        void         Initialize(s_ptr<Ogre::SceneManager> pSceneMgr, const s_float& fWidth, const s_float& fHeigth);
+        void         Initialize(s_ptr<Ogre::SceneManager> pSceneMgr, const s_float& fWidth, const s_float& fHeight);
 
         /// Renders a single quad on the screen.
         /** \param mQuad A reference to a Quad
@@ -350,7 +350,7 @@ namespace Frost
         void RenderBuffers_(s_bool bCallBeginEnd = false);
 
         /// Creates hardware buffers.
-        /** \param size Vertex count for the new hardware buffer.
+        /** \param uiSize Vertex count for the new hardware buffer.
         */
         void CreateHardwareBuffers_(uint uiSize);
 

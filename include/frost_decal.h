@@ -12,6 +12,11 @@ namespace Frost
         DECAL_PROJECTION_ORTHO
     };
 
+    /// A movable texture projection.
+    /** This class can be used to display a selection
+    *   indicator on the ground, fake shadows, any many
+    *   other things.
+    */
     class Decal : public MovableObject
     {
     public :

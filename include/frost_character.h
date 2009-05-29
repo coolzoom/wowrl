@@ -44,6 +44,7 @@ namespace Frost
         GENDER_FEMALE
     };
 
+    /// Holds informations about the model used by a character.
     struct CharacterModelInfo
     {
         s_str               sModel;
@@ -54,6 +55,7 @@ namespace Frost
         static const s_str CLASS_NAME;
     };
 
+    /// Holds generic informations about a specific character race.
     struct Race
     {
         s_str              sName;
@@ -96,8 +98,10 @@ namespace Frost
     public :
 
         /// Constructor.
-        /** \param uiID  This Character's unique ID
-        *   \param sName This Character's name
+        /** \param uiID    This Character's unique ID
+        *   \param sName   This Character's name
+        *   \param mRace   This Character's race
+        *   \param mGender This Character's gender
         *   \note You shouldn't have to call this. Use the
         *         UnitManager instead.
         */

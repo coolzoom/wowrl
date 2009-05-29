@@ -16,6 +16,7 @@
 
 namespace Frost
 {
+    /// Handles Unit creation.
     class UnitManager : public Manager<UnitManager>
     {
     friend class Manager<UnitManager>;

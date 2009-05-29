@@ -20,6 +20,7 @@ namespace Frost
         HEALTH_REGEN_CONTINUOUS
     };
 
+    /// Holds generic informations about a specific health type.
     struct HealthType
     {
         s_str           sName;

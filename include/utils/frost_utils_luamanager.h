@@ -49,7 +49,7 @@ namespace Frost
         s_ptr<Lua::State> GetDefaultLua() const;
 
         /// Sets the default Lua state.
-        /** \param The new default Lua state
+        /** \param pLua The new default Lua state
         */
         void              SetDefaultLua(s_ptr<Lua::State> pLua);
 
