@@ -135,6 +135,9 @@ namespace Frost
         s_str                         sTextureFile_;
         s_bool                        bShown_;
         DecalProjection               mProjection_;
+        Color                         mDiffuse_;
+        Color                         mSelfIllum_;
+        Color                         mAmbient_;
 
     };
 }
