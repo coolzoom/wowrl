@@ -99,7 +99,7 @@ namespace Frost
                 InputManager::GetSingleton()->MouseIsDown(MOUSE_RIGHT))
             {
                 Yaw(-mEvent[0].GetF()/s_float(Engine::GetSingleton()->GetScreenWidth()));
-                Pitch(-mEvent[1].GetF()/s_float(Engine::GetSingleton()->GetScreenWidth()));
+                Pitch(-mEvent[1].GetF()/s_float(Engine::GetSingleton()->GetScreenHeight()));
             }
         }
         else if (mEvent.GetName() == "MOUSE_WHEEL")
