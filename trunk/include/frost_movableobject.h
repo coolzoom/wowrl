@@ -179,9 +179,6 @@ namespace Frost
 
     protected :
 
-        /// Changes the controlled node
-        /** \param pNode The new node to use
-        */
         void  CreateOrbitNode_();
         void  RemoveOrbitNode_();
 

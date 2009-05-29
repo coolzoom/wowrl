@@ -275,7 +275,8 @@ namespace Frost
         static s_float Random(const s_float& fMin = 0.0f, const s_float& fMax = 1.0f);
 
         /// Rounds a float value.
-        /** \param mRoundType How to round the value (see RoundType)
+        /** \param fValue     The value to round
+        *   \param mRoundType How to round the value (see RoundType)
         */
         static s_float Round(const s_float& fValue, const RoundType& mRoundType = ROUND_MID);
 

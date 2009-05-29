@@ -100,7 +100,6 @@ namespace Frost
             /** \param sName    The name of this alternative argument (used to print errors in the log)
             *   \param mLuaType The expected type in Lua
             *   \param mType    The C++ type you'll be using (conversion is done automatically)
-            *   \param pParent  A pointer to the function that'll be using it
             */
             void          Add(const s_str& sName, Lua::Type mLuaType, ValueType mType);
 
@@ -209,6 +208,7 @@ namespace Frost
             s_var           vValue;
         };
 
+        /// Holds all possible arguments of a Lua function's argument set.
         struct ArgumentList
         {
             std::map< s_uint, s_ptr<Argument> > lArg_;

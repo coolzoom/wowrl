@@ -17,8 +17,11 @@ namespace Frost
 
     enum FileType
     {
+        /// Input - Output
         FILE_IO,
+        /// Input
         FILE_I,
+        /// Output
         FILE_O
     };
 
@@ -45,7 +48,8 @@ namespace Frost
     public :
 
         /// Call that constructor to open a file.
-        /** \param sName   The file's name.
+        /** \param sName   The file's name
+        *   \param mType   How to open this file, see FileType
         *   \param bBinary 'false' if the file is plain text
         */
         File(const s_str& sName, const FileType& mType = FILE_IO, const s_bool& bBinary = false);

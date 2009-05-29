@@ -20,6 +20,7 @@ namespace Frost
         POWER_REGEN_CONTINUOUS
     };
 
+    /// Holds generic informations about a specific power type.
     struct PowerType
     {
         s_str          sName;

@@ -50,6 +50,7 @@ namespace Frost
             ALIGN_RIGHT
         };
 
+        /// Holds the position, tex. coordinates and color of a character.
         struct Letter
         {
             s_float fX1, fY1;
@@ -63,7 +64,7 @@ namespace Frost
         /** \param sFileName The path to the .ttf file to use
         *   \param fSize    The size of the font (in point)
         */
-        Text(const s_str& sFileName, const s_float& fSize_);
+        Text(const s_str& sFileName, const s_float& fSize);
 
         /// Destructor.
         ~Text();

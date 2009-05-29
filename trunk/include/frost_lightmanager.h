@@ -15,6 +15,7 @@
 
 namespace Frost
 {
+    /// Manages Light creation.
     class LightManager : public Manager<LightManager>
     {
     friend class Manager<LightManager>;

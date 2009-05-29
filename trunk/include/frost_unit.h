@@ -30,6 +30,7 @@ namespace Frost
         LMOVEMENT_TURN_RIGHT,
     };
 
+    /// Holds generic informations about a specific unit class.
     struct Class
     {
         s_str sName;
@@ -99,7 +100,7 @@ namespace Frost
         s_float          GetHealthRegenRatio() const;
 
         /// Adds some power points to this Unit's total power.
-        /** \param fHealthAdd The number of power points to add
+        /** \param fPowerAdd The number of power points to add
         */
         void             AddPower(const s_float& fPowerAdd);
 

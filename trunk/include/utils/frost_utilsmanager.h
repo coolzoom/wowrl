@@ -14,13 +14,28 @@
 
 namespace Frost
 {
+    /// Manages base functions (log...).
     class UtilsManager : public Manager<UtilsManager>
     {
     friend class Manager<UtilsManager>;
     public :
 
         typedef void (*LogFunction)(const s_str&, const s_bool&);
+
+        /// Sets the log function to use.
+        /** \param pFunc The log function
+        *   \note This function will be used by Frost::Log(), Frost::Warning()
+        *         and Frost::Error().<br>
+        *         Its signature must be :<br>
+        *         &nsbp&nsbp&nsbpvoid Func(const s_str&, const s_bool&);<br>
+        *         See UtilsManager::Log() for more infos about these params.
+        */
         void SetLogFunction(LogFunction pFunc);
+
+        /// Shortcut to the user specified log function.
+        /** \param sMessage    The message to log
+        *   \param bTimeStamps 'true' to display time stamps
+        */
         void Log(const s_str& sMessage, const s_bool& bTimeStamps);
 
         static const s_str CLASS_NAME;
