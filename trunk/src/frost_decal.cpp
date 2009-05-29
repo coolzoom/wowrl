@@ -25,6 +25,9 @@ namespace Frost
         pNode_->attachObject(pOgreFrustum_.Get());
         mProjection_ = DECAL_PROJECTION_PERSP;
         fScale_ = 1.0f;
+        mDiffuse_ = Color::WHITE;
+        mSelfIllum_ = Color::BLACK;
+        mAmbient_ = Color::BLACK;
     }
 
     Decal::Decal( const Decal& mDecal, const s_uint& uiID, s_ptr<Ogre::Material> pOgreMat ) : MovableObject(mDecal)
@@ -40,14 +43,19 @@ namespace Frost
         pNode_->attachObject(pOgreFrustum_.Get());
         mProjection_ = DECAL_PROJECTION_PERSP;
         fScale_ = 1.0f;
+        SetDiffuse(mDecal.mDiffuse_);
+        SetSelfIllumination(mDecal.mSelfIllum_);
+        SetAmbient(mDecal.mAmbient_);
     }
 
     Decal::~Decal()
     {
-        this->Hide();
-        pOgreMat_->getTechnique(0)->removePass(pOgrePass_->getIndex());
+        if (pOgreMat_)
+        {
+            this->Hide();
+            pOgreMat_->getTechnique(0)->removePass(pOgrePass_->getIndex());
+        }
     }
-
 
     void Decal::SetScale( const s_float& fScale )
     {
@@ -74,35 +82,47 @@ namespace Frost
 
     void Decal::SetDiffuse( const Color& mColor )
     {
-        pOgrePass_->setDiffuse(
-            mColor.GetR().Get()/255.0f,
-            mColor.GetG().Get()/255.0f,
-            mColor.GetB().Get()/255.0f,
-            mColor.GetA().Get()/255.0f
-        );
+        mDiffuse_ = mColor;
+        if (pOgrePass_)
+        {
+            pOgrePass_->setDiffuse(
+                mColor.GetR().Get()/255.0f,
+                mColor.GetG().Get()/255.0f,
+                mColor.GetB().Get()/255.0f,
+                mColor.GetA().Get()/255.0f
+            );
+        }
     }
 
     Color Decal::GetDiffuse() const
     {
-        return Color(pOgrePass_->getDiffuse().getAsARGB());
+        return mDiffuse_;
     }
 
     void Decal::SetSelfIllumination( const Color& mColor )
     {
-        pOgrePass_->setSelfIllumination(
-            mColor.GetR().Get()/255.0f,
-            mColor.GetG().Get()/255.0f,
-            mColor.GetB().Get()/255.0f
-        );
+        mSelfIllum_ = mColor;
+        if (pOgrePass_)
+        {
+            pOgrePass_->setSelfIllumination(
+                mColor.GetR().Get()/255.0f,
+                mColor.GetG().Get()/255.0f,
+                mColor.GetB().Get()/255.0f
+            );
+        }
     }
 
     void Decal::SetAmbient( const Color& mColor )
     {
-        pOgrePass_->setAmbient(
-            mColor.GetR().Get()/255.0f,
-            mColor.GetG().Get()/255.0f,
-            mColor.GetB().Get()/255.0f
-        );
+        mAmbient_ = mColor;
+        if (pOgrePass_)
+        {
+            pOgrePass_->setAmbient(
+                mColor.GetR().Get()/255.0f,
+                mColor.GetG().Get()/255.0f,
+                mColor.GetB().Get()/255.0f
+            );
+        }
     }
 
     void Decal::SetProjection( const DecalProjection& mProjection )
