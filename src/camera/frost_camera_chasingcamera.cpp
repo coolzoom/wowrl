@@ -104,14 +104,14 @@ namespace Frost
             {
                 pUnit_->RotateCamera(
                     -mEvent[0].GetF()/s_float(Engine::GetSingleton()->GetScreenWidth()),
-                    -mEvent[1].GetF()/s_float(Engine::GetSingleton()->GetScreenWidth())
+                    -mEvent[1].GetF()/s_float(Engine::GetSingleton()->GetScreenHeight())
                 );
             }
             else if (InputManager::GetSingleton()->MouseIsDown(MOUSE_RIGHT))
             {
                 pUnit_->RotateModel(
                     -mEvent[0].GetF()/s_float(Engine::GetSingleton()->GetScreenWidth()),
-                    -mEvent[1].GetF()/s_float(Engine::GetSingleton()->GetScreenWidth())
+                    -mEvent[1].GetF()/s_float(Engine::GetSingleton()->GetScreenHeight())
                 );
             }
         }
