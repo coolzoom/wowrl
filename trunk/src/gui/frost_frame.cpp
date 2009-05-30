@@ -61,56 +61,59 @@ void Frame::Render()
     // TODO : Frame : Implementer et faire le rendu du backdrop
     // ...
 
-    // Render child regions
-    map<LayerType, Layer>::iterator iterLayer;
-    foreach (iterLayer, lLayerList_)
+    if (IsVisible())
     {
-        Layer& mLayer = iterLayer->second;
-        if (!mLayer.bDisabled)
+        // Render child regions
+        map<LayerType, Layer>::iterator iterLayer;
+        foreach (iterLayer, lLayerList_)
         {
-            map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
-            foreach (iterRegion, mLayer.lRegionList)
+            Layer& mLayer = iterLayer->second;
+            if (!mLayer.bDisabled)
             {
-                s_ptr<LayeredRegion> pRegion = iterRegion->second;
-                if (pRegion->IsShown())
-                    pRegion->Render();
+                map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+                foreach (iterRegion, mLayer.lRegionList)
+                {
+                    s_ptr<LayeredRegion> pRegion = iterRegion->second;
+                    if (pRegion->IsShown())
+                        pRegion->Render();
+                }
             }
         }
-    }
 
-    // Render child frames
-    map<FrameStrata, Strata>::iterator iterStrata;
-    foreach (iterStrata, lStrataList_)
-    {
-        Strata& mStrata = iterStrata->second;
-
-        map<s_uint, Level>::iterator iterLevel;
-        foreach (iterLevel, mStrata.lLevelList)
+        // Render child frames
+        map<FrameStrata, Strata>::iterator iterStrata;
+        foreach (iterStrata, lStrataList_)
         {
-            Level& mLevel = iterLevel->second;
+            Strata& mStrata = iterStrata->second;
 
-            map< s_uint, s_ptr<Frame> >::iterator iterFrame;
-            foreach (iterFrame, mLevel.lFrameList)
+            map<s_uint, Level>::iterator iterLevel;
+            foreach (iterLevel, mStrata.lLevelList)
             {
-                s_ptr<Frame> pFrame = iterFrame->second;
-                if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
+                Level& mLevel = iterLevel->second;
+
+                map< s_uint, s_ptr<Frame> >::iterator iterFrame;
+                foreach (iterFrame, mLevel.lFrameList)
                 {
-                    if (pFrame->IsShown())
-                        pFrame->Render();
+                    s_ptr<Frame> pFrame = iterFrame->second;
+                    if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
+                    {
+                        if (pFrame->IsShown())
+                            pFrame->Render();
+                    }
+                }
+
+                if (mLevel.pTopLevel)
+                {
+                    if (mLevel.pTopLevel->IsShown())
+                        mLevel.pTopLevel->Render();
                 }
             }
 
-            if (mLevel.pTopLevel)
+            if (mStrata.pTopStrata)
             {
-                if (mLevel.pTopLevel->IsShown())
-                    mLevel.pTopLevel->Render();
+                if (mStrata.pTopStrata->IsShown())
+                    mStrata.pTopStrata->Render();
             }
-        }
-
-        if (mStrata.pTopStrata)
-        {
-            if (mStrata.pTopStrata->IsShown())
-                mStrata.pTopStrata->Render();
         }
     }
 }

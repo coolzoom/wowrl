@@ -33,7 +33,7 @@ FontString::~FontString()
 
 void FontString::Render()
 {
-    if (pText_)
+    if (pText_ && IsVisible())
     {
         if (bHasShadow_)
         {
