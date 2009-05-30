@@ -8,6 +8,7 @@
 #include "gui/frost_sprite.h"
 #include "gui/frost_text.h"
 #include "gui/frost_spritemanager.h"
+#include "gui/frost_gui_uiobject.h"
 #include "frost_inputmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
@@ -47,8 +48,6 @@ s_ptr<Light>  pLight1;
 s_ptr<Light>  pLight2;
 s_ptr<Light>  pLight3;
 
-s_bool bHideGUI = false;
-
 enum CameraType
 {
     CAMERA_FREE,
@@ -73,7 +72,11 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_Z) && pInputMgr->AltPressed())
     {
-        bHideGUI = !bHideGUI;
+        s_ptr<GUI::UIObject> pObj = GUIManager::GetSingleton()->GetUIObjectByName("UIParent");
+        if (pObj->IsVisible())
+            pObj->Hide();
+        else
+            pObj->Show();
     }
 
     if (pInputMgr->KeyIsPressed(KEY_P))
@@ -121,7 +124,7 @@ s_bool RenderFunc()
 {
     static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
 
-    pText->SetText("FPS : "+TimeManager::GetSingleton()->GetFPS());
+    //pText->SetText("FPS : "+TimeManager::GetSingleton()->GetFPS());
 
     pSpriteMgr->Begin(pRTarget);
 
@@ -136,10 +139,9 @@ s_bool RenderFunc()
 
         pSpriteMgr->Clear(Color::VOID);
 
-        if (!bHideGUI)
-            GUIManager::GetSingleton()->RenderUI();
+        GUIManager::GetSingleton()->RenderUI();
 
-        pText->Render(s_float(pFrost->GetScreenWidth())-2-pText->GetTextWidth(), s_float(pFrost->GetScreenHeight())-18);
+        //pText->Render(s_float(pFrost->GetScreenWidth())-2-pText->GetTextWidth(), s_float(pFrost->GetScreenHeight())-18);
 
         pRTSprite->Render(0, 0);
 
