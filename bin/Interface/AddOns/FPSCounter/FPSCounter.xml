@@ -1,0 +1,26 @@
+<Ui>
+    <Frame name="FPSCounter_Frame" hidden="false" movable="false" enableMouse="false" clampedToScreen="true">
+        <Anchors>
+            <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
+        </Anchors>
+        <Layers>
+            <Layer>
+                <FontString name="FPSCounter_Text" font="Fonts/Calibri.ttf" fontHeight="16" outline="NORMAL">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                            <Offset>
+                                <AbsDimension x="-2" y="3"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnUpdate>
+                local FPS = math.floor(1/arg1);
+                FPSCounter_Text:SetText("FPS : "..FPS);
+            </OnUpdate>
+        </Scripts>
+    </Frame>
+</Ui>
