@@ -372,6 +372,16 @@ namespace Frost
         }
     }
 
+    void Text::Update()
+    {
+        if (bReady_ && bUpdateCache_)
+        {
+            UpdateLines_();
+            UpdateCache_();
+            bUpdateCache_ = false;
+        }
+    }
+
     s_ptr<Ogre::Font> Text::GetOgreFont()
     {
         return pOgreFont_;
