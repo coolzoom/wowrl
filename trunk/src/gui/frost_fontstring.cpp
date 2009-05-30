@@ -60,6 +60,8 @@ void FontString::Render()
 
 void FontString::Update()
 {
+    if (pText_)
+        pText_->Update();
     UIObject::Update();
 }
 
@@ -240,7 +242,11 @@ void FontString::SetShadow( const s_bool& bHasShadow )
 void FontString::SetText( const s_str& sText )
 {
     if (pText_)
+    {
         pText_->SetText(sText);
+        FireUpdateBorders();
+        uiAbsWidth_ = uiAbsHeight_ = s_uint::NaN;
+    }
     else
     {
         Error(lType_.back(),
