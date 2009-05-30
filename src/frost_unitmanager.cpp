@@ -128,40 +128,50 @@ namespace Frost
         s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
         s_ptr<Engine>       pFrost = Engine::GetSingleton();
 
+        Ogre::Ray mRay = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera()->getCameraToViewportRay(
+            (pInputMgr->GetMPosX()/s_float(pFrost->GetScreenWidth())).Get(),
+            (pInputMgr->GetMPosY()/s_float(pFrost->GetScreenHeight())).Get()
+        );
+        s_ptr<Ogre::RaySceneQuery> pRayQuery = pFrost->GetOgreSceneManager()->createRayQuery(mRay);
+
+        pRayQuery->setSortByDistance(true);
+        Ogre::RaySceneQueryResult& mRes = pRayQuery->execute();
+        Ogre::RaySceneQueryResult::iterator iter = mRes.begin();
+        s_ptr<Unit> pUnit;
+        if (iter != mRes.end())
+        {
+            foreach (iter, mRes)
+            {
+                s_ptr<Ogre::MovableObject> pObject = iter->movable;
+                s_ptr<Ogre::UserDefinedObject> pMyObject = pObject->getUserObject();
+                s_str sType = pMyObject->getTypeName();
+                if (sType == "CHARACTER")
+                {
+                    pUnit = s_ptr<CharacterOgreInterface>(pMyObject)->GetCharacter();
+                    break;
+                }
+                else if (sType == "CREATURE")
+                {
+                    pUnit = s_ptr<CreatureOgreInterface>(pMyObject)->GetCreature();
+                    break;
+                }
+            }
+        }
+        pFrost->GetOgreSceneManager()->destroyQuery(pRayQuery.Get());
+
+        if (pMouseOveredUnit_ != pUnit)
+        {
+            if (pMouseOveredUnit_)
+                pMouseOveredUnit_->NotifyHighlighted(false);
+            if (pUnit)
+                pUnit->NotifyHighlighted(true);
+        }
+
         // Single click selection
         if (pInputMgr->MouseIsReleased(MOUSE_LEFT))
         {
             if (pInputMgr->GetMouseDownDuration(MOUSE_LEFT) < 0.2f)
             {
-                Ogre::Ray mRay = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera()->getCameraToViewportRay(
-                    (pInputMgr->GetMPosX()/s_float(pFrost->GetScreenWidth())).Get(),
-                    (pInputMgr->GetMPosY()/s_float(pFrost->GetScreenHeight())).Get()
-                );
-                s_ptr<Ogre::RaySceneQuery> pRayQuery = pFrost->GetOgreSceneManager()->createRayQuery(mRay);
-
-                pRayQuery->setSortByDistance(true);
-                Ogre::RaySceneQueryResult& mRes = pRayQuery->execute();
-                Ogre::RaySceneQueryResult::iterator iter = mRes.begin();
-                s_ptr<Unit> pUnit;
-                if (iter != mRes.end())
-                {
-                    foreach (iter, mRes)
-                    {
-                        s_ptr<Ogre::MovableObject> pObject = iter->movable;
-                        s_ptr<Ogre::UserDefinedObject> pMyObject = pObject->getUserObject();
-                        s_str sType = pMyObject->getTypeName();
-                        if (sType == "CHARACTER")
-                        {
-                            pUnit = s_ptr<CharacterOgreInterface>(pMyObject)->GetCharacter();
-                        }
-                        else if (sType == "CREATURE")
-                        {
-                            pUnit = s_ptr<CreatureOgreInterface>(pMyObject)->GetCreature();
-                        }
-                    }
-                }
-                pFrost->GetOgreSceneManager()->destroyQuery(pRayQuery.Get());
-
                 map< s_uint, s_ptr<Unit> >::iterator iterUnit;
                 foreach (iterUnit, lSelectedUnitList_)
                 {
@@ -176,6 +186,8 @@ namespace Frost
                 }
             }
         }
+
+        pMouseOveredUnit_ = pUnit;
 
         // Update units
         map< s_uint, s_ptr<Unit> >::iterator iterUnit;
