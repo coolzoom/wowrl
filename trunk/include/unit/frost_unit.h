@@ -195,6 +195,32 @@ namespace Frost
         /// Makes this Unit jump.
         void             Jump();
 
+        /// Instantaneously move this Unit to a given position.
+        /** \param mDestination The new position of the Unit
+        */
+        void             Teleport(const Vector& mDestination);
+
+        /// Orient this Unit so it looks at the other.
+        /** \param pUnit The Unit to look at
+        *   \note This Unit will keep on looking at the other
+        *         until you call LookAt(NULL).
+        */
+        void             LookAtUnit(s_ptr<Unit> pUnit);
+
+        /// Orient this Unit so it looks at an object.
+        /** \param pObject The Object to look at
+        *   \note This Unit will keep on looking at the object
+        *         until you call LookAt(NULL).
+        */
+        void             LookAtObject(s_ptr<MovableObject> pObject);
+
+        /// Orient this Unit so it looks at the given position.
+        /** \param mPosition The point to look at
+        *   \note If you need continuous traking, use the other
+        *         LookAt functions.
+        */
+        void             LookAt(const Vector& mPosition);
+
         /// Makes this Unit move forward.
         void             SetMoveForward(const s_bool& bMoveForward);
 
