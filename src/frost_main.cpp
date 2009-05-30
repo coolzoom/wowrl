@@ -23,7 +23,6 @@
 #include "frost_unitmanager.h"
 #include "frost_character.h"
 #include "frost_node.h"
-#include "frost_decal.h"
 #include "frost_text.h"
 
 #include <OgreException.h>
@@ -48,7 +47,7 @@ s_ptr<Light>  pLight1;
 s_ptr<Light>  pLight2;
 s_ptr<Light>  pLight3;
 
-s_ptr<Decal>  pSelectionDecal;
+s_bool bHideGUI = false;
 
 enum CameraType
 {
@@ -70,6 +69,11 @@ s_bool FrameFunc()
     if (pInputMgr->KeyIsPressed(KEY_T))
     {
         pFrost->TakeScreenshot();
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_Z) && pInputMgr->AltPressed())
+    {
+        bHideGUI = !bHideGUI;
     }
 
     if (pInputMgr->KeyIsPressed(KEY_P))
@@ -132,7 +136,8 @@ s_bool RenderFunc()
 
         pSpriteMgr->Clear(Color::VOID);
 
-        GUIManager::GetSingleton()->RenderUI();
+        if (!bHideGUI)
+            GUIManager::GetSingleton()->RenderUI();
 
         pText->Render(s_float(pFrost->GetScreenWidth())-2-pText->GetTextWidth(), s_float(pFrost->GetScreenHeight())-18);
 
@@ -168,7 +173,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             // Populate the world !
 
             // Create a Unit
-            //pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
+            pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
             pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
             pChar->SetClass("MAGE");
             pChar->SetLevel(51);
@@ -198,23 +203,6 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 
             pPlane = SceneManager::GetSingleton()->CreatePlane();
             pPlane->SetMaterial(pGroundMat);
-
-            s_ptr<Decal> pDecal = pGroundMat->AddDecal("Textures/UnitShadow.png");
-            pDecal->Attach(s_ptr<MovableObject>(pChar->GetBodyModel().Get()), false, true);
-            pDecal->SetPosition(Vector(0, 5, 0));
-            pDecal->SetDirection(Vector(0, -1, 0));
-            pDecal->SetProjection(DECAL_PROJECTION_ORTHO);
-            pDecal->SetScale(1.8f);
-            pDecal->SetDiffuse(Color(128, 255, 255, 255));
-
-            pSelectionDecal = pGroundMat->AddDecal("Textures/UnitSelection.png");
-            pSelectionDecal->Attach(s_ptr<MovableObject>(pChar->GetBodyModel().Get()), false, true);
-            pSelectionDecal->SetPosition(Vector(0, 5, 0));
-            pSelectionDecal->SetDirection(Vector(0, -1, 0));
-            pSelectionDecal->SetProjection(DECAL_PROJECTION_ORTHO);
-            pSelectionDecal->SetScale(1.5f);
-            pSelectionDecal->SetDiffuse(Color(0, 255, 0));
-            pSelectionDecal->SetAmbient(Color(0, 255, 0));
 
             // Some light
             pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);

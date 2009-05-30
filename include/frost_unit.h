@@ -172,7 +172,17 @@ namespace Frost
         */
         const s_uint&    GetLevel() const;
 
-        /// Tells this Unit's it has been selected/deselected.
+        /// Tells this Unit that it has been highlithed (or not).
+        /** \param bHighlighted 'true' if the Unit has been highlighted
+        */
+        void             NotifyHighlighted(const s_bool& bHighlighted);
+
+        /// Checks if this Unit is highlighted.
+        /** \param 'true' if this Unit is highlithed
+        */
+        const s_bool&    IsHighlighted() const;
+
+        /// Tells this Unit that it has been selected/deselected.
         /** \param bSelected 'true' if the Unit has been selected
         */
         void             NotifySelected(const s_bool& bSelected);
@@ -315,9 +325,13 @@ namespace Frost
         s_refptr<Model> pBodyModel_;
         s_ptr<Camera>   pCamera_;
         s_ptr<Node>     pNode_;
+        s_refptr<Decal> pSelectionDecal_;
+        s_uint          uiSelectionDecalID_;
+        s_uint          uiShadowDecalID_;
         s_bool          bCameraMovedAlone_;
 
         s_bool          bSelected_;
+        s_bool          bHighlighted_;
         s_bool          bDead_;
 
         s_bool          bJumping_;
