@@ -1,6 +1,6 @@
 #include "frost_te_gtkogrewindow.h"
 #include "frost_te_mainwindow.h"
-#include "frost_spritemanager.h"
+#include "gui/frost_spritemanager.h"
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
