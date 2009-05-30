@@ -53,6 +53,15 @@ namespace Frost
         );
     }
 
+    s_uint SceneManager::AddDecalOnGround( s_ptr<Decal> pDecal )
+    {
+        return 0;
+    }
+
+    void SceneManager::RemoveDecalFromGround( const s_uint& uiID )
+    {
+    }
+
     s_ptr<Plane> SceneManager::CreatePlane()
     {
         s_ptr<Plane> pPlane = new Plane(uiPlaneCounter_);

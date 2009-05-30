@@ -25,6 +25,16 @@ namespace Frost
         */
         void   Initialize();
 
+        /// Adds a new Decal on the ground.
+        /** \param pDecal The decal to put on the ground
+        */
+        s_uint         AddDecalOnGround(s_ptr<Decal> pDecal);
+
+        /// Removes a previously created Decal from the ground.
+        /** \param uiID The ID of the decal
+        */
+        void           RemoveDecalFromGround(const s_uint& uiID);
+
         /// Creates a new Plane.
         /** \note The created plane will be "infinite".
         *         Actually, its width and height will be
