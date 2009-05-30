@@ -36,7 +36,7 @@ s_str Texture::Serialize(const s_str& sTab) const
 
 void Texture::Render()
 {
-    if (pSprite_)
+    if (pSprite_ && IsVisible())
     {
         pSprite_->Render2V(
             s_float(lBorderList_[BORDER_LEFT]), s_float(lBorderList_[BORDER_TOP]),
