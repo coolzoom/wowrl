@@ -315,6 +315,32 @@ namespace Frost
         }
     }
 
+    void Unit::Teleport( const Vector& mDestination )
+    {
+        pNode_->SetPosition(mDestination);
+    }
+
+    void Unit::LookAtUnit( s_ptr<Unit> pUnit )
+    {
+        if (pUnit)
+            pNode_->LookAt(pUnit->GetNode());
+        else
+            pNode_->UnlockTracking();
+    }
+
+    void Unit::LookAtObject( s_ptr<MovableObject> pObject )
+    {
+        if (pObject)
+            pNode_->LookAt(pObject);
+        else
+            pNode_->UnlockTracking();
+    }
+
+    void Unit::LookAt( const Vector& mPosition )
+    {
+        pNode_->SetDirection(mPosition - pNode_->GetPosition(false));
+    }
+
     void Unit::SetMovement_( Movement mMovementType )
     {
         mMovementType_ = mMovementType;
@@ -326,12 +352,12 @@ namespace Frost
                 {
                     if (mLMovementType_ == LMOVEMENT_STRAFE_LEFT)
                     {
-                        pNode_->Yaw(0.125f-fCumuledYaw_);
+                        pNode_->Yaw(0.125f - fCumuledYaw_);
                         fCumuledYaw_ = 0.125f;
                     }
                     else if (mLMovementType_ == LMOVEMENT_STRAFE_RIGHT)
                     {
-                        pNode_->Yaw(-0.125f-fCumuledYaw_);
+                        pNode_->Yaw(-0.125f - fCumuledYaw_);
                         fCumuledYaw_ = -0.125f;
                     }
                     else
@@ -349,12 +375,12 @@ namespace Frost
                 {
                     if (mLMovementType_ == LMOVEMENT_STRAFE_LEFT)
                     {
-                        pNode_->Yaw(-0.125f-fCumuledYaw_);
+                        pNode_->Yaw(-0.125f - fCumuledYaw_);
                         fCumuledYaw_ = -0.125f;
                     }
                     else if (mLMovementType_ == LMOVEMENT_STRAFE_RIGHT)
                     {
-                        pNode_->Yaw(-0.125f-fCumuledYaw_);
+                        pNode_->Yaw(-0.125f - fCumuledYaw_);
                         fCumuledYaw_ = 0.125f;
                     }
 
@@ -377,12 +403,12 @@ namespace Frost
                     {
                         if (mLMovementType_ == LMOVEMENT_STRAFE_LEFT)
                         {
-                            pNode_->Yaw(0.25f-fCumuledYaw_);
+                            pNode_->Yaw(0.25f - fCumuledYaw_);
                             fCumuledYaw_ = 0.25f;
                         }
                         else
                         {
-                            pNode_->Yaw(-0.25f-fCumuledYaw_);
+                            pNode_->Yaw(-0.25f - fCumuledYaw_);
                             fCumuledYaw_ = -0.25f;
                         }
                         pBodyModel_->GetAnimMgr()->SetSpeed(1.0f);
@@ -405,6 +431,7 @@ namespace Frost
 
     void Unit::SetMoveForward( const s_bool& bMoveForward )
     {
+        pNode_->UnlockTracking();
         if (bMoveForward)
         {
             bMoveForward_ = bMoveForward;
@@ -433,6 +460,7 @@ namespace Frost
 
     void Unit::SetMoveBackward( const s_bool& bMoveBackward )
     {
+        pNode_->UnlockTracking();
         if (bMoveBackward)
         {
             bMoveBackward_ = bMoveBackward;
@@ -461,6 +489,7 @@ namespace Frost
 
     void Unit::SetLateralMovement_( LateralMovement mLMovementType )
     {
+        pNode_->UnlockTracking();
         mLMovementType_ = mLMovementType;
         switch (mLMovementType)
         {
@@ -468,7 +497,7 @@ namespace Frost
             {
                 if (mMovementType_ == MOVEMENT_NONE)
                 {
-                    pNode_->Yaw(0.25f-fCumuledYaw_);
+                    pNode_->Yaw(0.25f - fCumuledYaw_);
                     fCumuledYaw_ = 0.25f;
                     if (bWalk_)
                         pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
@@ -477,12 +506,12 @@ namespace Frost
                 }
                 else if (mMovementType_ == MOVEMENT_FORWARD)
                 {
-                    pNode_->Yaw(0.125f-fCumuledYaw_);
+                    pNode_->Yaw(0.125f - fCumuledYaw_);
                     fCumuledYaw_ = 0.125f;
                 }
                 else if (mMovementType_ == MOVEMENT_BACKWARD)
                 {
-                    pNode_->Yaw(-0.125f-fCumuledYaw_);
+                    pNode_->Yaw(-0.125f - fCumuledYaw_);
                     fCumuledYaw_ = -0.125f;
                 }
                 break;
@@ -491,7 +520,7 @@ namespace Frost
             {
                 if (mMovementType_ == MOVEMENT_NONE)
                 {
-                    pNode_->Yaw(-0.25f-fCumuledYaw_);
+                    pNode_->Yaw(-0.25f - fCumuledYaw_);
                     fCumuledYaw_ = -0.25f;
                     if (bWalk_)
                         pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
@@ -500,12 +529,12 @@ namespace Frost
                 }
                 else if (mMovementType_ == MOVEMENT_FORWARD)
                 {
-                    pNode_->Yaw(-0.125f-fCumuledYaw_);
+                    pNode_->Yaw(-0.125f - fCumuledYaw_);
                     fCumuledYaw_ = -0.125f;
                 }
                 else if (mMovementType_ == MOVEMENT_BACKWARD)
                 {
-                    pNode_->Yaw(0.125f-fCumuledYaw_);
+                    pNode_->Yaw(0.125f - fCumuledYaw_);
                     fCumuledYaw_ = 0.125f;
                 }
                 break;
@@ -713,7 +742,6 @@ namespace Frost
 
     void Unit::SetTurning( const s_bool& bTurn )
     {
-        //if ( (bTurn_ && !bTurn) || (!bTurn_ && bTurn) )
         if (bTurn_ != bTurn)
             ToggleTurning();
     }
@@ -839,6 +867,8 @@ namespace Frost
 
     void Unit::UpdateMovement_( const s_float fDelta )
     {
+        pNode_->Update(fDelta);
+
         if (bJumping_)
         {
             if (pBodyModel_)
