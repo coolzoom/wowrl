@@ -178,7 +178,7 @@ namespace Frost
         void             NotifyHighlighted(const s_bool& bHighlighted);
 
         /// Checks if this Unit is highlighted.
-        /** \param 'true' if this Unit is highlithed
+        /** \return 'true' if this Unit is highlithed
         */
         const s_bool&    IsHighlighted() const;
 
