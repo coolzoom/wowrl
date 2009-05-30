@@ -8,8 +8,8 @@
             <n[1,1]:UI name="" description="" icon="Icons/INV_Misc_QuestionMark.png" b:logInfo="true"/>
             <n[1,1]:CastInfo n:castTime="0.0" b:channeled="false" n:rangeMin="0" n:rangeMax="5" b:inCombat="true" target="ALL">
                 <n[1,1]:Cost type="MANA">
-                    <n[*]:Absolute n:val="0"/>
-                    <n[*]:RelativeToMax n:val="0.0"/>
+                    <n[*]:Absolute       n:val="0"/>
+                    <n[*]:RelativeToMax  n:val="0.0"/>
                     <n[*]:RelativeToBase n:val="0.0"/>
                 </Cost>
             </CastInfo>
