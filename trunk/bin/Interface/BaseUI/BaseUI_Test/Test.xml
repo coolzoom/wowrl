@@ -51,7 +51,7 @@
                 </Texture>
             </Layer>
             <Layer level="HIGHLIGHT">
-                <FontString name="$parent_Text1" font="Fonts/times.ttf" fontHeight="16" justifyH="LEFT" text="Bonjour a tous, ici John Connor. Je vous previens que la Terre va bientot exploser, que vous le vouliez ou non... Pour l'empecher, verifiez que ce TextBox marche correctement.">
+                <FontString name="$parent_Text1" font="Fonts/Calibri.ttf" fontHeight="16" justifyH="LEFT" text="Bonjour a tous, ici John Connor. Je vous previens que la Terre va bientot exploser, que vous le vouliez ou non... Pour l'empecher, verifiez que ce TextBox marche correctement.">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="RIGHT"/>
                         <Anchor point="TOPRIGHT" relativePoint="RIGHT">

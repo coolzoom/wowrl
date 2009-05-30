@@ -127,6 +127,7 @@ namespace Frost
         std::map<s_str, HealthType>     lHealthTypeList_;
         std::map<s_str, PowerType>      lPowerTypeList_;
 
+        s_ptr<Unit>                     pMouseOveredUnit_;
         std::map< s_uint, s_ptr<Unit> > lSelectedUnitList_;
 
         std::vector<s_str> lSchoolList_;
