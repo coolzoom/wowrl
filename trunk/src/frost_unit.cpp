@@ -18,6 +18,7 @@
 #include "frost_healthtype.h"
 #include "frost_powertype.h"
 #include "frost_material.h"
+#include "frost_decal.h"
 
 using namespace std;
 
@@ -33,7 +34,7 @@ namespace Frost
     // TODO : Unit : Implémenter les buffs
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
-        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN),
+        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN), uiSelectionDecalID_(s_uint::NaN),
         mMovementType_(MOVEMENT_NONE), mJumpMovementType_(MOVEMENT_NONE),
         mLMovementType_(LMOVEMENT_NONE), bTurn_(true), fJumpHeight_(1.4f),
         fJumpDuration_(0.9f), fForwardRunSpeed_(6.5f), fForwardWalkSpeed_(2.5f),
@@ -41,10 +42,33 @@ namespace Frost
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
         pCamera_ = s_ptr<Camera>(CameraManager::GetSingleton()->CreateChasingCamera(this));
+
+        pSelectionDecal_ = s_refptr<Decal>(new Decal("Textures/UnitSelection.png"));
+        pSelectionDecal_->Attach(pNode_, false, true);
+        pSelectionDecal_->SetPosition(Vector(0, 5, 0));
+        pSelectionDecal_->SetDirection(Vector(0, -1, 0));
+        pSelectionDecal_->SetProjection(DECAL_PROJECTION_ORTHO);
+        pSelectionDecal_->SetScale(1.5f);
+        pSelectionDecal_->SetDiffuse(Color(0, 255, 0));
+        pSelectionDecal_->SetAmbient(Color(0, 255, 0));
+
+        s_refptr<Decal> pShadowDecal = s_refptr<Decal>(new Decal("Textures/UnitShadow.png"));
+        pShadowDecal->Attach(pNode_, false, true);
+        pShadowDecal->SetPosition(Vector(0, 5, 0));
+        pShadowDecal->SetDirection(Vector(0, -1, 0));
+        pShadowDecal->SetProjection(DECAL_PROJECTION_ORTHO);
+        pShadowDecal->SetScale(1.8f);
+        pShadowDecal->SetDiffuse(Color(128, 255, 255, 255));
+
+        uiShadowDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pShadowDecal.Get());
     }
 
     Unit::~Unit()
     {
+        SceneManager::GetSingleton()->RemoveDecalFromGround(uiShadowDecalID_);
+        pSelectionDecal_.SetNull();
+        if (uiSelectionDecalID_.IsValid())
+            SceneManager::GetSingleton()->RemoveDecalFromGround(uiSelectionDecalID_);
         CameraManager::GetSingleton()->DeleteCamera(pCamera_);
         SceneManager::GetSingleton()->DeleteNode(pNode_);
         pGlue_.Delete();
@@ -210,7 +234,12 @@ namespace Frost
             return vReturn;
         }
         else
+        {
+            Error(CLASS_NAME,
+                "Unkown stat : \""+sStatName+"\" for "+sName_+"."
+            );
             return s_var(NULL);
+        }
     }
 
     void Unit::SetLevel( const s_uint& uiLevel )
@@ -223,6 +252,27 @@ namespace Frost
         return uiLevel_;
     }
 
+    void Unit::NotifyHighlighted( const s_bool& bHighlighted )
+    {
+        if (bHighlighted != bHighlighted_)
+        {
+            bHighlighted_ = bHighlighted;
+            if (bHighlighted_)
+            {
+                pBodyModel_->GetMaterial()->SetSelfIllumination(Color(128, 128, 128));
+            }
+            else
+            {
+                pBodyModel_->GetMaterial()->SetSelfIllumination(Color(0, 0, 0));
+            }
+        }
+    }
+
+    const s_bool& Unit::IsHighlighted() const
+    {
+        return bHighlighted_;
+    }
+
     void Unit::NotifySelected( const s_bool& bSelected )
     {
         if (bSelected != bSelected_)
@@ -230,11 +280,12 @@ namespace Frost
             bSelected_ = bSelected;
             if (bSelected_)
             {
-                pBodyModel_->GetMaterial()->SetSelfIllumination(Color(255, 255, 255));
+                uiSelectionDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pSelectionDecal_.Get());
             }
             else
             {
-                pBodyModel_->GetMaterial()->SetSelfIllumination(Color(0, 0, 0));
+                SceneManager::GetSingleton()->RemoveDecalFromGround(uiSelectionDecalID_);
+                uiSelectionDecalID_.SetNaN();
             }
         }
     }
