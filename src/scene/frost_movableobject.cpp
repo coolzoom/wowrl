@@ -24,7 +24,6 @@ namespace Frost
         pNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode(
             Ogre::Vector3::ZERO
         );
-        //pNode_->setDirection(Ogre::Vector3::UNIT_X);
         pNode_->setFixedYawAxis(true);
     }
 
@@ -63,12 +62,20 @@ namespace Frost
         pNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode(
             Vector::FrostToOgre(mPosition)
         );
-        //pNode_->setDirection(Ogre::Vector3::UNIT_X);
         pNode_->setFixedYawAxis(true);
     }
 
     MovableObject::~MovableObject()
     {
+        UnlockTracking();
+        vector< s_ptr<MovableObject> >::iterator iter = lLookingAtList_.begin();
+        while (iter != lLookingAtList_.end())
+        {
+            s_ptr<MovableObject> pObj = (*iter);
+            iter = lLookingAtList_.erase(iter);
+            pObj->UnlockTracking();
+        }
+
         Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->destroySceneNode(
             pNode_.Get()
         );
@@ -160,7 +167,47 @@ namespace Frost
 
         bTrackedPointRelative_ = bTrackedPointRelative;
         mTrackedPoint_ = mTrackedPoint;
+
         bTracks_ = true;
+    }
+
+    void MovableObject::LookAt( s_ptr<MovableObject> pObject )
+    {
+        UnlockOrbiting();
+
+        if (pLookAtObject_)
+            pLookAtObject_->NotifyLookedAt(this, false);
+
+        pLookAtObject_ = pObject;
+
+        if (pLookAtObject_)
+        {
+            Log(pNode_->getName()+" looks at "+pLookAtObject_->pNode_->getName());
+            pLookAtObject_->NotifyLookedAt(this, true);
+            bTracks_ = true;
+        }
+        else
+            bTracks_ = false;
+    }
+
+    void MovableObject::NotifyLookedAt( s_ptr<MovableObject> pObject, const s_bool& bLookingAt )
+    {
+        if (bLookingAt)
+        {
+            if (!VECTORFIND(pObject, lLookingAtList_))
+            {
+                lLookingAtList_.push_back(pObject);
+            }
+        }
+        else
+        {
+            vector< s_ptr<MovableObject> >::iterator iter;
+            iter = find(lLookingAtList_.begin(), lLookingAtList_.end(), pObject);
+            if (iter != lLookingAtList_.end())
+            {
+                lLookingAtList_.erase(iter);
+            }
+        }
     }
 
     void MovableObject::OrbitAround( const Vector &mOrbitCenter, const s_bool& bOrbitCenterRelative )
@@ -275,8 +322,12 @@ namespace Frost
     void MovableObject::UnlockTracking()
     {
         bTracks_ = false;
+        if (pLookAtObject_)
+        {
+            pLookAtObject_->NotifyLookedAt(this, false);
+            pLookAtObject_ = NULL;
+        }
     }
-
 
     const s_bool& MovableObject::IsOrbiting() const
     {
@@ -335,15 +386,25 @@ namespace Frost
 
         if (bTracks_)
         {
-            if (bTrackedPointRelative_)
+            if (pLookAtObject_)
             {
-                if (pParent_)
-                    pNode_->lookAt(Vector::FrostToOgre(mTrackedPoint_), Ogre::Node::TS_PARENT);
-                else
-                    pNode_->lookAt(Vector::FrostToOgre(mTrackedPoint_), Ogre::Node::TS_PARENT);
+                pNode_->lookAt(
+                    pLookAtObject_->pNode_->_getDerivedPosition(),
+                    Ogre::Node::TS_WORLD
+                );
             }
             else
-                pNode_->lookAt(Vector::FrostToOgre(mTrackedPoint_), Ogre::Node::TS_WORLD);
+            {
+                if (bTrackedPointRelative_)
+                {
+                    if (pParent_)
+                        pNode_->lookAt(Vector::FrostToOgre(mTrackedPoint_), Ogre::Node::TS_PARENT);
+                    else
+                        pNode_->lookAt(Vector::FrostToOgre(mTrackedPoint_), Ogre::Node::TS_PARENT);
+                }
+                else
+                    pNode_->lookAt(Vector::FrostToOgre(mTrackedPoint_), Ogre::Node::TS_WORLD);
+            }
         }
     }
 

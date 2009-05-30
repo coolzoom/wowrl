@@ -56,6 +56,18 @@ namespace Frost
         */
         virtual void          LookAt(const Vector& mTrackedPoint, const s_bool& bTrackedPointRelative = false);
 
+        /// Orientates the object to look at another object.
+        /** \param pObject The object to look at
+        *   \note Disables orbiting, enables tracking.
+        */
+        virtual void          LookAt(s_ptr<MovableObject> pObject);
+
+        /// Tells this object that it is being looked at by another one.
+        /** \param pObject    The object that looks at this one
+        *   \param bLookingAt 'true' is the object is looking at this one
+        */
+        virtual void          NotifyLookedAt(s_ptr<MovableObject> pObject, const s_bool& bLookingAt);
+
         /// Makes the object rotate around a point in the space.
         /** \param mOrbitCenter         The point around which the object will orbit
         *   \param bOrbitCenterRelative 'true' if the point is relative to this object's parent
@@ -183,6 +195,9 @@ namespace Frost
         void  RemoveOrbitNode_();
 
         s_ptr<MovableObject>    pParent_;
+        s_ptr<MovableObject>    pLookAtObject_;
+
+        std::vector< s_ptr<MovableObject> > lLookingAtList_;
 
         s_ptr<Ogre::SceneNode>  pNode_;
         s_ptr<Ogre::SceneNode>  pTargetNode_;
