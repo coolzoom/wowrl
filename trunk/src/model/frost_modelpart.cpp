@@ -6,8 +6,8 @@
 /*  ## : It's just a submesh.             */
 /*                                        */
 
-#include "frost_model.h"
-#include "frost_material.h"
+#include "model/frost_model.h"
+#include "material/frost_material.h"
 
 #include <OgreEntity.h>
 #include <OgreSubEntity.h>

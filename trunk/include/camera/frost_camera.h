@@ -10,7 +10,7 @@
 #define FROST_CAMERA_H
 
 #include "frost.h"
-#include "frost_movableobject.h"
+#include "scene/frost_movableobject.h"
 
 namespace Frost
 {

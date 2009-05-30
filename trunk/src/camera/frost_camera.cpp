@@ -7,8 +7,8 @@
 
 #include "camera/frost_camera.h"
 #include "frost_engine.h"
-#include "frost_pathmanager.h"
-#include "frost_path.h"
+#include "path/frost_pathmanager.h"
+#include "path/frost_path.h"
 
 #include <OgreSceneManager.h>
 #include <OgreCamera.h>

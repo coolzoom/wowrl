@@ -14,7 +14,7 @@
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_anchor.h"
 #include "gui/frost_gui_frame.h"
-#include "frost_lua.h"
+#include "lua/frost_lua.h"
 
 using namespace std;
 

@@ -7,8 +7,8 @@
 
 #include "gui/frost_gui_frame.h"
 #include "gui/frost_guimanager.h"
-#include "frost_material.h"
-#include "frost_spritemanager.h"
+#include "material/frost_material.h"
+#include "gui/frost_spritemanager.h"
 
 using namespace std;
 using namespace Frost;

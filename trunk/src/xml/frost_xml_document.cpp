@@ -5,8 +5,8 @@
 /*                                        */
 /*                                        */
 
-#include "frost_xml_document.h"
-#include "frost_xml_block.h"
+#include "xml/frost_xml_document.h"
+#include "xml/frost_xml_block.h"
 
 using namespace std;
 using namespace Frost;

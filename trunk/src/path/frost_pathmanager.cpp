@@ -5,10 +5,10 @@
 /*                                        */
 /*                                        */
 
-#include "frost_pathmanager.h"
-#include "frost_path_directpath.h"
-#include "frost_path_manualpath.h"
-#include "frost_path_smoothpath.h"
+#include "path/frost_pathmanager.h"
+#include "path/frost_path_directpath.h"
+#include "path/frost_path_manualpath.h"
+#include "path/frost_path_smoothpath.h"
 
 using namespace std;
 

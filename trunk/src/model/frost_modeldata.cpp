@@ -5,13 +5,13 @@
 /*                                        */
 /*                                        */
 
-#include "frost_modeldata.h"
+#include "model/frost_modeldata.h"
 
-#include "frost_model.h"
-#include "frost_animmanager.h"
-#include "frost_modelstructs.h"
-#include "frost_materialmanager.h"
-#include "frost_material.h"
+#include "model/frost_model.h"
+#include "model/frost_animmanager.h"
+#include "model/frost_modelstructs.h"
+#include "material/frost_materialmanager.h"
+#include "material/frost_material.h"
 
 #include <OgreBone.h>
 #include <OgreMeshManager.h>

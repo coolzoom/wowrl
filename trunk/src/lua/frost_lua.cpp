@@ -5,7 +5,7 @@
 /*                                        */
 
 
-#include "frost_lua.h"
+#include "lua/frost_lua.h"
 
 #include "gui/frost_gui_uiobject.h"
 #include "gui/frost_gui_frame.h"
@@ -17,9 +17,9 @@
 #include "gui/frost_gui_statusbar.h"
 #include "gui/frost_gui_fontstring.h"
 #include "gui/frost_gui_texture.h"
-#include "frost_unit.h"
-#include "frost_character.h"
-#include "frost_creature.h"
+#include "unit/frost_unit.h"
+#include "unit/frost_character.h"
+#include "unit/frost_creature.h"
 
 using namespace std;
 using namespace Frost;

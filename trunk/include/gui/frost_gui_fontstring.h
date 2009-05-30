@@ -11,7 +11,7 @@
 
 #include "frost.h"
 #include "gui/frost_gui_layeredregion.h"
-#include "frost_text.h"
+#include "gui/frost_text.h"
 
 namespace Frost
 {

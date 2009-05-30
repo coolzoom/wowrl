@@ -10,12 +10,12 @@
 /*  doodads, ...                          */
 /*                                        */
 
-#include "frost_model.h"
+#include "model/frost_model.h"
 
-#include "frost_modeldata.h"
-#include "frost_animmanager.h"
-#include "frost_material.h"
-#include "frost_materialmanager.h"
+#include "model/frost_modeldata.h"
+#include "model/frost_animmanager.h"
+#include "material/frost_material.h"
+#include "material/frost_materialmanager.h"
 
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>

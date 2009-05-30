@@ -95,8 +95,7 @@ namespace Frost
         }
         else if (mEvent.GetName() == "MOUSE_MOVED")
         {
-            if (InputManager::GetSingleton()->MouseIsDown(MOUSE_LEFT) ||
-                InputManager::GetSingleton()->MouseIsDown(MOUSE_RIGHT))
+            if (InputManager::GetSingleton()->MouseIsDown(MOUSE_RIGHT))
             {
                 Yaw(-mEvent[0].GetF()/s_float(Engine::GetSingleton()->GetScreenWidth()));
                 Pitch(-mEvent[1].GetF()/s_float(Engine::GetSingleton()->GetScreenHeight()));

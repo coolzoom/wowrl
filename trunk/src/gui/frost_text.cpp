@@ -5,13 +5,13 @@
 /*                                        */
 /*                                        */
 
-#include "frost_text.h"
+#include "gui/frost_text.h"
 
-#include "frost_fontmanager.h"
-#include "frost_spritemanager.h"
-#include "frost_materialmanager.h"
-#include "frost_material.h"
-#include "frost_sprite.h"
+#include "gui/frost_fontmanager.h"
+#include "gui/frost_spritemanager.h"
+#include "material/frost_materialmanager.h"
+#include "material/frost_material.h"
+#include "gui/frost_sprite.h"
 
 #include <OgreFont.h>
 #include <OgreFontManager.h>

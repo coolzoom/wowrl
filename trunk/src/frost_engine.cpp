@@ -6,19 +6,19 @@
 #include "frost_engine.h"
 
 #include "frost_inputmanager.h"
-#include "frost_fontmanager.h"
+#include "gui/frost_fontmanager.h"
 #include "gui/frost_guimanager.h"
 #include "frost_localemanager.h"
-#include "frost_spritemanager.h"
-#include "frost_pathmanager.h"
-#include "frost_modelmanager.h"
+#include "gui/frost_spritemanager.h"
+#include "path/frost_pathmanager.h"
+#include "model/frost_modelmanager.h"
 #include "camera/frost_cameramanager.h"
-#include "frost_scenemanager.h"
-#include "frost_materialmanager.h"
-#include "frost_lightmanager.h"
-#include "frost_unitmanager.h"
+#include "scene/frost_scenemanager.h"
+#include "material/frost_materialmanager.h"
+#include "light/frost_lightmanager.h"
+#include "unit/frost_unitmanager.h"
 #include "camera/frost_camera.h"
-#include "frost_lua.h"
+#include "lua/frost_lua.h"
 
 #include <OgreRoot.h>
 #include <OgreRenderSystem.h>

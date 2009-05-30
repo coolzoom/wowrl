@@ -4,7 +4,7 @@
 /*               Lua source               */
 /*                                        */
 
-#include "frost_lua.h"
+#include "lua/frost_lua.h"
 
 #include "frost_inputmanager.h"
 #include "frost_localemanager.h"
