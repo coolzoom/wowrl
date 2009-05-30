@@ -255,7 +255,14 @@ namespace Frost
         *   \note Must be called between SpriteManager::Begin() and
         *         SpriteManager::End().
         */
-        void          Render(const s_float& fX, const s_float& fY);
+        void           Render(const s_float& fX, const s_float& fY);
+
+        /// Updates this Text's cache.
+        /** \note Automatically done by Render().<br>
+        *         Only use this method if you need it to
+        *         be updated sooner.
+        */
+        void           Update();
 
         static const s_str CLASS_NAME;
 
