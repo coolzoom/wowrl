@@ -7,10 +7,10 @@
 /*  model creation and loading.           */
 /*                                        */
 
-#include "frost_modelmanager.h"
-#include "frost_animmanager.h"
-#include "frost_model.h"
-#include "frost_modeldata.h"
+#include "model/frost_modelmanager.h"
+#include "model/frost_animmanager.h"
+#include "model/frost_model.h"
+#include "model/frost_modeldata.h"
 
 using namespace std;
 

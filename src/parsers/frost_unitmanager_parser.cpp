@@ -5,14 +5,14 @@
 /*                                        */
 /*                                        */
 
-#include "frost_unitmanager.h"
+#include "unit/frost_unitmanager.h"
 
-#include "frost_character.h"
-#include "frost_creature.h"
-#include "frost_healthtype.h"
-#include "frost_powertype.h"
-#include "frost_modelmanager.h"
-#include "frost_xml_document.h"
+#include "unit/frost_character.h"
+#include "unit/frost_creature.h"
+#include "unit/frost_healthtype.h"
+#include "unit/frost_powertype.h"
+#include "model/frost_modelmanager.h"
+#include "xml/frost_xml_document.h"
 
 using namespace std;
 

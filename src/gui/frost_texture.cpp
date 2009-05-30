@@ -7,9 +7,9 @@
 
 #include "gui/frost_gui_layeredregion.h"
 #include "gui/frost_guimanager.h"
-#include "frost_materialmanager.h"
-#include "frost_material.h"
-#include "frost_spritemanager.h"
+#include "material/frost_materialmanager.h"
+#include "material/frost_material.h"
+#include "gui/frost_spritemanager.h"
 
 using namespace std;
 using namespace Frost;

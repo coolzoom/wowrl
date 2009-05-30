@@ -10,9 +10,9 @@
 /*  play, pause, select, ...              */
 /*                                        */
 
-#include "frost_animmanager.h"
+#include "model/frost_animmanager.h"
 
-#include "frost_model.h"
+#include "model/frost_model.h"
 
 #include <OgreAnimationState.h>
 #include <OgreEntity.h>

@@ -12,9 +12,9 @@
 #include "gui/frost_gui_frame.h"
 #include "gui/frost_gui_texture.h"
 #include "gui/frost_gui_fontstring.h"
-#include "frost_spritemanager.h"
+#include "gui/frost_spritemanager.h"
 
-#include "frost_xml_document.h"
+#include "xml/frost_xml_document.h"
 
 using namespace std;
 

@@ -37,10 +37,10 @@
 
 */
 
-#include "frost_spritemanager.h"
-#include "frost_sprite.h"
-#include "frost_material.h"
-#include "frost_materialmanager.h"
+#include "gui/frost_spritemanager.h"
+#include "gui/frost_sprite.h"
+#include "material/frost_material.h"
+#include "material/frost_materialmanager.h"
 
 #include <OgreRoot.h>
 #include <OgreViewport.h>

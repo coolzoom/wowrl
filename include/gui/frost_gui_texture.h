@@ -12,7 +12,7 @@
 #include "frost.h"
 #include "gui/frost_gui_layeredregion.h"
 #include "gui/frost_gui_gradient.h"
-#include "frost_sprite.h"
+#include "gui/frost_sprite.h"
 
 namespace Frost
 {

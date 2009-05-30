@@ -6,7 +6,7 @@
 /*                                        */
 
 #include "camera/frost_camera_chasingcamera.h"
-#include "frost_unit.h"
+#include "unit/frost_unit.h"
 #include "frost_inputmanager.h"
 
 using namespace std;
