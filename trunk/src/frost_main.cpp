@@ -174,14 +174,21 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 
             // Populate the world !
 
-            // Create a Unit
-            pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
+            // Create Units
             pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
             pChar->SetClass("MAGE");
             pChar->SetLevel(51);
             pChar->SetStat("SPIRIT", s_int(50));
             pChar->SetStat("INTELLECT", s_int(50));
             pModel = pChar->GetBodyModel().Get();
+
+            pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
+            pChar2->Teleport(Vector(0, 0, -5));
+            pChar2->LookAtUnit(pChar);
+            pChar2->SetClass("MAGE");
+            pChar2->SetLevel(51);
+            pChar2->SetStat("SPIRIT", s_int(50));
+            pChar2->SetStat("INTELLECT", s_int(50));
 
             switch (mCamType)
             {
