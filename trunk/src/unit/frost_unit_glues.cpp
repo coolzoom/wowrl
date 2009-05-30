@@ -18,7 +18,7 @@ namespace Frost
 
     LuaUnit::LuaUnit( lua_State* pLua )
     {
-        s_uint uiID = (uint)lua_tonumber(pLua, 1);
+        s_uint uiID = (uint)lua_tonumber(pLua, -1);
 
         lua_newtable(pLua);
         iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);

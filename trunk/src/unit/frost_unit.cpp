@@ -823,9 +823,13 @@ namespace Frost
     void Unit::Update( const s_float& fDelta )
     {
         if (pHealthType_)
+        {
             pHealthType_->Update(fDelta);
+        }
         if (pPowerType_)
+        {
             pPowerType_->Update(fDelta);
+        }
 
         UpdateMovement_(fDelta);
 
