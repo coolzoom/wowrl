@@ -18,7 +18,7 @@
 #include <gtkmm/iconfactory.h>
 
 #include "frost_te_gtkogrewindow.h"
-#include "frost_sprite.h"
+#include "gui/frost_sprite.h"
 
 #include <OgreRoot.h>
 

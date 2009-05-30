@@ -8,12 +8,12 @@
 #include <gdkmm/cursor.h>
 
 #include "frost_timemanager.h"
-#include "frost_materialmanager.h"
-#include "frost_spritemanager.h"
-#include "frost_sprite.h"
-#include "frost_material.h"
+#include "material/frost_materialmanager.h"
+#include "gui/frost_spritemanager.h"
+#include "gui/frost_sprite.h"
+#include "material/frost_material.h"
 #include "frost_timers.h"
-#include "frost_decal.h"
+#include "material/frost_decal.h"
 
 #include <OgreHardwareBufferManager.h>
 #include <OgreMeshManager.h>
