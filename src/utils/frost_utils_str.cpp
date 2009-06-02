@@ -811,7 +811,7 @@ namespace Frost
         uiPos_ = uiPos;
     }
 
-    string_element& s_str::iterator::operator * ()
+    string_element& s_str::iterator::operator * () const
     {
         return (*pParent_)[uiPos_];
     }
@@ -824,7 +824,7 @@ namespace Frost
             if (iOffset > 0)
             {
                 uiNewPos += s_uint(iOffset);
-                if (uiNewPos > pParent_->Length())
+                if (uiNewPos >= pParent_->Length())
                     uiNewPos = s_uint::NaN;
             }
             if (iOffset < 0)
@@ -846,7 +846,7 @@ namespace Frost
             if (iOffset < 0)
             {
                 uiNewPos += s_uint(iOffset);
-                if (uiNewPos > pParent_->Length())
+                if (uiNewPos >= pParent_->Length())
                     uiNewPos = s_uint::NaN;
             }
             if (iOffset > 0)
@@ -873,35 +873,44 @@ namespace Frost
 
     s_str::iterator& s_str::iterator::operator ++ ()
     {
-        ++uiPos_;
-        if (uiPos_ == pParent_->Length())
-            uiPos_ = s_uint::NaN;
+        if (pParent_)
+        {
+            ++uiPos_;
+            if (uiPos_ == pParent_->Length())
+                uiPos_ = s_uint::NaN;
+        }
 
         return *this;
     }
 
     s_str::iterator s_str::iterator::operator ++ (int)
     {
-        uiPos_++;
-        if (uiPos_ == pParent_->Length())
-            uiPos_ = s_uint::NaN;
+        if (pParent_)
+        {
+            uiPos_++;
+            if (uiPos_ == pParent_->Length())
+                uiPos_ = s_uint::NaN;
+        }
 
         return *this;
     }
 
     s_str::iterator& s_str::iterator::operator -- ()
     {
-        if (uiPos_.IsValid())
+        if (pParent_)
         {
-            if (uiPos_ != 0)
-                --uiPos_;
-        }
-        else
-        {
-            if (pParent_->IsEmpty())
-                uiPos_ = s_uint::NaN;
+            if (uiPos_.IsValid())
+            {
+                if (uiPos_ != 0)
+                    --uiPos_;
+            }
             else
-                uiPos_ = pParent_->Length()-1;
+            {
+                if (pParent_->IsEmpty())
+                    uiPos_ = s_uint::NaN;
+                else
+                    uiPos_ = pParent_->Length()-1;
+            }
         }
 
         return *this;
@@ -909,17 +918,20 @@ namespace Frost
 
     s_str::iterator s_str::iterator::operator -- (int)
     {
-        if (uiPos_.IsValid())
+        if (pParent_)
         {
-            if (uiPos_ != 0)
-                uiPos_--;
-        }
-        else
-        {
-            if (pParent_->IsEmpty())
-                uiPos_ = s_uint::NaN;
+            if (uiPos_.IsValid())
+            {
+                if (uiPos_ != 0)
+                    uiPos_--;
+            }
             else
-                uiPos_ = pParent_->Length()-1;
+            {
+                if (pParent_->IsEmpty())
+                    uiPos_ = s_uint::NaN;
+                else
+                    uiPos_ = pParent_->Length()-1;
+            }
         }
 
         return *this;
@@ -954,7 +966,7 @@ namespace Frost
         uiPos_ = uiPos;
     }
 
-    const string_element& s_str::const_iterator::operator * ()
+    const string_element& s_str::const_iterator::operator * () const
     {
         return (*pParent_)[uiPos_];
     }
@@ -967,7 +979,7 @@ namespace Frost
             if (iOffset > 0)
             {
                 uiNewPos += s_uint(iOffset);
-                if (uiNewPos > pParent_->Length())
+                if (uiNewPos >= pParent_->Length())
                     uiNewPos = s_uint::NaN;
             }
             if (iOffset < 0)
@@ -990,7 +1002,7 @@ namespace Frost
             if (iOffset < 0)
             {
                 uiNewPos += s_uint(iOffset);
-                if (uiNewPos > pParent_->Length())
+                if (uiNewPos >= pParent_->Length())
                     uiNewPos = s_uint::NaN;
             }
             if (iOffset > 0)
@@ -1017,35 +1029,44 @@ namespace Frost
 
     s_str::const_iterator& s_str::const_iterator::operator ++ ()
     {
-        ++uiPos_;
-        if (uiPos_ == pParent_->Length())
-            uiPos_ = s_uint::NaN;
+        if (pParent_)
+        {
+            ++uiPos_;
+            if (uiPos_ == pParent_->Length())
+                uiPos_ = s_uint::NaN;
+        }
 
         return *this;
     }
 
     s_str::const_iterator s_str::const_iterator::operator ++ (int)
     {
-        uiPos_++;
-        if (uiPos_ == pParent_->Length())
-            uiPos_ = s_uint::NaN;
+        if (pParent_)
+        {
+            uiPos_++;
+            if (uiPos_ == pParent_->Length())
+                uiPos_ = s_uint::NaN;
+        }
 
         return *this;
     }
 
     s_str::const_iterator& s_str::const_iterator::operator -- ()
     {
-        if (uiPos_.IsValid())
+        if (pParent_)
         {
-            if (uiPos_ != 0)
-                --uiPos_;
-        }
-        else
-        {
-            if (pParent_->IsEmpty())
-                uiPos_ = s_uint::NaN;
+            if (uiPos_.IsValid())
+            {
+                if (uiPos_ != 0)
+                    --uiPos_;
+            }
             else
-                uiPos_ = pParent_->Length()-1;
+            {
+                if (pParent_->IsEmpty())
+                    uiPos_ = s_uint::NaN;
+                else
+                    uiPos_ = pParent_->Length()-1;
+            }
         }
 
         return *this;
@@ -1053,17 +1074,20 @@ namespace Frost
 
     s_str::const_iterator s_str::const_iterator::operator -- (int)
     {
-        if (uiPos_.IsValid())
+        if (pParent_)
         {
-            if (uiPos_ != 0)
-                uiPos_--;
-        }
-        else
-        {
-            if (pParent_->IsEmpty())
-                uiPos_ = s_uint::NaN;
+            if (uiPos_.IsValid())
+            {
+                if (uiPos_ != 0)
+                    uiPos_--;
+            }
             else
-                uiPos_ = pParent_->Length()-1;
+            {
+                if (pParent_->IsEmpty())
+                    uiPos_ = s_uint::NaN;
+                else
+                    uiPos_ = pParent_->Length()-1;
+            }
         }
 
         return *this;

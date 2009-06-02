@@ -326,27 +326,32 @@ namespace Frost
                 uiPos_ = uiPos;
                 if (pParent)
                 {
-                    if (uiPos_ > pParent_->GetSize())
+                    if (uiPos_ >= pParent_->GetSize())
                         uiPos_ = s_uint::NaN;
                 }
             }
 
             s_bool IsValid(s_ctnr<T>* pParent = NULL) const
             {
-                if (uiPos_ > pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
-
-                if (pParent != NULL)
-                    return ((pParent_ == pParent) && uiPos_.IsValid());
+                if (pParent_)
+                {
+                    if (pParent != NULL)
+                        return ((pParent_ == pParent) && uiPos_.IsValid());
+                    else
+                        return (uiPos_.IsValid() && uiPos_ < pParent_->GetSize());
+                }
                 else
-                    return uiPos_.IsValid();
+                    return false;
             }
 
-            T& operator * ()
+            T& operator * () const
             {
-                if (uiPos_ > pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
                 return (*pParent_)[uiPos_];
+            }
+
+            T* operator -> () const
+            {
+                return &(*pParent_)[uiPos_];
             }
 
             iterator operator + ( const s_int& iOffset ) const
@@ -357,7 +362,7 @@ namespace Frost
                     if (iOffset > 0)
                     {
                         uiNewPos += s_uint(iOffset);
-                        if (uiNewPos > pParent_->GetSize())
+                        if (uiNewPos >= pParent_->GetSize())
                             uiNewPos = s_uint::NaN;
                     }
                     if (iOffset < 0)
@@ -380,7 +385,7 @@ namespace Frost
                     if (iOffset < 0)
                     {
                         uiNewPos += s_uint(iOffset);
-                        if (uiNewPos > pParent_->GetSize())
+                        if (uiNewPos >= pParent_->GetSize())
                             uiNewPos = s_uint::NaN;
                     }
                     if (iOffset > 0)
@@ -407,35 +412,44 @@ namespace Frost
 
             iterator& iterator::operator ++ ()
             {
-                ++uiPos_;
-                if (uiPos_ >= pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_)
+                {
+                    ++uiPos_;
+                    if (uiPos_ >= pParent_->GetSize())
+                        uiPos_ = s_uint::NaN;
+                }
 
                 return *this;
             }
 
             iterator iterator::operator ++ (int)
             {
-                uiPos_++;
-                if (uiPos_ >= pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_)
+                {
+                    uiPos_++;
+                    if (uiPos_ >= pParent_->GetSize())
+                        uiPos_ = s_uint::NaN;
+                }
 
                 return *this;
             }
 
             iterator& iterator::operator -- ()
             {
-                if (uiPos_.IsValid())
+                if (pParent_)
                 {
-                    if (uiPos_ > 0)
-                        --uiPos_;
-                }
-                else
-                {
-                    if (pParent_->IsEmpty())
-                        uiPos_ = s_uint::NaN;
+                    if (uiPos_.IsValid())
+                    {
+                        if (uiPos_ > 0)
+                            --uiPos_;
+                    }
                     else
-                        uiPos_ = pParent_->GetSize()-1;
+                    {
+                        if (pParent_->IsEmpty())
+                            uiPos_ = s_uint::NaN;
+                        else
+                            uiPos_ = pParent_->GetSize()-1;
+                    }
                 }
 
                 return *this;
@@ -443,17 +457,20 @@ namespace Frost
 
             iterator iterator::operator -- (int)
             {
-                if (uiPos_.IsValid())
+                if (pParent_)
                 {
-                    if (uiPos_ > 0)
-                        uiPos_--;
-                }
-                else
-                {
-                    if (pParent_->IsEmpty())
-                        uiPos_ = s_uint::NaN;
+                    if (uiPos_.IsValid())
+                    {
+                        if (uiPos_ > 0)
+                            uiPos_--;
+                    }
                     else
-                        uiPos_ = pParent_->GetSize()-1;
+                    {
+                        if (pParent_->IsEmpty())
+                            uiPos_ = s_uint::NaN;
+                        else
+                            uiPos_ = pParent_->GetSize()-1;
+                    }
                 }
 
                 return *this;
@@ -503,27 +520,30 @@ namespace Frost
                 uiPos_ = uiPos;
                 if (pParent)
                 {
-                    if (uiPos_ > pParent_->GetSize())
+                    if (uiPos_ >= pParent_->GetSize())
                         uiPos_ = s_uint::NaN;
                 }
             }
 
             s_bool IsValid(const s_ctnr<T>* pParent = NULL) const
             {
-                if (uiPos_ > pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
-
-                if (pParent != NULL)
-                    return ((pParent_ == pParent) && uiPos_.IsValid());
-                else
-                    return uiPos_.IsValid();
+                if (pParent_)
+                {
+                    if (pParent != NULL)
+                        return ((pParent_ == pParent) && uiPos_.IsValid());
+                    else
+                        return (uiPos_.IsValid() && uiPos_ < pParent_->GetSize());
+                }
             }
 
-            const T& operator * ()
+            const T& operator * () const
             {
-                if (uiPos_ > pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
                 return (*pParent_)[uiPos_];
+            }
+
+            const T* operator -> () const
+            {
+                return &(*pParent_)[uiPos_];
             }
 
             const_iterator operator + ( const s_int& iOffset ) const
@@ -534,7 +554,7 @@ namespace Frost
                     if (iOffset > 0)
                     {
                         uiNewPos += s_uint(iOffset);
-                        if (uiNewPos > pParent_->GetSize())
+                        if (uiNewPos >= pParent_->GetSize())
                             uiNewPos = s_uint::NaN;
                     }
                     if (iOffset < 0)
@@ -557,7 +577,7 @@ namespace Frost
                     if (iOffset < 0)
                     {
                         uiNewPos += s_uint(iOffset);
-                        if (uiNewPos > pParent_->GetSize())
+                        if (uiNewPos >= pParent_->GetSize())
                             uiNewPos = s_uint::NaN;
                     }
                     if (iOffset > 0)
@@ -584,35 +604,44 @@ namespace Frost
 
             const_iterator& const_iterator::operator ++ ()
             {
-                ++uiPos_;
-                if (uiPos_ >= pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_)
+                {
+                    ++uiPos_;
+                    if (uiPos_ >= pParent_->GetSize())
+                        uiPos_ = s_uint::NaN;
+                }
 
                 return *this;
             }
 
             const_iterator const_iterator::operator ++ (int)
             {
-                uiPos_++;
-                if (uiPos_ >= pParent_->GetSize())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_)
+                {
+                    uiPos_++;
+                    if (uiPos_ >= pParent_->GetSize())
+                        uiPos_ = s_uint::NaN;
+                }
 
                 return *this;
             }
 
             const_iterator& const_iterator::operator -- ()
             {
-                if (uiPos_.IsValid())
+                if (pParent_)
                 {
-                    if (uiPos_ > 0)
-                        --uiPos_;
-                }
-                else
-                {
-                    if (pParent_->IsEmpty())
-                        uiPos_ = s_uint::NaN;
+                    if (uiPos_.IsValid())
+                    {
+                        if (uiPos_ > 0)
+                            --uiPos_;
+                    }
                     else
-                        uiPos_ = pParent_->GetSize()-1;
+                    {
+                        if (pParent_->IsEmpty())
+                            uiPos_ = s_uint::NaN;
+                        else
+                            uiPos_ = pParent_->GetSize()-1;
+                    }
                 }
 
                 return *this;
@@ -620,17 +649,20 @@ namespace Frost
 
             const_iterator const_iterator::operator -- (int)
             {
-                if (uiPos_.IsValid())
+                if (pParent_)
                 {
-                    if (uiPos_ > 0)
-                        uiPos_--;
-                }
-                else
-                {
-                    if (pParent_->IsEmpty())
-                        uiPos_ = s_uint::NaN;
+                    if (uiPos_.IsValid())
+                    {
+                        if (uiPos_ > 0)
+                            uiPos_--;
+                    }
                     else
-                        uiPos_ = pParent_->GetSize()-1;
+                    {
+                        if (pParent_->IsEmpty())
+                            uiPos_ = s_uint::NaN;
+                        else
+                            uiPos_ = pParent_->GetSize()-1;
+                    }
                 }
 
                 return *this;

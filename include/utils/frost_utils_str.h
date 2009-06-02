@@ -417,7 +417,7 @@ namespace Frost
             iterator();
             iterator(s_str* pParent, const s_uint& uiPos);
 
-            string_element& operator * ();
+            string_element& operator * () const;
             iterator  operator + (const s_int& iOffset) const;
             iterator  operator - (const s_int& iOffset) const;
             s_int     operator - (const iterator& iter) const;
@@ -445,7 +445,7 @@ namespace Frost
             const_iterator();
             const_iterator(const s_str* pParent, const s_uint& uiPos);
 
-            const string_element& operator * ();
+            const string_element& operator * () const;
             const_iterator  operator + (const s_int& iOffset) const;
             const_iterator  operator - (const s_int& iOffset) const;
             s_int           operator - (const const_iterator& iter) const;
