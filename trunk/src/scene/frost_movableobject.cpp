@@ -68,11 +68,11 @@ namespace Frost
     MovableObject::~MovableObject()
     {
         UnlockTracking();
-        vector< s_ptr<MovableObject> >::iterator iter = lLookingAtList_.begin();
-        while (iter != lLookingAtList_.end())
+        s_ctnr< s_ptr<MovableObject> >::iterator iter = lLookingAtList_.Begin();
+        while (iter != lLookingAtList_.End())
         {
             s_ptr<MovableObject> pObj = (*iter);
-            iter = lLookingAtList_.erase(iter);
+            iter = lLookingAtList_.Erase(iter);
             pObj->UnlockTracking();
         }
 
@@ -194,18 +194,17 @@ namespace Frost
     {
         if (bLookingAt)
         {
-            if (!VECTORFIND(pObject, lLookingAtList_))
+            if (!lLookingAtList_.Find(pObject))
             {
-                lLookingAtList_.push_back(pObject);
+                lLookingAtList_.PushBack(pObject);
             }
         }
         else
         {
-            vector< s_ptr<MovableObject> >::iterator iter;
-            iter = find(lLookingAtList_.begin(), lLookingAtList_.end(), pObject);
-            if (iter != lLookingAtList_.end())
+            s_ctnr< s_ptr<MovableObject> >::iterator iter = lLookingAtList_.FindIter(pObject);
+            if (iter != lLookingAtList_.End())
             {
-                lLookingAtList_.erase(iter);
+                lLookingAtList_.Erase(iter);
             }
         }
     }

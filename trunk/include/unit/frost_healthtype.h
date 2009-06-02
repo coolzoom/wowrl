@@ -28,7 +28,7 @@ namespace Frost
         s_float         fRegenTickDuration;
         s_float         fRegenRate;
 
-        std::vector<s_str> lDefinedScriptList;
+        s_ctnr<s_str>   lDefinedScriptList;
     };
 
     /// Handles a Unit's health.

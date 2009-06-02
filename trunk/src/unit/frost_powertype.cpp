@@ -28,7 +28,7 @@ namespace Frost
 
     void PowerTypeInstance::On( const s_str& sScriptName, s_ptr<Event> pEvent )
     {
-        if (VECTORFIND(sScriptName, pParent_->lDefinedScriptList))
+        if (pParent_->lDefinedScriptList.Find(sScriptName))
         {
             s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
 

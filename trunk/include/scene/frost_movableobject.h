@@ -197,7 +197,7 @@ namespace Frost
         s_ptr<MovableObject>    pParent_;
         s_ptr<MovableObject>    pLookAtObject_;
 
-        std::vector< s_ptr<MovableObject> > lLookingAtList_;
+        s_ctnr< s_ptr<MovableObject> > lLookingAtList_;
 
         s_ptr<Ogre::SceneNode>  pNode_;
         s_ptr<Ogre::SceneNode>  pTargetNode_;

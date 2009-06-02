@@ -76,8 +76,8 @@ int LuaUIObject::_IsObjectType( lua_State* pLua )
     {
         s_bool bIsType = false;
         s_str sType = mFunc.Get(0)->GetS();
-        const vector<s_str>& lType = pParent_->GetObjectTypeList();
-        vector<s_str>::const_iterator iterType;
+        const s_ctnr<s_str>& lType = pParent_->GetObjectTypeList();
+        s_ctnr<s_str>::const_iterator iterType;
         foreach (iterType, lType)
         {
             if (sType == *iterType)

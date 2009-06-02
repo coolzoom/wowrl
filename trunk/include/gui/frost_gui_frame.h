@@ -151,7 +151,7 @@ namespace Frost
             /// Returns the child list.
             /** \return The child list
             */
-            std::vector< s_ptr<Frame> > GetChildren();
+            s_ctnr< s_ptr<Frame> > GetChildren();
 
             /// Calculates effective alpha.
             /** \return Effective alpha (alpha*parent->alpha)
@@ -287,7 +287,7 @@ namespace Frost
             /// Tels this Frame to react to mouse drag.
             /** \param lButtonList The list of mouse button allowed
             */
-            void                RegisterForDrag(const std::vector<s_str>& lButtonList);
+            void                RegisterForDrag(const s_ctnr<s_str>& lButtonList);
 
             /// Sets if this Frame is clamped to screen.
             /** \param bIsClampedToScreen 'true' if this Frame is clamped to screen

@@ -21,7 +21,7 @@ const s_str FontString::CLASS_NAME = "GUI::FontString";
 FontString::FontString() : LayeredRegion()
 {
     mObjectType_ = OJBECT_TYPE_FONTSTRING;
-    lType_.push_back("FontString");
+    lType_.PushBack("FontString");
 
     mTextColor_   = Color::WHITE;
     mShadowColor_ = Color::BLACK;
@@ -184,7 +184,7 @@ void FontString::SetSpacing( const s_float& fSpacing )
         pText_->SetTracking(fSpacing);
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Trying to call SetSpacing on an uninitialized Texture : "+sName_+"."
         );
     }
@@ -249,7 +249,7 @@ void FontString::SetText( const s_str& sText )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Trying to call SetText on an uninitialized FontString : "+sName_+"."
         );
     }

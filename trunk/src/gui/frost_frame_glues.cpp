@@ -118,10 +118,10 @@ int LuaFrame::_EnableMouseWheel(lua_State* pLua)
 
 int LuaFrame::_GetChildren(lua_State* pLua)
 {
-    vector< s_ptr<Frame> > lChildList = pFrameParent_->GetChildren();
-    Lua::Function mFunc("Frame:GetChildren", pLua, lChildList.size());
+    s_ctnr< s_ptr<Frame> > lChildList = pFrameParent_->GetChildren();
+    Lua::Function mFunc("Frame:GetChildren", pLua, lChildList.GetSize());
 
-    vector< s_ptr<Frame> >::iterator iterChild;
+    s_ctnr< s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList)
     {
         Lunar<LuaUIObject>::push(pLua, (*iterChild)->GetGlue().Get());
@@ -413,11 +413,11 @@ int LuaFrame::_RegisterForDrag(lua_State* pLua)
     mFunc.Add(2, "button 3", Lua::TYPE_STRING, VALUE_STRING, true);
     if (mFunc.Check())
     {
-        vector<s_str> lButtonList;
+        s_ctnr<s_str> lButtonList;
         for (s_uint i; i<3; i++)
         {
             if (mFunc.IsProvided(i))
-                lButtonList.push_back(mFunc.Get(i)->GetS());
+                lButtonList.PushBack(mFunc.Get(i)->GetS());
             else
                 break;
         }
