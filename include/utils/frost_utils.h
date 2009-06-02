@@ -22,6 +22,7 @@ typedef unsigned long  ulong;
 
 #include <string>
 #include <vector>
+#include <deque>
 #include <fstream>
 #include <sstream>
 #include <map>

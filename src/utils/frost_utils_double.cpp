@@ -705,8 +705,8 @@ namespace Frost
     s_ctnr<s_double> s_double::operator, ( const s_double& dValue ) const
     {
         s_ctnr<s_double> mContainer;
-        mContainer.Push(*this);
-        mContainer.Push(dValue);
+        mContainer.PushBack(*this);
+        mContainer.PushBack(dValue);
         return mContainer;
     }
 }

@@ -56,7 +56,15 @@ namespace Frost
     *   in the standard libraries.<br>
     *   This class can be compiled to use either Unicode
     *   or ASCII characters. Just set the preprocessor
-    *   directive USE_UNICODE.
+    *   directive USE_UNICODE.<br>
+    *   <b>Note</b> : Most of Frost's base types are
+    *   slower than C++ base types. The difference is
+    *   negligible for small operations, but if you need
+    *   to do a lot of calculations (matrices, ...) it
+    *   can bloat your performances. Use prebuilt types
+    *   in this case.<br>
+    *   <b>Note 2</b> : This class is almost as efficient
+    *   as the standard std::string.
     */
     class s_str
     {
@@ -459,6 +467,12 @@ namespace Frost
 
         iterator       end();
         const_iterator end() const;
+
+        iterator       Begin();
+        const_iterator Begin() const;
+
+        iterator       End();
+        const_iterator End() const;
 
     private :
 

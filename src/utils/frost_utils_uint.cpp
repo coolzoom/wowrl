@@ -623,8 +623,8 @@ namespace Frost
     s_ctnr<s_uint> s_uint::operator, ( const s_uint& uiValue ) const
     {
         s_ctnr<s_uint> mContainer;
-        mContainer.Push(*this);
-        mContainer.Push(uiValue);
+        mContainer.PushBack(*this);
+        mContainer.PushBack(uiValue);
         return mContainer;
     }
 }

@@ -358,8 +358,8 @@ namespace Frost
     s_ctnr<s_var> s_var::operator, ( const s_var& vValue ) const
     {
         s_ctnr<s_var> mContainer;
-        mContainer.Push(*this);
-        mContainer.Push(vValue);
+        mContainer.PushBack(*this);
+        mContainer.PushBack(vValue);
         return mContainer;
     }
 
