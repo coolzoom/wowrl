@@ -229,7 +229,7 @@ namespace Frost
             /// Returns an array containing all the types of this widget.
             /** \return  An array containing all the types of this widget
             */
-            const std::vector<s_str>& GetObjectTypeList() const;
+            const s_ctnr<s_str>& GetObjectTypeList() const;
 
             /// Returns the vertical position of this widget's bottom border.
             /** \return The vertical position of this widget's bottom border
@@ -360,7 +360,7 @@ namespace Frost
 
             s_ptr<LuaUIObject> pGlue_;
 
-            std::vector<s_str> lType_;
+            s_ctnr<s_str> lType_;
 
             std::map<AnchorPoint, Anchor> lAnchorList_;
             s_array<s_bool, 4>            lDefinedBorderList_;

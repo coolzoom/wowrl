@@ -20,7 +20,7 @@ const s_str Texture::CLASS_NAME = "GUI::Texture";
 Texture::Texture() : LayeredRegion()
 {
     mObjectType_ = OJBECT_TYPE_TEXTURE;
-    lType_.push_back("Texture");
+    lType_.PushBack("Texture");
 }
 
 Texture::~Texture()
@@ -81,7 +81,7 @@ const Color& Texture::GetVertexColor() const
         return pSprite_->GetColor();
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Trying to call GetVertexColor on an uninitialized Texture : "+sName_+"."
         );
         return Color::NaN;
@@ -100,7 +100,7 @@ void Texture::SetBlendMode( TextureBlendMode mBlendMode )
 
 void Texture::SetBlendMode( const s_str& sBlendMode )
 {
-    Warning(lType_.back(),
+    Warning(lType_.Back(),
         "Texture::SetBlendMode is not yet implemented."
     );
     if (sBlendMode == "BLEND")
@@ -115,7 +115,7 @@ void Texture::SetBlendMode( const s_str& sBlendMode )
         mBlendMode_ = BLEND_NONE;
     else
     {
-        Warning(lType_.back(),
+        Warning(lType_.Back(),
             "Unknown blending : \""+sBlendMode+"\". Using \"BLEND\"."
         );
         mBlendMode_ = BLEND_BLEND;
@@ -131,7 +131,7 @@ void Texture::SetDesaturated( const s_bool& bIsDesaturated )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Trying to desaturate an uninitialized Texture : "+sName_+"."
         );
     }
@@ -168,7 +168,7 @@ void Texture::SetTexCoord( const s_array<s_float,4>& lCoordinates )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Trying to call SetTexCoord on an uninitialized Texture : "+sName_+"."
         );
     }
@@ -183,7 +183,7 @@ void Texture::SetTexCoord( const s_array<s_float,8>& lCoordinates )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Trying to call SetTexCoord on an uninitialized Texture : "+sName_+"."
         );
     }
@@ -208,7 +208,7 @@ void Texture::SetTexture( const s_str& sFile )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Cannot find file \""+sFile+"\". Using white texture instead."
         );
         pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
@@ -232,7 +232,7 @@ void Texture::SetVertexColor( const Color& mColor )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Trying to set vertex color of an uninitialized Texture : "+
             sName_+"."
         );

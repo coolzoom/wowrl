@@ -47,10 +47,10 @@ namespace Frost
     /// Holds informations about the model used by a character.
     struct CharacterModelInfo
     {
-        s_str               sModel;
-        std::vector<s_str>  lBodyTextureList;
-        std::vector<s_str>  lHairTextureList;
-        std::vector<s_uint> lDefaultPartList;
+        s_str          sModel;
+        s_ctnr<s_str>  lBodyTextureList;
+        s_ctnr<s_str>  lHairTextureList;
+        s_ctnr<s_uint> lDefaultPartList;
 
         static const s_str CLASS_NAME;
     };

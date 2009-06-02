@@ -197,7 +197,7 @@ namespace Frost
         }
     }
 
-    const std::vector<s_str>& UnitManager::GetSpellSchoolList()
+    const s_ctnr<s_str>& UnitManager::GetSpellSchoolList()
     {
         return lSchoolList_;
     }

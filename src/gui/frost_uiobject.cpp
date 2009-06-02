@@ -19,7 +19,7 @@ const s_str UIObject::CLASS_NAME = "GUI::UIObject";
 UIObject::UIObject()
 {
     mObjectType_ = OJBECT_TYPE_UIOBJECT;
-    lType_.push_back("UIObject");
+    lType_.PushBack("UIObject");
 
     fAlpha_ = 1.0f;
     uiAbsWidth_ = s_uint::NaN;
@@ -56,7 +56,7 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 
     sStr << sTab << "  # Name        : "        << sName_ << " ("+bReady_.GetAsString("ready", "not ready")+")\n";
     sStr << sTab << "  # ID          : "        << uiID_ << "\n";
-    sStr << sTab << "  # Type        : "        << lType_.back() << "\n";
+    sStr << sTab << "  # Type        : "        << lType_.Back() << "\n";
     if (pParent_)
     sStr << sTab << "  # Parent      : "  << pParent_->GetName() << "\n";
     else
@@ -132,7 +132,7 @@ void UIObject::SetName( const s_str& sName )
     }
     else
     {
-        Warning(lType_.back(),
+        Warning(lType_.Back(),
             "SetName() can only be called once."
         );
     }
@@ -140,10 +140,10 @@ void UIObject::SetName( const s_str& sName )
 
 const s_str& UIObject::GetObjectType() const
 {
-    return lType_.back();
+    return lType_.Back();
 }
 
-const vector<s_str>& UIObject::GetObjectTypeList() const
+const s_ctnr<s_str>& UIObject::GetObjectTypeList() const
 {
     return lType_;
 }
@@ -258,7 +258,7 @@ void UIObject::SetParent( s_ptr<UIObject> pParent )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Can't call SetParent(this)."
         );
     }
@@ -328,7 +328,7 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
     }
     else
     {
-        Error(lType_.back(),
+        Error(lType_.Back(),
             "Can't call SetAllPoints(this)."
         );
     }
@@ -518,7 +518,7 @@ void UIObject::SetID( const s_uint& uiID )
         uiID_ = uiID;
     else
     {
-        Warning(lType_.back(),
+        Warning(lType_.Back(),
             "SetID() can't be called more than once."
         );
     }

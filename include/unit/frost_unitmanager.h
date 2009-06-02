@@ -35,7 +35,7 @@ namespace Frost
         void                      DeleteUnit(s_ptr<Unit> pUnit);
 
         /// Returns the Unit associated to the provided ID.
-        /** \param uiID The ID
+        /** \param uiID The Unit's ID
         *   \return The Unit associated to the provided ID (NULL if none)
         */
         s_ptr<Unit>               GetUnitByID(const s_uint& uiID) const;
@@ -48,7 +48,7 @@ namespace Frost
         /// Returns the complete list of spell school.
         /** \return The complete list of spell school
         */
-        const std::vector<s_str>& GetSpellSchoolList();
+        const s_ctnr<s_str>&      GetSpellSchoolList();
 
         /// Returns the Class linked to the provided name.
         /** \param sClassName The name of the Class to get
@@ -130,7 +130,7 @@ namespace Frost
         s_ptr<Unit>                     pMouseOveredUnit_;
         std::map< s_uint, s_ptr<Unit> > lSelectedUnitList_;
 
-        std::vector<s_str> lSchoolList_;
+        s_ctnr<s_str> lSchoolList_;
 
         s_ptr<Lua::State> pLua_;
 

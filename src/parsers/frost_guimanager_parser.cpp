@@ -93,8 +93,8 @@ namespace Frost
             s_ptr<GUI::UIObject> pObj = this->GetUIObjectByName(sInheritance, true);
             if (pObj)
             {
-                const vector<s_str>& lFrameTypes = pFrame->GetObjectTypeList();
-                if (VECTORFIND(pObj->GetObjectType(), lFrameTypes))
+                const s_ctnr<s_str>& lFrameTypes = pFrame->GetObjectTypeList();
+                if (lFrameTypes.Find(pObj->GetObjectType()))
                 {
                     // Inherit from the other Frame
                     pFrame->CopyFrom(pObj);

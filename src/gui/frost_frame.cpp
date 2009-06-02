@@ -27,7 +27,7 @@ const s_str Strata::CLASS_NAME = "GUI::Strata";
 Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
 {
     mObjectType_ = OJBECT_TYPE_FRAME;
-    lType_.push_back("Frame");
+    lType_.PushBack("Frame");
 
     mStrata_ = STRATA_MEDIUM;
 
@@ -242,7 +242,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                 pNewChild = new StatusBar();
             else
             {
-                Warning(lType_.back(),
+                Warning(lType_.Back(),
                     "Trying to create an inherited "+pChild->GetObjectType()+" child, "
                     "but no copying code was available. Skipped."
                 );
@@ -254,7 +254,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                 pNewChild->SetName(pChild->GetName());
                 if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
                 {
-                    Warning(lType_.back(),
+                    Warning(lType_.Back(),
                         "Couldn't add an inherited child to \""+sName_+"\", because its name was already taken : \""
                         +pNewChild->GetName()+"\". Skipped."
                     );
@@ -325,7 +325,7 @@ void Frame::AddRegion( s_ptr<LayeredRegion> pRegion )
         }
         else
         {
-            Warning(lType_.back(),
+            Warning(lType_.Back(),
                 "Trying to add \""+pRegion->GetName()+"\" to \""+sName_+"\"'s children, "
                 "but it was already one of this Frame's children."
             );
@@ -345,7 +345,7 @@ void Frame::RemoveRegion( s_ptr<LayeredRegion> pRegion )
         }
         else
         {
-            Warning(lType_.back(),
+            Warning(lType_.Back(),
                 "Trying to remove \""+pRegion->GetName()+"\" from \""+sName_+"\"'s children, "
                 "but it was not one of this Frame's children."
             );
@@ -364,7 +364,7 @@ void Frame::AddChild( s_ptr<Frame> pChild )
         }
         else
         {
-            Warning(lType_.back(),
+            Warning(lType_.Back(),
                 "Trying to add \""+pChild->GetName()+"\" to \""+sName_+"\"'s children, "
                 "but it was already one of this Frame's children."
             );
@@ -384,7 +384,7 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
         }
         else
         {
-            Warning(lType_.back(),
+            Warning(lType_.Back(),
                 "Trying to remove \""+pChild->GetName()+"\" from \""+sName_+"\"'s children, "
                 "but it was not one of this Frame's children."
             );
@@ -392,13 +392,13 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
     }
 }
 
-vector< s_ptr<Frame> > Frame::GetChildren()
+s_ctnr< s_ptr<Frame> > Frame::GetChildren()
 {
-    vector< s_ptr<Frame> > lChilds;
+    s_ctnr< s_ptr<Frame> > lChilds;
     map<s_uint, s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList_)
     {
-        lChilds.push_back(iterChild->second);
+        lChilds.PushBack(iterChild->second);
     }
 
     return lChilds;
@@ -440,7 +440,7 @@ FrameStrata Frame::GetFrameStrata() const
 
 const s_str& Frame::GetFrameType() const
 {
-    return lType_.back();
+    return lType_.Back();
 }
 
 s_array<s_int,4> Frame::GetAbsHitRectInsets() const
@@ -655,10 +655,10 @@ void Frame::RegisterEvent( const s_str& sEvent )
     }
 }
 
-void Frame::RegisterForDrag( const vector<s_str>& lButtonList )
+void Frame::RegisterForDrag( const s_ctnr<s_str>& lButtonList )
 {
     lRegDragList_.clear();
-    vector<s_str>::const_iterator iterButton;
+    s_ctnr<s_str>::const_iterator iterButton;
     foreach (iterButton, lButtonList)
     {
         lRegDragList_[*iterButton] = true;
@@ -709,7 +709,7 @@ void Frame::SetFrameStrata( const s_str& sStrata )
     }
     else
     {
-        Warning(lType_.back(),
+        Warning(lType_.Back(),
             "Unknown strata : \""+sStrata+"\"."
         );
         return;
@@ -736,7 +736,7 @@ void Frame::SetLevel( const s_uint& uiLevel )
     }
     else
     {
-        Warning(lType_.back(), "SetLevel() can't be called more than once.");
+        Warning(lType_.Back(), "SetLevel() can't be called more than once.");
     }
 }
 
@@ -775,7 +775,7 @@ void Frame::SetParent( s_ptr<UIObject> pParent )
     }
     else
     {
-        Error(lType_.back(), "Can't call SetParent(this).");
+        Error(lType_.Back(), "Can't call SetParent(this).");
     }
 }
 

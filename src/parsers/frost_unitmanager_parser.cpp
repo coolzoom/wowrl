@@ -55,13 +55,13 @@ namespace Frost
                 s_ptr<XML::Block> pTexture;
                 foreach_named_block (pTexture, "Texture", pBodyTextures)
                 {
-                    mRace.mMaleModelInfo.lBodyTextureList.push_back(pTexture->GetAttribute("file"));
+                    mRace.mMaleModelInfo.lBodyTextureList.PushBack(pTexture->GetAttribute("file"));
                 }
 
                 s_ptr<XML::Block> pHairTextures = pMaleModel->GetBlock("HairTextures");
                 foreach_named_block (pTexture, "Texture", pHairTextures)
                 {
-                    mRace.mMaleModelInfo.lHairTextureList.push_back(pTexture->GetAttribute("file"));
+                    mRace.mMaleModelInfo.lHairTextureList.PushBack(pTexture->GetAttribute("file"));
                 }
 
                 s_ptr<XML::Block> pDefaultParts = pMaleModel->GetBlock("DefaultParts");
@@ -70,7 +70,7 @@ namespace Frost
                 {
                     foreach_named_block (pPart, "Part", pDefaultParts)
                     {
-                        mRace.mMaleModelInfo.lDefaultPartList.push_back(s_uint(pPart->GetAttribute("val")));
+                        mRace.mMaleModelInfo.lDefaultPartList.PushBack(s_uint(pPart->GetAttribute("val")));
                     }
                 }
 
@@ -81,13 +81,13 @@ namespace Frost
                 pBodyTextures = pFemaleModel->GetBlock("BodyTextures");
                 foreach_named_block (pTexture, "Texture", pBodyTextures)
                 {
-                    mRace.mFemaleModelInfo.lBodyTextureList.push_back(pTexture->GetAttribute("file"));
+                    mRace.mFemaleModelInfo.lBodyTextureList.PushBack(pTexture->GetAttribute("file"));
                 }
 
                 pHairTextures = pFemaleModel->GetBlock("HairTextures");
                 foreach_named_block (pTexture, "Texture", pHairTextures)
                 {
-                    mRace.mFemaleModelInfo.lHairTextureList.push_back(pTexture->GetAttribute("file"));
+                    mRace.mFemaleModelInfo.lHairTextureList.PushBack(pTexture->GetAttribute("file"));
                 }
 
                 pDefaultParts = pFemaleModel->GetBlock("DefaultParts");
@@ -95,7 +95,7 @@ namespace Frost
                 {
                     foreach_named_block (pPart, "Part", pDefaultParts)
                     {
-                        mRace.mFemaleModelInfo.lDefaultPartList.push_back(s_uint(pPart->GetAttribute("val")));
+                        mRace.mFemaleModelInfo.lDefaultPartList.PushBack(s_uint(pPart->GetAttribute("val")));
                     }
                 }
 
@@ -194,7 +194,7 @@ namespace Frost
                         // Tell this HealthType it can use the script
                         s_str sTruncatedScriptName = pScript->GetName();
                         sTruncatedScriptName.EraseFromStart(2);
-                        mHealthType.lDefinedScriptList.push_back(sTruncatedScriptName);
+                        mHealthType.lDefinedScriptList.PushBack(sTruncatedScriptName);
 
                         // Register it in Lua
                         s_str sStr;
@@ -271,7 +271,7 @@ namespace Frost
                         // Tell this PowerType it can use the script
                         s_str sTruncatedScriptName = pScript->GetName();
                         sTruncatedScriptName.EraseFromStart(2);
-                        mPowerType.lDefinedScriptList.push_back(sTruncatedScriptName);
+                        mPowerType.lDefinedScriptList.PushBack(sTruncatedScriptName);
 
                         // Register it in Lua
                         s_str sStr;
@@ -315,9 +315,9 @@ namespace Frost
             {
                 s_str sSchool = pSchool->GetAttribute("name");
                 sSchool.ToUpper();
-                if (!VECTORFIND(sSchool, lSchoolList_))
+                if (!lSchoolList_.Find(sSchool))
                 {
-                    lSchoolList_.push_back(s_str::ToUpper(pSchool->GetAttribute("name")));
+                    lSchoolList_.PushBack(s_str::ToUpper(pSchool->GetAttribute("name")));
                 }
                 else
                 {

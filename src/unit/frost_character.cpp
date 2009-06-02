@@ -49,10 +49,10 @@ namespace Frost
         pBodyModel_->GetAnimMgr()->Play();
 
         // Apply a texture to the body
-        if (!pCharModelInfo->lBodyTextureList.empty())
+        if (!pCharModelInfo->lBodyTextureList.IsEmpty())
         {
             s_refptr<Material> pBodyMat = MaterialManager::GetSingleton()->CreateMaterial3D(
-                pCharModelInfo->lBodyTextureList.back()
+                pCharModelInfo->lBodyTextureList.Back()
             );
             pBodyMat->SetHardwareSkinning(true);
 
@@ -72,12 +72,12 @@ namespace Frost
         }*/
 
         // Show default model parts
-        if (!pCharModelInfo->lDefaultPartList.empty())
+        if (!pCharModelInfo->lDefaultPartList.IsEmpty())
         {
             pBodyModel_->Hide(true);
             pBodyModel_->Show();
 
-            vector<s_uint>::iterator iterPart;
+            s_ctnr<s_uint>::iterator iterPart;
             foreach(iterPart, pCharModelInfo->lDefaultPartList)
             {
                 s_ptr<ModelPart> pPart = pBodyModel_->GetModelPart(*iterPart);

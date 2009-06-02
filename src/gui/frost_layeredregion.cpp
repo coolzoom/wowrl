@@ -17,7 +17,7 @@ const s_str LayeredRegion::CLASS_NAME = "GUI::LayeredRegion";
 LayeredRegion::LayeredRegion() : UIObject()
 {
     mObjectType_ = OJBECT_TYPE_LAYEREDREGION;
-    lType_.push_back("LayeredRegion");
+    lType_.PushBack("LayeredRegion");
 }
 
 LayerType LayeredRegion::GetDrawLayer()
@@ -44,7 +44,7 @@ void LayeredRegion::SetDrawLayer(const s_str& sLayer)
         mLayer_ = LAYER_OVERLAY;
     else
     {
-        Warning(lType_.back(),
+        Warning(lType_.Back(),
             "Uknown layer type : \""+sLayer+"\". Using \"ARTWORK\"."
         );
         mLayer_ = LAYER_ARTWORK;

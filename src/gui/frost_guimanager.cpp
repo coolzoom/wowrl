@@ -227,7 +227,7 @@ namespace Frost
                                 foreach (iterVar, lVariables)
                                 {
                                     iterVar->Trim(' ');
-                                    mAddOn.lSavedVariableList.push_back(*iterVar);
+                                    mAddOn.lSavedVariableList.PushBack(*iterVar);
                                 }
                             }
                         }
@@ -237,7 +237,7 @@ namespace Frost
                         sLine.Trim(' ');
                         if (sLine.Find(".lua") || sLine.Find(".xml"))
                         {
-                            mAddOn.lFileList.push_back(mAddOn.sFolder + "/" + sLine);
+                            mAddOn.lFileList.PushBack(mAddOn.sFolder + "/" + sLine);
                         }
                     }
                 }
@@ -260,7 +260,7 @@ namespace Frost
 
     void GUIManager::LoadAddOnFiles_( s_ptr<AddOn> pAddOn )
     {
-        vector<s_str>::iterator iterFile;
+        s_ctnr<s_str>::iterator iterFile;
         foreach (iterFile, pAddOn->lFileList)
         {
             if (iterFile->Find(".lua"))

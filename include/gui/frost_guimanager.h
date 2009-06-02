@@ -26,8 +26,8 @@ namespace Frost
 
         s_str sFolder;
 
-        std::vector<s_str> lFileList;
-        std::vector<s_str> lSavedVariableList;
+        s_ctnr<s_str> lFileList;
+        s_ctnr<s_str> lSavedVariableList;
 
         static const s_str CLASS_NAME;
 
