@@ -37,7 +37,13 @@ namespace Frost
     *   They simplify conversions (mostly to string),
     *   allow easy access to math/string functions and
     *   implements new functions that are not present
-    *   in the standard libraries.
+    *   in the standard libraries.<br>
+    *   <b>Note</b> : Most of Frost's base types are
+    *   slower than C++ base types. The difference is
+    *   negligible for small operations, but if you need
+    *   to do a lot of calculations (matrices, ...) it
+    *   can bloat your performances. Use prebuilt types
+    *   in this case.
     */
     class s_float
     {

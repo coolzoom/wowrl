@@ -763,8 +763,8 @@ namespace Frost
     s_ctnr<s_str> s_str::operator, ( const s_str& sValue ) const
     {
         s_ctnr<s_str> mContainer;
-        mContainer.Push(*this);
-        mContainer.Push(sValue);
+        mContainer.PushBack(*this);
+        mContainer.PushBack(sValue);
         return mContainer;
     }
 
@@ -1109,6 +1109,32 @@ namespace Frost
     }
 
     s_str::const_iterator s_str::end() const
+    {
+        return const_iterator(this, s_uint::NaN);
+    }
+
+    s_str::iterator s_str::Begin()
+    {
+        if (sValue_.length() == 0)
+            return iterator(this, s_uint::NaN);
+        else
+            return iterator(this, 0);
+    }
+
+    s_str::const_iterator s_str::Begin() const
+    {
+        if (sValue_.length() == 0)
+            return const_iterator(this, s_uint::NaN);
+        else
+            return const_iterator(this, 0);
+    }
+
+    s_str::iterator s_str::End()
+    {
+        return iterator(this, s_uint::NaN);
+    }
+
+    s_str::const_iterator s_str::End() const
     {
         return const_iterator(this, s_uint::NaN);
     }

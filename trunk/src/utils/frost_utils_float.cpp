@@ -711,8 +711,8 @@ namespace Frost
     s_ctnr<s_float> s_float::operator, ( const s_float& fValue ) const
     {
         s_ctnr<s_float> mContainer;
-        mContainer.Push(*this);
-        mContainer.Push(fValue);
+        mContainer.PushBack(*this);
+        mContainer.PushBack(fValue);
         return mContainer;
     }
 }

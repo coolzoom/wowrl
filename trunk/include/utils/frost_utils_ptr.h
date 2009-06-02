@@ -180,8 +180,8 @@ namespace Frost
         s_ctnr< s_ptr<T> > operator , ( s_ptr<T> pValue ) const
         {
             s_ctnr< s_ptr<T> > mContainer;
-            mContainer.Push(*this);
-            mContainer.Push(pValue);
+            mContainer.PushBack(*this);
+            mContainer.PushBack(pValue);
             return mContainer;
         }
 

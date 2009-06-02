@@ -219,8 +219,8 @@ namespace Frost
         s_ctnr< s_refptr<T> > operator , ( s_refptr<T> pValue ) const
         {
             s_ctnr< s_refptr<T> > mContainer;
-            mContainer.Push(*this);
-            mContainer.Push(pValue);
+            mContainer.PushBack(*this);
+            mContainer.PushBack(pValue);
             return mContainer;
         }
 

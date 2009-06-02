@@ -39,11 +39,14 @@ namespace Frost
 
     /// Base type : untyped variable
     /** The purpose of this class is to have an untyped
-    *   return value / argument. It allows a simple
-    *   manipulation of events, and a lot of other things.<br>
+    *   return value / argument. It allows simple manipulation
+    *   of events, and a lot of other things.<br>
     *   It only uses more memory than a simple object :<br>
     *   size = sizeof(int) + sizeof(void*) + sizeof(T)<br>
     *   ... where "T" is the type of the value it contains.
+    *   But because it needs to convert the contained value
+    *   each time you need to access it, it is slower than
+    *   using this value out of this class. Use it wisely.
     */
     class s_var
     {
