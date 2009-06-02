@@ -73,6 +73,26 @@ namespace Frost
             return (*this);
         }
 
+        /// Returns the last element of this container.
+        /** \return The last element of this container
+        *   \note You should check this container is not empty
+        *         before calling this function.
+        */
+        T& Back()
+        {
+            return lArray_.back();
+        }
+
+        /// Returns the last element of this container.
+        /** \return The last element of this container
+        *   \note You should check this container is not empty
+        *         before calling this function.
+        */
+        const T& Back() const
+        {
+            return lArray_.back();
+        }
+
         /// Adds a value at the end of the container.
         /** \param mElem The value to add
         */
@@ -85,6 +105,26 @@ namespace Frost
         void PopBack()
         {
             lArray_.pop_back();
+        }
+
+        /// Returns the first element of this container.
+        /** \return The first element of this container
+        *   \note You should check this container is not empty
+        *         before calling this function.
+        */
+        T& Front()
+        {
+            return lArray_.front();
+        }
+
+        /// Returns the first element of this container.
+        /** \return The first element of this container
+        *   \note You should check this container is not empty
+        *         before calling this function.
+        */
+        const T& Front() const
+        {
+            return lArray_.front();
         }
 
         /// Adds a value at the beginning of the container.
