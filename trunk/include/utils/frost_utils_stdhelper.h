@@ -19,7 +19,7 @@
 #define VECTORFIND(key, vector) (std::find((vector).begin(), (vector).end(), key) != (vector).end())
 
 // Iterates through an stl container
-#define foreach(iter, container) for ((iter) = (container).begin(); (iter) != (container).end(); (iter)++)
+#define foreach(iter, container) for ((iter) = (container).begin(); (iter) != (container).end(); ++(iter))
 
 namespace Frost
 {
