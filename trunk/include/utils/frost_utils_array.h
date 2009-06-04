@@ -149,6 +149,8 @@ namespace Frost
 
         /// Inserts or erases elements from the end of this container.
         /** \param uiSize The new size of the container
+        *   \param mElem  The dummy element to append is the new size is
+        *                 greater than the actual one
         *   \note If uiSize is superior to the container's actual size,
         *         mElem is appended as many time as neccessary to fit the
         *         new size. Else, elements are erased.
