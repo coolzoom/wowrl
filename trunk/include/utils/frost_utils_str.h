@@ -70,6 +70,12 @@ namespace Frost
     {
     public :
 
+        class iterator;
+        class const_iterator;
+
+        friend class s_str::iterator;
+        friend class s_str::const_iterator;
+
         /// Constructor.
         s_str();
 
@@ -414,8 +420,11 @@ namespace Frost
         {
         public :
 
+            friend class const_iterator;
+
             iterator();
-            iterator(s_str* pParent, const s_uint& uiPos);
+            iterator(s_str* pParent, const int& iPos);
+            explicit iterator(const const_iterator& iter);
 
             string_element& operator * () const;
             iterator  operator + (const s_int& iOffset) const;
@@ -430,7 +439,7 @@ namespace Frost
         private :
 
             s_str* pParent_;
-            s_uint uiPos_;
+            int    iPos_;
 
         };
 
@@ -442,8 +451,11 @@ namespace Frost
         {
         public :
 
+            friend class iterator;
+
             const_iterator();
-            const_iterator(const s_str* pParent, const s_uint& uiPos);
+            const_iterator(const s_str* pParent, const int& iPos);
+            const_iterator(const iterator& iter);
 
             const string_element& operator * () const;
             const_iterator  operator + (const s_int& iOffset) const;
@@ -458,7 +470,7 @@ namespace Frost
         private :
 
             const s_str* pParent_;
-            s_uint uiPos_;
+            int          iPos_;
 
         };
 
