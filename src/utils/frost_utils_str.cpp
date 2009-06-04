@@ -805,67 +805,90 @@ namespace Frost
         pParent_ = NULL;
     }
 
-    s_str::iterator::iterator(s_str* pParent, const s_uint& uiPos)
+    s_str::iterator::iterator(s_str* pParent, const int& iPos)
     {
         pParent_ = pParent;
-        uiPos_ = uiPos;
+        iPos_ = iPos;
+        if (pParent)
+        {
+            if ((uint)iPos_ >= pParent_->sValue_.size())
+                iPos_ = -1;
+        }
+    }
+
+    s_str::iterator::iterator(const s_str::const_iterator& iter)
+    {
+        pParent_ = (s_str*)iter.pParent_;
+        iPos_ = iter.iPos_;
     }
 
     string_element& s_str::iterator::operator * () const
     {
-        return (*pParent_)[uiPos_];
+        return pParent_->sValue_[iPos_];
     }
 
     s_str::iterator s_str::iterator::operator + ( const s_int& iOffset ) const
     {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
+        int iNewPos = iPos_;
+        if (pParent_ && iOffset.IsValid())
         {
             if (iOffset > 0)
             {
-                uiNewPos += s_uint(iOffset);
-                if (uiNewPos >= pParent_->Length())
-                    uiNewPos = s_uint::NaN;
+                iNewPos += iOffset.Get();
+                if ((uint)iNewPos >= pParent_->sValue_.size())
+                    iNewPos = -1;
             }
             if (iOffset < 0)
             {
-                s_uint uiOffset = s_uint(iOffset);
-                if (uiOffset < uiNewPos)
-                    uiNewPos -= s_uint(iOffset);
+                if (-iOffset < iNewPos)
+                    iNewPos += iOffset.Get();
                 else
-                    uiNewPos = 0u;
+                    iNewPos = 0;
             }
         }
-        return iterator(pParent_, uiNewPos);
+        return iterator(pParent_, iNewPos);
     }
+
     s_str::iterator s_str::iterator::operator - ( const s_int& iOffset ) const
     {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
-        {
-            if (iOffset < 0)
-            {
-                uiNewPos += s_uint(iOffset);
-                if (uiNewPos >= pParent_->Length())
-                    uiNewPos = s_uint::NaN;
-            }
-            if (iOffset > 0)
-            {
-                s_uint uiOffset = s_uint(iOffset);
-                if (uiOffset < uiNewPos)
-                    uiNewPos -= s_uint(iOffset);
-                else
-                    uiNewPos = 0u;
-            }
-        }
-        return iterator(pParent_, uiNewPos);
+        int iNewPos = iPos_;
+                if (pParent_ && iOffset.IsValid())
+                {
+                    if (iOffset < 0)
+                    {
+                        iNewPos -= iOffset.Get();
+                        if ((uint)iNewPos >= pParent_->sValue_.size())
+                            iNewPos = -1;
+                    }
+                    if (iOffset > 0)
+                    {
+                        if (iOffset < iNewPos)
+                            iNewPos -= iOffset.Get();
+                        else
+                            iNewPos = 0;
+                    }
+                }
+                return iterator(pParent_, iNewPos);
     }
 
     s_int s_str::iterator::operator - ( const s_str::iterator& iter ) const
     {
         if (iter.pParent_ == pParent_)
         {
-            return s_int(uiPos_)-s_int(iter.uiPos_);
+            if (iPos_ == -1)
+            {
+                if (iter.iPos_ == -1)
+                    return 0;
+                else
+                    return pParent_->sValue_.size() - iter.iPos_;
+            }
+            else
+            {
+                if (iter.iPos_ == -1)
+                    return iPos_ - pParent_->sValue_.size();
+                else
+                    return iPos_ - iter.iPos_;
+            }
         }
         else
             return s_int::NaN;
@@ -873,11 +896,11 @@ namespace Frost
 
     s_str::iterator& s_str::iterator::operator ++ ()
     {
-        if (pParent_)
+        if (pParent_ && (iPos_ != -1))
         {
-            ++uiPos_;
-            if (uiPos_ == pParent_->Length())
-                uiPos_ = s_uint::NaN;
+            ++iPos_;
+            if ((uint)iPos_ >= pParent_->sValue_.size())
+                iPos_ = -1;
         }
 
         return *this;
@@ -885,11 +908,11 @@ namespace Frost
 
     s_str::iterator s_str::iterator::operator ++ (int)
     {
-        if (pParent_)
+        if (pParent_ && (iPos_ != -1))
         {
-            uiPos_++;
-            if (uiPos_ == pParent_->Length())
-                uiPos_ = s_uint::NaN;
+            ++iPos_;
+            if ((uint)iPos_ >= pParent_->sValue_.size())
+                iPos_ = -1;
         }
 
         return *this;
@@ -899,17 +922,17 @@ namespace Frost
     {
         if (pParent_)
         {
-            if (uiPos_.IsValid())
+            if (iPos_ != -1)
             {
-                if (uiPos_ != 0)
-                    --uiPos_;
+                if (iPos_ != 0)
+                    --iPos_;
             }
             else
             {
-                if (pParent_->IsEmpty())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_->sValue_.empty())
+                    iPos_ = -1;
                 else
-                    uiPos_ = pParent_->Length()-1;
+                    iPos_ = pParent_->sValue_.size() - 1;
             }
         }
 
@@ -920,17 +943,17 @@ namespace Frost
     {
         if (pParent_)
         {
-            if (uiPos_.IsValid())
+            if (iPos_ != -1)
             {
-                if (uiPos_ != 0)
-                    uiPos_--;
+                if (iPos_ != 0)
+                    --iPos_;
             }
             else
             {
-                if (pParent_->IsEmpty())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_->sValue_.empty())
+                    iPos_ = -1;
                 else
-                    uiPos_ = pParent_->Length()-1;
+                    iPos_ = pParent_->sValue_.size() - 1;
             }
         }
 
@@ -939,19 +962,19 @@ namespace Frost
 
     s_bool s_str::iterator::operator != (s_str::iterator iter)
     {
-        if (uiPos_.IsNaN())
+        if (iPos_ == -1)
         {
-            if (iter.uiPos_.IsNaN())
+            if (iter.iPos_ == -1)
                 return (pParent_ != iter.pParent_);
             else
                 return true;
         }
         else
         {
-            if (iter.uiPos_.IsNaN())
+            if (iter.iPos_ == -1)
                 return true;
             else
-                return (pParent_ != iter.pParent_) || (uiPos_ != iter.uiPos_);
+                return (pParent_ != iter.pParent_) || (iPos_ != iter.iPos_);
         }
     }
 
@@ -960,68 +983,90 @@ namespace Frost
         pParent_ = NULL;
     }
 
-    s_str::const_iterator::const_iterator(const s_str* pParent, const s_uint& uiPos)
+    s_str::const_iterator::const_iterator(const s_str* pParent, const int& iPos)
     {
         pParent_ = pParent;
-        uiPos_ = uiPos;
+        iPos_ = iPos;
+        if (pParent)
+        {
+            if ((uint)iPos_ >= pParent_->sValue_.size())
+                iPos_ = -1;
+        }
+    }
+
+    s_str::const_iterator::const_iterator(const s_str::iterator& iter)
+    {
+        pParent_ = iter.pParent_;
+        iPos_ = iter.iPos_;
     }
 
     const string_element& s_str::const_iterator::operator * () const
     {
-        return (*pParent_)[uiPos_];
+        return pParent_->sValue_[iPos_];
     }
 
     s_str::const_iterator s_str::const_iterator::operator + ( const s_int& iOffset ) const
     {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
+        int iNewPos = iPos_;
+        if (pParent_ && iOffset.IsValid())
         {
             if (iOffset > 0)
             {
-                uiNewPos += s_uint(iOffset);
-                if (uiNewPos >= pParent_->Length())
-                    uiNewPos = s_uint::NaN;
+                iNewPos += iOffset.Get();
+                if ((uint)iNewPos >= pParent_->sValue_.size())
+                    iNewPos = -1;
             }
             if (iOffset < 0)
             {
-                s_uint uiOffset = s_uint(iOffset);
-                if (uiOffset < uiNewPos)
-                    uiNewPos -= s_uint(iOffset);
+                if (-iOffset < iNewPos)
+                    iNewPos += iOffset.Get();
                 else
-                    uiNewPos = 0u;
+                    iNewPos = 0;
             }
         }
-        return const_iterator(pParent_, uiNewPos);
+        return const_iterator(pParent_, iNewPos);
     }
 
     s_str::const_iterator s_str::const_iterator::operator - ( const s_int& iOffset ) const
     {
-        s_uint uiNewPos = uiPos_;
-        if (pParent_)
+        int iNewPos = iPos_;
+        if (pParent_ && iOffset.IsValid())
         {
             if (iOffset < 0)
             {
-                uiNewPos += s_uint(iOffset);
-                if (uiNewPos >= pParent_->Length())
-                    uiNewPos = s_uint::NaN;
+                iNewPos -= iOffset.Get();
+                if ((uint)iNewPos >= pParent_->sValue_.size())
+                    iNewPos = -1;
             }
             if (iOffset > 0)
             {
-                s_uint uiOffset = s_uint(iOffset);
-                if (uiOffset < uiNewPos)
-                    uiNewPos -= s_uint(iOffset);
+                if (iOffset < iNewPos)
+                    iNewPos -= iOffset.Get();
                 else
-                    uiNewPos = 0u;
+                    iNewPos = 0;
             }
         }
-        return const_iterator(pParent_, uiNewPos);
+        return const_iterator(pParent_, iNewPos);
     }
 
     s_int s_str::const_iterator::operator - ( const s_str::const_iterator& iter ) const
     {
         if (iter.pParent_ == pParent_)
         {
-            return s_int(uiPos_)-s_int(iter.uiPos_);
+            if (iPos_ == -1)
+            {
+                if (iter.iPos_ == -1)
+                    return 0;
+                else
+                    return pParent_->sValue_.size() - iter.iPos_;
+            }
+            else
+            {
+                if (iter.iPos_ == -1)
+                    return iPos_ - pParent_->sValue_.size();
+                else
+                    return iPos_ - iter.iPos_;
+            }
         }
         else
             return s_int::NaN;
@@ -1029,11 +1074,11 @@ namespace Frost
 
     s_str::const_iterator& s_str::const_iterator::operator ++ ()
     {
-        if (pParent_)
+        if (pParent_ && (iPos_ != -1))
         {
-            ++uiPos_;
-            if (uiPos_ == pParent_->Length())
-                uiPos_ = s_uint::NaN;
+            ++iPos_;
+            if ((uint)iPos_ >= pParent_->sValue_.size())
+                iPos_ = -1;
         }
 
         return *this;
@@ -1041,11 +1086,11 @@ namespace Frost
 
     s_str::const_iterator s_str::const_iterator::operator ++ (int)
     {
-        if (pParent_)
+        if (pParent_ && (iPos_ != -1))
         {
-            uiPos_++;
-            if (uiPos_ == pParent_->Length())
-                uiPos_ = s_uint::NaN;
+            ++iPos_;
+            if ((uint)iPos_ >= pParent_->sValue_.size())
+                iPos_ = -1;
         }
 
         return *this;
@@ -1055,17 +1100,17 @@ namespace Frost
     {
         if (pParent_)
         {
-            if (uiPos_.IsValid())
+            if (iPos_ != -1)
             {
-                if (uiPos_ != 0)
-                    --uiPos_;
+                if (iPos_ != 0)
+                    --iPos_;
             }
             else
             {
-                if (pParent_->IsEmpty())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_->sValue_.empty())
+                    iPos_ = -1;
                 else
-                    uiPos_ = pParent_->Length()-1;
+                    iPos_ = pParent_->sValue_.size() - 1;
             }
         }
 
@@ -1076,17 +1121,17 @@ namespace Frost
     {
         if (pParent_)
         {
-            if (uiPos_.IsValid())
+            if (iPos_ != -1)
             {
-                if (uiPos_ != 0)
-                    uiPos_--;
+                if (iPos_ != 0)
+                    --iPos_;
             }
             else
             {
-                if (pParent_->IsEmpty())
-                    uiPos_ = s_uint::NaN;
+                if (pParent_->sValue_.empty())
+                    iPos_ = -1;
                 else
-                    uiPos_ = pParent_->Length()-1;
+                    iPos_ = pParent_->sValue_.size() - 1;
             }
         }
 
@@ -1095,26 +1140,26 @@ namespace Frost
 
     s_bool s_str::const_iterator::operator != (s_str::const_iterator iter)
     {
-        if (uiPos_.IsNaN())
+        if (iPos_ == -1)
         {
-            if (iter.uiPos_.IsNaN())
+            if (iter.iPos_ == -1)
                 return (pParent_ != iter.pParent_);
             else
                 return true;
         }
         else
         {
-            if (iter.uiPos_.IsNaN())
+            if (iter.iPos_ == -1)
                 return true;
             else
-                return (pParent_ != iter.pParent_) || (uiPos_ != iter.uiPos_);
+                return (pParent_ != iter.pParent_) || (iPos_ != iter.iPos_);
         }
     }
 
     s_str::iterator s_str::begin()
     {
         if (sValue_.length() == 0)
-            return iterator(this, s_uint::NaN);
+            return iterator(this, -1);
         else
             return iterator(this, 0);
     }
@@ -1122,25 +1167,25 @@ namespace Frost
     s_str::const_iterator s_str::begin() const
     {
         if (sValue_.length() == 0)
-            return const_iterator(this, s_uint::NaN);
+            return const_iterator(this, -1);
         else
             return const_iterator(this, 0);
     }
 
     s_str::iterator s_str::end()
     {
-        return iterator(this, s_uint::NaN);
+        return iterator(this, -1);
     }
 
     s_str::const_iterator s_str::end() const
     {
-        return const_iterator(this, s_uint::NaN);
+        return const_iterator(this, -1);
     }
 
     s_str::iterator s_str::Begin()
     {
         if (sValue_.length() == 0)
-            return iterator(this, s_uint::NaN);
+            return iterator(this, -1);
         else
             return iterator(this, 0);
     }
@@ -1148,19 +1193,19 @@ namespace Frost
     s_str::const_iterator s_str::Begin() const
     {
         if (sValue_.length() == 0)
-            return const_iterator(this, s_uint::NaN);
+            return const_iterator(this, -1);
         else
             return const_iterator(this, 0);
     }
 
     s_str::iterator s_str::End()
     {
-        return iterator(this, s_uint::NaN);
+        return iterator(this, -1);
     }
 
     s_str::const_iterator s_str::End() const
     {
-        return const_iterator(this, s_uint::NaN);
+        return const_iterator(this, -1);
     }
 
     string s_str::GetASCII() const
