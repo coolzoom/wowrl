@@ -11,6 +11,8 @@
 #include "frost_utils_eventmanager.h"
 #include "frost_utils_event.h"
 #include "frost_utils_stdhelper.h"
+#include "frost_utils_log.h"
+#include "frost_utils_var.h"
 
 using namespace std;
 using namespace Frost;

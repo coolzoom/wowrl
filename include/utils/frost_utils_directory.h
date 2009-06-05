@@ -11,15 +11,10 @@
 #define foreach_dir(subdir, dir) for ((subdir) = (dir).GetNextSubDirectory(); (subdir); (subdir) = (dir).GetNextSubDirectory())
 
 #include "frost_utils.h"
-#include "frost_utils_uint.h"
-#include "frost_utils_str.h"
-#include "frost_utils_ptr.h"
+#include "frost_utils_types.h"
 
 namespace Frost
 {
-    class s_str;
-    class s_uint;
-
     /// A tool for directory listing
     /** This class iterates through every sub-
     *   directories, store them in a vector and

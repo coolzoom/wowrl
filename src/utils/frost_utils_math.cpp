@@ -5,11 +5,6 @@
 
 #include "frost_utils_math.h"
 
-#include "frost_utils_int.h"
-#include "frost_utils_uint.h"
-#include "frost_utils_float.h"
-#include "frost_utils_double.h"
-
 #include <cmath>
 
 namespace Frost

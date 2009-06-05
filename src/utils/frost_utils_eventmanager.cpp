@@ -9,8 +9,7 @@
 #include "frost_utils_event.h"
 #include "frost_utils_eventreceiver.h"
 #include "frost_utils_stdhelper.h"
-
-#include "frost_utils_int.h"
+#include "frost_utils_log.h"
 
 #include <algorithm>
 

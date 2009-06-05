@@ -10,7 +10,7 @@
 #define FROST_UTILS_STDHELPER_H
 
 #include "frost_utils.h"
-#include "frost_utils_double.h"
+#include "frost_utils_types.h"
 
 // Returns 'true' if the key is found in the map
 #define MAPFIND(key, map) ((map).find(key) != (map).end())

@@ -10,6 +10,7 @@
 #include "frost_utils_timemanager.h"
 #include "frost_utils_profiler.h"
 #include "frost_utils_stdhelper.h"
+#include "frost_utils_log.h"
 
 #include <OgreTimer.h>
 

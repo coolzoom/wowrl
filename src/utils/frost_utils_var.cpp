@@ -4,8 +4,6 @@
 /*                                        */
 
 #include "frost_utils_var.h"
-#include "frost_utils_array.h"
-#include "frost_utils.h"
 
 using namespace std;
 
@@ -256,7 +254,7 @@ namespace Frost
                 return s_double((double)(long)pPtr_);
         }
 
-        return s_double(s_double::DOUBLE_NAN);
+        return s_double(s_double::FLOAT_NAN);
     }
 
     s_bool s_var::GetB() const

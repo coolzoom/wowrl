@@ -1,91 +1,167 @@
-/* ###################################### */
-/* ###     Frost Engine, by Kalith    ### */
-/* ###################################### */
-/*                                        */
-/*                                        */
+#ifdef USE_UNICODE
+    #define STRING(X) L##X
+#else
+    #define STRING(X) X
+#endif
 
-#ifndef FROST_UTILS_BOOL_H
-#define FROST_UTILS_BOOL_H
-
-#include "frost_utils.h"
-
-namespace Frost
+/// Base type : boolean
+/** Frost's base types are made to allow simpler
+*   manipulation of numbers, booleans and strings.
+*   They simplify conversions (mostly to string),
+*   allow easy access to math/string functions and
+*   implements new functions that are not present
+*   in the standard libraries.
+*/
+template<class T>
+class s_bool_t
 {
-    class s_str;
-    template<class T> class s_ctnr;
+public :
+
+    s_bool_t()
+    {
+        bValue_ = false;
+    }
+
+    s_bool_t(const T& bValue)
+    {
+        bValue_ = bValue;
+    }
+
+    template<class N>
+    explicit s_bool_t(const N* sValue)
+    {
+        if ((s_str_t<N>(sValue) == BOOL_TRUE) ||
+            (s_str_t<N>(sValue) == BOOL_ONE)  ||
+            (s_str_t<N>(sValue) == BOOL_YES))
+            bValue_ = true;
+        else
+            bValue_ = false;
+    }
+
+    explicit s_bool_t(const string_object& sValue)
+    {
+        if ((sValue == BOOL_TRUE) ||
+            (sValue == BOOL_ONE)  ||
+            (sValue == BOOL_YES))
+            bValue_ = true;
+        else
+            bValue_ = false;
+    }
+
+    template<class N>
+    explicit s_bool_t(const s_str_t<N>& sValue)
+    {
+        if ((sValue == BOOL_TRUE) ||
+            (sValue == BOOL_ONE)  ||
+            (sValue == BOOL_YES))
+            bValue_ = true;
+        else
+            bValue_ = false;
+    }
+
+    /// Returns a const reference to the boolean.
+    /** \return A const reference to the boolean
+    */
+    inline const T& Get() const
+    {
+        return bValue_;
+    }
+
+    /// Returns a reference to the boolean.
+    /** \return A reference to the boolean
+    */
+    inline T& GetR()
+    {
+        return bValue_;
+    }
+
+    bool operator ! () const
+    {
+        return !bValue_;
+    }
+
+    typedef const bool& (s_bool_t::*MemberFn)() const;
+    operator MemberFn() const
+    {
+        if (bValue_)
+            return &s_bool_t::Get;
+        else
+            return NULL;
+    }
+
+    s_bool_t operator == (const s_bool_t& bValue) const
+    {
+        return (bValue_ == bValue.bValue_);
+    }
+
+    s_bool_t operator != (const s_bool_t& bValue) const
+    {
+        return (bValue_ != bValue.bValue_);
+    }
+
+    template<class N>
+    s_str_t<N> operator + (const N* sValue) const
+    {
+        return s_str_t<N>(*this) + sValue;
+    }
 
     #ifdef USE_UNICODE
-        typedef wchar_t string_element;
-        typedef std::wstring string_object;
-        typedef std::wstringstream string_stream;
-        typedef std::wfstream file_stream;
-    #else
-        typedef char string_element;
-        typedef std::string string_object;
-        typedef std::stringstream string_stream;
-        typedef std::fstream file_stream;
+        template<class N>
+        s_str_t<N> operator + (const char* sValue) const
+        {
+            return s_str_t<char>(*this) + sValue;
+        }
     #endif
 
-    /// Base type : boolean
-    /** Frost's base types are made to allow simpler
-    *   manipulation of numbers, booleans and strings.
-    *   They simplify conversions (mostly to string),
-    *   allow easy access to math/string functions and
-    *   implements new functions that are not present
-    *   in the standard libraries.
-    */
-    class s_bool
+    template<class N>
+    s_str_t<N> operator + (const s_str_t<N>& sValue) const
     {
-    public :
+        return s_str_t<N>(*this) + sValue;
+    }
 
-        s_bool();
-        s_bool(const bool& bValue);
-        explicit s_bool(const string_element* sValue);
-        explicit s_bool(const string_object& sValue);
-        explicit s_bool(const s_str& sValue);
+    s_bool_t& operator =  (const s_bool_t& bValue)
+    {
+        bValue_ = bValue.bValue_;
+        return *this;
+    }
 
-        /// Returns a const reference to the boolean.
-        /** \return A const reference to the boolean
-        */
-        inline const bool& Get() const { return bValue_; }
+    s_ctnr<s_bool_t> operator , (const s_bool_t& bValue) const
+    {
+        s_ctnr<s_bool_t> mContainer;
+        mContainer.PushBack(*this);
+        mContainer.PushBack(bValue);
+        return mContainer;
+    }
 
-        /// Returns a reference to the boolean.
-        /** \return A reference to the boolean
-        */
-        inline bool&   GetR() { return bValue_; }
+    static string_element* BOOL_TRUE;
+    static string_element* BOOL_ONE;
+    static string_element* BOOL_YES;
+    static T               bDummy;
 
-        /// Returns the first argument if this boolean is true, and the second otherwise.
-        /** \param sTrue  The string to return if 'true'
-        *   \param sFalse The string to return if 'false'
-        *   \return Either sTrue or sFalse.
-        */
-        const s_str&   GetAsString(const s_str& sTrue, const s_str& sFalse) const;
+private :
 
-        bool           operator !  () const;
-        typedef        const bool& (s_bool::*MemberFn)() const;
-        operator       MemberFn() const;
+    T bValue_;
+};
 
-        s_bool         operator == (const s_bool& bValue) const;
-        s_bool         operator != (const s_bool& bValue) const;
+template<class T>
+string_element* s_bool_t<T>::BOOL_TRUE = STRING("true");
+template<class T>
+string_element* s_bool_t<T>::BOOL_ONE  = STRING("1");
+template<class T>
+string_element* s_bool_t<T>::BOOL_YES  = STRING("yes");
 
-        s_str          operator +  (const string_element* sValue) const;
-        #ifdef USE_UNICODE
-            s_str      operator +  (const char* sValue) const;
-        #endif
-        s_str          operator +  (const s_str& sValue) const;
-
-        s_bool&        operator =  (const s_bool& bValue);
-
-        s_ctnr<s_bool> operator,   (const s_bool& bValue) const;
-
-        static bool bDummy;
-
-        static const s_str CLASS_NAME;
-
-    private :
-
-        bool bValue_;
-    };
+template<class T, class N>
+s_str_t<N> operator+ ( const N* sLeft, const s_bool_t<T>& bRight )
+{
+    return s_str_t<N>(sLeft) << bRight;
 }
 
+#ifdef USE_UNICODE
+    template<class T>
+    s_str_t<char> operator+ ( const char* sLeft, const s_bool_t<T>& bRight )
+    {
+        return s_str_t<char>(sLeft) << bRight;
+    }
 #endif
+
+typedef s_bool_t<bool> s_bool;

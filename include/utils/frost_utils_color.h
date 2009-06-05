@@ -8,7 +8,7 @@
 #define FROST_UTILS_COLOR_H
 
 #include "frost_utils.h"
-#include "frost_utils_uint.h"
+#include "frost_utils_types.h"
 
 namespace Ogre
 {

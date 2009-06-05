@@ -8,7 +8,7 @@
 #define FROST_UTILS_LOG_H
 
 #include "frost_utils.h"
-#include "frost_utils_str.h"
+#include "frost_utils_types.h"
 
 namespace Frost
 {

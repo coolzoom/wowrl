@@ -90,7 +90,7 @@ namespace Frost
             else
             {
                 Error(CLASS_NAME,
-                    "A "+pObj->IsVirtual().GetAsString("virtual", "")+" widget with the name \""
+                    "A "+s_str(pObj->IsVirtual() ? "virtual" : "")+" widget with the name \""
                     +pObj->GetName()+"\" already exists."
                 );
                 return false;

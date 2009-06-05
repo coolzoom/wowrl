@@ -54,7 +54,7 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 {
     s_str sStr;
 
-    sStr << sTab << "  # Name        : "        << sName_ << " ("+bReady_.GetAsString("ready", "not ready")+")\n";
+    sStr << sTab << "  # Name        : "        << sName_ << " ("+s_str(bReady_ ? "ready" : "not ready")+")\n";
     sStr << sTab << "  # ID          : "        << uiID_ << "\n";
     sStr << sTab << "  # Type        : "        << lType_.Back() << "\n";
     if (pParent_)

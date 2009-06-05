@@ -4,12 +4,11 @@
 /*                                        */
 
 #include "frost_utils_directory.h"
-
-#include "frost_utils_ptr.h"
 #include "frost_utils_stdhelper.h"
+#include "frost_utils_log.h"
 
-#include "OgreArchiveManager.h"
-#include "OgreStringVector.h"
+#include <OgreArchiveManager.h>
+#include <OgreStringVector.h>
 
 using namespace std;
 

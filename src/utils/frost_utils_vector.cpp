@@ -5,7 +5,6 @@
 
 #include "frost_utils_vector.h"
 #include "frost_utils_math.h"
-#include "frost_utils_str.h"
 
 #include <OgreQuaternion.h>
 #include <OgreVector3.h>
@@ -97,7 +96,7 @@ namespace Frost
     void Vector::Rotate( const s_float& fAngle, const Vector& mAxis )
     {
         // Code extracted from Ogre for optimum performance
-        s_float fHalfAngle = 0.5*fAngle;
+        s_float fHalfAngle = 0.5f*fAngle;
         s_float fSin = sin(fHalfAngle.GetRad());
         s_float w = cos(fHalfAngle.GetRad());
         Vector mNAxis = fSin*mAxis;

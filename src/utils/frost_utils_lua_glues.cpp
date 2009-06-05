@@ -9,6 +9,7 @@
 #include "frost_utils_luamanager.h"
 #include "frost_utils_eventmanager.h"
 #include "frost_utils_event.h"
+#include "frost_utils_log.h"
 
 using namespace std;
 using namespace Frost;

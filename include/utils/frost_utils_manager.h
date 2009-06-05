@@ -13,7 +13,7 @@
 #ifndef FROST_MANAGER_H
 #define FROST_MANAGER_H
 
-#include "frost_utils_ptr.h"
+#include "frost_utils_types.h"
 
 namespace Frost
 {

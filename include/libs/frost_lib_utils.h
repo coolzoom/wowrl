@@ -14,21 +14,13 @@
 #define FROST_UTILS_H
 
 #include "utils/frost_utils.h"
-#include "utils/frost_utils_bool.h"
-#include "utils/frost_utils_int.h"
-#include "utils/frost_utils_uint.h"
-#include "utils/frost_utils_float.h"
-#include "utils/frost_utils_double.h"
-#include "utils/frost_utils_str.h"
+#include "utils/frost_utils_types.h"
 #include "utils/frost_utils_var.h"
-#include "utils/frost_utils_array.h"
 
 #include "utils/frost_utils_math.h"
 
 #include "utils/frost_utilsmanager.h"
-
-#include "utils/frost_utils_ptr.h"
-#include "utils/frost_utils_refptr.h"
+#include "utils/frost_utils_log.h"
 
 #include "utils/frost_utils_color.h"
 #include "utils/frost_utils_vector.h"

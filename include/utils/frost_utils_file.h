@@ -8,13 +8,10 @@
 #define FROST_UTILS_FILE_H
 
 #include "frost_utils.h"
+#include "frost_utils_types.h"
 
 namespace Frost
 {
-    class s_bool;
-    class s_uint;
-    class s_str;
-
     enum FileType
     {
         /// Input - Output

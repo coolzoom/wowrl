@@ -20,11 +20,12 @@ extern "C"
 #include "frost_utils.h"
 #include "frost_utils_manager.h"
 
-#include "frost_utils_var.h"
-#include "frost_utils_array.h"
+#include "frost_utils_types.h"
 
 namespace Frost
 {
+    class s_var;
+
     namespace Lua
     {
         enum Type
