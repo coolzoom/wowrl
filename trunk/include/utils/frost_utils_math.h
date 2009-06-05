@@ -7,13 +7,10 @@
 #ifndef FROST_UTILS_MATH_H
 #define FROST_UTILS_MATH_H
 
+#include "frost_utils_types.h"
+
 namespace Frost
 {
-    class s_int;
-    class s_uint;
-    class s_float;
-    class s_double;
-
     // s_int
     s_float cos(const s_int& iValue);
     s_float acos(const s_int& iValue);

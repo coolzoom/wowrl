@@ -267,7 +267,7 @@ namespace Frost
             Warning(CLASS_NAME,
                 "Calling SetDefaultPass() with a too high index : "+uiIndex+" (only "+
                 s_uint((uint)pOgreMat_->getTechnique(0)->getNumPasses())+" pass"+
-                (s_uint((uint)pOgreMat_->getTechnique(0)->getNumPasses()) > 1).GetAsString("es", "")+
+                s_str(pOgreMat_->getTechnique(0)->getNumPasses() > 1 ? "es" : "")+
                 " available)."
             );
         }

@@ -10,8 +10,7 @@
 #define FROST_TIMERS_H
 
 #include "frost_utils.h"
-#include "frost_utils_double.h"
-#include "frost_utils_bool.h"
+#include "frost_utils_types.h"
 
 namespace Frost
 {

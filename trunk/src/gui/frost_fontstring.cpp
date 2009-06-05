@@ -13,8 +13,8 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
 
-#define OUTLINE_QUALITY   10.0
-#define OUTLINE_THICKNESS 2.0
+#define OUTLINE_QUALITY   10.0f
+#define OUTLINE_THICKNESS 2.0f
 
 const s_str FontString::CLASS_NAME = "GUI::FontString";
 

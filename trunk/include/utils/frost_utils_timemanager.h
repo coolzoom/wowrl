@@ -12,11 +12,7 @@
 
 #include "frost_utils.h"
 #include "frost_utils_manager.h"
-#include "frost_utils_ptr.h"
-#include "frost_utils_refptr.h"
-#include "frost_utils_str.h"
-#include "frost_utils_double.h"
-#include "frost_utils_uint.h"
+#include "frost_utils_types.h"
 
 namespace Ogre
 {

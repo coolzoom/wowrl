@@ -527,7 +527,7 @@ namespace Frost
         {
             Warning(CLASS_NAME,
                 "Calling Begin(), but there is already something beeing rendered... ("+
-                pRenderTarget.IsValid().GetAsString(pRenderTarget->GetName(), "main target).")
+                s_str(pRenderTarget.IsValid() ? pRenderTarget->GetName() : "main target")+")."
             );
         }
     }

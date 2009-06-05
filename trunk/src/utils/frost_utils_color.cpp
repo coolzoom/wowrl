@@ -4,7 +4,6 @@
 /*                                        */
 
 #include "frost_utils_color.h"
-#include "frost_utils_str.h"
 
 #include <OgreColourValue.h>
 

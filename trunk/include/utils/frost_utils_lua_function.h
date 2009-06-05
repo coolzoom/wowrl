@@ -14,6 +14,7 @@
 #define FROST_LUA_UTILS_H
 
 #include "frost_utils.h"
+#include "frost_utils_var.h"
 
 namespace Frost
 {

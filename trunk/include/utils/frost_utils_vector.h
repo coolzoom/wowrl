@@ -8,8 +8,7 @@
 #define FROST_UTILS_VECTOR3_H
 
 #include "frost_utils.h"
-#include "frost_utils_float.h"
-#include "frost_utils_bool.h"
+#include "frost_utils_types.h"
 
 namespace Ogre
 {
@@ -18,9 +17,6 @@ namespace Ogre
 
 namespace Frost
 {
-    class s_float;
-    class s_bool;
-
     /// A simple 3d coordinate storage.
     /** This class is used to store a three dimensions
     *   set of coordinates (x, y, z). It provides a few

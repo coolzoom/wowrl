@@ -8,23 +8,10 @@
 #define FROST_UTILS_VAR_H
 
 #include "frost_utils.h"
-#include "frost_utils_int.h"
-#include "frost_utils_uint.h"
-#include "frost_utils_float.h"
-#include "frost_utils_double.h"
-#include "frost_utils_str.h"
-#include "frost_utils_bool.h"
+#include "frost_utils_types.h"
 
 namespace Frost
 {
-    class s_int;
-    class s_uint;
-    class s_float;
-    class s_double;
-    class s_bool;
-    class s_str;
-    template<class T> class s_ctnr;
-
     enum ValueType
     {
         VALUE_NONE = -1,
@@ -95,9 +82,9 @@ namespace Frost
         void*     pPtr_;
     };
 
-    s_str  operator+ (const char* sLeft, const s_var& vRight);
-    s_str  operator+ (const s_str& sLeft, const s_var& vRight);
-    s_str& operator<< (s_str& sLeft, const s_var& vRight);
+    s_str  operator + (const char* sLeft, const s_var& vRight);
+    s_str  operator + (const s_str& sLeft, const s_var& vRight);
+    s_str& operator << (s_str& sLeft, const s_var& vRight);
 }
 
 #endif
