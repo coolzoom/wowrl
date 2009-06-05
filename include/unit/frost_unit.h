@@ -310,10 +310,8 @@ namespace Frost
         /// Creates the associated Lua glue.
         virtual void     CreateGlue();
 
-        /// Pushes this Unit on the provided Lua::State.
-        /** \param pLua The State on which to push the Unit
-        */
-        virtual void     PushOnLua(s_ptr<Lua::State> pLua) const;
+        /// Pushes this Unit on the unit Lua::State.
+        virtual void     PushOnLua() const;
 
         /// Called whenever an Event occurs.
         /** \param mEvent The Event which has occured

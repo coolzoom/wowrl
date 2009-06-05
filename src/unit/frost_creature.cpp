@@ -53,8 +53,9 @@ namespace Frost
         pBodyModel_->SetUserObject(&mInterface_);
     }
 
-    void Creature::PushOnLua( s_ptr<Lua::State> pLua ) const
+    void Creature::PushOnLua() const
     {
+        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushGlobal(GetLuaID());
         pLua->SetGlobal("unit");
         pLua->PushNil();
