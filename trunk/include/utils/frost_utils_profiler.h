@@ -84,7 +84,13 @@ namespace Frost
     {
     public :
 
+        /// Constructor.
+        /** \param pProfiler The profiler that will be linked to this Chrono
+        *   \param bStart    'true' to make it start immediately
+        */
         Chrono(s_ptr<Profiler> pProfiler, const s_bool& bStart = true);
+
+        /// Destructor.
         ~Chrono();
 
         /// Returns the time elapsed since its creation.

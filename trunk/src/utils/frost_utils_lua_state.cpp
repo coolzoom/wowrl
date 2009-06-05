@@ -31,7 +31,7 @@ const luaL_Reg lualibs[] = {
 
 void OpenLibs( lua_State* pLua_ )
 {
-    for (const luaL_Reg* lib = lualibs; lib->func; lib++)
+    for (const luaL_Reg* lib = lualibs; lib->func; ++lib)
     {
         lua_pushcfunction(pLua_, lib->func);
         lua_pushstring(pLua_, lib->name);
@@ -140,7 +140,8 @@ void State::CopyTable( s_ptr<State::State> pLua, const s_str& sSrcName, const s_
             {
                 s_uint i = s.FindPos(" ");
                 s_str sKey = s.Extract(0, i);
-                s.Erase(0, ++i);
+                ++i;
+                s.Erase(0, i);
                 if (sKey == "'end'")
                 {
                     uiTableIndent--;
@@ -156,7 +157,8 @@ void State::CopyTable( s_ptr<State::State> pLua, const s_str& sSrcName, const s_
 
                     i = s.FindPos(" ");
                     s_str sValue = s.Extract(0, i);
-                    s.Erase(0, ++i);
+                    ++i;
+                    s.Erase(0, i);
 
                     int iType;
                     if (sValue == "'table'")
@@ -259,7 +261,7 @@ s_bool State::CallFunction( const s_str& sFunctionName )
             foreach (iterWords, lWords)
             {
                 lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
-                uiCounter++;
+                ++uiCounter;
                 if (lua_isnil(pLua_, -1))
                 {
                     Error(CLASS_NAME,
@@ -288,7 +290,7 @@ s_bool State::CallFunction( const s_str& sFunctionName )
             Pop(uiCounter);
             return false;
         }
-        uiCounter--;
+        --uiCounter;
     }
     else
     {
@@ -318,7 +320,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
             foreach (iterWords, lWords)
             {
                 lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
-                uiCounter++;
+                ++uiCounter;
                 if (lua_isnil(pLua_, -1))
                 {
                     Error(CLASS_NAME,
@@ -341,7 +343,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
 
     if (lua_isfunction(pLua_, -1))
     {
-        for (s_uint i; i < lArgumentStack.GetSize(); i++)
+        for (s_uint i; i < lArgumentStack.GetSize(); ++i)
         {
             const s_var& pArg = lArgumentStack[i];
             if ((pArg.GetType() == VALUE_INT) ||
@@ -363,7 +365,7 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
             Pop(uiCounter);
             return false;
         }
-        uiCounter--;
+        --uiCounter;
     }
     else
     {
@@ -436,7 +438,7 @@ void State::PushString( const s_str& sValue )
 
 void State::PushNil( const s_uint& uiNumber )
 {
-    for (s_uint ui; ui < uiNumber; ui++)
+    for (s_uint ui; ui < uiNumber; ++ui)
         lua_pushnil(pLua_);
 }
 

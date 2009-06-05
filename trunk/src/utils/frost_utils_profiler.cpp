@@ -30,10 +30,10 @@ namespace Frost
 
     void Profiler::AddTiming( const s_double& dTime )
     {
-        uiCallNbr_++;
+        ++uiCallNbr_;
 
         if (dTime < 0.000001)
-            uiZeroTimings_++;
+            ++uiZeroTimings_;
         else
         {
             if ( (dLowestTime_ == -1.0) || (dTime < dLowestTime_) )
@@ -73,7 +73,7 @@ namespace Frost
                 foreach (iter, lRecordStack_)
                 {
                     Log("        ["+ i +"] : "+ 1000.0*(*iter) +" ms");
-                    i++;
+                    ++i;
                 }
             }
         }

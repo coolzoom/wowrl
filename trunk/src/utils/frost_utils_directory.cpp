@@ -6,6 +6,7 @@
 #include "frost_utils_directory.h"
 
 #include "frost_utils_ptr.h"
+#include "frost_utils_stdhelper.h"
 
 #include "OgreArchiveManager.h"
 #include "OgreStringVector.h"
@@ -30,13 +31,13 @@ namespace Frost
             {
                 Ogre::StringVectorPtr pSV = pArchive->list(false, true);
                 Ogre::StringVector::iterator iter;
-                for (iter = pSV->begin(); iter != pSV->end(); iter++)
+                foreach (iter, *pSV)
                 {
                     lSubDirectoryList_.push_back(Directory(sRelPath_ + "/" + s_str(*iter)));
                 }
 
                 pSV = pArchive->list(false, false);
-                for (iter = pSV->begin(); iter != pSV->end(); iter++)
+                foreach (iter, *pSV)
                 {
                     lFileList_.push_back(sRelPath_ + "/" + (*iter));
                 }
@@ -56,7 +57,7 @@ namespace Frost
         if (uiIter_ < lSubDirectoryList_.size())
         {
             pSub = &lSubDirectoryList_[uiIter_.Get()];
-            uiIter_++;
+            ++uiIter_;
         }
         else
             uiIter_ = 0u;

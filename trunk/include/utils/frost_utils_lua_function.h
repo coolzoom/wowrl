@@ -88,8 +88,8 @@ namespace Frost
         {
         public :
 
-            /// Adds an alternative to this argument.
-            /** \param sName    The name of this alternative argument (used to print errors in the log)
+            /// Constructor.
+            /** \param sName    The name of this argument (used to print errors in the log)
             *   \param mLuaType The expected type in Lua
             *   \param mType    The C++ type you'll be using (conversion is done automatically)
             *   \param pParent  A pointer to the function that'll be using it

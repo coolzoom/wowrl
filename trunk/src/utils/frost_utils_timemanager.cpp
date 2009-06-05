@@ -55,7 +55,7 @@ namespace Frost
         // Update FPS
         static s_uint uiFrameRateCount = 0;
         static s_uint uiFrameCount = 0;
-        uiFrameCount++;
+        ++uiFrameCount;
 
         if (dDelta_ < 0.0001)
             uiFrameRateCount += 10000;
@@ -71,7 +71,7 @@ namespace Frost
             uiFrameCount = 0;
 
             uiAvgFPS_ += uiFPS_;
-            uiFrameNbr_++;
+            ++uiFrameNbr_;
 
             uiBestFPS_ = s_uint::Max(uiBestFPS_, uiFPS_);
             uiWorstFPS_ = s_uint::Min(uiWorstFPS_, uiFPS_);

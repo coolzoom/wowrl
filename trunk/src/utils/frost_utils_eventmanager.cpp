@@ -39,7 +39,7 @@ namespace Frost
                   multimap< s_str, s_ptr<EventReceiver> >::iterator > mIterPair;
             mIterPair = lReceiverList_.equal_range(sEventName);
             multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
-            for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; iterReceiver++)
+            for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; ++iterReceiver)
             {
                 if (iterReceiver->second == pReceiver)
                 {
@@ -65,7 +65,7 @@ namespace Frost
                   multimap< s_str, s_ptr<EventReceiver> >::iterator > mIterPair;
             mIterPair = lReceiverList_.equal_range(sEventName);
             multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
-            for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; iterReceiver++)
+            for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; ++iterReceiver)
             {
                 if (iterReceiver->second == pReceiver)
                 {
@@ -96,7 +96,7 @@ namespace Frost
                       multimap< s_str, s_ptr<EventReceiver> >::iterator > mIterPair;
                 mIterPair = lReceiverList_.equal_range(mEvent.GetName());
                 multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
-                for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; iterReceiver++)
+                for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; ++iterReceiver)
                 {
                     iterReceiver->second->OnEvent(mEvent);
                 }

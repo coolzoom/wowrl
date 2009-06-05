@@ -119,7 +119,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bo
 
                 sEnum += s_str(pLua->GetTypeName(iterData->GetLuaType())) +
                     " (" + iterData->GetName() + ")";
-                i++;
+                ++i;
             }
             pLua->PrintError(
                 "Argument " +
