@@ -35,6 +35,9 @@ namespace Frost
         ~TopCamera();
 
         /// Tells this Camera that it is the main camera.
+        /** \param bMainCamera 'true' if its the new main camera
+        *   \note You shouldn't call this. Use CameraManager::SetMainCamera().
+        */
         virtual void NotifyMainCamera(const s_bool& bMainCamera);
 
         /// Sets the movement speed of this camera.
