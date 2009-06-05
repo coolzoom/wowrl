@@ -5,7 +5,7 @@
 /*                                        */
 /*                                        */
 
-#include "frost_path_smoothpath.h"
+#include "path/frost_path_smoothpath.h"
 
 using namespace std;
 
