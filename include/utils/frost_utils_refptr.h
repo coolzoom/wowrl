@@ -231,14 +231,14 @@ namespace Frost
         void Increment_()
         {
             if (pCounter_)
-                (*pCounter_)++;
+                ++(*pCounter_);
         }
 
         void Decrement_()
         {
             if (pCounter_)
             {
-                (*pCounter_)--;
+                --(*pCounter_);
                 if (pCounter_->IsNull())
                 {
                     delete pValue_;

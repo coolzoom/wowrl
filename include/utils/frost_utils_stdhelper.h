@@ -39,7 +39,7 @@ namespace Frost
             iterSecond = lMap->lower_bound(mValue);
             if (iterSecond == lMap->end())
             {
-                iterSecond--;
+                --iterSecond;
                 return iterSecond->second;
             }
             else if (iterSecond == lMap->begin())
@@ -49,7 +49,7 @@ namespace Frost
             else
             {
                 iterFirst = iterSecond;
-                iterFirst--;
+                --iterFirst;
 
                 Key mCoef = (mValue - iterFirst->first)/(iterSecond->first - iterFirst->first);
 
@@ -75,7 +75,7 @@ namespace Frost
             iterSecond = lMap->lower_bound(mValue);
             if (iterSecond == lMap->end())
             {
-                iterSecond--;
+                --iterSecond;
                 return iterSecond->second;
             }
             else if (iterSecond == lMap->begin())
@@ -85,7 +85,7 @@ namespace Frost
             else
             {
                 iterFirst = iterSecond;
-                iterFirst--;
+                --iterFirst;
 
                 Key mCoef = (mValue - iterFirst->first)/(iterSecond->first - iterFirst->first);
 
@@ -111,7 +111,7 @@ namespace Frost
             iterSecond = lMap->lower_bound(mValue);
             if (iterSecond == lMap->end())
             {
-                iterSecond--;
+                --iterSecond;
                 return iterSecond->second;
             }
             else if (iterSecond == lMap->begin())
@@ -121,7 +121,7 @@ namespace Frost
             else
             {
                 iterFirst = iterSecond;
-                iterFirst--;
+                --iterFirst;
 
                 Key mCoef = (mValue - iterFirst->first)/(iterSecond->first - iterFirst->first);
 
@@ -147,7 +147,7 @@ namespace Frost
             iterSecond = lMap->lower_bound((Key)mValue);
             if (iterSecond == lMap->end())
             {
-                iterSecond--;
+                --iterSecond;
                 return iterSecond->second;
             }
             else if (iterSecond == lMap->begin())
@@ -157,7 +157,7 @@ namespace Frost
             else
             {
                 iterFirst = iterSecond;
-                iterFirst--;
+                --iterFirst;
 
                 double dCoef = (mValue - iterFirst->first);
                 dCoef /= (iterSecond->first - iterFirst->first);
@@ -184,7 +184,7 @@ namespace Frost
             iterSecond = lMap->lower_bound(Key(mValue));
             if (iterSecond == lMap->end())
             {
-                iterSecond--;
+                --iterSecond;
                 return iterSecond->second;
             }
             else if (iterSecond == lMap->begin())
@@ -194,7 +194,7 @@ namespace Frost
             else
             {
                 iterFirst = iterSecond;
-                iterFirst--;
+                --iterFirst;
 
                 s_double dCoef = (mValue - s_double(iterFirst->first));
                 dCoef /= s_double(iterSecond->first - iterFirst->first);
@@ -221,7 +221,7 @@ namespace Frost
             iterSecond = lMap->lower_bound(Key(mValue));
             if (iterSecond == lMap->end())
             {
-                iterSecond--;
+                --iterSecond;
                 return iterSecond->second;
             }
             else if (iterSecond == lMap->begin())
@@ -231,7 +231,7 @@ namespace Frost
             else
             {
                 iterFirst = iterSecond;
-                iterFirst--;
+                --iterFirst;
 
                 s_double dCoef = (mValue - s_double(iterFirst->first));
                 dCoef /= s_double(iterSecond->first - iterFirst->first);

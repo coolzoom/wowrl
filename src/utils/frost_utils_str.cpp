@@ -180,7 +180,7 @@ namespace Frost
             if (bIgnoreSpaces)
             {
                 s_bool bEmpty = true;
-                for (uint i = 0; i < sValue_.length(); i++)
+                for (uint i = 0; i < sValue_.length(); ++i)
                 {
                     if ( (sValue_[i] != STRING(' ')) && (sValue_[i] != STRING('	')) )
                     {
@@ -595,7 +595,7 @@ namespace Frost
                 lPieces.push_back(Extract(uiLastPos, uiCurSize));
             uiLastPos = uiPos + sDelim.Length();
             uiPos = FindPos(sDelim, uiLastPos);
-            uiCount++;
+            ++uiCount;
 
             if (uiCount >= uiMaxCut)
                 break;
@@ -619,7 +619,7 @@ namespace Frost
             lPieces.push_back(Extract(uiLastPos, uiCurSize));
             uiLastPos = uiPos + sDelim.Length();
             uiPos = FindPos(sDelim, uiLastPos);
-            uiCount++;
+            ++uiCount;
 
             if (uiCount >= uiMaxCut)
                 break;
@@ -636,8 +636,8 @@ namespace Frost
         s_uint uiPos = FindPos(sPattern);
         while (uiPos.IsValid())
         {
-            uiCount++;
-            uiPos++;
+            ++uiCount;
+            ++uiPos;
             uiPos = FindPos(sPattern, uiPos);
         }
 
@@ -723,12 +723,12 @@ namespace Frost
         while ((*this)[0] == cPattern)
         {
             EraseFromStart(1);
-            uiCount++;
+            ++uiCount;
         }
         while ((*this)[Length().Get()-1] == cPattern)
         {
             EraseFromEnd(1);
-            uiCount++;
+            ++uiCount;
         }
         return uiCount;
     }
@@ -742,7 +742,7 @@ namespace Frost
         {
             sValue_.replace(uiPos.Get(), sPattern.Length().Get(), sReplacement.Get());
             uiPos = FindPos(sPattern, uiPos+sReplacement.Length());
-            uiCount++;
+            ++uiCount;
         }
 
         return uiCount;

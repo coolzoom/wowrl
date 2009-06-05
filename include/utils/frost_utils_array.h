@@ -17,33 +17,23 @@ namespace Frost
     template<class T, uint N> class s_array;
 
     /// Base type : container
-    /** This class is basically a wrapper around std::deque.<br>
-    *   It works exactly the same, with one exception : iterators
-    *   are never invalidated by any of this class's member functions*.<br>
-    *   These "home maid" iterators might be a little slower (about 2 times)
-    *   than those provided by the standard. If you need performances, use
-    *   standard containers directly.<br>
-    *   One more important thing to note is the overloading of the ','
-    *   operator, which allows you to write :<br><br>
+    /** This class is basically a wrapper around std::deque.
+    *   A "cool feature" is the overloading of the ',' operator, which allows
+    *   you to write :<br><br>
     *   s_array<s_int, 2> myArray((s_int(0), s_int(1)));<br><br>
     *   ... with any class that has overloaded its ',' operator.<br><br>
-    *   <b>Don't forget the double parenthesis</b> : if you
-    *   don't use them, myArray will initialize all its fields
-    *   with the latest value.<br><br>
-    *   * : of course, if you have an iterator pointing to the 5th element, and
-    *   you resize the container to 4, then the iterator will behave like end()
-    *   (and will most likely crash when you'll try to dereference it).
+    *   <b>Don't forget the double parenthesis</b> : if you don't use them,
+    *   myArray will initialize all its fields with the latest value. If you don't
+    *   provide enough elements, myArray will fill the missing space with default
+    *   elements (default constructor is called).
     */
     template<class T>
     class s_ctnr
     {
     public :
 
-        class iterator;
-        class const_iterator;
-
-        friend class s_ctnr::iterator;
-        friend class s_ctnr::const_iterator;
+        typedef typename std::deque<T>::iterator       iterator;
+        typedef typename std::deque<T>::const_iterator const_iterator;
 
         /// Default constructor.
         s_ctnr()
@@ -69,7 +59,7 @@ namespace Frost
         */
         s_ctnr(const s_array<T,N>& lElemArray)
         {
-            for (uint i = 0; i < N; i++)
+            for (uint i = 0; i < N; ++i)
                 lArray_.push_back(lElemArray[i]);
         }
 
@@ -167,8 +157,7 @@ namespace Frost
         */
         s_bool Find(const T& mElem, const s_uint& uiStart = 0u) const
         {
-            typename std::deque<T>::const_iterator iterStart = lArray_.begin() + uiStart.Get();
-            return (std::find(iterStart, lArray_.end(), mElem) != lArray_.end());
+            return (std::find(lArray_.begin() + uiStart.Get(), lArray_.end(), mElem) != lArray_.end());
         }
 
         /// Searches the container for the provided element.
@@ -180,8 +169,7 @@ namespace Frost
         */
         s_uint FindPos(const T& mElem, const s_uint& uiStart = 0u) const
         {
-            typename std::deque<T>::const_iterator iterStart = lArray_.begin() + uiStart.Get();
-            typename std::deque<T>::const_iterator iterPos = std::find(iterStart, lArray_.end(), mElem);
+            const_iterator iterPos = std::find(lArray_.begin() + uiStart.Get(), lArray_.end(), mElem);
             if (iterPos == lArray_.end())
                 return s_uint::NaN;
             else
@@ -197,8 +185,8 @@ namespace Frost
         */
         iterator FindIter(const T& mElem, const s_uint& uiStart = 0u)
         {
-            typename std::deque<T>::iterator iterStart = lArray_.begin() + uiStart.Get();
-            return iterator(this, std::find(iterStart, lArray_.end(), mElem) - lArray_.begin());
+            iterator iterStart = lArray_.begin() + uiStart.Get();
+            return std::find(iterStart, lArray_.end(), mElem);
         }
 
         /// Searches the container for the provided element.
@@ -210,8 +198,8 @@ namespace Frost
         */
         const_iterator FindIter(const T& mElem, const s_uint& uiStart = 0u) const
         {
-            typename std::deque<T>::const_iterator iterStart = lArray_.begin() + uiStart.Get();
-            return const_iterator(this, std::find(iterStart, lArray_.end(), mElem) - lArray_.begin());
+            const_iterator iterStart = lArray_.begin() + uiStart.Get();
+            return std::find(iterStart, lArray_.end(), mElem);
         }
 
         /// Erases an element from the container.
@@ -220,10 +208,7 @@ namespace Frost
         void Erase(const s_uint& uiPos)
         {
             if (uiPos.IsValid() && uiPos < lArray_.size())
-            {
-                typename std::deque<T>::iterator iter = lArray_.begin() + uiPos.Get();
-                iter = lArray_.erase(iter);
-            }
+                lArray_.erase(lArray_.begin() + uiPos.Get());
         }
 
         /// Erases an element from the container.
@@ -234,17 +219,7 @@ namespace Frost
         */
         iterator Erase(const iterator& mIter)
         {
-            if (mIter.IsValid(this))
-            {
-                typename std::deque<T>::iterator iter = lArray_.begin() + (mIter - Begin()).Get();
-                iter = lArray_.erase(iter);
-                if (iter != lArray_.end())
-                    return iterator(this, iter - lArray_.begin());
-                else
-                    return End();
-            }
-            else
-                return End();
+            return lArray_.erase(mIter);
         }
 
         /// Returns the number of elements in this container.
@@ -277,6 +252,15 @@ namespace Frost
             return mContainer;
         }
 
+        template<uint N>
+        s_ctnr& operator = (const s_array<T,N>& lElemArray)
+        {
+            if (N < lArray_.size())
+                lArray_.resize(N);
+            for (uint i = 0; i < N; ++i)
+                lArray_.push_back(lElemArray[i]);
+        }
+
         T& operator[] (const s_uint& uiIndex)
         {
             return lArray_[uiIndex.Get()];
@@ -287,470 +271,55 @@ namespace Frost
             return lArray_[uiIndex.Get()];
         }
 
+        T& operator[] (const uint& uiIndex)
+        {
+            return lArray_[uiIndex];
+        }
+
+        const T& operator[] (const uint& uiIndex) const
+        {
+            return lArray_[uiIndex];
+        }
+
         iterator begin()
         {
-            return iterator(this, 0);
+            return lArray_.begin();
         }
 
         const_iterator begin() const
         {
-            return const_iterator(this, 0);
+            return lArray_.begin();
         }
 
         iterator end()
         {
-            return iterator(this, -1);
+            return lArray_.end();
         }
 
         const_iterator end() const
         {
-            return const_iterator(this, -1);
+            return lArray_.end();
         }
 
         iterator Begin()
         {
-            return iterator(this, 0);
+            return lArray_.begin();
         }
 
         const_iterator Begin() const
         {
-            return const_iterator(this, 0);
+            return lArray_.begin();
         }
 
         iterator End()
         {
-            return iterator(this, -1);
+            return lArray_.end();
         }
 
         const_iterator End() const
         {
-            return const_iterator(this, -1);
+            return lArray_.end();
         }
-
-        /// "stl like" s_ctnr iterator
-        /** Safely iterates through an s_ctnr.
-        */
-        class iterator
-        {
-        public :
-
-            friend class const_iterator;
-
-            iterator()
-            {
-                pParent_ = NULL;
-            }
-
-            iterator(s_ctnr<T>* pParent, const int& iPos)
-            {
-                pParent_ = pParent;
-                iPos_ = iPos;
-                if (pParent)
-                {
-                    if ((uint)iPos_ >= pParent_->lArray_.size())
-                        iPos_ = -1;
-                }
-            }
-
-            explicit iterator(const const_iterator& iter)
-            {
-                pParent_ = iter.pParent_;
-                iPos_ = iter.iPos_;
-            }
-
-            s_bool IsValid(s_ctnr<T>* pParent = NULL) const
-            {
-                if (pParent_)
-                {
-                    if (pParent != NULL)
-                        return ((pParent_ == pParent) && (iPos_ != -1));
-                    else
-                        return (iPos_ != -1);
-                }
-                else
-                    return false;
-            }
-
-            T& operator * () const
-            {
-                return pParent_->lArray_[iPos_];
-            }
-
-            T* operator -> () const
-            {
-                return &pParent_->lArray_[iPos_];
-            }
-
-            iterator operator + ( const s_int& iOffset ) const
-            {
-                int iNewPos = iPos_;
-                if (pParent_ && iOffset.IsValid())
-                {
-                    if (iOffset > 0)
-                    {
-                        iNewPos += iOffset.Get();
-                        if ((uint)iNewPos >= pParent_->lArray_.size())
-                            iNewPos = -1;
-                    }
-                    if (iOffset < 0)
-                    {
-                        if (-iOffset < iNewPos)
-                            iNewPos += iOffset.Get();
-                        else
-                            iNewPos = 0;
-                    }
-                }
-                return iterator(pParent_, iNewPos);
-            }
-
-            iterator iterator::operator - ( const s_int& iOffset ) const
-            {
-                int iNewPos = iPos_;
-                if (pParent_ && iOffset.IsValid())
-                {
-                    if (iOffset < 0)
-                    {
-                        iNewPos -= iOffset.Get();
-                        if ((uint)iNewPos >= pParent_->lArray_.size())
-                            iNewPos = -1;
-                    }
-                    if (iOffset > 0)
-                    {
-                        if (iOffset < iNewPos)
-                            iNewPos -= iOffset.Get();
-                        else
-                            iNewPos = 0;
-                    }
-                }
-                return iterator(pParent_, iNewPos);
-            }
-
-            s_int iterator::operator - ( const iterator& iter ) const
-            {
-                if (iter.pParent_ == pParent_)
-                {
-                    if (iPos_ == -1)
-                    {
-                        if (iter.iPos_ == -1)
-                            return 0;
-                        else
-                            return pParent_->lArray_.size() - iter.iPos_;
-                    }
-                    else
-                    {
-                        if (iter.iPos_ == -1)
-                            return iPos_ - pParent_->lArray_.size();
-                        else
-                            return iPos_ - iter.iPos_;
-                    }
-                }
-                else
-                    return s_int::NaN;
-            }
-
-            iterator& iterator::operator ++ ()
-            {
-                if (pParent_ && (iPos_ != -1))
-                {
-                    ++iPos_;
-                    if ((uint)iPos_ >= pParent_->lArray_.size())
-                        iPos_ = -1;
-                }
-
-                return *this;
-            }
-
-            iterator iterator::operator ++ (int)
-            {
-                if (pParent_ && (iPos_ != -1))
-                {
-                    ++iPos_;
-                    if ((uint)iPos_ >= pParent_->lArray_.size())
-                        iPos_ = -1;
-                }
-
-                return *this;
-            }
-
-            iterator& iterator::operator -- ()
-            {
-                if (pParent_)
-                {
-                    if (iPos_ != -1)
-                    {
-                        if (iPos_ != 0)
-                            --iPos_;
-                    }
-                    else
-                    {
-                        if (pParent_->lArray_.empty())
-                            iPos_ = -1;
-                        else
-                            iPos_ = pParent_->lArray_.size() - 1;
-                    }
-                }
-
-                return *this;
-            }
-
-            iterator iterator::operator -- (int)
-            {
-                if (pParent_)
-                {
-                    if (iPos_ != -1)
-                    {
-                        if (iPos_ != 0)
-                            --iPos_;
-                    }
-                    else
-                    {
-                        if (pParent_->lArray_.empty())
-                            iPos_ = -1;
-                        else
-                            iPos_ = pParent_->lArray_.size() - 1;
-                    }
-                }
-
-                return *this;
-            }
-
-            s_bool iterator::operator != (iterator iter)
-            {
-                if (iPos_ == -1)
-                {
-                    if (iter.iPos_ == -1)
-                        return (pParent_ != iter.pParent_);
-                    else
-                        return true;
-                }
-                else
-                {
-                    if (iter.iPos_ == -1)
-                        return true;
-                    else
-                        return (pParent_ != iter.pParent_) || (iPos_ != iter.iPos_);
-                }
-            }
-
-        private :
-
-            s_ctnr<T>* pParent_;
-            int        iPos_;
-
-        };
-
-        /// "stl like" s_ctnr iterator
-        /** Safely iterates through an s_ctnr.<br>
-        *   Ensures it is not modified.
-        */
-        class const_iterator
-        {
-        public :
-
-            friend class iterator;
-
-            const_iterator()
-            {
-                pParent_ = NULL;
-            }
-
-            const_iterator(const s_ctnr<T>* pParent, const int& iPos)
-            {
-                pParent_ = pParent;
-                iPos_ = iPos;
-                if (pParent)
-                {
-                    if ((uint)iPos_ >= pParent_->lArray_.size())
-                        iPos_ = -1;
-                }
-            }
-
-            const_iterator(const iterator& iter)
-            {
-                pParent_ = iter.pParent_;
-                iPos_ = iter.iPos_;
-            }
-
-            s_bool IsValid(const s_ctnr<T>* pParent = NULL) const
-            {
-                if (pParent_)
-                {
-                    if (pParent != NULL)
-                        return ((pParent_ == pParent) && (iPos_ != -1));
-                    else
-                        return (iPos_ != -1);
-                }
-                else
-                    return false;
-            }
-
-            const T& operator * () const
-            {
-                return pParent_->lArray_[iPos_];
-            }
-
-            const T* operator -> () const
-            {
-                return &pParent_->lArray_[iPos_];
-            }
-
-            const_iterator operator + ( const s_int& iOffset ) const
-            {
-                int iNewPos = iPos_;
-                if (pParent_ && iOffset.IsValid())
-                {
-                    if (iOffset > 0)
-                    {
-                        iNewPos += iOffset.Get();
-                        if ((uint)iNewPos >= pParent_->lArray_.size())
-                            iNewPos = -1;
-                    }
-                    if (iOffset < 0)
-                    {
-                        if (-iOffset < iNewPos)
-                            iNewPos += iOffset.Get();
-                        else
-                            iNewPos = 0;
-                    }
-                }
-                return const_iterator(pParent_, iNewPos);
-            }
-
-            const_iterator const_iterator::operator - ( const s_int& iOffset ) const
-            {
-                int iNewPos = iPos_;
-                if (pParent_ && iOffset.IsValid())
-                {
-                    if (iOffset < 0)
-                    {
-                        iNewPos -= iOffset.Get();
-                        if ((uint)iNewPos >= pParent_->lArray_.size())
-                            iNewPos = -1;
-                    }
-                    if (iOffset > 0)
-                    {
-                        if (iOffset < iNewPos)
-                            iNewPos -= iOffset.Get();
-                        else
-                            iNewPos = 0;
-                    }
-                }
-                return const_iterator(pParent_, iNewPos);
-            }
-
-            s_int const_iterator::operator - ( const const_iterator& iter ) const
-            {
-                if (iter.pParent_ == pParent_)
-                {
-                    if (iPos_ == -1)
-                    {
-                        if (iter.iPos_ == -1)
-                            return 0;
-                        else
-                            return pParent_->lArray_.size() - iter.iPos_;
-                    }
-                    else
-                    {
-                        if (iter.iPos_ == -1)
-                            return iPos_ - pParent_->lArray_.size();
-                        else
-                            return iPos_ - iter.iPos_;
-                    }
-                }
-                else
-                    return s_int::NaN;
-            }
-
-            const_iterator& const_iterator::operator ++ ()
-            {
-                if (pParent_ && (iPos_ != -1))
-                {
-                    ++iPos_;
-                    if ((uint)iPos_ >= pParent_->lArray_.size())
-                        iPos_ = -1;
-                }
-
-                return *this;
-            }
-
-            const_iterator const_iterator::operator ++ (int)
-            {
-                if (pParent_ && (iPos_ != -1))
-                {
-                    ++iPos_;
-                    if ((uint)iPos_ >= pParent_->lArray_.size())
-                        iPos_ = -1;
-                }
-
-                return *this;
-            }
-
-            const_iterator& const_iterator::operator -- ()
-            {
-                if (pParent_)
-                {
-                    if (iPos_ != -1)
-                    {
-                        if (iPos_ != 0)
-                            --iPos_;
-                    }
-                    else
-                    {
-                        if (pParent_->lArray_.empty())
-                            iPos_ = -1;
-                        else
-                            iPos_ = pParent_->lArray_.size() - 1;
-                    }
-                }
-
-                return *this;
-            }
-
-            const_iterator const_iterator::operator -- (int)
-            {
-                if (pParent_)
-                {
-                    if (iPos_ != -1)
-                    {
-                        if (iPos_ != 0)
-                            --iPos_;
-                    }
-                    else
-                    {
-                        if (pParent_->lArray_.empty())
-                            iPos_ = -1;
-                        else
-                            iPos_ = pParent_->lArray_.size() - 1;
-                    }
-                }
-
-                return *this;
-            }
-
-            s_bool const_iterator::operator != (const_iterator iter)
-            {
-                if (iPos_ == -1)
-                {
-                    if (iter.iPos_ == -1)
-                        return (pParent_ != iter.pParent_);
-                    else
-                        return true;
-                }
-                else
-                {
-                    if (iter.iPos_ == -1)
-                        return true;
-                    else
-                        return (pParent_ != iter.pParent_) || (iPos_ != iter.iPos_);
-                }
-            }
-
-        private :
-
-            const s_ctnr<T>* pParent_;
-            int              iPos_;
-
-        };
 
         static const s_str CLASS_NAME;
 
@@ -760,9 +329,8 @@ namespace Frost
     };
 
     /// Base type : array
-    /** This class is a limited version of std::vector.
-    *   It has a fixed size, like standard C arrays, but
-    *   it comes with a few features that make it simpler
+    /** This class is an improved version of C arrays.
+    *   It comes with a few features that make it simpler
     *   to use.
     */
     template<class T, uint N>
@@ -776,7 +344,7 @@ namespace Frost
 
         s_array(const T& mInitValue)
         {
-            for (uint i = 0; i < N; i++)
+            for (uint i = 0; i < N; ++i)
             {
                 lArray_[i] = mInitValue;
             }
@@ -784,12 +352,17 @@ namespace Frost
 
         s_array(const s_ctnr<T>& mContainer)
         {
-            for (uint i = 0; i < N; i++)
+            uint i;
+            for (i = 0; i < N; ++i)
             {
                 if (i >= mContainer.GetSize().Get())
                     break;
 
                 lArray_[i] = mContainer[i];
+            }
+            for (; i < N; ++i)
+            {
+                lArray_[i] = T();
             }
         }
 
@@ -800,23 +373,23 @@ namespace Frost
 
         void Set(const T& mValue)
         {
-            for (uint i = 0; i < N; i++)
+            for (uint i = 0; i < N; ++i)
             {
                 lArray_[i] = mValue;
             }
         }
 
-        void Set(const T lArray[N])
+        void Set(const T (&lArray)[N])
         {
-            for (uint i = 0; i < N; i++)
+            for (uint i = 0; i < N; ++i)
             {
                 lArray_[i] = lArray[i];
             }
         }
 
-        void Set(const T*& lArray)
+        void Set(const T* lArray)
         {
-            for (uint i = 0; i < N; i++)
+            for (uint i = 0; i < N; ++i)
             {
                 lArray_[i] = lArray[i];
             }
@@ -869,7 +442,7 @@ namespace Frost
 
         s_bool operator == (const s_array& mValue)
         {
-            for (uint i = 0; i < N; i++)
+            for (uint i = 0; i < N; ++i)
             {
                 if (lArray_[i] != mValue[i])
                     return false;
@@ -880,7 +453,7 @@ namespace Frost
 
         s_bool operator != (const s_array& mValue)
         {
-            for (uint i = 0; i < N; i++)
+            for (uint i = 0; i < N; ++i)
             {
                 if (lArray_[i] != mValue[i])
                     return true;
@@ -892,6 +465,24 @@ namespace Frost
         s_array& operator = (const s_array& mValue)
         {
             memcpy(lArray_, mValue.lArray_, N*sizeof(T));
+            return *this;
+        }
+
+        s_array& operator = (const s_ctnr<T>& mContainer)
+        {
+            uint i;
+            for (i = 0; i < N; ++i)
+            {
+                if (i >= mContainer.GetSize().Get())
+                    break;
+
+                lArray_[i] = mContainer[i];
+            }
+            for (; i < N; ++i)
+            {
+                lArray_[i] = T();
+            }
+
             return *this;
         }
 
@@ -908,7 +499,7 @@ namespace Frost
     s_str operator + (const s_str& sLeft, const s_ctnr<T>& mRight)
     {
         s_str sTemp = "(";
-        for (s_uint i = 0; i < mRight.GetSize(); i++)
+        for (s_uint i = 0; i < mRight.GetSize(); ++i)
         {
             if (i == mRight.GetSize()-s_uint(1u))
                 sTemp << mRight[i];
@@ -930,7 +521,7 @@ namespace Frost
     s_str operator + (const s_str& sLeft, const s_array<T, N>& mRight)
     {
         s_str sTemp = "(";
-        for (uint i = 0; i < N; i++)
+        for (uint i = 0; i < N; ++i)
         {
             if (i == N-1)
                 sTemp << mRight.Get(i);
@@ -952,7 +543,7 @@ namespace Frost
     s_str& operator << (s_str& sLeft, const s_array<T, N>& mRight)
     {
         s_str sTemp = "(";
-        for (uint i = 0; i < N; i++)
+        for (uint i = 0; i < N; ++i)
         {
             if (i == N-1)
                 sTemp << mRight.Get(i);

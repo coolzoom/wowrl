@@ -194,14 +194,14 @@ s_bool Function::Check( const s_bool& bPrintError )
                     bValid = false;
                     break;
                 }
-                ui++;
+                ++ui;
             }
             if (bValid)
             {
                 pArgList_ = (*iterArgListPtr);
                 break;
             }
-            i++;
+            ++i;
         }
 
         if (!pArgList_)
@@ -252,7 +252,7 @@ s_bool Function::Check( const s_bool& bPrintError )
         {
             if (!iterArg->second->Test(pLua_, ui, bPrintError))
                 bValid = false;
-            ui++; i++;
+            ++ui; ++i;
         }
 
         if (!bValid)
@@ -275,7 +275,7 @@ s_bool Function::Check( const s_bool& bPrintError )
             if (!iterArg->second->Test(pLua_, ui, bPrintError))
                 bValid = false;
         }
-        ui++;
+        ++ui;
     }
 
     return bValid;
@@ -289,7 +289,7 @@ const s_str& Function::GetName() const
 void Function::Push( ReturnValue mReturn )
 {
     if (uiReturnCount_ == uiReturnNbr_)
-        uiReturnNbr_++;
+        ++uiReturnNbr_;
 
     if (mReturn.mType == RETURN_NIL)
         pLua_->PushNil();
@@ -300,7 +300,7 @@ void Function::Push( ReturnValue mReturn )
     else if (mReturn.mType == RETURN_STRING)
         pLua_->PushString(mReturn.vValue.GetS());
 
-    uiReturnCount_++;
+    ++uiReturnCount_;
 }
 
 int Function::Return()
