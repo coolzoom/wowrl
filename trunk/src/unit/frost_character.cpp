@@ -123,8 +123,9 @@ namespace Frost
         return pBodyModel_->GetModelPart(uiID);
     }
 
-    void Character::PushOnLua( s_ptr<Lua::State> pLua ) const
+    void Character::PushOnLua() const
     {
+        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushGlobal(GetLuaID());
         pLua->SetGlobal("unit");
         pLua->PushGlobal(GetLuaID());

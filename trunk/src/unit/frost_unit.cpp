@@ -22,8 +22,8 @@
 
 using namespace std;
 
-#define JUMP_COEF_1   s_double(-4.0*fJumpHeight_/(fJumpDuration_*fJumpDuration_))
-#define JUMP_COEF_2   s_double(4.0*fJumpHeight_/fJumpDuration_)
+#define JUMP_COEF_1   s_double(-4.0f*fJumpHeight_/(fJumpDuration_*fJumpDuration_))
+#define JUMP_COEF_2   s_double(4.0f*fJumpHeight_/fJumpDuration_)
 
 namespace Frost
 {
@@ -823,8 +823,9 @@ namespace Frost
         return "U_"+uiID_;
     }
 
-    void Unit::PushOnLua( s_ptr<Lua::State> pLua ) const
+    void Unit::PushOnLua() const
     {
+        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushGlobal(GetLuaID());
         pLua->SetGlobal("unit");
         pLua->PushNil();
