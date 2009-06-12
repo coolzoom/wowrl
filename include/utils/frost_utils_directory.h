@@ -35,9 +35,15 @@ namespace Frost
         s_ptr<Directory> GetNextSubDirectory();
 
         /// Returns the list of the contained files.
-        /** \return The list of the contained files
+        /** \param bWithPath       'true' to include this Directory's relative path
+        *   \param sExtensionFilter Use it to filter files depending on their extention
+        *   \return The list of the contained files
+        *   \note Example : if you use "xml" as the extention filter, then only *.xml
+        *         files will appear on the list.<br>
+        *         Example : if you use "xml, lua", then you'll only get *.xml and *.lua
+        *         files.
         */
-        const std::vector<s_str>& GetFileList() const;
+        s_ctnr<s_str> GetFileList(const s_bool& bWithPath = false, const s_str& sExtensionFilter = "") const;
 
         /// Returns this directory's name.
         /** \return This directory's name
@@ -58,9 +64,9 @@ namespace Frost
     private :
 
         /// The sub-directory list
-        std::vector<Directory> lSubDirectoryList_;
+        s_ctnr<Directory> lSubDirectoryList_;
         /// The contained file list
-        std::vector<s_str>     lFileList_;
+        s_ctnr<s_str>     lFileList_;
         /// The sub-directory iterator
         s_uint uiIter_;
         /// This directory name

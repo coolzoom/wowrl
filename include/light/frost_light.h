@@ -27,7 +27,7 @@ namespace Frost
     public:
 
         /// Constructor.
-        Light(const s_uint& uiID, LightType mType);
+        Light(LightType mType);
 
         /// Destructor.
         ~Light();

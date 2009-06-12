@@ -9,9 +9,8 @@ namespace Frost
 {
     s_str Decal::CLASS_NAME = "Decal";
 
-    Decal::Decal( const s_str& sTextureFile, const s_uint& uiID, s_ptr<Ogre::Material> pOgreMat )
+    Decal::Decal( const s_str& sTextureFile, s_ptr<Ogre::Material> pOgreMat )
     {
-        uiID_ = uiID;
         pOgreMat_ = pOgreMat;
         if (pOgreMat_)
         {
@@ -30,9 +29,8 @@ namespace Frost
         mAmbient_ = Color::BLACK;
     }
 
-    Decal::Decal( const Decal& mDecal, const s_uint& uiID, s_ptr<Ogre::Material> pOgreMat ) : MovableObject(mDecal)
+    Decal::Decal( const Decal& mDecal, s_ptr<Ogre::Material> pOgreMat ) : MovableObject(mDecal)
     {
-        uiID_ = uiID;
         pOgreMat_ = pOgreMat;
         pOgrePass_ = pOgreMat_->getTechnique(0)->createPass();
         pOgrePass_->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);

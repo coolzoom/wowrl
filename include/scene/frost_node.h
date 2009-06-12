@@ -26,21 +26,15 @@ namespace Frost
         /** \note You shouldn't have to call this. Use the
         *         SceneManager instead.
         */
-        Node(const s_uint& uiID, const Vector& mPos);
+        Node(const Vector& mPos);
 
         /// Destructor.
         ~Node();
-
-        /// Returns this camera's ID.
-        /** \return This camera's ID
-        */
-        const s_uint& GetID();
 
         static const s_str CLASS_NAME;
 
     private :
 
-        s_uint uiID_;
     };
 }
 

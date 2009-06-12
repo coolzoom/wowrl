@@ -198,9 +198,8 @@ namespace Frost
 
     s_ptr<Decal> Material::AddDecal( s_ptr<Decal> pDecal )
     {
-        s_ptr<Decal> pNewDecal = new Decal(*pDecal, uiDecalCounter_, pOgreMat_);
-        lDecalList_[uiDecalCounter_] = pNewDecal;
-        uiDecalCounter_++;
+        s_ptr<Decal> pNewDecal = new Decal(*pDecal, pOgreMat_);
+        lDecalList_[pNewDecal->GetID()] = pNewDecal;
 
         pNewDecal->Show();
 
@@ -214,9 +213,8 @@ namespace Frost
 
     s_ptr<Decal> Material::AddDecal( const s_str& sTextureFile )
     {
-        s_ptr<Decal> pDecal = new Decal(sTextureFile, uiDecalCounter_, pOgreMat_);
-        lDecalList_[uiDecalCounter_] = pDecal;
-        uiDecalCounter_++;
+        s_ptr<Decal> pDecal = new Decal(sTextureFile, pOgreMat_);
+        lDecalList_[pDecal->GetID()] = pDecal;
 
         pDecal->Show();
 

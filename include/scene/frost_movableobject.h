@@ -23,11 +23,11 @@ namespace Frost
         /// Default constructor.
         MovableObject();
 
-        /// Copy constructor.
-        MovableObject(const MovableObject& mObject);
-
         /// Constructor.
         MovableObject(const Vector& mPosition);
+
+        /// Copy constructor.
+        MovableObject(const MovableObject& mObject);
 
         /// Destructor.
         virtual ~MovableObject();
@@ -70,13 +70,10 @@ namespace Frost
 
         /// Makes the object rotate around a point in the space.
         /** \param mOrbitCenter         The point around which the object will orbit
-        *   \param bOrbitCenterRelative 'true' if the point is relative to this object's parent
         *   \note Disables tracking, enables orbiting.<br>
-        *         If bRelative is 'false', this object will be completely detached from
-        *         its parent.
         *
         */
-        virtual void          OrbitAround(const Vector& mOrbitCenter, const s_bool& bOrbitCenterRelative = false);
+        virtual void          OrbitAround(const Vector& mOrbitCenter);
 
         /// Orientates the object to a certain direction.
         /** \param mDirection The direction to look to
@@ -166,6 +163,11 @@ namespace Frost
         */
         const Vector&         GetOrbitCenter() const;
 
+        /// Returns the node this object is orbiting around.
+        /** \return The node this object is orbiting around
+        */
+        s_ptr<Ogre::SceneNode> GetOrbitNode();
+
         /// Returns the Path used by this object.
         /** \return The Path used by this object
         */
@@ -175,6 +177,11 @@ namespace Frost
         /** \return The controlled node
         */
         s_ptr<Ogre::SceneNode> GetOgreNode();
+
+        /// Returns this MovableObject's unique ID.
+        /** \return This MovableObject's unique ID
+        */
+        const s_uint& GetID() const;
 
         /// Update this object's parameters.
         /** \param fDelta The time elapsed since the last call
@@ -187,12 +194,24 @@ namespace Frost
         */
         virtual void  OnEvent(const Event& mEvent);
 
+        /// Creates the associated Lua glue.
+        /** \param pLua The Lua::State on which to create the glue
+        */
+        virtual void  CreateGlue(s_ptr<Lua::State> pLua);
+
+        /// Returns the associated Lua glue.
+        /** \return The associated Lua glue
+        */
+        s_ptr<LuaMovableObject> GetGlue();
+
         static const s_str CLASS_NAME;
 
     protected :
 
         void  CreateOrbitNode_();
         void  RemoveOrbitNode_();
+
+        s_uint                  uiID_;
 
         s_ptr<MovableObject>    pParent_;
         s_ptr<MovableObject>    pLookAtObject_;
@@ -209,7 +228,46 @@ namespace Frost
         s_bool                  bTrackedPointRelative_;
         s_bool                  bInherits_;
         s_refptr<Path>          pPath_;
+
+        s_ptr<LuaMovableObject> pGlue_;
     };
+
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
+
+    /// MovableObject Lua glue
+    class LuaMovableObject
+    {
+    public :
+
+        /// Constructor.
+        LuaMovableObject(lua_State* pLua);
+
+        int _Translate(lua_State*);
+        int _TranslateOrbitNode(lua_State*);
+        int _OrbitAround(lua_State*);
+        int _GetDirection(lua_State*);
+        int _SetDirection(lua_State*);
+        int _Yaw(lua_State*);
+        int _Pitch(lua_State*);
+
+        s_ptr<MovableObject> GetObject();
+
+        int GetDataTable(lua_State *L);
+        static const char className[];
+        static Lunar<LuaMovableObject>::RegType methods[];
+        static const s_str CLASS_NAME;
+
+    protected :
+
+        s_ptr<MovableObject> pParent_;
+
+        lua_State* pLua_;
+        int        iRef_;
+    };
+
+    /** \endcond
+    */
 }
 
 #endif

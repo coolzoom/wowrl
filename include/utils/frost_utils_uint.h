@@ -461,9 +461,10 @@ public :
     }
 
     #ifdef USE_UNICODE
-        s_str_t<char> operator + (const char* sValue) const
+        template<class N>
+        s_str_t<N> operator + (const char* sValue) const
         {
-            return s_str_t<char>(*this) << sValue;
+            return s_str_t<N>(*this) + sValue;
         }
     #endif
 

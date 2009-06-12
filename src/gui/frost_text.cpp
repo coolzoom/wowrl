@@ -343,7 +343,7 @@ namespace Frost
             Quad mQuad;
             mQuad.pMat = pFontMat_;
 
-            vector<Letter>::iterator iterLetter;
+            s_ctnr<Letter>::iterator iterLetter;
             foreach (iterLetter, lLetterCache_)
             {
                 mQuad.lVertexArray[0].Set(iterLetter->fX1+fX, iterLetter->fY1+fY);
@@ -426,7 +426,7 @@ namespace Frost
     void Text::UpdateLines_()
     {
         // Update the line list, read format tags, do word wrapping, ...
-        lLineList_.clear();
+        lLineList_.Clear();
 
         s_uint uiMaxLineNbr, uiCounter;
         if (fBoxH_.IsValid())
@@ -434,12 +434,12 @@ namespace Frost
         else
             uiMaxLineNbr = s_uint::INF;
 
-        vector<s_str> lManualLineList = sText_.CutEach("\n");
-        vector<s_str>::iterator iterManual;
+        s_ctnr<s_str> lManualLineList = sText_.CutEach("\n");
+        s_ctnr<s_str>::iterator iterManual;
         foreach (iterManual, lManualLineList)
         {
             // Make a temporary line array
-            vector<Line> lLines;
+            s_ctnr<Line> lLines;
             Line mLine;
 
             s_str::iterator iterChar1;
@@ -528,7 +528,7 @@ namespace Frost
 
                         mLine.sCaption.EraseFromEnd(uiCharToErase);
 
-                        lLines.push_back(mLine);
+                        lLines.PushBack(mLine);
                         uiCounter += mLine.sCaption.Length();
                         mLine.fWidth = GetStringWidth(sErasedString);
                         mLine.sCaption = sErasedString;
@@ -589,7 +589,7 @@ namespace Frost
                             if (iterChar1 != iterManual->end())
                             {
                                 iterChar1--;
-                                lLines.push_back(mLine);
+                                lLines.PushBack(mLine);
                                 uiCounter += mLine.sCaption.Length();
                                 mLine.fWidth = 0.0f;
                                 mLine.sCaption = "";
@@ -598,15 +598,15 @@ namespace Frost
                     }
                 }
             }
-            lLines.push_back(mLine);
+            lLines.PushBack(mLine);
             uiCounter += mLine.sCaption.Length();
 
             // Add the maximum number of line to this Text
-            vector<Line>::iterator iterLine;
+            s_ctnr<Line>::iterator iterLine;
             foreach (iterLine, lLines)
             {
-                lLineList_.push_back(*iterLine);
-                if (s_uint((uint)lLineList_.size()) == uiMaxLineNbr)
+                lLineList_.PushBack(*iterLine);
+                if (lLineList_.GetSize() == uiMaxLineNbr)
                 {
                     return;
                 }
@@ -623,7 +623,7 @@ namespace Frost
         else
         {
             fW_ = 0;
-            vector<Line>::iterator iterLine;
+            s_ctnr<Line>::iterator iterLine;
             foreach (iterLine, lLineList_)
             {
                 fW_ = s_float::Max(fW_, iterLine->fWidth);
@@ -633,13 +633,13 @@ namespace Frost
         s_float fX, fY = 0;
         s_uint uiCounter;
 
-        lLetterCache_.clear();
+        lLetterCache_.Clear();
 
         Letter mLetter;
 
         Color mColor = Color(s_uint::NaN);
 
-        vector<Line>::iterator iterLine;
+        s_ctnr<Line>::iterator iterLine;
         foreach (iterLine, lLineList_)
         {
             switch (mAlign_)
@@ -696,7 +696,7 @@ namespace Frost
 
                     mLetter.mColor = mColor;
 
-                    lLetterCache_.push_back(mLetter);
+                    lLetterCache_.PushBack(mLetter);
                 }
 
                 fX += fCharWidth + fTracking_;

@@ -544,7 +544,7 @@ void Frame::OnEvent( const Event& mEvent )
     pLua->SetGlobal("event");
 
     // Set arguments
-    for (s_uint i; i < mEvent.GetNumParam(); i++)
+    for (s_uint i; i < mEvent.GetNumParam(); ++i)
     {
         s_ptr<const s_var> pArg = mEvent.Get(i);
         if ((pArg->GetType() == VALUE_INT) ||
@@ -559,8 +559,7 @@ void Frame::OnEvent( const Event& mEvent )
         else
             pLua->PushNil();
 
-        pLua->SetGlobal("arg"+i);
-        i++;
+        pLua->SetGlobal("arg"+(i+1));
     }
 
     pLua->CallFunction(sName_+":OnEvent");

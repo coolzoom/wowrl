@@ -376,7 +376,7 @@ namespace Frost
             s_bool  bIsHeightAbs_;
 
             s_ptr<RenderTarget> pTarget_;
-            s_refptr<Material>     pMaterial_;
+            s_refptr<Material>  pMaterial_;
 
             s_bool bUpdateBorders_;
             s_bool bUpdateDimensions_;
@@ -438,8 +438,8 @@ namespace Frost
 
             s_ptr<UIObject> pParent_;
 
-            lua_State*  pLua_;
-            int         iRef_;
+            lua_State* pLua_;
+            int        iRef_;
         };
 
         /** \endcond

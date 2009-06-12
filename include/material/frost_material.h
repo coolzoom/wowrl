@@ -186,7 +186,6 @@ namespace Frost
         s_bool                 bIsDesaturated_;
 
         std::map< s_uint, s_ptr<Decal> > lDecalList_;
-        s_uint                           uiDecalCounter_;
     };
 }
 

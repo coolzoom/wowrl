@@ -65,8 +65,8 @@ namespace Frost
     s_bool LocaleManager::ReadLocale()
     {
         Directory mDir("Locale/"+sLocale_);
-        const vector<s_str>& lFileList = mDir.GetFileList();
-        vector<s_str>::const_iterator iter;
+        s_ctnr<s_str> lFileList = mDir.GetFileList(true, "lua");
+        s_ctnr<s_str>::iterator iter;
         foreach (iter, lFileList)
         {
             pLua_->DoFile(*iter);

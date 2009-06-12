@@ -19,7 +19,6 @@ namespace Frost
 
     LightManager::LightManager()
     {
-        uiCounter_ = 0u;
         mAmbient_ = Color(20, 20, 20);
     }
 
@@ -41,9 +40,8 @@ namespace Frost
 
     s_ptr<Light> LightManager::CreateLight( LightType mType )
     {
-        s_ptr<Light> pLight(new Light(uiCounter_, mType));
-        lLightList_[uiCounter_] = pLight;
-        uiCounter_++;
+        s_ptr<Light> pLight = new Light(mType);
+        lLightList_[pLight->GetID()] = pLight;
 
         return pLight;
     }

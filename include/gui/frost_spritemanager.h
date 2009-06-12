@@ -263,9 +263,7 @@ namespace Frost
         /// Sets the Y axis type for rendering.
         /** \param mAxis The new axis to use
         *   \note AXIS_UP will put the origin (0, 0) at the bottom left corner.<br>
-        *         AXIS_DOWN will put the origine (0, 0) at the upper left corner.<br>
-        *         Coordinates will always be positive if chosen on the screen (you can
-        *         still go outside the screen with negative/too large coordinates).
+        *         AXIS_DOWN will put the origin (0, 0) at the upper left corner.
         */
         void         SetYAxisType(const AxisType& mAxis);
 
@@ -306,7 +304,6 @@ namespace Frost
 
         /// Deletes a RenderTarget.
         /** \param mTarget The RenderTarget you want to delete
-        *   \note This function is more secure than the other one.
         */
         void DeleteRenderTarget(s_ptr<RenderTarget> mTarget);
 

@@ -17,6 +17,7 @@
 #include "material/frost_materialmanager.h"
 #include "light/frost_lightmanager.h"
 #include "unit/frost_unitmanager.h"
+#include "gameplay/frost_gameplaymanager.h"
 #include "camera/frost_camera.h"
 #include "lua/frost_lua.h"
 
@@ -69,6 +70,7 @@ namespace Frost
         pSpriteMgr_   = SpriteManager::GetSingleton();
         pGUIMgr_      = GUIManager::GetSingleton();
         pUnitMgr_     = UnitManager::GetSingleton();
+        pGameplayMgr_ = GameplayManager::GetSingleton();
 
         pLua_ = pLuaMgr_->CreateLua();
         pLuaMgr_->SetDefaultLua(pLua_);
@@ -132,7 +134,7 @@ namespace Frost
         if (!pLua_->DoFile("Config.lua"))
             return false;
 
-        if (!this->ReadConfig_())
+        if (!this->ReadGraphicsConfig_())
             return false;
 
         if (!pFontMgr_->ReadConfig())
@@ -158,6 +160,9 @@ namespace Frost
         if (!pUnitMgr_->ParseData())
             return false;
 
+        if (!pGameplayMgr_->ParseData())
+            return false;
+
         // Initialize the input manager
         pInputMgr_->Initialize(pRenderWindow_);
 
@@ -179,12 +184,8 @@ namespace Frost
         // Load the UI
         pGUIMgr_->LoadUI();
 
-        // Create the free camera
-        pFreeCamera_ = s_ptr<Camera>(pCameraMgr_->CreateFreeCamera(Vector(3, 4, 3)));
-        pCameraMgr_->SetMainCamera(pFreeCamera_);
-
-        // Create the top camera
-        pTopCamera_ = s_ptr<Camera>(pCameraMgr_->CreateTopCamera());
+        if (!this->ReadGameConfig_())
+            return false;
 
         return true;
     }
@@ -222,6 +223,9 @@ namespace Frost
                 break;
 
             s_float fDelta = s_float(pTimeMgr_->GetDelta());
+
+            // Update current gameplay
+            pGameplayMgr_->Update(fDelta);
 
             // Update cameras' state and animations
             pCameraMgr_->UpdateCameras(fDelta);
@@ -269,6 +273,7 @@ namespace Frost
             pTimeMgr_->Print();
 
             // Delete managers
+            GameplayManager::Delete();
             UnitManager::Delete();
             GUIManager::Delete();
             SpriteManager::Delete();
@@ -412,11 +417,18 @@ namespace Frost
         return true;
     }
 
-    s_bool Engine::ReadConfig_()
+    s_bool Engine::ReadGameConfig_()
     {
-        iMaxComputedPaths_ = pLua_->GetGlobalInt("iMaxComputedPaths", false, 2);
         sGameVersion_ = pLua_->GetGlobalString("sGameVersion", false, "0");
 
+        s_str sGameplay = pLua_->GetGlobalString("sDefaultGameplay");
+        pGameplayMgr_->SetCurrentGameplay(sGameplay);
+
+        return true;
+    }
+
+    s_bool Engine::ReadGraphicsConfig_()
+    {
         s_str sRenderSystem = pLua_->GetGlobalString("sRenderSystem");
         if (sRenderSystem[0] == 'D')
         {
@@ -498,16 +510,6 @@ namespace Frost
     s_ptr<Ogre::Log> Engine::GetLog()
     {
         return pLog_;
-    }
-
-    s_ptr<Camera> Engine::GetFreeCamera()
-    {
-        return pFreeCamera_;
-    }
-
-    s_ptr<Camera> Engine::GetTopCamera()
-    {
-        return pTopCamera_;
     }
 
     s_ptr<Ogre::SceneManager> Engine::GetOgreSceneManager()

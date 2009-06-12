@@ -18,17 +18,37 @@ namespace Frost
         /// Allows a Lua::State to use Frost's global functions
         /** \param pLua The Lua state to use
         */
-        void    RegisterGlobalFuncs(s_ptr<Lua::State> pLua);
+        void RegisterGlobalFuncs(s_ptr<Lua::State> pLua);
 
         /// Allows a Lua::State to use Frost's GUI classes
         /** \param pLua The Lua state to use
         */
-        void    RegisterGUIClasses(s_ptr<Lua::State> pLua);
+        void RegisterGUIClasses(s_ptr<Lua::State> pLua);
 
         /// Allows a Lua::State to use Frost's Unit class
         /** \param pLua The Lua state to use
         */
-        void    RegisterUnitClass(s_ptr<Lua::State> pLua);
+        void RegisterUnitClass(s_ptr<Lua::State> pLua);
+
+        /// Allows a Lua::State to use Frost's MovableObject class
+        /** \param pLua The Lua state to use
+        */
+        void RegisterMovableObjectClass(s_ptr<Lua::State> pLua);
+
+        /// Allows a Lua::State to use Frost's Gameplay class
+        /** \param pLua The Lua state to use
+        */
+        void RegisterGameplayClass(s_ptr<Lua::State> pLua);
+
+        /// Allows a Lua::State to use the lua Vector class
+        /** \param pLua The Lua state to use
+        */
+        void RegisterVectorClass(s_ptr<Lua::State> pLua);
+
+        /// Allows a Lua::State to use the lua Vector class
+        /** \param pLua The Lua state to use
+        */
+        void RegisterKeyCodes(s_ptr<Lua::State> pLua);
     }
 
     // Global glues

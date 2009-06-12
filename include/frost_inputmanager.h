@@ -28,7 +28,7 @@ namespace Frost
 
     enum MouseButton
     {
-        MOUSE_LEFT,
+        MOUSE_LEFT = 0,
         MOUSE_RIGHT,
         MOUSE_MIDDLE
     };

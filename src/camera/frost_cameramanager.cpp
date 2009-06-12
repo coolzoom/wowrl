@@ -7,9 +7,6 @@
 
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
-#include "camera/frost_camera_freecamera.h"
-#include "camera/frost_camera_chasingcamera.h"
-#include "camera/frost_camera_topcamera.h"
 
 #include <OgreCamera.h>
 #include <OgreRenderWindow.h>
@@ -41,49 +38,19 @@ namespace Frost
         }
     }
 
-    s_ptr<Camera> CameraManager::CreateCamera( const Vector &mPosition )
+    s_ptr<Camera> CameraManager::CreateCamera( const Vector& mPosition )
     {
-        s_ptr<Camera> pCam(new Camera(uiCounter_));
-        lCameraList_[uiCounter_] = pCam;
+        s_ptr<Camera> pCam = new Camera();
+        lCameraList_[pCam->GetID()] = pCam;
         pCam->SetPosition(mPosition);
-        uiCounter_++;
 
         return pCam;
     }
 
     s_ptr<Camera> CameraManager::CreateCamera()
     {
-        s_ptr<Camera> pCam(new Camera(uiCounter_));
-        lCameraList_[uiCounter_] = pCam;
-        uiCounter_++;
-
-        return pCam;
-    }
-
-    s_ptr<FreeCamera> CameraManager::CreateFreeCamera( const Vector &mPosition )
-    {
-        s_ptr<FreeCamera> pCam(new FreeCamera(uiCounter_));
-        lCameraList_[uiCounter_] = pCam;
-        pCam->SetPosition(mPosition);
-        uiCounter_++;
-
-        return pCam;
-    }
-
-    s_ptr<ChasingCamera> CameraManager::CreateChasingCamera( s_ptr<Unit> pUnit )
-    {
-        s_ptr<ChasingCamera> pCam(new ChasingCamera(uiCounter_, pUnit));
-        lCameraList_[uiCounter_] = pCam;
-        uiCounter_++;
-
-        return pCam;
-    }
-
-    s_ptr<TopCamera> CameraManager::CreateTopCamera()
-    {
-        s_ptr<TopCamera> pCam(new TopCamera(uiCounter_));
-        lCameraList_[uiCounter_] = pCam;
-        uiCounter_++;
+        s_ptr<Camera> pCam = new Camera();
+        lCameraList_[pCam->GetID()] = pCam;
 
         return pCam;
     }

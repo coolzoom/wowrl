@@ -249,17 +249,16 @@ s_bool State::HandleError( int iError )
 
 s_bool State::CallFunction( const s_str& sFunctionName )
 {
-    vector<s_str> lWords = sFunctionName.Cut(":");
-    lua_getglobal(pLua_, lWords.front().GetASCII().c_str());
+    s_ctnr<s_str> lWords = sFunctionName.Cut(":");
+    lua_getglobal(pLua_, lWords.Front().GetASCII().c_str());
     s_uint uiCounter = 1;
 
-    if (lWords.size() > 1)
+    if (lWords.GetSize() > 1)
     {
-
-        lWords.erase(lWords.begin());
+        lWords.Erase(lWords.Begin());
         if (!lua_isnil(pLua_, -1))
         {
-            vector<s_str>::iterator iterWords;
+            s_ctnr<s_str>::iterator iterWords;
             foreach (iterWords, lWords)
             {
                 lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
@@ -309,16 +308,16 @@ s_bool State::CallFunction( const s_str& sFunctionName )
 
 s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
 {
-    vector<s_str> lWords = sFunctionName.Cut(":");
-    lua_getglobal(pLua_, lWords.front().GetASCII().c_str());
+    s_ctnr<s_str> lWords = sFunctionName.Cut(":");
+    lua_getglobal(pLua_, lWords.Front().GetASCII().c_str());
     s_uint uiCounter = 1;
 
-    if (lWords.size() > 1)
+    if (lWords.GetSize() > 1)
     {
-        lWords.erase(lWords.begin());
+        lWords.Erase(lWords.Begin());
         if (!lua_isnil(pLua_, -1))
         {
-            vector<s_str>::iterator iterWords;
+            s_ctnr<s_str>::iterator iterWords;
             foreach (iterWords, lWords)
             {
                 lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
@@ -816,4 +815,9 @@ void State::SetFieldBool( const s_int& iID, const s_bool& bValue )
     lua_pushnumber(pLua_, iID.Get());
     lua_pushboolean(pLua_, bValue.Get());
     lua_settable(pLua_, -3);
+}
+
+void State::SetTop( const s_uint& uiSize )
+{
+    lua_settop(pLua_, uiSize.Get());
 }

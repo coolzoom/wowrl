@@ -208,7 +208,7 @@ namespace Frost
             */
             s_str   GetTypeName(Type mType);
 
-            /// Wrapper to read an int from Lua
+            /// Reads an int from Lua
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -218,7 +218,7 @@ namespace Frost
             */
             s_int   GetGlobalInt(const s_str& sName, const s_bool& bCritical = true, const s_int& iDefaultValue = 0);
 
-            /// Wrapper to read a float from Lua
+            /// Reads a float from Lua
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -238,7 +238,7 @@ namespace Frost
             */
             s_str   GetGlobalString(const s_str& sName, const s_bool& bCritical = true, const s_str& sDefaultValue = "");
 
-            /// Wrapper to read a bool from Lua
+            /// Reads a bool from Lua
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -248,7 +248,7 @@ namespace Frost
             */
             s_bool  GetGlobalBool(const s_str& sName, const s_bool& bCritical = true, const s_bool& bDefaultValue = false);
 
-            /// Wrapper to read an int from a Lua table
+            /// Reads an int from a Lua table
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -263,7 +263,7 @@ namespace Frost
             */
             s_int   GetFieldInt(const s_str& sName, const s_bool& bCritical = true, const s_int& iDefaultValue = 0, const s_bool& bSetValue = false);
 
-            /// Wrapper to read a float from a Lua table
+            /// Reads a float from a Lua table
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -278,7 +278,7 @@ namespace Frost
             */
             s_float GetFieldFloat(const s_str& sName, const s_bool& bCritical = true, const s_float& fDefaultValue = 0.0f, const s_bool& bSetValue = false);
 
-            /// Wrapper to read a string from a Lua table
+            /// Reads a string from a Lua table
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -293,7 +293,7 @@ namespace Frost
             */
             s_str   GetFieldString(const s_str& sName, const s_bool& bCritical = true, const s_str& sDefaultValue = "", const s_bool& bSetValue = false);
 
-            /// Wrapper to read a bool from a Lua table
+            /// Reads a bool from a Lua table
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -308,7 +308,7 @@ namespace Frost
             */
             s_bool  GetFieldBool(const s_str& sName, const s_bool& bCritical = true, const s_bool& bDefaultValue = false, const s_bool& bSetValue = false);
 
-            /// Wrapper to write an int into a Lua table
+            /// Writes an int into a Lua table
             /** \param sName  The name of the key associated to the value
             *   \param iValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -316,7 +316,7 @@ namespace Frost
             */
             void    SetFieldInt(const s_str& sName, const s_int& iValue);
 
-            /// Wrapper to write a float into a Lua table
+            /// Writes a float into a Lua table
             /** \param sName  The name of the key associated to the value
             *   \param fValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -324,7 +324,7 @@ namespace Frost
             */
             void    SetFieldFloat(const s_str& sName, const s_float& fValue);
 
-            /// Wrapper to write a string into a Lua table
+            /// Writes a string into a Lua table
             /** \param sName  The name of the key associated to the value
             *   \param sValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -332,7 +332,7 @@ namespace Frost
             */
             void    SetFieldString(const s_str& sName, const s_str& sValue);
 
-            /// Wrapper to write a bool into a Lua table
+            /// Writes a bool into a Lua table
             /** \param sName  The name of the key associated to the value
             *   \param bValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -340,7 +340,7 @@ namespace Frost
             */
             void    SetFieldBool(const s_str& sName, const s_bool& bValue);
 
-            /// Wrapper to write an int into a Lua table
+            /// Writes an int into a Lua table
             /** \param iID    The ID of the key associated to the value
             *   \param iValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -348,7 +348,7 @@ namespace Frost
             */
             void    SetFieldInt(const s_int& iID, const s_int& iValue);
 
-            /// Wrapper to write a float into a Lua table
+            /// Writes a float into a Lua table
             /** \param iID    The ID of the key associated to the value
             *   \param fValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -356,7 +356,7 @@ namespace Frost
             */
             void    SetFieldFloat(const s_int& iID, const s_float& fValue);
 
-            /// Wrapper to write a string into a Lua table
+            /// Writes a string into a Lua table
             /** \param iID    The ID of the key associated to the value
             *   \param sValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -364,13 +364,20 @@ namespace Frost
             */
             void    SetFieldString(const s_int& iID, const s_str& sValue);
 
-            /// Wrapper to write a bool into a Lua table
+            /// Writes a bool into a Lua table
             /** \param iID    The ID of the key associated to the value
             *   \param bValue The value to set
             *   \note The table that will be used to write the value should be at the top of
             *         the stack just before you call that function.
             */
             void    SetFieldBool(const s_int& iID, const s_bool& bValue);
+
+            /// Changes the stack size.
+            /** \param uiSize The new size of the stack
+            *   \note If the stack has more elements, they will be erased.<br>
+            *         If is has less, the stack will be filled with nil.
+            */
+            void    SetTop(const s_uint& uiSize);
 
             /// Handles an error code returned from a call to Lua
             /** \param iError The error code

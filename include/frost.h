@@ -54,6 +54,13 @@ namespace Frost
     // frost_fontmanager.h
     class  FontManager;
 
+    // frost_gameplay.h
+    class  Gameplay;
+    class  LuaGameplay;
+
+    // frost_gameplaymanager.h
+    class  GameplayManager;
+
     namespace GUI
     {
         // frost_gui_anchor.h
@@ -144,6 +151,7 @@ namespace Frost
 
     // frost_movableobject.h
     class  MovableObject;
+    class  LuaMovableObject;
 
     // frost_node.h
     class  Node;

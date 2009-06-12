@@ -276,15 +276,15 @@ namespace Frost
             */
             void                OnEvent(const Event& mEvent);
 
-            /// Tels this Frame to react to every event in the game.
+            /// Tells this Frame to react to every event in the game.
             void                RegisterAllEvents();
 
-            /// Tels this Frame to react to a certain event.
+            /// Tells this Frame to react to a certain event.
             /** \param sEventName The name of the event
             */
             void                RegisterEvent(const s_str& sEventName);
 
-            /// Tels this Frame to react to mouse drag.
+            /// Tells this Frame to react to mouse drag.
             /** \param lButtonList The list of mouse button allowed
             */
             void                RegisterForDrag(const s_ctnr<s_str>& lButtonList);

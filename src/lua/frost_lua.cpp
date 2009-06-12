@@ -20,6 +20,8 @@
 #include "unit/frost_unit.h"
 #include "unit/frost_character.h"
 #include "unit/frost_creature.h"
+#include "scene/frost_movableobject.h"
+#include "gameplay/frost_gameplay.h"
 
 using namespace std;
 using namespace Frost;
@@ -56,4 +58,26 @@ void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )
     Lunar<LuaUnit>::Register(pRawLua);
     Lunar<LuaCharacter>::Register(pRawLua);
     Lunar<LuaCreature>::Register(pRawLua);
+}
+
+void Lua::RegisterMovableObjectClass( s_ptr<Lua::State> pLua )
+{
+    lua_State* pRawLua = pLua->GetState();
+    Lunar<LuaMovableObject>::Register(pRawLua);
+}
+
+void Lua::RegisterGameplayClass( s_ptr<Lua::State> pLua )
+{
+    lua_State* pRawLua = pLua->GetState();
+    Lunar<LuaGameplay>::Register(pRawLua);
+}
+
+void Lua::RegisterVectorClass( s_ptr<Lua::State> pLua )
+{
+    pLua->DoFile("DB/Vector.lua");
+}
+
+void Lua::RegisterKeyCodes( s_ptr<Lua::State> pLua )
+{
+    pLua->DoFile("DB/KeyCodes.lua");
 }

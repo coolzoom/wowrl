@@ -285,14 +285,14 @@ namespace Frost
         s_str     sText_;
         Alignment mAlign_;
 
-        std::vector<Line>        lLineList_;
+        s_ctnr<Line>             lLineList_;
         std::map<s_uint, Format> lFormatList_;
 
         s_ptr<Ogre::Font>  pOgreFont_;
         s_refptr<Material> pFontMat_;
 
-        s_bool              bUpdateCache_;
-        std::vector<Letter> lLetterCache_;
+        s_bool         bUpdateCache_;
+        s_ctnr<Letter> lLetterCache_;
 
     };
 }

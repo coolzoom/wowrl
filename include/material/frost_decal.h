@@ -23,21 +23,19 @@ namespace Frost
 
         /// Default constructor.
         /** \param sTextureFile The file containing the texture to draw
-        *   \param uiID         The ID to give to that decal (must be unique in the Material)
         *   \param pOgreMat     The material on which the decal will be applied
         *   \note The last two parameters are here for the Material class to create its
         *         own decals. If you want to create a temporary decal, only use the first
         *         parameter.
         */
-        Decal(const s_str& sTextureFile, const s_uint& uiID = s_uint::INF, s_ptr<Ogre::Material> pOgreMat = NULL);
+        Decal(const s_str& sTextureFile, s_ptr<Ogre::Material> pOgreMat = NULL);
 
         /// Copy constructor.
         /** \param mDecal   The base decal to copy
-        *   \param uiID     The ID to give to that decal (must be unique in the Material)
         *   \param pOgreMat The material on which the decal will be applied
         *   \note You shouldn't have to call this.
         */
-        Decal(const Decal& mDecal, const s_uint& uiID, s_ptr<Ogre::Material> pOgreMat);
+        Decal(const Decal& mDecal, s_ptr<Ogre::Material> pOgreMat);
 
         /// Destructor.
         virtual ~Decal();
@@ -123,8 +121,6 @@ namespace Frost
     private :
 
         Decal(const Decal& mDecal);
-
-        s_uint uiID_;
 
         s_ptr<Ogre::Material>         pOgreMat_;
         s_ptr<Ogre::Pass>             pOgrePass_;

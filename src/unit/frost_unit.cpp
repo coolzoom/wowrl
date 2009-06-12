@@ -41,7 +41,6 @@ namespace Frost
         fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f), fTurnRate_(0.385f)
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
-        pCamera_ = s_ptr<Camera>(CameraManager::GetSingleton()->CreateChasingCamera(this));
 
         pSelectionDecal_ = s_refptr<Decal>(new Decal("Textures/UnitSelection.png"));
         pSelectionDecal_->Attach(pNode_, false, true);
@@ -69,7 +68,6 @@ namespace Frost
         pSelectionDecal_.SetNull();
         if (uiSelectionDecalID_.IsValid())
             SceneManager::GetSingleton()->RemoveDecalFromGround(uiSelectionDecalID_);
-        CameraManager::GetSingleton()->DeleteCamera(pCamera_);
         SceneManager::GetSingleton()->DeleteNode(pNode_);
         pGlue_.Delete();
     }
@@ -775,42 +773,14 @@ namespace Frost
         return pNode_;
     }
 
-    void Unit::ZoomCamera( const s_float& fZoom )
-    {
-        pCamera_->Translate(Vector::UNIT_Z*fZoom, true);
-    }
-
-    void Unit::RotateCamera( const s_float& fYaw, const s_float& fPitch )
-    {
-        pCamera_->Yaw(fYaw);
-        pCamera_->Pitch(fPitch);
-
-        bCameraMovedAlone_ = true;
-    }
-
     void Unit::RotateModel( const s_float& fYaw, const s_float& fPitch )
     {
-        if (bCameraMovedAlone_)
-        {
-            Vector mDirection = pCamera_->GetDirection(false);
-            mDirection.Y(0.0f);
-            pNode_->SetDirection(mDirection);
-            bCameraMovedAlone_ = false;
-        }
-
         pNode_->Yaw(fYaw);
-        pCamera_->Yaw(fYaw);
-        pCamera_->Pitch(fPitch);
     }
 
     Vector Unit::GetPosition() const
     {
         return pNode_->GetPosition(false);
-    }
-
-    s_ptr<Camera> Unit::GetCamera()
-    {
-        return pCamera_;
     }
 
     const s_uint& Unit::GetID() const
@@ -990,14 +960,12 @@ namespace Frost
             {
                 s_float fAngle = s_float(s_double(fTurnRate_)*TimeManager::GetSingleton()->GetDelta());
                 pNode_->Yaw(fAngle);
-                pCamera_->Yaw(fAngle);
                 break;
             }
             case LMOVEMENT_TURN_RIGHT :
             {
                 s_float fAngle = s_float(s_double(-fTurnRate_)*TimeManager::GetSingleton()->GetDelta());
                 pNode_->Yaw(fAngle);
-                pCamera_->Yaw(fAngle);
                 break;
             }
             case LMOVEMENT_STRAFE_LEFT :

@@ -64,6 +64,12 @@ namespace Frost
         */
         s_ptr<Node>    CreateNode(const Vector& mPos = Vector::ZERO);
 
+        /// Returns the MovableObject associated to the provided id.
+        /** \param uiID The ID of the MovableObject you're after
+        *   \return The MovableObject associated to the provided id
+        */
+        s_ptr<MovableObject> GetMovableObjectByID(const s_uint& uiID) const;
+
         /// Deletes a particular Plane.
         /** \param pPlane The Plane to delete
         *   \note All planes created by this manager are automatically deleted
@@ -84,6 +90,15 @@ namespace Frost
         *         when the application closes.
         */
         void           DeleteNode(s_ptr<Node> pNode);
+
+        /// Returns a new unused ID for a new resource.
+        /** \param pObj The object requesting the ID
+        *   \return A new unused ID for a new resource
+        *   \note Used by MovableObject to define its ID.<br>
+        *         This function also registers the MovableObject
+        *         to the SceneManager.
+        */
+        const s_uint&  GetNewID(s_ptr<MovableObject> pObj);
 
         static const s_str CLASS_NAME;
 
@@ -118,15 +133,17 @@ namespace Frost
 
     private :
 
+        s_uint uiObjectCounter_;
+
+        std::map< s_uint, s_ptr<MovableObject> > lObjectList_;
+
         std::map< s_uint, s_ptr<Plane> > lPlaneList_;
-        s_uint                           uiPlaneCounter_;
+        std::map< s_uint, s_ptr<Node> >  lNodeList_;
 
         std::map< s_str, s_ptr<TerrainData> > lLoadedModelList_;
         std::map< s_uint, s_ptr<Terrain> >    lTerrainList_;
-        s_uint                                uiTerrainCounter_;
 
-        std::map< s_uint, s_ptr<Node> > lNodeList_;
-        s_uint                          uiNodeCounter_;
+
     };
 }
 

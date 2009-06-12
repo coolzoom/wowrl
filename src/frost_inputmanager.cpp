@@ -483,6 +483,8 @@ namespace Frost
             Event mMouseMovedEvent("MOUSE_MOVED", true);
             mMouseMovedEvent.Add(fDMX_);
             mMouseMovedEvent.Add(fDMY_);
+            mMouseMovedEvent.Add(fDMX_/s_float(Engine::GetSingleton()->GetScreenWidth()));
+            mMouseMovedEvent.Add(fDMY_/s_float(Engine::GetSingleton()->GetScreenHeight()));
             pEventMgr->FireEvent(mMouseMovedEvent);
         }
 

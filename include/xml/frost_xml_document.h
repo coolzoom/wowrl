@@ -77,7 +77,7 @@ namespace XML
         s_bool CheckLineSynthax_(s_str& sLine);
         s_bool LoadDefinition_();
         s_bool ReadPreDefCommands_(s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline, s_ptr<Block> pParent);
-        s_bool ParseArguments_(s_ptr<Block> pActual, const std::vector<s_str>& lAttribs);
+        s_bool ParseArguments_(s_ptr<Block> pActual, const s_ctnr<s_str>& lAttribs);
 
         s_str  sFileName_;
         s_str  sDefFileName_;

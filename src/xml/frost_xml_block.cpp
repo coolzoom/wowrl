@@ -12,8 +12,8 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::XML;
 
-const s_str Attribute::CLASS_NAME = "Attribute";
-const s_str Block::CLASS_NAME     = "Block";
+const s_str Attribute::CLASS_NAME = "XML::Attribute";
+const s_str Block::CLASS_NAME     = "XML::Block";
 
 Attribute::Attribute()
 {
@@ -99,7 +99,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
 {
     if (!sAttributes.IsEmpty())
     {
-        vector<s_str> lAttribs;
+        s_ctnr<s_str> lAttribs;
         s_str::const_iterator iterStr;
         s_str sAttr;
         s_bool bString = false;
@@ -115,7 +115,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
                 if (!bString)
                 {
                     if (!sAttr.IsEmpty())
-                        lAttribs.push_back(sAttr);
+                        lAttribs.PushBack(sAttr);
                     sAttr = "";
                 }
                 else
@@ -127,18 +127,18 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
             }
         }
         if (!sAttr.IsEmpty())
-            lAttribs.push_back(sAttr);
+            lAttribs.PushBack(sAttr);
 
-        vector<s_str>::iterator iterAttr;
+        s_ctnr<s_str>::iterator iterAttr;
         foreach (iterAttr, lAttribs)
         {
             if (iterAttr->Find("="))
             {
-                vector<s_str> lWords = iterAttr->Cut("=");
-                s_str sAttrName = lWords.front();
+                s_ctnr<s_str> lWords = iterAttr->Cut("=");
+                s_str sAttrName = lWords.Front();
                 sAttrName.Trim(' ');
 
-                s_str sAttrValue = lWords.back();
+                s_str sAttrValue = lWords.Back();
                 sAttrValue.Trim(' ');
                 sAttrValue.Trim('"');
 

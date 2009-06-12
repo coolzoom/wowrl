@@ -16,10 +16,10 @@ namespace Frost
 {
     const s_str Light::CLASS_NAME = "Light";
 
-    Light::Light(const s_uint& uiID, LightType mType) : uiID_(uiID), mType_(mType)
+    Light::Light(LightType mType) : mType_(mType)
     {
         pOgreLight_ = Engine::GetSingleton()->GetOgreSceneManager()->createLight(
-            ("Light_"+uiID).Get()
+            ("Light_"+uiID_).Get()
         );
 
         pNode_->attachObject(pOgreLight_.Get());

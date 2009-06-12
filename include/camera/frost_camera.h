@@ -25,7 +25,7 @@ namespace Frost
         /** \note You shouldn't have to call this. Use the
         *         CameraManager instead.
         */
-        Camera(const s_uint& uiID);
+        Camera();
 
         /// Destructor.
         virtual ~Camera();
@@ -41,16 +41,10 @@ namespace Frost
         */
         s_ptr<Ogre::Camera> GetOgreCamera();
 
-        /// Returns this camera's ID.
-        /** \return This camera's ID
-        */
-        const s_uint& GetID();
-
         static const s_str CLASS_NAME;
 
     protected :
 
-        s_uint              uiID_;
         s_ptr<Ogre::Camera> pOgreCamera_;
 
     };
