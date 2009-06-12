@@ -282,11 +282,6 @@ namespace Frost
         */
         Vector           GetPosition() const;
 
-        /// Returns the Camera associated to this Unit.
-        /** \return The Camera associated to this Unit
-        */
-        s_ptr<Camera>    GetCamera();
-
         /// Returns this Unit's body model.
         /** \return This Unit's body model
         */
@@ -347,12 +342,10 @@ namespace Frost
         s_uint                       uiLevel_;
 
         s_refptr<Model> pBodyModel_;
-        s_ptr<Camera>   pCamera_;
         s_ptr<Node>     pNode_;
         s_refptr<Decal> pSelectionDecal_;
         s_uint          uiSelectionDecalID_;
         s_uint          uiShadowDecalID_;
-        s_bool          bCameraMovedAlone_;
 
         s_bool          bSelected_;
         s_bool          bHighlighted_;

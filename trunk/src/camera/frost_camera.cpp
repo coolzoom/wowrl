@@ -19,11 +19,10 @@ namespace Frost
 {
     const s_str Camera::CLASS_NAME = "Camera";
 
-    Camera::Camera( const s_uint &uiID )
+    Camera::Camera()
     {
-        uiID_ = uiID;
         pOgreCamera_ = Frost::Engine::GetSingleton()->GetOgreSceneManager()->createCamera(
-            ("Camera_"+uiID).Get()
+            ("Camera_"+uiID_).Get()
         );
         pOgreCamera_->setNearClipDistance(1);
         pOgreCamera_->setFarClipDistance(200);
@@ -45,10 +44,5 @@ namespace Frost
     s_ptr<Ogre::Camera> Camera::GetOgreCamera()
     {
         return pOgreCamera_;
-    }
-
-    const s_uint& Camera::GetID()
-    {
-        return uiID_;
     }
 }

@@ -1,0 +1,18 @@
+<Gameplays>
+    <Script file="Free.lua"/>
+
+    <Gameplay name="Free">
+        <Selection allowSingle="false" allowMultiple="false"/>
+        <Scripts>
+            <OnLoad>
+                FreeGameplay.OnLoad();
+            </OnLoad>
+            <OnEvent>
+                FreeGameplay.OnEvent();
+            </OnEvent>
+            <OnUpdate>
+                FreeGameplay.OnUpdate();
+            </OnUpdate>
+        </Scripts>
+    </Gameplay>
+</Gameplays>

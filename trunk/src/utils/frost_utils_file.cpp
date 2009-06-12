@@ -162,6 +162,12 @@ namespace Frost
         mFile_.put(cChar);
     }
 
+    void File::WriteLine( const s_str& sLine )
+    {
+        mFile_.write(sLine.c_str(), sLine.Size().Get());
+        mFile_.put('\n');
+    }
+
     void File::Flush()
     {
         mFile_.flush();

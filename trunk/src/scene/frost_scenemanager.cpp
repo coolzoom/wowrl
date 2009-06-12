@@ -64,23 +64,32 @@ namespace Frost
 
     s_ptr<Plane> SceneManager::CreatePlane()
     {
-        s_ptr<Plane> pPlane = new Plane(uiPlaneCounter_);
-        lPlaneList_[uiPlaneCounter_] = pPlane;
-        uiPlaneCounter_++;
+        s_ptr<Plane> pPlane = new Plane();
+        lPlaneList_[pPlane->GetID()] = pPlane;
 
         return pPlane;
     }
 
     s_ptr<Plane> SceneManager::CreatePlane( const s_float& fWidth, const s_float& fHeight, const s_float& fDensity )
     {
-        s_ptr<Plane> pPlane = new Plane(uiPlaneCounter_, fWidth, fHeight, fDensity);
-        lPlaneList_[uiPlaneCounter_] = pPlane;
-        uiPlaneCounter_++;
+        s_ptr<Plane> pPlane = new Plane(fWidth, fHeight, fDensity);
+        lPlaneList_[pPlane->GetID()] = pPlane;
 
         return pPlane;
     }
 
-    void SceneManager::DeletePlane(s_ptr<Plane> pPlane)
+    s_ptr<MovableObject> SceneManager::GetMovableObjectByID( const s_uint& uiID ) const
+    {
+        map< s_uint, s_ptr<MovableObject> >::const_iterator iterMovable;
+        iterMovable = lObjectList_.find(uiID);
+
+        if (iterMovable != lObjectList_.end())
+            return iterMovable->second;
+        else
+            return NULL;
+    }
+
+    void SceneManager::DeletePlane( s_ptr<Plane> pPlane )
     {
         if (pPlane)
         {
@@ -94,6 +103,7 @@ namespace Frost
                     // Everything went fine, delete, erase from map and return
                     iterPlane->second.Delete();
                     lPlaneList_.erase(iterPlane);
+                    lObjectList_.erase(iterPlane->first);
                     return;
                 }
             }
@@ -104,7 +114,7 @@ namespace Frost
         }
     }
 
-    void SceneManager::DeleteTerrain(s_ptr<Terrain> pTerrain)
+    void SceneManager::DeleteTerrain( s_ptr<Terrain> pTerrain )
     {
         if (pTerrain)
         {
@@ -118,6 +128,7 @@ namespace Frost
                     // Everything went fine, delete, erase from map and return
                     iterTerrain->second.Delete();
                     lTerrainList_.erase(iterTerrain);
+                    lObjectList_.erase(iterTerrain->first);
                     return;
                 }
             }
@@ -130,14 +141,13 @@ namespace Frost
 
     s_ptr<Node> SceneManager::CreateNode( const Vector& mPos )
     {
-        s_ptr<Node> pNode = new Node(uiNodeCounter_, mPos);
-        lNodeList_[uiNodeCounter_] = pNode;
-        uiNodeCounter_++;
+        s_ptr<Node> pNode = new Node(mPos);
+        lNodeList_[pNode->GetID()] = pNode;
 
         return pNode;
     }
 
-    void SceneManager::DeleteNode(s_ptr<Node> pNode)
+    void SceneManager::DeleteNode( s_ptr<Node> pNode )
     {
         if (pNode)
         {
@@ -151,6 +161,7 @@ namespace Frost
                     // Everything went fine, delete, erase from map and return
                     iterNode->second.Delete();
                     lNodeList_.erase(iterNode);
+                    lObjectList_.erase(iterNode->first);
                     return;
                 }
             }
@@ -159,5 +170,12 @@ namespace Frost
                 "Trying to call DeleteNode on a Node that has not been created by SceneManager (ID:"+pNode->GetID()+")."
             );
         }
+    }
+
+    const s_uint& SceneManager::GetNewID(s_ptr<MovableObject> pObject)
+    {
+        uiObjectCounter_++;
+        lObjectList_[uiObjectCounter_] = pObject;
+        return uiObjectCounter_;
     }
 }

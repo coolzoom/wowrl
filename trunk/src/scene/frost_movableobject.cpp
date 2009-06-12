@@ -6,6 +6,7 @@
 /*                                        */
 
 #include "scene/frost_movableobject.h"
+#include "scene/frost_scenemanager.h"
 #include "frost_engine.h"
 #include "path/frost_pathmanager.h"
 #include "path/frost_path.h"
@@ -21,6 +22,7 @@ namespace Frost
 
     MovableObject::MovableObject()
     {
+        uiID_ = SceneManager::GetSingleton()->GetNewID(this);
         pNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode(
             Ogre::Vector3::ZERO
         );
@@ -29,6 +31,7 @@ namespace Frost
 
     MovableObject::MovableObject( const MovableObject& mObject )
     {
+        uiID_ = SceneManager::GetSingleton()->GetNewID(this);
         if (!bOrbits_)
             pNode_ = mObject.pNode_->getParentSceneNode()->createChildSceneNode(mObject.pNode_->getPosition());
         else
@@ -59,6 +62,7 @@ namespace Frost
 
     MovableObject::MovableObject( const Vector& mPosition )
     {
+        uiID_ = SceneManager::GetSingleton()->GetNewID(this);
         pNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode(
             Vector::FrostToOgre(mPosition)
         );
@@ -130,16 +134,8 @@ namespace Frost
         Vector mPosition = GetPosition();
 
         // - Create target orbiting node
-        if (bOrbitCenterRelative_)
-        {
-            pTargetNode_ = pNode_->getParentSceneNode()->createChildSceneNode();
-            pTargetNode_->setPosition(Vector::FrostToOgre(mOrbitCenter_));
-        }
-        else
-        {
-            pTargetNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode();
-            pTargetNode_->setPosition(Vector::FrostToOgre(mOrbitCenter_));
-        }
+        pTargetNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode();
+        pTargetNode_->setPosition(Vector::FrostToOgre(mOrbitCenter_));
         pTargetNode_->setFixedYawAxis(true);
         pTargetNode_->lookAt(-Vector::FrostToOgre(mPosition), Ogre::SceneNode::TS_WORLD);
 
@@ -182,7 +178,6 @@ namespace Frost
 
         if (pLookAtObject_)
         {
-            Log(pNode_->getName()+" looks at "+pLookAtObject_->pNode_->getName());
             pLookAtObject_->NotifyLookedAt(this, true);
             bTracks_ = true;
         }
@@ -209,12 +204,11 @@ namespace Frost
         }
     }
 
-    void MovableObject::OrbitAround( const Vector &mOrbitCenter, const s_bool& bOrbitCenterRelative )
+    void MovableObject::OrbitAround( const Vector &mOrbitCenter )
     {
         UnlockOrbiting();
         UnlockTracking();
 
-        bOrbitCenterRelative_ = bOrbitCenterRelative;
         mOrbitCenter_ = mOrbitCenter;
         bOrbits_ = true;
 
@@ -276,6 +270,7 @@ namespace Frost
         if (bOrbits_)
         {
             RemovePath();
+
             pTargetNode_->yaw(Ogre::Radian(fValue.GetRad().Get()), Ogre::SceneNode::TS_WORLD);
         }
         else
@@ -291,6 +286,7 @@ namespace Frost
         if (bOrbits_)
         {
             RemovePath();
+
             pTargetNode_->pitch(Ogre::Radian(fValue.GetRad().Get()), Ogre::SceneNode::TS_LOCAL);
         }
         else
@@ -374,6 +370,16 @@ namespace Frost
         return mOrbitCenter_;
     }
 
+    s_ptr<Ogre::SceneNode> MovableObject::GetOrbitNode()
+    {
+        return pTargetNode_;
+    }
+
+    const s_uint& MovableObject::GetID() const
+    {
+        return uiID_;
+    }
+
     void MovableObject::Update( const s_float& fDelta )
     {
         if (pPath_ != NULL)
@@ -410,5 +416,19 @@ namespace Frost
     void MovableObject::OnEvent( const Event& mEvent )
     {
 
+    }
+
+    void MovableObject::CreateGlue( s_ptr<Lua::State> pLua )
+    {
+        pLua->PushNumber(uiID_);
+        LuaMovableObject* pNewGlue;
+        pGlue_ = pNewGlue = new LuaMovableObject(pLua->GetState());
+        Lunar<LuaMovableObject>::push(pLua->GetState(), pNewGlue);
+        pLua->SetGlobal("Movable_"+uiID_);
+    }
+
+    s_ptr<LuaMovableObject> MovableObject::GetGlue()
+    {
+        return pGlue_;
     }
 }

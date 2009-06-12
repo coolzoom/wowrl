@@ -12,7 +12,6 @@
 #include "frost_inputmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
-#include "camera/frost_camera_topcamera.h"
 #include "path/frost_path_directpath.h"
 #include "path/frost_path_smoothpath.h"
 #include "path/frost_pathmanager.h"
@@ -96,25 +95,7 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
     {
-        if (mCamType == CAMERA_TOP)
-            mCamType = CAMERA_FREE;
-        else
-            mCamType = CameraType(mCamType+1);
 
-        switch (mCamType)
-        {
-            case CAMERA_FREE :
-                pCam = pFrost->GetFreeCamera();
-                break;
-            case CAMERA_UNIT :
-                pCam = pChar->GetCamera();
-                break;
-            case CAMERA_TOP :
-                pCam = pFrost->GetTopCamera();
-                break;
-        }
-
-        CameraManager::GetSingleton()->SetMainCamera(pCam);
     }
 
     return true;
@@ -190,19 +171,6 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
             pChar2->SetStat("SPIRIT", s_int(50));
             pChar2->SetStat("INTELLECT", s_int(50));
 
-            switch (mCamType)
-            {
-                case CAMERA_FREE :
-                    pCam = pFrost->GetFreeCamera();
-                    break;
-                case CAMERA_UNIT :
-                    pCam = pChar->GetCamera();
-                    break;
-                case CAMERA_TOP :
-                    pCam = pFrost->GetTopCamera();
-                    break;
-            }
-            CameraManager::GetSingleton()->SetMainCamera(pCam);
 
             // The ground
             s_refptr<Material> pGroundMat = MaterialManager::GetSingleton()->CreateMaterial3D(

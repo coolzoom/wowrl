@@ -44,21 +44,19 @@ namespace Frost
     public :
 
         /// Constructor.
-        /** \param uiID The unique ID to give to that Plane
-        *   \note You shouldn't have to call this. Use the
+        /** \note You shouldn't have to call this. Use the
         *         SceneManager instead.
         */
-        Plane(const s_uint& uiID);
+        Plane();
 
         /// Constructor.
-        /** \param uiID     The unique ID to give to that Plane
-        *   \param fWidth   The width of this Plane
+        /** \param fWidth   The width of this Plane
         *   \param fHeight  The height of this Plane
         *   \param fDensity The number of segment per meter
         *   \note You shouldn't have to call this. Use the
         *         SceneManager instead.
         */
-        Plane(const s_uint& uiID, const s_float& fWidth, const s_float& fHeight, const s_float& fDensity = 0.5f);
+        Plane(const s_float& fWidth, const s_float& fHeight, const s_float& fDensity = 0.5f);
 
         /// Destructor.
         ~Plane();
@@ -79,20 +77,14 @@ namespace Frost
         */
         s_refptr<Material> GetMaterial();
 
-        /// Returns this Plane's unique ID.
-        /** \return This Plane's unique ID
-        */
-        const s_uint& GetID() const;
-
         static const s_str CLASS_NAME;
 
     private :
 
         PlaneOgreInterface mInterface_;
 
-        s_uint               uiID_;
         s_ptr<Ogre::Entity> pEntity_;
-        s_refptr<Material>   pMaterial_;
+        s_refptr<Material>  pMaterial_;
 
     };
 }

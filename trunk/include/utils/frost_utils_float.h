@@ -556,9 +556,10 @@ public :
     }
 
     #ifdef USE_UNICODE
-        s_str_t<char> operator + (const char* sValue) const
+        template<class N>
+        s_str_t<N> operator + (const char* sValue) const
         {
-            return s_str_t<char>(*this) + sValue;
+            return s_str_t<N>(*this) + sValue;
         }
     #endif
 
@@ -700,6 +701,40 @@ public :
     static       T         fDummy;
     static const T         fEpsilon;
     static const s_float_t PI;
+
+    /// Converts a float to an angle in radian.
+    /** \note It is assumed that the value was a non dimensionnal angle
+    *         (1 = 2*PI rad = 360°).
+    */
+    static s_float_t ToRad(const s_float_t& fValue)
+    {
+        return fValue * 2*PI;
+    }
+
+    /// Converts this float to an angle in degree.
+    /** \note It is assumed that the value was a non dimensionnal angle
+    *         (1 = 2*PI rad = 360°).
+    */
+    static s_float_t ToDeg(const s_float_t& fValue)
+    {
+        return fValue * 360;
+    }
+
+    /// Converts a float to a angle in radian.
+    /** \note It is assumed that the value was an angle in degree.
+    */
+    static s_float_t DegToRad(const s_float_t& fValue)
+    {
+        return fValue * PI / 180;
+    }
+
+    /// Converts a float to a angle in degree.
+    /** \note It is assumed that the value was an angle in radian.
+    */
+    static s_float_t RadToDeg(const s_float_t& fValue)
+    {
+        return fValue * 180 / PI;
+    }
 
     /// Clamps the provided value into the provided interval.
     /** \param fValue The value to clamp

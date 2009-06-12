@@ -90,7 +90,7 @@ namespace Frost
         /** \return The Ogre::Log used to print infos in the log.
         *   \note This is not Ogre's log, but Frost's.
         */
-        s_ptr<Ogre::Log>   GetLog();
+        s_ptr<Ogre::Log>    GetLog();
 
         /// Returns the Ogre::SceneManager used for the main scene.
         /** \return The Ogre::SceneManager used for the main scene
@@ -111,16 +111,6 @@ namespace Frost
         /** \return The render window's height
         */
         const s_uint&       GetScreenHeight() const;
-
-        /// Returns the base camera (free).
-        /** \return The base camera (free)
-        */
-        s_ptr<Camera>       GetFreeCamera();
-
-        /// Returns the classic top-down camera.
-        /** \return The classic top-down camera
-        */
-        s_ptr<Camera>       GetTopCamera();
 
         /// Returns the Ogre::RenderWindow used by the engine.
         /** \return The Ogre::RenderWindow used by the engine
@@ -176,7 +166,8 @@ namespace Frost
 
     private :
 
-        s_bool ReadConfig_();
+        s_bool ReadGraphicsConfig_();
+        s_bool ReadGameConfig_();
         s_bool LoadShaders_();
 
         s_bool bShutDown_;
@@ -212,10 +203,7 @@ namespace Frost
         s_ptr<MaterialManager> pMaterialMgr_;
         s_ptr<LightManager>    pLightMgr_;
         s_ptr<UnitManager>     pUnitMgr_;
-
-        // Base cameras
-        s_ptr<Camera> pFreeCamera_;
-        s_ptr<Camera> pTopCamera_;
+        s_ptr<GameplayManager> pGameplayMgr_;
 
         // Lua
         s_ptr<Lua::State> pLua_;

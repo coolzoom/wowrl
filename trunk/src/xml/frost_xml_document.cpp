@@ -12,7 +12,7 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::XML;
 
-const s_str Document::CLASS_NAME = "Document";
+const s_str Document::CLASS_NAME = "XML::Document";
 
 Document::Document( const s_str& sFileName, const s_str& sDefFileName ) :
     sFileName_(sFileName), sDefFileName_(sDefFileName)
@@ -77,10 +77,10 @@ s_bool Document::CheckLineSynthax_( s_str& sLine )
 
 s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline, s_ptr<Block> pParent )
 {
-    vector<s_str> lCommands = sName.Cut(":");
-    sName = lCommands.back();
-    lCommands.pop_back();
-    vector<s_str>::iterator iterCommand;
+    s_ctnr<s_str> lCommands = sName.Cut(":");
+    sName = lCommands.Back();
+    lCommands.PopBack();
+    s_ctnr<s_str>::iterator iterCommand;
     foreach (iterCommand, lCommands)
     {
         s_str sLetterCode = s_str((*iterCommand)[0]);
@@ -142,9 +142,9 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
                 s_str sParams = iterCommand->ExtractRange(uiStart+1, uiEnd);
                 if (sParams.Find(","))
                 {
-                    vector<s_str> lMinMax = sParams.Cut(",");
-                    s_str sMin = lMinMax.front();
-                    s_str sMax = lMinMax.back();
+                    s_ctnr<s_str> lMinMax = sParams.Cut(",");
+                    s_str sMin = lMinMax.Front();
+                    s_str sMax = lMinMax.Back();
                     if (sMin != ".")
                         uiMin = s_uint(sMin);
                     if (sMax != ".")
@@ -180,9 +180,9 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
     return true;
 }
 
-s_bool Document::ParseArguments_( s_ptr<Block> pActual, const vector<s_str>& lAttribs )
+s_bool Document::ParseArguments_( s_ptr<Block> pActual, const s_ctnr<s_str>& lAttribs )
 {
-    vector<s_str>::const_iterator iterAttr;
+    s_ctnr<s_str>::const_iterator iterAttr;
     foreach (iterAttr, lAttribs)
     {
         s_str sAttr = *iterAttr;
@@ -191,17 +191,17 @@ s_bool Document::ParseArguments_( s_ptr<Block> pActual, const vector<s_str>& lAt
         if (sAttr.Find("="))
         {
             bOptional = true;
-            vector<s_str> lCut = sAttr.Cut("=");
-            sAttr = lCut.front();
-            sDefault = lCut.back();
+            s_ctnr<s_str> lCut = sAttr.Cut("=");
+            sAttr = lCut.Front();
+            sDefault = lCut.Back();
             sDefault.Trim('"');
         }
 
         AttrType mType = ATTR_TYPE_STRING;
-        vector<s_str> lCommands = sAttr.Cut(":");
-        sAttr = lCommands.back();
-        lCommands.pop_back();
-        vector<s_str>::iterator iterCommand;
+        s_ctnr<s_str> lCommands = sAttr.Cut(":");
+        sAttr = lCommands.Back();
+        lCommands.PopBack();
+        s_ctnr<s_str>::iterator iterCommand;
         foreach (iterCommand, lCommands)
         {
             s_str sLetterCode = s_str((*iterCommand)[0]);
@@ -262,8 +262,8 @@ s_bool Document::LoadDefinition_()
                             bComment = true;
                             uiCommentTagCount = 1;
                             sLine.EraseFromStart(2);
-                            sCommentTag = sLine.Cut(">", 1).front();
-                            sCommentTag = sCommentTag.Cut(" ", 1).front();
+                            sCommentTag = sLine.Cut(">", 1).Front();
+                            sCommentTag = sCommentTag.Cut(" ", 1).Front();
                         }
                     }
                     else if (sLine.Find("<--"))
@@ -295,9 +295,9 @@ s_bool Document::LoadDefinition_()
                     {
                         // Monoline block
                         sLine.EraseFromStart(1);
-                        sLine = sLine.Cut("/>").front();
-                        vector<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.front();
+                        sLine = sLine.Cut("/>").Front();
+                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
+                        s_str sName = lWords.Front();
                         s_uint uiMin = 0u;
                         s_uint uiMax = s_uint::INF;
                         s_bool bPreDefining = false;
@@ -315,10 +315,10 @@ s_bool Document::LoadDefinition_()
                         );
 
                         // Prepare attributes
-                        vector<s_str> lAttribs;
-                        if (lWords.size() > 1)
+                        s_ctnr<s_str> lAttribs;
+                        if (lWords.GetSize() > 1)
                         {
-                            s_str sAttribs = lWords.back();
+                            s_str sAttribs = lWords.Back();
                             sAttribs.Replace(" =", "=");
                             sAttribs.Replace("= ", "=");
 
@@ -337,7 +337,7 @@ s_bool Document::LoadDefinition_()
                                     if (!bString)
                                     {
                                         if (!sAttr.IsEmpty())
-                                            lAttribs.push_back(sAttr);
+                                            lAttribs.PushBack(sAttr);
                                         sAttr = "";
                                     }
                                     else
@@ -350,7 +350,7 @@ s_bool Document::LoadDefinition_()
                             }
 
                             if (!sAttr.IsEmpty())
-                                lAttribs.push_back(sAttr);
+                                lAttribs.PushBack(sAttr);
                         }
 
                         if (pParent)
@@ -368,7 +368,7 @@ s_bool Document::LoadDefinition_()
                                     if (!pAdded)
                                         return false;
 
-                                    if (lAttribs.size() != 0)
+                                    if (lAttribs.GetSize() != 0)
                                     {
                                         Warning(sDefFileName_+":"+uiLineNbr_,
                                             "Can't add attributes to a loaded pre-defined block."
@@ -468,7 +468,7 @@ s_bool Document::LoadDefinition_()
                         if (bComment)
                         {
                             sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").front();
+                            sLine = sLine.Cut(">").Front();
                             sLine.Trim(' ');
                             if (sLine == sCommentTag)
                             {
@@ -480,7 +480,7 @@ s_bool Document::LoadDefinition_()
                         else
                         {
                             sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").front();
+                            sLine = sLine.Cut(">").Front();
                             sLine.Trim(' ');
 
                             if (sLine == pActual->GetName())
@@ -516,9 +516,9 @@ s_bool Document::LoadDefinition_()
                     {
                         // Multiline block
                         sLine.EraseFromStart(1);
-                        sLine = sLine.Cut(">").front();
-                        vector<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.front();
+                        sLine = sLine.Cut(">").Front();
+                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
+                        s_str sName = lWords.Front();
 
                         if (bComment)
                         {
@@ -542,10 +542,10 @@ s_bool Document::LoadDefinition_()
                                 true, pParent
                             );
 
-                            vector<s_str> lAttribs;
-                            if (lWords.size() > 1)
+                            s_ctnr<s_str> lAttribs;
+                            if (lWords.GetSize() > 1)
                             {
-                                s_str sAttribs = lWords.back();
+                                s_str sAttribs = lWords.Back();
                                 sAttribs.Replace(" =", "=");
                                 sAttribs.Replace("= ", "=");
                                 lAttribs = sAttribs.Cut(" ");
@@ -680,8 +680,8 @@ s_bool Document::Check()
                             bComment = true;
                             uiCommentTagCount = 1;
                             sLine.EraseFromStart(2);
-                            sCommentTag = sLine.Cut(">", 1).front();
-                            sCommentTag = sCommentTag.Cut(" ", 1).front();
+                            sCommentTag = sLine.Cut(">", 1).Front();
+                            sCommentTag = sCommentTag.Cut(" ", 1).Front();
                         }
                     }
                     else if (sLine.Find("<--"))
@@ -714,13 +714,13 @@ s_bool Document::Check()
                         // Monoline block
                         bOpened = false;
                         sLine.EraseFromStart(1);
-                        sLine = sLine.Cut("/>").front();
-                        vector<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.front();
+                        sLine = sLine.Cut("/>").Front();
+                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
+                        s_str sName = lWords.Front();
                         s_str sAttribs;
-                        if (lWords.size() > 1)
+                        if (lWords.GetSize() > 1)
                         {
-                            sAttribs = lWords.back();
+                            sAttribs = lWords.Back();
                             sAttribs.Replace(" =", "=");
                             sAttribs.Replace("= ", "=");
                         }
@@ -781,7 +781,7 @@ s_bool Document::Check()
                         if (bComment)
                         {
                             sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").front();
+                            sLine = sLine.Cut(">").Front();
                             sLine.Trim(' ');
                             if (sLine == sCommentTag)
                             {
@@ -795,7 +795,7 @@ s_bool Document::Check()
                             bOpened = false;
                             bValue = false;
                             sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").front();
+                            sLine = sLine.Cut(">").Front();
                             sLine.Trim(' ');
                             if (sLine == pActual->GetName())
                             {
@@ -836,9 +836,9 @@ s_bool Document::Check()
                         // Multiline block
                         bOpened = true;
                         sLine.EraseFromStart(1);
-                        sLine = sLine.Cut(">").front();
-                        vector<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.front();
+                        sLine = sLine.Cut(">").Front();
+                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
+                        s_str sName = lWords.Front();
 
                         if (bComment)
                         {
@@ -848,9 +848,9 @@ s_bool Document::Check()
                         else
                         {
                             s_str sAttribs;
-                            if (lWords.size() > 1)
+                            if (lWords.GetSize() > 1)
                             {
-                                sAttribs = lWords.back();
+                                sAttribs = lWords.Back();
                                 sAttribs.Replace(" =", "=");
                                 sAttribs.Replace("= ", "=");
                             }

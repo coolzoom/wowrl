@@ -156,6 +156,12 @@ namespace Frost
         */
         void        Write(const string_element& cChar);
 
+        /// Writes the content of the provided string and go to the next line.
+        /** \param sLine The string to write
+        *   \note This function automatically adds the line jump.
+        */
+        void        WriteLine(const s_str& sLine);
+
         /// Forces writing everything to the file.
         void        Flush();
 

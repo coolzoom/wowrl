@@ -40,6 +40,16 @@ namespace Frost
         */
         s_ptr<Unit>               GetUnitByID(const s_uint& uiID) const;
 
+        void                      SelectOneUnit(s_ptr<Unit> pUnit);
+
+        void                      AddUnitToSelection(s_ptr<Unit> pUnit);
+
+        void                      AddUnitListToSelection(s_ctnr<Unit> lUnitList);
+
+        void                      ClearSelection();
+
+
+
         /// Reads all xml files related to Units.
         /** \return 'true' if everything went fine
         */

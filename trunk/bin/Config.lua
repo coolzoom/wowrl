@@ -19,6 +19,7 @@ sRenderSystem = "OpenGL Rendering Subsystem";
 
 
 -- Game
+sDefaultGameplay = "Free";
 sGameVersion = "0.045";
 sLocale = "enGB";
 iMaxComputedPaths = 2;

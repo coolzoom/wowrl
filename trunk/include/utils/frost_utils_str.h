@@ -74,7 +74,7 @@ public :
         s_str_t(const std::string& sValue)
         {
             const uchar* str = reinterpret_cast<const uchar*>(sValue.c_str());
-            sValue_ = wstring(str, str + sValue.size());
+            sValue_ = std::wstring(str, str + sValue.size());
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
         }
@@ -242,9 +242,9 @@ public :
     *   \note Removes the delineator from the sub-strings.<br>
     *         This function <b>groups</b> occurences of the delineator.
     */
-    std::vector<s_str_t> Cut(const s_str_t& sDelim, const s_uint& uiMaxCut = s_uint::INF) const
+    s_ctnr<s_str_t> Cut(const s_str_t& sDelim, const s_uint& uiMaxCut = s_uint::INF) const
     {
-        std::vector<s_str_t> lPieces;
+        s_ctnr<s_str_t> lPieces;
         s_uint uiPos = FindPos(sDelim);
         s_uint uiLastPos;
         s_uint uiCount;
@@ -253,7 +253,7 @@ public :
         {
             uiCurSize = uiPos - uiLastPos;
             if (!uiCurSize.IsNull())
-                lPieces.push_back(Extract(uiLastPos, uiCurSize));
+                lPieces.PushBack(Extract(uiLastPos, uiCurSize));
             uiLastPos = uiPos + sDelim.Length();
             uiPos = FindPos(sDelim, uiLastPos);
             ++uiCount;
@@ -262,7 +262,7 @@ public :
                 break;
         }
 
-        lPieces.push_back(Extract(uiLastPos));
+        lPieces.PushBack(Extract(uiLastPos));
 
         return lPieces;
     }
@@ -277,9 +277,9 @@ public :
     *         This function cuts the string <b>each time</b> the delineator
     *         is found.
     */
-    std::vector<s_str_t>  CutEach(const s_str_t& sDelim, const s_uint& uiMaxCut = s_uint::INF) const
+    s_ctnr<s_str_t>  CutEach(const s_str_t& sDelim, const s_uint& uiMaxCut = s_uint::INF) const
     {
-        std::vector<s_str_t> lPieces;
+        s_ctnr<s_str_t> lPieces;
         s_uint uiPos = FindPos(sDelim);
         s_uint uiLastPos;
         s_uint uiCount;
@@ -287,7 +287,7 @@ public :
         while (uiPos.IsValid())
         {
             uiCurSize = uiPos - uiLastPos;
-            lPieces.push_back(Extract(uiLastPos, uiCurSize));
+            lPieces.PushBack(Extract(uiLastPos, uiCurSize));
             uiLastPos = uiPos + sDelim.Length();
             uiPos = FindPos(sDelim, uiLastPos);
             ++uiCount;
@@ -296,7 +296,7 @@ public :
                 break;
         }
 
-        lPieces.push_back(Extract(uiLastPos));
+        lPieces.PushBack(Extract(uiLastPos));
 
         return lPieces;
     }
@@ -1108,7 +1108,7 @@ s_str_t<T> operator + (const string_element* sLeft, const s_str_t<T>& sRight)
 
 #ifdef USE_UNICODE
     template<class T>
-    s_str_t operator + (const char* sLeft, const s_str_t<T>& sRight)
+    s_str_t<T> operator + (const char* sLeft, const s_str_t<T>& sRight)
     {
         return s_str_t<T>(sLeft) + sRight;
     }

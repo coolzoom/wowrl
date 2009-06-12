@@ -26,27 +26,10 @@ namespace Frost
         */
         s_ptr<Camera>  CreateCamera(const Vector& mPosition);
 
-        /// Creates a new ChasingCamera.
-        /** \param pUnit The Unit to chase
-        *   \return The new camera
-        */
-        s_ptr<ChasingCamera> CreateChasingCamera(s_ptr<Unit> pUnit);
-
-        /// Creates a new FreeCamera.
-        /** \param mPosition The position of this camera
-        *   \return The new camera
-        */
-        s_ptr<FreeCamera> CreateFreeCamera(const Vector& mPosition);
-
-        /// Creates a new TopCamera.
-        /** \return The new camera
-        */
-        s_ptr<TopCamera>  CreateTopCamera();
-
         /// Creates a new camera.
         /** \return The new camera
         */
-        s_ptr<Camera>  CreateCamera();
+        s_ptr<Camera>   CreateCamera();
 
         /// Checks if all settings are good for rendering.
         /** \return 'true' if everything is fine
@@ -117,13 +100,12 @@ namespace Frost
     private:
 
         std::map< s_uint, s_ptr<Camera> > lCameraList_;
-        s_uint                 uiCounter_;
-        s_ptr<Camera>          pMainCamera_;
+
+        s_ptr<Camera>         pMainCamera_;
         s_ptr<Ogre::Viewport> pViewport_;
-        s_bool                 bNewViewport_;
+        s_bool                bNewViewport_;
 
     };
-
 }
 
 

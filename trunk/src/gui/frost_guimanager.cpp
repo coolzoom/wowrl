@@ -185,8 +185,8 @@ namespace Frost
                     {
                         sLine = sLine.Extract(2);
                         sLine.Trim(' ');
-                        vector<s_str> lArgs = sLine.Cut(":", 1);
-                        if (lArgs.size() == 2)
+                        s_ctnr<s_str> lArgs = sLine.Cut(":", 1);
+                        if (lArgs.GetSize() == 2)
                         {
                             s_str sKey = lArgs[0];
                             sKey.Trim(' ');
@@ -222,8 +222,8 @@ namespace Frost
                             }
                             else if (sKey == "SavedVariables")
                             {
-                                vector<s_str> lVariables = sValue.Cut(",");
-                                vector<s_str>::iterator iterVar;
+                                s_ctnr<s_str> lVariables = sValue.Cut(",");
+                                s_ctnr<s_str>::iterator iterVar;
                                 foreach (iterVar, lVariables)
                                 {
                                     iterVar->Trim(' ');
@@ -305,8 +305,8 @@ namespace Frost
                 }
                 else
                 {
-                    vector<s_str> lArgs = sLine.Cut(":", 1);
-                    if (lArgs.size() == 2)
+                    s_ctnr<s_str> lArgs = sLine.Cut(":", 1);
+                    if (lArgs.GetSize() == 2)
                     {
                         s_str sKey = lArgs[0];
                         sKey.Trim(' ');

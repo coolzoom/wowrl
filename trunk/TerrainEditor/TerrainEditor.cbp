@@ -183,10 +183,6 @@
 		<Unit filename="src\frost_te_mainwindow.cpp" />
 		<Unit filename="src\frost_te_terrain.cpp" />
 		<Unit filename="src\frost_te_tool.cpp" />
-		<Unit filename="..\src\frost_decal.cpp" />
-		<Unit filename="..\src\frost_material.cpp" />
-		<Unit filename="..\src\frost_materialmanager.cpp" />
-		<Unit filename="..\src\frost_movableobject.cpp" />
 		<Unit filename="..\src\gui\frost_sprite.cpp" />
 		<Unit filename="..\src\gui\frost_spritemanager.cpp" />
 		<Unit filename="..\src\path\frost_path.cpp" />

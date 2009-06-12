@@ -20,7 +20,7 @@ namespace Frost
     {
         uiIter_ = 0u;
         sRelPath_ = sRelPath;
-        sName_ = sRelPath_.Cut("/").back();
+        sName_ = sRelPath_.Cut("/").Back();
 
         s_ptr<Ogre::Archive> pFrostMain = Ogre::ArchiveManager::getSingleton().load("./", "FileSystem");
         if (pFrostMain->exists(sRelPath_.GetASCII()))
@@ -32,13 +32,13 @@ namespace Frost
                 Ogre::StringVector::iterator iter;
                 foreach (iter, *pSV)
                 {
-                    lSubDirectoryList_.push_back(Directory(sRelPath_ + "/" + s_str(*iter)));
+                    lSubDirectoryList_.PushBack(Directory(sRelPath_ + "/" + s_str(*iter)));
                 }
 
                 pSV = pArchive->list(false, false);
                 foreach (iter, *pSV)
                 {
-                    lFileList_.push_back(sRelPath_ + "/" + (*iter));
+                    lFileList_.PushBack(*iter);
                 }
             }
             else
@@ -53,9 +53,9 @@ namespace Frost
     s_ptr<Directory> Directory::GetNextSubDirectory()
     {
         s_ptr<Directory> pSub;
-        if (uiIter_ < lSubDirectoryList_.size())
+        if (uiIter_ < lSubDirectoryList_.GetSize())
         {
-            pSub = &lSubDirectoryList_[uiIter_.Get()];
+            pSub = &lSubDirectoryList_[uiIter_];
             ++uiIter_;
         }
         else
@@ -64,9 +64,57 @@ namespace Frost
         return pSub;
     }
 
-    const std::vector<s_str>& Directory::GetFileList() const
+    s_ctnr<s_str> Directory::GetFileList( const s_bool& bWithPath, const s_str& sExtensionFilter ) const
     {
-        return lFileList_;
+        if (sExtensionFilter.IsEmpty())
+        {
+            if (bWithPath)
+            {
+                s_ctnr<s_str> lNewFileList;
+
+                s_ctnr<s_str>::const_iterator iterFile;
+                foreach (iterFile, lFileList_)
+                {
+                    lNewFileList.PushBack(sRelPath_ + "/" + (*iterFile));
+                }
+
+                return lNewFileList;
+            }
+            else
+            {
+                return lFileList_;
+            }
+        }
+        else
+        {
+            s_ctnr<s_str> lNewFileList;
+
+            s_ctnr<s_str> lExtension = sExtensionFilter.Cut(",");
+            s_ctnr<s_str>::iterator iterExtension;
+            foreach (iterExtension, lExtension)
+            {
+                iterExtension->Trim(' ');
+            }
+
+            s_ctnr<s_str>::const_iterator iterFile;
+            foreach (iterFile, lFileList_)
+            {
+                s_str sExtension = iterFile->Cut(".", 1).Back();
+                foreach (iterExtension, lExtension)
+                {
+                    if (sExtension == (*iterExtension))
+                    {
+                        if (bWithPath)
+                            lNewFileList.PushBack(sRelPath_ + "/" + (*iterFile));
+                        else
+                            lNewFileList.PushBack(*iterFile);
+                        break;
+                    }
+                }
+            }
+
+            return lNewFileList;
+        }
     }
 
     const s_str& Directory::GetName() const
