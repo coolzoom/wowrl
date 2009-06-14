@@ -73,10 +73,35 @@ public :
         lArray_.push_back(mElem);
     }
 
+    /// Adds a set of values at the end of the container.
+    /** \param lArray The array of value to add
+    *   \note Order is preserved.
+    */
+    void PushBack(const s_ctnr& lArray)
+    {
+        typename std::deque<T>::const_iterator iter;
+        for (iter = lArray.lArray_.begin(); iter != lArray.lArray_.end(); ++iter)
+            lArray_.push_back(*iter);
+    }
+
     /// Removes the last value of the container.
     void PopBack()
     {
         lArray_.pop_back();
+    }
+
+    /// Removes values from the end of the container.
+    /** \param uiNbr The number of value to remove
+    */
+    void PopBack(const s_uint& uiNbr)
+    {
+        if (uiNbr >= lArray_.size())
+            lArray_.clear();
+        else
+        {
+            for (s_uint ui; ui < uiNbr; ++ui)
+                lArray_.pop_back();
+        }
     }
 
     /// Returns the first element of this container.
@@ -107,10 +132,38 @@ public :
         lArray_.push_front(mElem);
     }
 
+    /// Adds a set of values at the beginning of the container.
+    /** \param lArray The array of value to add
+    *   \note Order is preserved.
+    */
+    void PushFront(const s_ctnr& lArray)
+    {
+        typename s_ctnr::const_iterator iter = lArray.End();
+        while (iter != lArray.Begin())
+        {
+            --iter;
+            lArray_.push_front(*iter);
+        }
+    }
+
     /// Removes the first value of the container.
     void PopFront()
     {
         lArray_.pop_front();
+    }
+
+    /// Removes values from the beginning of the container.
+    /** \param uiNbr The number of value to remove
+    */
+    void PopFront(const s_uint& uiNbr)
+    {
+        if (uiNbr >= lArray_.size())
+            lArray_.clear();
+        else
+        {
+            for (s_uint ui; ui < uiNbr; ++ui)
+                lArray_.pop_front();
+        }
     }
 
     /// Removes all values from this container.
@@ -237,8 +290,8 @@ public :
     template<uint N>
     s_ctnr& operator = (const s_array<T,N>& lElemArray)
     {
-        if (N < lArray_.size())
-            lArray_.resize(N);
+        lArray_.clear();
+
         for (uint i = 0; i < N; ++i)
             lArray_.push_back(lElemArray[i]);
     }
