@@ -141,11 +141,8 @@ public :
     s_array& operator = (const s_ctnr<T>& mContainer)
     {
         uint i;
-        for (i = 0; i < N; ++i)
+        for (i = 0; (i < N) && (i < mContainer.GetSize().Get()); ++i)
         {
-            if (i >= mContainer.GetSize().Get())
-                break;
-
             lArray_[i] = mContainer[i];
         }
         for (; i < N; ++i)
