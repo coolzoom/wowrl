@@ -176,32 +176,30 @@ s_bool Function::Check( const s_bool& bPrintError )
     }
 
     // We then check the value type
-    s_uint ui;
+    s_int i;
     map< s_uint, s_ptr<Argument> >::iterator iterArg;
     if (lValidArgList.size() > 1)
     {
         vector< s_ptr<ArgumentList> >::iterator iterArgListPtr;
         pArgList_.SetNull();
-        s_uint i;
         foreach (iterArgListPtr, lValidArgList)
         {
-            ui = 1;
+            i = 1;
             s_bool bValid = true;
             foreach (iterArg, (*iterArgListPtr)->lArg_)
             {
-                if (!iterArg->second->Test(pLua_, ui, false))
+                if (!iterArg->second->Test(pLua_, i, false))
                 {
                     bValid = false;
                     break;
                 }
-                ++ui;
+                ++i;
             }
             if (bValid)
             {
                 pArgList_ = (*iterArgListPtr);
                 break;
             }
-            ++i;
         }
 
         if (!pArgList_)
@@ -245,14 +243,13 @@ s_bool Function::Check( const s_bool& bPrintError )
     else
     {
         pArgList_ = lValidArgList.front();
-        ui = 1;
+        i = 1;
         s_bool bValid = true;
-        int i;
         foreach (iterArg, pArgList_->lArg_)
         {
-            if (!iterArg->second->Test(pLua_, ui, bPrintError))
+            if (!iterArg->second->Test(pLua_, i, bPrintError))
                 bValid = false;
-            ++ui; ++i;
+            ++i;
         }
 
         if (!bValid)
@@ -270,12 +267,12 @@ s_bool Function::Check( const s_bool& bPrintError )
     s_bool bValid = true;
     foreach (iterArg, pArgList_->lOptional_)
     {
-        if (pLua_->GetType(ui) != Lua::TYPE_NIL)
+        if (pLua_->GetType(i) != Lua::TYPE_NIL)
         {
-            if (!iterArg->second->Test(pLua_, ui, bPrintError))
+            if (!iterArg->second->Test(pLua_, i, bPrintError))
                 bValid = false;
         }
-        ++ui;
+        ++i;
     }
 
     return bValid;

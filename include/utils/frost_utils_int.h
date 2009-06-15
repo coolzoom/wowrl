@@ -246,7 +246,29 @@ namespace Frost
                 if (iMax.iValue_ < iMin.iValue_)
                     iValue_ = iMin.iValue_;
                 else
-                    iValue_ = (T)((iMax.iValue_-iMin.iValue_)*(rand()/float(RAND_MAX))) + iMin.iValue_;
+                {
+                    T iRange = iMax.iValue_ - iMin.iValue_ + 1;
+                    if (iRange >= 100)
+                        iValue_ = (T)(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
+                    else if (iRange >= 10)
+                    {
+                        float fTemp = rand()/100.0f;
+                        fTemp = (fTemp - (int)fTemp)*100;
+                        if ((int)fTemp == 0)
+                            iValue_ = iMin.iValue_;
+                        else
+                            iValue_ = (T)ceil(iRange*(fTemp/99.0f)) + iMin.iValue_ - 1;
+                    }
+                    else
+                    {
+                        float fTemp = rand()/10.0f;
+                        fTemp = (fTemp - (int)fTemp)*10;
+                        if ((int)fTemp == 0)
+                            iValue_ = iMin.iValue_;
+                        else
+                            iValue_ = (T)ceil(iRange*(fTemp/9.0f)) + iMin.iValue_ - 1;
+                    }
+                }
             }
         }
 
@@ -759,7 +781,27 @@ namespace Frost
                 }
                 else
                 {
-                    return (T)((iMax.iValue_-iMin.iValue_)*(rand()/float(RAND_MAX))) + iMin.iValue_;
+                    T iRange = iMax.iValue_ - iMin.iValue_ + 1;
+                    if (iRange >= 100)
+                        return (T)(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
+                    else if (iRange >= 10)
+                    {
+                        float fTemp = rand()/100.0f;
+                        fTemp = (fTemp - (int)fTemp)*100;
+                        if ((int)fTemp == 0)
+                            return iMin.iValue_;
+                        else
+                            return (T)ceil(iRange*(fTemp/99.0f)) + iMin.iValue_ - 1;
+                    }
+                    else
+                    {
+                        float fTemp = rand()/10.0f;
+                        fTemp = (fTemp - (int)fTemp)*10;
+                        if ((int)fTemp == 0)
+                            return iMin.iValue_;
+                        else
+                            return (T)ceil(iRange*(fTemp/9.0f)) + iMin.iValue_ - 1;
+                    }
                 }
             }
             else

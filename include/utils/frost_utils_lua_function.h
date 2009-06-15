@@ -41,11 +41,11 @@ namespace Frost
             Data(const s_str& sName, Lua::Type mLuaType, ValueType mType, s_ptr<Argument> pParent);
 
             /// Gets data from Lua
-            /** \param pLua    The Lua state to use
-            *   \param uiIndex The index at which to get the value
+            /** \param pLua   The Lua state to use
+            *   \param iIndex The index at which to get the value
             *   \note Only called on a valid Data (expected type is found).
             */
-            void         Set(s_ptr<Lua::State> pLua, const s_uint& uiIndex);
+            void         Set(s_ptr<Lua::State> pLua, const s_int& iIndex);
 
             /// Returns this argument's name.
             /** \return This argument's name
@@ -156,12 +156,12 @@ namespace Frost
 
             /// Checks if this argument has the expected type(s).
             /** \param pLua        The Lua state to use
-            *   \param uiIndex     The index to check
+            *   \param iIndex      The index to check
             *   \param bPrintError Set to 'false' if you don't want that function
             *                      to print errors in the log
             *   \return 'true' if everything went fine
             */
-            s_bool        Test(s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bool& bPrintError = true);
+            s_bool        Test(s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool& bPrintError = true);
 
             /// Sets this argument's data
             /** \param pData A pointer to the good Data

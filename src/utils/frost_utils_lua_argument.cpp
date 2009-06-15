@@ -68,11 +68,11 @@ const s_bool& Argument::IsProvided() const
     return bSet_;
 }
 
-s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bool& bPrintError )
+s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool& bPrintError )
 {
     s_bool bSeveralChoices = (lData_.size() > 1);
 
-    Lua::Type mType = pLua->GetType(uiIndex);
+    Lua::Type mType = pLua->GetType(iIndex);
     vector<Data>::iterator iterData;
     foreach (iterData, lData_)
     {
@@ -82,7 +82,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bo
             {
                 pLua->PrintError(
                     "Argument " +
-                    s_str(uiIndex) +
+                    s_str(iIndex) +
                     " of \"" +
                     pParent_->GetName() +
                     "\" must be a " +
@@ -95,7 +95,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bo
         }
         else
         {
-            iterData->Set(pLua, uiIndex);
+            iterData->Set(pLua, iIndex);
             break;
         }
     }
@@ -123,7 +123,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_uint& uiIndex, const s_bo
             }
             pLua->PrintError(
                 "Argument " +
-                s_str(uiIndex) +
+                s_str(iIndex) +
                 " of \"" +
                 pParent_->GetName() +
                 "\" must be " +
