@@ -112,18 +112,7 @@ namespace Frost
         for (s_uint i; i < mEvent.GetNumParam(); ++i)
         {
             s_ptr<const s_var> pArg = mEvent.Get(i);
-            if ((pArg->GetType() == VALUE_INT) ||
-                (pArg->GetType() == VALUE_UINT) ||
-                (pArg->GetType() == VALUE_FLOAT) ||
-                (pArg->GetType() == VALUE_DOUBLE))
-                pLua->PushNumber(pArg->GetF());
-            else if (pArg->GetType() == VALUE_STRING)
-                pLua->PushString(pArg->GetS());
-            else if (pArg->GetType() == VALUE_BOOL)
-                pLua->PushBool(pArg->GetB());
-            else
-                pLua->PushNil();
-
+            pLua->PushVar(*pArg);
             pLua->SetGlobal("arg"+(i+1));
         }
 

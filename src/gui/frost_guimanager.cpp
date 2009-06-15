@@ -196,7 +196,7 @@ namespace Frost
                             {
                                 mAddOn.sUIVersion = sValue;
 
-                                s_str sGameVersion = Engine::GetSingleton()->GetConstant("GameVersion").GetS();
+                                s_str sGameVersion = Engine::GetSingleton()->GetConstant("GameVersion").Get<s_str>();
                                 sGameVersion.Replace(".", "");
                                 if (mAddOn.sUIVersion == sGameVersion)
                                     mAddOn.bEnabled = true;

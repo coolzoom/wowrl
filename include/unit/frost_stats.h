@@ -102,7 +102,7 @@ namespace Frost
         */
         s_int GetAddBonusI() const
         {
-            return mAdd_.GetI();
+            return mAdd_.Get<s_int>();
         }
 
         /// Returns the additive bonus (float).
@@ -110,7 +110,7 @@ namespace Frost
         */
         s_float GetAddBonusF() const
         {
-            return mAdd_.GetF();
+            return mAdd_.Get<s_float>();
         }
 
         /// Returns the multiplicative bonus.
@@ -126,15 +126,15 @@ namespace Frost
         */
         s_bool IsInteger() const
         {
-            return (mAdd_.GetType() == VALUE_INT);
+            return (mAdd_.IsOfType<s_int>());
         }
 
         Bonus operator + (const Bonus& mValue) const
         {
             if (IsInteger() && mValue.IsInteger())
-                return Bonus(mAdd_.GetI() + mValue.mAdd_.GetI(), fMul_ + mValue.fMul_);
+                return Bonus(mAdd_.Get<s_int>() + mValue.mAdd_.Get<s_int>(), fMul_ + mValue.fMul_);
             else if (!IsInteger() && !mValue.IsInteger())
-                return Bonus(mAdd_.GetF() + mValue.mAdd_.GetF(), fMul_ + mValue.fMul_);
+                return Bonus(mAdd_.Get<s_float>() + mValue.mAdd_.Get<s_float>(), fMul_ + mValue.fMul_);
             else
             {
                 Warning(CLASS_NAME, "Trying to add two bonuses with different types.");
@@ -145,9 +145,9 @@ namespace Frost
         Bonus operator - (const Bonus& mValue) const
         {
             if (IsInteger() && mValue.IsInteger())
-                return Bonus(mAdd_.GetI() - mValue.mAdd_.GetI(), fMul_ - mValue.fMul_);
+                return Bonus(mAdd_.Get<s_int>() - mValue.mAdd_.Get<s_int>(), fMul_ - mValue.fMul_);
             else if (!IsInteger() && !mValue.IsInteger())
-                return Bonus(mAdd_.GetF() - mValue.mAdd_.GetF(), fMul_ - mValue.fMul_);
+                return Bonus(mAdd_.Get<s_float>() - mValue.mAdd_.Get<s_float>(), fMul_ - mValue.fMul_);
             else
             {
                 Warning(CLASS_NAME, "Trying to substract two bonuses with different types.");
@@ -159,12 +159,12 @@ namespace Frost
         {
             if (IsInteger() && mValue.IsInteger())
             {
-                mAdd_.SetI(mAdd_.GetI() + mValue.mAdd_.GetI());
+                mAdd_ = mAdd_.Get<s_int>() + mValue.mAdd_.Get<s_int>();
                 fMul_ += mValue.fMul_;
             }
             else if (!IsInteger() && !mValue.IsInteger())
             {
-                mAdd_.SetF(mAdd_.GetF() + mValue.mAdd_.GetF());
+                mAdd_ = mAdd_.Get<s_float>() + mValue.mAdd_.Get<s_float>();
                 fMul_ += mValue.fMul_;
             }
             else
@@ -177,12 +177,12 @@ namespace Frost
         {
             if (IsInteger() && mValue.IsInteger())
             {
-                mAdd_.SetI(mAdd_.GetI() - mValue.mAdd_.GetI());
+                mAdd_ = mAdd_.Get<s_int>() - mValue.mAdd_.Get<s_int>();
                 fMul_ -= mValue.fMul_;
             }
             else if (!IsInteger() && !mValue.IsInteger())
             {
-                mAdd_.SetF(mAdd_.GetF() - mValue.mAdd_.GetF());
+                mAdd_ = mAdd_.Get<s_float>() - mValue.mAdd_.Get<s_float>();
                 fMul_ -= mValue.fMul_;
             }
             else
@@ -312,32 +312,32 @@ namespace Frost
 
         s_int GetBaseValueI() const
         {
-            return mValue_.GetI();
+            return mValue_.Get<s_int>();
         }
 
         s_float GetBaseValueF() const
         {
-            return mValue_.GetF();
+            return mValue_.Get<s_float>();
         }
 
         s_int GetBonusI() const
         {
-            return s_int(s_float(mValue_.GetI() + mBonus_.GetAddBonusI())*mBonus_.GetMulBonus()) - mValue_.GetI();
+            return s_int(s_float(mValue_.Get<s_int>() + mBonus_.GetAddBonusI())*mBonus_.GetMulBonus()) - mValue_.Get<s_int>();
         }
 
         s_float GetBonusF() const
         {
-            return (mValue_.GetF() + mBonus_.GetAddBonusF())*mBonus_.GetMulBonus() - mValue_.GetF();
+            return (mValue_.Get<s_float>() + mBonus_.GetAddBonusF())*mBonus_.GetMulBonus() - mValue_.Get<s_float>();
         }
 
         s_int GetValueI() const
         {
-            return s_int(s_float(mValue_.GetI() + mBonus_.GetAddBonusI())*mBonus_.GetMulBonus());
+            return s_int(s_float(mValue_.Get<s_int>() + mBonus_.GetAddBonusI())*mBonus_.GetMulBonus());
         }
 
         s_float GetValueF() const
         {
-            return (mValue_.GetF() + mBonus_.GetAddBonusF())*mBonus_.GetMulBonus();
+            return (mValue_.Get<s_float>() + mBonus_.GetAddBonusF())*mBonus_.GetMulBonus();
         }
 
         void AddBonus(const Bonus<s_var>& mBonus)

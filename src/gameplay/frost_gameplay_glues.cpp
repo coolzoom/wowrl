@@ -36,10 +36,10 @@ namespace Frost
     int LuaGameplay::_RegisterEvent(lua_State* pLua)
     {
         Lua::Function mFunc("Gameplay:RegisterEvent", pLua);
-        mFunc.Add(0, "event", Lua::TYPE_STRING, VALUE_STRING);
+        mFunc.Add(0, "event", Lua::TYPE_STRING);
         if (mFunc.Check())
         {
-            pParent_->RegisterEvent(mFunc.Get(0)->GetS());
+            pParent_->RegisterEvent(mFunc.Get(0)->GetString());
         }
 
         return mFunc.Return();
@@ -48,10 +48,12 @@ namespace Frost
     int LuaGameplay::_SetCamera(lua_State* pLua)
     {
         Lua::Function mFunc("Gameplay:SetCamera", pLua);
-        mFunc.Add(0, "camera", Lua::TYPE_USERDATA, VALUE_NONE);
+        mFunc.Add(0, "camera", Lua::TYPE_USERDATA);
         if (mFunc.Check())
         {
-            s_ptr<Camera> pCam = s_ptr<Camera>(Lunar<LuaMovableObject>::check(pLua, mFunc.Get(0)->GetI().Get())->GetObject());
+            s_ptr<Camera> pCam = s_ptr<Camera>(
+                Lunar<LuaMovableObject>::check(pLua, mFunc.Get(0)->GetIndex().Get())->GetObject()
+            );
             pParent_->SetCamera(pCam);
         }
 
@@ -61,11 +63,11 @@ namespace Frost
     int LuaGameplay::_CreateCamera(lua_State* pLua)
     {
         Lua::Function mFunc("Gameplay:CreateCamera", pLua, 1);
-        mFunc.Add(0, "vec", Lua::TYPE_TABLE, VALUE_NONE);
+        mFunc.Add(0, "vec", Lua::TYPE_TABLE);
         mFunc.NewParamSet();
-        mFunc.Add(0, "x", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(1, "y", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(2, "z", Lua::TYPE_NUMBER, VALUE_FLOAT);
+        mFunc.Add(0, "x", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "y", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "z", Lua::TYPE_NUMBER);
         mFunc.NewParamSet();
         if (mFunc.Check())
         {
@@ -86,9 +88,9 @@ namespace Frost
             else if (mFunc.GetParamSetRank() == 1)
             {
                 pCam = pParent_->CreateCamera(Vector(
-                    mFunc.Get(0)->GetF(),
-                    mFunc.Get(1)->GetF(),
-                    mFunc.Get(2)->GetF()
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
             else
@@ -97,7 +99,7 @@ namespace Frost
             }
 
             Lunar<LuaMovableObject>::push(pLua, pCam->GetGlue().Get());
-            mFunc.Push(Lua::ReturnValue(Lua::RETURN_OBJECT));
+            mFunc.NotifyPushed();
         }
 
         return mFunc.Return();

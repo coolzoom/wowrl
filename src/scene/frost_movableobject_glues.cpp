@@ -37,20 +37,20 @@ namespace Frost
     int LuaMovableObject::_Translate(lua_State* pLua)
     {
         Lua::Function mFunc("MovableObject:Translate", pLua);
-        mFunc.Add(0, "vec", Lua::TYPE_TABLE, VALUE_NONE);
-        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, VALUE_BOOL, true);
+        mFunc.Add(0, "vec", Lua::TYPE_TABLE);
+        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, true);
         mFunc.NewParamSet();
-        mFunc.Add(0, "x", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(1, "y", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(2, "z", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, VALUE_BOOL, true);
+        mFunc.Add(0, "x", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "y", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "z", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, true);
         if (mFunc.Check())
         {
             if (mFunc.GetParamSetRank() == 0)
             {
                 s_bool bLocal = false;
                 if (mFunc.IsProvided(1))
-                    bLocal = mFunc.Get(1)->GetB();
+                    bLocal = mFunc.Get(1)->GetBool();
 
                 s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
                 pState->SetTop(1);
@@ -67,12 +67,12 @@ namespace Frost
             {
                 s_bool bLocal = false;
                 if (mFunc.IsProvided(3))
-                    bLocal = mFunc.Get(3)->GetB();
+                    bLocal = mFunc.Get(3)->GetBool();
 
                 pParent_->Translate(Vector(
-                        mFunc.Get(0)->GetF(),
-                        mFunc.Get(1)->GetF(),
-                        mFunc.Get(2)->GetF()
+                        mFunc.Get(0)->GetNumber(),
+                        mFunc.Get(1)->GetNumber(),
+                        mFunc.Get(2)->GetNumber()
                     ),
                     bLocal
                 );
@@ -85,11 +85,11 @@ namespace Frost
     int LuaMovableObject::_SetDirection(lua_State* pLua)
     {
         Lua::Function mFunc("MovableObject:SetDirection", pLua);
-        mFunc.Add(0, "vec", Lua::TYPE_TABLE, VALUE_NONE);
+        mFunc.Add(0, "vec", Lua::TYPE_TABLE);
         mFunc.NewParamSet();
-        mFunc.Add(0, "x", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(1, "y", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(2, "z", Lua::TYPE_NUMBER, VALUE_FLOAT);
+        mFunc.Add(0, "x", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "y", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "z", Lua::TYPE_NUMBER);
         if (mFunc.Check())
         {
             if (mFunc.GetParamSetRank() == 0)
@@ -108,9 +108,9 @@ namespace Frost
             else
             {
                 pParent_->SetDirection(Vector(
-                    mFunc.Get(0)->GetF(),
-                    mFunc.Get(1)->GetF(),
-                    mFunc.Get(2)->GetF()
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
         }
@@ -121,20 +121,20 @@ namespace Frost
     int LuaMovableObject::_TranslateOrbitNode(lua_State* pLua)
     {
         Lua::Function mFunc("MovableObject:TranslateOrbitNode", pLua);
-        mFunc.Add(0, "vec", Lua::TYPE_TABLE, VALUE_NONE);
-        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, VALUE_BOOL, true);
+        mFunc.Add(0, "vec", Lua::TYPE_TABLE);
+        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, true);
         mFunc.NewParamSet();
-        mFunc.Add(0, "x", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(1, "y", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(2, "z", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, VALUE_BOOL, true);
+        mFunc.Add(0, "x", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "y", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "z", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, true);
         if (mFunc.Check())
         {
             if (mFunc.GetParamSetRank() == 0)
             {
                 s_bool bLocal = false;
                 if (mFunc.IsProvided(1))
-                    bLocal = mFunc.Get(1)->GetB();
+                    bLocal = mFunc.Get(1)->GetBool();
 
                 s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
                 pState->SetTop(1);
@@ -154,12 +154,12 @@ namespace Frost
             {
                 s_bool bLocal = false;
                 if (mFunc.IsProvided(3))
-                    bLocal = mFunc.Get(3)->GetB();
+                    bLocal = mFunc.Get(3)->GetBool();
 
                 pParent_->GetOrbitNode()->translate(Vector::FrostToOgre(Vector(
-                        mFunc.Get(0)->GetF(),
-                        mFunc.Get(1)->GetF(),
-                        mFunc.Get(2)->GetF()
+                        mFunc.Get(0)->GetNumber(),
+                        mFunc.Get(1)->GetNumber(),
+                        mFunc.Get(2)->GetNumber()
                     )),
                     bLocal ? Ogre::SceneNode::TS_LOCAL : Ogre::SceneNode::TS_PARENT
                 );
@@ -172,11 +172,11 @@ namespace Frost
     int LuaMovableObject::_OrbitAround(lua_State* pLua)
     {
         Lua::Function mFunc("MovableObject:OrbitAround", pLua);
-        mFunc.Add(0, "vec", Lua::TYPE_TABLE, VALUE_NONE);
+        mFunc.Add(0, "vec", Lua::TYPE_TABLE);
         mFunc.NewParamSet();
-        mFunc.Add(0, "x", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(1, "y", Lua::TYPE_NUMBER, VALUE_FLOAT);
-        mFunc.Add(2, "z", Lua::TYPE_NUMBER, VALUE_FLOAT);
+        mFunc.Add(0, "x", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "y", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "z", Lua::TYPE_NUMBER);
         if (mFunc.Check())
         {
             if (mFunc.GetParamSetRank() == 0)
@@ -196,12 +196,12 @@ namespace Frost
             {
                 s_bool bLocal = false;
                 if (mFunc.IsProvided(3))
-                    bLocal = mFunc.Get(3)->GetB();
+                    bLocal = mFunc.Get(3)->GetBool();
 
                 pParent_->OrbitAround(Vector(
-                    mFunc.Get(0)->GetF(),
-                    mFunc.Get(1)->GetF(),
-                    mFunc.Get(2)->GetF()
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
         }
@@ -220,7 +220,7 @@ namespace Frost
         lua_pushnumber(pLua, mDir.Y().Get());
         lua_pushnumber(pLua, mDir.Z().Get());
         lua_pcall(pLua, 3, 1, 0);
-        mFunc.Push(Lua::ReturnValue(Lua::RETURN_OBJECT));
+        mFunc.NotifyPushed();
 
         return mFunc.Return();
     }
@@ -228,10 +228,10 @@ namespace Frost
     int LuaMovableObject::_Yaw(lua_State* pLua)
     {
         Lua::Function mFunc("MovableObject:Yaw", pLua);
-        mFunc.Add(0, "angle", Lua::TYPE_NUMBER, VALUE_FLOAT);
+        mFunc.Add(0, "angle", Lua::TYPE_NUMBER);
         if (mFunc.Check())
         {
-            pParent_->Yaw(mFunc.Get(0)->GetF());
+            pParent_->Yaw(mFunc.Get(0)->GetNumber());
         }
 
         return mFunc.Return();
@@ -240,10 +240,10 @@ namespace Frost
     int LuaMovableObject::_Pitch(lua_State* pLua)
     {
         Lua::Function mFunc("MovableObject:Pitch", pLua);
-        mFunc.Add(0, "angle", Lua::TYPE_NUMBER, VALUE_FLOAT);
+        mFunc.Add(0, "angle", Lua::TYPE_NUMBER);
         if (mFunc.Check())
         {
-            pParent_->Pitch(mFunc.Get(0)->GetF());
+            pParent_->Pitch(mFunc.Get(0)->GetNumber());
         }
 
         return mFunc.Return();

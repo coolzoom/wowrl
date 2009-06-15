@@ -41,28 +41,28 @@ Function::~Function()
     }
 }
 
-void Function::Add( const s_uint& uiIndex, const s_str& sName, Lua::Type mLuaType, ValueType mType, const s_bool& bOptional )
+void Function::Add( const s_uint& uiIndex, const s_str& sName, Lua::Type mLuaType, const s_bool& bOptional )
 {
     if (bOptional)
     {
         if (MAPFIND(uiIndex, pArgList_->lOptional_))
         {
-            pArgList_->lOptional_[uiIndex]->Add(sName, mLuaType, mType);
+            pArgList_->lOptional_[uiIndex]->Add(sName, mLuaType);
         }
         else
         {
-            pArgList_->lOptional_[uiIndex] = new Argument(sName, mLuaType, mType, this);
+            pArgList_->lOptional_[uiIndex] = new Argument(sName, mLuaType, this);
         }
     }
     else
     {
         if (MAPFIND(uiIndex, pArgList_->lArg_))
         {
-            pArgList_->lArg_[uiIndex]->Add(sName, mLuaType, mType);
+            pArgList_->lArg_[uiIndex]->Add(sName, mLuaType);
         }
         else
         {
-            pArgList_->lArg_[uiIndex] = new Argument(sName, mLuaType, mType, this);
+            pArgList_->lArg_[uiIndex] = new Argument(sName, mLuaType, this);
         }
     }
 }
@@ -140,7 +140,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                 {
                     if (iterArg != iterArgList->lArg_.begin())
                         sArguments += ", ";
-                    sArguments += iterArg->second->Get()->GetName();
+                    sArguments += iterArg->second->GetData()->GetName();
                 }
                 if (iterArgList->lOptional_.size() > 0)
                 {
@@ -151,7 +151,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                     {
                         if (iterArg != iterArgList->lOptional_.begin())
                             sArguments += ", ";
-                        sArguments += iterArg->second->Get()->GetName();
+                        sArguments += iterArg->second->GetData()->GetName();
                     }
                     sArguments += ")";
                 }
@@ -215,7 +215,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                     {
                         if (iterArg != iterArgList->lArg_.begin())
                             sArguments += ", ";
-                        sArguments += iterArg->second->Get()->GetName();
+                        sArguments += iterArg->second->GetData()->GetName();
                     }
                     if (iterArgList->lOptional_.size() > 0)
                     {
@@ -226,7 +226,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                         {
                             if (iterArg != iterArgList->lOptional_.begin())
                                 sArguments += ", ";
-                            sArguments += iterArg->second->Get()->GetName();
+                            sArguments += iterArg->second->GetData()->GetName();
                         }
                         sArguments += ")";
                     }
@@ -283,19 +283,30 @@ const s_str& Function::GetName() const
     return sName_;
 }
 
-void Function::Push( ReturnValue mReturn )
+void Function::Push( const s_var& vValue )
 {
     if (uiReturnCount_ == uiReturnNbr_)
         ++uiReturnNbr_;
 
-    if (mReturn.mType == RETURN_NIL)
-        pLua_->PushNil();
-    else if (mReturn.mType == RETURN_NUMBER)
-        pLua_->PushNumber(mReturn.vValue.GetF());
-    else if (mReturn.mType == RETURN_BOOLEAN)
-        pLua_->PushBool(mReturn.vValue.GetB());
-    else if (mReturn.mType == RETURN_STRING)
-        pLua_->PushString(mReturn.vValue.GetS());
+    pLua_->PushVar(vValue);
+
+    ++uiReturnCount_;
+}
+
+void Function::PushNil()
+{
+    if (uiReturnCount_ == uiReturnNbr_)
+        ++uiReturnNbr_;
+
+    pLua_->PushNil();
+
+    ++uiReturnCount_;
+}
+
+void Function::NotifyPushed()
+{
+    if (uiReturnCount_ == uiReturnNbr_)
+        ++uiReturnNbr_;
 
     ++uiReturnCount_;
 }

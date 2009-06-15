@@ -494,17 +494,16 @@ namespace Frost
 
     s_var Engine::GetConstant( const s_str& sName ) const
     {
-        s_var vValue;
         if (sName == "MaxComputedPaths")
         {
-            vValue.SetI(iMaxComputedPaths_);
+            return iMaxComputedPaths_;
         }
         else if (sName == "GameVersion")
         {
-            vValue.SetS(sGameVersion_);
+            return sGameVersion_;
         }
-
-        return vValue;
+        else
+            return s_var();
     }
 
     s_ptr<Ogre::Log> Engine::GetLog()

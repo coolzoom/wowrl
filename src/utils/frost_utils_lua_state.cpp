@@ -351,11 +351,11 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
                 (pArg.GetType() == VALUE_UINT) ||
                 (pArg.GetType() == VALUE_FLOAT) ||
                 (pArg.GetType() == VALUE_DOUBLE))
-                lua_pushnumber(pLua_, pArg.GetF().Get());
+                lua_pushnumber(pLua_, pArg.Get<s_float>().Get());
             else if (pArg.GetType() == VALUE_STRING)
-                lua_pushstring(pLua_, pArg.GetS().GetASCII().c_str());
+                lua_pushstring(pLua_, pArg.Get<s_str>().GetASCII().c_str());
             else if (pArg.GetType() == VALUE_BOOL)
-                lua_pushboolean(pLua_, pArg.GetB().Get());
+                lua_pushboolean(pLua_, pArg.Get<s_bool>().Get());
             else
                 lua_pushnil(pLua_);
         }
@@ -443,6 +443,18 @@ void State::PushNil( const s_uint& uiNumber )
         lua_pushnil(pLua_);
 }
 
+void State::PushVar( const s_var& vValue )
+{
+    const s_type& mType = vValue.GetType();
+    if (mType == VALUE_INT) PushNumber(vValue.Get<s_int>());
+    else if (mType == VALUE_UINT) PushNumber(vValue.Get<s_uint>());
+    else if (mType == VALUE_FLOAT) PushNumber(vValue.Get<s_float>());
+    else if (mType == VALUE_DOUBLE) PushNumber(vValue.Get<s_double>());
+    else if (mType == VALUE_STRING) PushString(vValue.Get<s_str>());
+    else if (mType == VALUE_BOOL) PushBool(vValue.Get<s_bool>());
+    else PushNil();
+}
+
 void State::PushGlobal( const s_str& sName )
 {
     lua_getglobal(pLua_, sName.GetASCII().c_str());
@@ -486,7 +498,7 @@ s_var State::GetValue( const s_int& iIndex )
         case LUA_TBOOLEAN : return GetBool(iIndex);
         case LUA_TNUMBER : return GetNumber(iIndex);
         case LUA_TSTRING : return GetString(iIndex);
-        default : return NULL;
+        default : return (void*)NULL;
     }
 }
 

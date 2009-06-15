@@ -54,13 +54,13 @@ int Lua::l_ConcTable( lua_State* pLua )
 int Lua::l_ThrowError( lua_State* pLua )
 {
     Lua::Function mFunc("ThrowError", pLua);
-    mFunc.Add(0, "caption", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "caption", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        Log("# Error # : Lua : " + mFunc.Get(0)->GetS());
+        Log("# Error # : Lua : " + mFunc.Get(0)->GetString());
 
         Event e("LUA_ERROR");
-        e.Add(s_var(mFunc.Get(0)->GetS()));
+        e.Add(s_var(mFunc.Get(0)->GetString()));
 
         EventManager::GetSingleton()->FireEvent(e);
     }
@@ -89,10 +89,10 @@ int Lua::l_ThrowInternalError( lua_State* pLua )
 int Lua::l_Log( lua_State* pLua )
 {
     Lua::Function mFunc("Log", pLua);
-    mFunc.Add(0, "caption", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "caption", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        Log("# Lua # : " + mFunc.Get(0)->GetS());
+        Log("# Lua # : " + mFunc.Get(0)->GetString());
     }
 
     return mFunc.Return();
@@ -101,15 +101,15 @@ int Lua::l_Log( lua_State* pLua )
 int Lua::l_RandomInt( lua_State* pLua )
 {
     Lua::Function mFunc("RandomInt", pLua, 1);
-    mFunc.Add(0, "min", Lua::TYPE_NUMBER, VALUE_INT);
-    mFunc.Add(1, "max", Lua::TYPE_NUMBER, VALUE_INT);
+    mFunc.Add(0, "min", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "max", Lua::TYPE_NUMBER);
     if (mFunc.Check())
     {
-        s_int iMin = mFunc.Get(0)->GetI();
-        s_int iMax = mFunc.Get(1)->GetI();
+        s_int iMin = s_int(mFunc.Get(0)->GetNumber());
+        s_int iMax = s_int(mFunc.Get(1)->GetNumber());
 
         s_int iRand = s_int::Random(iMin, iMax);
-        mFunc.Push(Lua::ReturnValue(iRand));
+        mFunc.Push(iRand);
     }
 
     return mFunc.Return();
@@ -118,15 +118,15 @@ int Lua::l_RandomInt( lua_State* pLua )
 int Lua::l_RandomFloat( lua_State* pLua )
 {
     Lua::Function mFunc("RandomFloat", pLua, 1);
-    mFunc.Add(0, "min", Lua::TYPE_NUMBER, VALUE_FLOAT);
-    mFunc.Add(1, "max", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(0, "min", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "max", Lua::TYPE_NUMBER);
     if (mFunc.Check())
     {
-        s_float fMin = mFunc.Get(0)->GetF();
-        s_float fMax = mFunc.Get(1)->GetF();
+        s_float fMin = mFunc.Get(0)->GetNumber();
+        s_float fMax = mFunc.Get(1)->GetNumber();
 
         s_float fRand = s_float::Random(fMin, fMax);
-        mFunc.Push(Lua::ReturnValue(fRand));
+        mFunc.Push(fRand);
     }
 
     return mFunc.Return();
@@ -135,17 +135,17 @@ int Lua::l_RandomFloat( lua_State* pLua )
 int Lua::l_StrReplace( lua_State* pLua )
 {
     Lua::Function mFunc("StrReplace", pLua, 2);
-    mFunc.Add(0, "base string", Lua::TYPE_STRING, VALUE_STRING);
-    mFunc.Add(1, "pattern", Lua::TYPE_STRING, VALUE_STRING);
-    mFunc.Add(3, "replacement", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "base string", Lua::TYPE_STRING);
+    mFunc.Add(1, "pattern", Lua::TYPE_STRING);
+    mFunc.Add(3, "replacement", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        s_str sBase = mFunc.Get(0)->GetS();
-        s_str sPattern = mFunc.Get(1)->GetS();
-        s_str sReplacement = mFunc.Get(2)->GetS();
+        s_str sBase = mFunc.Get(0)->GetString();
+        s_str sPattern = mFunc.Get(1)->GetString();
+        s_str sReplacement = mFunc.Get(2)->GetString();
         s_uint uiCount = sBase.Replace(sPattern, sReplacement);
-        mFunc.Push(Lua::ReturnValue(sBase));
-        mFunc.Push(Lua::ReturnValue(uiCount));
+        mFunc.Push(sBase);
+        mFunc.Push(uiCount);
     }
 
     return mFunc.Return();
@@ -154,12 +154,12 @@ int Lua::l_StrReplace( lua_State* pLua )
 int Lua::l_StrCapitalStart( lua_State* pLua )
 {
     Lua::Function mFunc("StrCapitalStart", pLua, 1);
-    mFunc.Add(0, "base string", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "base string", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        s_str sBase = mFunc.Get(0)->GetS();
+        s_str sBase = mFunc.Get(0)->GetString();
         sBase.CapitalStart(true);
-        mFunc.Push(Lua::ReturnValue(sBase));
+        mFunc.Push(sBase);
     }
 
     return mFunc.Return();
@@ -168,12 +168,12 @@ int Lua::l_StrCapitalStart( lua_State* pLua )
 int Lua::l_GetGlobal( lua_State* pLua )
 {
     Lua::Function mFunc("GetGlobal", pLua, 1);
-    mFunc.Add(0, "variable name", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "variable name", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        s_str sName = mFunc.Get(0)->GetS();
+        s_str sName = mFunc.Get(0)->GetString();
         lua_getglobal(pLua, sName.GetASCII().c_str());
-        mFunc.Push(Lua::ReturnValue(RETURN_OBJECT));
+        mFunc.NotifyPushed();
     }
 
     return mFunc.Return();
@@ -182,10 +182,10 @@ int Lua::l_GetGlobal( lua_State* pLua )
 int Lua::l_DoString( lua_State* pLua )
 {
     Lua::Function mFunc("RunScript", pLua);
-    mFunc.Add(0, "script", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "script", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        s_str sScript = mFunc.Get(0)->GetS();
+        s_str sScript = mFunc.Get(0)->GetString();
         int iError = luaL_dostring(pLua, sScript.GetASCII().c_str());
         if (iError == LUA_ERRRUN)
             l_ThrowInternalError(pLua);

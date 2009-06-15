@@ -34,11 +34,10 @@ namespace Frost
             /// Main constructor
             /** \param sName    The name associated to this data
             *   \param mLuaType The expected type in Lua
-            *   \param mType    The C++ type you'll be using
             *   \param pParent  A pointer to the Argument that'll be using it
             *   \note You shouldn't have to call it. Consider using Function instead.
             */
-            Data(const s_str& sName, Lua::Type mLuaType, ValueType mType, s_ptr<Argument> pParent);
+            Data(const s_str& sName, Lua::Type mLuaType, s_ptr<Argument> pParent);
 
             /// Gets data from Lua
             /** \param pLua   The Lua state to use
@@ -60,12 +59,7 @@ namespace Frost
             /// Returns this argument's Lua type.
             /** \return This argument's Lua type
             */
-            Lua::Type    GetLuaType() const;
-
-            /// Returns this argument's type.
-            /** \return This argument's type
-            */
-            ValueType    GetType() const;
+            Lua::Type    GetType() const;
 
             static const s_str CLASS_NAME;
 
@@ -74,7 +68,6 @@ namespace Frost
             s_str           sName_;
             s_var           mValue_;
             Lua::Type       mLuaType_;
-            ValueType       mType_;
             s_ptr<Argument> pParent_;
         };
 
@@ -92,57 +85,40 @@ namespace Frost
             /// Constructor.
             /** \param sName    The name of this argument (used to print errors in the log)
             *   \param mLuaType The expected type in Lua
-            *   \param mType    The C++ type you'll be using (conversion is done automatically)
             *   \param pParent  A pointer to the function that'll be using it
             */
-            Argument(const s_str& sName, Lua::Type mLuaType, ValueType mType, s_ptr<Function> pParent);
+            Argument(const s_str& sName, Lua::Type mLuaType, s_ptr<Function> pParent);
 
             /// Adds an alternative to this argument.
             /** \param sName    The name of this alternative argument (used to print errors in the log)
             *   \param mLuaType The expected type in Lua
-            *   \param mType    The C++ type you'll be using (conversion is done automatically)
             */
-            void          Add(const s_str& sName, Lua::Type mLuaType, ValueType mType);
+            void          Add(const s_str& sName, Lua::Type mLuaType);
 
             /// Returns the associated Data.
             /** \return The associated Data
             */
-            s_ptr<Data>   Get() const;
-
-            /// Returns the value and converts it to an int.
-            /** \return The value and converts it to an int
-            */
-            s_int         GetI() const;
-
-            /// Returns the value and converts it to an unsigned int.
-            /** \return The value and converts it to an unsigned int
-            */
-            s_uint        GetUI() const;
+            s_ptr<Data>   GetData() const;
 
             /// Returns the value and converts it to a float.
             /** \return The value and converts it to a float
             */
-            s_float       GetF() const;
-
-            /// Returns the value and converts it to a double.
-            /** \return The value and converts it to a double
-            */
-            s_double      GetD() const;
+            s_float       GetNumber() const;
 
             /// Returns the value and converts it to a bool.
             /** \return The value and converts it to a bool
             */
-            s_bool        GetB() const;
+            s_bool        GetBool() const;
 
             /// Returns the value and converts it to a string.
             /** \return The value and converts it to a string
             */
-            s_str         GetS() const;
+            s_str         GetString() const;
 
-            /// Returns the value and converts it to a void pointer.
-            /** \return The value and converts it to a void pointer
+            /// Returns the value and converts it to an int.
+            /** \return The value and converts it to an int
             */
-            const void*   GetP() const;
+            s_int         GetIndex() const;
 
             /// Returns the actual type of this value.
             /** \return The actual type of this value
@@ -176,37 +152,6 @@ namespace Frost
             s_ptr<Data>       pData_;
             std::vector<Data> lData_;
             s_ptr<Function>   pParent_;
-        };
-
-        enum ReturnValueType
-        {
-            /// Returns nil (= NULL in Lua)
-            RETURN_NIL,
-            /// Returns a number (promoted to a float in Lua)
-            RETURN_NUMBER,
-            /// Returns a string
-            RETURN_STRING,
-            /// Returns a boolean
-            RETURN_BOOLEAN,
-            /// Returns a Lua object (a table, ...)
-            RETURN_OBJECT
-        };
-
-        /// Return value of a Lua glue
-        struct ReturnValue
-        {
-            ReturnValue();
-            ReturnValue(ReturnValueType type);
-            ReturnValue(const s_var& vVal);
-            ReturnValue(const s_int& iVal);
-            ReturnValue(const s_uint& uiVal);
-            ReturnValue(const s_float& fVal);
-            ReturnValue(const s_double& dVal);
-            ReturnValue(const s_bool& bVal);
-            ReturnValue(const s_str& sVal);
-
-            ReturnValueType mType;
-            s_var           vValue;
         };
 
         /// Holds all possible arguments of a Lua function's argument set.
@@ -256,7 +201,6 @@ namespace Frost
             /** \param uiIndex    The index of this argument
             *   \param sName      The name of this argument (used to print errors in the log)
             *   \param mLuaType   The expected type in Lua
-            *   \param mType      The C++ type you'll be using (conversion is done automatically)
             *   \param bOptional 'true' if this argument is not essential and can be ommited
             *   \note Optional arguments work just like in C++ : if you say argument n is optional,
             *         then all the following arguments will have to be optional too.<br>
@@ -264,7 +208,7 @@ namespace Frost
             *         have different Lua types. The function will then choose the right one acording
             *         to the actual Lua type that the user has provided.
             */
-            void            Add(const s_uint& uiIndex, const s_str& sName, Lua::Type mLuaType, ValueType mType, const s_bool& bOptional = false);
+            void            Add(const s_uint& uiIndex, const s_str& sName, Lua::Type mLuaType, const s_bool& bOptional = false);
 
             /// Tells the Function there is another parameter set that will be provided.
             void            NewParamSet();
@@ -303,11 +247,11 @@ namespace Frost
             */
             const s_uint&   GetArgumentCount() const;
 
-            /// Adds a return value
-            /** \param mReturn The returned value
-            *   \note - If you want to return a Lua object, <b>you must put it on the
-            *         stack yourself</b>, and then call this function :<br>
-            *         Push(Lua::ReturnValue(Lua::RETURN_OBJECT));<br>
+            /// Adds a return value.
+            /** \param vValue One of the returned value
+            *   \note - If you want to return a complex Lua object (a table,
+            *         a function, ...), <b>you must put it on the
+            *         stack yourself</b>, and then call NotifyPushed();<br>
             *         - Values are immediatly pushed onto the Lua stack, so
             *         the order in which you return your values is important.<br>
             *         - If, for some reason, your can't push one of your return
@@ -316,9 +260,20 @@ namespace Frost
             *         nil until the proper number of return values is reached when
             *         Return() is called.
             */
-            void            Push(ReturnValue mReturn);
+            void            Push(const s_var& vValue);
 
-            /// Ends the function
+            /// Adds nil to the return values.
+            /** \note Calling Push(s_var()) does exactly the same thing. But this
+            *         function is clearer.
+            */
+            void            PushNil();
+
+            /// Tells this function you pushed a return value.
+            /** \note See Push for more infos.
+            */
+            void            NotifyPushed();
+
+            /// Ends the function.
             /** \return The number of returned values
             *   \note Use the return of this function as return value of your glue.<br>
             *         Note that this class will automatically fill the stack with
@@ -345,6 +300,5 @@ namespace Frost
         };
     }
 }
-
 
 #endif
