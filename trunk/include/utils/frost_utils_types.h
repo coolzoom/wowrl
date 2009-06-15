@@ -38,16 +38,16 @@ namespace Frost
         typedef std::stringstream string_stream;
         typedef std::fstream file_stream;
     #endif
-
-    #include "frost_utils_bool.h"
-    #include "frost_utils_int.h"
-    #include "frost_utils_uint.h"
-    #include "frost_utils_float.h"
-    #include "frost_utils_str.h"
-    #include "frost_utils_ctnr.h"
-    #include "frost_utils_array.h"
-    #include "frost_utils_ptr.h"
-    #include "frost_utils_refptr.h"
 }
+
+#include "frost_utils_bool.h"
+#include "frost_utils_int.h"
+#include "frost_utils_uint.h"
+#include "frost_utils_float.h"
+#include "frost_utils_str.h"
+#include "frost_utils_ctnr.h"
+#include "frost_utils_array.h"
+#include "frost_utils_ptr.h"
+#include "frost_utils_refptr.h"
 
 #endif
