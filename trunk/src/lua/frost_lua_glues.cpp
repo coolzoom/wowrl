@@ -29,7 +29,7 @@ int Frost::l_GetDelta( lua_State* pLua )
 {
     Lua::Function mFunc("GetDelta", pLua, 1);
 
-    mFunc.Push(Lua::ReturnValue(TimeManager::GetSingleton()->GetDelta()));
+    mFunc.Push(TimeManager::GetSingleton()->GetDelta());
 
     return mFunc.Return();
 }
@@ -38,7 +38,7 @@ int Frost::l_GetLocale( lua_State* pLua )
 {
     Lua::Function mFunc("GetLocale", pLua, 1);
 
-    mFunc.Push(Lua::ReturnValue(LocaleManager::GetSingleton()->GetLocale()));
+    mFunc.Push(LocaleManager::GetSingleton()->GetLocale());
 
     return mFunc.Return();
 }
@@ -46,11 +46,11 @@ int Frost::l_GetLocale( lua_State* pLua )
 int Frost::l_GetLocalizedString( lua_State* pLua )
 {
     Lua::Function mFunc("GetLocalizedString", pLua, 1);
-    mFunc.Add(0, "string id", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "string id", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        s_str sID = mFunc.Get(0)->GetS();
-        mFunc.Push(Lua::ReturnValue(LocaleManager::GetSingleton()->GetLocalizedString(sID)));
+        s_str sID = mFunc.Get(0)->GetString();
+        mFunc.Push(LocaleManager::GetSingleton()->GetLocalizedString(sID));
     }
 
     return mFunc.Return();
@@ -60,7 +60,7 @@ int Frost::l_GetTime( lua_State* pLua )
 {
     Lua::Function mFunc("GetTime", pLua, 1);
 
-    mFunc.Push(Lua::ReturnValue(TimeManager::GetSingleton()->GetTime()));
+    mFunc.Push(TimeManager::GetSingleton()->GetTime());
 
     return mFunc.Return();
 }
@@ -69,9 +69,9 @@ int Frost::l_GetTimeOfTheDay( lua_State* pLua )
 {
     Lua::Function mFunc("GetTimeOfTheDay", pLua, 3);
 
-    mFunc.Push(Lua::ReturnValue(TimeManager::GetSingleton()->GetHour()));
-    mFunc.Push(Lua::ReturnValue(TimeManager::GetSingleton()->GetMinutes()));
-    mFunc.Push(Lua::ReturnValue(TimeManager::GetSingleton()->GetSeconds()));
+    mFunc.Push(TimeManager::GetSingleton()->GetHour());
+    mFunc.Push(TimeManager::GetSingleton()->GetMinutes());
+    mFunc.Push(TimeManager::GetSingleton()->GetSeconds());
 
     return mFunc.Return();
 }
@@ -80,8 +80,8 @@ int Frost::l_GetMousePos( lua_State* pLua )
 {
     Lua::Function mFunc("GetMousePos", pLua, 2);
 
-    mFunc.Push(Lua::ReturnValue(InputManager::GetSingleton()->GetMPosX()));
-    mFunc.Push(Lua::ReturnValue(InputManager::GetSingleton()->GetMPosY()));
+    mFunc.Push(InputManager::GetSingleton()->GetMPosX());
+    mFunc.Push(InputManager::GetSingleton()->GetMPosY());
 
     return mFunc.Return();
 }

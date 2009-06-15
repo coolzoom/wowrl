@@ -148,6 +148,11 @@ namespace Frost
             */
             void    PushString(const s_str& sValue);
 
+            /// Puts a value on the stack.
+            /** \param vValue The value to push on the stack
+            */
+            void    PushVar(const s_var& vValue);
+
             /// Puts "nil" (NULL) on the stack.
             /** \param uiNumber The number of "nil" to push
             */

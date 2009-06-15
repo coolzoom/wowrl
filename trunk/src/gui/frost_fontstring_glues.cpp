@@ -96,16 +96,16 @@ int LuaFontString::_GetTextColor( lua_State* pLua )
 int LuaFontString::_SetFont( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetFont", pLua);
-    mFunc.Add(0, "file", Lua::TYPE_STRING, VALUE_STRING);
-    mFunc.Add(1, "height", Lua::TYPE_NUMBER, VALUE_UINT);
-    mFunc.Add(3, "flags", Lua::TYPE_STRING, VALUE_STRING, true);
+    mFunc.Add(0, "file", Lua::TYPE_STRING);
+    mFunc.Add(1, "height", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "flags", Lua::TYPE_STRING, true);
 
     if (mFunc.Check())
     {
-        pFontStringParent_->SetFont(mFunc.Get(0)->GetS(), mFunc.Get(1)->GetUI());
+        pFontStringParent_->SetFont(mFunc.Get(0)->GetString(), s_uint(mFunc.Get(1)->GetNumber()));
         if (mFunc.IsProvided(2))
         {
-            s_str sFlags = mFunc.Get(2)->GetS();
+            s_str sFlags = mFunc.Get(2)->GetString();
             if (sFlags.Find("OUTLINE") || sFlags.Find("THICKOUTLINE"))
                 pFontStringParent_->SetOutlined(true);
             else if (sFlags.IsEmpty())
@@ -129,11 +129,11 @@ int LuaFontString::_SetFont( lua_State* pLua )
 int LuaFontString::_SetJustifyH( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetJustifyH", pLua);
-    mFunc.Add(0, "justify horizontal", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "justify horizontal", Lua::TYPE_STRING);
 
     if (mFunc.Check())
     {
-        s_str sJustifyH = mFunc.Get(0)->GetS();
+        s_str sJustifyH = mFunc.Get(0)->GetString();
         if (sJustifyH == "LEFT")
             pFontStringParent_->SetJustifyH(Text::ALIGN_LEFT);
         else if (sJustifyH == "CENTER")
@@ -154,10 +154,10 @@ int LuaFontString::_SetJustifyH( lua_State* pLua )
 int LuaFontString::_SetShadowColor( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetShadowColor", pLua);
-    mFunc.Add(0, "red", Lua::TYPE_NUMBER, VALUE_FLOAT);
-    mFunc.Add(1, "green", Lua::TYPE_NUMBER, VALUE_FLOAT);
-    mFunc.Add(2, "blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
-    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, VALUE_FLOAT, true);
+    mFunc.Add(0, "red", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "green", Lua::TYPE_NUMBER);
+    mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
 
     if (mFunc.Check())
     {
@@ -165,18 +165,18 @@ int LuaFontString::_SetShadowColor( lua_State* pLua )
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(3)->GetF()),
-                s_uint(255*mFunc.Get(0)->GetF()),
-                s_uint(255*mFunc.Get(1)->GetF()),
-                s_uint(255*mFunc.Get(2)->GetF())
+                s_uint(255*mFunc.Get(3)->GetNumber()),
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
             );
         }
         else
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(0)->GetF()),
-                s_uint(255*mFunc.Get(1)->GetF()),
-                s_uint(255*mFunc.Get(2)->GetF())
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
             );
         }
 
@@ -189,12 +189,15 @@ int LuaFontString::_SetShadowColor( lua_State* pLua )
 int LuaFontString::_SetShadowOffset( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetShadowOffset", pLua);
-    mFunc.Add(0, "x offset", Lua::TYPE_NUMBER, VALUE_INT);
-    mFunc.Add(1, "y offset", Lua::TYPE_NUMBER, VALUE_INT);
+    mFunc.Add(0, "x offset", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "y offset", Lua::TYPE_NUMBER);
 
     if (mFunc.Check())
     {
-        pFontStringParent_->SetShadowOffsets(mFunc.Get(0)->GetI(), mFunc.Get(1)->GetI());
+        pFontStringParent_->SetShadowOffsets(
+            s_int(mFunc.Get(0)->GetNumber()),
+            s_int(mFunc.Get(1)->GetNumber())
+        );
     }
 
     return mFunc.Return();
@@ -203,11 +206,11 @@ int LuaFontString::_SetShadowOffset( lua_State* pLua )
 int LuaFontString::_SetSpacing( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetSpacing", pLua);
-    mFunc.Add(0, "spacing", Lua::TYPE_NUMBER, VALUE_FLOAT);
+    mFunc.Add(0, "spacing", Lua::TYPE_NUMBER);
 
     if (mFunc.Check())
     {
-        pFontStringParent_->SetSpacing(mFunc.Get(0)->GetF());
+        pFontStringParent_->SetSpacing(mFunc.Get(0)->GetNumber());
     }
 
     return mFunc.Return();
@@ -216,10 +219,10 @@ int LuaFontString::_SetSpacing( lua_State* pLua )
 int LuaFontString::_SetTextColor( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetTextColor", pLua);
-    mFunc.Add(0, "red", Lua::TYPE_NUMBER, VALUE_FLOAT);
-    mFunc.Add(1, "green", Lua::TYPE_NUMBER, VALUE_FLOAT);
-    mFunc.Add(2, "blue", Lua::TYPE_NUMBER, VALUE_FLOAT);
-    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, VALUE_FLOAT, true);
+    mFunc.Add(0, "red", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "green", Lua::TYPE_NUMBER);
+    mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
 
     if (mFunc.Check())
     {
@@ -227,18 +230,18 @@ int LuaFontString::_SetTextColor( lua_State* pLua )
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(3)->GetF()),
-                s_uint(255*mFunc.Get(0)->GetF()),
-                s_uint(255*mFunc.Get(1)->GetF()),
-                s_uint(255*mFunc.Get(2)->GetF())
+                s_uint(255*mFunc.Get(3)->GetNumber()),
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
             );
         }
         else
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(0)->GetF()),
-                s_uint(255*mFunc.Get(1)->GetF()),
-                s_uint(255*mFunc.Get(2)->GetF())
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
             );
         }
 
@@ -287,11 +290,11 @@ int LuaFontString::_GetText( lua_State* pLua )
 int LuaFontString::_SetNonSpaceWrap( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetNonSpaceWrap", pLua);
-    mFunc.Add(0, "can non space wrap", Lua::TYPE_BOOLEAN, VALUE_BOOL);
+    mFunc.Add(0, "can non space wrap", Lua::TYPE_BOOLEAN);
 
     if (mFunc.Check())
     {
-        pFontStringParent_->SetNonSpaceWrap(mFunc.Get(0)->GetB());
+        pFontStringParent_->SetNonSpaceWrap(mFunc.Get(0)->GetBool());
     }
 
     return mFunc.Return();
@@ -300,11 +303,11 @@ int LuaFontString::_SetNonSpaceWrap( lua_State* pLua )
 int LuaFontString::_SetText( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetText", pLua);
-    mFunc.Add(0, "text", Lua::TYPE_STRING, VALUE_STRING);
+    mFunc.Add(0, "text", Lua::TYPE_STRING);
 
     if (mFunc.Check())
     {
-        pFontStringParent_->SetText(mFunc.Get(0)->GetS());
+        pFontStringParent_->SetText(mFunc.Get(0)->GetString());
     }
 
     return mFunc.Return();

@@ -225,9 +225,9 @@ namespace Frost
         {
             s_var vReturn;
             if (iter->second.IsInteger())
-                vReturn.SetI(iter->second.GetValueI());
+                vReturn = iter->second.GetValueI();
             else
-                vReturn.SetF(iter->second.GetValueF());
+                vReturn = iter->second.GetValueF();
 
             return vReturn;
         }
@@ -236,7 +236,7 @@ namespace Frost
             Error(CLASS_NAME,
                 "Unkown stat : \""+sStatName+"\" for "+sName_+"."
             );
-            return s_var(NULL);
+            return (void*)NULL;
         }
     }
 

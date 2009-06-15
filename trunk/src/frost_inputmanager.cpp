@@ -306,27 +306,27 @@ namespace Frost
                 if (lKeyBuf_[i])
                 {
                     mKeyboardEvent.SetName("KEY_DOWN");
-                    mKeyboardEvent[0].SetUI(s_uint(i));
+                    mKeyboardEvent[0] = s_uint(i);
                     pEventMgr->FireEvent(mKeyboardEvent);
 
                     if (!lKeyBufOld_[i])
                     {
                         mKeyboardEvent.SetName("KEY_PRESSED");
-                        mKeyboardEvent[0].SetUI(s_uint(i));
+                        mKeyboardEvent[0] = s_uint(i);
                         pEventMgr->FireEvent(mKeyboardEvent);
                     }
 
                     if (lKeyLong_[i])
                     {
                         mKeyboardEvent.SetName("KEY_DOWN_LONG");
-                        mKeyboardEvent[0].SetUI(s_uint(i));
+                        mKeyboardEvent[0] = s_uint(i);
                         pEventMgr->FireEvent(mKeyboardEvent);
                     }
                 }
                 else if (lKeyBufOld_[i])
                 {
                     mKeyboardEvent.SetName("KEY_RELEASED");
-                    mKeyboardEvent[0].SetUI(s_uint(i));
+                    mKeyboardEvent[0] = s_uint(i);
                     pEventMgr->FireEvent(mKeyboardEvent);
                 }
             }
@@ -428,19 +428,19 @@ namespace Frost
                 if (bMouseState)
                 {
                     mMouseEvent.SetName("MOUSE_DOWN");
-                    mMouseEvent[0].SetUI(s_uint(i));
+                    mMouseEvent[0] = s_uint(i);
                     pEventMgr->FireEvent(mMouseEvent);
 
                     if (!bOldMouseState)
                     {
                         mMouseEvent.SetName("MOUSE_PRESSED");
-                        mMouseEvent[0].SetUI(s_uint(i));
+                        mMouseEvent[0] = s_uint(i);
                         pEventMgr->FireEvent(mMouseEvent);
 
                         if (lDoubleclickDelay_[i] > 0.0)
                         {
                             mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
-                            mMouseEvent[0].SetUI(s_uint(i));
+                            mMouseEvent[0] = s_uint(i);
                             pEventMgr->FireEvent(mMouseEvent);
                         }
                     }
@@ -448,14 +448,14 @@ namespace Frost
                     if (lMouseLong_[i])
                     {
                         mMouseEvent.SetName("MOUSE_DOWN_LONG");
-                        mMouseEvent[0].SetUI(s_uint(i));
+                        mMouseEvent[0] = s_uint(i);
                         pEventMgr->FireEvent(mMouseEvent);
                     }
                 }
                 else if (bOldMouseState)
                 {
                     mMouseEvent.SetName("MOUSE_RELEASED");
-                    mMouseEvent[0].SetUI(s_uint(i));
+                    mMouseEvent[0] = s_uint(i);
                     pEventMgr->FireEvent(mMouseEvent);
                 }
             }

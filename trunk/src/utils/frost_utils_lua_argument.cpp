@@ -14,53 +14,43 @@ using namespace Frost::Lua;
 
 const s_str Argument::CLASS_NAME = "Lua::Argument";
 
-Argument::Argument( const s_str& sName, Lua::Type mLuaType, ValueType mType, s_ptr<Function> pParent )
+Argument::Argument( const s_str& sName, Lua::Type mLuaType, s_ptr<Function> pParent )
 {
-    lData_.push_back(Data(sName, mLuaType, mType, this));
+    lData_.push_back(Data(sName, mLuaType, this));
     pData_ = &lData_[0];
     pParent_ = pParent;
 }
 
-void Argument::Add( const s_str& sName, Lua::Type mLuaType, ValueType mType )
+void Argument::Add( const s_str& sName, Lua::Type mLuaType )
 {
-    lData_.push_back(Data(sName, mLuaType, mType, this));
+    lData_.push_back(Data(sName, mLuaType, this));
     if (lData_.size() == 1)
         pData_ = &lData_[0];
 }
 
-s_int Argument::GetI() const
+s_float Argument::GetNumber() const
 {
-    return pData_->GetValue().GetI();
+    return pData_->GetValue().Get<s_float>();
 }
 
-s_uint Argument::GetUI() const
+s_bool Argument::GetBool() const
 {
-    return pData_->GetValue().GetUI();
+    return pData_->GetValue().Get<s_bool>();
 }
 
-s_float Argument::GetF() const
+s_str Argument::GetString() const
 {
-    return pData_->GetValue().GetF();
+    return pData_->GetValue().Get<s_str>();
 }
 
-s_bool Argument::GetB() const
+s_int Argument::GetIndex() const
 {
-    return pData_->GetValue().GetB();
-}
-
-s_str Argument::GetS() const
-{
-    return pData_->GetValue().GetS();
-}
-
-const void* Argument::GetP() const
-{
-    return pData_->GetValue().GetP();
+    return pData_->GetValue().Get<s_int>();
 }
 
 Lua::Type Argument::GetType() const
 {
-    return pData_->GetLuaType();
+    return pData_->GetType();
 }
 
 const s_bool& Argument::IsProvided() const
@@ -76,7 +66,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
     vector<Data>::iterator iterData;
     foreach (iterData, lData_)
     {
-        if (mType != iterData->GetLuaType())
+        if (mType != iterData->GetType())
         {
             if (bPrintError && !bSeveralChoices)
             {
@@ -86,7 +76,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
                     " of \"" +
                     pParent_->GetName() +
                     "\" must be a " +
-                    s_str(pLua->GetTypeName(iterData->GetLuaType())) +
+                    s_str(pLua->GetTypeName(iterData->GetType())) +
                     " (" +
                     iterData->GetName() +
                     ")."
@@ -117,7 +107,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
                 else
                     sEnum += " or a ";
 
-                sEnum += s_str(pLua->GetTypeName(iterData->GetLuaType())) +
+                sEnum += s_str(pLua->GetTypeName(iterData->GetType())) +
                     " (" + iterData->GetName() + ")";
                 ++i;
             }
@@ -142,7 +132,7 @@ void Argument::SetData( s_ptr<Data> pData )
     pData_ = pData;
 }
 
-s_ptr<Data> Argument::Get() const
+s_ptr<Data> Argument::GetData() const
 {
     return pData_;
 }

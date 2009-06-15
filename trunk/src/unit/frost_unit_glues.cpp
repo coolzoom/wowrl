@@ -42,11 +42,11 @@ namespace Frost
     int LuaUnit::_AddHealth( lua_State* pLua )
     {
         Lua::Function mFunc("Unit:AddHealth", pLua);
-        mFunc.Add(0, "health add", Lua::TYPE_NUMBER, VALUE_FLOAT);
+        mFunc.Add(0, "health add", Lua::TYPE_NUMBER);
 
         if (mFunc.Check())
         {
-            pParent_->AddHealth(mFunc.Get(0)->GetF());
+            pParent_->AddHealth(mFunc.Get(0)->GetNumber());
         }
 
         return mFunc.Return();
@@ -55,11 +55,11 @@ namespace Frost
     int LuaUnit::_AddPower( lua_State* pLua )
     {
         Lua::Function mFunc("Unit:AddPower", pLua);
-        mFunc.Add(0, "power add", Lua::TYPE_NUMBER, VALUE_FLOAT);
+        mFunc.Add(0, "power add", Lua::TYPE_NUMBER);
 
         if (mFunc.Check())
         {
-            pParent_->AddPower(mFunc.Get(0)->GetF());
+            pParent_->AddPower(mFunc.Get(0)->GetNumber());
         }
 
         return mFunc.Return();
@@ -188,11 +188,11 @@ namespace Frost
     int LuaUnit::_GetStat( lua_State* pLua )
     {
         Lua::Function mFunc("Unit:GetStat", pLua, 1);
-        mFunc.Add(0, "stat name", Lua::TYPE_STRING, VALUE_STRING);
+        mFunc.Add(0, "stat name", Lua::TYPE_STRING);
 
         if (mFunc.Check())
         {
-            mFunc.Push(pParent_->GetStat(mFunc.Get(0)->GetS()));
+            mFunc.Push(pParent_->GetStat(mFunc.Get(0)->GetString()));
         }
 
         return mFunc.Return();

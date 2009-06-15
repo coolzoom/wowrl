@@ -13,38 +13,31 @@ using namespace Frost::Lua;
 
 const s_str Data::CLASS_NAME = "Lua::Data";
 
-Data::Data()
+Data::Data() : sName_(""), mLuaType_(Lua::TYPE_NIL), pParent_(NULL)
 {
-    sName_ = ""; mLuaType_ = Lua::TYPE_NIL; mType_ = VALUE_NONE; pParent_ = NULL;
 }
 
-Data::Data( const s_str& name, Lua::Type mLuaType, ValueType mType, s_ptr<Argument> pParent )
+Data::Data( const s_str& name, Lua::Type mLuaType, s_ptr<Argument> pParent ) :
+    sName_(name), mLuaType_(mLuaType), pParent_(pParent)
 {
-    sName_ = name; mLuaType_ = mLuaType; mType_ = mType; pParent_ = pParent;
 }
 
 void Data::Set( s_ptr<Lua::State> pLua, const s_int& iIndex )
 {
-    if (mType_ == VALUE_BOOL)
-        mValue_.SetB(pLua->GetBool(iIndex));
-    else if (mType_ == VALUE_FLOAT)
-        mValue_.SetF(pLua->GetNumber(iIndex));
-    else if (mType_ == VALUE_DOUBLE)
-        mValue_.SetD(s_double(pLua->GetNumber(iIndex)));
-    else if (mType_ == VALUE_INT)
-        mValue_.SetI(s_int(pLua->GetNumber(iIndex)));
-    else if (mType_ == VALUE_UINT)
-        mValue_.SetUI(s_uint(pLua->GetNumber(iIndex)));
-    else if (mType_ == VALUE_STRING)
-        mValue_.SetS(pLua->GetString(iIndex));
+    if (mLuaType_ == Lua::TYPE_BOOLEAN)
+        mValue_ = pLua->GetBool(iIndex);
+    else if (mLuaType_ == Lua::TYPE_NUMBER)
+        mValue_ = pLua->GetNumber(iIndex);
+    else if (mLuaType_ == Lua::TYPE_STRING)
+        mValue_ = pLua->GetString(iIndex);
     else if (mLuaType_ == Lua::TYPE_TABLE)
-        mValue_.SetI(iIndex);
+        mValue_ = iIndex;
     else if (mLuaType_ == Lua::TYPE_FUNCTION)
-        mValue_.SetI(iIndex);
+        mValue_ = iIndex;
     else if (mLuaType_ == Lua::TYPE_USERDATA)
-        mValue_.SetI(iIndex);
+        mValue_ = iIndex;
     else if (mLuaType_ == Lua::TYPE_NIL)
-        mValue_.SetP(NULL);
+        mValue_ = (void*)NULL;
 
     pParent_->SetData(this);
 }
@@ -60,12 +53,7 @@ const s_var& Data::GetValue() const
     return mValue_;
 }
 
-Lua::Type Data::GetLuaType() const
+Lua::Type Data::GetType() const
 {
     return mLuaType_;
-}
-
-ValueType Data::GetType() const
-{
-    return mType_;
 }
