@@ -198,14 +198,12 @@
 		<Unit filename="src\utils\frost_utils_lua_data.cpp" />
 		<Unit filename="src\utils\frost_utils_lua_function.cpp" />
 		<Unit filename="src\utils\frost_utils_lua_glues.cpp" />
-		<Unit filename="src\utils\frost_utils_lua_returnvalue.cpp" />
 		<Unit filename="src\utils\frost_utils_lua_state.cpp" />
 		<Unit filename="src\utils\frost_utils_luamanager.cpp" />
 		<Unit filename="src\utils\frost_utils_math.cpp" />
 		<Unit filename="src\utils\frost_utils_profiler.cpp" />
 		<Unit filename="src\utils\frost_utils_timemanager.cpp" />
 		<Unit filename="src\utils\frost_utils_timers.cpp" />
-		<Unit filename="src\utils\frost_utils_var.cpp" />
 		<Unit filename="src\utils\frost_utils_vector.cpp" />
 		<Unit filename="src\utils\frost_utilsmanager.cpp" />
 		<Extensions>
