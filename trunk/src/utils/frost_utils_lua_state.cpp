@@ -463,19 +463,31 @@ void State::Pop( const s_uint& uiNumber )
     lua_pop(pLua_, uiNumber.Get());
 }
 
-s_float State::GetNumber( const s_uint& uiIndex )
+s_float State::GetNumber( const s_int& iIndex )
 {
-    return lua_tonumber(pLua_, uiIndex.Get());
+    return lua_tonumber(pLua_, iIndex.Get());
 }
 
-s_bool State::GetBool( const s_uint& uiIndex )
+s_bool State::GetBool( const s_int& iIndex )
 {
-    return lua_toboolean(pLua_, uiIndex.Get());
+    return lua_toboolean(pLua_, iIndex.Get());
 }
 
-s_str State::GetString( const s_uint& uiIndex )
+s_str State::GetString( const s_int& iIndex )
 {
-    return lua_tostring(pLua_, uiIndex.Get());
+    return lua_tostring(pLua_, iIndex.Get());
+}
+
+s_var State::GetValue( const s_int& iIndex )
+{
+    int type = lua_type(pLua_, iIndex.Get());
+    switch (type)
+    {
+        case LUA_TBOOLEAN : return GetBool(iIndex);
+        case LUA_TNUMBER : return GetNumber(iIndex);
+        case LUA_TSTRING : return GetString(iIndex);
+        default : return NULL;
+    }
 }
 
 s_uint State::GetTop()
@@ -483,9 +495,9 @@ s_uint State::GetTop()
     return lua_gettop(pLua_);
 }
 
-Type State::GetType( const s_uint& uiIndex )
+Type State::GetType( const s_int& iIndex )
 {
-    int type = lua_type(pLua_, uiIndex.Get());
+    int type = lua_type(pLua_, iIndex.Get());
     switch (type)
     {
         case LUA_TBOOLEAN : return Lua::TYPE_BOOLEAN;

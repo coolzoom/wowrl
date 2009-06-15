@@ -547,7 +547,7 @@ int LuaFrame::_SetScript(lua_State* pLua)
             s_ptr<Lua::Argument> pSecond = mFunc.Get(1);
             if (pSecond->GetType() == Lua::TYPE_FUNCTION)
             {
-                lua_pushvalue(pLua, pSecond->GetUI().Get());
+                lua_pushvalue(pLua, pSecond->GetI().Get());
                 lua_setglobal(pLua, (pFrameParent_->GetName() + ":" + sScriptName).c_str());
                 pFrameParent_->NotifyScriptDefined(sScriptName);
             }

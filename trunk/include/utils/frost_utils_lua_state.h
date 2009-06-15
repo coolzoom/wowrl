@@ -174,22 +174,28 @@ namespace Frost
             void    Pop(const s_uint& uiNumber = 1);
 
             /// Returns the value at the given index converted to a number.
-            /** \param uiIndex The index at wich to search for the value
+            /** \param iIndex The index at wich to search for the value
             *   \return The value at the given index converted to a number
             */
-            s_float GetNumber(const s_uint& uiIndex = 1);
+            s_float GetNumber(const s_int& iIndex = 1);
 
             /// Returns the value at the given index converted to a bool.
-            /** \param uiIndex The index at wich to search for the value
+            /** \param iIndex The index at wich to search for the value
             *   \return The value at the given index converted to a bool
             */
-            s_bool  GetBool(const s_uint& uiIndex = 1);
+            s_bool  GetBool(const s_int& iIndex = 1);
 
             /// Returns the value at the given index converted to a string.
-            /** \param uiIndex The index at wich to search for the value
+            /** \param iIndex The index at wich to search for the value
             *   \return The value at the given index converted to a string
             */
-            s_str   GetString(const s_uint& uiIndex = 1);
+            s_str   GetString(const s_int& iIndex = 1);
+
+            /// Returns the value at the given index
+            /** \param iIndex The index at wich to search for the value
+            *   \return The value at the given index
+            */
+            s_var   GetValue(const s_int& iIndex = 1);
 
             /// Returns the number of value on the stack.
             /** \return The number of value on the stack
@@ -197,10 +203,10 @@ namespace Frost
             s_uint  GetTop();
 
             /// Returns the type of the value on the stack.
-            /** \param uiIndex The index of the value to analyse
+            /** \param iIndex The index of the value to analyse
             *   \return The type
             */
-            Type    GetType(const s_uint& uiIndex = 1);
+            Type    GetType(const s_int& iIndex = 1);
 
             /// Returns the name of a Lua::Type.
             /** \param mType The type to serialize

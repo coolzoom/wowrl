@@ -268,7 +268,29 @@ namespace Frost
                 if (uiMax.uiValue_ < uiMin.uiValue_)
                     uiValue_ = uiMin.uiValue_;
                 else
-                    uiValue_ = (uint)((uiMax.uiValue_-uiMin.uiValue_)*(rand()/float(RAND_MAX))) + uiMin.uiValue_;
+                {
+                    T uiRange = uiMax.uiValue_ - uiMin.uiValue_ + 1;
+                    if (uiRange >= 100)
+                        uiValue_ = (T)(uiRange*(rand()/(RAND_MAX+1.0))) + uiMin.uiValue_;
+                    else if (uiRange >= 10)
+                    {
+                        float fTemp = rand()/100.0f;
+                        fTemp = (fTemp - (int)fTemp)*100;
+                        if ((int)fTemp == 0)
+                            uiValue_ = uiMin.uiValue_;
+                        else
+                            uiValue_ = (T)ceil(uiRange*(fTemp/99.0f)) + uiMin.uiValue_ - 1;
+                    }
+                    else
+                    {
+                        float fTemp = rand()/10.0f;
+                        fTemp = (fTemp - (int)fTemp)*10;
+                        if ((int)fTemp == 0)
+                            uiValue_ = uiMin.uiValue_;
+                        else
+                            uiValue_ = (T)ceil(uiRange*(fTemp/9.0f)) + uiMin.uiValue_ - 1;
+                    }
+                }
             }
         }
 
@@ -633,7 +655,27 @@ namespace Frost
                 }
                 else
                 {
-                    return s_uint_t((uiMax.uiValue_-uiMin.uiValue_)*(rand()/float(RAND_MAX))) + uiMin.uiValue_;
+                    T uiRange = uiMax.uiValue_ - uiMin.uiValue_ + 1;
+                    if (uiRange >= 100)
+                        return (T)(uiRange*(rand()/(RAND_MAX+1.0))) + uiMin.uiValue_;
+                    else if (uiRange >= 10)
+                    {
+                        float fTemp = rand()/100.0f;
+                        fTemp = (fTemp - (int)fTemp)*100;
+                        if ((int)fTemp == 0)
+                            return uiMin.uiValue_;
+                        else
+                            return (T)ceil(uiRange*(fTemp/99.0f)) + uiMin.uiValue_ - 1;
+                    }
+                    else
+                    {
+                        float fTemp = rand()/10.0f;
+                        fTemp = (fTemp - (int)fTemp)*10;
+                        if ((int)fTemp == 0)
+                            return uiMin.uiValue_;
+                        else
+                            return (T)ceil(uiRange*(fTemp/9.0f)) + uiMin.uiValue_ - 1;
+                    }
                 }
             }
             else

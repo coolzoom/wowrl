@@ -177,7 +177,7 @@ int LuaUIObject::_GetParent( lua_State* pLua )
 int LuaUIObject::_GetPoint( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetPoint", pLua, 5);
-    mFunc.Add(0, "point ID", Lua::TYPE_NUMBER, VALUE_INT);
+    mFunc.Add(0, "point ID", Lua::TYPE_NUMBER, VALUE_UINT);
     if (mFunc.Check())
     {
         s_ptr<Anchor> pAnchor = pParent_->GetPoint(mFunc.Get(0)->GetUI());

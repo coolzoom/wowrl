@@ -275,6 +275,19 @@ namespace Frost
             return std::deque<T>::empty();
         }
 
+        /// Inverts the order of the elements.
+        void Reverse()
+        {
+            s_ctnr lTemp;
+            typename std::deque<T>::iterator iter = std::deque<T>::end();
+            while (iter != std::deque<T>::begin())
+            {
+                --iter;
+                lTemp.push_back(*iter);
+            }
+            *this = lTemp;
+        }
+
         s_ctnr& operator, (const T& mElem)
         {
             std::deque<T>::push_back(mElem);
@@ -328,4 +341,34 @@ namespace Frost
             return std::deque<T>::end();
         }
     };
+
+    template<class T, class N>
+    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_ctnr<T>& mRight)
+    {
+        s_str_t<N> sTemp = STRING("(");
+        for (s_uint i = 0; i < mRight.GetSize(); ++i)
+        {
+            if (i == mRight.GetSize()-1)
+                sTemp << mRight[i];
+            else
+                sTemp << mRight[i] << STRING(", ");
+        }
+        sTemp << STRING(")");
+
+        return sLeft + sTemp;
+    }
+
+    template<class T, class N>
+    s_str_t<N> operator + (const N* sLeft, const s_ctnr<T>& mRight)
+    {
+        return s_str_t<N>(sLeft) + mRight;
+    }
+
+    #ifdef USE_UNICODE
+        template<class T>
+        s_str_t<char> operator + (const char* sLeft, const s_ctnr<T>& mRight)
+        {
+            return s_str_t<char>(sLeft) + mRight;
+        }
+    #endif
 }
