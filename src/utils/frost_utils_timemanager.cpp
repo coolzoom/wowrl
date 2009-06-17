@@ -14,6 +14,10 @@
 
 #include <OgreTimer.h>
 
+#ifdef WIN32
+    #include <sys/timeb.h>
+#endif
+
 using namespace std;
 
 namespace Frost
@@ -235,5 +239,19 @@ namespace Frost
     {
         time_t iTimestamp = time(NULL);
         return localtime(&iTimestamp)->tm_sec;
+    }
+
+    s_uint TimeManager::GetMicrosecond() const
+    {
+    #ifdef WIN32
+        timeb tb;
+        ftime(&tb);
+        return (uint)tb.millitm*1000;
+    #else
+        // Note : Needs to be checked on Linux
+        timeval tv;
+        gettimeofday(tv, NULL);
+        return tv.tv_usec;
+    #endif
     }
 }

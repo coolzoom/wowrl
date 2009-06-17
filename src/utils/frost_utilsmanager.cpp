@@ -4,6 +4,7 @@
 /*                                        */
 
 #include "frost_utilsmanager.h"
+#include "frost_utils_timemanager.h"
 
 using namespace std;
 
@@ -18,7 +19,18 @@ namespace Frost
 
     UtilsManager::~UtilsManager()
     {
+    }
 
+    void UtilsManager::Initialize()
+    {
+        // Calling srand(time(NULL)) can result in similar results
+        // because time()'s resolution is too low. Here we use a
+        // high precision timer.
+        srand(TimeManager::GetSingleton()->GetMicrosecond().Get());
+
+        // In GCC, the first rand() is round(3.25*seed) + 38
+        // To get rid of this effect, we just call rand() several times.
+        rand(); rand(); rand(); rand();
     }
 
     void UtilsManager::SetLogFunction( LogFunction pFunc )
