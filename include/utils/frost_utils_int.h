@@ -58,6 +58,13 @@ namespace Frost
         }
 
         template<class N>
+        explicit s_int_t(const s_int_t<N>& iValue)
+        {
+            mType_ = (IntegerType)(int)iValue.GetType();
+            iValue_ = static_cast<T>(iValue.Get());
+        }
+
+        template<class N>
         explicit s_int_t(const s_uint_t<N>& uiValue)
         {
             if (uiValue.GetType() == s_uint_t<N>::INTEGER_NAN)
@@ -137,7 +144,7 @@ namespace Frost
         /// Returns a const reference to the int.
         /** \return A const reference to the int
         */
-        inline const int& Get() const
+        inline const T& Get() const
         {
             if (mType_ != INTEGER)
                 return iDummy;
@@ -148,7 +155,7 @@ namespace Frost
         /// Returns a reference to the int.
         /** \return A reference to the int
         */
-        inline int& GetR()
+        inline T& GetR()
         {
             if (mType_ != INTEGER)
                 return iDummy;
