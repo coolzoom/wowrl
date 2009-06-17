@@ -46,7 +46,7 @@ namespace Frost
         */
         s_double      GetDelta() const;
 
-        /// Returns the actual Frame Per Second (FPS) count.
+        /// Returns the current Frame Per Second (FPS) count.
         /** \return Average number of frame per second over a second
         */
         const s_uint& GetFPS() const;
@@ -71,35 +71,42 @@ namespace Frost
         */
         s_double      GetTime() const;
 
-        /// Returns the actual time (year).
-        /** \return The actual year
+        /// Returns the current time (year).
+        /** \return The current year
         */
         s_uint        GetYear() const;
 
-        /// Returns the actual time (month).
-        /** \return The actual month
+        /// Returns the current time (month).
+        /** \return The current month
         */
         s_uint        GetMonth() const;
 
-        /// Returns the actual time (day name code).
-        /** \return The actual day name code
+        /// Returns the current time (day name code).
+        /** \return The current day name code
         */
         s_uint        GetDayName() const;
 
-        /// Returns the actual time (day).
-        /** \return The actual day number
+        /// Returns the current time (day).
+        /** \return The current day number
         */
         s_uint        GetDay() const;
 
-        /// Returns the actual time (hours).
-        /** \return The actual hour
+        /// Returns the current time (hours).
+        /** \return The current hour
         */
         s_uint        GetHour() const;
 
-        /// Returns the actual time (minutes).
-        /** \return The actual minutes
+        /// Returns the current time (minutes).
+        /** \return The current minutes
         */
         s_uint        GetMinutes() const;
+
+        /// Returns the current time (microseconds).
+        /** \return The current microseconds
+        *   \note On windows, this function only has milisecond
+        *         resolution.
+        */
+        s_uint        GetMicrosecond() const;
 
         /// Returns the time elapsed since game's start.
         /** \return The elapsed time since the game has started,
@@ -107,8 +114,8 @@ namespace Frost
         */
         s_str         GetPlayTime() const;
 
-        /// Returns the actual time (seconds).
-        /** \return The actual seconds
+        /// Returns the current time (seconds).
+        /** \return The current seconds
         */
         s_uint        GetSeconds() const;
 
@@ -194,17 +201,5 @@ namespace Frost
         std::map<s_str, Profiler> lProfilerList_;
     };
 }
-
-/****** PROFILING GROUPS ******/
-/* [1] : pathfinding          */
-/* [2] : unit                 */
-/* [3] : GUI parsing          */
-/* [4] : GUI drawing          */
-/* [5] : data parsing         */
-/* [6] : render order         */
-/* [7] : scene manager        */
-/* [8] : frame func           */
-/* [0] : other                */
-/******************************/
 
 #endif

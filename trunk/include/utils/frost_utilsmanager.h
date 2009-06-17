@@ -22,6 +22,11 @@ namespace Frost
 
         typedef void (*LogFunction)(const s_str&, const s_bool&);
 
+        /// Initializes this manager.
+        /** \note Calls srand().
+        */
+        void Initialize();
+
         /// Sets the log function to use.
         /** \param pFunc The log function
         *   \note This function will be used by Frost::Log(), Frost::Warning()
