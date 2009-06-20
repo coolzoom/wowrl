@@ -41,37 +41,54 @@ namespace Frost
     {
     public :
 
+        /// Default constructor.
         s_var() : pValue_(NULL) {}
 
+        /// Value assignment constructor.
+        /** \param mValue The value to assign
+        */
         template <class T>
-        s_var(const T& pValue) : pValue_(new value<T>(pValue)) {}
+        s_var(const T& mValue) : pValue_(new value<T>(mValue)) {}
 
-        s_var(const s_var& mAny) : pValue_(mAny.pValue_ ? mAny.pValue_->Clone() : NULL) {}
+        /// Copy constructor.
+        /** \param mVar The s_var to copy
+        */
+        s_var(const s_var& mVar) : pValue_(mVar.pValue_ ? mVar.pValue_->Clone() : NULL) {}
 
+        /// Destructor.
         ~s_var()
         {
-            delete pValue_;
         }
 
-        s_var& operator = (const s_var& mAny)
+        s_var& operator = (const s_var& mVar)
         {
-            if (&mAny != this)
+            if (&mVar != this)
             {
-                s_var mTemp(mAny);
+                s_var mTemp(mVar);
                 Swap(mTemp);
             }
             return *this;
         }
 
-        void Swap(s_var& mAny)
+        /// Swaps this value with another.
+        /** \param mVar the value to swap with this one
+        */
+        void Swap(s_var& mVar)
         {
-            std::swap(pValue_, mAny.pValue_);
+            std::swap(pValue_, mVar.pValue_);
         }
 
+        /// Returns the contained value.
+        /** \return The contained value
+        *   \note If the provided type doesn't math the
+        *         contained value's, a Warning is printed
+        *         in the log, and this function returns a
+        *         default value.
+        */
         template<class T>
         T Get() const
         {
-            value<T>* pValue = dynamic_cast< value<T>* >(pValue_);
+            value<T>* pValue = dynamic_cast< value<T>* >(pValue_.Get());
             if (pValue)
             {
                 return pValue->mT_;
@@ -89,11 +106,20 @@ namespace Frost
             }
         }
 
+        /// Checks if this variable is empty.
+        /** \return 'true' if this variable is empty
+        *   \note Only the default constructor of s_var returns
+        *         an empty variable.
+        */
         s_bool IsEmpty() const
         {
             return (pValue_ == NULL);
         }
 
+        /// Returns the type of the contained value.
+        /** \return The type of the contained value
+        *   \note Returns typeid(void) if the variable is empty.
+        */
         const s_type& GetType() const
         {
             if (pValue_)
@@ -106,6 +132,10 @@ namespace Frost
             }
         }
 
+        /// Checks the contained value's type.
+        /** \return 'true' if the contained value's type is the one
+        *           you provided
+        */
         template<class T>
         s_bool IsOfType() const
         {
@@ -119,6 +149,9 @@ namespace Frost
             }
         }
 
+        /// Converts this variable to a string.
+        /** \return This variable converted to a string
+        */
         s_str ToString() const
         {
             const s_type& mType = GetType();
@@ -173,7 +206,7 @@ namespace Frost
         /** \endcond
         */
 
-        value_base* pValue_;
+        s_refptr<value_base> pValue_;
     };
 }
 
