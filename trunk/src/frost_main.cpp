@@ -24,6 +24,7 @@
 #include "light/frost_light.h"
 #include "unit/frost_unitmanager.h"
 #include "unit/frost_character.h"
+#include "gameplay/frost_gameplaymanager.h"
 
 #include <OgreException.h>
 
@@ -95,7 +96,17 @@ s_bool FrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
     {
+        GameplayManager::GetSingleton()->SetCurrentGameplay("Free");
+    }
 
+    if (pInputMgr->KeyIsPressed(KEY_F2))
+    {
+        GameplayManager::GetSingleton()->SetCurrentGameplay("TopDown");
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_F3))
+    {
+        GameplayManager::GetSingleton()->SetCurrentGameplay("FirstPerson");
     }
 
     return true;
