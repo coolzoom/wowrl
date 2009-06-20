@@ -21,6 +21,10 @@ namespace Frost
     *   to do a lot of calculations (matrices, ...) it
     *   can bloat your performances. Use prebuilt types
     *   in this case.
+    *   <b>Note</b> : Because the CPU can handle infinite
+    *   and nan itself for float types, this class is
+    *   more efficient than the others (about 5 times
+    *   slower than its corresponding POD).
     */
     template <class T>
     class s_float_t
@@ -37,32 +41,28 @@ namespace Frost
 
         s_float_t()
         {
-            mType_ = FLOAT;
             fValue_ = 0.0;
         }
 
         s_float_t(const T& fValue)
         {
-            mType_ = FLOAT;
             fValue_ = fValue;
-        }
-
-        s_float_t(const s_float_t& fValue)
-        {
-            mType_ = fValue.mType_;
-            fValue_ = fValue.fValue_;
         }
 
         explicit s_float_t(const FloatType& mType)
         {
-            mType_ = mType;
-            fValue_ = 0.0;
+            switch (mType)
+            {
+                case FLOAT_INF_PLUS  : SetInfinitePlus();
+                case FLOAT_INF_MINUS : SetInfiniteMinus();
+                case FLOAT_NAN       : SetNaN();
+                default : fValue_ = 0.0;
+            }
         }
 
         template <class N>
         explicit s_float_t(const s_float_t<N>& fValue)
         {
-            mType_ = (FloatType)(int)(fValue.GetType());
             fValue_ = static_cast<T>(fValue.Get());
         }
 
@@ -71,22 +71,18 @@ namespace Frost
         {
             if (iValue.GetType() == s_int_t<N>::INTEGER_NAN)
             {
-                mType_ = FLOAT_NAN;
-                fValue_ = 0.0;
+                SetNaN();
             }
             else if (iValue.GetType() == s_int_t<N>::INTEGER_INF_PLUS)
             {
-                mType_ = FLOAT_INF_PLUS;
-                fValue_ = 0.0;
+                SetInfinitePlus();
             }
             else if (iValue.GetType() == s_int_t<N>::INTEGER_INF_MINUS)
             {
-                mType_ = FLOAT_INF_MINUS;
-                fValue_ = 0.0;
+                SetInfiniteMinus();
             }
             else
             {
-                mType_ = FLOAT;
                 fValue_ = static_cast<T>(iValue.Get());
             }
         }
@@ -96,17 +92,14 @@ namespace Frost
         {
             if (uiValue.GetType() == s_uint_t<N>::INTEGER_NAN)
             {
-                mType_ = FLOAT_NAN;
-                fValue_ = 0.0;
+                SetNaN();
             }
             else if (uiValue.GetType() == s_uint_t<N>::INTEGER_INF)
             {
-                mType_ = FLOAT_INF_PLUS;
-                fValue_ = 0.0;
+                SetInfinitePlus();
             }
             else
             {
-                mType_ = FLOAT;
                 fValue_ = static_cast<T>(uiValue.Get());
             }
         }
@@ -114,7 +107,6 @@ namespace Frost
         template<class N>
         explicit s_float_t(const s_bool_t<N>& bValue)
         {
-            mType_ = FLOAT;
             if (bValue)
                 fValue_ = 1.0;
             else
@@ -123,14 +115,12 @@ namespace Frost
 
         explicit s_float_t(const string_element* sValue)
         {
-            mType_ = FLOAT;
             string_stream s(sValue);
             s >> fValue_;
         }
 
         explicit s_float_t(const string_object& sValue)
         {
-            mType_ = FLOAT;
             string_stream s(sValue);
             s >> fValue_;
         }
@@ -138,7 +128,6 @@ namespace Frost
         template<class N>
         explicit s_float_t(const s_str_t<N>& sValue)
         {
-            mType_ = FLOAT;
             string_stream s(sValue.Get());
             s >> fValue_;
         }
@@ -199,10 +188,7 @@ namespace Frost
         */
         inline const T& Get() const
         {
-            if (mType_ != FLOAT)
-                return fDummy;
-            else
-                return fValue_;
+            return fValue_;
         }
 
         /// Returns a reference to the float.
@@ -210,10 +196,7 @@ namespace Frost
         */
         inline T& GetR()
         {
-            if (mType_ != FLOAT)
-                return fDummy;
-            else
-                return fValue_;
+            return fValue_;
         }
 
         /// Returns the power of two just above the actual value (or equal).
@@ -238,7 +221,20 @@ namespace Frost
         */
         FloatType GetType() const
         {
-            return mType_;
+            if (_isnan(fValue_))
+                return FLOAT_NAN;
+            else
+            {
+                if (_finite(fValue_))
+                    return FLOAT;
+                else
+                {
+                    if (fValue_ < 0.0)
+                        return FLOAT_INF_MINUS;
+                    else
+                        return FLOAT_INF_PLUS;
+                }
+            }
         }
 
         /// Checks if this float is infinite and negative
@@ -246,7 +242,7 @@ namespace Frost
         */
         s_bool IsInfiniteMinus() const
         {
-            return (mType_ == FLOAT_INF_MINUS);
+            return (!_finite(fValue_) && (fValue_ < 0.0));
         }
 
         /// Checks if this float is infinite and positive
@@ -254,7 +250,7 @@ namespace Frost
         */
         s_bool IsInfinitePlus() const
         {
-            return (mType_ == FLOAT_INF_PLUS);
+            return (!_finite(fValue_) && (fValue_ > 0.0));
         }
 
         /// Checks if this float is a Not a Number (NaN)
@@ -262,7 +258,7 @@ namespace Frost
         */
         s_bool IsNaN() const
         {
-            return (mType_ == FLOAT_NAN);
+            return (_isnan(fValue_));
         }
 
         /// Checks if this float equals zero.
@@ -278,7 +274,7 @@ namespace Frost
         */
         s_bool IsValid() const
         {
-            return (mType_ == FLOAT);
+            return (_finite(fValue_));
         }
 
         /// Elevates this float to a certain power (this^n).
@@ -315,7 +311,6 @@ namespace Frost
         {
             if (fMin.IsValid() && fMax.IsValid())
             {
-                mType_ = FLOAT;
                 if (fMax < fMin)
                     fValue_ = fMin.fValue_;
                 else
@@ -345,22 +340,19 @@ namespace Frost
         /// Sets this float to infinite (negative).
         void SetInfiniteMinus()
         {
-            mType_ = FLOAT_INF_MINUS;
-            fValue_ = 0.0;
+            fValue_ = INFMINUS.fValue_;
         }
 
         /// Sets this float to infinite (positive).
         void SetInfinitePlus()
         {
-            mType_ = FLOAT_INF_PLUS;
-            fValue_ = 0.0;
+            fValue_ = INFPLUS.fValue_;
         }
 
         /// Set this float to Not a Number state.
         void SetNaN()
         {
-            mType_ = FLOAT_NAN;
-            fValue_ = 0.0;
+            fValue_ = NaN.fValue_;
         }
 
         /// Returns the sign of this float.
@@ -409,147 +401,47 @@ namespace Frost
 
         s_float_t operator - () const
         {
-            if (!IsNaN())
-            {
-                if (IsInfinitePlus())
-                    return s_float_t::INFMINUS;
-                else if (IsInfiniteMinus())
-                    return s_float_t::INFPLUS;
-                else
-                    return -fValue_;
-            }
-            else
-                return s_float_t::NaN;
+            return -fValue_;
         }
 
         s_float_t operator + (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return s_float_t::NaN;
-
-            if (fValue.IsInfinitePlus())
-            {
-                if (IsInfiniteMinus())
-                    return s_float_t::NaN;
-                else
-                    return s_float_t::INFPLUS;
-            }
-            else if (fValue.IsInfiniteMinus())
-            {
-                if (IsInfinitePlus())
-                    return s_float_t::NaN;
-                else
-                    return s_float_t::INFMINUS;
-            }
-            else
-            {
-                return fValue_ + fValue.fValue_;
-            }
+            return fValue_ + fValue.fValue_;
         }
 
         s_float_t operator - (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return s_float_t::NaN;
-
-            if (fValue.IsInfinitePlus())
-            {
-                if (IsInfinitePlus())
-                    return s_float_t::NaN;
-                else
-                    return s_float_t::INFMINUS;
-            }
-            else if (fValue.IsInfiniteMinus())
-            {
-                if (IsInfiniteMinus())
-                    return s_float_t::NaN;
-                else
-                    return s_float_t::INFPLUS;
-            }
-            else
-            {
-                return fValue_ - fValue.fValue_;
-            }
+            return fValue_ - fValue.fValue_;
         }
 
         s_float_t operator * (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return s_float_t::NaN;
-
-            if (fValue.IsInfinitePlus())
-            {
-                if (IsInfiniteMinus())
-                    return s_float_t::NaN;
-                else
-                {
-                    if (fValue_ < 0.0)
-                        return s_float_t::INFMINUS;
-                    else
-                        return s_float_t::INFPLUS;
-                }
-            }
-            else if (fValue.IsInfiniteMinus())
-            {
-                if (IsInfinitePlus())
-                    return s_float_t::NaN;
-                else
-                {
-                    if (fValue_ < 0.0)
-                        return s_float_t::INFPLUS;
-                    else
-                        return s_float_t::INFMINUS;
-                }
-            }
-            else
-            {
-                return fValue_ * fValue.fValue_;
-            }
+            return fValue_ * fValue.fValue_;
         }
 
         s_float_t operator / (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN() || fValue.fValue_ == 0.0)
-                return s_float_t::NaN;
-
-            if (fValue.IsInfinitePlus())
-            {
-                if (IsInfiniteMinus())
-                    return s_float_t::NaN;
-                else
-                    return 0.0;
-            }
-            else if (fValue.IsInfiniteMinus())
-            {
-                if (IsInfinitePlus())
-                    return s_float_t::NaN;
-                else
-                    return 0.0;
-            }
-            else
-            {
-                return fValue_ / fValue.fValue_;
-            }
+            return fValue_ / fValue.fValue_;
         }
 
         void operator += (const s_float_t& fValue)
         {
-            *this = *this + fValue;
+            fValue_ += fValue.fValue_;
         }
 
         void operator -= (const s_float_t& fValue)
         {
-            *this = *this - fValue;
+            fValue_ -= fValue.fValue_;
         }
 
         void operator *= (const s_float_t& fValue)
         {
-            *this = *this * fValue;
+            fValue_ *= fValue.fValue_;
         }
 
         void operator /= (const s_float_t& fValue)
         {
-            *this = *this / fValue;
+            fValue_ /= fValue.fValue_;
         }
 
         template<class N>
@@ -574,120 +466,32 @@ namespace Frost
 
         s_bool operator == (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == fValue.mType_) && (mType_ != FLOAT) )
-                    return true;
-
-                return (fValue_ == fValue.fValue_);
-            }
+            return (fValue_ == fValue.fValue_);
         }
 
         s_bool operator != (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if (mType_ != fValue.mType_)
-                    return true;
-
-                return (fValue_ != fValue.fValue_);
-            }
+            return (fValue_ != fValue.fValue_);
         }
 
         s_bool operator < (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == fValue.mType_) && (mType_ != FLOAT) )
-                    return false;
-
-                if (mType_ == FLOAT_INF_MINUS)
-                    return true;
-                if (mType_ == FLOAT_INF_PLUS)
-                    return false;
-
-                if (fValue.mType_ == FLOAT_INF_MINUS)
-                    return false;
-                if (fValue.mType_ == FLOAT_INF_PLUS)
-                    return true;
-
-                return (fValue_ < fValue.fValue_);
-            }
+            return (fValue_ < fValue.fValue_);
         }
 
         s_bool operator > (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == fValue.mType_) && (mType_ != FLOAT) )
-                    return false;
-
-                if (mType_ == FLOAT_INF_MINUS)
-                    return false;
-                if (mType_ == FLOAT_INF_PLUS)
-                    return true;
-
-                if (fValue.mType_ == FLOAT_INF_MINUS)
-                    return true;
-                if (fValue.mType_ == FLOAT_INF_PLUS)
-                    return false;
-
-                return (fValue_ > fValue.fValue_);
-            }
+            return (fValue_ > fValue.fValue_);
         }
 
         s_bool operator <= (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == fValue.mType_) && (mType_ != FLOAT) )
-                    return true;
-
-                if (mType_ == FLOAT_INF_MINUS)
-                    return true;
-                if (mType_ == FLOAT_INF_PLUS)
-                    return false;
-
-                if (fValue.mType_ == FLOAT_INF_MINUS)
-                    return false;
-                if (fValue.mType_ == FLOAT_INF_PLUS)
-                    return true;
-
-                return (fValue_ <= fValue.fValue_);
-            }
+            return (fValue_ <= fValue.fValue_);
         }
 
         s_bool operator >= (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == fValue.mType_) && (mType_ != FLOAT) )
-                    return true;
-
-                if (mType_ == FLOAT_INF_MINUS)
-                    return false;
-                if (mType_ == FLOAT_INF_PLUS)
-                    return true;
-
-                if (fValue.mType_ == FLOAT_INF_MINUS)
-                    return true;
-                if (fValue.mType_ == FLOAT_INF_PLUS)
-                    return false;
-
-                return (fValue_ >= fValue.fValue_);
-            }
+            return (fValue_ >= fValue.fValue_);
         }
 
         s_ctnr<s_float_t> operator , (const s_float_t& fValue) const
@@ -701,7 +505,6 @@ namespace Frost
         static const s_float_t NaN;
         static const s_float_t INFPLUS;
         static const s_float_t INFMINUS;
-        static       T         fDummy;
         static const T         fEpsilon;
         static const s_float_t PI;
 
@@ -817,18 +620,19 @@ namespace Frost
     private :
 
         T fValue_;
-
-        FloatType mType_;
     };
 
+    float MakeFloat(unsigned long ul)
+    {
+        return *reinterpret_cast<float*>(&ul);
+    }
+
     template <class T>
-    const s_float_t<T> s_float_t<T>::NaN      = s_float_t<T>(FLOAT_NAN);
+    const s_float_t<T> s_float_t<T>::NaN      = MakeFloat(0xFFC00000);
     template <class T>
-    const s_float_t<T> s_float_t<T>::INFPLUS  = s_float_t<T>(FLOAT_INF_PLUS);
+    const s_float_t<T> s_float_t<T>::INFPLUS  = MakeFloat(0x7F800000);
     template <class T>
-    const s_float_t<T> s_float_t<T>::INFMINUS = s_float_t<T>(FLOAT_INF_MINUS);
-    template <class T>
-    T s_float_t<T>::fDummy = 0.0;
+    const s_float_t<T> s_float_t<T>::INFMINUS = MakeFloat(0xFF800000);
     template <class T>
     const T s_float_t<T>::fEpsilon = 0.0;
     template <class T>
