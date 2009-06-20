@@ -115,10 +115,10 @@ namespace Frost
     {
         if (!uiA_.IsNaN() && !uiB_.IsNaN() && !uiG_.IsNaN() && !uiR_.IsNaN())
         {
-            uiColor_ =  ((uchar)uiA_.Get()) << 24;
-            uiColor_ += ((uchar)uiB_.Get()) << 16;
-            uiColor_ += ((uchar)uiG_.Get()) << 8;
-            uiColor_ += ((uchar)uiR_.Get());
+            uiColor_  = static_cast<uchar>(uiA_.Get()) << 24;
+            uiColor_ += static_cast<uchar>(uiB_.Get()) << 16;
+            uiColor_ += static_cast<uchar>(uiG_.Get()) << 8;
+            uiColor_ += static_cast<uchar>(uiR_.Get());
         }
         else
             uiColor_ = s_uint::NaN;
@@ -128,10 +128,10 @@ namespace Frost
     {
         if (!uiColor_.IsNaN())
         {
-            uiA_ = ((((uchar)uiColor_.Get()) >> 24) & 0xFF);
-            uiB_ = ((((uchar)uiColor_.Get()) >> 16) & 0xFF);
-            uiG_ = ((((uchar)uiColor_.Get()) >> 8) & 0xFF);
-            uiR_ =  (((uchar)uiColor_.Get()) & 0xFF);
+            uiA_ = (static_cast<uchar>(uiColor_.Get()) >> 24) & 0xFF;
+            uiB_ = (static_cast<uchar>(uiColor_.Get()) >> 16) & 0xFF;
+            uiG_ = (static_cast<uchar>(uiColor_.Get()) >> 8)  & 0xFF;
+            uiR_ =  static_cast<uchar>(uiColor_.Get())        & 0xFF;
         }
         else
         {
@@ -142,9 +142,18 @@ namespace Frost
     Color Color::Random( const s_bool& bRandomAlpha )
     {
         if (bRandomAlpha)
-            return Color(s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255));
+            return Color(
+                s_uint::Random(0, 255),
+                s_uint::Random(0, 255),
+                s_uint::Random(0, 255),
+                s_uint::Random(0, 255)
+            );
         else
-            return Color(s_uint::Random(0, 255), s_uint::Random(0, 255), s_uint::Random(0, 255));
+            return Color(
+                s_uint::Random(0, 255),
+                s_uint::Random(0, 255),
+                s_uint::Random(0, 255)
+            );
     }
 
     Ogre::ColourValue Color::FrostToOgre( const Color& mColor )

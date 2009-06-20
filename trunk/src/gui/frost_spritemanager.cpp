@@ -299,13 +299,13 @@ namespace Frost
 
     void SpriteManager::RenderBuffers_( s_bool bCallBeginEnd )
     {
-        if (lQuadList_.empty())
+        if (lQuadList_.IsEmpty())
             return;
 
-        vector<Quad>::iterator itCurrQuad, itEndQuad;
+        s_ctnr<Quad>::iterator itCurrQuad, itEndQuad;
 
         VertexChunk mThisChunk;
-        list<VertexChunk> lChunkList;
+        s_ctnr<VertexChunk> lChunkList;
 
         uint uiNewSize = lQuadList_.size()*6;
 
@@ -325,8 +325,8 @@ namespace Frost
         float* pBuffer = (float*)mHardwareBuffer_->lock(Ogre::HardwareBuffer::HBL_DISCARD);
         uint*  pColorBuffer = (uint*)mColorBuffer_->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 
-        itEndQuad = lQuadList_.end();
-        itCurrQuad = lQuadList_.begin();
+        itEndQuad = lQuadList_.End();
+        itCurrQuad = lQuadList_.Begin();
         mThisChunk.pMat = itCurrQuad->pMat.Get();
         mThisChunk.uiVertexCount = 0u;
         while (itCurrQuad != itEndQuad)
@@ -344,7 +344,7 @@ namespace Frost
             itCurrQuad++;
             if ( (itCurrQuad == itEndQuad) || (mThisChunk.pMat->GetOgreMaterial() != itCurrQuad->pMat->GetOgreMaterial()) )
             {
-                lChunkList.push_back(mThisChunk);
+                lChunkList.PushBack(mThisChunk);
                 if (itCurrQuad != itEndQuad)
                 {
                     mThisChunk.pMat = itCurrQuad->pMat.Get();
@@ -357,7 +357,7 @@ namespace Frost
         mColorBuffer_->unlock();
 
         // Do the real render!
-        list<VertexChunk>::iterator itCurrChunk;
+        s_ctnr<VertexChunk>::iterator itCurrChunk;
 
         if (bCallBeginEnd)
             Ogre::Root::getSingleton().getRenderSystem()->_beginFrame();
@@ -393,8 +393,7 @@ namespace Frost
             mRenderOp_.vertexData->vertexStart += itCurrChunk->uiVertexCount;
         }
 
-        // Sprites go home!
-        lQuadList_.clear();
+        lQuadList_.Clear();
 
         if (bCallBeginEnd)
             Ogre::Root::getSingleton().getRenderSystem()->_endFrame();
@@ -637,7 +636,7 @@ namespace Frost
 
     void SpriteManager::RenderQuad( const Quad &mQuad )
     {
-        lQuadList_.push_back(mQuad);
+        lQuadList_.PushBack(mQuad);
     }
 
     void SpriteManager::SetRenderFunction( Function pRenderFunc )

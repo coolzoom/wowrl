@@ -140,13 +140,13 @@ namespace Frost
         s_ptr<Lua::State> pLua_;
         s_bool            bClosed_;
 
-        std::map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
-        std::map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
+        s_map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
+        s_map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
 
-        std::map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
-        std::map< s_uint, s_ptr<GUI::UIObject> > lMainObjectList_;
+        s_map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
+        s_map< s_uint, s_ptr<GUI::UIObject> > lMainObjectList_;
 
-        std::map<s_str, AddOn> lAddOnList_;
+        s_map<s_str, AddOn> lAddOnList_;
     };
 }
 

@@ -205,7 +205,6 @@ namespace Frost
             s_int iShadowXOffset_;
             s_int iShadowYOffset_;
 
-
         };
 
         /** \cond NOT_REMOVE_FROM_DOC

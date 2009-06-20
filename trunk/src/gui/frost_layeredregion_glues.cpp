@@ -15,5 +15,5 @@ const s_str LuaLayeredRegion::CLASS_NAME = "GUI::LuaLayeredRegion";
 
 LuaLayeredRegion::LuaLayeredRegion(lua_State* pLua) : LuaUIObject(pLua)
 {
-    pLayeredRegionParent_ = (LayeredRegion*)(pParent_.Get());
+    pLayeredRegionParent_ = s_ptr<LayeredRegion>::DynamicCast(pParent_);
 }

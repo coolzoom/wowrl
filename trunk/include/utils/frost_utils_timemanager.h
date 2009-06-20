@@ -198,7 +198,7 @@ namespace Frost
         s_double dLast_;
         s_double dProfileTime_;
 
-        std::map<s_str, Profiler> lProfilerList_;
+        s_map<s_str, Profiler> lProfilerList_;
     };
 }
 

@@ -1,3 +1,4 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
     /// Smart pointer
@@ -29,7 +30,7 @@ namespace Frost
         template<class N>
         explicit s_ptr(const s_ptr<N>& mPointer)
         {
-            pValue_ = (T*)mPointer.Get();
+            pValue_ = mPointer.Get();
         }
 
         /// Returns the contained pointer.
@@ -161,6 +162,28 @@ namespace Frost
             return mContainer;
         }
 
+        /// Casts the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        */
+        template<class N>
+        static s_ptr<T> StaticCast(s_ptr<N> pValue)
+        {
+            return static_cast<T*>(pValue.Get());
+        }
+
+        /// Tries to dynamic cast the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        *   \note Dynamic cast can fail, and in this case, will result in
+        *         a NULL pointer.
+        */
+        template<class N>
+        static s_ptr<T> DynamicCast(s_ptr<N> pValue)
+        {
+            return dynamic_cast<T*>(pValue.Get());
+        }
+
         static const s_str CLASS_NAME;
 
     private :
@@ -175,19 +198,19 @@ namespace Frost
     template<class T>
     s_str operator+ ( const s_str& sLeft, s_ptr<T> pRight )
     {
-        return s_str(sLeft) << (void*)pRight.Get();
+        return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
     s_str& operator<< ( s_str& sLeft, s_ptr<T> pRight )
     {
-        return sLeft << (void*)pRight.Get();
+        return sLeft << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
     s_str operator+ ( const char* sLeft, s_ptr<T> pRight )
     {
-        return s_str(sLeft) << (void*)pRight.Get();
+        return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }
 }
 

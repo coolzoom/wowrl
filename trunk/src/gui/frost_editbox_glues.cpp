@@ -15,5 +15,5 @@ const s_str LuaEditBox::CLASS_NAME = "GUI::LuaEditBox";
 
 LuaEditBox::LuaEditBox(lua_State* pLua) : LuaFrame(pLua)
 {
-    pEditBoxParent_ = (EditBox*)(pParent_.Get());
+    pEditBoxParent_ = s_ptr<EditBox>::DynamicCast(pParent_);
 }

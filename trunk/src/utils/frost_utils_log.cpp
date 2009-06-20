@@ -25,6 +25,7 @@ namespace Frost
 
     void Warning( const s_str& sClass, const s_str& sMessage )
     {
+
         if (sClass != "")
             Log("# Warning # : " + sClass + " : " + sMessage);
         else

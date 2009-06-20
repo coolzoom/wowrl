@@ -60,13 +60,15 @@ Block::Block( const Block& mValue )
     lDefBlockList_ = mValue.lDefBlockList_;
     lPreDefBlockList_ = mValue.lPreDefBlockList_;
 
-    multimap< s_str, s_ptr<Block> >::const_iterator iterBlock;
-    multimap< s_str, s_ptr<Block> >::iterator iterAdded;
+    s_multimap< s_str, s_ptr<Block> >::const_iterator iterBlock;
+    s_multimap< s_str, s_ptr<Block> >::iterator       iterAdded;
     foreach (iterBlock, mValue.lFoundBlockList_)
     {
-        iterAdded = lFoundBlockList_.insert(make_pair(iterBlock->first, new Block(*(iterBlock->second))));
-        lFoundBlockStack_.push_back(iterAdded);
-        lFoundBlockSortedStacks_[iterBlock->first].push_back(iterAdded);
+        iterAdded = lFoundBlockList_.Insert(make_pair(
+            iterBlock->first, s_ptr<Block>(new Block(*(iterBlock->second)))
+        ));
+        lFoundBlockStack_.PushBack(iterAdded);
+        lFoundBlockSortedStacks_[iterBlock->first].PushBack(iterAdded);
     }
 }
 
@@ -81,7 +83,7 @@ Block::~Block()
 
 s_bool Block::Add( const Attribute& mAttrib )
 {
-    if (!MAPFIND(mAttrib.sName, lAttributeList_))
+    if (!lAttributeList_.Find(mAttrib.sName))
     {
         lAttributeList_[mAttrib.sName] = mAttrib;
         return true;
@@ -142,7 +144,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
                 sAttrValue.Trim(' ');
                 sAttrValue.Trim('"');
 
-                if (MAPFIND(sAttrName, lAttributeList_))
+                if (lAttributeList_.Find(sAttrName))
                 {
                     s_ptr<Attribute> pAttr = &lAttributeList_[sAttrName];
                     if (pAttr->mType == ATTR_TYPE_BOOL)
@@ -175,7 +177,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
                         "Unknown attribute : \""+sAttrName+"\"."
                     );
                     Log("Listing available possibilities :");
-                    map<s_str, Attribute>::iterator iterAttr;
+                    s_map<s_str, Attribute>::iterator iterAttr;
                     foreach (iterAttr, lAttributeList_)
                         Log("    "+iterAttr->first);
                     return false;
@@ -192,7 +194,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
     }
 
     s_bool bGood = true;
-    map<s_str, Attribute>::iterator iterAttr2;
+    s_map<s_str, Attribute>::iterator iterAttr2;
     foreach (iterAttr2, lAttributeList_)
     {
         if (!iterAttr2->second.bFound)
@@ -216,14 +218,14 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
 
 s_bool Block::CheckBlocks()
 {
-    if ( bRadioChilds_ && (lFoundBlockList_.size() == 0) )
+    if ( bRadioChilds_ && (lFoundBlockList_.GetSize() == 0) )
     {
         Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
             "This block is meant to contain one radio child, but doesn't contain any."
         );
         return false;
     }
-    if ( bRadioChilds_ && (lFoundBlockList_.size() > 1) )
+    if ( bRadioChilds_ && (lFoundBlockList_.GetSize() > 1) )
     {
         Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
             "This block is meant to contain one radio child, but contains several ones."
@@ -231,10 +233,10 @@ s_bool Block::CheckBlocks()
         return false;
     }
 
-    map<s_str, Block>::iterator iterDefBlock;
+    s_map<s_str, Block>::iterator iterDefBlock;
     foreach (iterDefBlock, lDefBlockList_)
     {
-        s_uint uiCount = lFoundBlockList_.count(iterDefBlock->first);
+        s_uint uiCount = lFoundBlockList_.Count(iterDefBlock->first);
         if (uiCount < iterDefBlock->second.GetMinCount())
         {
             Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
@@ -251,10 +253,10 @@ s_bool Block::CheckBlocks()
         }
     }
 
-    map<s_str, PredefinedBlock>::iterator iterPreDefBlock;
+    s_map<s_str, PredefinedBlock>::iterator iterPreDefBlock;
     foreach (iterPreDefBlock, lPreDefBlockList_)
     {
-        s_uint uiCount = lFoundBlockList_.count(iterPreDefBlock->first);
+        s_uint uiCount = lFoundBlockList_.Count(iterPreDefBlock->first);
         if (uiCount < iterPreDefBlock->second.uiMin)
         {
             Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
@@ -311,13 +313,13 @@ void Block::AddDerivated( const s_str& sName )
 
 s_bool Block::HasDerivated( const s_str& sName )
 {
-    if (VECTORFIND(sName, lDerivatedList_))
+    if (lDerivatedList_.Find(sName))
     {
         return true;
     }
     else
     {
-        vector<s_str>::iterator iter;
+        s_ctnr<s_str>::iterator iter;
         foreach (iter, lDerivatedList_)
         {
             if (pDoc_->GetPredefinedBlock(*iter)->HasDerivated(sName))
@@ -364,22 +366,22 @@ const s_bool& Block::HasRadioChilds() const
 
 s_uint Block::GetDefChildNumber() const
 {
-    return lDefBlockList_.size() + lPreDefBlockList_.size();
+    return lDefBlockList_.GetSize() + lPreDefBlockList_.GetSize();
 }
 
 s_uint Block::GetChildNumber() const
 {
-    return lFoundBlockList_.size();
+    return lFoundBlockList_.GetSize();
 }
 
 s_ptr<Block> Block::First( const s_str& sName )
 {
     if (sName.IsEmpty())
     {
-        if (!lFoundBlockStack_.empty())
+        if (!lFoundBlockStack_.IsEmpty())
         {
-            mCurrIter_ = lFoundBlockStack_.begin();
-            mEndIter_ = lFoundBlockStack_.end();
+            mCurrIter_ = lFoundBlockStack_.Begin();
+            mEndIter_ = lFoundBlockStack_.End();
             return (*mCurrIter_)->second;
         }
         else
@@ -389,10 +391,10 @@ s_ptr<Block> Block::First( const s_str& sName )
     }
     else
     {
-        if (MAPFIND(sName, lFoundBlockSortedStacks_))
+        if (lFoundBlockSortedStacks_.Find(sName))
         {
-            mCurrIter_ = lFoundBlockSortedStacks_[sName].begin();
-            mEndIter_ = lFoundBlockSortedStacks_[sName].end();
+            mCurrIter_ = lFoundBlockSortedStacks_[sName].Begin();
+            mEndIter_ = lFoundBlockSortedStacks_[sName].End();
             return (*mCurrIter_)->second;
         }
         else
@@ -418,7 +420,7 @@ s_ptr<Block> Block::Next()
 
 s_str Block::GetAttribute( const s_str& sName )
 {
-    if (MAPFIND(sName, lAttributeList_))
+    if (lAttributeList_.Find(sName))
     {
         return lAttributeList_[sName].sValue;
     }
@@ -426,7 +428,7 @@ s_str Block::GetAttribute( const s_str& sName )
     {
         Error(CLASS_NAME + "("+sName_+")", "Attribute \""+sName+"\" doesn't exist.");
         Log("List :");
-        map<s_str, Attribute>::iterator iterAttr;
+        s_map<s_str, Attribute>::iterator iterAttr;
         foreach (iterAttr, lAttributeList_)
             Log("    "+iterAttr->first);
         return "";
@@ -435,9 +437,10 @@ s_str Block::GetAttribute( const s_str& sName )
 
 s_ptr<Block> Block::GetBlock( const s_str& sName )
 {
-    if (MAPFIND(sName, lFoundBlockList_))
+    s_multimap< s_str, s_ptr<Block> >::iterator iter = lFoundBlockList_.FindIter(sName);
+    if (iter != lFoundBlockList_.End())
     {
-        return lFoundBlockList_.find(sName)->second;
+        return iter->second;
     }
     else
     {
@@ -448,21 +451,21 @@ s_ptr<Block> Block::GetBlock( const s_str& sName )
 s_ptr<Block> Block::GetRadioBlock()
 {
     if (bRadioChilds_)
-        return lFoundBlockList_.begin()->second;
+        return lFoundBlockList_.Begin()->second;
     else
         return NULL;
 }
 
 s_bool Block::HasBlock( const s_str& sName )
 {
-    if (MAPFIND(sName, lDefBlockList_) || MAPFIND(sName, lPreDefBlockList_))
+    if ( lDefBlockList_.Find(sName) || lPreDefBlockList_.Find(sName) )
     {
         return true;
     }
     else
     {
         s_ptr<XML::Block> pGlobal;
-        map<s_str, PredefinedBlock>::iterator iterBlock;
+        s_map<s_str, PredefinedBlock>::iterator iterBlock;
         foreach (iterBlock, lPreDefBlockList_)
         {
             pGlobal = pDoc_->GetPredefinedBlock(iterBlock->first);
@@ -480,7 +483,7 @@ s_ptr<Block> Block::CreateBlock( const s_str& sName )
 {
     if (!bCreating_)
     {
-        if (MAPFIND(sName, lDefBlockList_))
+        if (lDefBlockList_.Find(sName))
         {
             pNewBlock_ = s_refptr<Block>(new Block(lDefBlockList_[sName]));
         }
@@ -504,13 +507,15 @@ void Block::AddBlock()
 {
     if (bCreating_)
     {
-        multimap< s_str, s_ptr<Block> >::iterator iterAdded;
+        s_multimap< s_str, s_ptr<Block> >::iterator iterAdded;
         // Store the new block
-        iterAdded = lFoundBlockList_.insert(make_pair(pNewBlock_->GetName(), new Block(*pNewBlock_)));
+        iterAdded = lFoundBlockList_.Insert(make_pair(
+            pNewBlock_->GetName(), s_ptr<Block>(new Block(*pNewBlock_))
+        ));
         // Position it on the global stack
-        lFoundBlockStack_.push_back(iterAdded);
+        lFoundBlockStack_.PushBack(iterAdded);
         // Position it on the sorted stack
-        lFoundBlockSortedStacks_[pNewBlock_->GetName()].push_back(iterAdded);
+        lFoundBlockSortedStacks_[pNewBlock_->GetName()].PushBack(iterAdded);
 
         pNewBlock_.SetNull();
         bCreating_ = false;
@@ -589,7 +594,6 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
     }
 }
 
-
 s_ptr<PredefinedBlock> Block::AddPredefinedBlock( s_ptr<Block> pBlock, const s_uint& uiMinNbr, const s_uint& uiMaxNbr )
 {
     if (!HasBlock(pBlock->GetName()))
@@ -628,7 +632,7 @@ s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock )
                 "All previously defined childs will be marked as radio blocks."
             );
 
-            map<s_str, PredefinedBlock>::iterator iterPreDef;
+            s_map<s_str, PredefinedBlock>::iterator iterPreDef;
             foreach (iterPreDef, lPreDefBlockList_)
             {
                 iterPreDef->second.bRadio = true;

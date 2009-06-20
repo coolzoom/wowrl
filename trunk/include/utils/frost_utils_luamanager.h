@@ -76,7 +76,7 @@ namespace Frost
         *         you close your program by calling Delete() (this is
         *         automatically done by Engine).
         */
-        virtual ~LuaManager();
+        ~LuaManager();
 
         /// Copy constructor
         LuaManager(const LuaManager& mMgr);
@@ -86,8 +86,8 @@ namespace Frost
 
     private :
 
-        s_ptr<Lua::State>                         pDefaultLua_;
-        std::map< lua_State*, s_ptr<Lua::State> > lLuaStateList_;
+        s_ptr<Lua::State>                      pDefaultLua_;
+        s_map< lua_State*, s_ptr<Lua::State> > lLuaStateList_;
 
     };
 }

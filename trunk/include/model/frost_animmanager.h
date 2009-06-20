@@ -272,7 +272,7 @@ namespace Frost
     {
         s_uint uiID;
 
-        std::vector<Animation> lSequence;
+        s_ctnr<Animation> lSequence;
 
         static const s_str CLASS_NAME;
     };
@@ -385,8 +385,8 @@ namespace Frost
         s_ptr<Animation> pOldAnim_;
         s_uint           uiBackgroundAnimID_;
 
-        std::map<s_uint, AnimationSequence> lAnimList_;
-        std::map< AnimPriority, std::deque< s_ptr<Animation> > > lQueueList_;
+        s_map<s_uint, AnimationSequence> lAnimList_;
+        s_map< AnimPriority, s_ctnr< s_ptr<Animation> > > lQueueList_;
     };
 }
 

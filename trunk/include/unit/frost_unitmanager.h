@@ -44,11 +44,9 @@ namespace Frost
 
         void                      AddUnitToSelection(s_ptr<Unit> pUnit);
 
-        void                      AddUnitListToSelection(s_ctnr<Unit> lUnitList);
+        void                      AddUnitListToSelection(s_ctnr< s_ptr<Unit> > lUnitList);
 
         void                      ClearSelection();
-
-
 
         /// Reads all xml files related to Units.
         /** \return 'true' if everything went fine
@@ -130,15 +128,15 @@ namespace Frost
         s_bool ParseCreatureModels_();
         s_bool ParseSpellSchools_();
 
-        s_uint                          uiCounter_;
-        std::map< s_uint, s_ptr<Unit> > lUnitList_;
-        std::map<s_str, Race>           lRaceList_;
-        std::map<s_str, Class>          lClassList_;
-        std::map<s_str, HealthType>     lHealthTypeList_;
-        std::map<s_str, PowerType>      lPowerTypeList_;
+        s_uint                       uiCounter_;
+        s_map< s_uint, s_ptr<Unit> > lUnitList_;
+        s_map<s_str, Race>           lRaceList_;
+        s_map<s_str, Class>          lClassList_;
+        s_map<s_str, HealthType>     lHealthTypeList_;
+        s_map<s_str, PowerType>      lPowerTypeList_;
 
-        s_ptr<Unit>                     pMouseOveredUnit_;
-        std::map< s_uint, s_ptr<Unit> > lSelectedUnitList_;
+        s_ptr<Unit>                  pMouseOveredUnit_;
+        s_map< s_uint, s_ptr<Unit> > lSelectedUnitList_;
 
         s_ctnr<s_str> lSchoolList_;
 

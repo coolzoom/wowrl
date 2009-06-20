@@ -13,7 +13,7 @@ const s_str LuaFrame::CLASS_NAME  = "GUI::LuaFrame";
 
 LuaFrame::LuaFrame(lua_State* pLua) : LuaUIObject(pLua)
 {
-    pFrameParent_ = (Frame*)(pParent_.Get());
+    pFrameParent_ = s_ptr<Frame>::DynamicCast(pParent_);
 }
 
 int LuaFrame::_DisableDrawLayer(lua_State* pLua)

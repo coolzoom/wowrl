@@ -15,5 +15,5 @@ const s_str LuaStatusBar::CLASS_NAME = "GUI::LuaStatusBar";
 
 LuaStatusBar::LuaStatusBar(lua_State* pLua) : LuaFrame(pLua)
 {
-    pStatusBarParent_ = (StatusBar*)(pParent_.Get());
+    pStatusBarParent_ = s_ptr<StatusBar>::DynamicCast(pParent_);
 }

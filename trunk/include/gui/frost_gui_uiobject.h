@@ -362,9 +362,9 @@ namespace Frost
 
             s_ctnr<s_str> lType_;
 
-            std::map<AnchorPoint, Anchor> lAnchorList_;
-            s_array<s_bool, 4>            lDefinedBorderList_;
-            s_array<s_int, 4>             lBorderList_;
+            s_map<AnchorPoint, Anchor> lAnchorList_;
+            s_array<s_bool, 4>         lDefinedBorderList_;
+            s_array<s_int, 4>          lBorderList_;
 
             s_float fAlpha_;
             s_bool  bIsShown_;

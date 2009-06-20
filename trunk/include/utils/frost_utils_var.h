@@ -9,6 +9,7 @@
 
 #include "frost_utils.h"
 #include "frost_utils_types.h"
+#include "frost_utils_log.h"
 
 namespace Frost
 {
@@ -45,7 +46,7 @@ namespace Frost
         template <class T>
         s_var(const T& pValue) : pValue_(new value<T>(pValue)) {}
 
-        s_var(const s_var& mAny) : pValue_(mAny.pValue_ ? mAny.pValue_->Clone() : 0) {}
+        s_var(const s_var& mAny) : pValue_(mAny.pValue_ ? mAny.pValue_->Clone() : NULL) {}
 
         ~s_var()
         {
@@ -77,6 +78,13 @@ namespace Frost
             }
             else
             {
+                if (pValue_)
+                    Warning("s_var",
+                        "Conversion from type \""+s_str(pValue_->GetType().name())+
+                        "\" to \""+s_str(typeid(T).name())+"\" failed. Returning default "
+                        "value."
+                    );
+
                 return T();
             }
         }
@@ -109,6 +117,19 @@ namespace Frost
             {
                 return typeid(void) == typeid(T);
             }
+        }
+
+        s_str ToString() const
+        {
+            const s_type& mType = GetType();
+            if (mType == VALUE_INT) return s_str(Get<s_int>());
+            else if (mType == VALUE_UINT) return s_str(Get<s_uint>());
+            else if (mType == VALUE_FLOAT) return s_str(Get<s_float>());
+            else if (mType == VALUE_DOUBLE) return s_str(Get<s_double>());
+            else if (mType == VALUE_BOOL) return s_str(Get<s_bool>());
+            else if (mType == VALUE_STRING) return Get<s_str>();
+            else if (mType == VALUE_POINTER) return s_str() << Get<void*>();
+            else return "<none>";
         }
 
     private :
@@ -154,60 +175,6 @@ namespace Frost
 
         value_base* pValue_;
     };
-
-    s_str operator + ( const string_element* sLeft, const s_var& vRight )
-    {
-        const s_type& mType = vRight.GetType();
-        if (mType == VALUE_INT) return s_str(sLeft) + vRight.Get<s_int>();
-        else if (mType == VALUE_UINT) return s_str(sLeft) + vRight.Get<s_uint>();
-        else if (mType == VALUE_FLOAT) return s_str(sLeft) + vRight.Get<s_float>();
-        else if (mType == VALUE_DOUBLE) return s_str(sLeft) + vRight.Get<s_double>();
-        else if (mType == VALUE_BOOL) return s_str(sLeft) + vRight.Get<s_bool>();
-        else if (mType == VALUE_STRING) return s_str(sLeft) + vRight.Get<s_str>();
-        else if (mType == VALUE_POINTER) return s_str(sLeft) << vRight.Get<void*>();
-        else return s_str(sLeft) + "<none>";
-    }
-
-    #ifdef USE_UNICODE
-        s_str operator+ ( const char* sLeft, const s_var& vRight )
-        {
-            const s_type& mType = vRight.GetType();
-            if (mType == VALUE_INT) return s_str(sLeft) + vRight.Get<s_int>();
-            else if (mType == VALUE_UINT) return s_str(sLeft) + vRight.Get<s_uint>();
-            else if (mType == VALUE_FLOAT) return s_str(sLeft) + vRight.Get<s_float>();
-            else if (mType == VALUE_DOUBLE) return s_str(sLeft) + vRight.Get<s_double>();
-            else if (mType == VALUE_BOOL) return s_str(sLeft) + vRight.Get<s_bool>();
-            else if (mType == VALUE_STRING) return s_str(sLeft) + vRight.Get<s_str>();
-            else if (mType == VALUE_POINTER) return s_str(sLeft) << vRight.Get<void*>();
-            else return s_str(sLeft) + "<none>";
-        }
-    #endif
-
-    s_str operator + ( const s_str& sLeft, const s_var& vRight )
-    {
-        const s_type& mType = vRight.GetType();
-        if (mType == VALUE_INT) return sLeft + vRight.Get<s_int>();
-        else if (mType == VALUE_UINT) return sLeft + vRight.Get<s_uint>();
-        else if (mType == VALUE_FLOAT) return sLeft + vRight.Get<s_float>();
-        else if (mType == VALUE_DOUBLE) return sLeft + vRight.Get<s_double>();
-        else if (mType == VALUE_BOOL) return sLeft + vRight.Get<s_bool>();
-        else if (mType == VALUE_STRING) return sLeft + vRight.Get<s_str>();
-        else if (mType == VALUE_POINTER) return s_str(sLeft) << vRight.Get<void*>();
-        else return sLeft + "<none>";
-    }
-
-    s_str& operator << ( s_str& sLeft, const s_var& vRight )
-    {
-        const s_type& mType = vRight.GetType();
-        if (mType == VALUE_INT) return sLeft << vRight.Get<s_int>();
-        else if (mType == VALUE_UINT) return sLeft << vRight.Get<s_uint>();
-        else if (mType == VALUE_FLOAT) return sLeft << vRight.Get<s_float>();
-        else if (mType == VALUE_DOUBLE) return sLeft << vRight.Get<s_double>();
-        else if (mType == VALUE_BOOL) return sLeft << vRight.Get<s_bool>();
-        else if (mType == VALUE_STRING) return sLeft << vRight.Get<s_str>();
-        else if (mType == VALUE_POINTER) return sLeft << vRight.Get<void*>();
-        else return sLeft << "<none>";
-    }
 }
 
 #endif

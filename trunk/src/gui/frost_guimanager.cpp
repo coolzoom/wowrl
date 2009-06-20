@@ -358,7 +358,7 @@ namespace Frost
             map< s_uint, s_ptr<GUI::UIObject> >::iterator iterUIObject;
             foreach (iterUIObject, lMainObjectList_)
             {
-                s_ptr<GUI::Frame>(iterUIObject->second)->On("Load");
+                s_ptr<GUI::Frame>::DynamicCast(iterUIObject->second)->On("Load");
             }
 
             bClosed_ = false;

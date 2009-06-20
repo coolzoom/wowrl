@@ -310,18 +310,18 @@ namespace XML
         s_refptr<Block> pNewBlock_;
         s_bool          bCreating_;
 
-        std::vector<std::multimap< s_str, s_ptr<Block> >::iterator>::iterator mCurrIter_;
-        std::vector<std::multimap< s_str, s_ptr<Block> >::iterator>::iterator mEndIter_;
+        s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator>::iterator mCurrIter_;
+        s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator>::iterator mEndIter_;
 
-        std::vector<s_str> lDerivatedList_;
+        s_ctnr<s_str> lDerivatedList_;
 
-        std::map<s_str, Attribute>       lAttributeList_;
-        std::map<s_str, Block>           lDefBlockList_;
-        std::map<s_str, PredefinedBlock> lPreDefBlockList_;
+        s_map<s_str, Attribute>       lAttributeList_;
+        s_map<s_str, Block>           lDefBlockList_;
+        s_map<s_str, PredefinedBlock> lPreDefBlockList_;
 
-        std::multimap< s_str, s_ptr<Block> >                                           lFoundBlockList_;
-        std::vector<std::multimap< s_str, s_ptr<Block> >::iterator>                    lFoundBlockStack_;
-        std::map< s_str, std::vector<std::multimap< s_str, s_ptr<Block> >::iterator> > lFoundBlockSortedStacks_;
+        s_multimap< s_str, s_ptr<Block> >                                   lFoundBlockList_;
+        s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator>                 lFoundBlockStack_;
+        s_map< s_str, s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator> > lFoundBlockSortedStacks_;
     };
 }
 }

@@ -373,14 +373,14 @@ namespace Frost
         Ogre::HardwareVertexBufferSharedPtr mColorBuffer_;
 
         // Sprite list
-        std::vector<Quad> lQuadList_;
+        s_ctnr<Quad> lQuadList_;
 
         // Render target if any
-        s_ptr<RenderTarget> pRenderTarget_;
-        s_ptr<RenderTarget> pMainTarget_;
-        std::map< s_uint, s_ptr<RenderTarget> > lRenderTargetList_;
-        s_uint              uiTargetCounter_;
-        s_refptr<Sprite>    pMainSprite_;
+        s_ptr<RenderTarget>                  pRenderTarget_;
+        s_map< s_uint, s_ptr<RenderTarget> > lRenderTargetList_;
+        s_uint                               uiTargetCounter_;
+        s_ptr<RenderTarget>                  pMainTarget_;
+        s_refptr<Sprite>                     pMainSprite_;
 
         s_float f2_ScreenWidth_;
         s_float f2_ScreenHeight_;

@@ -18,7 +18,7 @@ namespace Frost
 
     LuaCharacter::LuaCharacter( lua_State* pLua ) : LuaUnit(pLua)
     {
-        pParentCharacter_ = s_ptr<Character>(pParent_);
+        pParentCharacter_ = s_ptr<Character>::DynamicCast(pParent_);
     }
 
     int LuaCharacter::_GetRace( lua_State* pLua )

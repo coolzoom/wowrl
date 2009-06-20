@@ -82,8 +82,8 @@ namespace Frost
 
     private :
 
-        std::multimap< s_str, s_ptr<EventReceiver> > lReceiverList_;
-        std::vector<s_str>                           lFiredEventList_;
+        s_multimap< s_str, s_ptr<EventReceiver> > lReceiverList_;
+        s_ctnr<s_str>                             lFiredEventList_;
 
         s_bool bDebugOutput_;
     };

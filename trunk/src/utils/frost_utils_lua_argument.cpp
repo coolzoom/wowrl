@@ -63,7 +63,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
     s_bool bSeveralChoices = (lData_.size() > 1);
 
     Lua::Type mType = pLua->GetType(iIndex);
-    vector<Data>::iterator iterData;
+    s_ctnr<Data>::iterator iterData;
     foreach (iterData, lData_)
     {
         if (mType != iterData->GetType())

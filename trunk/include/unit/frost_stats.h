@@ -212,28 +212,7 @@ namespace Frost
         Bonus<s_float> fMovementSpeedPercent;
 
         // Dynamic bonuses
-        std::map< s_str, Bonus<s_var> > lBonusList;
-        /*Bonus<s_int> iAgility;
-        Bonus<s_int> iStamina;
-        Bonus<s_int> iIntellect;
-        Bonus<s_int> iSpirit;
-        Bonus<s_int> iStrength;
-
-        Bonus<s_int>   iArmor;
-        Bonus<s_int>   iDefense;
-        Bonus<s_int>   iBlock;
-        Bonus<s_float> fBlockChance;
-        Bonus<s_int>   iAttackPower;
-        Bonus<s_float> fCriticalHitChance;
-        Bonus<s_float> fHitChance;
-        Bonus<s_float> fDodgeChance;
-
-        std::map< s_str, Bonus<s_int> >   lSpellDamageBonus;
-        std::map< s_str, Bonus<s_float> > lSpellDamageBonusPercent;
-        std::map< s_str, Bonus<s_float> > lSpellResistancePercent;
-        std::map< s_str, Bonus<s_float> > lSpellCriticalHitChance;
-        std::map< s_str, Bonus<s_float> > lSpellHitChance;
-        std::map< s_str, Bonus<s_int> >   lSpellPenetration;*/
+        s_map< s_str, Bonus<s_var> > lBonusList;
 
         static const s_str CLASS_NAME;
     };
@@ -352,7 +331,7 @@ namespace Frost
 
         s_bool IsInteger() const
         {
-            return mBonus_.IsInteger();
+            return mValue_.IsOfType<s_int>();
         }
 
         static const s_str CLASS_NAME;
@@ -379,28 +358,7 @@ namespace Frost
         Characteristic<s_float> fMovementSpeedPercent;
 
         // Dynamic characteristics
-        std::map< s_str, Characteristic<s_var> > lCharactList;
-        /*Characteristic<s_int> iAgility;
-        Characteristic<s_int> iStamina;
-        Characteristic<s_int> iIntellect;
-        Characteristic<s_int> iSpirit;
-        Characteristic<s_int> iStrength;
-
-        Characteristic<s_int>   iArmor;
-        Characteristic<s_int>   iDefense;
-        Characteristic<s_int>   iBlock;
-        Characteristic<s_float> fBlockChance;
-        Characteristic<s_int>   iAttackPower;
-        Characteristic<s_float> fCriticalHitChance;
-        Characteristic<s_float> fHitChance;
-        Characteristic<s_float> fDodgeChance;
-
-        std::map< s_str, Characteristic<s_int> >   lSpellDamageBonus;
-        std::map< s_str, Characteristic<s_float> > lSpellDamageBonusPercent;
-        std::map< s_str, Characteristic<s_float> > lSpellResistancePercent;
-        std::map< s_str, Characteristic<s_float> > lSpellCriticalHitChance;
-        std::map< s_str, Characteristic<s_float> > lSpellHitChance;
-        std::map< s_str, Characteristic<s_int> >   lSpellPenetration;*/
+        s_map< s_str, Characteristic<s_var> > lCharactList;
 
         static const s_str CLASS_NAME;
     };

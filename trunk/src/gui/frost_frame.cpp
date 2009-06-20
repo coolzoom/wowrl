@@ -137,7 +137,7 @@ s_str Frame::Serialize( const s_str& sTab ) const
         if (lChildList_.size() == 1)
             sStr << sTab << "  # Region : \n";
         else
-            sStr << sTab << "  # Regions     : " << (uint)lRegionList_.size() << "\n";
+            sStr << sTab << "  # Regions     : " << lRegionList_.GetSize() << "\n";
         sStr << sTab << "  |-###\n";
 
         map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
@@ -153,7 +153,7 @@ s_str Frame::Serialize( const s_str& sTab ) const
         if (lChildList_.size() == 1)
             sStr << sTab << "  # Child : \n";
         else
-            sStr << sTab << "  # Children    : " << (uint)lChildList_.size() << "\n";
+            sStr << sTab << "  # Children    : " << lChildList_.GetSize() << "\n";
         sStr << sTab << "  |-###\n";
 
         map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
@@ -547,8 +547,7 @@ void Frame::OnEvent( const Event& mEvent )
     for (s_uint i; i < mEvent.GetNumParam(); ++i)
     {
         s_ptr<const s_var> pArg = mEvent.Get(i);
-        pLua->PushVar(pArg);
-
+        pLua->PushVar(*pArg);
         pLua->SetGlobal("arg"+(i+1));
     }
 

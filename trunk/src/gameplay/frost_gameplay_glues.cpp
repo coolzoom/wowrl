@@ -51,7 +51,7 @@ namespace Frost
         mFunc.Add(0, "camera", Lua::TYPE_USERDATA);
         if (mFunc.Check())
         {
-            s_ptr<Camera> pCam = s_ptr<Camera>(
+            s_ptr<Camera> pCam = s_ptr<Camera>::DynamicCast(
                 Lunar<LuaMovableObject>::check(pLua, mFunc.Get(0)->GetIndex().Get())->GetObject()
             );
             pParent_->SetCamera(pCam);

@@ -86,7 +86,7 @@ namespace Frost
 
     private :
 
-        std::map<s_uint, s_ptr<Light> > lLightList_;
+        s_map<s_uint, s_ptr<Light> > lLightList_;
 
         Color mAmbient_;
 

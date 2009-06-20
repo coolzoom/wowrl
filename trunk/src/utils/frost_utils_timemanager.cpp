@@ -11,6 +11,7 @@
 #include "frost_utils_profiler.h"
 #include "frost_utils_stdhelper.h"
 #include "frost_utils_log.h"
+#include "frost_utils_math.h"
 
 #include <OgreTimer.h>
 
@@ -127,13 +128,13 @@ namespace Frost
     s_str TimeManager::GetPlayTime() const
     {
         s_double dTime = GetTime();
-        s_uint uiHours = (uint)floor(dTime.Get()/3600);
+        s_uint uiHours(s_double::Round((dTime/3600.0), ROUND_FLOOR));
         dTime -= s_double(uiHours)*3600.0;
-        s_uint uiMinutes = (uint)floor(dTime.Get()/60);
+        s_uint uiMinutes(s_double::Round((dTime/60.0), ROUND_FLOOR));
         dTime -= s_double(uiMinutes)*60.0;
-        s_uint uiSeconds = (uint)floor(dTime.Get());
+        s_uint uiSeconds(s_double::Round((dTime), ROUND_FLOOR));
         dTime -= s_double(uiSeconds);
-        s_uint uiMilliseconds = (uint)floor(dTime.Get()*1000);
+        s_uint uiMilliseconds(s_double::Round((dTime*1000), ROUND_FLOOR));
 
         s_str sTime = "[";
         sTime += s_str(uiHours, 2) + ":";
@@ -159,7 +160,7 @@ namespace Frost
             return &lProfilerList_.find(sName)->second;
         }
         else
-            return s_ptr<Profiler>(NULL);
+            return NULL;
     }
 
     void TimeManager::SetProfiling( const s_bool& bProfiling )
@@ -248,7 +249,7 @@ namespace Frost
         ftime(&tb);
         return (uint)tb.millitm*1000;
     #else
-        // Note : Needs to be checked on Linux
+        // NOTE : Needs to be checked on Linux
         timeval tv;
         gettimeofday(tv, NULL);
         return tv.tv_usec;
