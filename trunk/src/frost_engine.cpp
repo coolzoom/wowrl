@@ -42,12 +42,9 @@ namespace Frost
         bGamePaused_ = false;
         sGameVersion_ = "0.045";
         iMaxComputedPaths_ = 2;
-        pLua_ = NULL;
         pFrameFunc_ = NULL;
 
         bShutDown_ = false;
-
-        srand((unsigned)time(0));
 
         // Initialize OGRE
         pRoot_ = new Ogre::Root("", "");
@@ -118,6 +115,8 @@ namespace Frost
 
     s_bool Engine::Initialize()
     {
+        pUtilsMgr_->Initialize();
+
         // Create the log
         pLog_ = Ogre::LogManager::getSingleton().createLog("Frost.log");
         pLog_->setTimeStampEnabled(false);
