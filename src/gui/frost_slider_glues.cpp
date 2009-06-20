@@ -15,5 +15,5 @@ const s_str LuaSlider::CLASS_NAME = "GUI::LuaSlider";
 
 LuaSlider::LuaSlider(lua_State* pLua) : LuaFrame(pLua)
 {
-    pSliderParent_ = (Slider*)(pParent_.Get());
+    pSliderParent_ = s_ptr<Slider>::DynamicCast(pParent_);
 }

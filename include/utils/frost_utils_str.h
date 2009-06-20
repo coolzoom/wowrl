@@ -1,3 +1,4 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
     enum IntegerConversionType
@@ -833,77 +834,6 @@ namespace Frost
             return *this;
         }
 
-        s_str_t& operator << (const int& iValue)
-        {
-            string_stream sStream;
-
-            switch (mIntConvType_)
-            {
-                case CONV_DECIMAL :
-                {
-                    sStream << iValue;
-                    break;
-                }
-                case CONV_HEXA :
-                {
-                    sStream << std::hex << iValue;
-                    break;
-                }
-                case CONV_BIN :
-                {
-                    // TODO : Implementer la conversion en binaire, si necessaire
-                    break;
-                }
-            }
-
-            string_object sValue;
-            sStream >> sValue;
-            sValue_ += sValue;
-
-            return *this;
-        }
-
-        s_str_t& operator << (const uint& uiValue)
-        {
-            return operator<<(static_cast<int>(uiValue));
-        }
-
-        s_str_t& operator << (const float& fValue)
-        {
-            string_stream sStream;
-            sStream << fValue;
-            sValue_ += sStream.str();
-            return *this;
-        }
-
-        s_str_t& operator << (const double& dValue)
-        {
-            string_stream sStream;
-            sStream << dValue;
-            sValue_ += sStream.str();
-            return *this;
-        }
-
-        s_str_t& operator << (const bool& bValue)
-        {
-            string_object sChoice[2] = { STRING(""), STRING("") };
-            switch (mBoolConvType_)
-            {
-                case CONV_TRUE_FALSE : sChoice[0] = STRING("false"); sChoice[1] = STRING("true"); break;
-                case CONV_1_0 : sChoice[0] = STRING("0"); sChoice[1] = STRING("1"); break;
-                case CONV_YES_NO : sChoice[0] = STRING("no"); sChoice[1] = STRING("yes"); break;
-            }
-
-            sValue_ += sChoice[(int)bValue];
-            return *this;
-        }
-
-        s_str_t& operator << (const string_element& cValue)
-        {
-            operator+=(cValue);
-            return *this;
-        }
-
         s_str_t& operator << (const void* pValue)
         {
             if (pValue == NULL)
@@ -922,7 +852,33 @@ namespace Frost
         s_str_t& operator << (const s_int_t<N>& iValue)
         {
             if (iValue.IsValid())
-                return operator<<(iValue.Get());
+            {
+                string_stream sStream;
+                switch (mIntConvType_)
+                {
+                    case CONV_DECIMAL :
+                    {
+                        sStream << iValue.Get();
+                        break;
+                    }
+                    case CONV_HEXA :
+                    {
+                        sStream << std::hex << iValue.Get();
+                        break;
+                    }
+                    case CONV_BIN :
+                    {
+                        // TODO : Implementer la conversion en binaire, si necessaire
+                        break;
+                    }
+                }
+
+                string_object sValue;
+                sStream >> sValue;
+                sValue_ += sValue;
+
+                return *this;
+            }
             else
             {
                 if (iValue.GetType() == s_int_t<N>::INTEGER_NAN)
@@ -940,7 +896,31 @@ namespace Frost
         s_str_t& operator << (const s_uint_t<N>& uiValue)
         {
             if (uiValue.IsValid())
-                return operator<<(uiValue.Get());
+            {
+                string_stream sStream;
+                switch (mIntConvType_)
+                {
+                    case CONV_DECIMAL :
+                    {
+                        sStream << uiValue.Get();
+                        break;
+                    }
+                    case CONV_HEXA :
+                    {
+                        sStream << std::hex << uiValue.Get();
+                        break;
+                    }
+                    case CONV_BIN :
+                    {
+                        // TODO : Implementer la conversion en binaire, si necessaire
+                        break;
+                    }
+                }
+
+                sValue_ += sStream.str();
+
+                return *this;
+            }
             else
             {
                 if (uiValue.GetType() == s_uint_t<N>::INTEGER_NAN)
@@ -956,7 +936,12 @@ namespace Frost
         s_str_t& operator << (const s_float_t<N>& fValue)
         {
             if (fValue.IsValid())
-                return operator<<(fValue.Get());
+            {
+                string_stream sStream;
+                sStream << fValue.Get();
+                sValue_ += sStream.str();
+                return *this;
+            }
             else
             {
                 if (fValue.GetType() == s_float_t<N>::FLOAT_NAN)
@@ -973,7 +958,22 @@ namespace Frost
         template <class N>
         s_str_t& operator << (const s_bool_t<N>& bValue)
         {
-            return operator<<(bValue.Get());
+            string_object sChoice[2] = { STRING(""), STRING("") };
+            switch (mBoolConvType_)
+            {
+                case CONV_TRUE_FALSE :
+                    sChoice[0] = STRING("false"); sChoice[1] = STRING("true");
+                    break;
+                case CONV_1_0 :
+                    sChoice[0] = STRING("0");     sChoice[1] = STRING("1");
+                    break;
+                case CONV_YES_NO :
+                    sChoice[0] = STRING("no");    sChoice[1] = STRING("yes");
+                    break;
+            }
+
+            sValue_ += sChoice[bValue ? 1 : 0];
+            return *this;
         }
 
         template <class N, int M>

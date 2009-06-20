@@ -135,13 +135,13 @@ namespace Frost
 
         s_uint uiObjectCounter_;
 
-        std::map< s_uint, s_ptr<MovableObject> > lObjectList_;
+        s_map< s_uint, s_ptr<MovableObject> > lObjectList_;
 
-        std::map< s_uint, s_ptr<Plane> > lPlaneList_;
-        std::map< s_uint, s_ptr<Node> >  lNodeList_;
+        s_map< s_uint, s_ptr<Plane> > lPlaneList_;
+        s_map< s_uint, s_ptr<Node> >  lNodeList_;
 
-        std::map< s_str, s_ptr<TerrainData> > lLoadedModelList_;
-        std::map< s_uint, s_ptr<Terrain> >    lTerrainList_;
+        s_map< s_str, s_ptr<TerrainData> > lLoadedModelList_;
+        s_map< s_uint, s_ptr<Terrain> >    lTerrainList_;
 
 
     };

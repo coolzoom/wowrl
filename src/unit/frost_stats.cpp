@@ -54,33 +54,6 @@ namespace Frost
                 );
             }
         }
-
-        /*iAgility.AddBonus(mBonusSet.iAgility);
-        iStamina.AddBonus(mBonusSet.iStamina);
-        iIntellect.AddBonus(mBonusSet.iIntellect);
-        iSpirit.AddBonus(mBonusSet.iSpirit);
-        iStrength.AddBonus(mBonusSet.iStrength);
-
-        iArmor.AddBonus(mBonusSet.iArmor);
-        iDefense.AddBonus(mBonusSet.iDefense);
-        iBlock.AddBonus(mBonusSet.iBlock);
-        fBlockChance.AddBonus(mBonusSet.fBlockChance);
-        iAttackPower.AddBonus(mBonusSet.iAttackPower);
-        fCriticalHitChance.AddBonus(mBonusSet.fCriticalHitChance);
-        fHitChance.AddBonus(mBonusSet.fHitChance);
-        fDodgeChance.AddBonus(mBonusSet.fDodgeChance);
-
-        const vector<s_str>& lSchoolList = UnitManager::GetSingleton()->GetSpellSchoolList();
-        vector<s_str>::const_iterator iterSchool;
-        foreach (iterSchool, lSchoolList)
-        {
-            lSpellDamageBonus[*iterSchool].AddBonus(mBonusSet.lSpellDamageBonus[*iterSchool]);
-            lSpellDamageBonusPercent[*iterSchool].AddBonus(mBonusSet.lSpellDamageBonusPercent[*iterSchool]);
-            lSpellResistancePercent[*iterSchool].AddBonus(mBonusSet.lSpellResistancePercent[*iterSchool]);
-            lSpellCriticalHitChance[*iterSchool].AddBonus(mBonusSet.lSpellCriticalHitChance[*iterSchool]);
-            lSpellHitChance[*iterSchool].AddBonus(mBonusSet.lSpellHitChance[*iterSchool]);
-            lSpellPenetration[*iterSchool].AddBonus(mBonusSet.lSpellPenetration[*iterSchool]);
-        }*/
     }
 
     void Stats::RemoveBonusSet( BonusSet& mBonusSet )
@@ -105,29 +78,5 @@ namespace Frost
                 );
             }
         }
-
-        /*iAgility.RemoveBonus(mBonusSet.iAgility);
-        iStamina.RemoveBonus(mBonusSet.iStamina);
-        iIntellect.RemoveBonus(mBonusSet.iIntellect);
-        iSpirit.RemoveBonus(mBonusSet.iSpirit);
-        iStrength.RemoveBonus(mBonusSet.iStrength);
-
-        iArmor.RemoveBonus(mBonusSet.iArmor);
-        iBlock.RemoveBonus(mBonusSet.iBlock);
-        iAttackPower.RemoveBonus(mBonusSet.iAttackPower);
-        fCriticalHitChance.RemoveBonus(mBonusSet.fCriticalHitChance);
-        fHitChance.RemoveBonus(mBonusSet.fHitChance);
-
-        const vector<s_str>& lSchoolList = UnitManager::GetSingleton()->GetSpellSchoolList();
-        vector<s_str>::const_iterator iterSchool;
-        foreach (iterSchool, lSchoolList)
-        {
-            lSpellDamageBonus[*iterSchool].RemoveBonus(mBonusSet.lSpellDamageBonus[*iterSchool]);
-            lSpellDamageBonusPercent[*iterSchool].RemoveBonus(mBonusSet.lSpellDamageBonusPercent[*iterSchool]);
-            lSpellResistancePercent[*iterSchool].RemoveBonus(mBonusSet.lSpellResistancePercent[*iterSchool]);
-            lSpellCriticalHitChance[*iterSchool].RemoveBonus(mBonusSet.lSpellCriticalHitChance[*iterSchool]);
-            lSpellHitChance[*iterSchool].RemoveBonus(mBonusSet.lSpellHitChance[*iterSchool]);
-            lSpellPenetration[*iterSchool].RemoveBonus(mBonusSet.lSpellPenetration[*iterSchool]);
-        }*/
     }
 }

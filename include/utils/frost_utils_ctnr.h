@@ -1,6 +1,7 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
-    /// Base type : container
+    /// Base type : container (sequence)
     /** This class is basically a wrapper around std::deque.
     *   A "cool feature" is the overloading of the ',' operator, which allows
     *   you to write :<br><br>
@@ -168,7 +169,7 @@ namespace Frost
             }
         }
 
-        /// Removes all values from this container.
+        /// Removes all elements from this container.
         void Clear()
         {
             std::deque<T>::clear();
@@ -216,7 +217,7 @@ namespace Frost
         /// Searches the container for the provided element.
         /** \param mElem   The element to search for
         *   \param uiStart The position from which to start searching
-        *   \return An iterator pointing at this element
+        *   \return An iterator pointing to this element
         *   \note If the element is not present in the container, this function
         *         returns End().
         */
@@ -229,7 +230,7 @@ namespace Frost
         /// Searches the container for the provided element.
         /** \param mElem   The element to search for
         *   \param uiStart The position from which to start searching
-        *   \return An iterator pointing at this element
+        *   \return An iterator pointing to this element
         *   \note If the element is not present in the container, this function
         *         returns End().
         */

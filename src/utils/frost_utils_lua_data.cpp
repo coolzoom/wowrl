@@ -37,7 +37,7 @@ void Data::Set( s_ptr<Lua::State> pLua, const s_int& iIndex )
     else if (mLuaType_ == Lua::TYPE_USERDATA)
         mValue_ = iIndex;
     else if (mLuaType_ == Lua::TYPE_NIL)
-        mValue_ = (void*)NULL;
+        mValue_ = static_cast<void*>(NULL);
 
     pParent_->SetData(this);
 }

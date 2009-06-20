@@ -83,7 +83,7 @@ namespace Frost
         if (!pFrame->IsVirtual())
             pFrame->CreateGlue();
 
-        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pFrame->GetParent());
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pFrame->GetParent());
         if (pParent)
             pParent->AddChild(pFrame);
 
@@ -151,7 +151,7 @@ namespace Frost
         if (!this->AddUIObject(pTexture))
             return false;
 
-        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pTexture->GetParent());
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pTexture->GetParent());
 
         if (pParent && !pParent->IsVirtual())
             pTexture->CreateGlue();
@@ -192,7 +192,7 @@ namespace Frost
         if (!this->AddUIObject(pFontString))
             return false;
 
-        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>(pFontString->GetParent());
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pFontString->GetParent());
 
         if (pParent && !pParent->IsVirtual())
             pFontString->CreateGlue();

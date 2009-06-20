@@ -1,3 +1,4 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
     /// Base type : boolean

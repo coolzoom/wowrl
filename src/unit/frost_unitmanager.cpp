@@ -147,12 +147,12 @@ namespace Frost
                 s_str sType = pMyObject->getTypeName();
                 if (sType == "CHARACTER")
                 {
-                    pUnit = s_ptr<CharacterOgreInterface>(pMyObject)->GetCharacter();
+                    pUnit = s_ptr<CharacterOgreInterface>::DynamicCast(pMyObject)->GetCharacter();
                     break;
                 }
                 else if (sType == "CREATURE")
                 {
-                    pUnit = s_ptr<CreatureOgreInterface>(pMyObject)->GetCreature();
+                    pUnit = s_ptr<CreatureOgreInterface>::DynamicCast(pMyObject)->GetCreature();
                     break;
                 }
             }

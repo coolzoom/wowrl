@@ -29,79 +29,76 @@ namespace Frost
 
     void EventManager::RegisterEvent( s_ptr<EventReceiver> pReceiver, const s_str& sEventName )
     {
-        if (MAPFIND(sEventName, lReceiverList_))
+        if (lReceiverList_.Find(sEventName))
         {
             // This event is already registered to one or more EventReceivers.
             // Now, check our EventReceiver isn't one of them :
 
-            pair< multimap< s_str, s_ptr<EventReceiver> >::iterator,
-                  multimap< s_str, s_ptr<EventReceiver> >::iterator > mIterPair;
-            mIterPair = lReceiverList_.equal_range(sEventName);
-            multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
-            for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; ++iterReceiver)
+            s_multimap< s_str, s_ptr<EventReceiver> >::range mRange;
+            mRange = lReceiverList_.EqualRange(sEventName);
+            s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
+            foreach (iterReceiver, mRange)
             {
                 if (iterReceiver->second == pReceiver)
                 {
                     Warning(CLASS_NAME,
-                        "Event \""+sEventName+"\" is already registered to that EventReceiver "+
-                        "(EventReceiver : "+s_str(s_int((int)(long)pReceiver.Get()))+").");
+                        "Event \""+sEventName+"\" is already registered to this EventReceiver "+
+                        "(EventReceiver : "+s_str(s_ulong(reinterpret_cast<ulong>(pReceiver.Get())))+").");
                     return;
                 }
             }
         }
 
-        lReceiverList_.insert(pair< s_str, s_ptr<EventReceiver> >(sEventName, pReceiver));
+        lReceiverList_.Insert(make_pair(sEventName, pReceiver));
     }
 
     void EventManager::UnregisterEvent( s_ptr<EventReceiver> pReceiver, const s_str& sEventName )
     {
-        if (MAPFIND(sEventName, lReceiverList_))
+        if (lReceiverList_.Find(sEventName))
         {
             // This event is already registered to one or more EventReceivers.
             // Now, check our EventReceiver is one of them :
 
-            pair< multimap< s_str, s_ptr<EventReceiver> >::iterator,
-                  multimap< s_str, s_ptr<EventReceiver> >::iterator > mIterPair;
-            mIterPair = lReceiverList_.equal_range(sEventName);
-            multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
-            for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; ++iterReceiver)
+            s_multimap< s_str, s_ptr<EventReceiver> >::range mRange;
+            mRange = lReceiverList_.EqualRange(sEventName);
+            s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
+            foreach (iterReceiver, mRange)
             {
                 if (iterReceiver->second == pReceiver)
                 {
-                    lReceiverList_.erase(iterReceiver);
+                    lReceiverList_.Erase(iterReceiver);
                     return;
                 }
             }
         }
 
         Warning(CLASS_NAME,
-            "Event \""+sEventName+"\" is not registered to that EventReceiver "+
-            "(EventReceiver : "+s_str(s_int((int)(long)pReceiver.Get()))+").");
+            "Event \""+sEventName+"\" is not registered to this EventReceiver "+
+            "(EventReceiver : "+s_str(s_ulong(reinterpret_cast<ulong>(pReceiver.Get())))+").");
     }
 
     void EventManager::FireEvent( const Event& mEvent )
     {
-        if (MAPFIND(mEvent.GetName(), lReceiverList_))
+        if (lReceiverList_.Find(mEvent.GetName()))
         {
             // This event is registered to one or more EventReceivers.
             // Check if this event should only be fired once per frame.
-            if (!VECTORFIND(mEvent.GetName(), lFiredEventList_))
+            if (!lFiredEventList_.Find(mEvent.GetName()))
             {
                 if (bDebugOutput_)
                     Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" is being fired...");
 
                 // Now, tell all these EventReceivers that this Event has occured.
-                pair< multimap< s_str, s_ptr<EventReceiver> >::iterator,
-                      multimap< s_str, s_ptr<EventReceiver> >::iterator > mIterPair;
-                mIterPair = lReceiverList_.equal_range(mEvent.GetName());
-                multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
-                for (iterReceiver = mIterPair.first; iterReceiver != mIterPair.second; ++iterReceiver)
+                s_multimap< s_str, s_ptr<EventReceiver> >::range mRange;
+                mRange = lReceiverList_.EqualRange(mEvent.GetName());
+                s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
+                foreach (iterReceiver, mRange)
                 {
                     iterReceiver->second->OnEvent(mEvent);
                 }
 
                 if (mEvent.IsOncePerFrame())
-                    lFiredEventList_.push_back(mEvent.GetName());
+                    lFiredEventList_.PushBack(mEvent.GetName());
 
                 if (bDebugOutput_)
                     Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" has been fired.");
@@ -111,7 +108,7 @@ namespace Frost
 
     void EventManager::FrameEnded()
     {
-        lFiredEventList_.clear();
+        lFiredEventList_.Clear();
     }
 
     void EventManager::ToggleDebugOutput()

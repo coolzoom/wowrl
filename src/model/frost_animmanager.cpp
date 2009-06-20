@@ -35,12 +35,12 @@ namespace Frost
         fSpeed_ = 1.0f;
         mActualPriority_ = ANIM_PRIORITY_BACKGROUND;
 
-        map<s_uint, MeshAnimation>::iterator iterAnim;
+        s_map<s_uint, MeshAnimation>::iterator iterAnim;
         foreach (iterAnim, lMAList)
         {
             Animation mAnim;
             mAnim.Set(&iterAnim->second, pParent_);
-            lAnimList_[mAnim.uiID].lSequence.push_back(mAnim);
+            lAnimList_[mAnim.uiID].lSequence.PushBack(mAnim);
         }
     }
 
@@ -51,15 +51,15 @@ namespace Frost
         fSpeed_ = 1.0f;
         mActualPriority_ = ANIM_PRIORITY_LOW;
 
-        map<s_uint, AnimationSequence>::const_iterator iterSequence;
+        s_map<s_uint, AnimationSequence>::const_iterator iterSequence;
         foreach (iterSequence, mMgr.lAnimList_)
         {
-            vector<Animation>::const_iterator iterAnim;
+            s_ctnr<Animation>::const_iterator iterAnim;
             foreach (iterAnim, iterSequence->second.lSequence)
             {
                 Animation mAnim;
                 mAnim.Set(s_ptr<const Animation>(&(*iterAnim)), pParent_);
-                lAnimList_[mAnim.uiID].lSequence.push_back(mAnim);
+                lAnimList_[mAnim.uiID].lSequence.PushBack(mAnim);
             }
         }
     }
@@ -75,8 +75,9 @@ namespace Frost
         else
         {
             s_ptr<Animation> pAnim;
-            map<s_uint, AnimationSequence>::iterator iterAnim = lAnimList_.find((uint)mID);
-            if (iterAnim != lAnimList_.end())
+            map<s_uint, AnimationSequence>::iterator iterAnim;
+            iterAnim = lAnimList_.FindIter(static_cast<uint>(mID));
+            if (iterAnim != lAnimList_.End())
                 pAnim = &iterAnim->second.lSequence[0];
             return pAnim;
         }
@@ -97,18 +98,18 @@ namespace Frost
 
         pOldAnim_ = pActualAnim_;
 
-        map<s_uint, AnimationSequence>::iterator iterAnim = lAnimList_.find(uiID);
-        if (iterAnim != lAnimList_.end())
+        s_map<s_uint, AnimationSequence>::iterator iterAnim = lAnimList_.FindIter(uiID);
+        if (iterAnim != lAnimList_.End())
         {
             s_ptr<AnimationSequence> pAS = &(iterAnim->second);
-            if (pAS->lSequence.size() > 1)
+            if (pAS->lSequence.GetSize() > 1)
             {
                 s_uint uiRnd = s_uint::Random(0u, 10u);
                 if (uiRnd > 8)
-                    uiRnd.Randomize(1, pAS->lSequence.size()-1);
+                    uiRnd.Randomize(1, pAS->lSequence.GetSize()-1);
                 else
                     uiRnd = 0u;
-                pActualAnim_ = &pAS->lSequence[uiRnd.Get()];
+                pActualAnim_ = &pAS->lSequence[uiRnd];
             }
             else
                 pActualAnim_ = &pAS->lSequence[0];
@@ -150,7 +151,7 @@ namespace Frost
             }
             else
             {
-                uiBackgroundAnimID_ = (uint)mID;
+                uiBackgroundAnimID_ = static_cast<uint>(mID);
                 if (mActualPriority_ == ANIM_PRIORITY_BACKGROUND)
                 {
                     if (pActualAnim_)
@@ -166,15 +167,15 @@ namespace Frost
         else if ( (bQueued) && (mActualPriority_ >= mPriority) )
         {
             if (mID == ANIM_NONE)
-                lQueueList_[mPriority].push_back(NULL);
+                lQueueList_[mPriority].PushBack(NULL);
             else
             {
-                lQueueList_[mPriority].push_back(GetAnim(mID));
+                lQueueList_[mPriority].PushBack(GetAnim(mID));
             }
         }
         else
         {
-            lQueueList_.clear();
+            lQueueList_.Clear();
 
             if (mID == ANIM_NONE)
             {
@@ -185,7 +186,7 @@ namespace Frost
             }
             else
             {
-                ChooseAnim((int)mID);
+                ChooseAnim(static_cast<uint>(mID));
 
                 mActualPriority_ = mPriority;
             }
@@ -254,12 +255,12 @@ namespace Frost
                             {
                                 if (!lQueueList_.empty())
                                 {
-                                    map< AnimPriority, deque< s_ptr<Animation> > >::iterator iterQueue = lQueueList_.end();
+                                    s_map< AnimPriority, s_ctnr< s_ptr<Animation> > >::iterator iterQueue = lQueueList_.End();
                                     iterQueue--;
 
-                                    if (iterQueue->second.front())
+                                    if (iterQueue->second.Front())
                                     {
-                                        ChooseAnim(iterQueue->second.front()->uiID);
+                                        ChooseAnim(iterQueue->second.Front()->uiID);
                                     }
                                     else
                                     {
@@ -268,9 +269,9 @@ namespace Frost
 
                                     mActualPriority_ = iterQueue->first;
 
-                                    iterQueue->second.pop_front();
-                                    if (iterQueue->second.empty())
-                                        lQueueList_.erase(iterQueue);
+                                    iterQueue->second.PopFront();
+                                    if (iterQueue->second.IsEmpty())
+                                        lQueueList_.Erase(iterQueue);
                                 }
                                 else if (uiBackgroundAnimID_.IsValid() && mActualPriority_ != ANIM_PRIORITY_BACKGROUND)
                                 {
@@ -296,14 +297,14 @@ namespace Frost
                             }
                             else
                             {
-                                if (!lQueueList_.empty())
+                                if (!lQueueList_.IsEmpty())
                                 {
-                                    map< AnimPriority, deque< s_ptr<Animation> > >::iterator iterQueue = lQueueList_.end();
+                                    s_map< AnimPriority, s_ctnr< s_ptr<Animation> > >::iterator iterQueue = lQueueList_.End();
                                     iterQueue--;
 
-                                    if (iterQueue->second.front())
+                                    if (iterQueue->second.Front())
                                     {
-                                        ChooseAnim(iterQueue->second.front()->uiID);
+                                        ChooseAnim(iterQueue->second.Front()->uiID);
                                         pActualAnim_->pAnim->setTimePosition(pActualAnim_->pAnim->getLength());
                                     }
                                     else
@@ -313,9 +314,9 @@ namespace Frost
 
                                     mActualPriority_ = iterQueue->first;
 
-                                    iterQueue->second.pop_front();
-                                    if (iterQueue->second.empty())
-                                        lQueueList_.erase(iterQueue);
+                                    iterQueue->second.PopFront();
+                                    if (iterQueue->second.IsEmpty())
+                                        lQueueList_.Erase(iterQueue);
                                 }
                                 else if (uiBackgroundAnimID_.IsValid())
                                 {
@@ -343,14 +344,10 @@ namespace Frost
                         if (!bReversed_)
                         {
                             pActualAnim_->pAnim->addTime((fDelta*fSpeed_).Get());
-                            /*if (pOldAnim_ != NULL)
-                                pOldAnim_->pAnim->addTime((fDelta*fSpeed_).Get());*/
                         }
                         else
                         {
                             pActualAnim_->pAnim->addTime((-fDelta*fSpeed_).Get());
-                            /*if (pOldAnim_ != NULL)
-                                pOldAnim_->pAnim->addTime((-fDelta*fSpeed_).Get());*/
                         }
 
                         fBlend_ += fDelta;

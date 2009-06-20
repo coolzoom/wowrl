@@ -1,3 +1,4 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
     /// Reference counting pointer
@@ -27,7 +28,7 @@ namespace Frost
         explicit s_refptr(T* pValue)
         {
             pValue_ = pValue;
-            pCounter_ = new s_uint();
+            pCounter_ = new uint(0);
 
             Increment_();
         }
@@ -39,7 +40,7 @@ namespace Frost
         *         by anyone else than itself (and other
         *         template specializations).
         */
-        explicit s_refptr(T* pValue, s_uint* pCounter)
+        explicit s_refptr(T* pValue, uint* pCounter)
         {
             pValue_ = pValue;
             pCounter_ = pCounter;
@@ -210,7 +211,7 @@ namespace Frost
             if (pCounter_)
             {
                 --(*pCounter_);
-                if (pCounter_->IsNull())
+                if (*pCounter_ == 0u)
                 {
                     delete pValue_;
                     delete pCounter_;
@@ -220,25 +221,25 @@ namespace Frost
             }
         }
 
-        T*      pValue_;
-        s_uint* pCounter_;
+        T*    pValue_;
+        uint* pCounter_;
     };
 
     template<class T>
     s_str operator+ ( const s_str& sLeft, s_refptr<T> pRight )
     {
-        return s_str(sLeft) << (void*)pRight.Get();
+        return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
     s_str& operator<< ( s_str& sLeft, s_refptr<T> pRight )
     {
-        return sLeft << (void*)pRight.Get();
+        return sLeft << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
     s_str operator+ ( const char* sLeft, s_refptr<T> pRight )
     {
-        return s_str(sLeft) << (void*)pRight.Get();
+        return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }
 }

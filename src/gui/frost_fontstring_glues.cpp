@@ -15,7 +15,7 @@ const s_str LuaFontString::CLASS_NAME = "GUI::LuaFontString";
 
 LuaFontString::LuaFontString(lua_State* pLua) : LuaLayeredRegion(pLua)
 {
-    pFontStringParent_ = (FontString*)(pParent_.Get());
+    pFontStringParent_ = s_ptr<FontString>::DynamicCast(pParent_);
 }
 
 int LuaFontString::_GetFont( lua_State* pLua )

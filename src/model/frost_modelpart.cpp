@@ -33,7 +33,7 @@ namespace Frost
 
     void ModelPart::Show()
     {
-        vector<s_uint>::iterator iterSub;
+        s_ctnr<s_uint>::iterator iterSub;
         foreach (iterSub, lSubEntity_)
         {
             pParent_->GetEntity()->getSubEntity(iterSub->Get())->setVisible(true);
@@ -42,7 +42,7 @@ namespace Frost
 
     void ModelPart::Hide()
     {
-        vector<s_uint>::iterator iterSub;
+        s_ctnr<s_uint>::iterator iterSub;
         foreach (iterSub, lSubEntity_)
         {
             pParent_->GetEntity()->getSubEntity(iterSub->Get())->setVisible(false);
@@ -52,7 +52,7 @@ namespace Frost
     void ModelPart::SetMaterial(s_refptr<Material> pMat)
     {
         pMaterial_ = pMat;
-        vector<s_uint>::iterator iterSub;
+        s_ctnr<s_uint>::iterator iterSub;
         foreach (iterSub, lSubEntity_)
         {
             pParent_->GetEntity()->getSubEntity(iterSub->Get())->setMaterialName(
@@ -68,6 +68,6 @@ namespace Frost
 
     void ModelPart::AddSubEntity( const s_uint& uiID )
     {
-        lSubEntity_.push_back(uiID);
+        lSubEntity_.PushBack(uiID);
     }
 }

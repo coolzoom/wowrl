@@ -15,5 +15,5 @@ const s_str LuaScrollingMessageFrame::CLASS_NAME = "GUI::LuaScrollingMessageFram
 
 LuaScrollingMessageFrame::LuaScrollingMessageFrame(lua_State* pLua) : LuaFrame(pLua)
 {
-    pSMFParent_ = (ScrollingMessageFrame*)(pParent_.Get());
+    pSMFParent_ = s_ptr<ScrollingMessageFrame>::DynamicCast(pParent_);
 }

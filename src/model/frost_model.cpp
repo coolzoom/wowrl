@@ -137,7 +137,7 @@ namespace Frost
         return pMaterial_;
     }
 
-    const std::map< s_uint, s_ptr<ModelPart> >& Model::GetModelPartList() const
+    const s_map< s_uint, s_ptr<ModelPart> >& Model::GetModelPartList() const
     {
         return lModelPartList_;
     }

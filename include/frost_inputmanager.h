@@ -266,8 +266,8 @@ namespace Frost
         s_bool bKey_;
         char   cChar_;
 
-        std::vector<s_uint> lDownStack_;
-        std::vector<s_uint> lUpStack_;
+        s_ctnr<s_uint> lDownStack_;
+        s_ctnr<s_uint> lUpStack_;
 
         // Mouse
         s_double   dDoubleclickTime_;

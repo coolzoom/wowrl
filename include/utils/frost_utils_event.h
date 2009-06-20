@@ -77,9 +77,9 @@ namespace Frost
 
     private :
 
-        s_str              sName_;
-        s_bool             bOncePerFrame_;
-        std::vector<s_var> lArgList_;
+        s_str         sName_;
+        s_bool        bOncePerFrame_;
+        s_ctnr<s_var> lArgList_;
     };
 }
 

@@ -1,3 +1,4 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
     /// Base type : unsigned integer
@@ -65,7 +66,7 @@ namespace Frost
         template<class N>
         explicit s_uint_t(const s_uint_t<N>& uiValue)
         {
-            mType_ = (IntegerType)(int)uiValue.GetType();
+            mType_ = static_cast<IntegerType>(uiValue.GetType());
             uiValue_ = static_cast<T>(uiValue.Get());
         }
 
@@ -259,7 +260,10 @@ namespace Frost
         {
             if (IsValid() && uiPower.IsValid())
             {
-                uiValue_ = static_cast<uint>(pow((float)uiValue_, (int)uiPower.Get()));
+                uiValue_ = static_cast<uint>(pow(
+                    static_cast<float>(uiValue_),
+                    static_cast<int>(uiPower.Get())
+                ));
             }
         }
 
@@ -278,24 +282,24 @@ namespace Frost
                 {
                     T uiRange = uiMax.uiValue_ - uiMin.uiValue_ + 1;
                     if (uiRange >= 100)
-                        uiValue_ = (T)(uiRange*(rand()/(RAND_MAX+1.0))) + uiMin.uiValue_;
+                        uiValue_ = static_cast<T>(uiRange*(rand()/(RAND_MAX+1.0))) + uiMin.uiValue_;
                     else if (uiRange >= 10)
                     {
                         float fTemp = rand()/100.0f;
-                        fTemp = (fTemp - (int)fTemp)*100;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*100;
+                        if (static_cast<int>(fTemp) == 0)
                             uiValue_ = uiMin.uiValue_;
                         else
-                            uiValue_ = (T)ceil(uiRange*(fTemp/99.0f)) + uiMin.uiValue_ - 1;
+                            uiValue_ = static_cast<T>(ceil(uiRange*(fTemp/99.0f))) + uiMin.uiValue_ - 1;
                     }
                     else
                     {
                         float fTemp = rand()/10.0f;
-                        fTemp = (fTemp - (int)fTemp)*10;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*10;
+                        if (static_cast<int>(fTemp) == 0)
                             uiValue_ = uiMin.uiValue_;
                         else
-                            uiValue_ = (T)ceil(uiRange*(fTemp/9.0f)) + uiMin.uiValue_ - 1;
+                            uiValue_ = static_cast<T>(ceil(uiRange*(fTemp/9.0f))) + uiMin.uiValue_ - 1;
                     }
                 }
             }
@@ -341,7 +345,7 @@ namespace Frost
                 if (IsInfinite())
                     return s_int_t<int>::INFMINUS;
                 else
-                    return -(int)uiValue_;
+                    return -static_cast<int>(uiValue_);
             }
             else
                 return s_int_t<int>::NaN;
@@ -664,24 +668,24 @@ namespace Frost
                 {
                     T uiRange = uiMax.uiValue_ - uiMin.uiValue_ + 1;
                     if (uiRange >= 100)
-                        return (T)(uiRange*(rand()/(RAND_MAX+1.0))) + uiMin.uiValue_;
+                        return static_cast<T>(uiRange*(rand()/(RAND_MAX+1.0))) + uiMin.uiValue_;
                     else if (uiRange >= 10)
                     {
                         float fTemp = rand()/100.0f;
-                        fTemp = (fTemp - (int)fTemp)*100;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*100;
+                        if (static_cast<int>(fTemp) == 0)
                             return uiMin.uiValue_;
                         else
-                            return (T)ceil(uiRange*(fTemp/99.0f)) + uiMin.uiValue_ - 1;
+                            return static_cast<T>(ceil(uiRange*(fTemp/99.0f))) + uiMin.uiValue_ - 1;
                     }
                     else
                     {
                         float fTemp = rand()/10.0f;
-                        fTemp = (fTemp - (int)fTemp)*10;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*10;
+                        if (static_cast<int>(fTemp) == 0)
                             return uiMin.uiValue_;
                         else
-                            return (T)ceil(uiRange*(fTemp/9.0f)) + uiMin.uiValue_ - 1;
+                            return static_cast<T>(ceil(uiRange*(fTemp/9.0f))) + uiMin.uiValue_ - 1;
                     }
                 }
             }

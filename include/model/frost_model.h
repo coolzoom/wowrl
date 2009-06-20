@@ -33,10 +33,10 @@ namespace Frost
 
     private :
 
-        std::vector<s_uint> lSubEntity_;
-        s_ptr<Model>        pParent_;
-        s_refptr<Material>  pMaterial_;
-        s_uint              uiID_;
+        s_ctnr<s_uint>     lSubEntity_;
+        s_ptr<Model>       pParent_;
+        s_refptr<Material> pMaterial_;
+        s_uint             uiID_;
     };
 
     /// A 3D element (mesh)
@@ -54,7 +54,7 @@ namespace Frost
         const s_str&          GetModelName() const;
         const s_str&          GetEntityName() const;
         s_ptr<ModelPart>      GetModelPart(const s_uint& uiID);
-        const std::map< s_uint, s_ptr<ModelPart> >& GetModelPartList() const;
+        const s_map< s_uint, s_ptr<ModelPart> >& GetModelPartList() const;
         s_ptr<Ogre::Entity>   GetEntity();
 
         void                  Show();
@@ -80,7 +80,7 @@ namespace Frost
         s_str sModelName_;
         s_str sEntityName_;
 
-        std::map< s_uint, s_ptr<ModelPart> > lModelPartList_;
+        s_map< s_uint, s_ptr<ModelPart> > lModelPartList_;
     };
 }
 

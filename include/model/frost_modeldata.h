@@ -37,8 +37,8 @@ namespace Frost
         s_refptr<AnimManager> pAnimMgr_;
         s_str                 sModelName_;
 
-        std::map< s_uint, s_ptr<ModelPart> > lModelPartList_;
-        std::map<s_uint, MeshAnimation>      lAnimList_;
+        s_map< s_uint, s_ptr<ModelPart> > lModelPartList_;
+        s_map<s_uint, MeshAnimation>      lAnimList_;
 
     };
 }

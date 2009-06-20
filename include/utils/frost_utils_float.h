@@ -1,5 +1,13 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
+    enum RoundType
+    {
+        ROUND_CEIL,
+        ROUND_MID,
+        ROUND_FLOOR
+    };
+
     /// Base type : float
     /** Frost's base types are made to allow simpler
     *   manipulation of numbers, booleans and strings.
@@ -27,17 +35,10 @@ namespace Frost
             FLOAT_NAN
         };
 
-        enum RoundType
-        {
-            ROUND_CEIL,
-            ROUND_MID,
-            ROUND_FLOOR
-        };
-
         s_float_t()
         {
             mType_ = FLOAT;
-            fValue_ = 0.0f;
+            fValue_ = 0.0;
         }
 
         s_float_t(const T& fValue)
@@ -55,7 +56,7 @@ namespace Frost
         explicit s_float_t(const FloatType& mType)
         {
             mType_ = mType;
-            fValue_ = 0.0f;
+            fValue_ = 0.0;
         }
 
         template <class N>
@@ -71,17 +72,17 @@ namespace Frost
             if (iValue.GetType() == s_int_t<N>::INTEGER_NAN)
             {
                 mType_ = FLOAT_NAN;
-                fValue_ = 0.0f;
+                fValue_ = 0.0;
             }
             else if (iValue.GetType() == s_int_t<N>::INTEGER_INF_PLUS)
             {
                 mType_ = FLOAT_INF_PLUS;
-                fValue_ = 0.0f;
+                fValue_ = 0.0;
             }
             else if (iValue.GetType() == s_int_t<N>::INTEGER_INF_MINUS)
             {
                 mType_ = FLOAT_INF_MINUS;
-                fValue_ = 0.0f;
+                fValue_ = 0.0;
             }
             else
             {
@@ -96,12 +97,12 @@ namespace Frost
             if (uiValue.GetType() == s_uint_t<N>::INTEGER_NAN)
             {
                 mType_ = FLOAT_NAN;
-                fValue_ = 0.0f;
+                fValue_ = 0.0;
             }
             else if (uiValue.GetType() == s_uint_t<N>::INTEGER_INF)
             {
                 mType_ = FLOAT_INF_PLUS;
-                fValue_ = 0.0f;
+                fValue_ = 0.0;
             }
             else
             {
@@ -115,9 +116,9 @@ namespace Frost
         {
             mType_ = FLOAT;
             if (bValue)
-                fValue_ = 1.0f;
+                fValue_ = 1.0;
             else
-                fValue_ = 0.0f;
+                fValue_ = 0.0;
         }
 
         explicit s_float_t(const string_element* sValue)
@@ -161,7 +162,7 @@ namespace Frost
         {
             if (IsValid())
             {
-                fValue_ *= M_PI/180.0f;
+                fValue_ *= M_PI/180.0;
             }
         }
 
@@ -176,7 +177,7 @@ namespace Frost
                 return fValue_*2*M_PI;
             }
             else
-                return 0.0f;
+                return 0.0;
         }
 
         /// Converts this float to an angle in degree.
@@ -187,10 +188,10 @@ namespace Frost
         {
             if (IsValid())
             {
-                return fValue_*360.0f;
+                return fValue_*360.0;
             }
             else
-                return 0.0f;
+                return 0.0;
         }
 
         /// Returns a const reference to the float.
@@ -300,9 +301,9 @@ namespace Frost
         {
             if (IsValid())
             {
-                fValue_ *= 180.0f/M_PI;
-                if ( (!bNegativeAllowed) && (fValue_ < 0.0f) )
-                    fValue_ += 360.0f;
+                fValue_ *= 180.0/M_PI;
+                if ( (!bNegativeAllowed) && (fValue_ < 0.0) )
+                    fValue_ += 360.0;
             }
         }
 
@@ -310,7 +311,7 @@ namespace Frost
         /** \param fMin The lower bound (minimum)
         *   \param fMax The upper bound (maximum)
         */
-        void Randomize(const s_float_t& fMin = 0.0f, const s_float_t& fMax = 1.0f)
+        void Randomize(const s_float_t& fMin = 0.0, const s_float_t& fMax = 1.0)
         {
             if (fMin.IsValid() && fMax.IsValid())
             {
@@ -318,7 +319,7 @@ namespace Frost
                 if (fMax < fMin)
                     fValue_ = fMin.fValue_;
                 else
-                    fValue_ = (fMax.fValue_-fMin.fValue_)*(rand()/T(RAND_MAX)) + fMin.fValue_;
+                    fValue_ = (fMax.fValue_ - fMin.fValue_ - 1.0)*(rand()/(RAND_MAX + 1.0)) + fMin.fValue_;
             }
         }
 
@@ -345,21 +346,21 @@ namespace Frost
         void SetInfiniteMinus()
         {
             mType_ = FLOAT_INF_MINUS;
-            fValue_ = 0.0f;
+            fValue_ = 0.0;
         }
 
         /// Sets this float to infinite (positive).
         void SetInfinitePlus()
         {
             mType_ = FLOAT_INF_PLUS;
-            fValue_ = 0.0f;
+            fValue_ = 0.0;
         }
 
         /// Set this float to Not a Number state.
         void SetNaN()
         {
             mType_ = FLOAT_NAN;
-            fValue_ = 0.0f;
+            fValue_ = 0.0;
         }
 
         /// Returns the sign of this float.
@@ -369,7 +370,7 @@ namespace Frost
         {
             if (IsValid())
             {
-                if (fValue_ == 0.0f)
+                if (fValue_ == 0.0)
                     return 1;
                 else
                     return (fValue_*fabs(fValue_) < 0) ? -1 : 1;
@@ -388,9 +389,9 @@ namespace Frost
         {
             if (IsValid())
             {
-                fValue_ *= 360.0f;
-                if ( (!bNegativeAllowed) && (fValue_ < 0.0f) )
-                    fValue_ += 360.0f;
+                fValue_ *= 360.0;
+                if ( (!bNegativeAllowed) && (fValue_ < 0.0) )
+                    fValue_ += 360.0;
             }
         }
 
@@ -482,7 +483,7 @@ namespace Frost
                     return s_float_t::NaN;
                 else
                 {
-                    if (fValue_ < 0.0f)
+                    if (fValue_ < 0.0)
                         return s_float_t::INFMINUS;
                     else
                         return s_float_t::INFPLUS;
@@ -494,7 +495,7 @@ namespace Frost
                     return s_float_t::NaN;
                 else
                 {
-                    if (fValue_ < 0.0f)
+                    if (fValue_ < 0.0)
                         return s_float_t::INFPLUS;
                     else
                         return s_float_t::INFMINUS;
@@ -508,7 +509,7 @@ namespace Frost
 
         s_float_t operator / (const s_float_t& fValue) const
         {
-            if (fValue.IsNaN() || IsNaN() || fValue.fValue_ == 0.0f)
+            if (fValue.IsNaN() || IsNaN() || fValue.fValue_ == 0.0)
                 return s_float_t::NaN;
 
             if (fValue.IsInfinitePlus())
@@ -516,14 +517,14 @@ namespace Frost
                 if (IsInfiniteMinus())
                     return s_float_t::NaN;
                 else
-                    return 0.0f;
+                    return 0.0;
             }
             else if (fValue.IsInfiniteMinus())
             {
                 if (IsInfinitePlus())
                     return s_float_t::NaN;
                 else
-                    return 0.0f;
+                    return 0.0;
             }
             else
             {
@@ -777,7 +778,7 @@ namespace Frost
         *   \param fMax The upper bound (maximum)
         *   \return A random float in the provided range
         */
-        static s_float_t Random(const s_float_t& fMin = 0.0f, const s_float_t& fMax = 1.0f)
+        static s_float_t Random(const s_float_t& fMin = 0.0, const s_float_t& fMax = 1.0)
         {
             if (fMin.IsValid() && fMax.IsValid())
             {
@@ -787,7 +788,7 @@ namespace Frost
                 }
                 else
                 {
-                    return (fMax.fValue_ - fMin.fValue_)*(rand()/T(RAND_MAX)) + fMin.fValue_;
+                    return (fMax.fValue_ - fMin.fValue_ - 1.0)*(rand()/(RAND_MAX + 1.0)) + fMin.fValue_;
                 }
             }
             else
@@ -827,11 +828,11 @@ namespace Frost
     template <class T>
     const s_float_t<T> s_float_t<T>::INFMINUS = s_float_t<T>(FLOAT_INF_MINUS);
     template <class T>
-    T s_float_t<T>::fDummy = 0.0f;
+    T s_float_t<T>::fDummy = 0.0;
     template <class T>
-    const T s_float_t<T>::fEpsilon = 0.0f;
+    const T s_float_t<T>::fEpsilon = 0.0;
     template <class T>
-    const s_float_t<T> s_float_t<T>::PI      = 3.1415;
+    const s_float_t<T> s_float_t<T>::PI = 3.1415;
 
     template <class T>
     s_float_t<T> operator + (const T& fLeft, const s_float_t<T>& fRight)

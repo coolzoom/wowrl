@@ -46,24 +46,24 @@ namespace Frost
 
     s_bool InputManager::Initialize( s_ptr<Ogre::RenderWindow> pWindow )
     {
-        multimap<string, string> mPL;
+        s_multimap<string, string> mPL;
 
         size_t iWindowHnd = 0;
         ostringstream mWindowHnd;
         pWindow->getCustomAttribute("WINDOW", &iWindowHnd);
         mWindowHnd << iWindowHnd;
 
-        mPL.insert(make_pair(string("WINDOW"), mWindowHnd.str()));
+        mPL.Insert(make_pair(string("WINDOW"), mWindowHnd.str()));
         #ifndef FROST_LINUX
-            mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_FOREGROUND")));
-            mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_NONEXCLUSIVE")));
-            mPL.insert(make_pair(string("w32_keyboard"), string("DISCL_FOREGROUND")));
-            mPL.insert(make_pair(string("w32_keyboard"), string("DISCL_NONEXCLUSIVE")));
+            mPL.Insert(make_pair(string("w32_mouse"),    string("DISCL_FOREGROUND")));
+            mPL.Insert(make_pair(string("w32_mouse"),    string("DISCL_NONEXCLUSIVE")));
+            mPL.Insert(make_pair(string("w32_keyboard"), string("DISCL_FOREGROUND")));
+            mPL.Insert(make_pair(string("w32_keyboard"), string("DISCL_NONEXCLUSIVE")));
         #else
-            mPL.insert(make_pair(string("x11_mouse_grab"),    string("false")));
-            mPL.insert(make_pair(string("x11_mouse_hide"),    string("false")));
-            mPL.insert(make_pair(string("x11_keyboard_grab"), string("false")));
-            mPL.insert(make_pair(string("XAutoRepeatOn"),     string("true")));
+            mPL.Insert(make_pair(string("x11_mouse_grab"),    string("false")));
+            mPL.Insert(make_pair(string("x11_mouse_hide"),    string("false")));
+            mPL.Insert(make_pair(string("x11_keyboard_grab"), string("false")));
+            mPL.Insert(make_pair(string("XAutoRepeatOn"),     string("true")));
         #endif
 
         pOgreInputMgr_ = OIS::InputManager::createInputSystem(mPL);

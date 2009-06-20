@@ -1,3 +1,4 @@
+// Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
     /// Base type : integer
@@ -33,7 +34,7 @@ namespace Frost
             iValue_ = 0;
         }
 
-        s_int_t(const int& iValue)
+        s_int_t(const T& iValue)
         {
             mType_ = INTEGER;
             iValue_ = iValue;
@@ -48,19 +49,19 @@ namespace Frost
         explicit s_int_t(const float& fValue)
         {
             mType_ = INTEGER;
-            iValue_ = static_cast<T>(::round(fValue));
+            iValue_ = static_cast<T>(round(fValue));
         }
 
         explicit s_int_t(const double& dValue)
         {
             mType_ = INTEGER;
-            iValue_ = static_cast<T>(::round(dValue));
+            iValue_ = static_cast<T>(round(dValue));
         }
 
         template<class N>
         explicit s_int_t(const s_int_t<N>& iValue)
         {
-            mType_ = (IntegerType)(int)iValue.GetType();
+            mType_ = static_cast<IntegerType>(iValue.GetType());
             iValue_ = static_cast<T>(iValue.Get());
         }
 
@@ -175,7 +176,7 @@ namespace Frost
                 while (iValue_ > i)
                     i = i << 1;
 
-                return (uint)i;
+                return static_cast<uint>(i);
             }
             else
                 return s_uint_t<T>::NaN;
@@ -237,7 +238,9 @@ namespace Frost
         {
             if (IsValid() && uiPower.IsValid())
             {
-                iValue_ = static_cast<T>(pow((float)iValue_, (int)uiPower.Get()));
+                iValue_ = static_cast<T>(pow(
+                    static_cast<float>(iValue_), static_cast<int>(uiPower.Get())
+                ));
             }
         }
 
@@ -256,24 +259,24 @@ namespace Frost
                 {
                     T iRange = iMax.iValue_ - iMin.iValue_ + 1;
                     if (iRange >= 100)
-                        iValue_ = (T)(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
+                        iValue_ = static_cast<T>(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
                     else if (iRange >= 10)
                     {
                         float fTemp = rand()/100.0f;
-                        fTemp = (fTemp - (int)fTemp)*100;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*100;
+                        if (static_cast<int>(fTemp) == 0)
                             iValue_ = iMin.iValue_;
                         else
-                            iValue_ = (T)ceil(iRange*(fTemp/99.0f)) + iMin.iValue_ - 1;
+                            iValue_ = static_cast<T>(ceil(iRange*(fTemp/99.0f))) + iMin.iValue_ - 1;
                     }
                     else
                     {
                         float fTemp = rand()/10.0f;
-                        fTemp = (fTemp - (int)fTemp)*10;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*10;
+                        if (static_cast<int>(fTemp) == 0)
                             iValue_ = iMin.iValue_;
                         else
-                            iValue_ = (T)ceil(iRange*(fTemp/9.0f)) + iMin.iValue_ - 1;
+                            iValue_ = static_cast<T>(ceil(iRange*(fTemp/9.0f))) + iMin.iValue_ - 1;
                     }
                 }
             }
@@ -790,24 +793,24 @@ namespace Frost
                 {
                     T iRange = iMax.iValue_ - iMin.iValue_ + 1;
                     if (iRange >= 100)
-                        return (T)(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
+                        return static_cast<T>(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
                     else if (iRange >= 10)
                     {
                         float fTemp = rand()/100.0f;
-                        fTemp = (fTemp - (int)fTemp)*100;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*100;
+                        if (static_cast<int>(fTemp) == 0)
                             return iMin.iValue_;
                         else
-                            return (T)ceil(iRange*(fTemp/99.0f)) + iMin.iValue_ - 1;
+                            return static_cast<T>(ceil(iRange*(fTemp/99.0f))) + iMin.iValue_ - 1;
                     }
                     else
                     {
                         float fTemp = rand()/10.0f;
-                        fTemp = (fTemp - (int)fTemp)*10;
-                        if ((int)fTemp == 0)
+                        fTemp = (fTemp - static_cast<int>(fTemp))*10;
+                        if (static_cast<int>(fTemp) == 0)
                             return iMin.iValue_;
                         else
-                            return (T)ceil(iRange*(fTemp/9.0f)) + iMin.iValue_ - 1;
+                            return static_cast<T>(ceil(iRange*(fTemp/9.0f))) + iMin.iValue_ - 1;
                     }
                 }
             }

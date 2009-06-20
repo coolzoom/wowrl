@@ -171,7 +171,6 @@ namespace Frost
         std::list<SmoothPathSegment>           lSegmentList_;
         std::list<SmoothPathSegment>::iterator mSegment_;
 
-
     };
 }
 

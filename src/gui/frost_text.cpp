@@ -430,7 +430,7 @@ namespace Frost
 
         s_uint uiMaxLineNbr, uiCounter;
         if (fBoxH_.IsValid())
-            uiMaxLineNbr = s_uint(s_float::Round(fBoxH_/(GetLineHeight()*fLineSpacing_), s_float::ROUND_FLOOR));
+            uiMaxLineNbr = s_uint(s_float::Round(fBoxH_/(GetLineHeight()*fLineSpacing_), ROUND_FLOOR));
         else
             uiMaxLineNbr = s_uint::INF;
 

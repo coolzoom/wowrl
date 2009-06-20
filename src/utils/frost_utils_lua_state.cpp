@@ -344,20 +344,10 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
 
     if (lua_isfunction(pLua_, -1))
     {
-        for (s_uint i; i < lArgumentStack.GetSize(); ++i)
+        s_ctnr<s_var>::const_iterator iter;
+        foreach (iter, lArgumentStack)
         {
-            const s_var& pArg = lArgumentStack[i];
-            if ((pArg.GetType() == VALUE_INT) ||
-                (pArg.GetType() == VALUE_UINT) ||
-                (pArg.GetType() == VALUE_FLOAT) ||
-                (pArg.GetType() == VALUE_DOUBLE))
-                lua_pushnumber(pLua_, pArg.Get<s_float>().Get());
-            else if (pArg.GetType() == VALUE_STRING)
-                lua_pushstring(pLua_, pArg.Get<s_str>().GetASCII().c_str());
-            else if (pArg.GetType() == VALUE_BOOL)
-                lua_pushboolean(pLua_, pArg.Get<s_bool>().Get());
-            else
-                lua_pushnil(pLua_);
+            PushVar(*iter);
         }
 
         int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, 0);
@@ -498,7 +488,7 @@ s_var State::GetValue( const s_int& iIndex )
         case LUA_TBOOLEAN : return GetBool(iIndex);
         case LUA_TNUMBER : return GetNumber(iIndex);
         case LUA_TSTRING : return GetString(iIndex);
-        default : return (void*)NULL;
+        default : return static_cast<void*>(NULL);
     }
 }
 

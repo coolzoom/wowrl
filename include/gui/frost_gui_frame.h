@@ -395,13 +395,13 @@ namespace Frost
             void FireBuildStrataList_();
             void FireBuildLayerList_();
 
-            std::map< s_uint, s_ptr<Frame> >         lChildList_;
-            std::map<FrameStrata, Strata>            lStrataList_;
-            std::map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
-            std::map<LayerType, Layer>               lLayerList_;
-            std::map<s_str, s_bool>                  lDefinedScriptList_;
-            std::map<s_str, s_bool>                  lRegEventList_;
-            std::map<s_str, s_bool>                  lRegDragList_;
+            s_map< s_uint, s_ptr<Frame> >         lChildList_;
+            s_map<FrameStrata, Strata>            lStrataList_;
+            s_map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
+            s_map<LayerType, Layer>               lLayerList_;
+            s_map<s_str, s_bool>                  lDefinedScriptList_;
+            s_map<s_str, s_bool>                  lRegEventList_;
+            s_map<s_str, s_bool>                  lRegDragList_;
 
             s_uint uiLevel_;
 

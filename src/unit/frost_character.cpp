@@ -9,6 +9,7 @@
 
 #include "model/frost_modelmanager.h"
 #include "model/frost_model.h"
+#include "scene/frost_node.h"
 #include "model/frost_animmanager.h"
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
@@ -86,7 +87,7 @@ namespace Frost
             }
         }
 
-        pBodyModel_->Attach(s_ptr<MovableObject>(pNode_));
+        pBodyModel_->Attach(pNode_);
         pBodyModel_->SetUserObject(&mInterface_);
     }
 

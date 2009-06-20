@@ -15,5 +15,5 @@ const s_str LuaButton::CLASS_NAME = "GUI::LuaButton";
 
 LuaButton::LuaButton(lua_State* pLua) : LuaFrame(pLua)
 {
-    pButtonParent_ = (Button*)(pParent_.Get());
+    pButtonParent_ = s_ptr<Button>::DynamicCast(pParent_);
 }

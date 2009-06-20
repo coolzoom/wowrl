@@ -74,7 +74,7 @@ namespace Frost
 
         s_str sDefaultFont_;
 
-        std::map< s_str, s_ptr<Ogre::Font> > lFontList_;
+        s_map< s_str, s_ptr<Ogre::Font> > lFontList_;
     };
 }
 

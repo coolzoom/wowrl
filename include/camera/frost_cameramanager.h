@@ -99,7 +99,7 @@ namespace Frost
 
     private:
 
-        std::map< s_uint, s_ptr<Camera> > lCameraList_;
+        s_map< s_uint, s_ptr<Camera> > lCameraList_;
 
         s_ptr<Camera>         pMainCamera_;
         s_ptr<Ogre::Viewport> pViewport_;

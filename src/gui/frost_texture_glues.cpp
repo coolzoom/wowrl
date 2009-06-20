@@ -15,7 +15,7 @@ const s_str LuaTexture::CLASS_NAME = "GUI::LuaTexture";
 
 LuaTexture::LuaTexture(lua_State* pLua) : LuaLayeredRegion(pLua)
 {
-    pTextureParent_ = (Texture*)(pParent_.Get());
+    pTextureParent_ = s_ptr<Texture>::DynamicCast(pParent_);
 }
 
 int LuaTexture::_GetBlendMode( lua_State* pLua )

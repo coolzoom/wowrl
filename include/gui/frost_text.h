@@ -285,8 +285,8 @@ namespace Frost
         s_str     sText_;
         Alignment mAlign_;
 
-        s_ctnr<Line>             lLineList_;
-        std::map<s_uint, Format> lFormatList_;
+        s_ctnr<Line>          lLineList_;
+        s_map<s_uint, Format> lFormatList_;
 
         s_ptr<Ogre::Font>  pOgreFont_;
         s_refptr<Material> pFontMat_;

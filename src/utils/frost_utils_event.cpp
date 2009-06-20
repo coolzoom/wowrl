@@ -36,17 +36,17 @@ namespace Frost
 
     void Event::Add( const s_var& mValue )
     {
-        lArgList_.push_back(mValue);
+        lArgList_.PushBack(mValue);
     }
 
     s_ptr<const s_var> Event::Get( const s_uint& uiIndex ) const
     {
-        return &lArgList_[uiIndex.Get()];
+        return &lArgList_[uiIndex];
     }
 
     s_uint Event::GetNumParam() const
     {
-        return lArgList_.size();
+        return lArgList_.GetSize();
     }
 
     const s_str& Event::GetName() const
@@ -61,12 +61,12 @@ namespace Frost
 
     s_var& Event::operator [] ( const s_uint& uiIndex )
     {
-        return lArgList_[uiIndex.Get()];
+        return lArgList_[uiIndex];
     }
 
     const s_var& Event::operator [] ( const s_uint& uiIndex ) const
     {
-        return lArgList_[uiIndex.Get()];
+        return lArgList_[uiIndex];
     }
 }
 

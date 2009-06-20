@@ -148,18 +148,18 @@ namespace Frost
 
         private :
 
-            s_bool            bSet_;
-            s_ptr<Data>       pData_;
-            std::vector<Data> lData_;
-            s_ptr<Function>   pParent_;
+            s_bool          bSet_;
+            s_ptr<Data>     pData_;
+            s_ctnr<Data>    lData_;
+            s_ptr<Function> pParent_;
         };
 
         /// Holds all possible arguments of a Lua function's argument set.
         struct ArgumentList
         {
-            std::map< s_uint, s_ptr<Argument> > lArg_;
-            std::map< s_uint, s_ptr<Argument> > lOptional_;
-            s_uint                              uiRank_;
+            s_map< s_uint, s_ptr<Argument> > lArg_;
+            s_map< s_uint, s_ptr<Argument> > lOptional_;
+            s_uint                           uiRank_;
         };
 
         /// A helper to write Lua glues
@@ -290,13 +290,13 @@ namespace Frost
 
         private :
 
-            s_str                      sName_;
-            s_ptr<Lua::State>          pLua_;
-            s_uint                     uiArgumentCount_;
-            s_uint                     uiReturnNbr_;
-            s_uint                     uiReturnCount_;
-            std::vector<ArgumentList>  lArgListStack_;
-            s_ptr<ArgumentList>        pArgList_;
+            s_str                sName_;
+            s_ptr<Lua::State>    pLua_;
+            s_uint               uiArgumentCount_;
+            s_uint               uiReturnNbr_;
+            s_uint               uiReturnCount_;
+            s_ctnr<ArgumentList> lArgListStack_;
+            s_ptr<ArgumentList>  pArgList_;
         };
     }
 }
