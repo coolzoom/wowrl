@@ -3,16 +3,5 @@
 
     <Gameplay name="FirstPerson">
         <Selection allowSingle="true" allowMultiple="false"/>
-        <Scripts>
-            <OnLoad>
-                FirstPersonGameplay.OnLoad();
-            </OnLoad>
-            <OnEvent>
-                FirstPersonGameplay.OnEvent();
-            </OnEvent>
-            <OnUpdate>
-                FirstPersonGameplay.OnUpdate();
-            </OnUpdate>
-        </Scripts>
     </Gameplay>
 </Gameplays>
