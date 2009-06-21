@@ -14,8 +14,8 @@ namespace Frost
     *   to do a lot of calculations (matrices, ...) it
     *   can bloat your performances. Use prebuilt types
     *   in this case.
-    *   <b>Note</b> : This class is about 20 times slower
-    *   than its associated POD.
+    *   <b>Note</b> : This class is about 60 times slower
+    *   than the wrapped POD (20 times in debug).
     */
     template<class T>
     class s_int_t
