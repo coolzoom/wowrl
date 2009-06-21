@@ -79,7 +79,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
                     s_str(pLua->GetTypeName(iterData->GetType())) +
                     " (" +
                     iterData->GetName() +
-                    ")."
+                    "), got a " + s_str(pLua->GetTypeName(mType)) + "."
                 );
             }
         }
@@ -118,7 +118,7 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
                 pParent_->GetName() +
                 "\" must be " +
                 sEnum +
-                "."
+                ", got a " + s_str(pLua->GetTypeName(mType)) + "."
             );
         }
     }
