@@ -106,7 +106,7 @@ namespace Frost
         *   \note On windows, this function only has milisecond
         *         resolution.
         */
-        s_uint        GetMicrosecond() const;
+        s_uint        GetMicroseconds() const;
 
         /// Returns the time elapsed since game's start.
         /** \return The elapsed time since the game has started,
