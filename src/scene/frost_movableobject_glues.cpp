@@ -52,7 +52,7 @@ namespace Frost
                 if (mFunc.IsProvided(1))
                     bLocal = mFunc.Get(1)->GetBool();
 
-                s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
+                s_ptr<Lua::State> pState = mFunc.GetState();
                 pState->SetTop(1);
 
                 Vector mVec(
@@ -94,7 +94,7 @@ namespace Frost
         {
             if (mFunc.GetParamSetRank() == 0)
             {
-                s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
+                s_ptr<Lua::State> pState = mFunc.GetState();
                 pState->SetTop(1);
 
                 Vector mVec(
@@ -136,7 +136,7 @@ namespace Frost
                 if (mFunc.IsProvided(1))
                     bLocal = mFunc.Get(1)->GetBool();
 
-                s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
+                s_ptr<Lua::State> pState = mFunc.GetState();
                 pState->SetTop(1);
 
                 Vector mVec(
@@ -181,7 +181,7 @@ namespace Frost
         {
             if (mFunc.GetParamSetRank() == 0)
             {
-                s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
+                s_ptr<Lua::State> pState = mFunc.GetState();
                 pState->SetTop(1);
 
                 Vector mVec(
