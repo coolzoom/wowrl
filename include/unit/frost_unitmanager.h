@@ -40,6 +40,16 @@ namespace Frost
         */
         s_ptr<Unit>               GetUnitByID(const s_uint& uiID) const;
 
+        /// Returns the complete Unit list.
+        /** \return The complete Unit list
+        */
+        const s_map< s_uint, s_ptr<Unit> >& GetUnitList() const;
+
+        /// Returns the selected Unit list.
+        /** \return The selected Unit list
+        */
+        const s_map< s_uint, s_ptr<Unit> >& GetSelectedUnitList() const;
+
         void                      SelectOneUnit(s_ptr<Unit> pUnit);
 
         void                      AddUnitToSelection(s_ptr<Unit> pUnit);
@@ -146,6 +156,7 @@ namespace Frost
         s_ctnr<s_str> lSchoolList_;
 
         s_ptr<Lua::State> pLua_;
+        s_ctnr< s_ptr<LuaUnitManager> > lGlueList_;
 
     };
 

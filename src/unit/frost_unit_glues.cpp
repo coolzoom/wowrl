@@ -7,6 +7,7 @@
 
 #include "unit/frost_unit.h"
 #include "unit/frost_unitmanager.h"
+#include "camera/frost_camera.h"
 
 #define method(widget, function) {#function, &Lua##widget::_##function}
 
@@ -33,6 +34,7 @@ namespace Frost
 
         if (mFunc.Check())
         {
+            // NOTE : Not yet implemented (Unit:AddBuff).
             Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
         }
 
@@ -71,6 +73,7 @@ namespace Frost
 
         if (mFunc.Check())
         {
+            // NOTE : Not yet implemented (Unit:Damage).
             Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
         }
 
@@ -216,6 +219,7 @@ namespace Frost
 
         if (mFunc.Check())
         {
+            // NOTE : Not yet implemented (Unit:IsInCombat).
             mFunc.Push(s_bool(false));
         }
 
@@ -228,6 +232,7 @@ namespace Frost
 
         if (mFunc.Check())
         {
+            // NOTE : Not yet implemented (Unit:IsSitting).
             mFunc.Push(s_bool(false));
         }
 
@@ -240,6 +245,7 @@ namespace Frost
 
         if (mFunc.Check())
         {
+            // NOTE : Not yet implemented (Unit:SetAnim).
             Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
         }
 
@@ -252,7 +258,151 @@ namespace Frost
 
         if (mFunc.Check())
         {
+            // NOTE : Not yet implemented (Unit:SetAttacking).
             Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_GetCamera( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:GetCamera", pLua, 1);
+
+        if (pParent_->GetCamera())
+        {
+            pParent_->GetCamera()->PushOnLua(mFunc.GetState());
+            mFunc.NotifyPushed();
+        }
+        else
+        {
+            mFunc.PushNil();
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_Jump( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:Jump", pLua);
+
+        pParent_->Jump();
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_RotateCamera( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:RotateCamera", pLua);
+        mFunc.Add(0, "yaw", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "pitch", Lua::TYPE_NUMBER);
+
+        if (mFunc.Check())
+        {
+            pParent_->RotateCamera(
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber()
+            );
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_RotateModel( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:RotateModel", pLua);
+        mFunc.Add(0, "yaw", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "pitch", Lua::TYPE_NUMBER);
+
+        if (mFunc.Check())
+        {
+            pParent_->RotateModel(
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber()
+            );
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_SetMoveForward( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:SetMoveForward", pLua);
+        mFunc.Add(0, "move forward", Lua::TYPE_BOOLEAN);
+
+        if (mFunc.Check())
+        {
+            pParent_->SetMoveForward(mFunc.Get(0)->GetBool());
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_SetMoveBackward( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:SetMoveBackward", pLua);
+        mFunc.Add(0, "move backward", Lua::TYPE_BOOLEAN);
+
+        if (mFunc.Check())
+        {
+            pParent_->SetMoveBackward(mFunc.Get(0)->GetBool());
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_SetMoveLeft( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:SetMoveLeft", pLua);
+        mFunc.Add(0, "move left", Lua::TYPE_BOOLEAN);
+
+        if (mFunc.Check())
+        {
+            pParent_->SetMoveLeft(mFunc.Get(0)->GetBool());
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_SetMoveRight( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:SetMoveRight", pLua);
+        mFunc.Add(0, "move right", Lua::TYPE_BOOLEAN);
+
+        if (mFunc.Check())
+        {
+            pParent_->SetMoveRight(mFunc.Get(0)->GetBool());
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_ToggleTurning( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:ToggleTurning", pLua);
+
+        pParent_->ToggleTurning();
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_ToggleWalking( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:ToggleWalking", pLua);
+
+        pParent_->ToggleWalking();
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_ZoomCamera( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:ZoomCamera", pLua);
+        mFunc.Add(0, "zoom", Lua::TYPE_NUMBER);
+
+        if (mFunc.Check())
+        {
+            pParent_->ZoomCamera(mFunc.Get(0)->GetNumber());
         }
 
         return mFunc.Return();
@@ -277,6 +427,7 @@ namespace Frost
         method(Unit, EmptyHealthGauge),
         method(Unit, EmptyPowerGauge),
         method(Unit, Die),
+        method(Unit, GetCamera),
         method(Unit, GetClass),
         method(Unit, GetHealthRegenRatio),
         method(Unit, GetLevel),
@@ -285,8 +436,18 @@ namespace Frost
         method(Unit, GetUnitType),
         method(Unit, IsInCombat),
         method(Unit, IsSitting),
+        method(Unit, Jump),
+        method(Unit, RotateCamera),
+        method(Unit, RotateModel),
         method(Unit, SetAnim),
         method(Unit, SetAttacking),
+        method(Unit, SetMoveForward),
+        method(Unit, SetMoveBackward),
+        method(Unit, SetMoveLeft),
+        method(Unit, SetMoveRight),
+        method(Unit, ToggleTurning),
+        method(Unit, ToggleWalking),
+        method(Unit, ZoomCamera),
 
         {0,0}
     };

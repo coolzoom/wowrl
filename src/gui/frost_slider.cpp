@@ -24,8 +24,8 @@ void Slider::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    LuaSlider* pNewGlue;
-    pGlue_ = pNewGlue = new LuaSlider(pLua->GetState());
-    pLua->Push<LuaSlider>(pNewGlue);
+    lGlueList_.PushBack(
+        pLua->Push<LuaSlider>(new LuaSlider(pLua->GetState()))
+    );
     pLua->SetGlobal(sName_);
 }

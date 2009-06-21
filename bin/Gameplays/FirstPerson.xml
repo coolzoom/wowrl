@@ -2,6 +2,17 @@
     <Script file="FirstPerson.lua"/>
 
     <Gameplay name="FirstPerson">
-        <Selection allowSingle="true" allowMultiple="false"/>
+        <Selection friendly="SINGLE" hostile="SINGLE"/>
+        <Scripts>
+            <OnLoad>
+                FirstPersonGameplay.OnLoad();
+            </OnLoad>
+            <OnEnabled>
+                FirstPersonGameplay.OnEnabled();
+            </OnEnabled>
+            <OnEvent>
+                FirstPersonGameplay.OnEvent();
+            </OnEvent>
+        </Scripts>
     </Gameplay>
 </Gameplays>

@@ -22,6 +22,11 @@ namespace Frost
 
     Gameplay::~Gameplay()
     {
+        s_ctnr< s_ptr<LuaGameplay> >::iterator iter;
+        foreach (iter, lGlueList_)
+        {
+            iter->Delete();
+        }
     }
 
     void Gameplay::SetCamera( s_ptr<Camera> pCamera )
@@ -62,9 +67,9 @@ namespace Frost
     {
         s_ptr<Lua::State> pLua = GameplayManager::GetSingleton()->GetLua();
         pLua->PushString(sName_);
-        LuaGameplay* pNewGlue;
-        pGlue_ = pNewGlue = new LuaGameplay(pLua->GetState());
-        pLua->Push<LuaGameplay>(pNewGlue);
+        lGlueList_.PushBack(
+            pLua->Push<LuaGameplay>(new LuaGameplay(pLua->GetState()))
+        );
         pLua->SetGlobal(sName_);
     }
 
@@ -119,24 +124,14 @@ namespace Frost
         pLua->CallFunction(sName_+":OnEvent");
     }
 
-    void Gameplay::SetAllowSingleSelection( const s_bool& bAllow )
+    void Gameplay::SetFriendlySelection( const s_str& sFlag )
     {
-        bAllowSingleSelection_ = bAllow;
+        // NOTE : Not yet implemented (Gameplay::SetFriendlySelection).
     }
 
-    void Gameplay::SetAllowMultipleSelection( const s_bool& bAllow )
+    void Gameplay::SetHostileSelection( const s_str& sFlag )
     {
-        bAllowMultipleSelection_ = bAllow;
-    }
-
-    const s_bool& Gameplay::AllowSingleSelection() const
-    {
-        return bAllowSingleSelection_;
-    }
-
-    const s_bool& Gameplay::AllowMultipleSelection() const
-    {
-        return bAllowMultipleSelection_;
+        // NOTE : Not yet implemented (Gameplay::SetHostileSelection).
     }
 
     void Gameplay::RegisterEvent( const s_str& sEventName )

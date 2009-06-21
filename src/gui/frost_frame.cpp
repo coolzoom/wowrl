@@ -122,9 +122,9 @@ void Frame::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    LuaFrame* pNewGlue;
-    pGlue_ = pNewGlue = new LuaFrame(pLua->GetState());
-    pLua->Push<LuaFrame>(pNewGlue);
+    lGlueList_.PushBack(
+        pLua->Push<LuaFrame>(new LuaFrame(pLua->GetState()))
+    );
     pLua->SetGlobal(sName_);
 }
 

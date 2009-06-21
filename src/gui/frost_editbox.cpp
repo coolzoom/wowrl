@@ -24,8 +24,8 @@ void EditBox::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    LuaEditBox* pNewGlue;
-    pGlue_ = pNewGlue = new LuaEditBox(pLua->GetState());
-    pLua->Push<LuaEditBox>(pNewGlue);
+    lGlueList_.PushBack(
+        pLua->Push<LuaEditBox>(new LuaEditBox(pLua->GetState()))
+    );
     pLua->SetGlobal(sName_);
 }

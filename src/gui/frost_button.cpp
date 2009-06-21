@@ -24,8 +24,8 @@ void Button::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    LuaButton* pNewGlue;
-    pGlue_ = pNewGlue = new LuaButton(pLua->GetState());
-    pLua->Push<LuaButton>(pNewGlue);
+    lGlueList_.PushBack(
+        pLua->Push<LuaButton>(new LuaButton(pLua->GetState()))
+    );
     pLua->SetGlobal(sName_);
 }

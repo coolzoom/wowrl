@@ -337,10 +337,10 @@ namespace Frost
             */
             virtual void    CreateGlue() = 0;
 
-            /// Returns this widget's Lua glue.
-            /** \return This widget's Lua glue
+            /// Pushes this UIObject on the provided Lua::State.
+            /** \param pLua The Lua::State on which to push the glue
             */
-            s_ptr<LuaUIObject> GetGlue();
+            virtual void    PushOnLua(s_ptr<Lua::State> pLua) const;
 
             static const s_str CLASS_NAME;
 
@@ -358,7 +358,7 @@ namespace Frost
             s_bool          bVirtual_;
             s_bool          bReady_;
 
-            s_ptr<LuaUIObject> pGlue_;
+            s_ctnr< s_ptr<LuaUIObject> > lGlueList_;
 
             s_ctnr<s_str> lType_;
 

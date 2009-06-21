@@ -58,24 +58,14 @@ namespace Frost
         void OnEvent(const Event& mEvent);
 
         /// Sets whether single selection is allowed.
-        /** \param bAllow 'true' to allow it
+        /** \param sFlag "NONE", "SINGLE" or "MULTIPLE"
         */
-        void SetAllowSingleSelection(const s_bool& bAllow);
+        void SetFriendlySelection(const s_str& sFlag);
 
         /// Sets whether mutliple selection is allowed.
-        /** \param bAllow 'true' to allow it
+        /** \param sFlag "NONE", "SINGLE" or "MULTIPLE"
         */
-        void SetAllowMultipleSelection(const s_bool& bAllow);
-
-        /// Checks if single selection is allowed.
-        /** \return 'true' if single selection is allowed
-        */
-        const s_bool& AllowSingleSelection() const;
-
-        /// Checks if mutliple selection is allowed.
-        /** \return 'true' if mutliple selection is allowed
-        */
-        const s_bool& AllowMultipleSelection() const;
+        void SetHostileSelection(const s_str& sFlag);
 
         /// Tells this Gameplay to react to a certain event.
         /** \param sEventName The name of the event
@@ -100,10 +90,7 @@ namespace Frost
         s_ctnr<s_str> lRegisteredEventList_;
         s_ctnr<s_str> lDefinedScriptList_;
 
-        s_ptr<LuaGameplay> pGlue_;
-
-        s_bool bAllowSingleSelection_;
-        s_bool bAllowMultipleSelection_;
+        s_ctnr< s_ptr<LuaGameplay> > lGlueList_;
 
     };
 

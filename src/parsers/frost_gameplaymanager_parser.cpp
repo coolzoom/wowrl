@@ -46,8 +46,8 @@ namespace Frost
             s_ptr<XML::Block> pSelectionBlock = pGameplayBlock->GetBlock("Selection");
             if (pSelectionBlock)
             {
-                pGameplay->SetAllowSingleSelection(s_bool(pSelectionBlock->GetAttribute("allowSingle")));
-                pGameplay->SetAllowMultipleSelection(s_bool(pSelectionBlock->GetAttribute("allowMultiple")));
+                pGameplay->SetFriendlySelection(pSelectionBlock->GetAttribute("friendly"));
+                pGameplay->SetHostileSelection(pSelectionBlock->GetAttribute("hostile"));
             }
 
             s_ptr<XML::Block> pScriptsBlock = pGameplayBlock->GetBlock("Scripts");

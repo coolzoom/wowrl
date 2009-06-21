@@ -260,6 +260,7 @@
 		<Unit filename="src\unit\frost_unit.cpp" />
 		<Unit filename="src\unit\frost_unit_glues.cpp" />
 		<Unit filename="src\unit\frost_unitmanager.cpp" />
+		<Unit filename="src\unit\frost_unitmanager_glues.cpp" />
 		<Unit filename="src\xml\frost_xml_block.cpp" />
 		<Unit filename="src\xml\frost_xml_document.cpp" />
 		<Extensions>

@@ -96,13 +96,12 @@ namespace Frost
         pBodyModel_->Detach();
     }
 
-    void Character::CreateGlue()
+    void Character::CreateGlue( s_ptr<Lua::State> pLua )
     {
-        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushNumber(GetID());
-        LuaCharacter* pNewGlue;
-        pGlue_ = pNewGlue = new LuaCharacter(pLua->GetState());
-        Lunar<LuaCharacter>::push(pLua->GetState(), pNewGlue);
+        lGlueList_.PushBack(
+            pLua->Push<LuaCharacter>(new LuaCharacter(pLua->GetState()))
+        );
         pLua->SetGlobal(GetLuaID());
     }
 
@@ -124,9 +123,8 @@ namespace Frost
         return pBodyModel_->GetModelPart(uiID);
     }
 
-    void Character::PushOnLua() const
+    void Character::PushOnLua( s_ptr<Lua::State> pLua ) const
     {
-        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushGlobal(GetLuaID());
         pLua->SetGlobal("unit");
         pLua->PushGlobal(GetLuaID());

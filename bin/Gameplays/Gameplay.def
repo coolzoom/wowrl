@@ -6,7 +6,7 @@
     <Script file/>
 
     <Gameplay name>
-        <n[.,1]:Selection b:allowSingle="false" b:allowMultiple="false"/>
+        <n[.,1]:Selection friendly hostile/>
         <n[.,1]:Scripts>
             <n[.,1]:OnLoad/>
             <n[.,1]:OnEnabled/>

@@ -19,6 +19,7 @@
 #include "unit/frost_powertype.h"
 #include "material/frost_material.h"
 #include "material/frost_decal.h"
+#include "gameplay/frost_gameplaymanager.h"
 
 using namespace std;
 
@@ -41,6 +42,10 @@ namespace Frost
         fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f), fTurnRate_(0.385f)
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
+        pCamera_ = CameraManager::GetSingleton()->CreateCamera(Vector(0, 4, 5));
+        pCamera_->OrbitAround(Vector(0, 2, 0));
+        pCamera_->Attach(pNode_, false, false);
+        pCamera_->CreateGlue(GameplayManager::GetSingleton()->GetLua());
 
         pSelectionDecal_ = s_refptr<Decal>(new Decal("Textures/UnitSelection.png"));
         pSelectionDecal_->Attach(pNode_, false, true);
@@ -68,8 +73,13 @@ namespace Frost
         pSelectionDecal_.SetNull();
         if (uiSelectionDecalID_.IsValid())
             SceneManager::GetSingleton()->RemoveDecalFromGround(uiSelectionDecalID_);
+
+        CameraManager::GetSingleton()->DeleteCamera(pCamera_);
         SceneManager::GetSingleton()->DeleteNode(pNode_);
-        pGlue_.Delete();
+
+        s_ctnr< s_ptr<LuaUnit> >::iterator iter;
+        foreach (iter, lGlueList_)
+            iter->Delete();
     }
 
     void Unit::SetClass(const s_str& sClassName)
@@ -208,6 +218,12 @@ namespace Frost
         }
     }
 
+    s_bool Unit::IsHostile( s_ptr<Unit> pReference ) const
+    {
+        // NOTE : Not yet implemented (Unit::IsHostile).
+        return false;
+    }
+
     void Unit::SetStat( const s_str& sStatName, const s_int& iValue )
     {
         mStats_.lCharactList[sStatName].SetBaseValue(iValue);
@@ -299,7 +315,11 @@ namespace Frost
         {
             bJumping_ = true;
             mJumpTimer_.Start(true);
-            mJumpMovementType_ = mMovementType_;
+            if ((mLMovementType_ == LMOVEMENT_STRAFE_LEFT) ||
+                (mLMovementType_ == LMOVEMENT_STRAFE_RIGHT))
+                mJumpMovementType_ = MOVEMENT_FORWARD;
+            else
+                mJumpMovementType_ = mMovementType_;
             mJumpHMovement_ = Vector::ZERO;
 
             if (pBodyModel_)
@@ -773,9 +793,38 @@ namespace Frost
         return pNode_;
     }
 
+    s_ptr<Camera> Unit::GetCamera()
+    {
+        return pCamera_;
+    }
+
     void Unit::RotateModel( const s_float& fYaw, const s_float& fPitch )
     {
+        if (bCameraMovedAlone_)
+        {
+            Vector mDirection = pCamera_->GetDirection(false);
+            mDirection.Y(0.0f);
+            pNode_->SetDirection(mDirection);
+            bCameraMovedAlone_ = false;
+        }
+
         pNode_->Yaw(fYaw);
+        pCamera_->Yaw(fYaw);
+        pCamera_->Pitch(fPitch);
+
+    }
+
+    void Unit::RotateCamera( const s_float& fYaw, const s_float& fPitch )
+    {
+        pCamera_->Yaw(fYaw);
+        pCamera_->Pitch(fPitch);
+
+        bCameraMovedAlone_ = true;
+    }
+
+    void Unit::ZoomCamera( const s_float& fZoom )
+    {
+        pCamera_->Translate(Vector::UNIT_Z*fZoom, true);
     }
 
     Vector Unit::GetPosition() const
@@ -793,9 +842,8 @@ namespace Frost
         return "U_"+uiID_;
     }
 
-    void Unit::PushOnLua() const
+    void Unit::PushOnLua( s_ptr<Lua::State> pLua ) const
     {
-        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushGlobal(GetLuaID());
         pLua->SetGlobal("unit");
         pLua->PushNil();
@@ -804,19 +852,17 @@ namespace Frost
         pLua->SetGlobal("creature");
     }
 
-    void Unit::CreateGlue()
+    void Unit::CreateGlue( s_ptr<Lua::State> pLua )
     {
-        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushNumber(GetID());
-        LuaUnit* pNewGlue;
-        pGlue_ = pNewGlue = new LuaUnit(pLua->GetState());
-        Lunar<LuaUnit>::push(pLua->GetState(), pNewGlue);
+        lGlueList_.PushBack(
+            pLua->Push<LuaUnit>(new LuaUnit(pLua->GetState()))
+        );
         pLua->SetGlobal(GetLuaID());
     }
 
     void Unit::OnEvent(const Event& mEvent)
     {
-
     }
 
     void Unit::Update( const s_float& fDelta )
@@ -960,12 +1006,14 @@ namespace Frost
             {
                 s_float fAngle = s_float(s_double(fTurnRate_)*TimeManager::GetSingleton()->GetDelta());
                 pNode_->Yaw(fAngle);
+                pCamera_->Yaw(fAngle);
                 break;
             }
             case LMOVEMENT_TURN_RIGHT :
             {
                 s_float fAngle = s_float(s_double(-fTurnRate_)*TimeManager::GetSingleton()->GetDelta());
                 pNode_->Yaw(fAngle);
+                pCamera_->Yaw(fAngle);
                 break;
             }
             case LMOVEMENT_STRAFE_LEFT :

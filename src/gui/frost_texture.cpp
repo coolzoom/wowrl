@@ -49,9 +49,9 @@ void Texture::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    LuaTexture* pNewGlue;
-    pGlue_ = pNewGlue = new LuaTexture(pLua->GetState());
-    pLua->Push<LuaTexture>(pNewGlue);
+    lGlueList_.PushBack(
+        pLua->Push<LuaTexture>(new LuaTexture(pLua->GetState()))
+    );
     pLua->SetGlobal(sName_);
 }
 

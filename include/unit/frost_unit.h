@@ -142,6 +142,13 @@ namespace Frost
         */
         void             Resurrect();
 
+        /// Checks if this Unit is hostile toward another.
+        /** \param pReference The other Unit
+        *   \note If the other Unit is ommited, then this function will
+        *         check if this Unit is hostile toward the player.
+        */
+        s_bool           IsHostile(s_ptr<Unit> pReference = NULL) const;
+
         /// Sets one of this Unit's stat.
         /** \param sStatName The code name of this stat
         *   \param iValue    The new value to give to this stat
@@ -292,6 +299,11 @@ namespace Frost
         */
         s_ptr<Node>      GetNode();
 
+        /// Returns this Unit's camera.
+        /** \return This Unit's camera
+        */
+        s_ptr<Camera>    GetCamera();
+
         /// Returns this Unit's ID.
         /** \return This Unit's ID
         */
@@ -303,10 +315,14 @@ namespace Frost
         s_str            GetLuaID() const;
 
         /// Creates the associated Lua glue.
-        virtual void     CreateGlue();
+        /** \param pLua The Lua::State on which to create the glue
+        */
+        virtual void     CreateGlue(s_ptr<Lua::State> pLua);
 
-        /// Pushes this Unit on the unit Lua::State.
-        virtual void     PushOnLua() const;
+        /// Pushes this Unit on the provided Lua::State.
+        /** \param pLua The Lua::State on which to push the glue
+        */
+        virtual void     PushOnLua(s_ptr<Lua::State> pLua) const;
 
         /// Called whenever an Event occurs.
         /** \param mEvent The Event which has occured
@@ -331,7 +347,7 @@ namespace Frost
         s_uint uiID_;
         s_str  sName_;
 
-        s_ptr<LuaUnit> pGlue_;
+        s_ctnr< s_ptr<LuaUnit> > lGlueList_;
 
         Class                        mClass_;
         s_refptr<HealthTypeInstance> pHealthType_;
@@ -343,6 +359,7 @@ namespace Frost
 
         s_refptr<Model> pBodyModel_;
         s_ptr<Node>     pNode_;
+        s_ptr<Camera>   pCamera_;
         s_refptr<Decal> pSelectionDecal_;
         s_uint          uiSelectionDecalID_;
         s_uint          uiShadowDecalID_;
@@ -367,6 +384,7 @@ namespace Frost
         s_bool          bTurnLeft_;
         s_bool          bTurnRight_;
         s_bool          bTurn_;
+        s_bool          bCameraMovedAlone_;
         s_float         fCumuledYaw_;
         s_float         fJumpHeight_;
         s_float         fJumpDuration_;
@@ -395,6 +413,7 @@ namespace Frost
         int _EmptyHealthGauge(lua_State*);
         int _EmptyPowerGauge(lua_State*);
         int _Die(lua_State*);
+        int _GetCamera(lua_State*);
         int _GetClass(lua_State*);
         int _GetHealthRegenRatio(lua_State*);
         int _GetLevel(lua_State*);
@@ -403,8 +422,19 @@ namespace Frost
         int _GetUnitType(lua_State*);
         int _IsInCombat(lua_State*);
         int _IsSitting(lua_State*);
+        int _Jump(lua_State*);
+        int _RotateCamera(lua_State*);
+        int _RotateModel(lua_State*);
         int _SetAnim(lua_State*);
         int _SetAttacking(lua_State*);
+        int _SetMoveForward(lua_State*);
+        int _SetMoveBackward(lua_State*);
+        int _SetMoveLeft(lua_State*);
+        int _SetMoveRight(lua_State*);
+        int _ToggleTurning(lua_State*);
+        int _ToggleWalking(lua_State*);
+        int _ZoomCamera(lua_State*);
+
 
         int    GetDataTable(lua_State*);
         static const char className[];

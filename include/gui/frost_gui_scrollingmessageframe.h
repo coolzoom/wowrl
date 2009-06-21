@@ -23,7 +23,7 @@ namespace Frost
             ScrollingMessageFrame();
 
             /// Returns this widget's Lua glue.
-            virtual void        CreateGlue();
+            void CreateGlue();
 
             static const s_str CLASS_NAME;
 

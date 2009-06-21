@@ -98,7 +98,7 @@ namespace Frost
                 pCam = pParent_->CreateCamera();
             }
 
-            Lunar<LuaMovableObject>::push(pLua, pCam->GetGlue().Get());
+            pCam->PushOnLua(mFunc.GetState());
             mFunc.NotifyPushed();
         }
 

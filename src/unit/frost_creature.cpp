@@ -31,13 +31,12 @@ namespace Frost
     {
     }
 
-    void Creature::CreateGlue()
+    void Creature::CreateGlue( s_ptr<Lua::State> pLua )
     {
-        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushNumber(GetID());
-        LuaCreature* pNewGlue;
-        pGlue_ = pNewGlue = new LuaCreature(pLua->GetState());
-        Lunar<LuaCreature>::push(pLua->GetState(), pNewGlue);
+        lGlueList_.PushBack(
+            pLua->Push<LuaCreature>(new LuaCreature(pLua->GetState()))
+        );
         pLua->SetGlobal(GetLuaID());
     }
 
@@ -53,9 +52,8 @@ namespace Frost
         pBodyModel_->SetUserObject(&mInterface_);
     }
 
-    void Creature::PushOnLua() const
+    void Creature::PushOnLua( s_ptr<Lua::State> pLua ) const
     {
-        s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
         pLua->PushGlobal(GetLuaID());
         pLua->SetGlobal("unit");
         pLua->PushNil();

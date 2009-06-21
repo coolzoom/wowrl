@@ -2,7 +2,7 @@
     <Script file="TopDown.lua"/>
 
     <Gameplay name="TopDown">
-        <Selection allowSingle="true" allowMultiple="true"/>
+        <Selection friendly="MULTIPLE" hostile="SINGLE"/>
         <Scripts>
             <OnLoad>
                 TopDownGameplay.OnLoad();
