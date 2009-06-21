@@ -26,7 +26,7 @@ namespace Frost
         // Calling srand(time(NULL)) can result in similar results
         // because time()'s resolution is too low. Here we use a
         // high precision timer.
-        srand(TimeManager::GetSingleton()->GetMicrosecond().Get());
+        srand(TimeManager::GetSingleton()->GetMicroseconds().Get());
 
         // In GCC, the first rand() is round(3.25*seed) + 38
         // To get rid of this effect, we just call rand() several times.

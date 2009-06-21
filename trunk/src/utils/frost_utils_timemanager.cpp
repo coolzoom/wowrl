@@ -242,7 +242,7 @@ namespace Frost
         return localtime(&iTimestamp)->tm_sec;
     }
 
-    s_uint TimeManager::GetMicrosecond() const
+    s_uint TimeManager::GetMicroseconds() const
     {
     #ifdef WIN32
         timeb tb;
