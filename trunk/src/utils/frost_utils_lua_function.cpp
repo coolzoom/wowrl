@@ -325,3 +325,8 @@ int Function::Return()
     else
         return 0;
 }
+
+s_ptr<Lua::State> Function::GetState() const
+{
+    return pLua_;
+}

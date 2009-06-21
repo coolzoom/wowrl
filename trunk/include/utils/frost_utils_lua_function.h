@@ -286,6 +286,11 @@ namespace Frost
             */
             const s_str&    GetName() const;
 
+            /// Returns the Lua::State used by this function.
+            /** \return The Lua::State used by this function
+            */
+            s_ptr<Lua::State> GetState() const;
+
             static const s_str CLASS_NAME;
 
         private :
