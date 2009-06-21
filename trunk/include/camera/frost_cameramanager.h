@@ -24,7 +24,7 @@ namespace Frost
         /** \param mPosition The position of this camera
         *   \return The new camera
         */
-        s_ptr<Camera>  CreateCamera(const Vector& mPosition);
+        s_ptr<Camera>   CreateCamera(const Vector& mPosition);
 
         /// Creates a new camera.
         /** \return The new camera

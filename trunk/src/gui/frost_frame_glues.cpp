@@ -124,7 +124,7 @@ int LuaFrame::_GetChildren(lua_State* pLua)
     s_ctnr< s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList)
     {
-        Lunar<LuaUIObject>::push(pLua, (*iterChild)->GetGlue().Get());
+        (*iterChild)->PushOnLua(mFunc.GetState());
         mFunc.NotifyPushed();
     }
 

@@ -19,6 +19,7 @@
 #include "frost_inputmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include "gameplay/frost_gameplaymanager.h"
 
 #include <OgreRay.h>
 #include <OgreSceneManager.h>
@@ -41,6 +42,12 @@ namespace Frost
             iterUnit->second.Delete();
         }
 
+        s_ctnr< s_ptr<LuaUnitManager> >::iterator iter;
+        foreach (iter, lGlueList_)
+        {
+            iter->Delete();
+        }
+
         LuaManager::GetSingleton()->CloseLua(pLua_);
     }
 
@@ -59,7 +66,8 @@ namespace Frost
         {
             pCharacter = new Character(uiCounter_, sName, lRaceList_[sRace], mGender);
             lUnitList_[uiCounter_] = pCharacter;
-            pCharacter->CreateGlue();
+            pCharacter->CreateGlue(pLua_);
+            pCharacter->CreateGlue(GameplayManager::GetSingleton()->GetLua());
             uiCounter_++;
         }
         else
@@ -74,7 +82,8 @@ namespace Frost
     {
         s_ptr<Creature> pCreature = new Creature(uiCounter_, sName);
         lUnitList_[uiCounter_] = pCreature;
-        pCreature->CreateGlue();
+        pCreature->CreateGlue(pLua_);
+        pCreature->CreateGlue(GameplayManager::GetSingleton()->GetLua());
         uiCounter_++;
 
         return pCreature;
@@ -120,6 +129,16 @@ namespace Frost
             );
             return NULL;
         }
+    }
+
+    const s_map< s_uint, s_ptr<Unit> >& UnitManager::GetUnitList() const
+    {
+        return lUnitList_;
+    }
+
+    const s_map< s_uint, s_ptr<Unit> >& UnitManager::GetSelectedUnitList() const
+    {
+        return lSelectedUnitList_;
     }
 
     void UnitManager::UpdateUnits( const s_float& fDelta )
@@ -280,9 +299,9 @@ namespace Frost
 
     void UnitManager::CreateGlue( s_ptr<Lua::State> pLua )
     {
-        LuaUnitManager* pNewGlue;
-        pGlue_ = pNewGlue = new LuaUnitManager();
-        pLua->Push<LuaUnit>(pNewGlue);
-        pLua->SetGlobal(GetLuaID());
+        lGlueList_.PushBack(
+            pLua->Push<LuaUnitManager>(new LuaUnitManager(pLua->GetState()))
+        );
+        pLua->SetGlobal("UnitManager");
     }
 }

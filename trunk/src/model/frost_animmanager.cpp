@@ -111,8 +111,17 @@ namespace Frost
                     uiRnd = 0u;
                 pActualAnim_ = &pAS->lSequence[uiRnd];
             }
-            else
+            else if (!pAS->lSequence.IsEmpty())
+            {
                 pActualAnim_ = &pAS->lSequence[0];
+            }
+            else
+            {
+                Error(CLASS_NAME,
+                    "No animation in the sequence for anim "+uiID+"."
+                );
+                return;
+            }
 
             pActualAnim_->pAnim->setEnabled(true);
             pActualAnim_->pAnim->setTimePosition(0.0f);

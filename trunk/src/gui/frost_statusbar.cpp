@@ -24,8 +24,8 @@ void StatusBar::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    LuaStatusBar* pNewGlue;
-    pGlue_ = pNewGlue = new LuaStatusBar(pLua->GetState());
-    pLua->Push<LuaStatusBar>(pNewGlue);
+    lGlueList_.PushBack(
+        pLua->Push<LuaStatusBar>(new LuaStatusBar(pLua->GetState()))
+    );
     pLua->SetGlobal(sName_);
 }

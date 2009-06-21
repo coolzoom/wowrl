@@ -167,7 +167,7 @@ int LuaUIObject::_GetParent( lua_State* pLua )
 
     if (pParent_->GetParent() != NULL)
     {
-        Lunar<LuaUIObject>::push(pLua, pParent_->GetParent()->GetGlue().Get());
+        pParent_->GetParent()->PushOnLua(mFunc.GetState());
         mFunc.NotifyPushed();
     }
 
@@ -186,7 +186,7 @@ int LuaUIObject::_GetPoint( lua_State* pLua )
             mFunc.Push(Anchor::GetStringPoint(pAnchor->GetPoint()));
             if (pAnchor->GetParent() != NULL)
             {
-                Lunar<LuaUIObject>::push(pLua, pAnchor->GetParent()->GetGlue().Get());
+                pAnchor->GetParent()->PushOnLua(mFunc.GetState());
                 mFunc.NotifyPushed();
             }
             else

@@ -199,10 +199,10 @@ namespace Frost
         */
         virtual void  CreateGlue(s_ptr<Lua::State> pLua);
 
-        /// Returns the associated Lua glue.
-        /** \return The associated Lua glue
+        /// Pushes this MovableObject on the provided Lua::State.
+        /** \param pLua The Lua::State on which to push the glue
         */
-        s_ptr<LuaMovableObject> GetGlue();
+        virtual void  PushOnLua(s_ptr<Lua::State> pLua) const;
 
         static const s_str CLASS_NAME;
 
@@ -229,7 +229,7 @@ namespace Frost
         s_bool                  bInherits_;
         s_refptr<Path>          pPath_;
 
-        s_ptr<LuaMovableObject> pGlue_;
+        s_ctnr< s_ptr<LuaMovableObject> > lGlueList_;
     };
 
     /** \cond NOT_REMOVE_FROM_DOC

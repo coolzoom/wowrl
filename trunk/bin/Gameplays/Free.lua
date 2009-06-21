@@ -8,12 +8,12 @@ FreeGameplay = {
 -----------------------------------
 -- CONTROLS : (only moves a camera)
 -----------------------------------
--- [W] : move forward
--- [S] : move backward
--- [A] : strafe left
--- [D] : strafe right
--- [Q] : move up
--- [E] : move down
+-- [W] : Move forward
+-- [S] : Move backward
+-- [A] : Strafe left
+-- [D] : Strafe right
+-- [Q] : Move up
+-- [E] : Move down
 -- [MouseRight] : Yaw and pitch the camera when dragged
 -----------------------------------
 
@@ -23,6 +23,7 @@ function FreeGameplay.OnLoad()
     this:RegisterEvent("MOUSE_MOVED");
     this:RegisterEvent("MOUSE_PRESSED");
     this:RegisterEvent("MOUSE_RELEASED");
+    
     FreeGameplay.camera = this:CreateCamera(3, 4, 3);
     FreeGameplay.camera:SetDirection(-3, -4, -3);
     this:SetCamera(FreeGameplay.camera); 

@@ -2,7 +2,7 @@
     <Script file="Free.lua"/>
 
     <Gameplay name="Free">
-        <Selection allowSingle="false" allowMultiple="false"/>
+        <Selection friendly="NONE" hostile="NONE"/>
         <Scripts>
             <OnLoad>
                 FreeGameplay.OnLoad();

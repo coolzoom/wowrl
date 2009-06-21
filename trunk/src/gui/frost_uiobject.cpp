@@ -37,12 +37,12 @@ UIObject::UIObject()
 UIObject::~UIObject()
 {
     GUIManager::GetSingleton()->RemoveUIObject(this);
-    pGlue_.Delete();
-}
 
-s_ptr<LuaUIObject> UIObject::GetGlue()
-{
-    return pGlue_;
+    s_ctnr< s_ptr<LuaUIObject> >::iterator iter;
+    foreach (iter, lGlueList_)
+    {
+        iter->Delete();
+    }
 }
 
 s_refptr<Material> UIObject::GetMaterial()
@@ -718,4 +718,9 @@ void UIObject::Update()
 
 void UIObject::UpdateMaterial( const s_bool& bForceUpdate )
 {
+}
+
+void UIObject::PushOnLua( s_ptr<Lua::State> pLua ) const
+{
+    pLua->PushGlobal(sName_);
 }

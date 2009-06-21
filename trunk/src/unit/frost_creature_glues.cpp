@@ -34,6 +34,7 @@ namespace Frost
         method(Creature, EmptyHealthGauge),
         method(Creature, EmptyPowerGauge),
         method(Creature, Die),
+        method(Creature, GetCamera),
         method(Creature, GetClass),
         method(Creature, GetHealthRegenRatio),
         method(Creature, GetLevel),
@@ -42,8 +43,18 @@ namespace Frost
         method(Creature, GetUnitType),
         method(Creature, IsInCombat),
         method(Creature, IsSitting),
+        method(Creature, Jump),
+        method(Creature, RotateCamera),
+        method(Creature, RotateModel),
         method(Creature, SetAnim),
         method(Creature, SetAttacking),
+        method(Creature, SetMoveForward),
+        method(Creature, SetMoveBackward),
+        method(Creature, SetMoveLeft),
+        method(Creature, SetMoveRight),
+        method(Creature, ToggleTurning),
+        method(Creature, ToggleWalking),
+        method(Creature, ZoomCamera),
 
         {0,0}
     };

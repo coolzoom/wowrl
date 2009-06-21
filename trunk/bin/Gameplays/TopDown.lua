@@ -8,10 +8,10 @@ TopDownGameplay = {
 -----------------------------------
 -- CONTROLS : (only moves a camera)
 -----------------------------------
--- [W] : move forward
--- [S] : move backward
--- [A] : strafe left
--- [D] : strafe right
+-- [W] : Move forward
+-- [S] : Move backward
+-- [A] : Strafe left
+-- [D] : Strafe right
 -- [MouseRight] : Yaw and pitch the camera when dragged
 -- [MouseWheel] : Zoom in and out
 -----------------------------------
@@ -23,6 +23,7 @@ function TopDownGameplay.OnLoad()
     this:RegisterEvent("MOUSE_PRESSED");
     this:RegisterEvent("MOUSE_RELEASED");
     this:RegisterEvent("MOUSE_WHEEL");
+    
     TopDownGameplay.camera = this:CreateCamera(2, 8, 2);
     TopDownGameplay.camera:OrbitAround(0, 0, 0, true);
     this:SetCamera(TopDownGameplay.camera);

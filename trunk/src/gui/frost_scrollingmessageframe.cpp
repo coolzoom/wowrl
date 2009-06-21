@@ -24,8 +24,8 @@ void ScrollingMessageFrame::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    LuaScrollingMessageFrame* pNewGlue;
-    pGlue_ = pNewGlue = new LuaScrollingMessageFrame(pLua->GetState());
-    pLua->Push<LuaScrollingMessageFrame>(pNewGlue);
+    lGlueList_.PushBack(
+        pLua->Push<LuaScrollingMessageFrame>(new LuaScrollingMessageFrame(pLua->GetState()))
+    );
     pLua->SetGlobal(sName_);
 }

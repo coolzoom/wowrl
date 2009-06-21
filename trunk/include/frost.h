@@ -222,6 +222,7 @@ namespace Frost
 
     // frost_unitmanager.h
     class  UnitManager;
+    class  LuaUnitManager;
 
     namespace XML
     {

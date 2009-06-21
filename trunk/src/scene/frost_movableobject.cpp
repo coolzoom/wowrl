@@ -83,6 +83,12 @@ namespace Frost
         Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->destroySceneNode(
             pNode_.Get()
         );
+
+        s_ctnr< s_ptr<LuaMovableObject> >::iterator iterGlue;
+        foreach (iterGlue, lGlueList_)
+        {
+            iterGlue->Delete();
+        }
     }
 
     void MovableObject::Attach( s_ptr<MovableObject> pObject, const s_bool& bInheritRot, const s_bool& bInheritScale )
@@ -421,14 +427,14 @@ namespace Frost
     void MovableObject::CreateGlue( s_ptr<Lua::State> pLua )
     {
         pLua->PushNumber(uiID_);
-        LuaMovableObject* pNewGlue;
-        pGlue_ = pNewGlue = new LuaMovableObject(pLua->GetState());
-        Lunar<LuaMovableObject>::push(pLua->GetState(), pNewGlue);
+        lGlueList_.PushBack(
+            pLua->Push<LuaMovableObject>(new LuaMovableObject(pLua->GetState()))
+        );
         pLua->SetGlobal("Movable_"+uiID_);
     }
 
-    s_ptr<LuaMovableObject> MovableObject::GetGlue()
+    void MovableObject::PushOnLua( s_ptr<Lua::State> pLua ) const
     {
-        return pGlue_;
+        pLua->PushGlobal("Movable_"+uiID_);
     }
 }

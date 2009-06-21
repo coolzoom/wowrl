@@ -130,11 +130,15 @@ namespace Frost
         */
         virtual void     Update(const s_float& fDelta);
 
-        /// Pushes this Character on the unit Lua::State.
-        virtual void     PushOnLua() const;
+        /// Pushes this Character on the provided Lua::State.
+        /** \param pLua The Lua::State on which to push the glue
+        */
+        virtual void     PushOnLua(s_ptr<Lua::State> pLua) const;
 
         /// Creates the associated Lua glue.
-        virtual void     CreateGlue();
+        /** \param pLua The Lua::State on which to push the glue
+        */
+        virtual void     CreateGlue(s_ptr<Lua::State> pLua);
 
         static const s_str CLASS_NAME;
 
