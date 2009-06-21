@@ -17,6 +17,7 @@
 #include "gui/frost_gui_statusbar.h"
 #include "gui/frost_gui_fontstring.h"
 #include "gui/frost_gui_texture.h"
+#include "unit/frost_unitmanager.h"
 #include "unit/frost_unit.h"
 #include "unit/frost_character.h"
 #include "unit/frost_creature.h"
@@ -29,47 +30,43 @@ using namespace Frost::Lua;
 
 void Lua::RegisterGlobalFuncs( s_ptr<Lua::State> pLua )
 {
-    pLua->Register("GetDelta", l_GetDelta);
     pLua->Register("GetLocale", l_GetLocale);
     pLua->Register("GetLocalizedString", l_GetLocalizedString);
     pLua->Register("GetTime", l_GetTime);
     pLua->Register("GetTimeOfTheDay", l_GetTimeOfTheDay);
-    pLua->Register("GetMousePos", l_GetMousePos);
 }
 
 void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
 {
-    lua_State* pRawLua = pLua->GetState();
-    Lunar<GUI::LuaUIObject>::Register(pRawLua);
-    Lunar<GUI::LuaFrame>::Register(pRawLua);
-    Lunar<GUI::LuaStatusBar>::Register(pRawLua);
-    Lunar<GUI::LuaEditBox>::Register(pRawLua);
-    Lunar<GUI::LuaScrollingMessageFrame>::Register(pRawLua);
-    Lunar<GUI::LuaButton>::Register(pRawLua);
-    Lunar<GUI::LuaSlider>::Register(pRawLua);
-    Lunar<GUI::LuaLayeredRegion>::Register(pRawLua);
-    Lunar<GUI::LuaTexture>::Register(pRawLua);
-    Lunar<GUI::LuaFontString>::Register(pRawLua);
+    pLua->Register<GUI::LuaUIObject>();
+    pLua->Register<GUI::LuaFrame>();
+    pLua->Register<GUI::LuaStatusBar>();
+    pLua->Register<GUI::LuaEditBox>();
+    pLua->Register<GUI::LuaScrollingMessageFrame>();
+    pLua->Register<GUI::LuaButton>();
+    pLua->Register<GUI::LuaSlider>();
+    pLua->Register<GUI::LuaLayeredRegion>();
+    pLua->Register<GUI::LuaTexture>();
+    pLua->Register<GUI::LuaFontString>();
 }
 
 void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )
 {
-    lua_State* pRawLua = pLua->GetState();
-    Lunar<LuaUnit>::Register(pRawLua);
-    Lunar<LuaCharacter>::Register(pRawLua);
-    Lunar<LuaCreature>::Register(pRawLua);
+    pLua->Register<LuaUnitManager>();
+    UnitManager::GetSingleton()->CreateGlue(pLua);
+    pLua->Register<LuaUnit>();
+    pLua->Register<LuaCharacter>();
+    pLua->Register<LuaCreature>();
 }
 
 void Lua::RegisterMovableObjectClass( s_ptr<Lua::State> pLua )
 {
-    lua_State* pRawLua = pLua->GetState();
-    Lunar<LuaMovableObject>::Register(pRawLua);
+    pLua->Register<LuaMovableObject>();
 }
 
 void Lua::RegisterGameplayClass( s_ptr<Lua::State> pLua )
 {
-    lua_State* pRawLua = pLua->GetState();
-    Lunar<LuaGameplay>::Register(pRawLua);
+    pLua->Register<LuaGameplay>();
 }
 
 void Lua::RegisterVectorClass( s_ptr<Lua::State> pLua )

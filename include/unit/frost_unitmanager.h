@@ -81,6 +81,11 @@ namespace Frost
         */
         s_ptr<Lua::State>         GetLua();
 
+        /// Creates a Lua glue on the provided Lua::State.
+        /** \param pLua The Lua::State on which to create this glue
+        */
+        void                      CreateGlue(s_ptr<Lua::State> pLua);
+
         /// Updates all units.
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by Engine.
@@ -143,6 +148,32 @@ namespace Frost
         s_ptr<Lua::State> pLua_;
 
     };
+
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
+
+    class LuaUnitManager
+    {
+    public :
+
+        LuaUnitManager(lua_State* pLua);
+
+        int _GetSelectedUnit(lua_State*);
+        int _GetNearestUnit(lua_State*);
+
+        int    GetDataTable(lua_State*);
+        static const char className[];
+        static Lunar<LuaUnitManager>::RegType methods[];
+        static const s_str CLASS_NAME;
+
+    protected :
+
+        lua_State*  pLua_;
+        int         iRef_;
+    };
+
+    /** \endcond
+    */
 }
 
 #endif

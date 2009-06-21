@@ -51,7 +51,7 @@ void Texture::CreateGlue()
     pLua->PushString(sName_);
     LuaTexture* pNewGlue;
     pGlue_ = pNewGlue = new LuaTexture(pLua->GetState());
-    Lunar<LuaTexture>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaTexture>(pNewGlue);
     pLua->SetGlobal(sName_);
 }
 

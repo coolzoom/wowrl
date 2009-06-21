@@ -64,7 +64,7 @@ namespace Frost
         pLua->PushString(sName_);
         LuaGameplay* pNewGlue;
         pGlue_ = pNewGlue = new LuaGameplay(pLua->GetState());
-        Lunar<LuaGameplay>::push(pLua->GetState(), pNewGlue);
+        pLua->Push<LuaGameplay>(pNewGlue);
         pLua->SetGlobal(sName_);
     }
 

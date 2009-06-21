@@ -26,6 +26,6 @@ void EditBox::CreateGlue()
     pLua->PushString(sName_);
     LuaEditBox* pNewGlue;
     pGlue_ = pNewGlue = new LuaEditBox(pLua->GetState());
-    Lunar<LuaEditBox>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaEditBox>(pNewGlue);
     pLua->SetGlobal(sName_);
 }

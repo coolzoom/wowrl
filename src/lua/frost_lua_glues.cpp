@@ -25,15 +25,6 @@ using namespace Frost::Lua;
 /** \cond NOT_REMOVE_FROM_DOC
 */
 
-int Frost::l_GetDelta( lua_State* pLua )
-{
-    Lua::Function mFunc("GetDelta", pLua, 1);
-
-    mFunc.Push(TimeManager::GetSingleton()->GetDelta());
-
-    return mFunc.Return();
-}
-
 int Frost::l_GetLocale( lua_State* pLua )
 {
     Lua::Function mFunc("GetLocale", pLua, 1);
@@ -67,21 +58,12 @@ int Frost::l_GetTime( lua_State* pLua )
 
 int Frost::l_GetTimeOfTheDay( lua_State* pLua )
 {
-    Lua::Function mFunc("GetTimeOfTheDay", pLua, 3);
+    Lua::Function mFunc("GetTimeOfTheDay", pLua, 4);
 
     mFunc.Push(TimeManager::GetSingleton()->GetHour());
     mFunc.Push(TimeManager::GetSingleton()->GetMinutes());
     mFunc.Push(TimeManager::GetSingleton()->GetSeconds());
-
-    return mFunc.Return();
-}
-
-int Frost::l_GetMousePos( lua_State* pLua )
-{
-    Lua::Function mFunc("GetMousePos", pLua, 2);
-
-    mFunc.Push(InputManager::GetSingleton()->GetMPosX());
-    mFunc.Push(InputManager::GetSingleton()->GetMPosY());
+    mFunc.Push(TimeManager::GetSingleton()->GetMicroseconds());
 
     return mFunc.Return();
 }

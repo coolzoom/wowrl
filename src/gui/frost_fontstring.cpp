@@ -78,7 +78,7 @@ void FontString::CreateGlue()
     pLua->PushString(sName_);
     LuaFontString* pNewGlue;
     pGlue_ = pNewGlue = new LuaFontString(pLua->GetState());
-    Lunar<LuaFontString>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaFontString>(pNewGlue);
     pLua->SetGlobal(sName_);
 }
 
