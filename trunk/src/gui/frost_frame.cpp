@@ -124,7 +124,7 @@ void Frame::CreateGlue()
     pLua->PushString(sName_);
     LuaFrame* pNewGlue;
     pGlue_ = pNewGlue = new LuaFrame(pLua->GetState());
-    Lunar<LuaFrame>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaFrame>(pNewGlue);
     pLua->SetGlobal(sName_);
 }
 

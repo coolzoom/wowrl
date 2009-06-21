@@ -26,6 +26,6 @@ void StatusBar::CreateGlue()
     pLua->PushString(sName_);
     LuaStatusBar* pNewGlue;
     pGlue_ = pNewGlue = new LuaStatusBar(pLua->GetState());
-    Lunar<LuaStatusBar>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaStatusBar>(pNewGlue);
     pLua->SetGlobal(sName_);
 }

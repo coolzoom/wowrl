@@ -112,6 +112,13 @@ namespace Frost
             */
             void    Register(const s_str& sFunctionName, lua_CFunction mFunction);
 
+            /// Registers a Lunar class to be used on this state.
+            template<class T>
+            void    Register()
+            {
+                Lunar<T>::Register(pLua_);
+            }
+
             /// Prints an error string in the log file with the Lua tag
             /** \param sError The error string to output
             *   \note This function will print out the actual file and line
@@ -163,6 +170,15 @@ namespace Frost
             */
             void    PushGlobal(const s_str& sName);
 
+            /// Pushes a Lunar object on the stack.
+            /** \param pValue A pointer to the Lunar object
+            */
+            template<class T>
+            void    Push(s_ptr<T> pValue)
+            {
+                Lunar<T>::push(pLua_, pValue.Get());
+            }
+
             /// Sets the value of a global Lua variable.
             /** \param sName The name of this variable
             *   \note The value taken is taken at the top of the stack,
@@ -179,28 +195,38 @@ namespace Frost
             void    Pop(const s_uint& uiNumber = 1);
 
             /// Returns the value at the given index converted to a number.
-            /** \param iIndex The index at wich to search for the value
+            /** \param iIndex The index at which to search for the value
             *   \return The value at the given index converted to a number
             */
             s_float GetNumber(const s_int& iIndex = 1);
 
             /// Returns the value at the given index converted to a bool.
-            /** \param iIndex The index at wich to search for the value
+            /** \param iIndex The index at which to search for the value
             *   \return The value at the given index converted to a bool
             */
             s_bool  GetBool(const s_int& iIndex = 1);
 
             /// Returns the value at the given index converted to a string.
-            /** \param iIndex The index at wich to search for the value
+            /** \param iIndex The index at which to search for the value
             *   \return The value at the given index converted to a string
             */
             s_str   GetString(const s_int& iIndex = 1);
 
-            /// Returns the value at the given index
-            /** \param iIndex The index at wich to search for the value
+            /// Returns the value at the given index.
+            /** \param iIndex The index at which to search for the value
             *   \return The value at the given index
             */
             s_var   GetValue(const s_int& iIndex = 1);
+
+            /// Returns the Lunar object at the given index.
+            /** \param iIndex The index at which to search for the value
+            *   \return The Lunar object at the given index
+            */
+            template<class T>
+            s_ptr<T> Get(const s_int& iIndex = 1)
+            {
+                return Lunar<T>::check(pLua_, iIndex.Get());
+            }
 
             /// Returns the number of value on the stack.
             /** \return The number of value on the stack

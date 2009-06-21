@@ -277,4 +277,12 @@ namespace Frost
     {
         return pLua_;
     }
+
+    void UnitManager::CreateGlue( s_ptr<Lua::State> pLua )
+    {
+        LuaUnitManager* pNewGlue;
+        pGlue_ = pNewGlue = new LuaUnitManager();
+        pLua->Push<LuaUnit>(pNewGlue);
+        pLua->SetGlobal(GetLuaID());
+    }
 }

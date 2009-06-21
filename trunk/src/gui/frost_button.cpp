@@ -26,6 +26,6 @@ void Button::CreateGlue()
     pLua->PushString(sName_);
     LuaButton* pNewGlue;
     pGlue_ = pNewGlue = new LuaButton(pLua->GetState());
-    Lunar<LuaButton>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaButton>(pNewGlue);
     pLua->SetGlobal(sName_);
 }

@@ -26,6 +26,6 @@ void Slider::CreateGlue()
     pLua->PushString(sName_);
     LuaSlider* pNewGlue;
     pGlue_ = pNewGlue = new LuaSlider(pLua->GetState());
-    Lunar<LuaSlider>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaSlider>(pNewGlue);
     pLua->SetGlobal(sName_);
 }

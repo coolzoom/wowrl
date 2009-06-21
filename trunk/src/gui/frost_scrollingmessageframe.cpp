@@ -26,6 +26,6 @@ void ScrollingMessageFrame::CreateGlue()
     pLua->PushString(sName_);
     LuaScrollingMessageFrame* pNewGlue;
     pGlue_ = pNewGlue = new LuaScrollingMessageFrame(pLua->GetState());
-    Lunar<LuaScrollingMessageFrame>::push(pLua->GetState(), pNewGlue);
+    pLua->Push<LuaScrollingMessageFrame>(pNewGlue);
     pLua->SetGlobal(sName_);
 }
