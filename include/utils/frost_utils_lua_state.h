@@ -174,9 +174,10 @@ namespace Frost
             /** \param pValue A pointer to the Lunar object
             */
             template<class T>
-            void    Push(s_ptr<T> pValue)
+            s_ptr<T> Push(s_ptr<T> pValue)
             {
                 Lunar<T>::push(pLua_, pValue.Get());
+                return pValue;
             }
 
             /// Sets the value of a global Lua variable.
