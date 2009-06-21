@@ -23,8 +23,8 @@ namespace Frost
     *   in this case.
     *   <b>Note</b> : Because the CPU can handle infinite
     *   and nan itself for float types, this class is
-    *   more efficient than the others (about 5 times
-    *   slower than its corresponding POD).
+    *   more efficient than the others (as fast as the
+    *   wrapped POD, 5 times slower in debug).
     */
     template <class T>
     class s_float_t
