@@ -10,7 +10,7 @@
 #define FROST_CREATURE_H
 
 #include "frost.h"
-#include "unit/frost_unit.h"
+#include "unit/frost_movableunit.h"
 
 #include <OgreUserDefinedObject.h>
 
@@ -44,7 +44,7 @@ namespace Frost
     *   player can (temporarily) take control of some of them,
     *   through mind control for example.
     */
-    class Creature : public Unit
+    class Creature : public MovableUnit
     {
     public :
 
@@ -91,7 +91,7 @@ namespace Frost
     /** \cond NOT_REMOVE_FROM_DOC
     */
 
-    class LuaCreature : public LuaUnit
+    class LuaCreature : public LuaMovableUnit
     {
     public :
 

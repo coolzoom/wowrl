@@ -55,6 +55,7 @@ void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )
     pLua->Register<LuaUnitManager>();
     UnitManager::GetSingleton()->CreateGlue(pLua);
     pLua->Register<LuaUnit>();
+    pLua->Register<LuaMovableUnit>();
     pLua->Register<LuaCharacter>();
     pLua->Register<LuaCreature>();
 }

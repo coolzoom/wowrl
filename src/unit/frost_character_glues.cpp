@@ -16,7 +16,7 @@ namespace Frost
 {
     const s_str LuaCharacter::CLASS_NAME = "LuaCharacter";
 
-    LuaCharacter::LuaCharacter( lua_State* pLua ) : LuaUnit(pLua)
+    LuaCharacter::LuaCharacter( lua_State* pLua ) : LuaMovableUnit(pLua)
     {
         pParentCharacter_ = s_ptr<Character>::DynamicCast(pParent_);
     }

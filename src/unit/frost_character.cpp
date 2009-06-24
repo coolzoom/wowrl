@@ -28,7 +28,7 @@ namespace Frost
     const s_str CharacterModelInfo::CLASS_NAME = "CharacterModelInfo";
 
     Character::Character( const s_uint& uiID, const s_str& sName, const Race& mRace, CharGender mGender ) :
-       Unit(uiID, sName), mInterface_(this), mGender_(mGender), mRace_(mRace)
+       MovableUnit(uiID, sName), mInterface_(this), mGender_(mGender), mRace_(mRace)
     {
         // Get the gender
         s_ptr<CharacterModelInfo> pCharModelInfo;
@@ -135,7 +135,7 @@ namespace Frost
 
     void Character::Update( const s_float& fDelta )
     {
-        Unit::Update(fDelta);
+        MovableUnit::Update(fDelta);
     }
 
     CharacterOgreInterface::CharacterOgreInterface( s_ptr<Character> pCharacter ) : pCharacter_(pCharacter)

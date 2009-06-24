@@ -14,22 +14,6 @@
 
 namespace Frost
 {
-    enum Movement
-    {
-        MOVEMENT_NONE,
-        MOVEMENT_FORWARD,
-        MOVEMENT_BACKWARD
-    };
-
-    enum LateralMovement
-    {
-        LMOVEMENT_NONE,
-        LMOVEMENT_STRAFE_LEFT,
-        LMOVEMENT_STRAFE_RIGHT,
-        LMOVEMENT_TURN_LEFT,
-        LMOVEMENT_TURN_RIGHT,
-    };
-
     /// Holds generic informations about a specific unit class.
     struct Class
     {
@@ -199,8 +183,7 @@ namespace Frost
         */
         const s_bool&    IsSelected() const;
 
-        /// Makes this Unit jump.
-        void             Jump();
+
 
         /// Instantaneously move this Unit to a given position.
         /** \param mDestination The new position of the Unit
@@ -227,44 +210,6 @@ namespace Frost
         *         LookAt functions.
         */
         void             LookAt(const Vector& mPosition);
-
-        /// Makes this Unit move forward.
-        void             SetMoveForward(const s_bool& bMoveForward);
-
-        /// Makes this Unit move backward.
-        void             SetMoveBackward(const s_bool& bMoveBackward);
-
-        /// Enables/disables walking.
-        /** \note By default, a Unit runs.
-        */
-        void             ToggleWalking();
-
-        /// Makes this Unit walk/run.
-        /** \param bWalk 'true' to make it walk
-        *   \note By default, a Unit runs.
-        */
-        void             SetWalking(const s_bool& bWalk);
-
-        /// Makes this Unit move to the left.
-        void             SetMoveLeft(const s_bool& bMoveLeft);
-
-        /// Makes this Unit move to the right.
-        void             SetMoveRight(const s_bool& bMoveRight);
-
-        /// Enables/disables turning.
-        /** \note If the Unit doesn't turn, it strafes.
-        */
-        void             ToggleTurning();
-
-        /// Makes this Unit turn/strafe.
-        /** \param bTurn 'true' to make it turn, 'false' to
-        *                make it strafe
-        *   \note By default, a Unit turns.
-        */
-        void             SetTurning(const s_bool& bTurn);
-
-        /// Stops this Unit's movement.
-        void             StopMovement();
 
         /// Moves this Unit's Camera on its local axis.
         /** \param fZoom The amount
@@ -339,11 +284,6 @@ namespace Frost
 
     protected :
 
-        void SetMovement_(Movement mMovementType);
-        void SetLateralMovement_(LateralMovement mLMovementType);
-
-        void UpdateMovement_(const s_float fDelta);
-
         s_uint uiID_;
         s_str  sName_;
 
@@ -368,31 +308,7 @@ namespace Frost
         s_bool          bHighlighted_;
         s_bool          bDead_;
 
-        s_bool          bJumping_;
-        Vector          mJumpPosition_;
-        Vector          mJumpDirection_;
-        Vector          mJumpHMovement_;
-        Timer           mJumpTimer_;
-        Movement        mMovementType_;
-        Movement        mJumpMovementType_;
-        LateralMovement mLMovementType_;
-        s_bool          bWalk_;
-        s_bool          bMoveForward_;
-        s_bool          bMoveBackward_;
-        s_bool          bStrafeLeft_;
-        s_bool          bStrafeRight_;
-        s_bool          bTurnLeft_;
-        s_bool          bTurnRight_;
-        s_bool          bTurn_;
         s_bool          bCameraMovedAlone_;
-        s_float         fCumuledYaw_;
-        s_float         fJumpHeight_;
-        s_float         fJumpDuration_;
-        s_float         fForwardRunSpeed_;
-        s_float         fForwardWalkSpeed_;
-        s_float         fBackwardRunSpeed_;
-        s_float         fBackwardWalkSpeed_;
-        s_float         fTurnRate_;
     };
 
     /** \cond NOT_REMOVE_FROM_DOC
@@ -422,19 +338,11 @@ namespace Frost
         int _GetUnitType(lua_State*);
         int _IsInCombat(lua_State*);
         int _IsSitting(lua_State*);
-        int _Jump(lua_State*);
         int _RotateCamera(lua_State*);
         int _RotateModel(lua_State*);
         int _SetAnim(lua_State*);
         int _SetAttacking(lua_State*);
-        int _SetMoveForward(lua_State*);
-        int _SetMoveBackward(lua_State*);
-        int _SetMoveLeft(lua_State*);
-        int _SetMoveRight(lua_State*);
-        int _ToggleTurning(lua_State*);
-        int _ToggleWalking(lua_State*);
         int _ZoomCamera(lua_State*);
-
 
         int    GetDataTable(lua_State*);
         static const char className[];

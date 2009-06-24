@@ -16,7 +16,7 @@ namespace Frost
 {
     const s_str LuaCreature::CLASS_NAME = "LuaCreature";
 
-    LuaCreature::LuaCreature( lua_State* pLua ) : LuaUnit(pLua)
+    LuaCreature::LuaCreature( lua_State* pLua ) : LuaMovableUnit(pLua)
     {
         pParentCreature_ = s_ptr<Creature>::DynamicCast(pParent_);
     }

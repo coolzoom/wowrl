@@ -23,7 +23,7 @@ namespace Frost
     const s_str Creature::CLASS_NAME = "Creature";
 
     Creature::Creature( const s_uint& uiID, const s_str& sName ) :
-        Unit(uiID, sName), mInterface_(this)
+        MovableUnit(uiID, sName), mInterface_(this)
     {
     }
 
@@ -64,7 +64,7 @@ namespace Frost
 
     void Creature::Update( const s_float& fDelta )
     {
-        Unit::Update(fDelta);
+        MovableUnit::Update(fDelta);
     }
 
     CreatureOgreInterface::CreatureOgreInterface( s_ptr<Creature> pCreature ) : pCreature_(pCreature)
