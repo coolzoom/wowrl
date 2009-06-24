@@ -10,7 +10,7 @@
 #define FROST_CHARACTER_H
 
 #include "frost.h"
-#include "unit/frost_unit.h"
+#include "unit/frost_movableunit.h"
 
 #include <OgreUserDefinedObject.h>
 
@@ -93,7 +93,7 @@ namespace Frost
     *   It has a unique name, a gender, a class, and belongs
     *   to a race.
     */
-    class Character : public Unit
+    class Character : public MovableUnit
     {
     public :
 
@@ -153,7 +153,7 @@ namespace Frost
     /** \cond NOT_REMOVE_FROM_DOC
     */
 
-    class LuaCharacter : public LuaUnit
+    class LuaCharacter : public LuaMovableUnit
     {
     public :
 

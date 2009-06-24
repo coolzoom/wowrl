@@ -176,6 +176,7 @@
 		<Unit filename="include\unit\frost_character.h" />
 		<Unit filename="include\unit\frost_creature.h" />
 		<Unit filename="include\unit\frost_healthtype.h" />
+		<Unit filename="include\unit\frost_movableunit.h" />
 		<Unit filename="include\unit\frost_powertype.h" />
 		<Unit filename="include\unit\frost_stats.h" />
 		<Unit filename="include\unit\frost_unit.h" />
@@ -255,6 +256,8 @@
 		<Unit filename="src\unit\frost_creature.cpp" />
 		<Unit filename="src\unit\frost_creature_glues.cpp" />
 		<Unit filename="src\unit\frost_healthtype.cpp" />
+		<Unit filename="src\unit\frost_movableunit.cpp" />
+		<Unit filename="src\unit\frost_movableunit_glues.cpp" />
 		<Unit filename="src\unit\frost_powertype.cpp" />
 		<Unit filename="src\unit\frost_stats.cpp" />
 		<Unit filename="src\unit\frost_unit.cpp" />

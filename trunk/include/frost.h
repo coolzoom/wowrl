@@ -153,6 +153,10 @@ namespace Frost
     class  MovableObject;
     class  LuaMovableObject;
 
+    // frost_movableunit.h
+    class  MovableUnit;
+    class  LuaMovableUnit;
+
     // frost_node.h
     class  Node;
 

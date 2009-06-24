@@ -282,15 +282,6 @@ namespace Frost
         return mFunc.Return();
     }
 
-    int LuaUnit::_Jump( lua_State* pLua )
-    {
-        Lua::Function mFunc("Unit:Jump", pLua);
-
-        pParent_->Jump();
-
-        return mFunc.Return();
-    }
-
     int LuaUnit::_RotateCamera( lua_State* pLua )
     {
         Lua::Function mFunc("Unit:RotateCamera", pLua);
@@ -321,76 +312,6 @@ namespace Frost
                 mFunc.Get(1)->GetNumber()
             );
         }
-
-        return mFunc.Return();
-    }
-
-    int LuaUnit::_SetMoveForward( lua_State* pLua )
-    {
-        Lua::Function mFunc("Unit:SetMoveForward", pLua);
-        mFunc.Add(0, "move forward", Lua::TYPE_BOOLEAN);
-
-        if (mFunc.Check())
-        {
-            pParent_->SetMoveForward(mFunc.Get(0)->GetBool());
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaUnit::_SetMoveBackward( lua_State* pLua )
-    {
-        Lua::Function mFunc("Unit:SetMoveBackward", pLua);
-        mFunc.Add(0, "move backward", Lua::TYPE_BOOLEAN);
-
-        if (mFunc.Check())
-        {
-            pParent_->SetMoveBackward(mFunc.Get(0)->GetBool());
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaUnit::_SetMoveLeft( lua_State* pLua )
-    {
-        Lua::Function mFunc("Unit:SetMoveLeft", pLua);
-        mFunc.Add(0, "move left", Lua::TYPE_BOOLEAN);
-
-        if (mFunc.Check())
-        {
-            pParent_->SetMoveLeft(mFunc.Get(0)->GetBool());
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaUnit::_SetMoveRight( lua_State* pLua )
-    {
-        Lua::Function mFunc("Unit:SetMoveRight", pLua);
-        mFunc.Add(0, "move right", Lua::TYPE_BOOLEAN);
-
-        if (mFunc.Check())
-        {
-            pParent_->SetMoveRight(mFunc.Get(0)->GetBool());
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaUnit::_ToggleTurning( lua_State* pLua )
-    {
-        Lua::Function mFunc("Unit:ToggleTurning", pLua);
-
-        pParent_->ToggleTurning();
-
-        return mFunc.Return();
-    }
-
-    int LuaUnit::_ToggleWalking( lua_State* pLua )
-    {
-        Lua::Function mFunc("Unit:ToggleWalking", pLua);
-
-        pParent_->ToggleWalking();
 
         return mFunc.Return();
     }
@@ -436,17 +357,10 @@ namespace Frost
         method(Unit, GetUnitType),
         method(Unit, IsInCombat),
         method(Unit, IsSitting),
-        method(Unit, Jump),
         method(Unit, RotateCamera),
         method(Unit, RotateModel),
         method(Unit, SetAnim),
         method(Unit, SetAttacking),
-        method(Unit, SetMoveForward),
-        method(Unit, SetMoveBackward),
-        method(Unit, SetMoveLeft),
-        method(Unit, SetMoveRight),
-        method(Unit, ToggleTurning),
-        method(Unit, ToggleWalking),
         method(Unit, ZoomCamera),
 
         {0,0}

@@ -7,15 +7,12 @@
 
 #include "scene/frost_node.h"
 
-#include <OgreSceneNode.h>
-
 using namespace std;
 
 namespace Frost
 {
-    Node::Node( const Vector& mPos )
+    Node::Node( const Vector& mPos ) : MovableObject(mPos)
     {
-        pNode_->setPosition(Vector::FrostToOgre(mPos));
     }
 
     Node::~Node()
