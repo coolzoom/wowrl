@@ -41,6 +41,11 @@ namespace Frost
         return ::atan(iValue.Get())/(2*M_PI);
     }
 
+    s_float atan2(const s_int& iX, const s_int& iY)
+    {
+        return ::atan2(iX.Get(), iY.Get())/(2*M_PI);
+    }
+
     s_int fabs(const s_int& iValue)
     {
         return static_cast<int>(::fabs(iValue.Get()));
@@ -98,6 +103,11 @@ namespace Frost
         return ::atan(uiValue.Get())/(2*M_PI);
     }
 
+    s_float atan2(const s_uint& uiX, const s_uint& uiY)
+    {
+        return ::atan2(uiX.Get(), uiY.Get())/(2*M_PI);
+    }
+
     s_float pow(const s_uint& uiValue, const s_float& fValue)
     {
         return ::pow(uiValue.Get(), fValue.Get());
@@ -148,6 +158,11 @@ namespace Frost
     s_float atan(const s_float& fValue)
     {
         return ::atan(fValue.Get())/(2*M_PI);
+    }
+
+    s_float atan2(const s_float& fX, const s_float& fY)
+    {
+        return ::atan2(fX.Get(), fY.Get())/(2*M_PI);
     }
 
     s_float fabs(const s_float& fValue)
@@ -205,6 +220,11 @@ namespace Frost
     s_double atan(const s_double& dValue)
     {
         return ::atan(dValue.Get())/(2*M_PI);
+    }
+
+    s_double atan2(const s_double& dX, const s_double& dY)
+    {
+        return ::atan2(dX.Get(), dY.Get())/(2*M_PI);
     }
 
     s_double fabs(const s_double& dValue)
