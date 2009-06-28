@@ -25,8 +25,6 @@ namespace Frost
         {
         public :
 
-            // TODO : Implementer FontString
-
             /// Constructor.
             FontString();
 

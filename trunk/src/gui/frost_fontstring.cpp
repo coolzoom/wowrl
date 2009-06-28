@@ -47,8 +47,8 @@ void FontString::Render()
             for (int i = 0; i < OUTLINE_QUALITY; i++)
             {
                 pText_->Render(
-                    s_float(lBorderList_[BORDER_LEFT]) + OUTLINE_THICKNESS*cos(2*s_float::PI*i/OUTLINE_QUALITY),
-                    s_float(lBorderList_[BORDER_TOP])  + OUTLINE_THICKNESS*sin(2*s_float::PI*i/OUTLINE_QUALITY)
+                    s_float(lBorderList_[BORDER_LEFT]) + OUTLINE_THICKNESS*cos(s_float(i/OUTLINE_QUALITY)),
+                    s_float(lBorderList_[BORDER_TOP])  + OUTLINE_THICKNESS*sin(s_float(i/OUTLINE_QUALITY))
                 );
             }
         }

@@ -215,8 +215,8 @@ namespace Frost
 
         if (!fRot.IsNull())
         {
-            s_float cost = cosf(fRot.Get());
-            s_float sint = sinf(fRot.Get());
+            s_float cost = cos(fRot);
+            s_float sint = sin(fRot);
 
             pQuad_->lVertexArray[0].Set(x1*cost - y1*sint + fX, x1*sint + y1*cost + fY);
             pQuad_->lVertexArray[1].Set(x2*cost - y1*sint + fX, x2*sint + y1*cost + fY);
