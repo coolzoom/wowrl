@@ -114,7 +114,7 @@ namespace Frost
                 map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamed = lNamedVirtualObjectList_.find(pObj->GetName());
                 if (iterNamed != lNamedVirtualObjectList_.end())
                 {
-                    lNamedVirtualObjectList_.erase(lNamedVirtualObjectList_.find(pObj->GetName()));
+                    lNamedVirtualObjectList_.erase(iterNamed);
                 }
             }
             else
@@ -122,7 +122,7 @@ namespace Frost
                 map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamed = lNamedObjectList_.find(pObj->GetName());
                 if (iterNamed != lNamedObjectList_.end())
                 {
-                    lNamedObjectList_.erase(lNamedObjectList_.find(pObj->GetName()));
+                    lNamedObjectList_.erase(iterNamed);
                 }
                 iterObj = lMainObjectList_.find(pObj->GetID());
                 if (iterObj != lMainObjectList_.end())
