@@ -102,8 +102,9 @@ namespace Frost
                 {
                     // Everything went fine, delete, erase from map and return
                     iterPlane->second.Delete();
-                    lPlaneList_.erase(iterPlane);
                     lObjectList_.erase(iterPlane->first);
+                    lPlaneList_.erase(iterPlane);
+
                     return;
                 }
             }
@@ -127,8 +128,9 @@ namespace Frost
                 {
                     // Everything went fine, delete, erase from map and return
                     iterTerrain->second.Delete();
-                    lTerrainList_.erase(iterTerrain);
                     lObjectList_.erase(iterTerrain->first);
+                    lTerrainList_.erase(iterTerrain);
+
                     return;
                 }
             }
@@ -160,8 +162,9 @@ namespace Frost
                 {
                     // Everything went fine, delete, erase from map and return
                     iterNode->second.Delete();
-                    lNodeList_.erase(iterNode);
                     lObjectList_.erase(iterNode->first);
+                    lNodeList_.erase(iterNode);
+
                     return;
                 }
             }
