@@ -109,13 +109,15 @@ namespace Frost
         /// Checks if this pointer equals another
         /** \param pValue The pointer to test
         */
-        s_bool operator == (T* pValue)
+        template<class N>
+        s_bool operator == (N* pValue)
         {
             return (pValue_ == pValue);
         }
 
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
+        *   \return 'true' if this pointer is different from another
         */
         template<class N>
         s_bool operator != (s_ptr<N> pValue)
@@ -125,10 +127,92 @@ namespace Frost
 
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
+        *   \return 'true' if this pointer is different from another
         */
-        s_bool operator != (T* pValue)
+        template<class N>
+        s_bool operator != (N* pValue)
         {
             return (pValue_ != pValue);
+        }
+
+        /// Checks if this pointer's value is lower than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower than the other
+        */
+        template<class N>
+        s_bool operator < (s_ptr<N> pValue)
+        {
+            return (pValue_ < pValue.Get());
+        }
+
+        /// Checks if this pointer's value is lower than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower than the other
+        */
+        template<class N>
+        s_bool operator < (N* pValue)
+        {
+            return (pValue_ < pValue);
+        }
+
+        /// Checks if this pointer's value is lower or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower or equal than the other
+        */
+        template<class N>
+        s_bool operator <= (s_ptr<N> pValue)
+        {
+            return (pValue_ <= pValue.Get());
+        }
+
+        /// Checks if this pointer's value is lower or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower or equal than the other
+        */
+        template<class N>
+        s_bool operator <= (N* pValue)
+        {
+            return (pValue_ <= pValue);
+        }
+
+        /// Checks if this pointer's value is greater than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater than the other
+        */
+        template<class N>
+        s_bool operator > (s_ptr<N> pValue)
+        {
+            return (pValue_ > pValue.Get());
+        }
+
+        /// Checks if this pointer's value is greater than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater than the other
+        */
+        template<class N>
+        s_bool operator > (N* pValue)
+        {
+            return (pValue_ > pValue);
+        }
+
+        /// Checks if this pointer's value is greater or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater or equal than the other
+        */
+        template<class N>
+        s_bool operator >= (s_ptr<N> pValue)
+        {
+            return (pValue_ >= pValue.Get());
+        }
+
+        /// Checks if this pointer's value is greater or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater or equal than the other
+        */
+        template<class N>
+        s_bool operator >= (N* pValue)
+        {
+            return (pValue_ >= pValue);
         }
 
         /// Allows : "if (!pPointer)".
