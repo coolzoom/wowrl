@@ -255,7 +255,7 @@ namespace Frost
     /// Stores an animation's settings and data
     struct Animation
     {
-        s_ptr<Ogre::AnimationState> pAnim;
+        s_ptr<Ogre::AnimationState> pOgreAnim;
 
         s_str  sName;
         s_uint uiID;
@@ -277,6 +277,17 @@ namespace Frost
         static const s_str CLASS_NAME;
     };
 
+    /// Stores an animation and its temporary parameters
+    struct AnimationParameters
+    {
+        AnimationParameters() : fSpeed(1.0f) {}
+        AnimationParameters(s_ptr<Animation> anim, const s_float& speed = 1.0f) :
+            pAnim(anim), fSpeed(speed) {}
+
+        s_ptr<Animation> pAnim;
+        s_float          fSpeed;
+    };
+
     /// Animation manager
     /** This class manages a single model's animation.<br>
     *   It is instanciated for each Model in the game.<br>
@@ -290,13 +301,13 @@ namespace Frost
         /** \param pParent The Model this manager belongs to
         *   \param lMAList The animation list
         */
-        AnimManager(s_ptr<Model> pParent, std::map<s_uint, MeshAnimation> lMAList);
+        AnimManager(s_ptr<Model> pParent, const std::map<s_uint, MeshAnimation>& lMAList);
 
         /// Copy constructor.
         /** \param mMgr The source
         *   \param pParent The new parent
         */
-        AnimManager(const AnimManager &mMgr, s_ptr<Model> pParent);
+        AnimManager(const AnimManager& mMgr, s_ptr<Model> pParent);
 
         /// Destructor.
         /** \note Automatically called by Model.
@@ -316,24 +327,33 @@ namespace Frost
 
         /// The main function : puts a new animation on the queue.
         /** \param mID       The new animation's ID
-        *   \param mPriority This prority of this new animation.
+        *   \param mPriority The prority of this animation
+        *   \param fSpeed    The speed at which this animation should be played
         *   \param bQueued   Tells whether this animation should be put
         *                    in the queue or erase every previous call.
-        *   \note If the animation being played has the same priority, it keeps
-        *         playing until the end. Then, the new animation starts.<br>
-        *         If the new animation has a higher priority, it immediately
-        *         stops the actual one and starts playing the new one.<br>
-        *         If the new animation has a lower priority, it is just
-        *         stored in the queue, and will play when no other animation
+        *   \note If the current animation has the same priority as the new one, it
+        *         keeps playing until it ends. Then, the new animation starts.<br>
+        *         If the current animation has a lower priority, it immediately stops 
+        *         and the new animation starts.<br>
+        *         If the current animation has a higher priority, the new one is just
+        *         stored in the queue, and will play when no other queued animation
         *         has a higher priority.<br>
         *         If you use the ANIM_PRIORITY_BACKGROUND priority, then this
         *         animation will be used whenever there is nothing to play
         *         (for example : "stand", "run", "dead", ... should always uses
         *         this priority).<br><br>
         *         When you set an animation, all other animations in lower
-        *         priority queues will be erased (except the BACKGROUND one).
+        *         priority queues will be erased (except the background one).<br><br>
+        *         The speed argument only applies to this particular animation. Once
+        *         it has stopped playing, only the global speed factor (the one you
+        *         set using SetSpeed()) applies.
         */
-        void             SetAnim(AnimID mID, AnimPriority mPriority = ANIM_PRIORITY_HIGH, s_bool bQueued = false);
+        void             SetAnim(
+            AnimID mID,
+            AnimPriority mPriority = ANIM_PRIORITY_HIGH,
+            const s_float& fSpeed = 1.0f,
+            const s_bool& bQueued = false
+        );
 
         /// Plays the actual animation.
         /** \note If it's already being played, the timer is reset and
@@ -365,19 +385,21 @@ namespace Frost
         /// Updates the actual animation.
         /** \note Automatically called by ModelManager.
         */
-        void             Update(s_float fDelta);
+        void             Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 
     private :
 
-        void ChooseAnim(s_uint mID);
+        void ChooseAnim_(const s_uint& mID);
 
         AnimPriority mActualPriority_;
         s_bool       bPaused_;
         s_bool       bTransition_;
         s_bool       bReversed_;
         s_float      fSpeed_;
+        s_float      fTempSpeed_;
+        s_float      fBackGroundSpeed_;
         s_float      fBlend_;
         s_ptr<Model> pParent_;
 
@@ -386,7 +408,7 @@ namespace Frost
         s_uint           uiBackgroundAnimID_;
 
         s_map<s_uint, AnimationSequence> lAnimList_;
-        s_map< AnimPriority, s_ctnr< s_ptr<Animation> > > lQueueList_;
+        s_map< AnimPriority, s_ctnr<AnimationParameters> > lQueueList_;
     };
 }
 
