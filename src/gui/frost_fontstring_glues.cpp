@@ -3,9 +3,9 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_gui_fontstring.h"
+#include "gui/frost_fontstring.h"
 
-#include "gui/frost_gui_layeredregion.h"
+#include "gui/frost_layeredregion.h"
 
 using namespace std;
 using namespace Frost;

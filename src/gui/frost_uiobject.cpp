@@ -3,9 +3,9 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_gui_uiobject.h"
+#include "gui/frost_uiobject.h"
 
-#include "gui/frost_gui_frame.h"
+#include "gui/frost_frame.h"
 #include "gui/frost_guimanager.h"
 #include "material/frost_material.h"
 #include "gui/frost_spritemanager.h"

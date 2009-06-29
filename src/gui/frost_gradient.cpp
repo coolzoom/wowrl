@@ -5,7 +5,7 @@
 /*                                        */
 /*                                        */
 
-#include "gui/frost_gui_gradient.h"
+#include "gui/frost_gradient.h"
 
 using namespace std;
 using namespace Frost;

@@ -10,8 +10,8 @@
 #define FROST_GUI_TEXTURE_H
 
 #include "frost.h"
-#include "gui/frost_gui_layeredregion.h"
-#include "gui/frost_gui_gradient.h"
+#include "gui/frost_layeredregion.h"
+#include "gui/frost_gradient.h"
 #include "gui/frost_sprite.h"
 
 namespace Frost

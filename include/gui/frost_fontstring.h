@@ -10,7 +10,7 @@
 #define FROST_GUI_FONTSTRING_H
 
 #include "frost.h"
-#include "gui/frost_gui_layeredregion.h"
+#include "gui/frost_layeredregion.h"
 #include "gui/frost_text.h"
 
 namespace Frost

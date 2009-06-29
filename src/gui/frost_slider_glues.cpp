@@ -3,9 +3,9 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_gui_slider.h"
+#include "gui/frost_slider.h"
 
-#include "gui/frost_gui_frame.h"
+#include "gui/frost_frame.h"
 
 using namespace std;
 using namespace Frost;

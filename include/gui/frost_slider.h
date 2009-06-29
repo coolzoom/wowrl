@@ -10,7 +10,7 @@
 #define FROST_GUI_SLIDER_H
 
 #include "frost.h"
-#include "gui/frost_gui_frame.h"
+#include "gui/frost_frame.h"
 
 namespace Frost
 {
