@@ -203,7 +203,7 @@ namespace Frost
 
     int LuaUnit::_GetUnitType( lua_State* pLua )
     {
-        Lua::Function mFunc("Unit:SetAnim", pLua, 1);
+        Lua::Function mFunc("Unit:GetUnitType", pLua, 1);
 
         if (mFunc.Check())
         {
