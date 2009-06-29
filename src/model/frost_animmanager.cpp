@@ -28,14 +28,14 @@ namespace Frost
     const s_str MeshAnimation::CLASS_NAME = "MeshAnimation";
     const s_str AnimationSequence::CLASS_NAME = "AnimationSequence";
 
-    AnimManager::AnimManager( s_ptr<Model> pParent, map<s_uint, MeshAnimation> lMAList )
+    AnimManager::AnimManager( s_ptr<Model> pParent, const map<s_uint, MeshAnimation>& lMAList )
     {
         pParent_ = pParent;
         bPaused_ = true;
         fSpeed_ = 1.0f;
         mActualPriority_ = ANIM_PRIORITY_BACKGROUND;
 
-        s_map<s_uint, MeshAnimation>::iterator iterAnim;
+        s_map<s_uint, MeshAnimation>::const_iterator iterAnim;
         foreach (iterAnim, lMAList)
         {
             Animation mAnim;
@@ -91,10 +91,10 @@ namespace Frost
             return 0;
     }
 
-    void AnimManager::ChooseAnim( s_uint uiID )
+    void AnimManager::ChooseAnim_( const s_uint& uiID )
     {
         if (pOldAnim_)
-            pOldAnim_->pAnim->setEnabled(false);
+            pOldAnim_->pOgreAnim->setEnabled(false);
 
         pOldAnim_ = pActualAnim_;
 
@@ -123,23 +123,23 @@ namespace Frost
                 return;
             }
 
-            pActualAnim_->pAnim->setEnabled(true);
-            pActualAnim_->pAnim->setTimePosition(0.0f);
+            pActualAnim_->pOgreAnim->setEnabled(true);
+            pActualAnim_->pOgreAnim->setTimePosition(0.0f);
 
             if (pOldAnim_ != pActualAnim_)
             {
                 if (pOldAnim_ != NULL)
                 {
-                    pOldAnim_->pAnim->setEnabled(true);
-                    pOldAnim_->pAnim->setWeight(1.0f);
+                    pOldAnim_->pOgreAnim->setEnabled(true);
+                    pOldAnim_->pOgreAnim->setWeight(1.0f);
                 }
-                pActualAnim_->pAnim->setWeight(0.0f);
+                pActualAnim_->pOgreAnim->setWeight(0.0f);
                 bTransition_ = true;
                 fBlend_ = 0.0f;
             }
             else
             {
-                pActualAnim_->pAnim->setWeight(1.0f);
+                pActualAnim_->pOgreAnim->setWeight(1.0f);
             }
         }
         else
@@ -148,10 +148,11 @@ namespace Frost
         // TODO : Model : Calculer la bounding box animée
     }
 
-    void AnimManager::SetAnim( AnimID mID, AnimPriority mPriority, s_bool bQueued )
+    void AnimManager::SetAnim( AnimID mID, AnimPriority mPriority, const s_float& fSpeed, const s_bool& bQueued )
     {
         if (mPriority == ANIM_PRIORITY_BACKGROUND)
         {
+            fBackGroundSpeed_ = fSpeed;
             if (mID == ANIM_NONE)
             {
                 uiBackgroundAnimID_.SetNaN();
@@ -163,23 +164,24 @@ namespace Frost
                 uiBackgroundAnimID_ = static_cast<uint>(mID);
                 if (mActualPriority_ == ANIM_PRIORITY_BACKGROUND)
                 {
+                    fTempSpeed_ = fBackGroundSpeed_;
                     if (pActualAnim_)
                     {
                         if (pActualAnim_->uiID != uiBackgroundAnimID_)
-                            ChooseAnim(uiBackgroundAnimID_);
+                            ChooseAnim_(uiBackgroundAnimID_);
                     }
                     else
-                        ChooseAnim(uiBackgroundAnimID_);
+                        ChooseAnim_(uiBackgroundAnimID_);
                 }
             }
         }
         else if ( (bQueued) && (mActualPriority_ >= mPriority) )
         {
             if (mID == ANIM_NONE)
-                lQueueList_[mPriority].PushBack(NULL);
+                lQueueList_[mPriority].PushBack(AnimationParameters(NULL));
             else
             {
-                lQueueList_[mPriority].PushBack(GetAnim(mID));
+                lQueueList_[mPriority].PushBack(AnimationParameters(GetAnim(mID), fSpeed));
             }
         }
         else
@@ -189,14 +191,14 @@ namespace Frost
             if (mID == ANIM_NONE)
             {
                 if (pActualAnim_ != NULL)
-                    pActualAnim_->pAnim->setEnabled(false);
+                    pActualAnim_->pOgreAnim->setEnabled(false);
                 pActualAnim_ = NULL;
                 pOldAnim_ = NULL;
             }
             else
             {
-                ChooseAnim(static_cast<uint>(mID));
-
+                ChooseAnim_(static_cast<uint>(mID));
+                fTempSpeed_ = fSpeed;
                 mActualPriority_ = mPriority;
             }
         }
@@ -206,9 +208,10 @@ namespace Frost
     {
         if (bPaused_)
             bPaused_ = false;
+
         else if (pActualAnim_ != NULL)
         {
-            pActualAnim_->pAnim->setTimePosition(0.0f);
+            pActualAnim_->pOgreAnim->setTimePosition(0.0f);
         }
     }
 
@@ -242,7 +245,7 @@ namespace Frost
         return fSpeed_;
     }
 
-    void AnimManager::Update( s_float fDelta )
+    void AnimManager::Update( const s_float& fDelta )
     {
         if (!bPaused_)
         {
@@ -252,24 +255,27 @@ namespace Frost
                 {
                     if (!bReversed_)
                     {
-                        pActualAnim_->pAnim->addTime((fDelta*fSpeed_).Get());
+                        pActualAnim_->pOgreAnim->addTime((fDelta*fSpeed_*fTempSpeed_).Get());
 
-                        if (pActualAnim_->pAnim->hasEnded())
+                        if (pActualAnim_->pOgreAnim->hasEnded())
                         {
                             if (pActualAnim_->bLoop)
                             {
-                                ChooseAnim(pActualAnim_->uiID);
+                                ChooseAnim_(pActualAnim_->uiID);
                             }
                             else
                             {
-                                if (!lQueueList_.empty())
+                                if (!lQueueList_.IsEmpty())
                                 {
-                                    s_map< AnimPriority, s_ctnr< s_ptr<Animation> > >::iterator iterQueue = lQueueList_.End();
+                                    s_map< AnimPriority, s_ctnr<AnimationParameters> >::iterator iterQueue = lQueueList_.End();
                                     iterQueue--;
 
-                                    if (iterQueue->second.Front())
+                                    const AnimationParameters& mAnimParam = iterQueue->second.Front();
+
+                                    if (mAnimParam.pAnim)
                                     {
-                                        ChooseAnim(iterQueue->second.Front()->uiID);
+                                        ChooseAnim_(mAnimParam.pAnim->uiID);
+                                        fTempSpeed_ = mAnimParam.fSpeed;
                                     }
                                     else
                                     {
@@ -284,7 +290,8 @@ namespace Frost
                                 }
                                 else if (uiBackgroundAnimID_.IsValid() && mActualPriority_ != ANIM_PRIORITY_BACKGROUND)
                                 {
-                                    ChooseAnim(uiBackgroundAnimID_);
+                                    ChooseAnim_(uiBackgroundAnimID_);
+                                    fTempSpeed_ = fBackGroundSpeed_;
                                     mActualPriority_ = ANIM_PRIORITY_BACKGROUND;
                                 }
                                 else
@@ -296,25 +303,28 @@ namespace Frost
                     }
                     else
                     {
-                        pActualAnim_->pAnim->addTime((-fDelta*fSpeed_).Get());
-                        if (pActualAnim_->pAnim->getTimePosition() == 0.0f)
+                        pActualAnim_->pOgreAnim->addTime((-fDelta*fSpeed_*fTempSpeed_).Get());
+                        if (pActualAnim_->pOgreAnim->getTimePosition() == 0.0f)
                         {
                             if (pActualAnim_->bLoop)
                             {
-                                ChooseAnim(pActualAnim_->uiID);
-                                pActualAnim_->pAnim->setTimePosition(pActualAnim_->pAnim->getLength());
+                                ChooseAnim_(pActualAnim_->uiID);
+                                pActualAnim_->pOgreAnim->setTimePosition(pActualAnim_->pOgreAnim->getLength());
                             }
                             else
                             {
                                 if (!lQueueList_.IsEmpty())
                                 {
-                                    s_map< AnimPriority, s_ctnr< s_ptr<Animation> > >::iterator iterQueue = lQueueList_.End();
+                                    s_map< AnimPriority, s_ctnr<AnimationParameters> >::iterator iterQueue = lQueueList_.End();
                                     iterQueue--;
 
-                                    if (iterQueue->second.Front())
+                                    const AnimationParameters& mAnimParam = iterQueue->second.Front();
+
+                                    if (mAnimParam.pAnim)
                                     {
-                                        ChooseAnim(iterQueue->second.Front()->uiID);
-                                        pActualAnim_->pAnim->setTimePosition(pActualAnim_->pAnim->getLength());
+                                        ChooseAnim_(mAnimParam.pAnim->uiID);
+                                        fTempSpeed_ = mAnimParam.fSpeed;
+                                        pActualAnim_->pOgreAnim->setTimePosition(pActualAnim_->pOgreAnim->getLength());
                                     }
                                     else
                                     {
@@ -329,7 +339,8 @@ namespace Frost
                                 }
                                 else if (uiBackgroundAnimID_.IsValid())
                                 {
-                                    ChooseAnim(uiBackgroundAnimID_);
+                                    ChooseAnim_(uiBackgroundAnimID_);
+                                    fTempSpeed_ = fBackGroundSpeed_;
                                     mActualPriority_ = ANIM_PRIORITY_BACKGROUND;
                                 }
                                 else
@@ -346,17 +357,17 @@ namespace Frost
                     if (fBlend_ <= ANIMATION_BLEND_DURATION)
                     {
                         float fCoef = fBlend_.Get()/ANIMATION_BLEND_DURATION;
-                        pActualAnim_->pAnim->setWeight(fCoef);
+                        pActualAnim_->pOgreAnim->setWeight(fCoef);
                         if (pOldAnim_ != NULL)
-                            pOldAnim_->pAnim->setWeight(1-fCoef);
+                            pOldAnim_->pOgreAnim->setWeight(1-fCoef);
 
                         if (!bReversed_)
                         {
-                            pActualAnim_->pAnim->addTime((fDelta*fSpeed_).Get());
+                            pActualAnim_->pOgreAnim->addTime((fDelta*fSpeed_*fTempSpeed_).Get());
                         }
                         else
                         {
-                            pActualAnim_->pAnim->addTime((-fDelta*fSpeed_).Get());
+                            pActualAnim_->pOgreAnim->addTime((-fDelta*fSpeed_*fTempSpeed_).Get());
                         }
 
                         fBlend_ += fDelta;
@@ -364,10 +375,10 @@ namespace Frost
                     else
                     {
                         bTransition_ = false;
-                        pActualAnim_->pAnim->setWeight(1.0f);
+                        pActualAnim_->pOgreAnim->setWeight(1.0f);
                         if (pOldAnim_ != NULL)
                         {
-                            pOldAnim_->pAnim->setEnabled(false);
+                            pOldAnim_->pOgreAnim->setEnabled(false);
                             pOldAnim_ = NULL;
                         }
                     }
@@ -386,8 +397,8 @@ namespace Frost
         sName = pMeshAnim->sName;
         uiID = pMeshAnim->uiID;
         bLoop = pMeshAnim->bLoop;
-        pAnim = pModel->GetEntity()->getAnimationState(sName.Get());
-        pAnim->setLoop(false);
+        pOgreAnim = pModel->GetEntity()->getAnimationState(sName.Get());
+        pOgreAnim->setLoop(false);
     }
 
     void Animation::Set( s_ptr<const Animation> pAnimation, s_ptr<Model> pModel )
@@ -395,7 +406,7 @@ namespace Frost
         sName = pAnimation->sName;
         uiID = pAnimation->uiID;
         bLoop = pAnimation->bLoop;
-        pAnim = pModel->GetEntity()->getAnimationState(sName.Get());
-        pAnim->setLoop(false);
+        pOgreAnim = pModel->GetEntity()->getAnimationState(sName.Get());
+        pOgreAnim->setLoop(false);
     }
 }
