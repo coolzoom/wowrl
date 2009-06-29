@@ -257,10 +257,21 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
     catch (Ogre::Exception e)
     {
         #ifdef FROST_LINUX
-            std::cerr << e.getFullDescription().c_str() << std::endl;
+            std::cerr << e.getFullDescription() << std::endl;
         #else
             MessageBox(
                 NULL, e.getFullDescription().c_str(),
+                "Ogre Error", MB_OK|MB_ICONERROR|MB_TASKMODAL
+            );
+        #endif
+    }
+    catch (std::exception e)
+    {
+        #ifdef FROST_LINUX
+            std::cerr << e.what() << std::endl;
+        #else
+            MessageBox(
+                NULL, e.what(),
                 "Ogre Error", MB_OK|MB_ICONERROR|MB_TASKMODAL
             );
         #endif
