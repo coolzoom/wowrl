@@ -3,9 +3,9 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_gui_statusbar.h"
+#include "gui/frost_statusbar.h"
 
-#include "gui/frost_gui_frame.h"
+#include "gui/frost_frame.h"
 
 using namespace std;
 using namespace Frost;

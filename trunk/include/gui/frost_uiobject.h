@@ -10,7 +10,7 @@
 #define FROST_GUI_UIOBJECT_H
 
 #include "frost.h"
-#include "frost_gui_anchor.h"
+#include "gui/frost_anchor.h"
 
 namespace Frost
 {

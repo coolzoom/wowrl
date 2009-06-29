@@ -10,7 +10,7 @@
 #define FROST_GUI_LAYEREDREGION_H
 
 #include "frost.h"
-#include "gui/frost_gui_uiobject.h"
+#include "gui/frost_uiobject.h"
 
 namespace Frost
 {

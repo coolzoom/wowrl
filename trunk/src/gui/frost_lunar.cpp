@@ -3,16 +3,16 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_gui_uiobject.h"
-#include "gui/frost_gui_frame.h"
-#include "gui/frost_gui_layeredregion.h"
-#include "gui/frost_gui_button.h"
-#include "gui/frost_gui_editbox.h"
-#include "gui/frost_gui_scrollingmessageframe.h"
-#include "gui/frost_gui_slider.h"
-#include "gui/frost_gui_statusbar.h"
-#include "gui/frost_gui_fontstring.h"
-#include "gui/frost_gui_texture.h"
+#include "gui/frost_uiobject.h"
+#include "gui/frost_frame.h"
+#include "gui/frost_layeredregion.h"
+#include "gui/frost_button.h"
+#include "gui/frost_editbox.h"
+#include "gui/frost_scrollingmessageframe.h"
+#include "gui/frost_slider.h"
+#include "gui/frost_statusbar.h"
+#include "gui/frost_fontstring.h"
+#include "gui/frost_texture.h"
 
 /****************/
 /* Methods list */

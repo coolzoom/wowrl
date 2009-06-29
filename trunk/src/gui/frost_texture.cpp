@@ -3,9 +3,9 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_gui_texture.h"
+#include "gui/frost_texture.h"
 
-#include "gui/frost_gui_layeredregion.h"
+#include "gui/frost_layeredregion.h"
 #include "gui/frost_guimanager.h"
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
