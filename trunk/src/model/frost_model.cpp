@@ -28,7 +28,7 @@ namespace Frost
 {
     const s_str Model::CLASS_NAME = "Model";
 
-    Model::Model( const ModelData& mData, const s_str& sEntityName )
+    Model::Model( const ModelData& mData, const s_str& sEntityName ) : MovableObject()
     {
         pMesh_ = mData.pMesh_;
         sModelName_ = mData.sModelName_;

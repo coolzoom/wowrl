@@ -19,7 +19,7 @@ namespace Frost
 {
     const s_str Camera::CLASS_NAME = "Camera";
 
-    Camera::Camera()
+    Camera::Camera() : MovableObject()
     {
         pOgreCamera_ = Frost::Engine::GetSingleton()->GetOgreSceneManager()->createCamera(
             ("Camera_"+uiID_).Get()

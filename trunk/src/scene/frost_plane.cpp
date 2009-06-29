@@ -19,7 +19,7 @@ namespace Frost
 {
     const s_str Plane::CLASS_NAME = "Plane";
 
-    Plane::Plane() : mInterface_(this)
+    Plane::Plane() : MovableObject(), mInterface_(this)
     {
         // Use the default plane mesh, link it to our node
         pEntity_ = Engine::GetSingleton()->GetOgreSceneManager()->createEntity(
