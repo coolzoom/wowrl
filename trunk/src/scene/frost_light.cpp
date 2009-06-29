@@ -5,7 +5,7 @@
 /*                                        */
 /*                                        */
 
-#include "light/frost_light.h"
+#include "scene/frost_light.h"
 
 #include <OgreSceneManager.h>
 #include <OgreLight.h>

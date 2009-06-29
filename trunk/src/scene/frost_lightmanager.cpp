@@ -5,9 +5,9 @@
 /*                                        */
 /*                                        */
 
-#include "light/frost_lightmanager.h"
+#include "scene/frost_lightmanager.h"
 
-#include "light/frost_light.h"
+#include "scene/frost_light.h"
 
 #include "OgreSceneManager.h"
 

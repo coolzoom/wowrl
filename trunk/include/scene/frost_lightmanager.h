@@ -11,7 +11,7 @@
 
 #include "frost.h"
 #include "utils/frost_utils_manager.h"
-#include "light/frost_light.h"
+#include "scene/frost_light.h"
 
 namespace Frost
 {
