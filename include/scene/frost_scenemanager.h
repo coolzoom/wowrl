@@ -23,7 +23,7 @@ namespace Frost
         /// Initializes this manager.
         /** \note Automatically called by Engine.
         */
-        void   Initialize();
+        void           Initialize();
 
         /// Adds a new Decal on the ground.
         /** \param pDecal The decal to put on the ground

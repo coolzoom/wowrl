@@ -204,6 +204,7 @@ namespace Frost
         s_ptr<LightManager>    pLightMgr_;
         s_ptr<UnitManager>     pUnitMgr_;
         s_ptr<GameplayManager> pGameplayMgr_;
+        s_ptr<PhysicsManager>  pPhysicsMgr_;
 
         // Lua
         s_ptr<Lua::State> pLua_;

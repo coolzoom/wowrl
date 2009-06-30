@@ -13,22 +13,6 @@
 
 namespace Frost
 {
-    enum Movement
-    {
-        MOVEMENT_NONE,
-        MOVEMENT_FORWARD,
-        MOVEMENT_BACKWARD
-    };
-
-    enum LateralMovement
-    {
-        LMOVEMENT_NONE,
-        LMOVEMENT_STRAFE_LEFT,
-        LMOVEMENT_STRAFE_RIGHT,
-        LMOVEMENT_TURN_LEFT,
-        LMOVEMENT_TURN_RIGHT,
-    };
-
     /// Abstract Unit type.
     /**
     */
@@ -86,6 +70,35 @@ namespace Frost
         /// Stops this Unit's movement.
         void         StopMovement();
 
+        /// Enables physical interractions for this Unit.
+        /** \note Disabled by default.
+        */
+        void         EnablePhysics();
+
+        /// Disables physical interractions for this Unit.
+        /** \note Disabled by default.
+        */
+        void         DisablePhysics();
+
+        /// Checks if physics is enabled for this Unit.
+        /** \return 'true' if physics is enabled for this Unit
+        *   \note Disabled by default.
+        */
+        s_bool       IsPhysicsEnabled() const;
+
+        /// Forces a Unit to touch the ground.
+        /** \note For this function to have any effect, you must
+        *         enable physics by calling EnablePhysics().
+        */
+        void         ForceOnGround();
+
+        /// Returns this Unit's PhysicsHandler.
+        /** \return This Unit's PhysicsHandler
+        *   \note Returns NULL if none (i.e if IsPhysicsEnabled()
+        *         returns 'false').
+        */
+        s_ptr<PhysicsHandler> GetPhysicsHandler();
+
         /// Creates the associated Lua glue.
         /** \param pLua The Lua::State on which to create the glue
         */
@@ -99,35 +112,27 @@ namespace Frost
 
     protected :
 
-        void SetMovement_(Movement mMovementType);
-        void SetLateralMovement_(LateralMovement mLMovementType);
+        void UpdateMovement_(const s_float& fDelta);
+        void SetYaw_(const s_float& fNewYaw);
 
-        void UpdateMovement_(const s_float fDelta);
+        Vector  mMovementDirection_;
+        s_bool  bWalk_;
+        s_bool  bTurn_;
+        s_float fCumuledYaw_;
 
-        s_bool          bJumping_;
-        Vector          mJumpPosition_;
-        Vector          mJumpDirection_;
-        Vector          mJumpHMovement_;
-        Timer           mJumpTimer_;
-        Movement        mMovementType_;
-        Movement        mJumpMovementType_;
-        LateralMovement mLMovementType_;
-        s_bool          bWalk_;
-        s_bool          bMoveForward_;
-        s_bool          bMoveBackward_;
-        s_bool          bStrafeLeft_;
-        s_bool          bStrafeRight_;
-        s_bool          bTurnLeft_;
-        s_bool          bTurnRight_;
-        s_bool          bTurn_;
-        s_float         fCumuledYaw_;
-        s_float         fJumpHeight_;
-        s_float         fJumpDuration_;
-        s_float         fForwardRunSpeed_;
-        s_float         fForwardWalkSpeed_;
-        s_float         fBackwardRunSpeed_;
-        s_float         fBackwardWalkSpeed_;
-        s_float         fTurnRate_;
+        s_bool  bJumping_;
+        s_float fJumpVSpeed_;
+        s_float fCumuledJumpHeight_;
+        s_float fJumpDuration_;
+
+        s_float fForwardRunSpeed_;
+        s_float fForwardWalkSpeed_;
+        s_float fBackwardRunSpeed_;
+        s_float fBackwardWalkSpeed_;
+        s_float fTurnRate_;
+
+        s_ptr<PhysicsHandler> pHandler_;
+
     };
 
     /** \cond NOT_REMOVE_FROM_DOC

@@ -24,19 +24,19 @@ namespace Frost
 
     SceneManager::~SceneManager()
     {
-        map<s_uint, s_ptr<Plane> >::iterator iterPlane;
+        s_map<s_uint, s_ptr<Plane> >::iterator iterPlane;
         foreach (iterPlane, lPlaneList_)
         {
             iterPlane->second.Delete();
         }
 
-        map<s_uint, s_ptr<Terrain> >::iterator iterTerrain;
+        s_map<s_uint, s_ptr<Terrain> >::iterator iterTerrain;
         foreach (iterTerrain, lTerrainList_)
         {
             iterTerrain->second.Delete();
         }
 
-        map<s_uint, s_ptr<Node> >::iterator iterNode;
+        s_map<s_uint, s_ptr<Node> >::iterator iterNode;
         foreach (iterNode, lNodeList_)
         {
             iterNode->second.Delete();
@@ -80,10 +80,10 @@ namespace Frost
 
     s_ptr<MovableObject> SceneManager::GetMovableObjectByID( const s_uint& uiID ) const
     {
-        map< s_uint, s_ptr<MovableObject> >::const_iterator iterMovable;
-        iterMovable = lObjectList_.find(uiID);
+        s_map< s_uint, s_ptr<MovableObject> >::const_iterator iterMovable;
+        iterMovable = lObjectList_.FindIter(uiID);
 
-        if (iterMovable != lObjectList_.end())
+        if (iterMovable != lObjectList_.End())
             return iterMovable->second;
         else
             return NULL;
@@ -93,24 +93,25 @@ namespace Frost
     {
         if (pPlane)
         {
-            map< s_uint, s_ptr<Plane> >::iterator iterPlane;
-            iterPlane = lPlaneList_.find(pPlane->GetID());
+            s_map< s_uint, s_ptr<Plane> >::iterator iterPlane;
+            iterPlane = lPlaneList_.FindIter(pPlane->GetID());
 
-            if (iterPlane != lPlaneList_.end())
+            if (iterPlane != lPlaneList_.End())
             {
                 if (iterPlane->second->GetID() == pPlane->GetID())
                 {
                     // Everything went fine, delete, erase from map and return
                     iterPlane->second.Delete();
-                    lObjectList_.erase(iterPlane->first);
-                    lPlaneList_.erase(iterPlane);
+                    lObjectList_.Erase(iterPlane->first);
+                    lPlaneList_.Erase(iterPlane);
 
                     return;
                 }
             }
 
             Warning(CLASS_NAME,
-                "Trying to call DeletePlane on a Plane that has not been created by SceneManager (ID:"+pPlane->GetID()+")."
+                "Trying to call DeletePlane on a Plane that has not been created "
+                "by SceneManager (ID:"+pPlane->GetID()+")."
             );
         }
     }
@@ -119,24 +120,25 @@ namespace Frost
     {
         if (pTerrain)
         {
-            map< s_uint, s_ptr<Terrain> >::iterator iterTerrain;
-            iterTerrain = lTerrainList_.find(pTerrain->GetID());
+            s_map< s_uint, s_ptr<Terrain> >::iterator iterTerrain;
+            iterTerrain = lTerrainList_.FindIter(pTerrain->GetID());
 
-            if (iterTerrain != lTerrainList_.end())
+            if (iterTerrain != lTerrainList_.End())
             {
                 if (iterTerrain->second->GetID() == pTerrain->GetID())
                 {
                     // Everything went fine, delete, erase from map and return
                     iterTerrain->second.Delete();
-                    lObjectList_.erase(iterTerrain->first);
-                    lTerrainList_.erase(iterTerrain);
+                    lObjectList_.Erase(iterTerrain->first);
+                    lTerrainList_.Erase(iterTerrain);
 
                     return;
                 }
             }
 
             Warning(CLASS_NAME,
-                "Trying to call DeleteTerrain on a Terrain that has not been created by SceneManager (ID:"+pTerrain->GetID()+")."
+                "Trying to call DeleteTerrain on a Terrain that has not been created "
+                "by SceneManager (ID:"+pTerrain->GetID()+")."
             );
         }
     }
@@ -153,24 +155,25 @@ namespace Frost
     {
         if (pNode)
         {
-            map< s_uint, s_ptr<Node> >::iterator iterNode;
-            iterNode = lNodeList_.find(pNode->GetID());
+            s_map< s_uint, s_ptr<Node> >::iterator iterNode;
+            iterNode = lNodeList_.FindIter(pNode->GetID());
 
-            if (iterNode != lNodeList_.end())
+            if (iterNode != lNodeList_.End())
             {
                 if (iterNode->second->GetID() == pNode->GetID())
                 {
                     // Everything went fine, delete, erase from map and return
                     iterNode->second.Delete();
-                    lObjectList_.erase(iterNode->first);
-                    lNodeList_.erase(iterNode);
+                    lObjectList_.Erase(iterNode->first);
+                    lNodeList_.Erase(iterNode);
 
                     return;
                 }
             }
 
             Warning(CLASS_NAME,
-                "Trying to call DeleteNode on a Node that has not been created by SceneManager (ID:"+pNode->GetID()+")."
+                "Trying to call DeleteNode on a Node that has not been created "
+                "by SceneManager (ID:"+pNode->GetID()+")."
             );
         }
     }
