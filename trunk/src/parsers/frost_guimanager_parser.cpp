@@ -7,11 +7,11 @@
 
 #include "gui/frost_guimanager.h"
 
-#include "gui/frost_gui_anchor.h"
-#include "gui/frost_gui_uiobject.h"
-#include "gui/frost_gui_frame.h"
-#include "gui/frost_gui_texture.h"
-#include "gui/frost_gui_fontstring.h"
+#include "gui/frost_anchor.h"
+#include "gui/frost_uiobject.h"
+#include "gui/frost_frame.h"
+#include "gui/frost_texture.h"
+#include "gui/frost_fontstring.h"
 #include "gui/frost_spritemanager.h"
 
 #include "xml/frost_xml_document.h"
