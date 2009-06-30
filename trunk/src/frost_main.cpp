@@ -8,7 +8,7 @@
 #include "gui/frost_sprite.h"
 #include "gui/frost_text.h"
 #include "gui/frost_spritemanager.h"
-#include "gui/frost_gui_uiobject.h"
+#include "gui/frost_uiobject.h"
 #include "frost_inputmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
@@ -20,11 +20,12 @@
 #include "scene/frost_scenemanager.h"
 #include "scene/frost_plane.h"
 #include "scene/frost_node.h"
-#include "light/frost_lightmanager.h"
-#include "light/frost_light.h"
+#include "scene/frost_lightmanager.h"
+#include "scene/frost_light.h"
 #include "unit/frost_unitmanager.h"
 #include "unit/frost_character.h"
 #include "gameplay/frost_gameplaymanager.h"
+#include "scene/frost_physicsmanager.h"
 
 #include <OgreException.h>
 
@@ -34,7 +35,6 @@ using namespace Frost;
 s_ptr<Engine> pFrost;
 s_ptr<Character> pChar;
 s_ptr<Character> pChar2;
-s_ptr<Model>  pModel;
 
 s_ptr<Sprite> pSprite;
 s_ptr<Sprite> pRTSprite;
@@ -44,6 +44,7 @@ s_ptr<Text>   pText;
 s_ptr<Camera> pCam;
 
 s_ptr<Plane>  pPlane;
+
 s_ptr<Light>  pLight1;
 s_ptr<Light>  pLight2;
 s_ptr<Light>  pLight3;
@@ -82,16 +83,6 @@ s_bool FrameFunc()
     if (pInputMgr->KeyIsPressed(KEY_P))
     {
         GUIManager::GetSingleton()->PrintUI();
-    }
-
-    if (pInputMgr->KeyIsPressed(KEY_R))
-    {
-        //pChar->Resurrect();
-    }
-
-    if (pInputMgr->KeyIsPressed(KEY_E))
-    {
-        pModel->GetAnimMgr()->SetAnim(ANIM_SLEEP, ANIM_PRIORITY_HIGH);
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -166,24 +157,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 
             // Populate the world !
 
-            // Create Units
-            pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
-            pChar->SetClass("MAGE");
-            pChar->SetLevel(51);
-            pChar->SetStat("SPIRIT", s_int(50));
-            pChar->SetStat("INTELLECT", s_int(50));
-            pModel = pChar->GetBodyModel().Get();
-
-            pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulette", "Orc", GENDER_MALE);
-            pChar2->Teleport(Vector(0, 0, -5));
-            pChar2->LookAtUnit(pChar);
-            pChar2->SetClass("MAGE");
-            pChar2->SetLevel(51);
-            pChar2->SetStat("SPIRIT", s_int(50));
-            pChar2->SetStat("INTELLECT", s_int(50));
-
-
-            // The ground
+            // Create the ground
             s_refptr<Material> pGroundMat = MaterialManager::GetSingleton()->CreateMaterial3D(
                 "Textures/Tileset/Aerie Peaks/AeriePeaksTrollTile.png"
             );
@@ -191,6 +165,33 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 
             pPlane = SceneManager::GetSingleton()->CreatePlane();
             pPlane->SetMaterial(pGroundMat);
+
+            // Register it to the physics manager
+            PhysicsManager::GetSingleton()->AddObstacle(pPlane);
+
+
+            // Create Units
+            pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
+            /*pChar->EnablePhysics();
+            pChar->ForceOnGround();*/
+
+            pChar->SetClass("MAGE");
+            pChar->SetLevel(51);
+            pChar->SetStat("SPIRIT", s_int(50));
+            pChar->SetStat("INTELLECT", s_int(50));
+
+
+            pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", GENDER_MALE);
+            //pChar2->EnablePhysics();
+            pChar2->Teleport(Vector(0, 0, -5));
+            //pChar2->ForceOnGround();
+            pChar2->LookAtUnit(pChar);
+
+            pChar2->SetClass("MAGE");
+            pChar2->SetLevel(51);
+            pChar2->SetStat("SPIRIT", s_int(50));
+            pChar2->SetStat("INTELLECT", s_int(50));
+
 
             // Some light
             pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);

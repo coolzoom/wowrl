@@ -15,9 +15,10 @@
 #include "camera/frost_cameramanager.h"
 #include "scene/frost_scenemanager.h"
 #include "material/frost_materialmanager.h"
-#include "light/frost_lightmanager.h"
+#include "scene/frost_lightmanager.h"
 #include "unit/frost_unitmanager.h"
 #include "gameplay/frost_gameplaymanager.h"
+#include "scene/frost_physicsmanager.h"
 #include "camera/frost_camera.h"
 #include "lua/frost_lua.h"
 
@@ -58,6 +59,7 @@ namespace Frost
         pLocaleMgr_   = LocaleManager::GetSingleton();
         pMaterialMgr_ = MaterialManager::GetSingleton();
         pFontMgr_     = FontManager::GetSingleton();
+        pPhysicsMgr_  = PhysicsManager::GetSingleton();
         pSceneMgr_    = SceneManager::GetSingleton();
         pPathMgr_     = PathManager::GetSingleton();
 
@@ -66,6 +68,7 @@ namespace Frost
         pModelMgr_    = ModelManager::GetSingleton();
         pSpriteMgr_   = SpriteManager::GetSingleton();
         pGUIMgr_      = GUIManager::GetSingleton();
+
         pUnitMgr_     = UnitManager::GetSingleton();
         pGameplayMgr_ = GameplayManager::GetSingleton();
 
@@ -235,6 +238,9 @@ namespace Frost
             // Update units' state, actions, movement, ...
             pUnitMgr_->UpdateUnits(fDelta);
 
+            // Update physics controled objects
+            pPhysicsMgr_->UpdateHandlers(fDelta);
+
             // Update the GUI
             pGUIMgr_->Update(fDelta);
 
@@ -282,6 +288,7 @@ namespace Frost
 
             PathManager::Delete();
             SceneManager::Delete();
+            PhysicsManager::Delete();
             FontManager::Delete();
             MaterialManager::Delete();
             LocaleManager::Delete();

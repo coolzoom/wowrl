@@ -183,8 +183,6 @@ namespace Frost
         */
         const s_bool&    IsSelected() const;
 
-
-
         /// Instantaneously move this Unit to a given position.
         /** \param mDestination The new position of the Unit
         */
