@@ -20,7 +20,7 @@ namespace Frost
         /** \param mPair The pair to convert
         *   \note Allows full compatiblity with STL.
         */
-        s_pair(std::pair<T, N> mPair) : std::pair<T, N>(mPair)
+        s_pair(const std::pair<T, N>& mPair) : std::pair<T, N>(mPair)
         {
         }
     };
