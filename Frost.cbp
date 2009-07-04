@@ -179,6 +179,7 @@
 			<Option compile="1" />
 		</Unit>
 		<Unit filename="include\gameplay\frost_gameplay.h" />
+		<Unit filename="include\gameplay\frost_gameplaymanager.h" />
 		<Unit filename="include\gui\frost_anchor.h" />
 		<Unit filename="include\gui\frost_button.h" />
 		<Unit filename="include\gui\frost_editbox.h" />
