@@ -202,7 +202,7 @@ namespace Frost
         }
         else
         {
-            s_ctnr< s_ptr<MovableObject> >::iterator iter = lLookingAtList_.FindIter(pObject);
+            s_ctnr< s_ptr<MovableObject> >::iterator iter = lLookingAtList_.Get(pObject);
             if (iter != lLookingAtList_.End())
             {
                 lLookingAtList_.Erase(iter);
@@ -338,6 +338,12 @@ namespace Frost
     const s_bool& MovableObject::IsTracking() const
     {
         return bTracks_;
+    }
+
+    Vector MovableObject::Transform( const Vector& mPoint ) const
+    {
+        Ogre::Quaternion mQuat = pNode_->_getDerivedOrientation();
+        return Vector::OgreToFrost(mQuat*Vector::FrostToOgre(mPoint));
     }
 
     s_ptr<Ogre::SceneNode> MovableObject::GetOgreNode()
