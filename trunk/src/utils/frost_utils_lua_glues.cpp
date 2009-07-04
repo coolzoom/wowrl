@@ -74,6 +74,7 @@ int Lua::l_ThrowInternalError( lua_State* pLua )
     {
         s_str sError = lua_tostring(pLua, -1);
         Log("# Error # : Lua : " + sError);
+        lua_pop(pLua, 1);
 
         Event e("LUA_ERROR");
         e.Add(sError);
