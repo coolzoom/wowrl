@@ -36,8 +36,6 @@ UIObject::UIObject()
 
 UIObject::~UIObject()
 {
-    GUIManager::GetSingleton()->RemoveUIObject(this);
-
     s_ctnr< s_ptr<LuaUIObject> >::iterator iter;
     foreach (iter, lGlueList_)
     {
@@ -61,8 +59,8 @@ s_str UIObject::Serialize( const s_str& sTab ) const
     sStr << sTab << "  # Parent      : "  << pParent_->GetName() << "\n";
     else
     sStr << sTab << "  # Parent      : none\n";
-    sStr << sTab << "  # Num anchors : " << s_int((int)lAnchorList_.size()) << "\n";
-    if (!lAnchorList_.empty())
+    sStr << sTab << "  # Num anchors : " << lAnchorList_.GetSize() << "\n";
+    if (!lAnchorList_.IsEmpty())
     {
         sStr << sTab << "  |-###\n";
         map<AnchorPoint, Anchor>::const_iterator iterAnchor;
@@ -299,7 +297,7 @@ const s_int& UIObject::GetTop() const
 
 void UIObject::ClearAllPoints()
 {
-    lAnchorList_.clear();
+    lAnchorList_.Clear();
 
     lDefinedBorderList_[BORDER_LEFT]   =
     lDefinedBorderList_[BORDER_TOP]    =
@@ -336,8 +334,8 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 
 void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_int& iX, const s_int& iY )
 {
-    map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.find(mPoint);
-    if (iterAnchor == lAnchorList_.end())
+    s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
+    if (iterAnchor == lAnchorList_.End())
     {
         Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
         mAnchor.SetAbsOffset(iX, iY);
@@ -389,8 +387,8 @@ void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
 
 void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_float& fX, const s_float& fY )
 {
-    map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.find(mPoint);
-    if (iterAnchor == lAnchorList_.end())
+    s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
+    if (iterAnchor == lAnchorList_.End())
     {
         Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
         mAnchor.SetRelOffset(fX, fY);
@@ -481,13 +479,13 @@ void UIObject::SetPoint( const Anchor& mAnchor )
 
 s_uint UIObject::GetNumPoint() const
 {
-    return lAnchorList_.size();
+    return lAnchorList_.GetSize();
 }
 
 s_ptr<Anchor> UIObject::GetPoint( const s_uint& uiPoint )
 {
     s_ptr<Anchor> pAnchor;
-    map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.begin();
+    s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Begin();
     for (s_uint i = 0; i < uiPoint; i++)
     {
         pAnchor = &(iterAnchor->second);
@@ -616,7 +614,7 @@ void UIObject::UpdateBorders_()
         bUpdateDimensions_ = false;
     }
 
-    if (!lAnchorList_.empty())
+    if (!lAnchorList_.IsEmpty())
     {
         s_int iLeft   = s_int(s_int::INFPLUS);
         s_int iRight  = s_int(s_int::INFMINUS);

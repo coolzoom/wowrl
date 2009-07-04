@@ -36,7 +36,8 @@ namespace Frost
 
     UnitManager::~UnitManager()
     {
-        map< s_uint, s_ptr<Unit> >::iterator iterUnit;
+        Log("Closing "+CLASS_NAME+"...");
+        s_map< s_uint, s_ptr<Unit> >::iterator iterUnit;
         foreach (iterUnit, lUnitList_)
         {
             iterUnit->second.Delete();
@@ -62,7 +63,7 @@ namespace Frost
     {
         s_ptr<Character> pCharacter;
 
-        if (MAPFIND(sRace, lRaceList_))
+        if (lRaceList_.Find(sRace))
         {
             pCharacter = new Character(uiCounter_, sName, lRaceList_[sRace], mGender);
             lUnitList_[uiCounter_] = pCharacter;
@@ -93,16 +94,16 @@ namespace Frost
     {
         if (pUnit)
         {
-            map< s_uint, s_ptr<Unit> >::iterator iterUnit;
-            iterUnit = lUnitList_.find(pUnit->GetID());
+            s_map< s_uint, s_ptr<Unit> >::iterator iterUnit;
+            iterUnit = lUnitList_.Get(pUnit->GetID());
 
-            if (iterUnit != lUnitList_.end())
+            if (iterUnit != lUnitList_.End())
             {
                 if (iterUnit->second->GetID() == pUnit->GetID())
                 {
                     // Everything went fine, delete and erase from map
                     iterUnit->second.Delete();
-                    lUnitList_.erase(iterUnit);
+                    lUnitList_.Erase(iterUnit);
                 }
             }
             else
@@ -117,8 +118,8 @@ namespace Frost
 
     s_ptr<Unit> UnitManager::GetUnitByID( const s_uint& uiID ) const
     {
-        map< s_uint, s_ptr<Unit> >::const_iterator iterUnit = lUnitList_.find(uiID);
-        if (iterUnit != lUnitList_.end())
+        s_map< s_uint, s_ptr<Unit> >::const_iterator iterUnit = lUnitList_.Get(uiID);
+        if (iterUnit != lUnitList_.End())
         {
             return iterUnit->second;
         }
@@ -196,7 +197,7 @@ namespace Frost
                 {
                     iterUnit->second->NotifySelected(false);
                 }
-                lSelectedUnitList_.empty();
+                lSelectedUnitList_.IsEmpty();
 
                 if (pUnit)
                 {
@@ -223,8 +224,8 @@ namespace Frost
 
     s_ptr<const Class> UnitManager::GetClassByName( const s_str& sClassName ) const
     {
-        map<s_str, Class>::const_iterator iter = lClassList_.find(sClassName);
-        if (iter != lClassList_.end())
+        s_map<s_str, Class>::const_iterator iter = lClassList_.Get(sClassName);
+        if (iter != lClassList_.End())
         {
             return &(iter->second);
         }
@@ -239,8 +240,8 @@ namespace Frost
 
     s_ptr<const HealthType> UnitManager::GetHealthTypeByName( const s_str& sHealthTypeName ) const
     {
-        map<s_str, HealthType>::const_iterator iter = lHealthTypeList_.find(sHealthTypeName);
-        if (iter != lHealthTypeList_.end())
+        s_map<s_str, HealthType>::const_iterator iter = lHealthTypeList_.Get(sHealthTypeName);
+        if (iter != lHealthTypeList_.End())
         {
             return &(iter->second);
         }
@@ -255,8 +256,8 @@ namespace Frost
 
     s_ptr<const PowerType> UnitManager::GetPowerTypeByName( const s_str& sPowerTypeName ) const
     {
-        map<s_str, PowerType>::const_iterator iter = lPowerTypeList_.find(sPowerTypeName);
-        if (iter != lPowerTypeList_.end())
+        s_map<s_str, PowerType>::const_iterator iter = lPowerTypeList_.Get(sPowerTypeName);
+        if (iter != lPowerTypeList_.End())
         {
             return &(iter->second);
         }

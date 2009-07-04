@@ -46,7 +46,6 @@ namespace Frost
         void                 Initialize();
 
         s_bool               AddUIObject(s_ptr<GUI::UIObject> pObj);
-        void                 RemoveUIObject(s_ptr<GUI::UIObject> pObj);
         s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName, const s_bool& bVirtual = false);
 
         void                 PrintUI();

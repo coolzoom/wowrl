@@ -99,9 +99,9 @@ namespace Frost
         }
         else
         {
-            map<s_float, s_float>::iterator iterFirst, iterSecond;
-            iterSecond = lLengthTable_.lower_bound(fDistance);
-            if (iterSecond != lLengthTable_.end())
+            s_map<s_float, s_float>::iterator iterFirst, iterSecond;
+            iterSecond = lLengthTable_.LowerBound(fDistance);
+            if (iterSecond != lLengthTable_.End())
             {
                 iterFirst = iterSecond;
                 iterFirst--;
@@ -160,7 +160,7 @@ namespace Frost
     {
         if (!bStarted_)
         {
-            lPointPath_.push_back(mPoint);
+            lPointPath_.PushBack(mPoint);
         }
         else
         {
@@ -172,11 +172,11 @@ namespace Frost
 
     void SmoothPath::CheckPath_()
     {
-        if (lPointPath_.empty())
+        if (lPointPath_.IsEmpty())
         {
             Warning(CLASS_NAME, "Can't use empty path. Please add points using AddPoint().");
         }
-        else if (lPointPath_.size() < 4)
+        else if (lPointPath_.GetSize() < 4)
         {
             Warning(CLASS_NAME, "Can't use a SmoothPath with less than 4 points.");
         }
@@ -185,16 +185,16 @@ namespace Frost
             // Build segments
             if (!(bLoop_ && bLinkEndToStart_))
             {
-                for (s_int i = 0; i < lPointPath_.size()-3; i++)
+                for (s_int i = 0; i < s_int(lPointPath_.GetSize())-3; ++i)
                 {
-                    lSegmentList_.push_back(SmoothPathSegment(this, i));
+                    lSegmentList_.PushBack(SmoothPathSegment(this, i));
                 }
             }
             else
             {
-                for (s_int i = -1; i < lPointPath_.size()-1; i++)
+                for (s_int i = -1; i < s_int(lPointPath_.GetSize())-1; ++i)
                 {
-                    lSegmentList_.push_back(SmoothPathSegment(this, i));
+                    lSegmentList_.PushBack(SmoothPathSegment(this, i));
                 }
             }
 
@@ -240,7 +240,7 @@ namespace Frost
             bStarted_ = true;
         }
 
-        if ( (lPointPath_.size() >= 4) && !bEnded_ && !bPaused_ )
+        if ( (lPointPath_.GetSize() >= 4) && !bEnded_ && !bPaused_ )
         {
             if (!bReversed_)
             {
@@ -326,53 +326,53 @@ namespace Frost
 
     const SmoothPathPoint& SmoothPath::GetPoint( const s_int& iIndex ) const
     {
-        if ( (iIndex < lPointPath_.size()) && (iIndex >= 0) )
+        if ( (iIndex < s_int(lPointPath_.GetSize())) && (iIndex >= 0) )
         {
-            list<SmoothPathPoint>::const_iterator iterPoint = lPointPath_.begin();
+            s_ctnr<SmoothPathPoint>::const_iterator iterPoint = lPointPath_.Begin();
             for (s_int i = 0; i < iIndex; i++)
-                iterPoint++;
+                ++iterPoint;
 
             return (*iterPoint);
         }
         else
         {
             s_int iNewIndex = iIndex;
-            while (iNewIndex >= lPointPath_.size())
-                iNewIndex -= lPointPath_.size();
+            while (iNewIndex >= s_int(lPointPath_.GetSize()))
+                iNewIndex -= s_int(lPointPath_.GetSize());
 
             while (iNewIndex < 0)
-                iNewIndex += lPointPath_.size();
+                iNewIndex += s_int(lPointPath_.GetSize());
 
-            list<SmoothPathPoint>::const_iterator iterPoint = lPointPath_.begin();
-            for (s_int i = 0; i < iNewIndex; i++)
-                iterPoint++;
+            s_ctnr<SmoothPathPoint>::const_iterator iterPoint = lPointPath_.Begin();
+            for (s_int i = 0; i < iNewIndex; ++i)
+                ++iterPoint;
 
             return (*iterPoint);
         }
     }
 
-    list<SmoothPathPoint>::iterator SmoothPath::GetPointIterator( const s_int& iIndex )
+    s_ctnr<SmoothPathPoint>::iterator SmoothPath::GetPointIterator( const s_int& iIndex )
     {
-        if ( (iIndex < lPointPath_.size()) && (iIndex >= 0) )
+        if ( (iIndex < s_int(lPointPath_.GetSize())) && (iIndex >= 0) )
         {
-            list<SmoothPathPoint>::iterator iterPoint = lPointPath_.begin();
-            for (s_int i = 0; i < iIndex; i++)
-                iterPoint++;
+            s_ctnr<SmoothPathPoint>::iterator iterPoint = lPointPath_.Begin();
+            for (s_int i = 0; i < iIndex; ++i)
+                ++iterPoint;
 
             return iterPoint;
         }
         else
         {
             s_int iNewIndex = iIndex;
-            while (iNewIndex >= lPointPath_.size())
-                iNewIndex -= lPointPath_.size();
+            while (iNewIndex >= s_int(lPointPath_.GetSize()))
+                iNewIndex -= s_int(lPointPath_.GetSize());
 
             while (iNewIndex < 0)
-                iNewIndex += lPointPath_.size();
+                iNewIndex += s_int(lPointPath_.GetSize());
 
-            list<SmoothPathPoint>::iterator iterPoint = lPointPath_.begin();
-            for (s_int i = 0; i < iNewIndex; i++)
-                iterPoint++;
+            s_ctnr<SmoothPathPoint>::iterator iterPoint = lPointPath_.Begin();
+            for (s_int i = 0; i < iNewIndex; ++i)
+                ++iterPoint;
 
             return iterPoint;
         }
@@ -380,6 +380,6 @@ namespace Frost
 
     s_uint SmoothPath::GetPointNumber() const
     {
-        return lPointPath_.size();
+        return lPointPath_.GetSize();
     }
 }

@@ -265,7 +265,7 @@ void FontString::UpdateBorders_()
         bUpdateDimensions_ = false;
     }
 
-    if (!lAnchorList_.empty())
+    if (!lAnchorList_.IsEmpty())
     {
         s_int iLeft   = s_int(s_int::INFPLUS);
         s_int iRight  = s_int(s_int::INFMINUS);

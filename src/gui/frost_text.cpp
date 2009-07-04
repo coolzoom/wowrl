@@ -552,7 +552,7 @@ namespace Frost
                         mLine.sCaption << "...";
 
                         s_str::iterator iterTemp = iterChar1;
-                        iterChar1 = iterManual->FindIter(" ", s_uint(iterChar1 - iterManual->begin()));
+                        iterChar1 = iterManual->Get(" ", s_uint(iterChar1 - iterManual->begin()));
 
                         if (iterChar1 != iterManual->end())
                         {
@@ -659,13 +659,13 @@ namespace Frost
             foreach (iterChar, iterLine->sCaption)
             {
                 // Format our text
-                if (MAPFIND(uiCounter, lFormatList_))
+                if (lFormatList_.Find(uiCounter))
                 {
-                    s_ptr<Format> f = &lFormatList_[uiCounter];
-                    switch (f->mColorAction)
+                    const Format& f = lFormatList_[uiCounter];
+                    switch (f.mColorAction)
                     {
                         case COLOR_ACTION_SET :
-                            mColor = f->mColor;
+                            mColor = f.mColor;
                             break;
                         case COLOR_ACTION_RESET :
                             mColor = Color(s_uint::NaN);

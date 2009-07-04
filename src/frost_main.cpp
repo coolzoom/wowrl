@@ -134,6 +134,7 @@ s_bool RenderFunc()
 }
 
 // To Do List :
+// TODO : Verifier l'histoire des destructeurs virtuels conteneurs STL
 #ifdef FROST_LINUX
 int main(int argc, char *argv[])
 #else

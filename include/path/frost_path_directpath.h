@@ -85,7 +85,7 @@ namespace Frost
         *   \return The iterator you're searching for
         *   \note You can use negative indices.
         */
-        std::list<DirectPathPoint>::iterator GetPointIterator(const s_int& iIndex);
+        s_ctnr<DirectPathPoint>::iterator GetPointIterator(const s_int& iIndex);
 
         /// Returns the number of points this path contains.
         /** \return The number of points this path contains
@@ -111,9 +111,9 @@ namespace Frost
 
         s_bool bStarted_;
 
-        std::list<DirectPathPoint>           lPointPath_;
-        std::list<DirectPathPoint>::iterator mPreviousPoint_;
-        std::list<DirectPathPoint>::iterator mNextPoint_;
+        s_ctnr<DirectPathPoint>           lPointPath_;
+        s_ctnr<DirectPathPoint>::iterator mPreviousPoint_;
+        s_ctnr<DirectPathPoint>::iterator mNextPoint_;
     };
 }
 

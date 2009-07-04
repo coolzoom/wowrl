@@ -24,7 +24,8 @@ namespace Frost
 
     CameraManager::~CameraManager()
     {
-        map<s_uint, s_ptr<Camera> >::iterator iterCamera;
+        Log("Closing "+CLASS_NAME+"...");
+        s_map<s_uint, s_ptr<Camera> >::iterator iterCamera;
         foreach (iterCamera, lCameraList_)
         {
             iterCamera->second.Delete();
@@ -134,8 +135,8 @@ namespace Frost
     {
         if (pCamera)
         {
-            map< s_uint, s_ptr<Camera> >::iterator iterCamera;
-            iterCamera = lCameraList_.find(pCamera->GetID());
+            s_map< s_uint, s_ptr<Camera> >::iterator iterCamera;
+            iterCamera = lCameraList_.Get(pCamera->GetID());
 
             if (iterCamera != lCameraList_.end())
             {
@@ -143,7 +144,7 @@ namespace Frost
                 {
                     // Everything went fine, delete and erase from map
                     iterCamera->second.Delete();
-                    lCameraList_.erase(iterCamera);
+                    lCameraList_.Erase(iterCamera);
                 }
             }
             else

@@ -66,8 +66,8 @@ namespace Frost
 
         s_float fLength_;
 
-        std::list<SmoothPathPoint>::iterator lP_[4];
-        std::map<s_float, s_float>           lLengthTable_;
+        s_ctnr<SmoothPathPoint>::iterator lP_[4];
+        s_map<s_float, s_float>           lLengthTable_;
     };
 
     /// A smoothed path
@@ -130,7 +130,7 @@ namespace Frost
         *   \return The iterator you're searching for
         *   \note You can use negative indices.
         */
-        std::list<SmoothPathPoint>::iterator GetPointIterator(const s_int& iIndex);
+        s_ctnr<SmoothPathPoint>::iterator GetPointIterator(const s_int& iIndex);
 
         /// Returns the number of points this path contains.
         /** \return The number of points this path contains
@@ -167,9 +167,9 @@ namespace Frost
         s_bool  bStarted_;
         s_float fDistance_;
 
-        std::list<SmoothPathPoint>             lPointPath_;
-        std::list<SmoothPathSegment>           lSegmentList_;
-        std::list<SmoothPathSegment>::iterator mSegment_;
+        s_ctnr<SmoothPathPoint>             lPointPath_;
+        s_ctnr<SmoothPathSegment>           lSegmentList_;
+        s_ctnr<SmoothPathSegment>::iterator mSegment_;
 
     };
 }

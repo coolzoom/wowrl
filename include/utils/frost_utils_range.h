@@ -8,12 +8,19 @@ namespace Frost
     *   <b>Note</b> : can be used in the "foreach" macro.
     */
     template<class T>
-    class s_range : public std::pair<T, T>
+    class s_range
     {
     public :
 
         /// Default constructor.
-        s_range() : std::pair<T, T>()
+        s_range()
+        {
+        }
+
+        /// Constructor.
+        /** \param mPair The pair to convert
+        */
+        s_range(const s_pair<T, T>& mPair) : mPair_(mPair)
         {
         }
 
@@ -21,28 +28,33 @@ namespace Frost
         /** \param mPair The pair to convert
         *   \note Allows full compatiblity with STL.
         */
-        s_range(const std::pair<T, T>& mPair) : std::pair<T, T>(mPair)
+        s_range(const std::pair<T, T>& mPair) : mPair_(mPair)
         {
         }
 
-        const T& begin()
+        const T& Begin() const
         {
-            return std::pair<T, T>::first;
+            return mPair_.First();
         }
 
-        const T& end()
+        const T& End() const
         {
-            return std::pair<T, T>::second;
+            return mPair_.Second();
         }
 
-        const T& Begin()
+        const T& begin() const
         {
-            return std::pair<T, T>::first;
+            return mPair_.First();
         }
 
-        const T& End()
+        const T& end() const
         {
-            return std::pair<T, T>::second;
+            return mPair_.Second();
         }
+
+    private :
+
+        s_pair<T, T> mPair_;
+
     };
 }

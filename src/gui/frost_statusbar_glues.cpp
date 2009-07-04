@@ -16,4 +16,8 @@ const s_str LuaStatusBar::CLASS_NAME = "GUI::LuaStatusBar";
 LuaStatusBar::LuaStatusBar(lua_State* pLua) : LuaFrame(pLua)
 {
     pStatusBarParent_ = s_ptr<StatusBar>::DynamicCast(pParent_);
+    if (pParent_ && !pStatusBarParent_)
+    {
+        Error(CLASS_NAME, "Dynamic cast failed !");
+    }
 }

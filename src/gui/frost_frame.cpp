@@ -132,9 +132,9 @@ s_str Frame::Serialize( const s_str& sTab ) const
 {
     s_str sStr = UIObject::Serialize(sTab);
 
-    if (!lRegionList_.empty())
+    if (!lRegionList_.IsEmpty())
     {
-        if (lChildList_.size() == 1)
+        if (lChildList_.GetSize() == 1)
             sStr << sTab << "  # Region : \n";
         else
             sStr << sTab << "  # Regions     : " << lRegionList_.GetSize() << "\n";
@@ -148,9 +148,9 @@ s_str Frame::Serialize( const s_str& sTab ) const
         }
     }
 
-    if (!lChildList_.empty())
+    if (!lChildList_.IsEmpty())
     {
-        if (lChildList_.size() == 1)
+        if (lChildList_.GetSize() == 1)
             sStr << sTab << "  # Child : \n";
         else
             sStr << sTab << "  # Children    : " << lChildList_.GetSize() << "\n";
@@ -311,14 +311,14 @@ void Frame::FireBuildLayerList_()
 
 s_bool Frame::HasScript( const s_str& sScriptName ) const
 {
-    return MAPFIND(sScriptName, lDefinedScriptList_);
+    return lDefinedScriptList_.Find(sScriptName);
 }
 
 void Frame::AddRegion( s_ptr<LayeredRegion> pRegion )
 {
     if (pRegion)
     {
-        if (!MAPFIND(pRegion->GetID(), lRegionList_))
+        if (!lRegionList_.Find(pRegion->GetID()))
         {
             lRegionList_[pRegion->GetID()] = pRegion;
             FireBuildLayerList_();
@@ -337,10 +337,10 @@ void Frame::RemoveRegion( s_ptr<LayeredRegion> pRegion )
 {
     if (pRegion)
     {
-        map< s_uint, s_ptr<LayeredRegion> >::iterator iter = lRegionList_.find(pRegion->GetID());
-        if (iter != lRegionList_.end())
+        s_map< s_uint, s_ptr<LayeredRegion> >::iterator iter = lRegionList_.Get(pRegion->GetID());
+        if (iter != lRegionList_.End())
         {
-            lRegionList_.erase(iter);
+            lRegionList_.Erase(iter);
             FireBuildLayerList_();
         }
         else
@@ -357,7 +357,7 @@ void Frame::AddChild( s_ptr<Frame> pChild )
 {
     if (pChild)
     {
-        if (!MAPFIND(pChild->GetID(), lChildList_))
+        if (!lChildList_.Find(pChild->GetID()))
         {
             lChildList_[pChild->GetID()] = pChild;
             FireBuildStrataList_();
@@ -376,10 +376,10 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
 {
     if (pChild)
     {
-        map< s_uint, s_ptr<Frame> >::iterator iter = lChildList_.find(pChild->GetID());
-        if (iter != lChildList_.end())
+        s_map< s_uint, s_ptr<Frame> >::iterator iter = lChildList_.Get(pChild->GetID());
+        if (iter != lChildList_.End())
         {
-            lChildList_.erase(iter);
+            lChildList_.Erase(iter);
             FireBuildStrataList_();
         }
         else
@@ -465,12 +465,12 @@ s_array<s_uint,2> Frame::GetMinResize() const
 
 s_uint Frame::GetNumChildren() const
 {
-    return lChildList_.size();
+    return lChildList_.GetSize();
 }
 
 s_uint Frame::GetNumRegions() const
 {
-    return lRegionList_.size();
+    return lRegionList_.GetSize();
 }
 
 const s_float& Frame::GetScale() const
@@ -556,7 +556,7 @@ void Frame::OnEvent( const Event& mEvent )
 
 void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 {
-    if (MAPFIND(sScriptName, lDefinedScriptList_))
+    if (lDefinedScriptList_.Find(sScriptName))
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
 
@@ -632,20 +632,17 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 void Frame::RegisterAllEvents()
 {
     bHasAllEventsRegistred_ = true;
-    lRegEventList_.clear();
+    lRegEventList_.Clear();
 }
 
 void Frame::RegisterEvent( const s_str& sEvent )
 {
-    if (!MAPFIND(sEvent, lRegEventList_))
-    {
-        lRegEventList_[sEvent] = true;
-    }
+    lRegEventList_[sEvent] = true;
 }
 
 void Frame::RegisterForDrag( const s_ctnr<s_str>& lButtonList )
 {
-    lRegDragList_.clear();
+    lRegDragList_.Clear();
     s_ctnr<s_str>::const_iterator iterButton;
     foreach (iterButton, lButtonList)
     {
@@ -817,7 +814,7 @@ void Frame::SetUserPlaced( const s_bool& bIsUserPlaced )
 void Frame::UnregisterAllEvents()
 {
     bHasAllEventsRegistred_ = false;
-    lRegEventList_.clear();
+    lRegEventList_.Clear();
 }
 
 void Frame::UnregisterEvent( const s_str& sEvent )
@@ -831,10 +828,10 @@ void Frame::Update()
 
     if (bBuildStrataList_)
     {
-        lStrataList_.clear();
+        lStrataList_.Clear();
 
         // Build the strata map
-        map< s_uint, s_ptr<Frame> >::iterator iterChild;
+        s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
         foreach (iterChild, lChildList_)
         {
             s_ptr<Frame> pChild = iterChild->second;
@@ -855,14 +852,14 @@ void Frame::Update()
     if (bBuildLayerList_)
     {
         // Clear layers' content
-        map< LayerType, Layer >::iterator iterLayer;
+        s_map< LayerType, Layer >::iterator iterLayer;
         foreach (iterLayer, lLayerList_)
         {
             iterLayer->second.lRegionList.clear();
         }
 
         // Fill layers with regions
-        map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+        s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
         foreach (iterRegion, lRegionList_)
         {
             s_ptr<LayeredRegion> pRegion = iterRegion->second;
@@ -876,14 +873,14 @@ void Frame::Update()
         On("Update");
 
     // Update regions
-    map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+    s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
     foreach (iterRegion, lRegionList_)
     {
         iterRegion->second->Update();
     }
 
     // Update childrens
-    map< s_uint, s_ptr<Frame> >::iterator iterChild;
+    s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList_)
     {
         iterChild->second->Update();

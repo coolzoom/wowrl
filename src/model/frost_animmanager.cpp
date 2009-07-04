@@ -28,7 +28,7 @@ namespace Frost
     const s_str MeshAnimation::CLASS_NAME = "MeshAnimation";
     const s_str AnimationSequence::CLASS_NAME = "AnimationSequence";
 
-    AnimManager::AnimManager( s_ptr<Model> pParent, const map<s_uint, MeshAnimation>& lMAList )
+    AnimManager::AnimManager( s_ptr<Model> pParent, const s_map<s_uint, MeshAnimation>& lMAList )
     {
         pParent_ = pParent;
         bPaused_ = true;
@@ -76,7 +76,7 @@ namespace Frost
         {
             s_ptr<Animation> pAnim;
             map<s_uint, AnimationSequence>::iterator iterAnim;
-            iterAnim = lAnimList_.FindIter(static_cast<uint>(mID));
+            iterAnim = lAnimList_.Get(static_cast<uint>(mID));
             if (iterAnim != lAnimList_.End())
                 pAnim = &iterAnim->second.lSequence[0];
             return pAnim;
@@ -98,7 +98,7 @@ namespace Frost
 
         pOldAnim_ = pActualAnim_;
 
-        s_map<s_uint, AnimationSequence>::iterator iterAnim = lAnimList_.FindIter(uiID);
+        s_map<s_uint, AnimationSequence>::iterator iterAnim = lAnimList_.Get(uiID);
         if (iterAnim != lAnimList_.End())
         {
             s_ptr<AnimationSequence> pAS = &(iterAnim->second);

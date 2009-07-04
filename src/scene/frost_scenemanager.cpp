@@ -24,6 +24,7 @@ namespace Frost
 
     SceneManager::~SceneManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
         s_map<s_uint, s_ptr<Plane> >::iterator iterPlane;
         foreach (iterPlane, lPlaneList_)
         {
@@ -81,7 +82,7 @@ namespace Frost
     s_ptr<MovableObject> SceneManager::GetMovableObjectByID( const s_uint& uiID ) const
     {
         s_map< s_uint, s_ptr<MovableObject> >::const_iterator iterMovable;
-        iterMovable = lObjectList_.FindIter(uiID);
+        iterMovable = lObjectList_.Get(uiID);
 
         if (iterMovable != lObjectList_.End())
             return iterMovable->second;
@@ -94,7 +95,7 @@ namespace Frost
         if (pPlane)
         {
             s_map< s_uint, s_ptr<Plane> >::iterator iterPlane;
-            iterPlane = lPlaneList_.FindIter(pPlane->GetID());
+            iterPlane = lPlaneList_.Get(pPlane->GetID());
 
             if (iterPlane != lPlaneList_.End())
             {
@@ -121,7 +122,7 @@ namespace Frost
         if (pTerrain)
         {
             s_map< s_uint, s_ptr<Terrain> >::iterator iterTerrain;
-            iterTerrain = lTerrainList_.FindIter(pTerrain->GetID());
+            iterTerrain = lTerrainList_.Get(pTerrain->GetID());
 
             if (iterTerrain != lTerrainList_.End())
             {
@@ -156,7 +157,7 @@ namespace Frost
         if (pNode)
         {
             s_map< s_uint, s_ptr<Node> >::iterator iterNode;
-            iterNode = lNodeList_.FindIter(pNode->GetID());
+            iterNode = lNodeList_.Get(pNode->GetID());
 
             if (iterNode != lNodeList_.End())
             {

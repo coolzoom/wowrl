@@ -86,8 +86,8 @@ namespace Frost
         void ParseXMLFile_(const s_str& sFile);
         void ParseGameplayBlock_(s_ptr<XML::Block> pGameplayBlock);
 
-        s_ptr<Gameplay>                    pCurrentGameplay_;
-        std::map< s_str, s_ptr<Gameplay> > lGameplayList_;
+        s_ptr<Gameplay>                 pCurrentGameplay_;
+        s_map< s_str, s_ptr<Gameplay> > lGameplayList_;
 
         s_ptr<Lua::State> pLua_;
 

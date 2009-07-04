@@ -14,6 +14,10 @@ const s_str LuaFrame::CLASS_NAME  = "GUI::LuaFrame";
 LuaFrame::LuaFrame(lua_State* pLua) : LuaUIObject(pLua)
 {
     pFrameParent_ = s_ptr<Frame>::DynamicCast(pParent_);
+    if (pParent_ && !pFrameParent_)
+    {
+        Error(CLASS_NAME, "Dynamic cast failed !");
+    }
 }
 
 int LuaFrame::_DisableDrawLayer(lua_State* pLua)

@@ -64,9 +64,9 @@ Block::Block( const Block& mValue )
     s_multimap< s_str, s_ptr<Block> >::iterator       iterAdded;
     foreach (iterBlock, mValue.lFoundBlockList_)
     {
-        iterAdded = lFoundBlockList_.Insert(make_pair(
+        iterAdded = lFoundBlockList_.Insert(
             iterBlock->first, s_ptr<Block>(new Block(*(iterBlock->second)))
-        ));
+        );
         lFoundBlockStack_.PushBack(iterAdded);
         lFoundBlockSortedStacks_[iterBlock->first].PushBack(iterAdded);
     }
@@ -308,7 +308,7 @@ void Block::SetParent( s_ptr<Block> pParent )
 
 void Block::AddDerivated( const s_str& sName )
 {
-    lDerivatedList_.push_back(sName);
+    lDerivatedList_.PushBack(sName);
 }
 
 s_bool Block::HasDerivated( const s_str& sName )
@@ -437,7 +437,7 @@ s_str Block::GetAttribute( const s_str& sName )
 
 s_ptr<Block> Block::GetBlock( const s_str& sName )
 {
-    s_multimap< s_str, s_ptr<Block> >::iterator iter = lFoundBlockList_.FindIter(sName);
+    s_multimap< s_str, s_ptr<Block> >::iterator iter = lFoundBlockList_.Get(sName);
     if (iter != lFoundBlockList_.End())
     {
         return iter->second;
@@ -509,9 +509,9 @@ void Block::AddBlock()
     {
         s_multimap< s_str, s_ptr<Block> >::iterator iterAdded;
         // Store the new block
-        iterAdded = lFoundBlockList_.Insert(make_pair(
+        iterAdded = lFoundBlockList_.Insert(
             pNewBlock_->GetName(), s_ptr<Block>(new Block(*pNewBlock_))
-        ));
+        );
         // Position it on the global stack
         lFoundBlockStack_.PushBack(iterAdded);
         // Position it on the sorted stack

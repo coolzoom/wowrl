@@ -23,6 +23,7 @@ namespace Frost
 
     PhysicsManager::~PhysicsManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
         s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> >::iterator iterHandler;
         foreach (iterHandler, lHandlerList_)
         {
@@ -41,7 +42,7 @@ namespace Frost
         s_ptr<PhysicsHandler> pHandler;
 
         s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> >::iterator iterHandler;
-        iterHandler = lHandlerList_.FindIter(pObj);
+        iterHandler = lHandlerList_.Get(pObj);
         if (iterHandler == lHandlerList_.End())
         {
             pHandler = new PhysicsHandler(pObj);
@@ -72,7 +73,7 @@ namespace Frost
         if (pHandler && pHandler->GetParent())
         {
             s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> >::iterator iterHandler;
-            iterHandler = lHandlerList_.FindIter(pHandler->GetParent());
+            iterHandler = lHandlerList_.Get(pHandler->GetParent());
 
             if (iterHandler != lHandlerList_.End())
             {
@@ -119,7 +120,7 @@ namespace Frost
         if (pObstacle)
         {
             s_map< s_uint, s_ptr<Obstacle> >::iterator iterObstacle;
-            iterObstacle = lObstacleList_.FindIter(pObstacle->GetID());
+            iterObstacle = lObstacleList_.Get(pObstacle->GetID());
 
             if (iterObstacle != lObstacleList_.End())
             {

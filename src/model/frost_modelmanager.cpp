@@ -24,7 +24,8 @@ namespace Frost
 
     ModelManager::~ModelManager()
     {
-        map< s_str, s_ptr<ModelData> >::iterator iterModelData;
+        Log("Closing "+CLASS_NAME+"...");
+        s_map< s_str, s_ptr<ModelData> >::iterator iterModelData;
         foreach (iterModelData, lLoadedModelList_)
         {
             iterModelData->second.Delete();
@@ -34,12 +35,12 @@ namespace Frost
     s_refptr<Model> ModelManager::CreateModel( const s_str& sModelName, const s_str& sEntityName )
     {
         s_refptr<Model> pModel;
-        map<s_str, s_str>& mMap = lModelNameToFileMap_[""];
+        s_map<s_str, s_str>& mMap = lModelNameToFileMap_[""];
 
-        if (MAPFIND(sModelName, mMap))
+        if (mMap.Find(sModelName))
         {
             s_str sFile = mMap[sModelName];
-            if (MAPFIND(sModelName, lLoadedModelList_))
+            if (lLoadedModelList_.Find(sModelName))
             {
                 // If this model has already been loaded, just copy it
                 pModel = s_refptr<Model>(new Model(*lLoadedModelList_[sFile], sEntityName));
@@ -65,12 +66,12 @@ namespace Frost
     s_refptr<Model> ModelManager::CreateModel( const s_str& sCategory, const s_str& sModelName, const s_str& sEntityName )
     {
         s_refptr<Model> pModel;
-        map<s_str, s_str>& mMap = lModelNameToFileMap_[sCategory];
+        s_map<s_str, s_str>& mMap = lModelNameToFileMap_[sCategory];
 
-        if (MAPFIND(sModelName, mMap))
+        if (mMap.Find(sModelName))
         {
             s_str sFile = mMap[sModelName];
-            if (MAPFIND(sModelName, lLoadedModelList_))
+            if (lLoadedModelList_.Find(sModelName))
             {
                 // If this model has already been loaded, just copy it
                 pModel = s_refptr<Model>(new Model(*lLoadedModelList_[sFile], sEntityName));
@@ -96,8 +97,8 @@ namespace Frost
 
     void ModelManager::LinkModelNameToFile( const s_str& sModelName, const s_str& sFile )
     {
-        map<s_str, s_str>& mMap = lModelNameToFileMap_[""];
-        if (MAPFIND(sModelName, mMap))
+        s_map<s_str, s_str>& mMap = lModelNameToFileMap_[""];
+        if (mMap.Find(sModelName))
         {
             Warning(CLASS_NAME,
                 "\""+sModelName+"\" is already linked to a file. Previous value erased."
@@ -109,8 +110,8 @@ namespace Frost
 
     void ModelManager::LinkModelNameToFile( const s_str& sCategory, const s_str& sModelName, const s_str& sFile )
     {
-        map<s_str, s_str>& mMap = lModelNameToFileMap_[sCategory];
-        if (MAPFIND(sModelName, mMap))
+        s_map<s_str, s_str>& mMap = lModelNameToFileMap_[sCategory];
+        if (mMap.Find(sModelName))
         {
             Warning(CLASS_NAME,
                 "\""+sModelName+"\" is already linked to a file. Previous value erased."
@@ -122,11 +123,11 @@ namespace Frost
 
     void ModelManager::ClearLink( const s_str& sModelName )
     {
-        map<s_str, s_str>& mMap = lModelNameToFileMap_[""];
-        map<s_str, s_str>::iterator iter = mMap.find(sModelName);
-        if (iter != mMap.end())
+        s_map<s_str, s_str>& mMap = lModelNameToFileMap_[""];
+        s_map<s_str, s_str>::iterator iter = mMap.Get(sModelName);
+        if (iter != mMap.End())
         {
-            mMap.erase(iter);
+            mMap.Erase(iter);
         }
         else
         {
@@ -138,11 +139,11 @@ namespace Frost
 
     void ModelManager::ClearLink( const s_str& sCategory, const s_str& sModelName )
     {
-        map<s_str, s_str>& mMap = lModelNameToFileMap_[sCategory];
-        map<s_str, s_str>::iterator iter = mMap.find(sModelName);
-        if (iter != mMap.end())
+        s_map<s_str, s_str>& mMap = lModelNameToFileMap_[sCategory];
+        s_map<s_str, s_str>::iterator iter = mMap.Get(sModelName);
+        if (iter != mMap.End())
         {
-            mMap.erase(iter);
+            mMap.Erase(iter);
         }
         else
         {

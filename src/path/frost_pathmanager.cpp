@@ -22,6 +22,7 @@ namespace Frost
 
     PathManager::~PathManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
     }
 
     s_refptr<DirectPath> PathManager::CreateDirectPath()

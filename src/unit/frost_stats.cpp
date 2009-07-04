@@ -43,7 +43,7 @@ namespace Frost
         map< s_str, Bonus<s_var> >::iterator iterBonus;
         foreach (iterBonus, mBonusSet.lBonusList)
         {
-            if (MAPFIND(iterBonus->first, lCharactList))
+            if (lCharactList.Find(iterBonus->first))
             {
                 lCharactList[iterBonus->first].AddBonus(iterBonus->second);
             }
@@ -67,7 +67,7 @@ namespace Frost
         map< s_str, Bonus<s_var> >::iterator iterBonus;
         foreach (iterBonus, mBonusSet.lBonusList)
         {
-            if (MAPFIND(iterBonus->first, lCharactList))
+            if (lCharactList.Find(iterBonus->first))
             {
                 lCharactList[iterBonus->first].RemoveBonus(iterBonus->second);
             }

@@ -86,11 +86,10 @@ namespace Frost
         */
         s_var               GetConstant(const s_str& sConstantName) const;
 
-        /// Returns the Ogre::Log used to print infos in the log.
-        /** \return The Ogre::Log used to print infos in the log.
-        *   \note This is not Ogre's log, but Frost's.
+        /// Returns the log file used to print debug infos.
+        /** \return The log file used to print debug infos
         */
-        s_ptr<Ogre::Log>    GetLog();
+        s_ptr<File>         GetLog();
 
         /// Returns the Ogre::SceneManager used for the main scene.
         /** \return The Ogre::SceneManager used for the main scene
@@ -213,7 +212,8 @@ namespace Frost
         s_ptr<Ogre::Root>         pRoot_;
         s_ptr<Ogre::SceneManager> pOgreSceneMgr_;
         s_ptr<Ogre::RenderWindow> pRenderWindow_;
-        s_ptr<Ogre::Log>          pLog_;
+
+        File mLog_;
     };
 }
 

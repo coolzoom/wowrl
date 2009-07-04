@@ -30,6 +30,7 @@ namespace Frost
 
     MaterialManager::~MaterialManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
     }
 
     void MaterialManager::Initialize()
