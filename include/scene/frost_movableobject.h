@@ -143,6 +143,12 @@ namespace Frost
         */
         virtual const s_bool& IsTracking() const;
 
+        /// Transforms a point in the local space into a point in the world space.
+        /** \param mPoint The point to transform
+        *   \return The transformed point
+        */
+        Vector                Transform(const Vector& mPoint) const;
+
         /// Returns the position of this object.
         /** \return The position of this object
         */
