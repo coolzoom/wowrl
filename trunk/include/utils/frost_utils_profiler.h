@@ -24,6 +24,9 @@ namespace Frost
     public :
 
         /// Default constructor.
+        Profiler();
+
+        /// Constructor.
         /** \param iGroup  The group to which it belongs (used to group prints later)
         *   \param sName   The name of this Profiler (usualy the name of the function
         *                it profiles)
