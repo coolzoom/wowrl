@@ -11,14 +11,9 @@ typedef unsigned char  uchar;
 typedef unsigned short ushort;
 typedef unsigned long  ulong;
 
-#ifndef FROST_UTILS_H
-#define FROST_UTILS_H
-
 #include <string>
 #include <vector>
 #include <deque>
 #include <fstream>
 #include <sstream>
 #include <map>
-
-#endif
