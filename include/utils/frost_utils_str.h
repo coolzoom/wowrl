@@ -120,7 +120,7 @@ namespace Frost
             sValue_ = STRING("");
             this->operator<<(iValue);
 
-            while (sValue_.length() < uiCharNbr.Get())
+            while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
                 sValue_ = STRING('0') + sValue_;
         }
 
@@ -149,7 +149,7 @@ namespace Frost
             sValue_ = STRING("");
             this->operator<<(uiValue);
 
-            while (sValue_.length() < uiCharNbr.Get())
+            while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
                 sValue_ = STRING('0') + sValue_;
         }
 
@@ -178,7 +178,7 @@ namespace Frost
             sValue_ = STRING("");
             this->operator<<(fValue);
 
-            while (sValue_.length() < uiCharNbr.Get())
+            while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
                 sValue_ = STRING('0') + sValue_;
         }
 
@@ -212,7 +212,10 @@ namespace Frost
         */
         explicit s_str_t(const string_element& cValue, const s_uint& uiCharNbr)
         {
-            sValue_ = string_object(uiCharNbr.Get(), cValue);
+            if (uiCharNbr.IsValid())
+                sValue_ = string_object(uiCharNbr.Get(), cValue);
+            else
+                sValue_ = STRING("");
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
         }
@@ -328,10 +331,13 @@ namespace Frost
         */
         void Erase(const s_uint& uiStart = 0u, const s_uint& uiNbr = s_uint::INF)
         {
-            if (!uiNbr.IsValid())
-                sValue_.erase(uiStart.Get(), string_object::npos);
-            else
-                sValue_.erase(uiStart.Get(), uiNbr.Get());
+            if (uiStart.IsValid())
+            {
+                if (!uiNbr.IsValid())
+                    sValue_.erase(uiStart.Get(), string_object::npos);
+                else
+                    sValue_.erase(uiStart.Get(), uiNbr.Get());
+            }
         }
 
         /// Removes a certain number of character from the end of the string.
@@ -341,6 +347,8 @@ namespace Frost
         {
             if (uiNbr.IsValid())
                 sValue_.erase((Length()-uiNbr).Get(), uiNbr.Get());
+            else
+                sValue_.clear();
         }
 
         /// Removes a certain number of character from the beginning of the string.
@@ -350,6 +358,8 @@ namespace Frost
         {
             if (uiNbr.IsValid())
                 sValue_.erase(0, uiNbr.Get());
+            else
+                sValue_.clear();
         }
 
         /// Removes all characters between the provided positions.
@@ -358,10 +368,13 @@ namespace Frost
         */
         void EraseRange(const s_uint& uiStart = 0u, const s_uint& uiEnd = s_uint::INF)
         {
-            if (!uiEnd.IsValid())
-                sValue_.erase(uiStart.Get(), string_object::npos);
-            else
-                sValue_.erase(uiStart.Get(), (uiEnd-uiStart).Get());
+            if (uiStart.IsValid())
+            {
+                if (!uiEnd.IsValid())
+                    sValue_.erase(uiStart.Get(), string_object::npos);
+                else
+                    sValue_.erase(uiStart.Get(), (uiEnd-uiStart).Get());
+            }
         }
 
         /// Returns a certain number of character from a given position.
@@ -395,7 +408,30 @@ namespace Frost
         *   \param uiStart From where to start searching
         *   \return The position of the pattern (NaN if not found)
         */
-        iterator FindIter(const s_str_t& sValue, const s_uint& uiStart = 0u)
+        iterator Get(const s_str_t& sValue, const s_uint& uiStart = 0u)
+        {
+            if (uiStart.IsValid())
+            {
+                // string::npos is an int for Linux, and an uint for Windows
+                #ifdef FROST_LINUX
+                    int iResult = sValue_.find(sValue.Get(), uiStart.Get());
+                    if (iResult >= 0)
+                        return Begin() + iResult;
+                #else
+                    uint uiResult = sValue_.find(sValue.Get(), uiStart.Get());
+                    if (uiResult != sValue_.npos)
+                        return Begin() + uiResult;
+                #endif
+            }
+            return End();
+        }
+
+        /// Returns the position of the pattern in the string.
+        /** \param sValue  The string to search for
+        *   \param uiStart From where to start searching
+        *   \return The position of the pattern (NaN if not found)
+        */
+        const_iterator Get(const s_str_t& sValue, const s_uint& uiStart = 0u) const
         {
             if (uiStart.IsValid())
             {
