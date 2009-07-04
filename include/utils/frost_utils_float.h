@@ -24,7 +24,8 @@ namespace Frost
     *   <b>Note</b> : Because the CPU can handle infinite
     *   and nan itself for float types, this class is
     *   more efficient than the others (as fast as the
-    *   wrapped POD, 5 times slower in debug).
+    *   wrapped POD with compiler optimizations, 5 times
+    *   slower in debug mode).
     */
     template <class T>
     class s_float_t
@@ -138,10 +139,7 @@ namespace Frost
         */
         void Clamp(const s_float_t& fMin, const s_float_t& fMax)
         {
-            if (IsValid() && fMax.IsValid() && fMin.IsValid())
-                fValue_ = (fValue_ < fMax.fValue_) ? ((fValue_ > fMin.fValue_) ? fValue_ : fMin.fValue_) : fMax.fValue_;
-            else
-                SetNaN();
+            fValue_ = (fValue_ < fMax.fValue_) ? ((fValue_ > fMin.fValue_) ? fValue_ : fMin.fValue_) : fMax.fValue_;
         }
 
         /// Converts this float to a angle in radian.
@@ -550,10 +548,7 @@ namespace Frost
         */
         static s_float_t Clamp(const s_float_t& fValue, const s_float_t& fMin, const s_float_t& fMax)
         {
-            if (fValue.IsValid() && fMax.IsValid() && fMin.IsValid())
-                return (fValue.fValue_ < fMax.fValue_) ? ((fValue.fValue_ > fMin.fValue_) ? fValue.fValue_ : fMin.fValue_) : fMax.fValue_;
-            else
-                return s_float_t::NaN;
+            return (fValue.fValue_ < fMax.fValue_) ? ((fValue.fValue_ > fMin.fValue_) ? fValue.fValue_ : fMin.fValue_) : fMax.fValue_;
         }
 
         /// Returns the lowest value of the two provided ones.

@@ -15,7 +15,8 @@ namespace Frost
     *   can bloat your performances. Use prebuilt types
     *   in this case.
     *   <b>Note</b> : This class is about 60 times slower
-    *   than the wrapped POD (20 times in debug).
+    *   than the wrapped POD (20 times in debug, without
+    *   any compiler optimizations).
     */
     template<class T>
     class s_int_t
