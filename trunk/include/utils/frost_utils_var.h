@@ -156,11 +156,11 @@ namespace Frost
         {
             const s_type& mType = GetType();
             if (mType == VALUE_INT) return s_str(Get<s_int>());
-            else if (mType == VALUE_UINT) return s_str(Get<s_uint>());
-            else if (mType == VALUE_FLOAT) return s_str(Get<s_float>());
+            else if (mType == VALUE_UINT) return s_str(Get<s_uint>())+"u";
+            else if (mType == VALUE_FLOAT) return s_str(Get<s_float>())+"f";
             else if (mType == VALUE_DOUBLE) return s_str(Get<s_double>());
             else if (mType == VALUE_BOOL) return s_str(Get<s_bool>());
-            else if (mType == VALUE_STRING) return Get<s_str>();
+            else if (mType == VALUE_STRING) return "\""+Get<s_str>()+"\"";
             else if (mType == VALUE_POINTER) return s_str() << Get<void*>();
             else return "<none>";
         }
