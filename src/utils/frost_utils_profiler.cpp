@@ -17,6 +17,10 @@ namespace Frost
     const s_str Profiler::CLASS_NAME = "Profiler";
     const s_str Chrono::CLASS_NAME = "Chrono";
 
+    Profiler::Profiler()
+    {
+    }
+
     Profiler::Profiler( const s_uint& uiGroup, const s_str& sName, const s_bool& bRecord )
     {
         sName_ = sName;

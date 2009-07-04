@@ -151,13 +151,12 @@ namespace Frost
         {
             bProfiled_ = true;
 
-            if (!MAPFIND(sName, lProfilerList_))
+            if (!lProfilerList_.Find(sName))
             {
-                Profiler mProfiler(uiGroup, sName, bRecord);
-                lProfilerList_.insert(make_pair(sName, mProfiler));
+                lProfilerList_[sName] = Profiler(uiGroup, sName, bRecord);
             }
 
-            return &lProfilerList_.find(sName)->second;
+            return &lProfilerList_[sName];
         }
         else
             return NULL;
