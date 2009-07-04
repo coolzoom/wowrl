@@ -106,8 +106,8 @@ namespace Frost
 
     private :
 
-        s_map< s_str, std::map<s_str, s_str> > lModelNameToFileMap_;
-        s_map< s_str, s_ptr<ModelData> >       lLoadedModelList_;
+        s_map< s_str, s_map<s_str, s_str> > lModelNameToFileMap_;
+        s_map< s_str, s_ptr<ModelData> >    lLoadedModelList_;
     };
 }
 

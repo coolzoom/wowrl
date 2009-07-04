@@ -95,12 +95,12 @@ s_ptr<Argument> Function::Get( const s_uint& uiIndex )
 
 s_bool Function::IsProvided( const s_uint& uiIndex ) const
 {
-    s_map< s_uint, s_ptr<Argument> >::const_iterator iter = pArgList_->lArg_.FindIter(uiIndex);
+    s_map< s_uint, s_ptr<Argument> >::const_iterator iter = pArgList_->lArg_.Get(uiIndex);
     if (iter != pArgList_->lArg_.End())
     {
         return iter->second->IsProvided();
     }
-    iter = pArgList_->lOptional_.FindIter(uiIndex);
+    iter = pArgList_->lOptional_.Get(uiIndex);
     if (iter != pArgList_->lOptional_.End())
     {
         return iter->second->IsProvided();

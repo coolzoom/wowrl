@@ -16,6 +16,10 @@ const s_str LuaTexture::CLASS_NAME = "GUI::LuaTexture";
 LuaTexture::LuaTexture(lua_State* pLua) : LuaLayeredRegion(pLua)
 {
     pTextureParent_ = s_ptr<Texture>::DynamicCast(pParent_);
+    if (pParent_ && !pTextureParent_)
+    {
+        Error(CLASS_NAME, "Dynamic cast failed !");
+    }
 }
 
 int LuaTexture::_GetBlendMode( lua_State* pLua )

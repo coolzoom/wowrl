@@ -99,7 +99,7 @@ namespace Frost
                     }
                 }
 
-                if (MAPFIND(mRace.sName, lRaceList_))
+                if (lRaceList_.Find(mRace.sName))
                 {
                     Warning(CLASS_NAME,
                         "A Race with the name \""+mRace.sName+"\" already exists. Previous one erased."
@@ -128,7 +128,7 @@ namespace Frost
                 mClass.sHealthType = pClass->GetAttribute("healthType");
                 mClass.sPowerType = pClass->GetAttribute("powerType");
 
-                if (MAPFIND(mClass.sName, lClassList_))
+                if (lClassList_.Find(mClass.sName))
                 {
                     Warning(CLASS_NAME,
                         "A Class with the name \""+mClass.sName+"\" already exists. Previous one erased."
@@ -205,7 +205,7 @@ namespace Frost
                     }
                 }
 
-                if (MAPFIND(mHealthType.sName, lHealthTypeList_))
+                if (lHealthTypeList_.Find(mHealthType.sName))
                 {
                     Warning(CLASS_NAME,
                         "A HealthType with the name \""+mHealthType.sName+"\" already exists. Previous one erased."
@@ -282,7 +282,7 @@ namespace Frost
                     }
                 }
 
-                if (MAPFIND(mPowerType.sName, lPowerTypeList_))
+                if (lPowerTypeList_.Find(mPowerType.sName))
                 {
                     Warning(CLASS_NAME,
                         "A PowerType with the name \""+mPowerType.sName+"\" already exists. Previous one erased."

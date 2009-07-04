@@ -61,7 +61,7 @@ namespace Frost
         }
 
         // Apply a texture to the hairs
-        /*if (!pCharModelInfo->lHairTextureList.empty())
+        /*if (!pCharModelInfo->lHairTextureList.IsEmpty())
         {
             s_refptr<Material> pHairMat = MaterialManager::GetSingleton()->CreateMaterial3D(
                 pCharModelInfo->lHairTextureList.back()

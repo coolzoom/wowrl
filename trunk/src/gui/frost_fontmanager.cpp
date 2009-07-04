@@ -32,7 +32,7 @@ namespace Frost
     s_ptr<Ogre::Font> FontManager::GetFont(const s_str& sFontFile, const s_uint& uiSize)
     {
         s_str sID = sFontFile + "|" + uiSize;
-        if (MAPFIND(sID, lFontList_))
+        if (lFontList_.Find(sID))
         {
             return lFontList_[sID];
         }

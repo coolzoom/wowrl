@@ -301,7 +301,7 @@ namespace Frost
         /** \param pParent The Model this manager belongs to
         *   \param lMAList The animation list
         */
-        AnimManager(s_ptr<Model> pParent, const std::map<s_uint, MeshAnimation>& lMAList);
+        AnimManager(s_ptr<Model> pParent, const s_map<s_uint, MeshAnimation>& lMAList);
 
         /// Copy constructor.
         /** \param mMgr The source
@@ -333,7 +333,7 @@ namespace Frost
         *                    in the queue or erase every previous call.
         *   \note If the current animation has the same priority as the new one, it
         *         keeps playing until it ends. Then, the new animation starts.<br>
-        *         If the current animation has a lower priority, it immediately stops 
+        *         If the current animation has a lower priority, it immediately stops
         *         and the new animation starts.<br>
         *         If the current animation has a higher priority, the new one is just
         *         stored in the queue, and will play when no other queued animation

@@ -198,7 +198,8 @@ namespace Frost
 
     SpriteManager::~SpriteManager()
     {
-        map< s_uint, s_ptr<RenderTarget> >::iterator iterTarget;
+        Log("Closing "+CLASS_NAME+"...");
+        s_map< s_uint, s_ptr<RenderTarget> >::iterator iterTarget;
         foreach (iterTarget, lRenderTargetList_)
         {
             iterTarget->second.Delete();
@@ -307,7 +308,7 @@ namespace Frost
         VertexChunk mThisChunk;
         s_ctnr<VertexChunk> lChunkList;
 
-        uint uiNewSize = lQuadList_.size()*6;
+        uint uiNewSize = lQuadList_.GetSize().Get()*6;
 
         if (uiNewSize < OGRE2D_MINIMAL_HARDWARE_BUFFER_SIZE)
             uiNewSize = OGRE2D_MINIMAL_HARDWARE_BUFFER_SIZE;
@@ -678,16 +679,16 @@ namespace Frost
     {
         if (pTarget)
         {
-            map< s_uint, s_ptr<RenderTarget> >::iterator iterRenderTarget;
-            iterRenderTarget = lRenderTargetList_.find(pTarget->GetID());
+            s_map< s_uint, s_ptr<RenderTarget> >::iterator iterRenderTarget;
+            iterRenderTarget = lRenderTargetList_.Get(pTarget->GetID());
 
-            if (iterRenderTarget != lRenderTargetList_.end())
+            if (iterRenderTarget != lRenderTargetList_.End())
             {
                 if (iterRenderTarget->second->GetID() == pTarget->GetID())
                 {
                     // Everything went fine, delete, erase from map and return
                     iterRenderTarget->second.Delete();
-                    lRenderTargetList_.erase(iterRenderTarget);
+                    lRenderTargetList_.Erase(iterRenderTarget);
                     return;
                 }
             }
@@ -696,6 +697,5 @@ namespace Frost
                 "Trying to call DeleteRenderTarget on a RenderTarget that has not been created by SpriteManager (ID:"+pTarget->GetID()+")."
             );
         }
-
     }
 }

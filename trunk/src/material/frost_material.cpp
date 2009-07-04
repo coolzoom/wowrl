@@ -224,14 +224,14 @@ namespace Frost
     void Material::RemoveDecal( s_ptr<Decal> pDecal )
     {
         const s_uint& uiID = pDecal->GetID();
-        map< s_uint, s_ptr<Decal> >::iterator iterDecal = lDecalList_.find(uiID);
-        if (iterDecal != lDecalList_.end())
+        s_map< s_uint, s_ptr<Decal> >::iterator iterDecal = lDecalList_.Get(uiID);
+        if (iterDecal != lDecalList_.End())
         {
             s_ptr<Decal> pListedDecal = lDecalList_[uiID];
             if (pListedDecal == pDecal)
             {
                 pDecal.Delete();
-                lDecalList_.erase(iterDecal);
+                lDecalList_.Erase(iterDecal);
             }
         }
 

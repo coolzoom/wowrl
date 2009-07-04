@@ -25,6 +25,7 @@ namespace Frost
 
     LocaleManager::~LocaleManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
         LuaManager::GetSingleton()->CloseLua(pLua_);
     }
 

@@ -16,6 +16,10 @@ const s_str LuaFontString::CLASS_NAME = "GUI::LuaFontString";
 LuaFontString::LuaFontString(lua_State* pLua) : LuaLayeredRegion(pLua)
 {
     pFontStringParent_ = s_ptr<FontString>::DynamicCast(pParent_);
+    if (pParent_ && !pFontStringParent_)
+    {
+        Error(CLASS_NAME, "Dynamic cast failed !");
+    }
 }
 
 int LuaFontString::_GetFont( lua_State* pLua )

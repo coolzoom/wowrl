@@ -35,7 +35,7 @@ namespace Frost
 {
     const s_str Engine::CLASS_NAME = "Engine";
 
-    Engine::Engine()
+    Engine::Engine() : mLog_("Frost.log", FILE_O)
     {
         uiScreenWidth_ = 1024;
         uiScreenHeight_ = 768;
@@ -102,14 +102,16 @@ namespace Frost
                 sNewMessage.Replace("\n", "\n"+sStamps);
             }
 
-            Engine::GetSingleton()->GetLog()->logMessage(sNewMessage.Get());
+            Engine::GetSingleton()->GetLog()->WriteLine(sNewMessage.Get());
+            Engine::GetSingleton()->GetLog()->Flush();
             #ifdef _DEBUG
                 printf("%s\n", sNewMessage.c_str());
             #endif
         }
         else
         {
-            Engine::GetSingleton()->GetLog()->logMessage(sMessage.Get());
+            Engine::GetSingleton()->GetLog()->WriteLine(sMessage.Get());
+            Engine::GetSingleton()->GetLog()->Flush();
             #ifdef _DEBUG
                 printf("%s\n", sMessage.c_str());
             #endif
@@ -120,9 +122,7 @@ namespace Frost
     {
         pUtilsMgr_->Initialize();
 
-        // Create the log
-        pLog_ = Ogre::LogManager::getSingleton().createLog("Frost.log");
-        pLog_->setTimeStampEnabled(false);
+        // Register the log function
         pUtilsMgr_->SetLogFunction(&PrintInLog);
 
         //pEventMgr_->ToggleDebugOutput();
@@ -266,10 +266,10 @@ namespace Frost
     {
         if (!bShutDown_)
         {
-            Log("\nGame ended.");
+            Log("\nEngine shutdown.");
             Log("Average FPS : "+ pTimeMgr_->GetAverageFPS());
             Log("Best FPS : "+ pTimeMgr_->GetBestFPS());
-            Log("Worst FPS : "+ pTimeMgr_->GetWorstFPS());
+            Log("Worst FPS : "+ pTimeMgr_->GetWorstFPS()+"\n");
 
             // End, delete/free everything
             // ...
@@ -293,10 +293,10 @@ namespace Frost
             MaterialManager::Delete();
             LocaleManager::Delete();
             InputManager::Delete();
-            TimeManager::Delete();
             EventManager::Delete();
             LuaManager::Delete();
-            UtilsManager::Delete();
+
+            Log("Closing Ogre...");
 
             // Close OGRE
             if (pRoot_)
@@ -316,6 +316,11 @@ namespace Frost
             pRoot_.Delete();
 
             bShutDown_ = true;
+
+            Log("Done.");
+
+            TimeManager::Delete();
+            UtilsManager::Delete();
         }
     }
 
@@ -512,9 +517,9 @@ namespace Frost
             return s_var();
     }
 
-    s_ptr<Ogre::Log> Engine::GetLog()
+    s_ptr<File> Engine::GetLog()
     {
-        return pLog_;
+        return &mLog_;
     }
 
     s_ptr<Ogre::SceneManager> Engine::GetOgreSceneManager()

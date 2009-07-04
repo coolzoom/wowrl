@@ -16,15 +16,15 @@ const s_str Argument::CLASS_NAME = "Lua::Argument";
 
 Argument::Argument( const s_str& sName, Lua::Type mLuaType, s_ptr<Function> pParent )
 {
-    lData_.push_back(Data(sName, mLuaType, this));
+    lData_.PushBack(Data(sName, mLuaType, this));
     pData_ = &lData_[0];
     pParent_ = pParent;
 }
 
 void Argument::Add( const s_str& sName, Lua::Type mLuaType )
 {
-    lData_.push_back(Data(sName, mLuaType, this));
-    if (lData_.size() == 1)
+    lData_.PushBack(Data(sName, mLuaType, this));
+    if (lData_.GetSize() == 1)
         pData_ = &lData_[0];
 }
 
@@ -60,7 +60,7 @@ const s_bool& Argument::IsProvided() const
 
 s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool& bPrintError )
 {
-    s_bool bSeveralChoices = (lData_.size() > 1);
+    s_bool bSeveralChoices = (lData_.GetSize() > 1);
 
     Lua::Type mType = pLua->GetType(iIndex);
     s_ctnr<Data>::iterator iterData;
@@ -95,12 +95,12 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
         if (bPrintError && bSeveralChoices)
         {
             s_str sEnum = "";
-            uint i = 0;
+            s_uint i = 0;
             foreach (iterData, lData_)
             {
-                if (i != lData_.size()-2)
+                if (i != lData_.GetSize()-2)
                 {
-                    if (iterData != lData_.begin())
+                    if (iterData != lData_.Begin())
                         sEnum += ", ";
                     sEnum += "a ";
                 }

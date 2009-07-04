@@ -28,15 +28,16 @@ namespace Frost
 
     GameplayManager::~GameplayManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
         LuaManager::GetSingleton()->CloseLua(pLua_);
     }
 
     s_ptr<Gameplay> GameplayManager::GetGameplay( const s_str& sName )
     {
-        map< s_str, s_ptr<Gameplay> >::iterator iter;
-        iter = lGameplayList_.find(sName);
+        s_map< s_str, s_ptr<Gameplay> >::iterator iter;
+        iter = lGameplayList_.Get(sName);
 
-        if (iter != lGameplayList_.end())
+        if (iter != lGameplayList_.End())
             return iter->second;
         else
             return NULL;
@@ -64,10 +65,10 @@ namespace Frost
 
     void GameplayManager::SetCurrentGameplay( const s_str& sGameplay )
     {
-        map< s_str, s_ptr<Gameplay> >::iterator iter;
-        iter = lGameplayList_.find(sGameplay);
+        s_map< s_str, s_ptr<Gameplay> >::iterator iter;
+        iter = lGameplayList_.Get(sGameplay);
 
-        if (iter != lGameplayList_.end())
+        if (iter != lGameplayList_.End())
             SetCurrentGameplay(iter->second);
         else
         {

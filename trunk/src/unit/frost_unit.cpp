@@ -229,8 +229,8 @@ namespace Frost
 
     s_var Unit::GetStat( const s_str& sStatName ) const
     {
-        map< s_str, Characteristic<s_var> >::const_iterator iter = mStats_.lCharactList.find(sStatName);
-        if (iter != mStats_.lCharactList.end())
+        s_map< s_str, Characteristic<s_var> >::const_iterator iter = mStats_.lCharactList.Get(sStatName);
+        if (iter != mStats_.lCharactList.End())
         {
             s_var vReturn;
             if (iter->second.IsInteger())

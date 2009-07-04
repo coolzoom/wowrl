@@ -33,6 +33,7 @@ namespace Frost
 
     InputManager::~InputManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
         if (pOgreInputMgr_)
         {
             pOgreInputMgr_->destroyInputObject(pMouse_.Get());
@@ -46,24 +47,24 @@ namespace Frost
 
     s_bool InputManager::Initialize( s_ptr<Ogre::RenderWindow> pWindow )
     {
-        s_multimap<string, string> mPL;
+        std::multimap<string, string> mPL;
 
         size_t iWindowHnd = 0;
         ostringstream mWindowHnd;
         pWindow->getCustomAttribute("WINDOW", &iWindowHnd);
         mWindowHnd << iWindowHnd;
 
-        mPL.Insert(make_pair(string("WINDOW"), mWindowHnd.str()));
+        mPL.insert(make_pair(string("WINDOW"), mWindowHnd.str()));
         #ifndef FROST_LINUX
-            mPL.Insert(make_pair(string("w32_mouse"),    string("DISCL_FOREGROUND")));
-            mPL.Insert(make_pair(string("w32_mouse"),    string("DISCL_NONEXCLUSIVE")));
-            mPL.Insert(make_pair(string("w32_keyboard"), string("DISCL_FOREGROUND")));
-            mPL.Insert(make_pair(string("w32_keyboard"), string("DISCL_NONEXCLUSIVE")));
+            mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_FOREGROUND")));
+            mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_NONEXCLUSIVE")));
+            mPL.insert(make_pair(string("w32_keyboard"), string("DISCL_FOREGROUND")));
+            mPL.insert(make_pair(string("w32_keyboard"), string("DISCL_NONEXCLUSIVE")));
         #else
-            mPL.Insert(make_pair(string("x11_mouse_grab"),    string("false")));
-            mPL.Insert(make_pair(string("x11_mouse_hide"),    string("false")));
-            mPL.Insert(make_pair(string("x11_keyboard_grab"), string("false")));
-            mPL.Insert(make_pair(string("XAutoRepeatOn"),     string("true")));
+            mPL.insert(make_pair(string("x11_mouse_grab"),    string("false")));
+            mPL.insert(make_pair(string("x11_mouse_hide"),    string("false")));
+            mPL.insert(make_pair(string("x11_keyboard_grab"), string("false")));
+            mPL.insert(make_pair(string("XAutoRepeatOn"),     string("true")));
         #endif
 
         pOgreInputMgr_ = OIS::InputManager::createInputSystem(mPL);
@@ -124,10 +125,10 @@ namespace Frost
 
     s_uint InputManager::GetNextDown()
     {
-        if (!lDownStack_.empty())
+        if (!lDownStack_.IsEmpty())
         {
-            s_uint uiID = lDownStack_.back();
-            lDownStack_.pop_back();
+            s_uint uiID = lDownStack_.Back();
+            lDownStack_.PopBack();
             return uiID;
         }
         else
@@ -136,10 +137,10 @@ namespace Frost
 
     s_uint InputManager::GetNextUp()
     {
-        if (!lUpStack_.empty())
+        if (!lUpStack_.IsEmpty())
         {
-            s_uint uiID = lUpStack_.back();
-            lUpStack_.pop_back();
+            s_uint uiID = lUpStack_.Back();
+            lUpStack_.PopBack();
             return uiID;
         }
         else
@@ -291,13 +292,13 @@ namespace Frost
                 if (!lKeyBufOld_[i])
                 {
                     // Key is pressed
-                    lDownStack_.push_back(i);
+                    lDownStack_.PushBack(i);
                 }
             }
             else if (lKeyBufOld_[i])
             {
                 // Key is released
-                lUpStack_.push_back(i);
+                lUpStack_.PushBack(i);
             }
 
             // Send events

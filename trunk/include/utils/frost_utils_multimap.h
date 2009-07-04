@@ -5,16 +5,16 @@ namespace Frost
     /** This class is basically a wrapper around std::multimap.
     *   It features a few more finding functions and some renamed ones.
     */
-    template<class Key, class Data>
-    class s_multimap : public std::multimap<Key, Data>
+    template<class Key, class Value>
+    class s_multimap
     {
     public :
 
-        typedef typename std::multimap<Key, Data>::iterator       iterator;
-        typedef typename std::multimap<Key, Data>::const_iterator const_iterator;
-        typedef          s_range<iterator>                        range;
-        typedef          s_range<const_iterator>                  const_range;
-        typedef          s_pair<Key, Data>                        pair;
+        typedef typename std::multimap<Key, Value>::iterator       iterator;
+        typedef typename std::multimap<Key, Value>::const_iterator const_iterator;
+        typedef          s_range<iterator>                         range;
+        typedef          s_range<const_iterator>                   const_range;
+        typedef          s_pair<Key, Value>                        pair;
 
         /// Default constructor.
         s_multimap()
@@ -26,7 +26,7 @@ namespace Frost
         */
         void Erase(const Key& mKey)
         {
-            std::multimap<Key, Data>::erase(mKey);
+            mMulMap_.erase(mKey);
         }
 
         /// Erases an element from the multimap.
@@ -34,7 +34,7 @@ namespace Frost
         */
         void Erase(const iterator& mIter)
         {
-            std::multimap<Key, Data>::erase(mIter);
+            mMulMap_.erase(mIter);
         }
 
         /// Erases a range of elements from the multimap.
@@ -43,7 +43,7 @@ namespace Frost
         */
         void Erase(const iterator& mBegin, const iterator& mEnd)
         {
-            std::multimap<Key, Data>::erase(mBegin, mEnd);
+            mMulMap_.erase(mBegin, mEnd);
         }
 
         /// Erases a range of elements from the multimap.
@@ -51,7 +51,7 @@ namespace Frost
         */
         void Erase(const range& mRange)
         {
-            std::multimap<Key, Data>::erase(mRange.Begin(), mRange.End());
+            mMulMap_.erase(mRange.Begin(), mRange.End());
         }
 
         /// Searches the multimap for the provided key.
@@ -60,7 +60,7 @@ namespace Frost
         */
         s_bool Find(const Key& mKey) const
         {
-            return std::multimap<Key, Data>::find(mKey) != End();
+            return (mMulMap_.find(mKey) != End());
         }
 
         /// Searches the multimap for the provided key.
@@ -71,8 +71,7 @@ namespace Frost
         */
         s_uint FindPos(const Key& mKey) const
         {
-            typename std::multimap<Key, Data>::const_iterator mIter;
-            mIter = std::multimap<Key, Data>::find(mKey);
+            const_iterator mIter = mMulMap_.find(mKey);
             if (mIter == End())
                 return s_uint::NaN;
             else
@@ -85,9 +84,9 @@ namespace Frost
         *   \note If the key is not present in the multimap, this function
         *         returns End().
         */
-        iterator FindIter(const Key& mKey)
+        iterator Get(const Key& mKey)
         {
-            return std::multimap<Key, Data>::find(mKey);
+            return mMulMap_.find(mKey);
         }
 
         /// Searches the multimap for the provided key.
@@ -96,9 +95,9 @@ namespace Frost
         *   \note If the key is not present in the multimap, this function
         *         returns End().
         */
-        const_iterator FindIter(const Key& mKey) const
+        const_iterator Get(const Key& mKey) const
         {
-            return std::multimap<Key, Data>::find(mKey);
+            return mMulMap_.find(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -112,7 +111,7 @@ namespace Frost
         */
         iterator LowerBound(const Key& mKey)
         {
-            return std::multimap<Key, Data>::lower_bound(mKey);
+            return mMulMap_.lower_bound(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -126,7 +125,7 @@ namespace Frost
         */
         const_iterator LowerBound(const Key& mKey) const
         {
-            return std::multimap<Key, Data>::lower_bound(mKey);
+            return mMulMap_.lower_bound(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -140,7 +139,7 @@ namespace Frost
         */
         iterator UpperBound(const Key& mKey)
         {
-            return std::multimap<Key, Data>::upper_bound(mKey);
+            return mMulMap_.upper_bound(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -154,7 +153,7 @@ namespace Frost
         */
         const_iterator UpperBound(const Key& mKey) const
         {
-            return std::multimap<Key, Data>::upper_bound(mKey);
+            return mMulMap_.upper_bound(mKey);
         }
 
         /// Returns the number of elements whith the provided key.
@@ -163,7 +162,7 @@ namespace Frost
         */
         s_uint Count(const Key& mKey) const
         {
-            return std::multimap<Key, Data>::count(mKey);
+            return mMulMap_.count(mKey);
         }
 
         /// Returns the range of all elements with the provided key.
@@ -172,7 +171,7 @@ namespace Frost
         */
         range EqualRange(const Key& mKey)
         {
-            return std::multimap<Key, Data>::equal_range(mKey);
+            return mMulMap_.equal_range(mKey);
         }
 
         /// Returns the range of all elements with the provided key.
@@ -181,7 +180,7 @@ namespace Frost
         */
         const_range EqualRange(const Key& mKey) const
         {
-            return std::multimap<Key, Data>::equal_range(mKey);
+            return mMulMap_.equal_range(mKey);
         }
 
         /// Inserts a pair in the multimap.
@@ -192,7 +191,19 @@ namespace Frost
         */
         iterator Insert(const pair& mPair)
         {
-            return std::multimap<Key, Data>::insert(mPair);
+            return mMulMap_.insert(make_pair(mPair.First(), mPair.Second()));
+        }
+
+        /// Inserts a pair in the multimap.
+        /** \param mKey   The access key
+        *   \param mValue The value to store
+        *   \return An iterator pointing to the inserted pair
+        *   \note The multimap automatically sorts itself after
+        *         this operation.
+        */
+        iterator Insert(const Key& mKey, const Value& mValue)
+        {
+            return mMulMap_.insert(make_pair(mKey, mValue));
         }
 
         /// Inserts a pair in the multimap (with hint).
@@ -204,13 +215,26 @@ namespace Frost
         */
         iterator Insert(const iterator& mIter, const pair& mPair)
         {
-            return std::multimap<Key, Data>::insert(mIter, mPair);
+            return mMulMap_.insert(mIter, make_pair(mPair.First(), mPair.Second()));
+        }
+
+        /// Inserts a pair in the multimap (with hint).
+        /** \param mIter A hint to where it should be inserted
+        *   \param mKey   The access key
+        *   \param mValue The value to store
+        *   \return An iterator pointing to the inserted pair
+        *   \note The multimap automatically sorts itself after
+        *         this operation.
+        */
+        iterator Insert(const iterator& mIter, const Key& mKey, const Value& mValue)
+        {
+            return mMulMap_.insert(mIter, make_pair(mKey, mValue));
         }
 
         /// Removes all elements from this multimap.
         void Clear()
         {
-            std::multimap<Key, Data>::clear();
+            mMulMap_.clear();
         }
 
         /// Returns the number of elements in this multimap.
@@ -218,7 +242,7 @@ namespace Frost
         */
         s_uint GetSize() const
         {
-            return std::multimap<Key, Data>::size();
+            return mMulMap_.size();
         }
 
         /// Checks if this multimap is empty.
@@ -226,7 +250,7 @@ namespace Frost
         */
         s_bool IsEmpty() const
         {
-            return std::multimap<Key, Data>::empty();
+            return mMulMap_.empty();
         }
 
         s_ctnr<s_multimap> operator, (const s_multimap& lValue)
@@ -239,31 +263,55 @@ namespace Frost
 
         iterator Begin()
         {
-            return std::multimap<Key, Data>::begin();
+            return mMulMap_.begin();
         }
 
         const_iterator Begin() const
         {
-            return std::multimap<Key, Data>::begin();
+            return mMulMap_.begin();
         }
 
         iterator End()
         {
-            return std::multimap<Key, Data>::end();
+            return mMulMap_.end();
         }
 
         const_iterator End() const
         {
-            return std::multimap<Key, Data>::end();
+            return mMulMap_.end();
         }
+
+        iterator begin()
+        {
+            return mMulMap_.begin();
+        }
+
+        const_iterator begin() const
+        {
+            return mMulMap_.begin();
+        }
+
+        iterator end()
+        {
+            return mMulMap_.end();
+        }
+
+        const_iterator end() const
+        {
+            return mMulMap_.end();
+        }
+
+    private :
+
+        std::multimap<Key, Value> mMulMap_;
 
     };
 
-    template<class Key, class Data, class N>
-    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_multimap<Key, Data>& mRight)
+    template<class Key, class Value, class N>
+    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_multimap<Key, Value>& mRight)
     {
         s_str_t<N> sTemp = STRING("( ");
-        typename std::multimap<Key, Data>::const_iterator iter;
+        typename s_multimap<Key, Value>::const_iterator iter;
         for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
         {
             if (iter - mRight.Begin() == mRight.GetSize()-1)
@@ -276,15 +324,15 @@ namespace Frost
         return sLeft + sTemp;
     }
 
-    template<class Key, class Data, class N>
-    s_str_t<N> operator + (const N* sLeft, const s_multimap<Key, Data>& mRight)
+    template<class Key, class Value, class N>
+    s_str_t<N> operator + (const N* sLeft, const s_multimap<Key, Value>& mRight)
     {
         return s_str_t<N>(sLeft) + mRight;
     }
 
     #ifdef USE_UNICODE
-        template<class Key, class Data>
-        s_str_t<char> operator + (const char* sLeft, const s_multimap<Key, Data>& mRight)
+        template<class Key, class Value>
+        s_str_t<char> operator + (const char* sLeft, const s_multimap<Key, Value>& mRight)
         {
             return s_str_t<char>(sLeft) + mRight;
         }

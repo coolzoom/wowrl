@@ -77,7 +77,7 @@ namespace Frost
 
     s_ptr<ModelPart> Model::GetModelPart( const s_uint& uiID )
     {
-        if (MAPFIND(uiID, lModelPartList_))
+        if (lModelPartList_.Find(uiID))
         {
             return lModelPartList_[uiID];
         }

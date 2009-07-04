@@ -49,7 +49,7 @@ namespace Frost
             }
         }
 
-        lReceiverList_.Insert(make_pair(sEventName, pReceiver));
+        lReceiverList_.Insert(sEventName, pReceiver);
     }
 
     void EventManager::UnregisterEvent( s_ptr<EventReceiver> pReceiver, const s_str& sEventName )

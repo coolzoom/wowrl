@@ -50,16 +50,16 @@ namespace Frost
     {
         if (pLight)
         {
-            map< s_uint, s_ptr<Light> >::iterator iterLight;
-            iterLight = lLightList_.find(pLight->GetID());
+            s_map< s_uint, s_ptr<Light> >::iterator iterLight;
+            iterLight = lLightList_.Get(pLight->GetID());
 
-            if (iterLight != lLightList_.end())
+            if (iterLight != lLightList_.End())
             {
                 if (iterLight->second->GetID() == pLight->GetID())
                 {
                     // Everything went fine, delete and erase from map
                     iterLight->second.Delete();
-                    lLightList_.erase(iterLight);
+                    lLightList_.Erase(iterLight);
                 }
             }
             else
@@ -74,7 +74,7 @@ namespace Frost
 
     void LightManager::UpdateLights( const s_float& fDelta )
     {
-        map< s_uint, s_ptr<Light> >::iterator iterLight;
+        s_map< s_uint, s_ptr<Light> >::iterator iterLight;
         foreach (iterLight, lLightList_)
         {
             iterLight->second->Update(fDelta);

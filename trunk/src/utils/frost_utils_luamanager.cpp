@@ -39,21 +39,21 @@ namespace Frost
     {
         if (pLua)
         {
-            map< lua_State*, s_ptr<Lua::State> >::iterator iter;
-            iter = lLuaStateList_.find(pLua->GetState());
-            if (iter != lLuaStateList_.end())
+            s_map< lua_State*, s_ptr<Lua::State> >::iterator iter;
+            iter = lLuaStateList_.Get(pLua->GetState());
+            if (iter != lLuaStateList_.End())
             {
                 iter->second.Delete();
-                lLuaStateList_.erase(iter);
+                lLuaStateList_.Erase(iter);
             }
         }
     }
 
     s_ptr<Lua::State> LuaManager::GetState( lua_State* pLua )
     {
-        map< lua_State*, s_ptr<Lua::State> >::iterator iter;
-        iter = lLuaStateList_.find(pLua);
-        if (iter != lLuaStateList_.end())
+        s_map< lua_State*, s_ptr<Lua::State> >::iterator iter;
+        iter = lLuaStateList_.Get(pLua);
+        if (iter != lLuaStateList_.End())
         {
             return iter->second;
         }

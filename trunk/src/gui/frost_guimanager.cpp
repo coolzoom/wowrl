@@ -29,6 +29,7 @@ namespace Frost
 
     GUIManager::~GUIManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
         CloseUI();
     }
 
@@ -39,17 +40,17 @@ namespace Frost
 
     s_bool GUIManager::AddUIObject( s_ptr<GUI::UIObject> pObj )
     {
-        map< s_str, s_ptr<GUI::UIObject> >* lNamedList;
+        s_map< s_str, s_ptr<GUI::UIObject> >* lNamedList;
         if (pObj->IsVirtual())
         {
             if (pObj->GetParent())
             {
-                s_uint i;
-                map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.find(i);
+                s_uint i = 0;
+                s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.Get(i);
                 while (iterObj != lObjectList_.end())
                 {
                     i++;
-                    iterObj = lObjectList_.find(i);
+                    iterObj = lObjectList_.Get(i);
                 }
                 lObjectList_[i] = pObj;
                 pObj->SetID(i);
@@ -68,15 +69,15 @@ namespace Frost
 
         if (pObj != NULL)
         {
-            map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamedObj = lNamedList->find(pObj->GetName());
+            s_map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamedObj = lNamedList->Get(pObj->GetName());
             if (iterNamedObj == lNamedList->end())
             {
-                s_uint i;
-                map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.find(i);
-                while (iterObj != lObjectList_.end())
+                s_uint i = 0;
+                s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.Get(i);
+                while (iterObj != lObjectList_.End())
                 {
                     i++;
-                    iterObj = lObjectList_.find(i);
+                    iterObj = lObjectList_.Get(i);
                 }
                 lObjectList_[i] = pObj;
                 (*lNamedList)[pObj->GetName()] = pObj;
@@ -103,41 +104,11 @@ namespace Frost
         }
     }
 
-    void GUIManager::RemoveUIObject( s_ptr<GUI::UIObject> pObj )
-    {
-        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.find(pObj->GetID());
-        if (iterObj != lObjectList_.end())
-        {
-            lObjectList_.erase(iterObj);
-            if (pObj->IsVirtual())
-            {
-                map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamed = lNamedVirtualObjectList_.find(pObj->GetName());
-                if (iterNamed != lNamedVirtualObjectList_.end())
-                {
-                    lNamedVirtualObjectList_.erase(iterNamed);
-                }
-            }
-            else
-            {
-                map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamed = lNamedObjectList_.find(pObj->GetName());
-                if (iterNamed != lNamedObjectList_.end())
-                {
-                    lNamedObjectList_.erase(iterNamed);
-                }
-                iterObj = lMainObjectList_.find(pObj->GetID());
-                if (iterObj != lMainObjectList_.end())
-                {
-                    lMainObjectList_.erase(iterObj);
-                }
-            }
-        }
-    }
-
     s_ptr<GUI::UIObject> GUIManager::GetUIObjectByName( const s_str& sName, const s_bool& bVirtual )
     {
         if (bVirtual)
         {
-            if (MAPFIND(sName, lNamedVirtualObjectList_))
+            if (lNamedVirtualObjectList_.Find(sName))
             {
                 return lNamedVirtualObjectList_[sName];
             }
@@ -149,7 +120,7 @@ namespace Frost
         }
         else
         {
-            if (MAPFIND(sName, lNamedObjectList_))
+            if (lNamedObjectList_.Find(sName))
             {
                 return lNamedObjectList_[sName];
             }
@@ -168,7 +139,7 @@ namespace Frost
 
     void GUIManager::LoadAddOnTOC_( const s_str& sAddOnName, const s_str& sAddOnFolder )
     {
-        if (!MAPFIND(sAddOnName, lAddOnList_))
+        if (!lAddOnList_.Find(sAddOnName))
         {
             AddOn mAddOn;
             mAddOn.bEnabled = true;
@@ -284,8 +255,8 @@ namespace Frost
             this->LoadAddOnTOC_(pSubDir->GetName(), sDirectory);
         }
 
-        vector< s_ptr<AddOn> > lCoreAddOnStack;
-        vector< s_ptr<AddOn> > lAddOnStack;
+        s_ctnr< s_ptr<AddOn> > lCoreAddOnStack;
+        s_ctnr< s_ptr<AddOn> > lAddOnStack;
         s_bool bCore = false;
 
         File mFile(sDirectory + "/AddOns.txt", FILE_I);
@@ -312,12 +283,12 @@ namespace Frost
                         sKey.Trim(' ');
                         s_str sValue = lArgs[1];
                         sValue.Trim(' ');
-                        if (MAPFIND(sKey, lAddOnList_))
+                        if (lAddOnList_.Find(sKey))
                         {
                             if (bCore)
-                                lCoreAddOnStack.push_back(&lAddOnList_[sKey]);
+                                lCoreAddOnStack.PushBack(&lAddOnList_[sKey]);
                             else
-                                lAddOnStack.push_back(&lAddOnList_[sKey]);
+                                lAddOnStack.PushBack(&lAddOnList_[sKey]);
 
                             if (sValue != "1")
                             {
@@ -330,7 +301,7 @@ namespace Frost
             mFile.Close();
         }
 
-        vector< s_ptr<AddOn> >::iterator iterAddOn;
+        s_ctnr< s_ptr<AddOn> >::iterator iterAddOn;
         foreach (iterAddOn, lCoreAddOnStack)
         {
             if ((*iterAddOn)->bEnabled)
@@ -369,19 +340,21 @@ namespace Frost
     {
         if (!bClosed_)
         {
-            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lMainObjectList_.begin();
-            while (iterObj != lMainObjectList_.end())
+            s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+            foreach (iterObj, lMainObjectList_)
             {
                 iterObj->second.Delete();
-                iterObj = lMainObjectList_.begin();
             }
+            lMainObjectList_.Clear();
+            lObjectList_.Clear();
+            lNamedObjectList_.Clear();
 
-            map< s_str, s_ptr<GUI::UIObject> >::iterator iterVirtual = lNamedVirtualObjectList_.begin();
-            while (iterVirtual != lNamedVirtualObjectList_.end())
+            s_map< s_str, s_ptr<GUI::UIObject> >::iterator iterVirtual;
+            foreach (iterVirtual, lNamedVirtualObjectList_)
             {
                 iterVirtual->second.Delete();
-                iterVirtual = lNamedVirtualObjectList_.begin();
             }
+            lNamedVirtualObjectList_.Clear();
 
             LuaManager::GetSingleton()->CloseLua(pLua_);
 
@@ -397,7 +370,7 @@ namespace Frost
 
     void GUIManager::RenderUI()
     {
-        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
         foreach (iterObj, lMainObjectList_)
         {
             iterObj->second->Render();
@@ -406,7 +379,7 @@ namespace Frost
 
     void GUIManager::Update( const s_float& fDelta )
     {
-        map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
         foreach (iterObj, lMainObjectList_)
         {
             iterObj->second->Update();
@@ -415,10 +388,10 @@ namespace Frost
 
     void GUIManager::PrintUI()
     {
-        if (lObjectList_.size() >= 1)
+        if (lObjectList_.GetSize() >= 1)
         {
             Log("\n\n######################## UIObjects ########################\n\n########################\n");
-            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+            s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
             foreach (iterObj, lObjectList_)
             {
                 if (!iterObj->second->IsVirtual() && !iterObj->second->GetParent())

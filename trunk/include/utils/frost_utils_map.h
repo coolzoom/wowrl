@@ -5,16 +5,16 @@ namespace Frost
     /** This class is basically a wrapper around std::map.
     *   It features a few more finding functions and some renamed ones.
     */
-    template<class Key, class Data>
-    class s_map : public std::map<Key, Data>
+    template<class Key, class Value>
+    class s_map
     {
     public :
 
-        typedef typename std::map<Key, Data>::iterator       iterator;
-        typedef typename std::map<Key, Data>::const_iterator const_iterator;
-        typedef          s_range<iterator>                   range;
-        typedef          s_range<const_iterator>             const_range;
-        typedef          s_pair<Key, Data>                   pair;
+        typedef typename std::map<Key, Value>::iterator       iterator;
+        typedef typename std::map<Key, Value>::const_iterator const_iterator;
+        typedef          s_range<iterator>                    range;
+        typedef          s_range<const_iterator>              const_range;
+        typedef          s_pair<Key, Value>                   pair;
 
         /// Default constructor.
         s_map()
@@ -26,7 +26,7 @@ namespace Frost
         */
         void Erase(const Key& mKey)
         {
-            std::map<Key, Data>::erase(mKey);
+            mMap_.erase(mKey);
         }
 
         /// Erases an element from the map.
@@ -34,7 +34,7 @@ namespace Frost
         */
         void Erase(const iterator& mIter)
         {
-            std::map<Key, Data>::erase(mIter);
+            mMap_.erase(mIter);
         }
 
         /// Erases a range of elements from the map.
@@ -43,7 +43,7 @@ namespace Frost
         */
         void Erase(const iterator& mBegin, const iterator& mEnd)
         {
-            std::map<Key, Data>::erase(mBegin, mEnd);
+            mMap_.erase(mBegin, mEnd);
         }
 
         /// Erases a range of elements from the map.
@@ -51,7 +51,7 @@ namespace Frost
         */
         void Erase(const range& mRange)
         {
-            std::map<Key, Data>::erase(mRange.Begin(), mRange.End());
+            mMap_.erase(mRange.Begin(), mRange.End());
         }
 
         /// Searches the map for the provided key.
@@ -60,7 +60,7 @@ namespace Frost
         */
         s_bool Find(const Key& mKey) const
         {
-            return std::map<Key, Data>::find(mKey) != End();
+            return (mMap_.find(mKey) != End());
         }
 
         /// Searches the map for the provided key.
@@ -71,8 +71,8 @@ namespace Frost
         */
         s_uint FindPos(const Key& mKey) const
         {
-            typename std::map<Key, Data>::const_iterator mIter;
-            mIter = std::map<Key, Data>::find(mKey);
+            const_iterator mIter;
+            mIter = mMap_.find(mKey);
             if (mIter == End())
                 return s_uint::NaN;
             else
@@ -85,9 +85,9 @@ namespace Frost
         *   \note If the key is not present in the map, this function
         *         returns End().
         */
-        iterator FindIter(const Key& mKey)
+        iterator Get(const Key& mKey)
         {
-            return std::map<Key, Data>::find(mKey);
+            return mMap_.find(mKey);
         }
 
         /// Searches the map for the provided key.
@@ -96,9 +96,9 @@ namespace Frost
         *   \note If the key is not present in the map, this function
         *         returns End().
         */
-        const_iterator FindIter(const Key& mKey) const
+        const_iterator Get(const Key& mKey) const
         {
-            return std::map<Key, Data>::find(mKey);
+            return mMap_.find(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -112,7 +112,7 @@ namespace Frost
         */
         iterator LowerBound(const Key& mKey)
         {
-            return std::map<Key, Data>::lower_bound(mKey);
+            return mMap_.lower_bound(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -126,7 +126,7 @@ namespace Frost
         */
         const_iterator LowerBound(const Key& mKey) const
         {
-            return std::map<Key, Data>::lower_bound(mKey);
+            return mMap_.lower_bound(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -140,7 +140,7 @@ namespace Frost
         */
         iterator UpperBound(const Key& mKey)
         {
-            return std::map<Key, Data>::upper_bound(mKey);
+            return mMap_.upper_bound(mKey);
         }
 
         /// Returns one of the surrounding pairs.
@@ -154,13 +154,13 @@ namespace Frost
         */
         const_iterator UpperBound(const Key& mKey) const
         {
-            return std::map<Key, Data>::upper_bound(mKey);
+            return mMap_.upper_bound(mKey);
         }
 
         /// Removes all elements from this map.
         void Clear()
         {
-            std::map<Key, Data>::clear();
+            mMap_.clear();
         }
 
         /// Returns the number of elements in this map.
@@ -168,7 +168,7 @@ namespace Frost
         */
         s_uint GetSize() const
         {
-            return std::map<Key, Data>::size();
+            return mMap_.size();
         }
 
         /// Checks if this map is empty.
@@ -176,7 +176,17 @@ namespace Frost
         */
         s_bool IsEmpty() const
         {
-            return std::map<Key, Data>::empty();
+            return mMap_.empty();
+        }
+
+        Value& operator [] (const Key& mKey)
+        {
+            return mMap_[mKey];
+        }
+
+        const Value& operator [] (const Key& mKey) const
+        {
+            return mMap_[mKey];
         }
 
         s_ctnr<s_map> operator, (const s_map& lValue)
@@ -189,31 +199,55 @@ namespace Frost
 
         iterator Begin()
         {
-            return std::map<Key, Data>::begin();
+            return mMap_.begin();
         }
 
         const_iterator Begin() const
         {
-            return std::map<Key, Data>::begin();
+            return mMap_.begin();
         }
 
         iterator End()
         {
-            return std::map<Key, Data>::end();
+            return mMap_.end();
         }
 
         const_iterator End() const
         {
-            return std::map<Key, Data>::end();
+            return mMap_.end();
         }
+
+        iterator begin()
+        {
+            return mMap_.begin();
+        }
+
+        const_iterator begin() const
+        {
+            return mMap_.begin();
+        }
+
+        iterator end()
+        {
+            return mMap_.end();
+        }
+
+        const_iterator end() const
+        {
+            return mMap_.end();
+        }
+
+    private :
+
+        std::map<Key, Value> mMap_;
 
     };
 
-    template<class Key, class Data, class N>
-    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_map<Key, Data>& mRight)
+    template<class Key, class Value, class N>
+    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_map<Key, Value>& mRight)
     {
         s_str_t<N> sTemp = STRING("( ");
-        typename std::map<Key, Data>::const_iterator iter;
+        typename s_map<Key, Value>::const_iterator iter;
         for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
         {
             if (iter - mRight.Begin() == mRight.GetSize()-1)
@@ -226,15 +260,15 @@ namespace Frost
         return sLeft + sTemp;
     }
 
-    template<class Key, class Data, class N>
-    s_str_t<N> operator + (const N* sLeft, const s_map<Key, Data>& mRight)
+    template<class Key, class Value, class N>
+    s_str_t<N> operator + (const N* sLeft, const s_map<Key, Value>& mRight)
     {
         return s_str_t<N>(sLeft) + mRight;
     }
 
     #ifdef USE_UNICODE
-        template<class Key, class Data>
-        s_str_t<char> operator + (const char* sLeft, const s_map<Key, Data>& mRight)
+        template<class Key, class Value>
+        s_str_t<char> operator + (const char* sLeft, const s_map<Key, Value>& mRight)
         {
             return s_str_t<char>(sLeft) + mRight;
         }

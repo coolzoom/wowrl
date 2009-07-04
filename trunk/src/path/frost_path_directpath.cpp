@@ -45,15 +45,15 @@ namespace Frost
     {
         if (!(bLoop_ && bStarted_))
         {
-            lPointPath_.push_back(mPoint);
-            lPointPath_.back().uiID = lPointPath_.size()-1;
+            lPointPath_.PushBack(mPoint);
+            lPointPath_.Back().uiID = lPointPath_.GetSize()-1;
 
-            if (lPointPath_.size() == 1)
+            if (lPointPath_.GetSize() == 1)
             {
                 mPreviousPoint_ = lPointPath_.begin();
                 mActualPoint_ = mPreviousPoint_->mPosition;
             }
-            else if (lPointPath_.size() == 2)
+            else if (lPointPath_.GetSize() == 2)
             {
                 mNextPoint_ = mPreviousPoint_;
                 mNextPoint_++;
@@ -77,7 +77,7 @@ namespace Frost
 
     void DirectPath::CheckPath_()
     {
-        if (lPointPath_.empty())
+        if (lPointPath_.IsEmpty())
         {
             Warning(CLASS_NAME, "Can't use an empty path. Please add points using AddPoint().");
         }
@@ -106,7 +106,7 @@ namespace Frost
             bStarted_ = true;
         }
 
-        if ( (!lPointPath_.empty()) && (lPointPath_.size() != 1) && !bEnded_ && !bPaused_ )
+        if ( (!lPointPath_.IsEmpty()) && (lPointPath_.GetSize() != 1) && !bEnded_ && !bPaused_ )
         {
             Vector mDir;
             s_float fTranslation;
@@ -234,9 +234,9 @@ namespace Frost
 
     const DirectPathPoint& DirectPath::GetPoint( const s_int& iIndex ) const
     {
-        if ( (iIndex < lPointPath_.size()) && (iIndex >= 0) )
+        if ( (iIndex < s_int(lPointPath_.GetSize())) && (iIndex >= 0) )
         {
-            list<DirectPathPoint>::const_iterator iterPoint = lPointPath_.begin();
+            s_ctnr<DirectPathPoint>::const_iterator iterPoint = lPointPath_.Begin();
             for (s_int i = 0; i < iIndex; i++)
                 iterPoint++;
 
@@ -245,13 +245,13 @@ namespace Frost
         else
         {
             s_int iNewIndex = iIndex;
-            while (iNewIndex >= lPointPath_.size())
-                iNewIndex -= lPointPath_.size();
+            while (iNewIndex >= s_int(lPointPath_.GetSize()))
+                iNewIndex -= s_int(lPointPath_.GetSize());
 
             while (iNewIndex < 0)
-                iNewIndex += lPointPath_.size();
+                iNewIndex += s_int(lPointPath_.GetSize());
 
-            list<DirectPathPoint>::const_iterator iterPoint = lPointPath_.begin();
+            s_ctnr<DirectPathPoint>::const_iterator iterPoint = lPointPath_.Begin();
             for (s_int i = 0; i < iNewIndex; i++)
                 iterPoint++;
 
@@ -259,28 +259,28 @@ namespace Frost
         }
     }
 
-    list<DirectPathPoint>::iterator DirectPath::GetPointIterator( const s_int& iIndex )
+    s_ctnr<DirectPathPoint>::iterator DirectPath::GetPointIterator( const s_int& iIndex )
     {
-        if ( (iIndex < lPointPath_.size()) && (iIndex >= 0) )
+        if ( (iIndex < s_int(lPointPath_.GetSize())) && (iIndex >= 0) )
         {
-            list<DirectPathPoint>::iterator iterPoint = lPointPath_.begin();
-            for (s_int i = 0; i < iIndex; i++)
-                iterPoint++;
+            s_ctnr<DirectPathPoint>::iterator iterPoint = lPointPath_.Begin();
+            for (s_int i = 0; i < iIndex; ++i)
+                ++iterPoint;
 
             return iterPoint;
         }
         else
         {
             s_int iNewIndex = iIndex;
-            while (iNewIndex >= lPointPath_.size())
-                iNewIndex -= lPointPath_.size();
+            while (iNewIndex >= s_int(lPointPath_.GetSize()))
+                iNewIndex -= s_int(lPointPath_.GetSize());
 
             while (iNewIndex < 0)
-                iNewIndex += lPointPath_.size();
+                iNewIndex += s_int(lPointPath_.GetSize());
 
-            list<DirectPathPoint>::iterator iterPoint = lPointPath_.begin();
-            for (s_int i = 0; i < iNewIndex; i++)
-                iterPoint++;
+            s_ctnr<DirectPathPoint>::iterator iterPoint = lPointPath_.Begin();
+            for (s_int i = 0; i < iNewIndex; ++i)
+                ++iterPoint;
 
             return iterPoint;
         }
@@ -288,6 +288,6 @@ namespace Frost
 
     s_uint DirectPath::GetPointNumber() const
     {
-        return lPointPath_.size();
+        return lPointPath_.GetSize();
     }
 }
