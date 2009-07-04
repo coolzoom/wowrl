@@ -97,8 +97,8 @@ namespace Frost
     {
         // Code extracted from Ogre for optimum performance
         s_float fHalfAngle = 0.5f*fAngle;
-        s_float fSin = sin(fHalfAngle.GetRad());
-        s_float w = cos(fHalfAngle.GetRad());
+        s_float fSin = sin(fHalfAngle);
+        s_float w = cos(fHalfAngle);
         Vector mNAxis = fSin*mAxis;
 
         Vector uv, uuv;
