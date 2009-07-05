@@ -102,14 +102,6 @@ namespace Frost
             return s_str_t<N>(*this) + sValue;
         }
 
-        #ifdef USE_UNICODE
-            template<class N>
-            s_str_t<N> operator + (const char* sValue) const
-            {
-                return s_str_t<N>(*this) + sValue;
-            }
-        #endif
-
         template<class N>
         s_str_t<N> operator + (const s_str_t<N>& sValue) const
         {
@@ -130,10 +122,10 @@ namespace Frost
             return mContainer;
         }
 
-        static string_element* BOOL_TRUE;
-        static string_element* BOOL_ONE;
-        static string_element* BOOL_YES;
-        static T               bDummy;
+        static const string_object BOOL_TRUE;
+        static const string_object BOOL_ONE;
+        static const string_object BOOL_YES;
+        static T                   bDummy;
 
     private :
 
@@ -141,25 +133,17 @@ namespace Frost
     };
 
     template<class T>
-    string_element* s_bool_t<T>::BOOL_TRUE = STRING("true");
+    const string_object s_bool_t<T>::BOOL_TRUE = "true";
     template<class T>
-    string_element* s_bool_t<T>::BOOL_ONE  = STRING("1");
+    const string_object s_bool_t<T>::BOOL_ONE  = "1";
     template<class T>
-    string_element* s_bool_t<T>::BOOL_YES  = STRING("yes");
+    const string_object s_bool_t<T>::BOOL_YES  = "yes";
 
     template<class T, class N>
     s_str_t<N> operator+ ( const N* sLeft, const s_bool_t<T>& bRight )
     {
         return s_str_t<N>(sLeft) << bRight;
     }
-
-    #ifdef USE_UNICODE
-        template<class T>
-        s_str_t<char> operator+ ( const char* sLeft, const s_bool_t<T>& bRight )
-        {
-            return s_str_t<char>(sLeft) << bRight;
-        }
-    #endif
 
     typedef s_bool_t<bool> s_bool;
 }

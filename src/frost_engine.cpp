@@ -253,6 +253,7 @@ namespace Frost
 
             // Update inputs and timers
             pTimeMgr_->Update();
+
             pInputMgr_->Update();
 
             if (!pRoot_->_fireFrameEnded())

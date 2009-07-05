@@ -17,3 +17,6 @@ typedef unsigned long  ulong;
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <cstdlib>
+#include <algorithm>
+#include <typeinfo>

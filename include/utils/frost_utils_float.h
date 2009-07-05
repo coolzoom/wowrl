@@ -448,14 +448,6 @@ namespace Frost
             return s_str_t<N>(*this) + sValue;
         }
 
-        #ifdef USE_UNICODE
-            template<class N>
-            s_str_t<N> operator + (const char* sValue) const
-            {
-                return s_str_t<N>(*this) + sValue;
-            }
-        #endif
-
         template<class N>
         s_str_t<N> operator + (const s_str_t<N>& sValue) const
         {
@@ -619,7 +611,13 @@ namespace Frost
 
     float MakeFloat(unsigned long ul)
     {
-        return *reinterpret_cast<float*>(&ul);
+        union {
+            float f;
+            unsigned long ul;
+        } x;
+
+        x.ul = ul;
+        return x.f;
     }
 
     template <class T>
@@ -686,14 +684,6 @@ namespace Frost
     {
         return s_str_t<N>(sLeft) << fRight;
     }
-
-    #ifdef USE_UNICODE
-        template <class T>
-        s_str_t<char> operator+ ( const char* sLeft, const s_float_t<T>& fRight )
-        {
-            return s_str_t<char>(sLeft) << fRight;
-        }
-    #endif
 
     typedef s_float_t<float> s_float;
     template<> const float s_float::fEpsilon = FLT_MIN;

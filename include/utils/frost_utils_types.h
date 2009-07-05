@@ -29,19 +29,10 @@ namespace Frost
     template<class T> class s_ptr;
     template<class T> class s_refptr;
 
-    #ifdef USE_UNICODE
-        #define STRING(X) L##X
-        typedef wchar_t string_element;
-        typedef std::wstring string_object;
-        typedef std::wstringstream string_stream;
-        typedef std::wfstream file_stream;
-    #else
-        #define STRING(X) X
-        typedef char string_element;
-        typedef std::string string_object;
-        typedef std::stringstream string_stream;
-        typedef std::fstream file_stream;
-    #endif
+    typedef char string_element;
+    typedef std::string string_object;
+    typedef std::stringstream string_stream;
+    typedef std::fstream file_stream;
 }
 
 #include "frost_utils_bool.h"

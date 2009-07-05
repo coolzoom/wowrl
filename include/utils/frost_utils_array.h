@@ -168,15 +168,15 @@ namespace Frost
     template<class T, uint N, class M>
     s_str_t<M> operator + (const s_str_t<M>& sLeft, const s_array<T, N>& mRight)
     {
-        s_str_t<M> sTemp = STRING("(");
+        s_str_t<M> sTemp = "(";
         for (uint i = 0; i < N; ++i)
         {
             if (i == N-1)
                 sTemp << mRight[i];
             else
-                sTemp << mRight[i] << STRING(", ");
+                sTemp << mRight[i] << ", ";
         }
-        sTemp << STRING(")");
+        sTemp << ")";
 
         return sLeft + sTemp;
     }
@@ -186,13 +186,5 @@ namespace Frost
     {
         return s_str_t<M>(sLeft) + mRight;
     }
-
-    #ifdef USE_UNICODE
-        template<class T, uint N>
-        s_str_t<char> operator + (const char* sLeft, const s_array<T, N>& mRight)
-        {
-            return s_str_t<char>(sLeft) + mRight;
-        }
-    #endif
 }
 

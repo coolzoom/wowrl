@@ -595,14 +595,6 @@ namespace Frost
             return s_str_t<N>(*this) + sValue;
         }
 
-        #ifdef USE_UNICODE
-            template<class N>
-            s_str_t<N> operator + (const char* sValue) const
-            {
-                return s_str_t<N>(*this) + sValue;
-            }
-        #endif
-
         template<class N>
         s_str_t<N> operator + (const s_str_t<N>& sValue) const
         {
@@ -868,14 +860,6 @@ namespace Frost
     {
         return s_str_t<N>(sLeft) << iRight;
     }
-
-    #ifdef USE_UNICODE
-        template<class T>
-        s_str_t<char> operator + ( const char* sLeft, const s_int_t<T>& iRight )
-        {
-            return s_str_t<char>(sLeft) << iRight;
-        }
-    #endif
 
     typedef s_int_t<char>  s_char;
     typedef s_int_t<short> s_short;

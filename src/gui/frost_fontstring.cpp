@@ -61,7 +61,10 @@ void FontString::Render()
 void FontString::Update()
 {
     if (pText_)
+    {
         pText_->Update();
+    }
+
     UIObject::Update();
 }
 
