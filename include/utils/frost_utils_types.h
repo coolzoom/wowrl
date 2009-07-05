@@ -29,6 +29,14 @@ namespace Frost
     template<class T> class s_ptr;
     template<class T> class s_refptr;
 
+    /// Binds POD types to their corresponding Frost's types
+    template<class T>
+    class TypeTraits
+    {
+    public :
+        typedef T Type;
+    };
+
     typedef char string_element;
     typedef std::string string_object;
     typedef std::stringstream string_stream;

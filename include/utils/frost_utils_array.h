@@ -11,6 +11,11 @@ namespace Frost
     {
     public :
 
+        typedef T*                      iterator;
+        typedef const T*                const_iterator;
+        typedef s_range<iterator>       range;
+        typedef s_range<const_iterator> const_range;
+
         s_array()
         {
         }
@@ -38,6 +43,28 @@ namespace Frost
                 lArray_[i] = T();
             }
         }
+
+        #ifdef CPP_0X
+            /// Initializer list constructor.
+            /** \param mList Brace enclosed element list
+            *   \note This constructor uses a C++0x feature.<br>
+            *         It allows : s_array<s_int, 4> v = {1, 2, 3, 4};<br>
+            *         If the initializer_list is too long, only the N first
+            *         values are stored into the s_array.<br>
+            *         If it is too short, the s_array is filled with T's
+            *         default constructor.
+            */
+            s_array(std::initializer_list<T> mList)
+            {
+                uint i = 0;
+                for (const T* p = mList.begin(); (p != mList.end()) && (i < N); ++p, ++i)
+                    lArray_[i] = *p;
+                for (; i < N; ++i)
+                {
+                    lArray_[i] = T();
+                }
+            }
+        #endif
 
         s_array(const s_array& mValue)
         {
@@ -71,6 +98,46 @@ namespace Frost
         s_uint GetSize() const
         {
             return N;
+        }
+
+        iterator Begin()
+        {
+            return lArray_;
+        }
+
+        const_iterator Begin() const
+        {
+            return lArray_;
+        }
+
+        iterator End()
+        {
+            return lArray_ + N;
+        }
+
+        const_iterator End() const
+        {
+            return lArray_ + N;
+        }
+
+        iterator begin()
+        {
+            return lArray_;
+        }
+
+        const_iterator begin() const
+        {
+            return lArray_;
+        }
+
+        iterator end()
+        {
+            return lArray_ + N;
+        }
+
+        const_iterator end() const
+        {
+            return lArray_ + N;
         }
 
         const T& Get(const s_uint& uiIndex) const

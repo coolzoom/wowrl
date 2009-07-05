@@ -149,7 +149,7 @@ namespace Frost
         {
             if (IsValid())
             {
-                fValue_ *= M_PI/180.0;
+                fValue_ *= PI.fValue_/180.0;
             }
         }
 
@@ -161,7 +161,7 @@ namespace Frost
         {
             if (IsValid())
             {
-                return fValue_*2*M_PI;
+                return fValue_*2*PI.fValue_;
             }
             else
                 return 0.0;
@@ -295,7 +295,7 @@ namespace Frost
         {
             if (IsValid())
             {
-                fValue_ *= 180.0/M_PI;
+                fValue_ *= 180.0/PI.fValue_;
                 if ( (!bNegativeAllowed) && (fValue_ < 0.0) )
                     fValue_ += 360.0;
             }
@@ -393,7 +393,7 @@ namespace Frost
         {
             if (IsValid())
             {
-                fValue_ *= 2*M_PI;
+                fValue_ *= 2*PI.fValue_;
             }
         }
 
@@ -692,4 +692,7 @@ namespace Frost
     typedef s_float_t<double> s_double;
     template<> const double s_double::fEpsilon = DBL_MIN;
     template<> const s_double s_double::PI     = 3.141592653589793;
+
+    template<> class TypeTraits<float>  { public : typedef s_float  Type; };
+    template<> class TypeTraits<double> { public : typedef s_double Type; };
 }

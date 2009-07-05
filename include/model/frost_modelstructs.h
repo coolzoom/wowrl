@@ -21,15 +21,24 @@
 //    sizeof(int)   = sizeof(uint)   = 4
 //    sizeof(float)                  = 4
 
-void MODELSTRUCT_H_Assertions()
-{
-    // If these conditions aren't met, the compiler will
-    // throw an error concerning a duplicated case value.
-    COMPILE_TIME_ASSERT(sizeof(char)  == 1);
-    COMPILE_TIME_ASSERT(sizeof(short) == 2);
-    COMPILE_TIME_ASSERT(sizeof(int)   == 4);
-    COMPILE_TIME_ASSERT(sizeof(float) == 4);
-}
+#ifdef CPP_0X
+    // C++0x provides static assertions
+    static_assert(sizeof(char)  == 1, "M2 loading requires sizeof(char) = 1");
+    static_assert(sizeof(short) == 2, "M2 loading requires sizeof(short) = 2");
+    static_assert(sizeof(int)   == 4, "M2 loading requires sizeof(int) = 4");
+    static_assert(sizeof(float) == 4, "M2 loading requires sizeof(float) = 4");
+#else
+    // Else we need to use a trick...
+    void MODELSTRUCT_H_Assertions()
+    {
+        // If these conditions aren't met, the compiler will
+        // throw an error concerning a duplicated case value.
+        COMPILE_TIME_ASSERT(sizeof(char)  == 1);
+        COMPILE_TIME_ASSERT(sizeof(short) == 2);
+        COMPILE_TIME_ASSERT(sizeof(int)   == 4);
+        COMPILE_TIME_ASSERT(sizeof(float) == 4);
+    }
+#endif
 
 struct ModelHeader
 {

@@ -48,12 +48,6 @@ namespace Frost
             uiValue_ = 0u;
         }
 
-        explicit s_uint_t(const ptrdiff_t& uiValue)
-        {
-            mType_ = INTEGER;
-            uiValue_ = (T)uiValue;
-        }
-
         explicit s_uint_t(const float& fValue)
         {
             mType_ = INTEGER;
@@ -742,4 +736,9 @@ namespace Frost
     typedef s_uint_t<ushort> s_ushort;
     typedef s_uint_t<uint>   s_uint;
     typedef s_uint_t<ulong>  s_ulong;
+
+    template<> class TypeTraits<uchar>     { public : typedef s_uchar  Type; };
+    template<> class TypeTraits<ushort>    { public : typedef s_ushort Type; };
+    template<> class TypeTraits<uint>      { public : typedef s_uint   Type; };
+    template<> class TypeTraits<ulong>     { public : typedef s_ulong  Type; };
 }
