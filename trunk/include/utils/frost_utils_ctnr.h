@@ -17,6 +17,8 @@ namespace Frost
 
         typedef typename std::deque<T>::iterator       iterator;
         typedef typename std::deque<T>::const_iterator const_iterator;
+        typedef          s_range<iterator>             range;
+        typedef          s_range<const_iterator>       const_range;
 
         /// Default constructor.
         s_ctnr()
@@ -24,7 +26,7 @@ namespace Frost
         }
 
         /// Constructor.
-        /** \param mElem The first element of a (.., .., ..) sequence
+        /** \param mElem The first element of the sequence
         *   \note You can use this constructor, but it's main use is to build
         *         s_ctnr by enclosing a series of values by parenthesis (if these
         *         values have implemented the ',' operator).
@@ -33,6 +35,19 @@ namespace Frost
         {
             mDeque_.push_back(mElem);
         }
+
+        #ifdef CPP_0X
+            /// Initializer list constructor.
+            /** \param mList Brace enclosed element list
+            *   \note This constructor uses a C++0x feature.<br>
+            *         It allows : s_ctnr<s_int> v = {1, 2, 3, 4};
+            */
+            s_ctnr(std::initializer_list<T> mList)
+            {
+                for (const T* p = mList.begin(); p != mList.end(); ++p)
+                    mDeque_.push_back(*p);
+            }
+        #endif
 
         template<uint N>
         /// Constructor.

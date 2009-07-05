@@ -278,6 +278,7 @@ namespace Frost
     template<class T>
     const s_str s_ptr<T>::CLASS_NAME = "s_ptr";
 
+    template<class T> class TypeTraits<T*>  { public : typedef s_ptr<T> Type; };
 
     template<class T>
     s_str operator+ ( const s_str& sLeft, s_ptr<T> pRight )

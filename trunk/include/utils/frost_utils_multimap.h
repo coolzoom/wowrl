@@ -21,6 +21,19 @@ namespace Frost
         {
         }
 
+        #ifdef CPP_0X
+            /// Initializer list constructor.
+            /** \param mList Brace enclosed pair list
+            *   \note This constructor uses a C++0x feature.<br>
+            *         It allows : s_multimap<s_int, s_str> v = {MakePair(1, "bar"), MakePair(4, "foo")};
+            */
+            s_multimap(std::initializer_list<pair> mList)
+            {
+                for (const pair* p = mList.begin(); p != mList.end(); ++p)
+                    mMulMap_.insert(std::make_pair(p->First(), p->Second()));
+            }
+        #endif
+
         /// Erases an element from the multimap.
         /** \param mKey The key of the element to erase
         */

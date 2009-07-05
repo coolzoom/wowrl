@@ -38,8 +38,10 @@ namespace Frost
     {
     public :
 
-        typedef typename string_object::iterator iterator;
+        typedef typename string_object::iterator       iterator;
         typedef typename string_object::const_iterator const_iterator;
+        typedef s_range<iterator>                      range;
+        typedef s_range<const_iterator>                const_range;
 
         /// Constructor.
         s_str_t()
@@ -1102,4 +1104,6 @@ namespace Frost
     }
 
     typedef s_str_t<char> s_str;
+
+    template<> class TypeTraits<string_object> { public : typedef s_str Type; };
 }
