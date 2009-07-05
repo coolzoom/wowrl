@@ -246,16 +246,16 @@ namespace Frost
     template<class Key, class Value, class N>
     s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_map<Key, Value>& mRight)
     {
-        s_str_t<N> sTemp = STRING("( ");
+        s_str_t<N> sTemp = "( ";
         typename s_map<Key, Value>::const_iterator iter;
         for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
         {
             if (iter - mRight.Begin() == mRight.GetSize()-1)
                 sTemp << "[" << iter->first << "] = " << iter->second;
             else
-                sTemp << "[" << iter->first << "] = " << iter->second << STRING(", ");
+                sTemp << "[" << iter->first << "] = " << iter->second << ", ";
         }
-        sTemp << STRING(" )");
+        sTemp << " )";
 
         return sLeft + sTemp;
     }
@@ -265,12 +265,4 @@ namespace Frost
     {
         return s_str_t<N>(sLeft) + mRight;
     }
-
-    #ifdef USE_UNICODE
-        template<class Key, class Value>
-        s_str_t<char> operator + (const char* sLeft, const s_map<Key, Value>& mRight)
-        {
-            return s_str_t<char>(sLeft) + mRight;
-        }
-    #endif
 }

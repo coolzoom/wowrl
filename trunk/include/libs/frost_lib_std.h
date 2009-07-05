@@ -16,11 +16,7 @@
 #include <math.h>
 #include <string>
 #include <map>
-#if FROST_LINUX
-    #include <tr1/unordered_map>
-#else
-    #include <ext/hash_map>
-#endif
+#include <tr1/unordered_map>
 #include <vector>
 #include <deque>
 #include <list>

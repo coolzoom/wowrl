@@ -64,7 +64,10 @@ s_bool FrameFunc()
     static s_ptr<TimeManager> pTimeMgr = TimeManager::GetSingleton();
 
     if (pInputMgr->KeyIsPressed(KEY_ESCAPE))
+    {
+        Log("Escape pressed, exiting...");
         return false;
+    }
 
     if (pInputMgr->KeyIsPressed(KEY_T))
     {

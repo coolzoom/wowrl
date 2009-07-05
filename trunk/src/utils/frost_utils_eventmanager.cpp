@@ -11,8 +11,6 @@
 #include "frost_utils_stdhelper.h"
 #include "frost_utils_log.h"
 
-#include <algorithm>
-
 using namespace std;
 
 namespace Frost

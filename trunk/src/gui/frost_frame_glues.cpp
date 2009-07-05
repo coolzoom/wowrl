@@ -206,7 +206,7 @@ int LuaFrame::_GetHitRectInsets(lua_State* pLua)
 
     s_array<s_int,4> lInsets = pFrameParent_->GetAbsHitRectInsets();
 
-    for (uint i; i < 4; ++i)
+    for (uint i = 0; i < 4; ++i)
         mFunc.Push(lInsets[i]);
 
     return mFunc.Return();

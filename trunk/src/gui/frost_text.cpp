@@ -251,30 +251,7 @@ namespace Frost
 
     s_float Text::GetCharacterKerning( const s_uint& uiChar1, const s_uint& uiChar2 ) const
     {
-        if (bReady_)
-        {
-            const Ogre::Font::GlyphInfo& mInfo = pOgreFont_->getGlyphInfo(uiChar1.Get());
-            map<Ogre::Font::CodePoint, Ogre::Vector2>::const_iterator iter = mInfo.kerningTable.find(uiChar2.Get());
-            if (iter != mInfo.kerningTable.end())
-            {
-                return iter->second.x*pFontMat_->GetWidth();
-            }
-            else
-            {
-                if (uiChar2 != 0)
-                {
-                    Error(CLASS_NAME,
-                        "Couldn't find kerning information for character "+uiChar2+"."
-                    );
-                }
-
-                return 0.0f;
-            }
-        }
-        else
-        {
-            return 0.0f;
-        }
+        return 0.0f;
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
@@ -438,6 +415,8 @@ namespace Frost
         s_ctnr<s_str>::iterator iterManual;
         foreach (iterManual, lManualLineList)
         {
+            static s_int si = 0;
+            si++;
             // Make a temporary line array
             s_ctnr<Line> lLines;
             Line mLine;

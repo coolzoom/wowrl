@@ -23,8 +23,7 @@ namespace Frost
     *   implements new functions that are not present
     *   in the standard libraries.<br>
     *   This class can be compiled to use either Unicode
-    *   or ASCII characters. Just set the preprocessor
-    *   directive USE_UNICODE.<br>
+    *   or ASCII characters.<br>
     *   <b>Note</b> : Most of Frost's base types are
     *   slower than C++ base types. The difference is
     *   negligible for small operations, but if you need
@@ -45,7 +44,7 @@ namespace Frost
         /// Constructor.
         s_str_t()
         {
-            sValue_ = STRING("");
+            sValue_ = "";
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
         }
@@ -70,31 +69,6 @@ namespace Frost
             mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
-        #ifdef USE_UNICODE
-            /// Constructor.
-            /** \param sValue The string to use
-            */
-            s_str_t(const std::string& sValue)
-            {
-                const uchar* str = reinterpret_cast<const uchar*>(sValue.c_str());
-                sValue_ = std::wstring(str, str + sValue.size());
-                mIntConvType_ = CONV_DECIMAL;
-                mBoolConvType_ = CONV_TRUE_FALSE;
-            }
-
-            /// Constructor.
-            /** \param sValue The string to use
-            */
-            s_str_t(const char* sValue)
-            {
-                std::string s = sValue;
-                const uchar* str = reinterpret_cast<const uchar*>(s.c_str());
-                sValue_ = std::wstring(str, str + s.size());
-                mIntConvType_ = CONV_DECIMAL;
-                mBoolConvType_ = CONV_TRUE_FALSE;
-            }
-        #endif
-
         /// s_int_t conversion constructor.
         /** \param iValue The s_int_t to convert
         */
@@ -103,7 +77,7 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator<<(iValue);
         }
 
@@ -117,11 +91,11 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator<<(iValue);
 
             while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
-                sValue_ = STRING('0') + sValue_;
+                sValue_ = '0' + sValue_;
         }
 
         /// s_uint_t conversion constructor.
@@ -132,7 +106,7 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator<<(uiValue);
         }
 
@@ -146,11 +120,11 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator<<(uiValue);
 
             while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
-                sValue_ = STRING('0') + sValue_;
+                sValue_ = '0' + sValue_;
         }
 
         /// s_float_t conversion constructor.
@@ -161,7 +135,7 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator<<(fValue);
         }
 
@@ -175,11 +149,11 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator<<(fValue);
 
             while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
-                sValue_ = STRING('0') + sValue_;
+                sValue_ = '0' + sValue_;
         }
 
         /// s_bool conversion constructor.
@@ -190,7 +164,7 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator<<(bValue);
         }
 
@@ -201,7 +175,7 @@ namespace Frost
         {
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
-            sValue_ = STRING("");
+            sValue_ = "";
             this->operator+=(cValue);
         }
 
@@ -215,7 +189,7 @@ namespace Frost
             if (uiCharNbr.IsValid())
                 sValue_ = string_object(uiCharNbr.Get(), cValue);
             else
-                sValue_ = STRING("");
+                sValue_ = "";
             mIntConvType_ = CONV_DECIMAL;
             mBoolConvType_ = CONV_TRUE_FALSE;
         }
@@ -505,11 +479,7 @@ namespace Frost
         */
         std::string GetASCII() const
         {
-            #ifdef USE_UNICODE
-                return std::string(sValue_.c_str(), sValue_.c_str() + sValue_.size());
-            #else
-                return sValue_;
-            #endif
+            return sValue_;
         }
 
         /// Returns the string converted to Unicode.
@@ -517,11 +487,7 @@ namespace Frost
         */
         std::wstring GetUnicode() const
         {
-            #ifdef USE_UNICODE
-                return sValue_;
-            #else
-                return std::wstring(sValue_.c_str(), sValue_.c_str() + sValue_.size());
-            #endif
+            return std::wstring(sValue_.c_str(), sValue_.c_str() + sValue_.size());
         }
 
         /// Returns a C-style string.
@@ -571,7 +537,7 @@ namespace Frost
                     s_bool bEmpty = true;
                     for (uint i = 0; i < sValue_.length(); ++i)
                     {
-                        if ( (sValue_[i] != STRING(' ')) && (sValue_[i] != STRING('	')) )
+                        if ( (sValue_[i] != ' ') && (sValue_[i] != '	') )
                         {
                             bEmpty = false;
                             break;
@@ -606,11 +572,11 @@ namespace Frost
             switch (mBoolConvType_)
             {
                 case CONV_TRUE_FALSE :
-                    return ((sValue_ == STRING("false")) || (sValue_ == STRING("true")));
+                    return ((sValue_ == "false") || (sValue_ == "true"));
                 case CONV_1_0 :
-                    return ((sValue_ == STRING("0"))     || (sValue_ == STRING("1")));
+                    return ((sValue_ == "0")     || (sValue_ == "1"));
                 case CONV_YES_NO :
-                    return ((sValue_ == STRING("no"))    || (sValue_ == STRING("yes")));
+                    return ((sValue_ == "no")    || (sValue_ == "yes"));
                 default :
                     return false;
             }
@@ -756,15 +722,6 @@ namespace Frost
             return sValue_ + sValue;
         }
 
-        #ifdef USE_UNICODE
-            s_str_t operator + (const char* sValue) const
-            {
-                std::string s = sValue;
-                const uchar* str = reinterpret_cast<const uchar*>(s.c_str());
-                return sValue_ + std::wstring(str, str + s.size());
-            }
-        #endif
-
         s_str_t operator + (const string_element& cValue) const
         {
             string_object sTemp = sValue_;
@@ -825,7 +782,7 @@ namespace Frost
             if (uiNumber.Get() < sValue_.size())
                 sValue_ = sValue_.substr(0, sValue_.size()-uiNumber.Get());
             else
-                sValue_ = STRING("");
+                sValue_ = "";
         }
 
         s_bool operator == (const s_str_t& mValue) const
@@ -994,17 +951,17 @@ namespace Frost
         template <class N>
         s_str_t& operator << (const s_bool_t<N>& bValue)
         {
-            string_object sChoice[2] = { STRING(""), STRING("") };
+            string_object sChoice[2] = { "", "" };
             switch (mBoolConvType_)
             {
                 case CONV_TRUE_FALSE :
-                    sChoice[0] = STRING("false"); sChoice[1] = STRING("true");
+                    sChoice[0] = "false"; sChoice[1] = "true";
                     break;
                 case CONV_1_0 :
-                    sChoice[0] = STRING("0");     sChoice[1] = STRING("1");
+                    sChoice[0] = "0";     sChoice[1] = "1";
                     break;
                 case CONV_YES_NO :
-                    sChoice[0] = STRING("no");    sChoice[1] = STRING("yes");
+                    sChoice[0] = "no";    sChoice[1] = "yes";
                     break;
             }
 
@@ -1015,29 +972,29 @@ namespace Frost
         template <class N, int M>
         s_str_t& operator << (const s_array<N, M>& lValue)
         {
-            operator<<(STRING("("));
+            operator << ("(");
             for (uint i = 0; i < M; ++i)
             {
                 if (i == M-1)
-                    operator<<(lValue[i]);
+                    operator << (lValue[i]);
                 else
-                    operator<<(lValue[i]) << STRING(", ");
+                    operator << (lValue[i]) << ", ";
             }
-            operator<<(STRING(")"));
+            operator << (")");
         }
 
         template <class N>
         s_str_t& operator << (const s_ctnr<N>& lValue)
         {
-            operator<<(STRING("("));
+            operator << ("(");
             for (s_uint i = 0; i < lValue.GetSize(); ++i)
             {
                 if (i == lValue.GetSize()-s_uint(1u))
-                    operator<<(lValue[i]);
+                    operator << (lValue[i]);
                 else
-                    operator<<(lValue[i]) << STRING(", ");
+                    operator << (lValue[i]) << ", ";
             }
-            operator<<(STRING(")"));
+            operator << (")");
         }
 
         s_str_t& operator << (const IntegerConversionType& mIntConvType)
@@ -1134,7 +1091,7 @@ namespace Frost
     };
 
     template<class T>
-    string_element s_str_t<T>::cDummy = STRING('\0');
+    string_element s_str_t<T>::cDummy = '\0';
     template<class T>
     const s_str_t<T> s_str_t<T>::EMPTY = "";
 
@@ -1143,14 +1100,6 @@ namespace Frost
     {
         return s_str_t<T>(sLeft) + sRight;
     }
-
-    #ifdef USE_UNICODE
-        template<class T>
-        s_str_t<T> operator + (const char* sLeft, const s_str_t<T>& sRight)
-        {
-            return s_str_t<T>(sLeft) + sRight;
-        }
-    #endif
 
     typedef s_str_t<char> s_str;
 }

@@ -368,15 +368,15 @@ namespace Frost
     template<class T, class N>
     s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_ctnr<T>& mRight)
     {
-        s_str_t<N> sTemp = STRING("(");
+        s_str_t<N> sTemp = "(";
         for (s_uint i = 0; i < mRight.GetSize(); ++i)
         {
             if (i == mRight.GetSize()-1)
                 sTemp << mRight[i];
             else
-                sTemp << mRight[i] << STRING(", ");
+                sTemp << mRight[i] << ", ";
         }
-        sTemp << STRING(")");
+        sTemp << ")";
 
         return sLeft + sTemp;
     }
@@ -386,12 +386,4 @@ namespace Frost
     {
         return s_str_t<N>(sLeft) + mRight;
     }
-
-    #ifdef USE_UNICODE
-        template<class T>
-        s_str_t<char> operator + (const char* sLeft, const s_ctnr<T>& mRight)
-        {
-            return s_str_t<char>(sLeft) + mRight;
-        }
-    #endif
 }

@@ -159,7 +159,7 @@ namespace Frost
             if (iterHandler->second->IsEnabled())
             {
                 // Acceleration is "constant"
-                const Vector& mAcceleration = PhysicsManager::GetSingleton()->GetGravity();
+                const Vector& mAcceleration = mGravity_;
 
                 // Update speed
                 iterHandler->second->AddSpeed(mAcceleration*fDelta);

@@ -22,17 +22,10 @@ namespace Frost
         FILE_O
     };
 
-    #ifdef USE_UNICODE
-        typedef wchar_t string_element;
-        typedef std::wstring string_object;
-        typedef std::wstringstream string_stream;
-        typedef std::wfstream file_stream;
-    #else
-        typedef char string_element;
-        typedef std::string string_object;
-        typedef std::stringstream string_stream;
-        typedef std::fstream file_stream;
-    #endif
+    typedef char string_element;
+    typedef std::string string_object;
+    typedef std::stringstream string_stream;
+    typedef std::fstream file_stream;
 
     /// A tool to input some data
     /** Built upon std::fstream, this class offers
