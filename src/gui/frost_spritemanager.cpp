@@ -280,9 +280,9 @@ namespace Frost
     */
     inline void WriteVertex( float* &pBuffer, uint* &pColorBuffer, Frost::Vertex &mV )
     {
-        *pBuffer = s_float::Round(mV.fX).Get();  // x
+        *pBuffer = mV.fX.Get();  // x
         pBuffer++;
-        *pBuffer = s_float::Round(mV.fY).Get();  // y
+        *pBuffer = mV.fY.Get();  // y
         pBuffer++;
         *pBuffer = -1;           // z
         pBuffer++;
@@ -638,6 +638,18 @@ namespace Frost
     void SpriteManager::RenderQuad( const Quad &mQuad )
     {
         lQuadList_.PushBack(mQuad);
+        if (bPreciseRendering_)
+        {
+            Quad& q = lQuadList_.Back();
+            q.lVertexArray[0].fX.Round(ROUND_FLOOR);
+            q.lVertexArray[0].fY.Round(ROUND_FLOOR);
+            q.lVertexArray[1].fX.Round(ROUND_FLOOR);
+            q.lVertexArray[1].fY.Round(ROUND_FLOOR);
+            q.lVertexArray[2].fX.Round(ROUND_FLOOR);
+            q.lVertexArray[2].fY.Round(ROUND_FLOOR);
+            q.lVertexArray[3].fX.Round(ROUND_FLOOR);
+            q.lVertexArray[3].fY.Round(ROUND_FLOOR);
+        }
     }
 
     void SpriteManager::SetRenderFunction( Function pRenderFunc )
@@ -653,6 +665,21 @@ namespace Frost
     const AxisType& SpriteManager::GetYAxisType() const
     {
         return mAxisType_;
+    }
+
+    void SpriteManager::EnablePreciseRendering()
+    {
+        bPreciseRendering_ = true;
+    }
+
+    void SpriteManager::DisablePreciseRendering()
+    {
+        bPreciseRendering_ = false;
+    }
+
+    const s_bool& SpriteManager::GetPreciseRendering() const
+    {
+        return bPreciseRendering_;
     }
 
     s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_str& sTargetName, const s_uint& uiWidth, const s_uint& uiHeight )

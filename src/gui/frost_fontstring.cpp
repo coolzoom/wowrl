@@ -7,13 +7,14 @@
 
 #include "gui/frost_layeredregion.h"
 #include "gui/frost_guimanager.h"
+#include "gui/frost_spritemanager.h"
 #include "material/frost_material.h"
 
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
 
-#define OUTLINE_QUALITY   10.0f
+#define OUTLINE_QUALITY   10
 #define OUTLINE_THICKNESS 2.0f
 
 const s_str FontString::CLASS_NAME = "GUI::FontString";
@@ -47,14 +48,21 @@ void FontString::Render()
             for (int i = 0; i < OUTLINE_QUALITY; i++)
             {
                 pText_->Render(
-                    s_float(lBorderList_[BORDER_LEFT]) + OUTLINE_THICKNESS*cos(s_float(i/OUTLINE_QUALITY)),
-                    s_float(lBorderList_[BORDER_TOP])  + OUTLINE_THICKNESS*sin(s_float(i/OUTLINE_QUALITY))
+                    s_float(lBorderList_[BORDER_LEFT]) + OUTLINE_THICKNESS*cos(s_float(i)/OUTLINE_QUALITY),
+                    s_float(lBorderList_[BORDER_TOP])  + OUTLINE_THICKNESS*sin(s_float(i)/OUTLINE_QUALITY)
                 );
             }
         }
 
+        SpriteManager::GetSingleton()->EnablePreciseRendering();
+
         pText_->SetColor(mTextColor_);
-        pText_->Render(s_float(lBorderList_[BORDER_LEFT]), s_float(lBorderList_[BORDER_TOP]));
+        pText_->Render(
+            s_float(lBorderList_[BORDER_LEFT]),
+            s_float(lBorderList_[BORDER_TOP])
+        );
+
+        SpriteManager::GetSingleton()->DisablePreciseRendering();
     }
 }
 

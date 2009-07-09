@@ -436,12 +436,12 @@ void State::PushNil( const s_uint& uiNumber )
 void State::PushVar( const s_var& vValue )
 {
     const s_type& mType = vValue.GetType();
-    if (mType == VALUE_INT) PushNumber(vValue.Get<s_int>());
-    else if (mType == VALUE_UINT) PushNumber(vValue.Get<s_uint>());
-    else if (mType == VALUE_FLOAT) PushNumber(vValue.Get<s_float>());
-    else if (mType == VALUE_DOUBLE) PushNumber(vValue.Get<s_double>());
-    else if (mType == VALUE_STRING) PushString(vValue.Get<s_str>());
-    else if (mType == VALUE_BOOL) PushBool(vValue.Get<s_bool>());
+    if (mType == s_var::VALUE_INT) PushNumber(vValue.Get<s_int>());
+    else if (mType == s_var::VALUE_UINT) PushNumber(vValue.Get<s_uint>());
+    else if (mType == s_var::VALUE_FLOAT) PushNumber(vValue.Get<s_float>());
+    else if (mType == s_var::VALUE_DOUBLE) PushNumber(vValue.Get<s_double>());
+    else if (mType == s_var::VALUE_STRING) PushString(vValue.Get<s_str>());
+    else if (mType == s_var::VALUE_BOOL) PushBool(vValue.Get<s_bool>());
     else PushNil();
 }
 

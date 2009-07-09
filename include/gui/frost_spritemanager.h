@@ -273,6 +273,35 @@ namespace Frost
         */
         const AxisType& GetYAxisType() const;
 
+        /// Enables presice rendering.
+        /** \note If precise rendering is enabled, all rendering coordinates
+        *         are rounded per pixel before being sent to the Ogre renderer.
+        *         This may result in less fluid movement, but textures and fonts
+        *         will appear much clearer.<br>
+        *         Precise rendering has a slight overhead, so you should disable
+        *         it whenever you don't need it (font shadowing, large blurry
+        *         sprites...)<br>
+        *         Disabled by default.
+        */
+        void         EnablePreciseRendering();
+
+        /// Disables presice rendering.
+        /** \note If precise rendering is enabled, all rendering coordinates
+        *         are rounded per pixel before being sent to the Ogre renderer.
+        *         This may result in less fluid movement, but textures and fonts
+        *         will appear much clearer.<br>
+        *         Precise rendering has a slight overhead, so you should disable
+        *         it whenever you don't need it (font shadowing, large blurry
+        *         sprites...)<br>
+        *         Disabled by default.
+        */
+        void         DisablePreciseRendering();
+
+        /// Checks if precise rendering is enabled.
+        /** \return 'true' if precise rendering is enabled
+        */
+        const s_bool& GetPreciseRendering() const;
+
         /// Creates a new RenderTarget.
         /** \param sTargetName The name of this render target
         *   \param uiWidth     The width of this render target
@@ -392,6 +421,7 @@ namespace Frost
         s_bool bRenderTargets_;
 
         AxisType mAxisType_;
+        s_bool   bPreciseRendering_;
 
         Function pRenderFunc_;
     };

@@ -17,6 +17,8 @@
 
 #ifdef WIN32
     #include <sys/timeb.h>
+#else
+    #include <sys/time.h>
 #endif
 
 using namespace std;
@@ -248,9 +250,8 @@ namespace Frost
         ftime(&tb);
         return (uint)tb.millitm*1000;
     #else
-        // NOTE : Needs to be checked on Linux
         timeval tv;
-        gettimeofday(tv, NULL);
+        gettimeofday(&tv, NULL);
         return tv.tv_usec;
     #endif
     }

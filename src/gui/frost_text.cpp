@@ -531,7 +531,7 @@ namespace Frost
                         mLine.sCaption << "...";
 
                         s_str::iterator iterTemp = iterChar1;
-                        iterChar1 = iterManual->Get(" ", s_uint(s_int(iterChar1 - iterManual->begin())));
+                        iterChar1 = iterManual->Get(" ", s_uint(s_ptrdiff(iterChar1 - iterManual->begin())));
 
                         if (iterChar1 != iterManual->end())
                         {
