@@ -219,12 +219,11 @@ namespace Frost
         */
         FloatType GetType() const
         {
-        #ifdef WIN32
-            if (_isnan(fValue_))
+            if (std::isnan(fValue_))
                 return FLOAT_NAN;
             else
             {
-                if (_finite(fValue_))
+                if (std::isfinite(fValue_))
                     return FLOAT;
                 else
                 {
@@ -234,22 +233,6 @@ namespace Frost
                         return FLOAT_INF_PLUS;
                 }
             }
-        #else
-            if (isnan(fValue_))
-                return FLOAT_NAN;
-            else
-            {
-                if (finite(fValue_))
-                    return FLOAT;
-                else
-                {
-                    if (fValue_ < 0.0)
-                        return FLOAT_INF_MINUS;
-                    else
-                        return FLOAT_INF_PLUS;
-                }
-            }
-        #endif
         }
 
         /// Checks if this float is infinite and negative
@@ -257,11 +240,7 @@ namespace Frost
         */
         s_bool IsInfiniteMinus() const
         {
-        #ifdef WIN32
-            return (!_finite(fValue_) && (fValue_ < 0.0));
-        #else
-            return (!finite(fValue_) && (fValue_ < 0.0));
-        #endif
+            return (!std::isfinite(fValue_) && (fValue_ < 0.0));
         }
 
         /// Checks if this float is infinite and positive
@@ -269,11 +248,7 @@ namespace Frost
         */
         s_bool IsInfinitePlus() const
         {
-        #ifdef WIN32
-            return (!_finite(fValue_) && (fValue_ > 0.0));
-        #else
-            return (!finite(fValue_) && (fValue_ > 0.0));
-        #endif
+            return (!std::isfinite(fValue_) && (fValue_ > 0.0));
         }
 
         /// Checks if this float is a Not a Number (NaN)
@@ -281,11 +256,7 @@ namespace Frost
         */
         s_bool IsNaN() const
         {
-        #ifdef WIN32
-            return _isnan(fValue_);
-        #else
-            return isnan(fValue_);
-        #endif
+            return std::isnan(fValue_);
         }
 
         /// Checks if this float equals zero.
@@ -301,11 +272,7 @@ namespace Frost
         */
         s_bool IsValid() const
         {
-        #ifdef WIN32
-            return _finite(fValue_);
-        #else
-            return finite(fValue_);
-        #endif
+            return std::isfinite(fValue_);
         }
 
         /// Elevates this float to a certain power (this^n).
