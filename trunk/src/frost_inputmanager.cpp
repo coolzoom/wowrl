@@ -55,7 +55,7 @@ namespace Frost
         mWindowHnd << iWindowHnd;
 
         mPL.insert(make_pair(string("WINDOW"), mWindowHnd.str()));
-        #ifndef FROST_LINUX
+        #ifdef WIN32
             mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_FOREGROUND")));
             mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_NONEXCLUSIVE")));
             mPL.insert(make_pair(string("w32_keyboard"), string("DISCL_FOREGROUND")));

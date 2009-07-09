@@ -137,13 +137,8 @@ s_bool RenderFunc()
 }
 
 // To Do List :
-// TODO : Verifier l'histoire des destructeurs virtuels conteneurs STL
-#ifdef FROST_LINUX
+
 int main(int argc, char *argv[])
-#else
-#include <windows.h>
-INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
-#endif
 {
     try
     {
@@ -243,14 +238,7 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
         }
         else
         {
-            #ifdef FROST_LINUX
-                std::cerr << "An error has occured while loading.\nSee Frost.log." << std::endl;
-            #else
-                MessageBox(
-                    NULL, "An error has occured while loading.\nSee Frost.log.",
-                    "Frost Error", MB_OK|MB_ICONERROR|MB_TASKMODAL
-                );
-            #endif
+            std::cerr << "An error has occured while loading.\nSee Frost.log." << std::endl;
         }
 
         pText.SetNull();
@@ -261,25 +249,11 @@ INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
     }
     catch (Ogre::Exception e)
     {
-        #ifdef FROST_LINUX
-            std::cerr << e.getFullDescription() << std::endl;
-        #else
-            MessageBox(
-                NULL, e.getFullDescription().c_str(),
-                "Ogre Error", MB_OK|MB_ICONERROR|MB_TASKMODAL
-            );
-        #endif
+        std::cerr << e.getFullDescription() << std::endl;
     }
     catch (std::exception e)
     {
-        #ifdef FROST_LINUX
-            std::cerr << e.what() << std::endl;
-        #else
-            MessageBox(
-                NULL, e.what(),
-                "Ogre Error", MB_OK|MB_ICONERROR|MB_TASKMODAL
-            );
-        #endif
+        std::cerr << e.what() << std::endl;
     }
 
     return 0;
