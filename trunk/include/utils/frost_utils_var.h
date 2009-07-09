@@ -15,15 +15,6 @@ namespace Frost
 {
     typedef std::type_info s_type;
 
-    const s_type& VALUE_NONE    = typeid(void);
-    const s_type& VALUE_INT     = typeid(s_int);
-    const s_type& VALUE_UINT    = typeid(s_uint);
-    const s_type& VALUE_FLOAT   = typeid(s_float);
-    const s_type& VALUE_DOUBLE  = typeid(s_double);
-    const s_type& VALUE_BOOL    = typeid(s_bool);
-    const s_type& VALUE_STRING  = typeid(s_str);
-    const s_type& VALUE_POINTER = typeid(void*);
-
     /// Base type : untyped variable
     /** The purpose of this class is to have an untyped
     *   return value / argument. It allows simple manipulation
@@ -164,6 +155,15 @@ namespace Frost
             else if (mType == VALUE_POINTER) return s_str() << Get<void*>();
             else return "<none>";
         }
+
+        static const s_type& VALUE_NONE;
+        static const s_type& VALUE_INT;
+        static const s_type& VALUE_UINT;
+        static const s_type& VALUE_FLOAT;
+        static const s_type& VALUE_DOUBLE;
+        static const s_type& VALUE_BOOL;
+        static const s_type& VALUE_STRING;
+        static const s_type& VALUE_POINTER;
 
     private :
 

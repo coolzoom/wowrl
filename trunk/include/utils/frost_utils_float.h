@@ -219,6 +219,7 @@ namespace Frost
         */
         FloatType GetType() const
         {
+        #ifdef WIN32
             if (_isnan(fValue_))
                 return FLOAT_NAN;
             else
@@ -233,6 +234,22 @@ namespace Frost
                         return FLOAT_INF_PLUS;
                 }
             }
+        #else
+            if (isnan(fValue_))
+                return FLOAT_NAN;
+            else
+            {
+                if (finite(fValue_))
+                    return FLOAT;
+                else
+                {
+                    if (fValue_ < 0.0)
+                        return FLOAT_INF_MINUS;
+                    else
+                        return FLOAT_INF_PLUS;
+                }
+            }
+        #endif
         }
 
         /// Checks if this float is infinite and negative
@@ -240,7 +257,11 @@ namespace Frost
         */
         s_bool IsInfiniteMinus() const
         {
+        #ifdef WIN32
             return (!_finite(fValue_) && (fValue_ < 0.0));
+        #else
+            return (!finite(fValue_) && (fValue_ < 0.0));
+        #endif
         }
 
         /// Checks if this float is infinite and positive
@@ -248,7 +269,11 @@ namespace Frost
         */
         s_bool IsInfinitePlus() const
         {
+        #ifdef WIN32
             return (!_finite(fValue_) && (fValue_ > 0.0));
+        #else
+            return (!finite(fValue_) && (fValue_ > 0.0));
+        #endif
         }
 
         /// Checks if this float is a Not a Number (NaN)
@@ -256,7 +281,11 @@ namespace Frost
         */
         s_bool IsNaN() const
         {
-            return (_isnan(fValue_));
+        #ifdef WIN32
+            return _isnan(fValue_);
+        #else
+            return isnan(fValue_);
+        #endif
         }
 
         /// Checks if this float equals zero.
@@ -272,7 +301,11 @@ namespace Frost
         */
         s_bool IsValid() const
         {
-            return (_finite(fValue_));
+        #ifdef WIN32
+            return _finite(fValue_);
+        #else
+            return finite(fValue_);
+        #endif
         }
 
         /// Elevates this float to a certain power (this^n).
@@ -609,16 +642,7 @@ namespace Frost
         T fValue_;
     };
 
-    float MakeFloat(unsigned long ul)
-    {
-        union {
-            float f;
-            unsigned long ul;
-        } x;
-
-        x.ul = ul;
-        return x.f;
-    }
+    float MakeFloat(const ulong& ul);
 
     template <class T>
     const s_float_t<T> s_float_t<T>::NaN      = MakeFloat(0xFFC00000);
@@ -686,13 +710,12 @@ namespace Frost
     }
 
     typedef s_float_t<float> s_float;
-    template<> const float s_float::fEpsilon = FLT_MIN;
-    template<> const s_float s_float::PI     = 3.141592f;
+    template<> const float   s_float::fEpsilon;
+    template<> const s_float s_float::PI;
+    template<> class TypeTraits<float>  { public : typedef s_float  Type; };
 
     typedef s_float_t<double> s_double;
-    template<> const double s_double::fEpsilon = DBL_MIN;
-    template<> const s_double s_double::PI     = 3.141592653589793;
-
-    template<> class TypeTraits<float>  { public : typedef s_float  Type; };
+    template<> const double   s_double::fEpsilon;
+    template<> const s_double s_double::PI;
     template<> class TypeTraits<double> { public : typedef s_double Type; };
 }

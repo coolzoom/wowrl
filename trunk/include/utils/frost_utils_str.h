@@ -835,11 +835,7 @@ namespace Frost
                 return operator<<("NULL");
             else
             {
-                #ifdef WIN32
-                    return operator<<(s_uint((uint)pValue));
-                #else
-                    return operator<<(s_uint((uint)(ulong)pValue));
-                #endif
+                return operator<<(s_ptrdiff((ptrdiff_t)pValue));
             }
         }
 
