@@ -90,21 +90,20 @@ namespace Frost
         }
     }
 
-    char InputManager::GetChar( s_bool bFormated, s_bool bForce ) const
+    s_char InputManager::GetChar( s_bool bFormated, s_bool bForce ) const
     {
         if (!bForce && bFocus_)
-            return 0;
+            return s_char::NaN;
         else if (bFormated)
         {
             // Filter non printable characters and special keys
-            char cChar = cChar_;
-            if ((cChar == 8)  || // Backspace
-                (cChar == 9)  || // Tab
-                (cChar == 13) || // Enter
-                (cChar == 27)    // Escape
-                )
-                cChar = 0;
-            return cChar;
+            if ((cChar_ == 8)  || // Backspace
+                (cChar_ == 9)  || // Tab
+                (cChar_ == 13) || // Enter
+                (cChar_ == 27))   // Escape
+                return s_char::NaN;
+            else
+                return cChar_;
         }
         else
             return cChar_;
