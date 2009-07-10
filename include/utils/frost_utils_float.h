@@ -260,11 +260,11 @@ namespace Frost
         }
 
         /// Checks if this float equals zero.
-        /** \return 'true' if this float equals zero (precision : fEpsilon)
+        /** \return 'true' if this float equals zero (precision : EPS)
         */
         s_bool IsNull() const
         {
-            return ( IsValid() && (fValue_ < fEpsilon) && (fValue_ > -fEpsilon) );
+            return ( IsValid() && (fValue_ < EPS) && (fValue_ > -EPS) );
         }
 
         /// Checks if this float is a valid number.
@@ -495,8 +495,9 @@ namespace Frost
         static const s_float_t NaN;
         static const s_float_t INFPLUS;
         static const s_float_t INFMINUS;
-        static const T         fEpsilon;
+        static const T         EPS;
         static const s_float_t PI;
+        static const uint      DIGIT;
 
         /// Converts a float to an angle in radian.
         /** \note It is assumed that the value was a non dimensionnal angle
@@ -618,9 +619,11 @@ namespace Frost
     template <class T>
     const s_float_t<T> s_float_t<T>::INFMINUS = MakeFloat(0xFF800000);
     template <class T>
-    const T s_float_t<T>::fEpsilon = 0.0;
+    const T s_float_t<T>::EPS = 0.0;
     template <class T>
     const s_float_t<T> s_float_t<T>::PI = 3.1415;
+    template <class T>
+    const uint s_float_t<T>::DIGIT = 1;
 
     template <class T>
     s_float_t<T> operator + (const T& fLeft, const s_float_t<T>& fRight)
@@ -677,12 +680,20 @@ namespace Frost
     }
 
     typedef s_float_t<float> s_float;
-    template<> const float   s_float::fEpsilon;
+    template<> const float   s_float::EPS;
     template<> const s_float s_float::PI;
-    template<> class TypeTraits<float>  { public : typedef s_float  Type; };
+    template<> const uint    s_float::DIGIT;
+    template<> class TypeTraits<float> { public : typedef s_float  Type; };
 
     typedef s_float_t<double> s_double;
-    template<> const double   s_double::fEpsilon;
+    template<> const double   s_double::EPS;
     template<> const s_double s_double::PI;
+    template<> const uint     s_double::DIGIT;
     template<> class TypeTraits<double> { public : typedef s_double Type; };
+
+    typedef s_float_t<long double> s_ldouble;
+    template<> const long double   s_ldouble::EPS;
+    template<> const s_ldouble     s_ldouble::PI;
+    template<> const uint          s_ldouble::DIGIT;
+    template<> class TypeTraits<long double> { public : typedef s_ldouble Type; };
 }

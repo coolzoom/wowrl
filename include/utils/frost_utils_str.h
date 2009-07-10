@@ -929,6 +929,7 @@ namespace Frost
             if (fValue.IsValid())
             {
                 string_stream sStream;
+                sStream.precision(s_float_t<N>::DIGIT);
                 sStream << fValue.Get();
                 sValue_ += sStream.str();
                 return *this;
