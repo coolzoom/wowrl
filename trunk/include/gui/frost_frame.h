@@ -410,6 +410,8 @@ namespace Frost
             s_bool      bIsTopStrata_;
             s_bool      bIsTopLevel_;
 
+            s_ptr<Backdrop> pBackdrop_;
+
             s_bool bHasAllEventsRegistred_;
 
             s_bool bIsKeyboardEnabled_;

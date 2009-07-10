@@ -182,6 +182,7 @@
 		<Unit filename="include\gameplay\frost_gameplay.h" />
 		<Unit filename="include\gameplay\frost_gameplaymanager.h" />
 		<Unit filename="include\gui\frost_anchor.h" />
+		<Unit filename="include\gui\frost_backdrop.h" />
 		<Unit filename="include\gui\frost_button.h" />
 		<Unit filename="include\gui\frost_editbox.h" />
 		<Unit filename="include\gui\frost_fontmanager.h" />
@@ -189,6 +190,7 @@
 		<Unit filename="include\gui\frost_frame.h" />
 		<Unit filename="include\gui\frost_gradient.h" />
 		<Unit filename="include\gui\frost_guimanager.h" />
+		<Unit filename="include\gui\frost_guistructs.h" />
 		<Unit filename="include\gui\frost_layeredregion.h" />
 		<Unit filename="include\gui\frost_scrollingmessageframe.h" />
 		<Unit filename="include\gui\frost_slider.h" />
@@ -250,6 +252,7 @@
 		<Unit filename="src\gameplay\frost_gameplay_glues.cpp" />
 		<Unit filename="src\gameplay\frost_gameplaymanager.cpp" />
 		<Unit filename="src\gui\frost_anchor.cpp" />
+		<Unit filename="src\gui\frost_backdrop.cpp" />
 		<Unit filename="src\gui\frost_button.cpp" />
 		<Unit filename="src\gui\frost_button_glues.cpp" />
 		<Unit filename="src\gui\frost_editbox.cpp" />
@@ -261,6 +264,7 @@
 		<Unit filename="src\gui\frost_frame_glues.cpp" />
 		<Unit filename="src\gui\frost_gradient.cpp" />
 		<Unit filename="src\gui\frost_guimanager.cpp" />
+		<Unit filename="src\gui\frost_guistructs.cpp" />
 		<Unit filename="src\gui\frost_layeredregion.cpp" />
 		<Unit filename="src\gui\frost_layeredregion_glues.cpp" />
 		<Unit filename="src\gui\frost_lunar.cpp" />

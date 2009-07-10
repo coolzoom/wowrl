@@ -39,6 +39,9 @@ namespace Frost
         // gui/frost_anchor.h
         class  Anchor;
 
+        // gui/frost_backdrop.h
+        class  Backdrop;
+
         // gui/frost_gradient.h
         class  Gradient;
 
@@ -90,13 +93,15 @@ namespace Frost
     struct AddOn;
     class  GUIManager;
 
+    // gui/frost_guistructs.h
+    struct Quad;
+    struct Vertex;
+    class  RenderTarget;
+
     // gui/frost_sprite.h
     class  Sprite;
 
     // gui/frost_spritemanager.h
-    struct Vertex;
-    struct Quad;
-    class  RenderTarget;
     class  SpriteManager;
 
     // gui/frost_text.h
