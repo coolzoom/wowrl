@@ -13,6 +13,7 @@
 #include "gui/frost_slider.h"
 #include "gui/frost_statusbar.h"
 #include "gui/frost_guimanager.h"
+#include "gui/frost_backdrop.h"
 #include "frost_inputmanager.h"
 
 using namespace std;
@@ -274,6 +275,12 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                 this->AddChild(pNewChild);
                 pNewChild->CopyFrom(pChild);
             }
+        }
+
+        if (pFrame->pBackdrop_)
+        {
+            pBackdrop_ = new Backdrop(this);
+            pBackdrop_->CopyFrom(pFrame->pBackdrop_);
         }
 
         s_map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;

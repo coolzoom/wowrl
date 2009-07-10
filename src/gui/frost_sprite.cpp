@@ -12,7 +12,6 @@
 
 #include "gui/frost_sprite.h"
 #include "gui/frost_spritemanager.h"
-#include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
 
 #include <OgreMaterial.h>
