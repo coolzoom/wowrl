@@ -146,6 +146,11 @@ const s_ctnr<s_str>& UIObject::GetObjectTypeList() const
     return lType_;
 }
 
+s_bool UIObject::IsObjectType(const s_str& sType) const
+{
+    return lType_.Find(sType);
+}
+
 const s_float& UIObject::GetAlpha() const
 {
     return fAlpha_;
@@ -616,10 +621,10 @@ void UIObject::UpdateBorders_()
 
     if (!lAnchorList_.IsEmpty())
     {
-        s_int iLeft   = s_int(s_int::INFPLUS);
-        s_int iRight  = s_int(s_int::INFMINUS);
-        s_int iTop    = s_int(s_int::INFPLUS);
-        s_int iBottom = s_int(s_int::INFMINUS);
+        s_int iLeft   = s_int::INFPLUS;
+        s_int iRight  = s_int::INFMINUS;
+        s_int iTop    = s_int::INFPLUS;
+        s_int iBottom = s_int::INFMINUS;
 
         s_int iXCenter;
         s_int iYCenter;

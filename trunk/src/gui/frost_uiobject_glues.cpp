@@ -78,20 +78,7 @@ int LuaUIObject::_IsObjectType( lua_State* pLua )
     mFunc.Add(0, "object type", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        s_bool bIsType = false;
-        s_str sType = mFunc.Get(0)->GetString();
-        const s_ctnr<s_str>& lType = pParent_->GetObjectTypeList();
-        s_ctnr<s_str>::const_iterator iterType;
-        foreach (iterType, lType)
-        {
-            if (sType == *iterType)
-            {
-                bIsType = true;
-                break;
-            }
-        }
-
-        mFunc.Push(bIsType);
+        mFunc.Push(pParent_->IsObjectType(mFunc.Get(0)->GetString()));
     }
 
     return mFunc.Return();

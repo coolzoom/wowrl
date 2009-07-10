@@ -222,9 +222,15 @@ namespace Frost
             const s_float&  GetRelHeight() const;
 
             /// Returns the type of this widget.
-            /** \return  The type of this widget
+            /** \return The type of this widget
             */
             const s_str&    GetObjectType() const;
+
+            /// Checks if this widget is of the provided type.
+            /** \param sType The type to test
+            *   \return 'true' if this widget is of the provided type
+            */
+            s_bool          IsObjectType(const s_str& sType) const;
 
             /// Returns an array containing all the types of this widget.
             /** \return  An array containing all the types of this widget
