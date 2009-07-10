@@ -192,38 +192,48 @@ s_bool Frame::CanUseScript( const s_str& sScriptName ) const
 
 void Frame::CopyFrom( s_ptr<UIObject> pObj )
 {
-    // TODO : Frame : Ré-écrire le code d'héritage ?
     UIObject::CopyFrom(pObj);
 
-    if (pObj->GetObjectType() == "Frame")
+    s_ptr<Frame> pFrame = s_ptr<Frame>::DynamicCast(pObj);
+
+    if (pFrame)
     {
-        s_ptr<Frame> pFrame = (Frame*)pObj.Get();
+        s_map<s_str, s_bool>::const_iterator iterScript;
+        foreach (iterScript, pFrame->lDefinedScriptList_)
+        {
+            if (iterScript->second)
+                this->NotifyScriptDefined("On"+iterScript->first);
+        }
 
-        lDefinedScriptList_ = pFrame->lDefinedScriptList_;
+        this->SetFrameStrata(pFrame->GetFrameStrata());
 
-        mStrata_ = pFrame->mStrata_;
-        bIsParentStrata_ = pFrame->bIsParentStrata_;
-        bIsTopStrata_ = pFrame->bIsTopStrata_;
-        bIsTopLevel_ = pFrame->bIsTopLevel_;
+        // ?
+        //bIsParentStrata_ = pFrame->bIsParentStrata_;
 
-        bIsKeyboardEnabled_ = pFrame->bIsKeyboardEnabled_;
-        bIsMouseEnabled_ = pFrame->bIsMouseEnabled_;
-        bIsMouseWheelEnabled_ = pFrame->bIsMouseWheelEnabled_;
-        bIsMovable_ = pFrame->bIsMovable_;
-        bIsClampedToScreen_ = pFrame->bIsClampedToScreen_;
-        bIsResizable_ = pFrame->bIsResizable_;
+        this->SetTopStrata(pFrame->IsTopStrata());
+        this->SetTopLevel(pFrame->IsTopLevel());
 
-        lAbsHitRectInsetList_ = pFrame->lAbsHitRectInsetList_;
-        lRelHitRectInsetList_ = pFrame->lRelHitRectInsetList_;
+        this->EnableKeyboard(pFrame->IsKeyboardEnabled());
+        this->EnableMouse(pFrame->IsMouseEnabled());
+        this->EnableMouseWheel(pFrame->IsMouseWheelEnabled());
 
-        uiMinWidth_ = pFrame->uiMinWidth_;
-        uiMaxWidth_ = pFrame->uiMaxWidth_;
-        uiMinHeight_ = pFrame->uiMinHeight_;
-        uiMaxHeight_ = pFrame->uiMaxHeight_;
+        this->SetMovable(pFrame->IsMovable());
+        this->SetClampedToScreen(pFrame->IsClampedToScreen());
+        this->SetResizable(pFrame->IsResizable());
 
-        fScale_ = pFrame->fScale_;
+        s_array<s_int,4> lAbsInsets = pFrame->GetAbsHitRectInsets();
+        this->SetAbsHitRectInsets(lAbsInsets[0], lAbsInsets[1], lAbsInsets[2], lAbsInsets[3]);
+        s_array<s_float,4> lRelInsets = pFrame->GetRelHitRectInsets();
+        this->SetRelHitRectInsets(lRelInsets[0], lRelInsets[1], lRelInsets[2], lRelInsets[3]);
 
-        map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
+        s_array<s_uint,2> lMax = pFrame->GetMaxResize();
+        this->SetMaxResize(lMax[0], lMax[1]);
+        s_array<s_uint,2> lMin = pFrame->GetMinResize();
+        this->SetMinResize(lMin[0], lMin[1]);
+
+        this->SetScale(pFrame->GetScale());
+
+        s_map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
         foreach (iterChild, pFrame->lChildList_)
         {
             s_ptr<Frame> pChild = iterChild->second;
@@ -243,7 +253,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 Warning(lType_.Back(),
-                    "Trying to create an inherited "+pChild->GetObjectType()+" child, "
+                    "Trying to add \""+pChild->GetName()+"\" (type : "+pChild->GetObjectType()+") to \""+sName_+"\", "
                     "but no copying code was available. Skipped."
                 );
             }
@@ -255,7 +265,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                 if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
                 {
                     Warning(lType_.Back(),
-                        "Couldn't add an inherited child to \""+sName_+"\", because its name was already taken : \""
+                        "Trying to add \""+pChild->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
                         +pNewChild->GetName()+"\". Skipped."
                     );
                     pNewChild.Delete();
@@ -266,11 +276,21 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             }
         }
 
-        // TODO : Frame : Copier les regions
-        //map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
+        s_map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
+        foreach (iterRegion, pFrame->lRegionList_)
+        {
+            // TODO : Copier les regions
+        }
 
         bBuildStrataList_ = true;
         bBuildLayerList_ = true;
+    }
+    else
+    {
+        Error(lType_.Back(),
+            "Trying to derive \""+sName_+"\" from \""+pObj->GetName()+"\", but they are not of the same type "
+            "(respectively "+this->GetObjectType()+" and "+pObj->GetObjectType()+")."
+        );
     }
 }
 

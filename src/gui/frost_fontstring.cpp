@@ -278,10 +278,10 @@ void FontString::UpdateBorders_()
 
     if (!lAnchorList_.IsEmpty())
     {
-        s_int iLeft   = s_int(s_int::INFPLUS);
-        s_int iRight  = s_int(s_int::INFMINUS);
-        s_int iTop    = s_int(s_int::INFPLUS);
-        s_int iBottom = s_int(s_int::INFMINUS);
+        s_int iLeft   = s_int::INFPLUS;
+        s_int iRight  = s_int::INFMINUS;
+        s_int iTop    = s_int::INFPLUS;
+        s_int iBottom = s_int::INFMINUS;
 
         s_int iXCenter;
         s_int iYCenter;
