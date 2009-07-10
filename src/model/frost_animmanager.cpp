@@ -123,6 +123,7 @@ namespace Frost
                 return;
             }
 
+            // FIXME : Random bug
             pActualAnim_->pOgreAnim->setEnabled(true);
             pActualAnim_->pOgreAnim->setTimePosition(0.0f);
 
