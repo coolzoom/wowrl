@@ -147,7 +147,7 @@ void State::CopyTable( s_ptr<State::State> pLua, const s_str& sSrcName, const s_
                 if (sKey == "'end'")
                 {
                     uiTableIndent--;
-                    sTab = sTab.Extract(0, sTab.Length() - 4u);
+                    sTab = sTab.Extract(0, sTab.GetLength() - 4u);
                     if (uiTableIndent == 0)
                         sTable += "}\n";
                     else

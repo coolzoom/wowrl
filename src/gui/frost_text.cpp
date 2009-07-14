@@ -435,7 +435,7 @@ namespace Frost
                         }
                         else
                         {
-                            GetFormat(iterChar1, lFormatList_[uiCounter+mLine.sCaption.Length()]);
+                            GetFormat(iterChar1, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
                             continue;
                         }
                     }
@@ -508,7 +508,7 @@ namespace Frost
                         mLine.sCaption.EraseFromEnd(uiCharToErase);
 
                         lLines.PushBack(mLine);
-                        uiCounter += mLine.sCaption.Length();
+                        uiCounter += mLine.sCaption.GetLength();
                         mLine.fWidth = GetStringWidth(sErasedString);
                         mLine.sCaption = sErasedString;
                     }

@@ -164,7 +164,7 @@ namespace Frost
 
     void File::WriteLine( const s_str& sLine )
     {
-        mFile_.write(sLine.c_str(), sLine.Size().Get());
+        mFile_.write(sLine.c_str(), sLine.GetSize().Get());
         mFile_.put('\n');
     }
 

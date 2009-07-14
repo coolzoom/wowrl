@@ -67,7 +67,7 @@ s_bool Document::CheckLineSynthax_( s_str& sLine )
         uiPos = sLine.FindPos(">");
         if (uiPos.IsValid())
         {
-            sLine.EraseFromEnd(sLine.Size()-uiPos-1);
+            sLine.EraseFromEnd(sLine.GetSize()-uiPos-1);
             return true;
         }
     }
