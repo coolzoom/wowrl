@@ -292,14 +292,7 @@ namespace Frost
         /// Inverts the order of the elements.
         void Reverse()
         {
-            s_ctnr lTemp;
-            iterator iter = mDeque_.end();
-            while (iter != mDeque_.begin())
-            {
-                --iter;
-                lTemp.push_back(*iter);
-            }
-            *this = lTemp;
+            std::reverse(mDeque_.begin(), mDeque_.end());
         }
 
         s_ctnr& operator, (const T& mElem)

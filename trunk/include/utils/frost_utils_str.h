@@ -181,6 +181,17 @@ namespace Frost
             this->operator+=(cValue);
         }
 
+        /// s_char conversion constructor.
+        /** \param cValue The s_char to convert
+        */
+        explicit s_str_t(const s_char& cValue)
+        {
+            mIntConvType_ = CONV_DECIMAL;
+            mBoolConvType_ = CONV_TRUE_FALSE;
+            sValue_ = "";
+            this->operator+=(cValue);
+        }
+
         /// char/wchar_t conversion constructor.
         /** \param cValue    The char/wchar_t to convert
         *   \param uiCharNbr The number of time to copy this
@@ -190,6 +201,21 @@ namespace Frost
         {
             if (uiCharNbr.IsValid())
                 sValue_ = string_object(uiCharNbr.Get(), cValue);
+            else
+                sValue_ = "";
+            mIntConvType_ = CONV_DECIMAL;
+            mBoolConvType_ = CONV_TRUE_FALSE;
+        }
+
+        /// s_char conversion constructor.
+        /** \param cValue    The s_char to convert
+        *   \param uiCharNbr The number of time to copy this
+        *                    character
+        */
+        explicit s_str_t(const s_char& cValue, const s_uint& uiCharNbr)
+        {
+            if (uiCharNbr.IsValid())
+                sValue_ = string_object(uiCharNbr.Get(), cValue.Get());
             else
                 sValue_ = "";
             mIntConvType_ = CONV_DECIMAL;
@@ -236,7 +262,7 @@ namespace Frost
                 uiCurSize = uiPos - uiLastPos;
                 if (!uiCurSize.IsNull())
                     lPieces.PushBack(Extract(uiLastPos, uiCurSize));
-                uiLastPos = uiPos + sDelim.Length();
+                uiLastPos = uiPos + sDelim.GetLength();
                 uiPos = FindPos(sDelim, uiLastPos);
                 ++uiCount;
 
@@ -270,7 +296,7 @@ namespace Frost
             {
                 uiCurSize = uiPos - uiLastPos;
                 lPieces.PushBack(Extract(uiLastPos, uiCurSize));
-                uiLastPos = uiPos + sDelim.Length();
+                uiLastPos = uiPos + sDelim.GetLength();
                 uiPos = FindPos(sDelim, uiLastPos);
                 ++uiCount;
 
@@ -322,7 +348,7 @@ namespace Frost
         void EraseFromEnd(const s_uint& uiNbr)
         {
             if (uiNbr.IsValid())
-                sValue_.erase((Length()-uiNbr).Get(), uiNbr.Get());
+                sValue_.erase((GetLength()-uiNbr).Get(), uiNbr.Get());
             else
                 sValue_.clear();
         }
@@ -587,7 +613,7 @@ namespace Frost
         /// Returns the number of character in the string.
         /** \return The number of character in the string
         */
-        s_uint Length() const
+        s_uint GetLength() const
         {
             return s_uint((uint)sValue_.length());
         }
@@ -595,7 +621,7 @@ namespace Frost
         /// Returns the number of character in ths string.
         /** \return The number of character in the string
         */
-        s_uint Size() const
+        s_uint GetSize() const
         {
             return s_uint((uint)sValue_.size());
         }
@@ -624,7 +650,7 @@ namespace Frost
                 EraseFromStart(1);
                 ++uiCount;
             }
-            while ((*this)[Length().Get()-1] == cPattern)
+            while ((*this)[GetLength().Get()-1] == cPattern)
             {
                 EraseFromEnd(1);
                 ++uiCount;
@@ -644,8 +670,8 @@ namespace Frost
 
             while (uiPos.IsValid())
             {
-                sValue_.replace(uiPos.Get(), sPattern.Length().Get(), sReplacement.Get());
-                uiPos = FindPos(sPattern, uiPos+sReplacement.Length());
+                sValue_.replace(uiPos.Get(), sPattern.GetLength().Get(), sReplacement.Get());
+                uiPos = FindPos(sPattern, uiPos+sReplacement.GetLength());
                 ++uiCount;
             }
 
@@ -660,12 +686,58 @@ namespace Frost
             sValue_.push_back(cChar);
         }
 
+        /// Removes the last character.
+        void PopBack()
+        {
+            if (!sValue_.empty())
+                sValue_.erase(sValue_.length()-1, 1);
+        }
+
+        /// Returns a reference to the last character.
+        /** \return A reference to the last character
+        */
+        string_element& Back()
+        {
+            return sValue_[sValue_.length()-1];
+        }
+
+        /// Returns a const reference to the last character.
+        /** \return A const reference to the last character
+        */
+        const string_element& Back() const
+        {
+            return sValue_[sValue_.length()-1];
+        }
+
         /// Adds a new character at the beginning of the string.
         /** \param cChar The character to add
         */
         void PushFront(const string_element& cChar)
         {
             sValue_.insert(0, 1, cChar);
+        }
+
+        /// Removes the first character.
+        void PopFront()
+        {
+            if (!sValue_.empty())
+                sValue_.erase(0, 1);
+        }
+
+        /// Returns a reference to the first character.
+        /** \return A reference to the first character
+        */
+        string_element& Front()
+        {
+            return sValue_[0];
+        }
+
+        /// Returns a const reference to the first character.
+        /** \return A const reference to the first character
+        */
+        const string_element& Front() const
+        {
+            return sValue_[0];
         }
 
         /// Adds a new character somewhere in the string.
@@ -678,6 +750,12 @@ namespace Frost
                 sValue_.insert(uiPos.Get(), 1, cChar);
             else
                 sValue_.push_back(cChar);
+        }
+
+        /// Inverts the order of the letters in the string.
+        void Reverse()
+        {
+            std::reverse(sValue_.begin(), sValue_.end());
         }
 
         template<class N>
@@ -731,6 +809,13 @@ namespace Frost
             return sTemp;
         }
 
+        s_str_t operator + (const s_char& cValue) const
+        {
+            string_object sTemp = sValue_;
+            sTemp.push_back(cValue.Get());
+            return sTemp;
+        }
+
         template <class N>
         s_str_t operator + (const s_int_t<N>& iValue) const
         {
@@ -776,6 +861,11 @@ namespace Frost
         void operator += (const string_element& cValue)
         {
             sValue_.push_back(cValue);
+        }
+
+        void operator += (const s_char& cValue)
+        {
+            sValue_.push_back(cValue.Get());
         }
 
         template <class N>

@@ -128,9 +128,9 @@ namespace Frost
         //pEventMgr_->ToggleDebugOutput();
 
         s_str sLine = "# Starting Frost Engine (" + sGameVersion_ + ") #";
-        Log(s_str('#', sLine.Length()));
+        Log(s_str('#', sLine.GetLength()));
         Log(sLine);
-        Log(s_str('#', sLine.Length())+"\n");
+        Log(s_str('#', sLine.GetLength())+"\n");
 
         // Load configuration
         if (!pLua_->DoFile("Config.lua"))
