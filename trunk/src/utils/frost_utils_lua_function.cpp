@@ -293,14 +293,17 @@ void Function::Push( const s_var& vValue )
     ++uiReturnCount_;
 }
 
-void Function::PushNil()
+void Function::PushNil( const s_uint& uiNbr )
 {
-    if (uiReturnCount_ == uiReturnNbr_)
-        ++uiReturnNbr_;
+    for (s_uint ui = 0; ui < uiNbr; ++ui)
+    {
+        if (uiReturnCount_ == uiReturnNbr_)
+            ++uiReturnNbr_;
 
-    pLua_->PushNil();
+        pLua_->PushNil();
 
-    ++uiReturnCount_;
+        ++uiReturnCount_;
+    }
 }
 
 void Function::NotifyPushed()
