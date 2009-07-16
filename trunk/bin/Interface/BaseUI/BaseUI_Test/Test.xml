@@ -25,6 +25,11 @@
         <Anchors>
             <Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="TOPLEFT"/>
         </Anchors>
+        <Backdrop bgFile="Interface/BaseUI/BaseUI_Test/UI-DialogBox-Background.png" edgeFile="Interface/BaseUI/BaseUI_Test/UI-DialogBox-Border.png" tile="true">
+            <BackgroundInsets>
+                <AbsInset left="8" right="8" top="8" bottom="8"/>
+            </BackgroundInsets>
+        </Backdrop>
         <!Frames>
             <Frame name="$parent_Pin">
                 <Size>
@@ -41,7 +46,7 @@
                 </Layers>
             </Frame>
         </Frames>
-        <Layers>
+        <!Layers>
             <Layer>
                 <Texture name="$parent_Texture" setAllPoints="true">
                     <Gradient orientation="HORIZONTAL">

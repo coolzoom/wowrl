@@ -10,6 +10,7 @@
 #include "gui/frost_anchor.h"
 #include "gui/frost_uiobject.h"
 #include "gui/frost_frame.h"
+#include "gui/frost_backdrop.h"
 #include "gui/frost_texture.h"
 #include "gui/frost_fontstring.h"
 #include "gui/frost_spritemanager.h"
@@ -338,7 +339,71 @@ namespace Frost
 
     s_bool GUIManager::ParseBackdropBlock_( s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock )
     {
-        // TODO : parse Backdrop
+        s_ptr<XML::Block> pBackdropBlock = pMainBlock->GetBlock("Backdrop");
+        if (pBackdropBlock)
+        {
+            s_ptr<GUI::Backdrop> pBackdrop = new GUI::Backdrop(pFrame);
+
+            pBackdrop->SetBackground(pBackdropBlock->GetAttribute("bgFile"));
+            pBackdrop->SetEdge(pBackdropBlock->GetAttribute("edgeFile"));
+            pBackdrop->SetBackgroundTilling(s_bool(pBackdropBlock->GetAttribute("tile")));
+
+            s_ptr<XML::Block> pBGInsetsBlock = pBackdropBlock->GetBlock("BackgroundInsets");
+            if (pBGInsetsBlock)
+            {
+                s_ptr<XML::Block> pInsetBlock = pBGInsetsBlock->GetRadioBlock();
+                if (pInsetBlock->GetName() == "AbsInset")
+                {
+                    pBackdrop->SetBackgroundInsets(
+                        s_int(pInsetBlock->GetAttribute("left")),
+                        s_int(pInsetBlock->GetAttribute("right")),
+                        s_int(pInsetBlock->GetAttribute("top")),
+                        s_int(pInsetBlock->GetAttribute("bottom"))
+                    );
+                }
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "RelInset for Backdrop:BackgroundInsets is not yet supported ("+pFrame->GetName()+")."
+                    );
+                }
+            }
+
+            s_ptr<XML::Block> pEdgeSizeBlock = pBackdropBlock->GetBlock("EdgeSize");
+            if (pEdgeSizeBlock)
+            {
+                s_ptr<XML::Block> pSizeBlock = pEdgeSizeBlock->GetRadioBlock();
+                if (pSizeBlock->GetName() == "AbsValue")
+                {
+                    pBackdrop->SetEdgeSize(s_uint(pSizeBlock->GetAttribute("x")));
+                }
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "RelValue for Backdrop:EdgeSize is not yet supported ("+pFrame->GetName()+")."
+                    );
+                }
+            }
+
+            s_ptr<XML::Block> pTileSizeBlock = pBackdropBlock->GetBlock("TileSize");
+            if (pTileSizeBlock)
+            {
+                s_ptr<XML::Block> pTileBlock = pTileSizeBlock->GetRadioBlock();
+                if (pTileBlock->GetName() == "AbsValue")
+                {
+                    pBackdrop->SetTileSize(s_uint(pTileBlock->GetAttribute("x")));
+                }
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "RelValue for Backdrop:TileSize is not yet supported ("+pFrame->GetName()+")."
+                    );
+                }
+            }
+
+            pFrame->SetBackdrop(pBackdrop);
+        }
+
         return true;
     }
 
