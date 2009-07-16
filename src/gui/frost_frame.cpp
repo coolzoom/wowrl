@@ -44,28 +44,30 @@ Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0
 
 Frame::~Frame()
 {
-    map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+    s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
     foreach (iterRegion, lRegionList_)
     {
         iterRegion->second.Delete();
     }
 
-    map< s_uint, s_ptr<Frame> >::iterator iterChild;
+    s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList_)
     {
         iterChild->second.Delete();
     }
+
+    pBackdrop_.Delete();
 }
 
 void Frame::Render()
 {
-    // TODO : Frame : Implementer et faire le rendu du backdrop
-    // ...
-
     if (IsVisible())
     {
+        if (pBackdrop_)
+            pBackdrop_->Render();
+
         // Render child regions
-        map<LayerType, Layer>::iterator iterLayer;
+        s_map<LayerType, Layer>::iterator iterLayer;
         foreach (iterLayer, lLayerList_)
         {
             Layer& mLayer = iterLayer->second;
@@ -82,7 +84,7 @@ void Frame::Render()
         }
 
         // Render child frames
-        map<FrameStrata, Strata>::iterator iterStrata;
+        s_map<FrameStrata, Strata>::iterator iterStrata;
         foreach (iterStrata, lStrataList_)
         {
             Strata& mStrata = iterStrata->second;
@@ -465,6 +467,11 @@ FrameStrata Frame::GetFrameStrata() const
     return mStrata_;
 }
 
+s_ptr<Backdrop> Frame::GetBackdrop() const
+{
+    return pBackdrop_;
+}
+
 const s_str& Frame::GetFrameType() const
 {
     return lType_.Back();
@@ -728,6 +735,12 @@ void Frame::SetFrameStrata( const s_str& sStrata )
     }
 
     SetFrameStrata(mStrata);
+}
+
+void Frame::SetBackdrop( s_ptr<Backdrop> pBackdrop )
+{
+    pBackdrop_.Delete();
+    pBackdrop_ = pBackdrop;
 }
 
 void Frame::SetAbsHitRectInsets( const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom )

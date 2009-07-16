@@ -21,6 +21,18 @@ namespace Frost
         {
         public :
 
+            enum EdgeType
+            {
+                EDGE_LEFT,
+                EDGE_RIGHT,
+                EDGE_TOP,
+                EDGE_BOTTOM,
+                EDGE_TOP_LEFT,
+                EDGE_TOP_RIGHT,
+                EDGE_BOTTOM_LEFT,
+                EDGE_BOTTOM_RIGHT
+            };
+
             /// Constructor.
             /** \param pParent The Frame it is linked to
             */
@@ -38,6 +50,11 @@ namespace Frost
             /** \param sBackgroundFile The background texture
             */
             void SetBackground(const s_str& sBackgroundFile);
+
+            /// Returns this Backdrop's background file.
+            /** \return This Backdrop's background file
+            */
+            const s_str& GetBackgroundFile() const;
 
             /// Sets the background color.
             /** \param mColor The background color
@@ -60,19 +77,35 @@ namespace Frost
             */
             const s_bool& IsBackgroundTilling() const;
 
+            /// Sets the appearent tile size.
+            /** \param uiTileSize The new edget size
+            *   \note Tile will be scaled by uiTileSize/backgroundTextureSize.
+            */
+            void SetTileSize(const s_uint& uiTileSize);
+
+            /// Returns this Backdrop's tile size.
+            /** \return This Backdrop's tile size
+            */
+            const s_uint& GetTileSize() const;
+
             /// Sets insets for the background texture.
             /** \param lInsets The insets array
-            *   \note Insets are interpreted as (left, top, right, bottom).
+            *   \note Insets are interpreted as (left, right, top, bottom).
             */
             void SetBackgroundInsets(const s_array<s_int,4>& lInsets);
 
             /// Sets insets for the background texture.
             /** \param iLeft   The left inset
-            *   \param iTop    The top inset
             *   \param iRight  The right inset
+            *   \param iTop    The top inset
             *   \param iBottom The bottom inset
             */
-            void SetBackgroundInsets(const s_int& iLeft, const s_int& iTop, const s_int& iRight, const s_int& iBottom);
+            void SetBackgroundInsets(const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom);
+
+            /// Returns this Backdrop's background insets.
+            /** \return This Backdrop's background insets
+            */
+            const s_array<s_int,4>& GetBackgroundInsets() const;
 
             /// Sets the edge/corner texture.
             /** \param sEdgeFile The edge/corner texture
@@ -89,6 +122,11 @@ namespace Frost
             *         - [7/8,   1] : bottom-right corner
             */
             void SetEdge(const s_str& sEdgeFile);
+
+            /// Returns this Backdrop's edge file.
+            /** \return This Backdrop's edge file
+            */
+            const s_str& GetEdgeFile() const;
 
             /// Sets the edge/corner color.
             /** \param mColor The edge/corner color
@@ -107,6 +145,11 @@ namespace Frost
             */
             void SetEdgeSize(const s_uint& uiEdgeSize);
 
+            /// Returns this Backdrop's edge size.
+            /** \return This Backdrop's edge size
+            */
+            const s_uint& GetEdgeSize() const;
+
             /// Renders this Backdrop on the current render target.
             void Render() const;
 
@@ -116,9 +159,13 @@ namespace Frost
 
             s_ptr<Frame>                pParent_;
             s_refptr<Sprite>            pBackground_;
+            s_str                       sBackgroundFile_;
             s_array<s_refptr<Sprite>,8> lEdgeList_;
+            s_str                       sEdgeFile_;
 
             s_bool           bBackgroundTilling_;
+            s_uint           uiTileSize_;
+            s_uint           uiOriginalTileSize_;
             s_array<s_int,4> lBackgroundInsets_;
             s_uint           uiEdgeSize_;
             s_uint           uiOriginalEdgeSize_;

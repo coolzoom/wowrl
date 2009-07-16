@@ -173,6 +173,11 @@ namespace Frost
             */
             FrameStrata         GetFrameStrata() const;
 
+            /// Returns this Frame's backdrop.
+            /** \return This Frame's backdrop
+            */
+            s_ptr<Backdrop>     GetBackdrop() const;
+
             /// Returns this Frame's type.
             /** \return This Frame's type (Frame, Slider, ...)
             */
@@ -304,6 +309,11 @@ namespace Frost
             /** \param sStrata The new strata
             */
             void                SetFrameStrata(const s_str& sStrata);
+
+            /// Sets this Frames' backdrop.
+            /** \param pBackdrop The new backdrop
+            */
+            void                SetBackdrop(s_ptr<Backdrop> pBackdrop);
 
             /// Sets this Frame's absolute hit rect insets.
             /** \param iLeft   Offset from the left border
