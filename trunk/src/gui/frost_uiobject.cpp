@@ -300,6 +300,11 @@ const s_int& UIObject::GetTop() const
     return lBorderList_[BORDER_TOP];
 }
 
+const s_array<s_int,4> UIObject::GetBorders() const
+{
+    return lBorderList_;
+}
+
 void UIObject::ClearAllPoints()
 {
     lAnchorList_.Clear();

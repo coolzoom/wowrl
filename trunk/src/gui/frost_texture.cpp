@@ -39,7 +39,7 @@ void Texture::Render()
     if (pSprite_ && IsVisible())
     {
         pSprite_->Render2V(
-            s_float(lBorderList_[BORDER_LEFT]), s_float(lBorderList_[BORDER_TOP]),
+            s_float(lBorderList_[BORDER_LEFT]),  s_float(lBorderList_[BORDER_TOP]),
             s_float(lBorderList_[BORDER_RIGHT]), s_float(lBorderList_[BORDER_BOTTOM])
         );
     }

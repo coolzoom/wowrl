@@ -548,7 +548,7 @@ namespace Frost
                                         }
                                         else
                                         {
-                                            GetFormat(iterTemp, lFormatList_[uiCounter+mLine.sCaption.Length()]);
+                                            GetFormat(iterTemp, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
                                         }
                                     }
                                 }
@@ -569,7 +569,7 @@ namespace Frost
                             {
                                 iterChar1--;
                                 lLines.PushBack(mLine);
-                                uiCounter += mLine.sCaption.Length();
+                                uiCounter += mLine.sCaption.GetLength();
                                 mLine.fWidth = 0.0f;
                                 mLine.sCaption = "";
                             }
@@ -578,7 +578,7 @@ namespace Frost
                 }
             }
             lLines.PushBack(mLine);
-            uiCounter += mLine.sCaption.Length();
+            uiCounter += mLine.sCaption.GetLength();
 
             // Add the maximum number of line to this Text
             s_ctnr<Line>::iterator iterLine;
