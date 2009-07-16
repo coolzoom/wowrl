@@ -263,10 +263,11 @@ namespace Frost
             void            Push(const s_var& vValue);
 
             /// Adds nil to the return values.
-            /** \note Calling Push(s_var()) does exactly the same thing. But this
+            /** \param uiNbr The number of nil to push
+            *   \note Calling Push(s_var()) does exactly the same thing. But this
             *         function is clearer.
             */
-            void            PushNil();
+            void            PushNil(const s_uint& uiNbr = 1);
 
             /// Tells this function you pushed a return value.
             /** \note See Push for more infos.
