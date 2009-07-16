@@ -262,6 +262,11 @@ namespace Frost
             */
             const s_int&    GetTop() const;
 
+            /// Returns this widget's borders.
+            /** \return This widget's borders
+            */
+            const s_array<s_int,4> GetBorders() const;
+
             /// Removes all anchors.
             /** \note This widget and its childs won't be visible until you
             *         define at least one anchor.

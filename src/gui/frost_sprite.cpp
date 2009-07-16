@@ -113,10 +113,13 @@ namespace Frost
         for (uint i = 0; i < 4; i++)
             pQuad_->lVertexArray[i].mColor = mColor_;
 
+        fWidth_ = fWidth;
+        fHeight_ = fHeight;
+
         fX1_ = fU;
         fY1_ = fV;
-        fX3_ = fWidth_ = fWidth;
-        fY3_ = fHeight_ = fHeight;
+        fX3_ = fU + fWidth_;
+        fY3_ = fV + fHeight_;
 
         if (pMat != NULL)
         {
@@ -195,20 +198,15 @@ namespace Frost
     {
         s_float x1, y1, x2, y2;
         x1 = -fHotSpotX_*fHScale;
-        y1 = (fHeight_-fHotSpotY_)*fVScale;
-        x2 = (fWidth_-fHotSpotX_)*fHScale;
-        y2 = -fHotSpotY_*fVScale;
-
-        x1 = -fHotSpotX_*fHScale;
         x2 = (fWidth_-fHotSpotX_)*fHScale;
         if (SpriteManager::GetSingleton()->GetYAxisType() == AXIS_DOWN)
         {
             y1 = -fHotSpotY_*fHScale;
-            y2 = (fHeight_-fHotSpotY_)*fHScale;
+            y2 = (fHeight_-fHotSpotY_)*fVScale;
         }
         else
         {
-            y1 = (fHeight_-fHotSpotY_)*fHScale;
+            y1 = (fHeight_-fHotSpotY_)*fVScale;
             y2 = -fHotSpotY_*fHScale;
         }
 
