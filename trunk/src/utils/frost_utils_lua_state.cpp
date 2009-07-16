@@ -780,6 +780,22 @@ s_bool State::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s
     return b;
 }
 
+void State::SetField( const s_str& sName )
+{
+    lua_pushstring(pLua_, sName.GetASCII().c_str());
+    lua_pushvalue(pLua_, -2);
+    lua_settable(pLua_, -4);
+    lua_pop(pLua_, 1);
+}
+
+void State::SetField( const s_int& iID )
+{
+    lua_pushnumber(pLua_, iID.Get());
+    lua_pushvalue(pLua_, -2);
+    lua_settable(pLua_, -4);
+    lua_pop(pLua_, 1);
+}
+
 void State::SetFieldInt( const s_str& sName, const s_int& iValue )
 {
     lua_pushstring(pLua_, sName.GetASCII().c_str());

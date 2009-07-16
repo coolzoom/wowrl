@@ -353,6 +353,22 @@ namespace Frost
             */
             s_bool  GetFieldBool(const s_str& sName, const s_bool& bCritical = true, const s_bool& bDefaultValue = false, const s_bool& bSetValue = false);
 
+            /// Writes a value into a Lua table.
+            /** \param sName The name of the key associated to the value
+            *   \note The value to put into the table must be at the top of the stack.<br>
+            *         The table must be at the index just before the value.<br>
+            *         Pops the value from the stack.
+            */
+            void    SetField(const s_str& sName);
+
+            /// Writes a value into a Lua table.
+            /** \param iID The ID of the key associated to the value
+            *   \note The value to put into the table must be at the top of the stack.<br>
+            *         The table must be at the index just before the value.<br>
+            *         Pops the value from the stack.
+            */
+            void    SetField(const s_int& iID);
+
             /// Writes an int into a Lua table.
             /** \param sName  The name of the key associated to the value
             *   \param iValue The value to set
