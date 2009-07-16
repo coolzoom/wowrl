@@ -246,7 +246,7 @@ namespace Frost
             */
             s_str   GetTypeName(Type mType);
 
-            /// Reads an int from Lua
+            /// Reads an int from Lua.
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -256,7 +256,7 @@ namespace Frost
             */
             s_int   GetGlobalInt(const s_str& sName, const s_bool& bCritical = true, const s_int& iDefaultValue = 0);
 
-            /// Reads a float from Lua
+            /// Reads a float from Lua.
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -266,7 +266,7 @@ namespace Frost
             */
             s_float GetGlobalFloat(const s_str& sName, const s_bool& bCritical = true, const s_float& fDefaultValue = 0.0f);
 
-            /// Wrapper to read a string from Lua
+            /// Wrapper to read a string from Lua.
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -276,7 +276,7 @@ namespace Frost
             */
             s_str   GetGlobalString(const s_str& sName, const s_bool& bCritical = true, const s_str& sDefaultValue = "");
 
-            /// Reads a bool from Lua
+            /// Reads a bool from Lua.
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -286,7 +286,14 @@ namespace Frost
             */
             s_bool  GetGlobalBool(const s_str& sName, const s_bool& bCritical = true, const s_bool& bDefaultValue = false);
 
-            /// Reads an int from a Lua table
+            /// Puts a value from a Lua table on the stack.
+            /** \param sName  The name of the key associated to the value
+            *   \param iIndex The position of the table in the stack
+            *   \note Puts 'nil' if the key couldn't be found.
+            */
+            void    GetField( const s_str& sName, const s_int& iIndex = -1 );
+
+            /// Reads an int from a Lua table.
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -301,7 +308,7 @@ namespace Frost
             */
             s_int   GetFieldInt(const s_str& sName, const s_bool& bCritical = true, const s_int& iDefaultValue = 0, const s_bool& bSetValue = false);
 
-            /// Reads a float from a Lua table
+            /// Reads a float from a Lua table.
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -316,7 +323,7 @@ namespace Frost
             */
             s_float GetFieldFloat(const s_str& sName, const s_bool& bCritical = true, const s_float& fDefaultValue = 0.0f, const s_bool& bSetValue = false);
 
-            /// Reads a string from a Lua table
+            /// Reads a string from a Lua table.
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -331,7 +338,7 @@ namespace Frost
             */
             s_str   GetFieldString(const s_str& sName, const s_bool& bCritical = true, const s_str& sDefaultValue = "", const s_bool& bSetValue = false);
 
-            /// Reads a bool from a Lua table
+            /// Reads a bool from a Lua table.
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
             *                        the variable is not found. Else, it will
@@ -346,7 +353,7 @@ namespace Frost
             */
             s_bool  GetFieldBool(const s_str& sName, const s_bool& bCritical = true, const s_bool& bDefaultValue = false, const s_bool& bSetValue = false);
 
-            /// Writes an int into a Lua table
+            /// Writes an int into a Lua table.
             /** \param sName  The name of the key associated to the value
             *   \param iValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -354,7 +361,7 @@ namespace Frost
             */
             void    SetFieldInt(const s_str& sName, const s_int& iValue);
 
-            /// Writes a float into a Lua table
+            /// Writes a float into a Lua table.
             /** \param sName  The name of the key associated to the value
             *   \param fValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -362,7 +369,7 @@ namespace Frost
             */
             void    SetFieldFloat(const s_str& sName, const s_float& fValue);
 
-            /// Writes a string into a Lua table
+            /// Writes a string into a Lua table.
             /** \param sName  The name of the key associated to the value
             *   \param sValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -370,7 +377,7 @@ namespace Frost
             */
             void    SetFieldString(const s_str& sName, const s_str& sValue);
 
-            /// Writes a bool into a Lua table
+            /// Writes a bool into a Lua table.
             /** \param sName  The name of the key associated to the value
             *   \param bValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -378,7 +385,7 @@ namespace Frost
             */
             void    SetFieldBool(const s_str& sName, const s_bool& bValue);
 
-            /// Writes an int into a Lua table
+            /// Writes an int into a Lua table.
             /** \param iID    The ID of the key associated to the value
             *   \param iValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -386,7 +393,7 @@ namespace Frost
             */
             void    SetFieldInt(const s_int& iID, const s_int& iValue);
 
-            /// Writes a float into a Lua table
+            /// Writes a float into a Lua table.
             /** \param iID    The ID of the key associated to the value
             *   \param fValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -394,7 +401,7 @@ namespace Frost
             */
             void    SetFieldFloat(const s_int& iID, const s_float& fValue);
 
-            /// Writes a string into a Lua table
+            /// Writes a string into a Lua table.
             /** \param iID    The ID of the key associated to the value
             *   \param sValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -402,7 +409,7 @@ namespace Frost
             */
             void    SetFieldString(const s_int& iID, const s_str& sValue);
 
-            /// Writes a bool into a Lua table
+            /// Writes a bool into a Lua table.
             /** \param iID    The ID of the key associated to the value
             *   \param bValue The value to set
             *   \note The table that will be used to write the value should be at the top of
@@ -417,7 +424,7 @@ namespace Frost
             */
             void    SetTop(const s_uint& uiSize);
 
-            /// Handles an error code returned from a call to Lua
+            /// Handles an error code returned from a call to Lua.
             /** \param iError The error code
             *   \return 'true' if everything went fine (no error)
             */

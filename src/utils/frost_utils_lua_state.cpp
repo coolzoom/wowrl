@@ -650,6 +650,11 @@ s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const 
     return b;
 }
 
+void State::GetField( const s_str& sName, const s_int& iIndex )
+{
+    lua_getfield(pLua_, iIndex.Get(), sName.GetASCII().c_str());
+}
+
 s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue, const s_bool& bSetValue )
 {
     s_int i;
