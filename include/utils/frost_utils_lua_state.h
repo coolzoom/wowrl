@@ -199,32 +199,32 @@ namespace Frost
             /** \param iIndex The index at which to search for the value
             *   \return The value at the given index converted to a number
             */
-            s_float GetNumber(const s_int& iIndex = 1);
+            s_float GetNumber(const s_int& iIndex = -1);
 
             /// Returns the value at the given index converted to a bool.
             /** \param iIndex The index at which to search for the value
             *   \return The value at the given index converted to a bool
             */
-            s_bool  GetBool(const s_int& iIndex = 1);
+            s_bool  GetBool(const s_int& iIndex = -1);
 
             /// Returns the value at the given index converted to a string.
             /** \param iIndex The index at which to search for the value
             *   \return The value at the given index converted to a string
             */
-            s_str   GetString(const s_int& iIndex = 1);
+            s_str   GetString(const s_int& iIndex = -1);
 
             /// Returns the value at the given index.
             /** \param iIndex The index at which to search for the value
             *   \return The value at the given index
             */
-            s_var   GetValue(const s_int& iIndex = 1);
+            s_var   GetValue(const s_int& iIndex = -1);
 
             /// Returns the Lunar object at the given index.
             /** \param iIndex The index at which to search for the value
             *   \return The Lunar object at the given index
             */
             template<class T>
-            s_ptr<T> Get(const s_int& iIndex = 1)
+            s_ptr<T> Get(const s_int& iIndex = -1)
             {
                 return Lunar<T>::check(pLua_, iIndex.Get());
             }
@@ -238,7 +238,7 @@ namespace Frost
             /** \param iIndex The index of the value to analyse
             *   \return The type
             */
-            Type    GetType(const s_int& iIndex = 1);
+            Type    GetType(const s_int& iIndex = -1);
 
             /// Returns the name of a Lua::Type.
             /** \param mType The type to serialize
@@ -291,7 +291,7 @@ namespace Frost
             *   \param iIndex The position of the table in the stack
             *   \note Puts 'nil' if the key couldn't be found.
             */
-            void    GetField( const s_str& sName, const s_int& iIndex = -1 );
+            void    GetField(const s_str& sName, const s_int& iIndex = -1);
 
             /// Reads an int from a Lua table.
             /** \param sName         The name of the key associated to the value
