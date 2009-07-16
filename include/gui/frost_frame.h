@@ -467,9 +467,9 @@ namespace Frost
             int _EnableKeyboard(lua_State*);
             int _EnableMouse(lua_State*);
             int _EnableMouseWheel(lua_State*);
-            /**/ int _GetBackdrop(lua_State*) { return 0; }
-            /**/ int _GetBackdropBorderColor(lua_State*) { return 0; }
-            /**/ int _GetBackdropColor(lua_State*) { return 0; }
+            int _GetBackdrop(lua_State*);
+            int _GetBackdropBorderColor(lua_State*);
+            int _GetBackdropColor(lua_State*);
             int _GetChildren(lua_State*);
             int _GetEffectiveAlpha(lua_State*);
             int _GetEffectiveScale(lua_State*);
@@ -501,9 +501,9 @@ namespace Frost
             int _RegisterAllEvents(lua_State*);
             int _RegisterEvent(lua_State*);
             int _RegisterForDrag(lua_State*);
-            /**/ int _SetBackdrop(lua_State*) { return 0; }
-            /**/ int _SetBackdropBorderColor(lua_State*) { return 0; }
-            /**/ int _SetBackdropColor(lua_State*) { return 0; }
+            int _SetBackdrop(lua_State*);
+            int _SetBackdropBorderColor(lua_State*);
+            int _SetBackdropColor(lua_State*);
             int _SetClampedToScreen(lua_State*);
             int _SetFrameLevel(lua_State*) { return 0; } // WBI
             int _SetFrameStrata(lua_State*);

@@ -4,6 +4,7 @@
 /*                                        */
 
 #include "gui/frost_frame.h"
+#include "gui/frost_backdrop.h"
 
 using namespace std;
 using namespace Frost;
@@ -115,6 +116,83 @@ int LuaFrame::_EnableMouseWheel(lua_State* pLua)
     if (mFunc.Check())
     {
         pFrameParent_->EnableMouseWheel(mFunc.Get(0)->GetBool());
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_GetBackdrop(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:GetBackdrop", pLua, 1);
+
+    s_ptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop();
+    if (pBackdrop)
+    {
+        s_ptr<Lua::State> pState = mFunc.GetState();
+
+        pState->NewTable();
+        pState->SetFieldString("bgFile", pBackdrop->GetBackgroundFile());
+        pState->SetFieldString("edgeFile", pBackdrop->GetEdgeFile());
+        pState->SetFieldBool("tile", pBackdrop->IsBackgroundTilling());
+
+        pState->SetFieldInt("tileSize", s_int(pBackdrop->GetTileSize()));
+        pState->SetFieldInt("edgeSize", s_int(pBackdrop->GetEdgeSize()));
+
+        pState->NewTable();
+        pState->SetField("insets");
+        pState->GetField("insets");
+
+        const s_array<s_int,4>& lInsets = pBackdrop->GetBackgroundInsets();
+        pState->SetFieldInt("left", lInsets[BORDER_LEFT]);
+        pState->SetFieldInt("right", lInsets[BORDER_RIGHT]);
+        pState->SetFieldInt("top", lInsets[BORDER_TOP]);
+        pState->SetFieldInt("bottom", lInsets[BORDER_BOTTOM]);
+
+        pState->Pop();
+    }
+    else
+    {
+        mFunc.PushNil();
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_GetBackdropBorderColor(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:GetBackdropBorderColor", pLua, 4);
+
+    if (pFrameParent_->GetBackdrop())
+    {
+        const Color& mColor = pFrameParent_->GetBackdrop()->GetEdgeColor();
+        mFunc.Push(mColor.GetR());
+        mFunc.Push(mColor.GetG());
+        mFunc.Push(mColor.GetB());
+        mFunc.Push(mColor.GetA());
+    }
+    else
+    {
+        mFunc.PushNil(4);
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_GetBackdropColor(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:GetBackdropColor", pLua, 4);
+
+    if (pFrameParent_->GetBackdrop())
+    {
+        const Color& mColor = pFrameParent_->GetBackdrop()->GetBackgroundColor();
+        mFunc.Push(mColor.GetR());
+        mFunc.Push(mColor.GetG());
+        mFunc.Push(mColor.GetB());
+        mFunc.Push(mColor.GetA());
+    }
+    else
+    {
+        mFunc.PushNil(4);
     }
 
     return mFunc.Return();
@@ -430,6 +508,127 @@ int LuaFrame::_RegisterForDrag(lua_State* pLua)
 
     return mFunc.Return();
 }
+
+int LuaFrame::_SetBackdrop(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetBackdrop", pLua);
+    mFunc.Add(0, "backdrop table", Lua::TYPE_TABLE);
+    mFunc.Add(0, "nil", Lua::TYPE_NIL);
+    if (mFunc.Check())
+    {
+        if (mFunc.Get(0)->GetType() == Lua::TYPE_NIL)
+        {
+            pFrameParent_->SetBackdrop(NULL);
+        }
+        else
+        {
+            s_ptr<Backdrop> pBackdrop = new Backdrop(pFrameParent_);
+
+            s_ptr<Lua::State> pState = mFunc.GetState();
+
+            pBackdrop->SetBackground(pState->GetFieldString("bgFile", false, ""));
+            pBackdrop->SetEdge(pState->GetFieldString("edgeFile", false, ""));
+            pBackdrop->SetBackgroundTilling(pState->GetFieldBool("tile", false, false));
+
+            s_uint uiTileSize = s_uint(pState->GetFieldInt("tileSize", false, s_int::NaN));
+            if (uiTileSize.IsValid())
+                pBackdrop->SetTileSize(uiTileSize);
+
+            s_uint uiEdgeSize = s_uint(pState->GetFieldInt("edgeSize", false, s_int::NaN));
+            if (uiEdgeSize.IsValid())
+                pBackdrop->SetEdgeSize(uiEdgeSize);
+
+            pState->GetField("insets");
+
+            if (pState->GetType() == Lua::TYPE_TABLE)
+            {
+                pBackdrop->SetBackgroundInsets((
+                    pState->GetFieldInt("left",   false, 0),
+                    pState->GetFieldInt("right",  false, 0),
+                    pState->GetFieldInt("top",    false, 0),
+                    pState->GetFieldInt("bottom", false, 0)
+                ));
+            }
+
+            pFrameParent_->SetBackdrop(pBackdrop);
+        }
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_SetBackdropBorderColor(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetBackdropBorderColor", pLua);
+    mFunc.Add(0, "red", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "green", Lua::TYPE_NUMBER);
+    mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
+
+    s_ptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop();
+    if (pBackdrop && mFunc.Check())
+    {
+        Color mColor;
+        if (mFunc.IsProvided(3))
+        {
+            mColor = Color(
+                s_uint(255*mFunc.Get(3)->GetNumber()),
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
+            );
+        }
+        else
+        {
+            mColor = Color(
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
+            );
+        }
+
+        pBackdrop->SetEdgeColor(mColor);
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_SetBackdropColor(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetBackdropColor", pLua);
+    mFunc.Add(0, "red", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "green", Lua::TYPE_NUMBER);
+    mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
+
+    s_ptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop();
+    if (pBackdrop && mFunc.Check())
+    {
+        Color mColor;
+        if (mFunc.IsProvided(3))
+        {
+            mColor = Color(
+                s_uint(255*mFunc.Get(3)->GetNumber()),
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
+            );
+        }
+        else
+        {
+            mColor = Color(
+                s_uint(255*mFunc.Get(0)->GetNumber()),
+                s_uint(255*mFunc.Get(1)->GetNumber()),
+                s_uint(255*mFunc.Get(2)->GetNumber())
+            );
+        }
+
+        pBackdrop->SetBackgroundColor(mColor);
+    }
+
+    return mFunc.Return();
+}
+
 
 int LuaFrame::_SetClampedToScreen(lua_State* pLua)
 {
