@@ -209,11 +209,11 @@ namespace Frost
         s_bool          WheelIsRolled(s_bool bForce = false) const;
         const s_bool&   MouseLastDragged() const;
         MouseState      GetMouseState(MouseButton mID) const;
-        const s_float&  GetMPosX() const;
-        const s_float&  GetMPosY() const;
-        const s_float&  GetMDPosX() const;
-        const s_float&  GetMDPosY() const;
-        const s_int&    GetMWheel() const;
+        const s_float&  GetMousePosX() const;
+        const s_float&  GetMousePosY() const;
+        const s_float&  GetMouseDX() const;
+        const s_float&  GetMouseDY() const;
+        const s_int&    GetMouseWheel() const;
 
         // Parameters
         void           SetDoubleclickTime(s_double dDoubleclickTime);

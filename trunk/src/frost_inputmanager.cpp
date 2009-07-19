@@ -352,7 +352,9 @@ namespace Frost
         OIS::MouseState mMouseState = pMouse_->getMouseState();
         s_bool bNewDragged = false;
         Event mMouseEvent;
-        mMouseEvent.Add(s_var(s_uint()));
+        mMouseEvent.Add(s_uint());
+        mMouseEvent.Add(s_float(mMouseState.X.abs));
+        mMouseEvent.Add(s_float(mMouseState.Y.abs));
         s_bool bMouseState, bOldMouseState;
         for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; i++)
         {
@@ -434,13 +436,11 @@ namespace Frost
                     if (!bOldMouseState)
                     {
                         mMouseEvent.SetName("MOUSE_PRESSED");
-                        mMouseEvent[0] = s_uint(i);
                         pEventMgr->FireEvent(mMouseEvent);
 
                         if (lDoubleclickDelay_[i] > 0.0)
                         {
                             mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
-                            mMouseEvent[0] = s_uint(i);
                             pEventMgr->FireEvent(mMouseEvent);
                         }
                     }
@@ -448,7 +448,6 @@ namespace Frost
                     if (lMouseLong_[i])
                     {
                         mMouseEvent.SetName("MOUSE_DOWN_LONG");
-                        mMouseEvent[0] = s_uint(i);
                         pEventMgr->FireEvent(mMouseEvent);
                     }
                 }
@@ -531,27 +530,27 @@ namespace Frost
         return lMouseState_[mID];
     }
 
-    const s_float& InputManager::GetMPosX() const
+    const s_float& InputManager::GetMousePosX() const
     {
         return fMX_;
     }
 
-    const s_float& InputManager::GetMPosY() const
+    const s_float& InputManager::GetMousePosY() const
     {
         return fMY_;
     }
 
-    const s_float& InputManager::GetMDPosX() const
+    const s_float& InputManager::GetMouseDX() const
     {
         return fDMX_;
     }
 
-    const s_float& InputManager::GetMDPosY() const
+    const s_float& InputManager::GetMouseDY() const
     {
         return fDMY_;
     }
 
-    const s_int& InputManager::GetMWheel() const
+    const s_int& InputManager::GetMouseWheel() const
     {
         return iMWheel_;
     }
