@@ -97,7 +97,7 @@ namespace Frost
             s_refptr<Material> GetMaterial();
 
             /// Tells this widget to update its borders.
-            void            FireUpdateBorders();
+            virtual void    FireUpdateBorders();
 
             /// Tells this widget to update its dimensions.
             void            FireUpdateDimensions();

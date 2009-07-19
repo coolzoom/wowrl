@@ -22,6 +22,10 @@ namespace Frost
 
             LayeredRegion();
 
+            void Render();
+            void CreateGlue();
+
+            s_bool IsInRegion(const s_int& iX, const s_int& iY);
             LayerType GetDrawLayer();
             void SetDrawLayer(LayerType mLayer);
             void SetDrawLayer(const s_str& sLayer);

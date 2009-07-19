@@ -216,7 +216,7 @@ namespace Frost
 
             // FontInstance
             int _GetFont(lua_State*);
-            /**/ int _GetFontObject(lua_State*) { return 0; }
+            int _GetFontObject(lua_State*) { return 0; } // WBI
             int _GetJustifyH(lua_State*);
             /**/ int _GetJustifyV(lua_State*) { return 0; }
             int _GetShadowColor(lua_State*);
@@ -224,7 +224,7 @@ namespace Frost
             int _GetSpacing(lua_State*);
             int _GetTextColor(lua_State*);
             int _SetFont(lua_State*);
-            /**/ int _SetFontObject(lua_State*) { return 0; }
+            int _SetFontObject(lua_State*) { return 0; } // WBI
             int _SetJustifyH(lua_State*);
             /**/ int _SetJustifyV(lua_State*) { return 0; }
             int _SetShadowColor(lua_State*);

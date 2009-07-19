@@ -41,38 +41,38 @@ namespace Frost
             LuaEditBox(lua_State* pLua);
 
             // Glues
-            /**/ int AddHistoryLine_L(lua_State*) { return 0; }
-            /**/ int ClearFocus_L(lua_State*) { return 0; }
-            /**/ int GetAltArrowKeyMode_L(lua_State*) { return 0; }
-            /**/ int GetBlinkSpeed_L(lua_State*) { return 0; }
-            /**/ int GetHistoryLines_L(lua_State*) { return 0; }
-            /**/ int GetInputLanguage_L(lua_State*) { return 0; }
-            /**/ int GetMaxBytes_L(lua_State*) { return 0; }
-            /**/ int GetMaxLetters_L(lua_State*) { return 0; }
-            /**/ int GetNumLetters_L(lua_State*) { return 0; }
-            /**/ int GetNumber_L(lua_State*) { return 0; }
-            /**/ int GetText_L(lua_State*) { return 0; }
-            /**/ int GetTextInsets_L(lua_State*) { return 0; }
-            /**/ int HighlithtText_L(lua_State*) { return 0; }
-            /**/ int Insert_L(lua_State*) { return 0; }
-            /**/ int IsAutoFocus_L(lua_State*) { return 0; }
-            /**/ int IsMultiLine_L(lua_State*) { return 0; }
-            /**/ int IsNumeric_L(lua_State*) { return 0; }
-            /**/ int IsPassword_L(lua_State*) { return 0; }
-            /**/ int SetAltArrowKeyMode_L(lua_State*) { return 0; }
-            /**/ int SetAutoFocus_L(lua_State*) { return 0; }
-            /**/ int SetBlinkSpeed_L(lua_State*) { return 0; }
-            /**/ int SetFocus_L(lua_State*) { return 0; }
-            /**/ int SetHistoryLines_L(lua_State*) { return 0; }
-            /**/ int SetMaxBytes_L(lua_State*) { return 0; }
-            /**/ int SetMaxLetters_L(lua_State*) { return 0; }
-            /**/ int SetMultiLine_L(lua_State*) { return 0; }
-            /**/ int SetNumber_L(lua_State*) { return 0; }
-            /**/ int SetNumeric_L(lua_State*) { return 0; }
-            /**/ int SetPassword_L(lua_State*) { return 0; }
-            /**/ int SetText_L(lua_State*) { return 0; }
-            /**/ int SetTextInsets_L(lua_State*) { return 0; }
-            /**/ int ToggleInputLanguage_L(lua_State*) { return 0; }
+            /**/ int _AddHistoryLine(lua_State*) { return 0; }
+            /**/ int _ClearFocus(lua_State*) { return 0; }
+            /**/ int _GetAltArrowKeyMode(lua_State*) { return 0; }
+            /**/ int _GetBlinkSpeed(lua_State*) { return 0; }
+            /**/ int _GetHistoryLines(lua_State*) { return 0; }
+            /**/ int _GetInputLanguage(lua_State*) { return 0; }
+            /**/ int _GetMaxBytes(lua_State*) { return 0; }
+            /**/ int _GetMaxLetters(lua_State*) { return 0; }
+            /**/ int _GetNumLetters(lua_State*) { return 0; }
+            /**/ int _GetNumber(lua_State*) { return 0; }
+            /**/ int _GetText(lua_State*) { return 0; }
+            /**/ int _GetTextInsets(lua_State*) { return 0; }
+            /**/ int _HighlithtText(lua_State*) { return 0; }
+            /**/ int _Insert(lua_State*) { return 0; }
+            /**/ int _IsAutoFocus(lua_State*) { return 0; }
+            /**/ int _IsMultiLine(lua_State*) { return 0; }
+            /**/ int _IsNumeric(lua_State*) { return 0; }
+            /**/ int _IsPassword(lua_State*) { return 0; }
+            /**/ int _SetAltArrowKeyMode(lua_State*) { return 0; }
+            /**/ int _SetAutoFocus(lua_State*) { return 0; }
+            /**/ int _SetBlinkSpeed(lua_State*) { return 0; }
+            /**/ int _SetFocus(lua_State*) { return 0; }
+            /**/ int _SetHistoryLines(lua_State*) { return 0; }
+            /**/ int _SetMaxBytes(lua_State*) { return 0; }
+            /**/ int _SetMaxLetters(lua_State*) { return 0; }
+            /**/ int _SetMultiLine(lua_State*) { return 0; }
+            /**/ int _SetNumber(lua_State*) { return 0; }
+            /**/ int _SetNumeric(lua_State*) { return 0; }
+            /**/ int _SetPassword(lua_State*) { return 0; }
+            /**/ int _SetText(lua_State*) { return 0; }
+            /**/ int _SetTextInsets(lua_State*) { return 0; }
+            /**/ int _ToggleInputLanguage(lua_State*) { return 0; }
 
             static const char className[];
             static Lunar<LuaEditBox>::RegType methods[];

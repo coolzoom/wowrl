@@ -41,30 +41,30 @@ namespace Frost
             LuaScrollingMessageFrame(lua_State* pLua);
 
             // Glues
-            /**/ int AddMessage_L(lua_State*) { return 0; }
-            /**/ int AtBottom_L(lua_State*) { return 0; }
-            /**/ int AtTop_L(lua_State*) { return 0; }
-            /**/ int Clear_L(lua_State*) { return 0; }
-            /**/ int GetCurrentLine_L(lua_State*) { return 0; }
-            /**/ int GetCurrentScroll_L(lua_State*) { return 0; }
-            /**/ int GetFadeDuration_L(lua_State*) { return 0; }
-            /**/ int GetFading_L(lua_State*) { return 0; }
-            /**/ int GetMaxLines_L(lua_State*) { return 0; }
-            /**/ int GetNumLinesDisplayed_L(lua_State*) { return 0; }
-            /**/ int GetNumMessages_L(lua_State*) { return 0; }
-            /**/ int GetTimeVisible_L(lua_State*) { return 0; }
-            /**/ int PageDown_L(lua_State*) { return 0; }
-            /**/ int PageUp_L(lua_State*) { return 0; }
-            /**/ int ScrollDown_L(lua_State*) { return 0; }
-            /**/ int ScrollToBottom_L(lua_State*) { return 0; }
-            /**/ int ScrollToTop_L(lua_State*) { return 0; }
-            /**/ int ScrollUp_L(lua_State*) { return 0; }
-            /**/ int SetFadeDuration_L(lua_State*) { return 0; }
-            /**/ int SetFading_L(lua_State*) { return 0; }
-            /**/ int SetMaxLines_L(lua_State*) { return 0; }
-            /**/ int SetScrollFromBottom_L(lua_State*) { return 0; }
-            /**/ int SetTimeVisible_L(lua_State*) { return 0; }
-            /**/ int UpdateColorByID_L(lua_State*) { return 0; }
+            /**/ int _AddMessage(lua_State*) { return 0; }
+            /**/ int _AtBottom(lua_State*) { return 0; }
+            /**/ int _AtTop(lua_State*) { return 0; }
+            /**/ int _Clear(lua_State*) { return 0; }
+            /**/ int _GetCurrentLine(lua_State*) { return 0; }
+            /**/ int _GetCurrentScroll(lua_State*) { return 0; }
+            /**/ int _GetFadeDuration(lua_State*) { return 0; }
+            /**/ int _GetFading(lua_State*) { return 0; }
+            /**/ int _GetMaxLines(lua_State*) { return 0; }
+            /**/ int _GetNumLinesDisplayed(lua_State*) { return 0; }
+            /**/ int _GetNumMessages(lua_State*) { return 0; }
+            /**/ int _GetTimeVisible(lua_State*) { return 0; }
+            /**/ int _PageDown(lua_State*) { return 0; }
+            /**/ int _PageUp(lua_State*) { return 0; }
+            /**/ int _ScrollDown(lua_State*) { return 0; }
+            /**/ int _ScrollToBottom(lua_State*) { return 0; }
+            /**/ int _ScrollToTop(lua_State*) { return 0; }
+            /**/ int _ScrollUp(lua_State*) { return 0; }
+            /**/ int _SetFadeDuration(lua_State*) { return 0; }
+            /**/ int _SetFading(lua_State*) { return 0; }
+            /**/ int _SetMaxLines(lua_State*) { return 0; }
+            /**/ int _SetScrollFromBottom(lua_State*) { return 0; }
+            /**/ int _SetTimeVisible(lua_State*) { return 0; }
+            /**/ int _UpdateColorByID(lua_State*) { return 0; }
 
             static const char className[];
             static Lunar<LuaScrollingMessageFrame>::RegType methods[];

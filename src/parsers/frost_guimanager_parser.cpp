@@ -128,6 +128,7 @@ namespace Frost
         pFrame->SetFrameStrata(pMainBlock->GetAttribute("frameStrata"));
         pFrame->EnableMouse(s_bool(pMainBlock->GetAttribute("enableMouse")));
         pFrame->EnableKeyboard(s_bool(pMainBlock->GetAttribute("enableKeyboard")));
+        pFrame->SetClampedToScreen(s_bool(pMainBlock->GetAttribute("clampedToScreen")));
 
         return true;
     }
@@ -333,7 +334,20 @@ namespace Frost
 
     s_bool GUIManager::ParseTitleRegionBlock_( s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock )
     {
-        // TODO : parse TitleRegion
+        s_ptr<XML::Block> pTitleRegionBlock = pMainBlock->GetBlock("TitleRegion");
+        if (pTitleRegionBlock)
+        {
+            pFrame->CreateTitleRegion();
+            s_ptr<GUI::LayeredRegion> pTitleRegion = pFrame->GetTitleRegion();
+            if (pTitleRegion)
+            {
+                if (pTitleRegionBlock->GetAttribute("setAllPoints") == "true")
+                    pTitleRegion->SetAllPoints(pFrame);
+
+                ParseSizeBlock_(pTitleRegion, pTitleRegionBlock);
+                ParseAnchorsBlock_(pTitleRegion, pTitleRegionBlock);
+            }
+        }
         return true;
     }
 

@@ -286,7 +286,7 @@ void FontString::UpdateBorders_()
         s_int iXCenter;
         s_int iYCenter;
 
-        map<AnchorPoint, Anchor>::iterator iterAnchor;
+        s_map<AnchorPoint, Anchor>::iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
             switch (iterAnchor->second.GetPoint())

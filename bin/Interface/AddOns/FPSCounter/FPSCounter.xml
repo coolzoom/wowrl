@@ -1,7 +1,7 @@
 <Ui>
     <Script file="FPSCounter.lua"/>
 
-    <Frame name="FPSCounter_Frame" hidden="false" movable="false" enableMouse="false" clampedToScreen="true">
+    <Frame name="FPSCounter_Frame" hidden="false" movable="false" enableMouse="false" clampedToScreen="false">
         <Anchors>
             <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
         </Anchors>
