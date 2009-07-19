@@ -193,7 +193,7 @@ namespace Frost
             return mType_;
         }
 
-        /// Checks if this int is infinite and negative
+        /// Checks if this int is infinite and negative.
         /** \return 'true' if this int is infinite and negative
         */
         s_bool IsInfiniteMinus() const
@@ -201,7 +201,7 @@ namespace Frost
             return (mType_ == INTEGER_INF_MINUS);
         }
 
-        /// Checks if this int is infinite and positive
+        /// Checks if this int is infinite and positive.
         /** \return 'true' if this int is infinite and positive
         */
         s_bool IsInfinitePlus() const
@@ -209,7 +209,13 @@ namespace Frost
             return (mType_ == INTEGER_INF_PLUS);
         }
 
-        /// Checks if this int is a Not a Number (NaN)
+        /// Checks if this int is contained into the provided range.
+        s_bool IsInRange(const s_int_t<T>& iMin, const s_int_t<T>& iMax) const
+        {
+            return ( (iMin <= (*this)) && ((*this) <= iMax) );
+        }
+
+        /// Checks if this int is a Not a Number (NaN).
         /** \return 'true' if this int is NaN
         */
         s_bool IsNaN() const

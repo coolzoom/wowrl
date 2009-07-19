@@ -226,6 +226,12 @@ namespace Frost
             return (mType_ == INTEGER_INF);
         }
 
+        /// Checks if this uint is contained into the provided range.
+        s_bool IsInRange(const s_uint_t<T>& uiMin, const s_uint_t<T>& uiMax) const
+        {
+            return ( (uiMin <= (*this)) && ((*this) <= uiMax) );
+        }
+
         /// Checks if this uint is a Not a Number (NaN)
         /** \return 'true' if this uint is NaN
         */
