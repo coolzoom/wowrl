@@ -41,7 +41,8 @@ namespace Frost
                 {
                     Warning(CLASS_NAME,
                         "Event \""+sEventName+"\" is already registered to this EventReceiver "+
-                        "(EventReceiver : "+s_str(s_ulong(reinterpret_cast<ulong>(pReceiver.Get())))+").");
+                        "(EventReceiver : "+s_str(pReceiver)+")."
+                    );
                     return;
                 }
             }
@@ -72,7 +73,8 @@ namespace Frost
 
         Warning(CLASS_NAME,
             "Event \""+sEventName+"\" is not registered to this EventReceiver "+
-            "(EventReceiver : "+s_str(s_ulong(reinterpret_cast<ulong>(pReceiver.Get())))+").");
+            "(EventReceiver : "+s_str(pReceiver)+")."
+        );
     }
 
     void EventManager::FireEvent( const Event& mEvent )
