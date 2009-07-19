@@ -16,6 +16,8 @@
 #include "gui/frost_frame.h"
 #include "lua/frost_lua.h"
 
+#include "frost_inputmanager.h"
+
 using namespace std;
 
 namespace Frost
@@ -379,11 +381,45 @@ namespace Frost
 
     void GUIManager::Update( const s_float& fDelta )
     {
+        if (pMovedObject_)
+        {
+            fMouseMovementX_ += InputManager::GetSingleton()->GetMouseDX();
+            fMouseMovementY_ += InputManager::GetSingleton()->GetMouseDY();
+        }
+
         s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
         foreach (iterObj, lMainObjectList_)
         {
             iterObj->second->Update();
         }
+    }
+
+    void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj )
+    {
+        pMovedObject_ = pObj;
+        fMouseMovementX_ = 0.0f;
+        fMouseMovementY_ = 0.0f;
+    }
+
+    void GUIManager::StopMoving( s_ptr<GUI::UIObject> pObj )
+    {
+        if (pMovedObject_ == pObj)
+            pMovedObject_ = NULL;
+    }
+
+    s_bool GUIManager::IsMoving( s_ptr<GUI::UIObject> pObj ) const
+    {
+        return (pMovedObject_ == pObj);
+    }
+
+    s_int GUIManager::GetMovementX() const
+    {
+        return s_int(fMouseMovementX_);
+    }
+
+    s_int GUIManager::GetMovementY() const
+    {
+        return s_int(fMouseMovementY_);
     }
 
     void GUIManager::PrintUI()

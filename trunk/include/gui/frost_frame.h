@@ -19,8 +19,8 @@ namespace Frost
         /// Contains LayeredRegion
         struct Layer
         {
-            s_bool                                   bDisabled;
-            std::map< s_uint, s_ptr<LayeredRegion> > lRegionList;
+            s_bool                                bDisabled;
+            s_map< s_uint, s_ptr<LayeredRegion> > lRegionList;
 
             static const s_str CLASS_NAME;
         };
@@ -40,8 +40,8 @@ namespace Frost
         /// Contains Frame
         struct Level
         {
-            s_ptr<Frame>                     pTopLevel;
-            std::map< s_uint, s_ptr<Frame> > lFrameList;
+            s_ptr<Frame>                  pTopLevel;
+            s_map< s_uint, s_ptr<Frame> > lFrameList;
 
             static const s_str CLASS_NAME;
         };
@@ -49,8 +49,8 @@ namespace Frost
         /// Contains Level
         struct Strata
         {
-            s_ptr<Frame>            pTopStrata;
-            std::map<s_uint, Level> lLevelList;
+            s_ptr<Frame>         pTopStrata;
+            s_map<s_uint, Level> lLevelList;
 
             static const s_str CLASS_NAME;
         };
@@ -92,10 +92,18 @@ namespace Frost
             */
             virtual s_bool      CanUseScript(const s_str& sScriptName) const;
 
+            /// Checks if this Frame's position is valid.
+            void                CheckPosition();
+
             /// Copies an UIObject's parameters into this Frame (inheritance).
             /** \param pObj The UIObject to copy
             */
             virtual void        CopyFrom(s_ptr<UIObject> pObj);
+
+            /// Creates a new title region for this Frame.
+            /** \note You can get it by calling GetTitleRegion().
+            */
+            void                CreateTitleRegion();
 
             /// Disables a Layer.
             /** \param mLayer The layer to disable
@@ -121,6 +129,9 @@ namespace Frost
             /** \param bIsMouseWheelEnabled 'true' to enable
             */
             void                EnableMouseWheel(const s_bool& bIsMouseWheelEnabled);
+
+            /// Tells this widget to update its borders.
+            virtual void        FireUpdateBorders();
 
             /// Checks if this Frame has a script defined.
             /** \param sScriptName The name of the script to check
@@ -220,10 +231,21 @@ namespace Frost
             */
             const s_float&      GetScale() const;
 
+            /// Returns this Frame's title region.
+            s_ptr<LayeredRegion> GetTitleRegion() const;
+
             /// Checks if this Frame is clamped to screen.
             /** \return 'true' if this Frame is clamed to screen
             */
             const s_bool&       IsClampedToScreen() const;
+
+            /// Checks if the provided coordinates are in the Frame.
+            /** \param iX           The horizontal coordinate
+            *   \param iY           The vertical coordinate
+            *   \param bTitleRegion 'true' to only consider the Frame's title region
+            *   \return 'true' if the provided coordinates are in the Frame
+            */
+            s_bool              IsInFrame(const s_int& iX, const s_int& iY, const s_bool& bTitleRegion = false) const;
 
             /// Checks if this Frame can receive keyboard input.
             /** \return 'true' if this Frame can receive keyboard input
@@ -279,7 +301,7 @@ namespace Frost
             /// Calls the OnEvent script.
             /** \param mEvent The Event that occured
             */
-            void                OnEvent(const Event& mEvent);
+            virtual void        OnEvent(const Event& mEvent);
 
             /// Tells this Frame to react to every event in the game.
             void                RegisterAllEvents();
@@ -445,6 +467,10 @@ namespace Frost
 
             s_float fScale_;
 
+            s_int                iMovementStartX_;
+            s_int                iMovementStartY_;
+            s_ptr<LayeredRegion> pTitleRegion_;
+
             s_ptr<Frame> pParentFrame_;
         };
 
@@ -486,7 +512,7 @@ namespace Frost
             int _GetScript(lua_State*);
             /**/ int _GetTitleRegion(lua_State*) { return 0; }
             int _HasScript(lua_State*);
-            /**/ int _HookScript(lua_State*) { return 0; }
+            int _HookScript(lua_State*) { return 0; } // WBI
             int _IsClampedToScreen(lua_State*);
             int _IsFrameType(lua_State*);
             int _IsKeyboardEnabled(lua_State*);

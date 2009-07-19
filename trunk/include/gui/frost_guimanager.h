@@ -57,6 +57,12 @@ namespace Frost
         void                 ReloadUI();
         void                 RenderUI();
 
+        void                 StartMoving(s_ptr<GUI::UIObject> pObj);
+        void                 StopMoving(s_ptr<GUI::UIObject> pObj);
+        s_bool               IsMoving(s_ptr<GUI::UIObject> pObj) const;
+        s_int                GetMovementX() const;
+        s_int                GetMovementY() const;
+
         void                 Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
@@ -146,6 +152,10 @@ namespace Frost
         s_map< s_uint, s_ptr<GUI::UIObject> > lMainObjectList_;
 
         s_map<s_str, AddOn> lAddOnList_;
+
+        s_ptr<GUI::UIObject> pMovedObject_;
+        s_float              fMouseMovementX_;
+        s_float              fMouseMovementY_;
     };
 }
 

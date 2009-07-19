@@ -57,6 +57,7 @@ Frame::~Frame()
     }
 
     pBackdrop_.Delete();
+    pTitleRegion_.Delete();
 }
 
 void Frame::Render()
@@ -285,6 +286,12 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             pBackdrop_->CopyFrom(pFrame->pBackdrop_);
         }
 
+        if (pFrame->pTitleRegion_)
+        {
+            pTitleRegion_ = new LayeredRegion();
+            pTitleRegion_->CopyFrom(pFrame->pTitleRegion_);
+        }
+
         s_map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
         foreach (iterRegion, pFrame->lRegionList_)
         {
@@ -303,6 +310,67 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
     }
 }
 
+void Frame::CreateTitleRegion()
+{
+    if (!pTitleRegion_)
+    {
+        pTitleRegion_ = new LayeredRegion();
+        if (this->IsVirtual())
+            pTitleRegion_->SetVirtual();
+        pTitleRegion_->SetParent(this);
+        pTitleRegion_->SetName(sName_+"TitleRegion");
+
+        if (!GUIManager::GetSingleton()->AddUIObject(pTitleRegion_))
+        {
+            Error(lType_.Back(),
+                "Couldn't create \""+sName_+"\"'s title region because another UIObject "
+                "already took its name : \""+pTitleRegion_->GetName()+"\"."
+            );
+            pTitleRegion_.Delete();
+            return;
+        }
+
+        if (!pTitleRegion_->IsVirtual())
+            pTitleRegion_->CreateGlue();
+    }
+    else
+    {
+        Warning(lType_.Back(),
+            "\""+sName_+"\" already has a title region."
+        );
+    }
+}
+
+void Frame::CheckPosition()
+{
+    if (bIsClampedToScreen_)
+    {
+        s_int iScreenW = s_int(Engine::GetSingleton()->GetScreenWidth());
+        s_int iScreenH = s_int(Engine::GetSingleton()->GetScreenHeight());
+
+        if (lBorderList_[BORDER_RIGHT] > iScreenW)
+        {
+            lBorderList_[BORDER_RIGHT] = iScreenW;
+            lBorderList_[BORDER_LEFT] = iScreenW - s_int(uiAbsWidth_);
+        }
+        if (lBorderList_[BORDER_BOTTOM] > iScreenH)
+        {
+            lBorderList_[BORDER_BOTTOM] = iScreenH;
+            lBorderList_[BORDER_TOP] = iScreenH - s_int(uiAbsHeight_);
+        }
+        if (lBorderList_[BORDER_LEFT] < 0)
+        {
+            lBorderList_[BORDER_LEFT] = 0;
+            lBorderList_[BORDER_RIGHT] = s_int(uiAbsWidth_);
+        }
+        if (lBorderList_[BORDER_TOP] < 0)
+        {
+            lBorderList_[BORDER_TOP] = 0;
+            lBorderList_[BORDER_BOTTOM] = s_int(uiAbsHeight_);
+        }
+    }
+}
+
 void Frame::DisableDrawLayer( LayerType mLayer )
 {
     lLayerList_[mLayer].bDisabled = true;
@@ -315,16 +383,55 @@ void Frame::EnableDrawLayer( LayerType mLayer )
 
 void Frame::EnableKeyboard( const s_bool& bIsKeyboardEnabled )
 {
+    if (bIsKeyboardEnabled && !bIsKeyboardEnabled_)
+    {
+        EventReceiver::RegisterEvent("KEY_DOWN");
+        EventReceiver::RegisterEvent("KEY_PRESSED");
+        EventReceiver::RegisterEvent("KEY_DOWN_LONG");
+        EventReceiver::RegisterEvent("KEY_RELEASED");
+    }
+    else if (!bIsKeyboardEnabled && bIsKeyboardEnabled_)
+    {
+        EventReceiver::UnregisterEvent("KEY_DOWN");
+        EventReceiver::UnregisterEvent("KEY_PRESSED");
+        EventReceiver::UnregisterEvent("KEY_DOWN_LONG");
+        EventReceiver::UnregisterEvent("KEY_RELEASED");
+    }
+
     bIsKeyboardEnabled_ = bIsKeyboardEnabled;
 }
 
 void Frame::EnableMouse( const s_bool& bIsMouseEnabled )
 {
+    if (bIsMouseEnabled && !bIsMouseEnabled_)
+    {
+        EventReceiver::RegisterEvent("MOUSE_MOVED");
+        EventReceiver::RegisterEvent("MOUSE_PRESSED");
+        EventReceiver::RegisterEvent("MOUSE_DOWN");
+        EventReceiver::RegisterEvent("MOUSE_DOWN_LONG");
+        EventReceiver::RegisterEvent("MOUSE_DOUBLE_CLICKED");
+        EventReceiver::RegisterEvent("MOUSE_RELEASED");
+    }
+    else if (!bIsMouseEnabled && bIsMouseEnabled_)
+    {
+        EventReceiver::UnregisterEvent("MOUSE_MOVED");
+        EventReceiver::UnregisterEvent("MOUSE_PRESSED");
+        EventReceiver::UnregisterEvent("MOUSE_DOWN");
+        EventReceiver::UnregisterEvent("MOUSE_DOWN_LONG");
+        EventReceiver::UnregisterEvent("MOUSE_DOUBLE_CLICKED");
+        EventReceiver::UnregisterEvent("MOUSE_RELEASED");
+    }
+
     bIsMouseEnabled_ = bIsMouseEnabled;
 }
 
 void Frame::EnableMouseWheel( const s_bool& bIsMouseWheelEnabled )
 {
+    if (bIsMouseWheelEnabled && !bIsMouseWheelEnabled_)
+        EventReceiver::RegisterEvent("MOUSE_WHEEL");
+    else if (!bIsMouseWheelEnabled && bIsMouseWheelEnabled_)
+        EventReceiver::UnregisterEvent("MOUSE_WHEEL");
+
     bIsMouseWheelEnabled_ = bIsMouseWheelEnabled;
 }
 
@@ -336,6 +443,26 @@ void Frame::FireBuildStrataList_()
 void Frame::FireBuildLayerList_()
 {
     bBuildLayerList_ = true;
+}
+
+void Frame::FireUpdateBorders()
+{
+    bUpdateBorders_ = true;
+
+    if (pTitleRegion_)
+        pTitleRegion_->FireUpdateBorders();
+
+    s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+    foreach (iterRegion, lRegionList_)
+    {
+        iterRegion->second->FireUpdateBorders();
+    }
+
+    s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
+    foreach (iterChild, lChildList_)
+    {
+        iterChild->second->FireUpdateBorders();
+    }
 }
 
 s_bool Frame::HasScript( const s_str& sScriptName ) const
@@ -512,9 +639,38 @@ const s_float& Frame::GetScale() const
     return fScale_;
 }
 
+s_ptr<LayeredRegion> Frame::GetTitleRegion() const
+{
+    return pTitleRegion_;
+}
+
 const s_bool& Frame::IsClampedToScreen() const
 {
     return bIsClampedToScreen_;
+}
+
+s_bool Frame::IsInFrame( const s_int& iX, const s_int& iY, const s_bool& bTitleRegion ) const
+{
+    if (bTitleRegion)
+    {
+        if (pTitleRegion_)
+            return pTitleRegion_->IsInRegion(iX, iY);
+        else
+            return false;
+    }
+    else
+    {
+        return (
+            iX.IsInRange(
+                lBorderList_[BORDER_LEFT]  + lAbsHitRectInsetList_[BORDER_LEFT],
+                lBorderList_[BORDER_RIGHT] - lAbsHitRectInsetList_[BORDER_RIGHT]
+            ) &&
+            iY.IsInRange(
+                lBorderList_[BORDER_TOP]    + lAbsHitRectInsetList_[BORDER_TOP],
+                lBorderList_[BORDER_BOTTOM] - lAbsHitRectInsetList_[BORDER_BOTTOM]
+            )
+        );
+    }
 }
 
 const s_bool& Frame::IsKeyboardEnabled() const
@@ -566,26 +722,58 @@ void Frame::NotifyScriptDefined( const s_str& sScriptName )
 
 void Frame::OnEvent( const Event& mEvent )
 {
-    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-
-    // Lua handlers do not need direct arguments.
-    // Instead, we set the value of some global variables
-    // (event : event name, arg1, arg2, ... arg9 : arguments)
-    // that the user can use however he wants in his handler.
-
-    // Set event name
-    pLua->PushString(mEvent.GetName());
-    pLua->SetGlobal("event");
-
-    // Set arguments
-    for (s_uint i; i < mEvent.GetNumParam(); ++i)
+    if (lDefinedScriptList_.Find("Event"))
     {
-        s_ptr<const s_var> pArg = mEvent.Get(i);
-        pLua->PushVar(*pArg);
-        pLua->SetGlobal("arg"+(i+1));
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+
+        // Lua handlers do not need direct arguments.
+        // Instead, we set the value of some global variables
+        // (event, arg1, arg2, ...) that the user can use
+        // however he wants in his handler.
+
+        // Set event name
+        pLua->PushString(mEvent.GetName());
+        pLua->SetGlobal("event");
+
+        // Set arguments
+        for (s_uint i; i < mEvent.GetNumParam(); ++i)
+        {
+            s_ptr<const s_var> pArg = mEvent.Get(i);
+            pLua->PushVar(*pArg);
+            pLua->SetGlobal("arg"+(i+1));
+        }
+
+        pLua->CallFunction(sName_+":OnEvent");
     }
 
-    pLua->CallFunction(sName_+":OnEvent");
+    if (bIsMouseEnabled_ && bIsMovable_)
+    {
+        if (mEvent.GetName() == "MOUSE_PRESSED")
+        {
+            if (IsInFrame(s_int(mEvent[1].Get<s_float>()),
+                          s_int(mEvent[2].Get<s_float>()), true))
+            {
+                if (lAnchorList_.GetSize() > 1)
+                {
+                    lAnchorList_.Clear();
+                    Anchor mAnchor(this, ANCHOR_TOPLEFT, NULL, ANCHOR_TOPLEFT);
+                    mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
+                    lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
+
+                    FireUpdateBorders();
+                }
+
+                iMovementStartX_ = lAnchorList_.Begin()->second.GetAbsOffsetX();
+                iMovementStartY_ = lAnchorList_.Begin()->second.GetAbsOffsetY();
+
+                GUIManager::GetSingleton()->StartMoving(this);
+            }
+        }
+        else if (mEvent.GetName() == "MOUSE_RELEASED")
+        {
+            GUIManager::GetSingleton()->StopMoving(this);
+        }
+    }
 }
 
 void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
@@ -864,7 +1052,18 @@ void Frame::UnregisterEvent( const s_str& sEvent )
 
 void Frame::Update()
 {
+    if (GUIManager::GetSingleton()->IsMoving(this))
+    {
+        lAnchorList_.Begin()->second.SetAbsOffset(
+            iMovementStartX_ + GUIManager::GetSingleton()->GetMovementX(),
+            iMovementStartY_ + GUIManager::GetSingleton()->GetMovementY()
+        );
+
+        FireUpdateBorders();
+    }
+
     UIObject::Update();
+    CheckPosition();
 
     if (bBuildStrataList_)
     {
@@ -895,7 +1094,7 @@ void Frame::Update()
         s_map< LayerType, Layer >::iterator iterLayer;
         foreach (iterLayer, lLayerList_)
         {
-            iterLayer->second.lRegionList.clear();
+            iterLayer->second.lRegionList.Clear();
         }
 
         // Fill layers with regions
@@ -911,6 +1110,9 @@ void Frame::Update()
 
     if (IsVisible())
         On("Update");
+
+    if (pTitleRegion_)
+        pTitleRegion_->Update();
 
     // Update regions
     s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;

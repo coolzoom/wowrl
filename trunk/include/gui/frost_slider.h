@@ -41,16 +41,16 @@ namespace Frost
             LuaSlider(lua_State* pLua);
 
             // Glues
-            /**/ int GetMinMaxValues(lua_State*) { return 0; }
-            /**/ int GetOrientation(lua_State*) { return 0; }
-            /**/ int GetThumbTexture(lua_State*) { return 0; }
-            /**/ int GetValue(lua_State*) { return 0; }
-            /**/ int GetValueStep(lua_State*) { return 0; }
-            /**/ int SetMinMaxValues(lua_State*) { return 0; }
-            /**/ int SetOrientation(lua_State*) { return 0; }
-            /**/ int SetThumbTexture(lua_State*) { return 0; }
-            /**/ int SetValue(lua_State*) { return 0; }
-            /**/ int SetValueStep(lua_State*) { return 0; }
+            /**/ int _GetMinMaxValues(lua_State*) { return 0; }
+            /**/ int _GetOrientation(lua_State*) { return 0; }
+            /**/ int _GetThumbTexture(lua_State*) { return 0; }
+            /**/ int _GetValue(lua_State*) { return 0; }
+            /**/ int _GetValueStep(lua_State*) { return 0; }
+            /**/ int _SetMinMaxValues(lua_State*) { return 0; }
+            /**/ int _SetOrientation(lua_State*) { return 0; }
+            /**/ int _SetThumbTexture(lua_State*) { return 0; }
+            /**/ int _SetValue(lua_State*) { return 0; }
+            /**/ int _SetValueStep(lua_State*) { return 0; }
 
             static const char className[];
             static Lunar<LuaSlider>::RegType methods[];

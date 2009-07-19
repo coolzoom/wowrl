@@ -70,7 +70,7 @@
         </Anchor>
     </Anchors>
     
-    <n[.,1]:TitleRegion>
+    <n[.,1]:TitleRegion b:setAllPoints="false">
         <n[.,1]:Size>
             <n[*]:AbsDimension n:x       n:y/>
             <n[*]:RelDimension n:x="1.0" n:y="1.0"/>

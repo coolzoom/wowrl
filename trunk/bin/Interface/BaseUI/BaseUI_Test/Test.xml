@@ -30,6 +30,17 @@
                 <AbsInset left="8" right="8" top="8" bottom="8"/>
             </BackgroundInsets>
         </Backdrop>
+        <HitRectInsets>
+            <AbsInset left="5" right="5" top="5" bottom="5"/>
+        </HitRectInsets>
+        <TitleRegion>
+            <Size>
+                <AbsDimension x="100" y="30"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOP" relativePoint="TOP"/>
+            </Anchors>
+        </TitleRegion>
         <!Frames>
             <Frame name="$parent_Pin">
                 <Size>
