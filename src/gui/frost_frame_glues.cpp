@@ -5,6 +5,7 @@
 
 #include "gui/frost_frame.h"
 #include "gui/frost_backdrop.h"
+#include "gui/frost_layeredregion.h"
 
 using namespace std;
 using namespace Frost;
@@ -19,6 +20,15 @@ LuaFrame::LuaFrame(lua_State* pLua) : LuaUIObject(pLua)
     {
         Error(CLASS_NAME, "Dynamic cast failed !");
     }
+}
+
+int LuaFrame::_CreateTitleRegion(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame::CreateTitleRegion", pLua);
+
+    pFrameParent_->CreateTitleRegion();
+
+    return mFunc.Return();
 }
 
 int LuaFrame::_DisableDrawLayer(lua_State* pLua)
@@ -149,6 +159,8 @@ int LuaFrame::_GetBackdrop(lua_State* pLua)
         pState->SetFieldInt("bottom", lInsets[BORDER_BOTTOM]);
 
         pState->Pop();
+
+        mFunc.NotifyPushed();
     }
     else
     {
@@ -362,6 +374,23 @@ int LuaFrame::_GetScript(lua_State* pLua)
             lua_getglobal(pLua, (pFrameParent_->GetName() + ":" + sScriptName).c_str());
             mFunc.NotifyPushed();
         }
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_GetTitleRegion(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:GetTitleRegion", pLua, 1);
+
+    if (pFrameParent_->GetTitleRegion())
+    {
+        pFrameParent_->GetTitleRegion()->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+    {
+        mFunc.PushNil();
     }
 
     return mFunc.Return();
@@ -794,6 +823,24 @@ int LuaFrame::_SetUserPlaced(lua_State* pLua)
     {
         pFrameParent_->SetUserPlaced(mFunc.Get(0)->GetBool());
     }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_StartMoving(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:StartMoving", pLua);
+
+    pFrameParent_->StartMoving();
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_StopMovingOrSizing(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:StopMovingOrSizing", pLua);
+
+    pFrameParent_->StopMoving();
 
     return mFunc.Return();
 }

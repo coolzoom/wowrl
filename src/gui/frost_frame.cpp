@@ -753,25 +753,12 @@ void Frame::OnEvent( const Event& mEvent )
             if (IsInFrame(s_int(mEvent[1].Get<s_float>()),
                           s_int(mEvent[2].Get<s_float>()), true))
             {
-                if (lAnchorList_.GetSize() > 1)
-                {
-                    lAnchorList_.Clear();
-                    Anchor mAnchor(this, ANCHOR_TOPLEFT, NULL, ANCHOR_TOPLEFT);
-                    mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
-                    lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
-
-                    FireUpdateBorders();
-                }
-
-                iMovementStartX_ = lAnchorList_.Begin()->second.GetAbsOffsetX();
-                iMovementStartY_ = lAnchorList_.Begin()->second.GetAbsOffsetY();
-
-                GUIManager::GetSingleton()->StartMoving(this);
+                StartMoving();
             }
         }
         else if (mEvent.GetName() == "MOUSE_RELEASED")
         {
-            GUIManager::GetSingleton()->StopMoving(this);
+            StopMoving();
         }
     }
 }
@@ -1037,6 +1024,29 @@ void Frame::SetTopStrata( const s_bool& bIsTopStrata )
 void Frame::SetUserPlaced( const s_bool& bIsUserPlaced )
 {
     bIsUserPlaced_ = bIsUserPlaced;
+}
+
+void Frame::StartMoving()
+{
+    if (lAnchorList_.GetSize() > 1)
+    {
+        lAnchorList_.Clear();
+        Anchor mAnchor(this, ANCHOR_TOPLEFT, NULL, ANCHOR_TOPLEFT);
+        mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
+        lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
+
+        FireUpdateBorders();
+    }
+
+    iMovementStartX_ = lAnchorList_.Begin()->second.GetAbsOffsetX();
+    iMovementStartY_ = lAnchorList_.Begin()->second.GetAbsOffsetY();
+
+    GUIManager::GetSingleton()->StartMoving(this);
+}
+
+void Frame::StopMoving()
+{
+    GUIManager::GetSingleton()->StopMoving(this);
 }
 
 void Frame::UnregisterAllEvents()
