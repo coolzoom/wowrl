@@ -149,8 +149,8 @@ namespace Frost
         s_ptr<Engine>       pFrost = Engine::GetSingleton();
 
         Ogre::Ray mRay = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera()->getCameraToViewportRay(
-            (pInputMgr->GetMPosX()/s_float(pFrost->GetScreenWidth())).Get(),
-            (pInputMgr->GetMPosY()/s_float(pFrost->GetScreenHeight())).Get()
+            (pInputMgr->GetMousePosX()/s_float(pFrost->GetScreenWidth())).Get(),
+            (pInputMgr->GetMousePosY()/s_float(pFrost->GetScreenHeight())).Get()
         );
         s_ptr<Ogre::RaySceneQuery> pRayQuery = pFrost->GetOgreSceneManager()->createRayQuery(mRay);
 
