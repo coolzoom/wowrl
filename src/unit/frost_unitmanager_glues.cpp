@@ -76,9 +76,10 @@ namespace Frost
             if (pUnit)
             {
                 pUnit->PushOnLua(mFunc.GetState());
+                mFunc.NotifyPushed();
             }
             else
-                mFunc.GetState()->PushNil();
+                mFunc.PushNil();
         }
 
         return mFunc.Return();
