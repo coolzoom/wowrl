@@ -409,6 +409,12 @@ namespace Frost
             */
             void                SetUserPlaced(const s_bool& bIsUserPlaced);
 
+            /// Starts moving this Frame with the mouse.
+            void                StartMoving();
+
+            /// Ends moving this Frame.
+            void                StopMoving();
+
             /// Tells the Frame not to react to all events.
             void                UnregisterAllEvents();
 
@@ -487,7 +493,7 @@ namespace Frost
 
             /**/ int _CreateFontString(lua_State*) { return 0; }
             /**/ int _CreateTexture(lua_State*) { return 0; }
-            /**/ int _CreateTitleRegion(lua_State*) { return 0; }
+            int _CreateTitleRegion(lua_State*);
             int _DisableDrawLayer(lua_State*);
             int _EnableDrawLayer(lua_State*);
             int _EnableKeyboard(lua_State*);
@@ -510,7 +516,7 @@ namespace Frost
             int _GetNumRegions(lua_State*);
             int _GetScale(lua_State*);
             int _GetScript(lua_State*);
-            /**/ int _GetTitleRegion(lua_State*) { return 0; }
+            int _GetTitleRegion(lua_State*);
             int _HasScript(lua_State*);
             int _HookScript(lua_State*) { return 0; } // WBI
             int _IsClampedToScreen(lua_State*);
@@ -543,9 +549,9 @@ namespace Frost
             int _SetScript(lua_State*);
             int _SetTopLevel(lua_State*);
             int _SetUserPlaced(lua_State*);
-            /**/ int _StartMoving(lua_State*) { return 0; }
+            int _StartMoving(lua_State*);
             /**/ int _StartSizing(lua_State*) { return 0; }
-            /**/ int _StopMovingOrSizing(lua_State*) { return 0; }
+            int _StopMovingOrSizing(lua_State*);
             int _UnregisterAllEvents(lua_State*);
             int _UnregisterEvent(lua_State*);
 
