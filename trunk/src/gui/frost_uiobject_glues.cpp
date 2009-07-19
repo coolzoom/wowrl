@@ -161,6 +161,8 @@ int LuaUIObject::_GetParent( lua_State* pLua )
         pParent_->GetParent()->PushOnLua(mFunc.GetState());
         mFunc.NotifyPushed();
     }
+    else
+        mFunc.PushNil();
 
     return mFunc.Return();
 }
