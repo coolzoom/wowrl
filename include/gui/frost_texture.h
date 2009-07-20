@@ -219,11 +219,9 @@ namespace Frost
             int _SetTexCoordModifiesRect(lua_State*);
             int _SetTexture(lua_State*);
 
-
             static const char className[];
             static Lunar<LuaTexture>::RegType methods[];
             static const s_str CLASS_NAME;
-
         protected :
 
             s_ptr<Texture> pTextureParent_;
