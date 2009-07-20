@@ -25,4 +25,4 @@ sLocale = "enGB";
 iMaxComputedPaths = 2;
 
 -- UI
-sDefaultFont = "Fonts/Calibri.ttf";
+sDefaultFont = "Fonts/Vera.ttf";
