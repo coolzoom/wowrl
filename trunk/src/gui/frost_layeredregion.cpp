@@ -57,7 +57,7 @@ void LayeredRegion::SetDrawLayer(const s_str& sLayer)
 {
     if (sLayer == "ARTWORK")
         mLayer_ = LAYER_ARTWORK;
-    else if (sLayer == "BACKDROUND")
+    else if (sLayer == "BACKGROUND")
         mLayer_ = LAYER_BACKGROUND;
     else if (sLayer == "BORDER")
         mLayer_ = LAYER_BORDER;
