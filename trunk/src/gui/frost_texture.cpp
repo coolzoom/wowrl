@@ -163,7 +163,12 @@ void Texture::SetTexCoord( const s_array<s_float,4>& lCoordinates )
 {
     if (pSprite_)
     {
-        pSprite_->SetTextureRect(lCoordinates);
+        s_array<s_float,4> lSortedCoordinates;
+        lSortedCoordinates[0] = lCoordinates[0];
+        lSortedCoordinates[1] = lCoordinates[2];
+        lSortedCoordinates[2] = lCoordinates[1];
+        lSortedCoordinates[3] = lCoordinates[3];
+        pSprite_->SetTextureRect(lSortedCoordinates, true);
         lTexCoord_ = pSprite_->GetTextureCoords();
     }
     else
@@ -178,7 +183,7 @@ void Texture::SetTexCoord( const s_array<s_float,8>& lCoordinates )
 {
     if (pSprite_)
     {
-        pSprite_->SetTextureCoords(lCoordinates);
+        pSprite_->SetTextureCoords(lCoordinates, true);
         lTexCoord_ = pSprite_->GetTextureCoords();
     }
     else
