@@ -189,7 +189,7 @@ namespace Frost
         s_bool          KeyIsPressed(KeyCode mKey, s_bool bForce = false) const;
         s_bool          KeyIsReleased(KeyCode mKey, s_bool bForce = false) const;
 
-        std::string     GetKeyString(KeyCode mKey) const;
+        s_str           GetKeyString(KeyCode mKey) const;
 
         s_uint          GetNextUp();
         s_uint          GetNextDown();
@@ -214,6 +214,8 @@ namespace Frost
         const s_float&  GetMouseDX() const;
         const s_float&  GetMouseDY() const;
         const s_int&    GetMouseWheel() const;
+
+        s_str           GetMouseButtonString(MouseButton mID) const;
 
         // Parameters
         void           SetDoubleclickTime(s_double dDoubleclickTime);

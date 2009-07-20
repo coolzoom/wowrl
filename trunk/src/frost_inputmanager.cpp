@@ -117,7 +117,7 @@ namespace Frost
             return bKey_;
     }
 
-    string InputManager::GetKeyString( KeyCode mKey ) const
+    s_str InputManager::GetKeyString( KeyCode mKey ) const
     {
         return pKeyboard_->getAsString((OIS::KeyCode)mKey);
     }
@@ -427,10 +427,10 @@ namespace Frost
             // Send events
             if (!bFocus_)
             {
+                mMouseEvent[0] = s_uint(i);
                 if (bMouseState)
                 {
                     mMouseEvent.SetName("MOUSE_DOWN");
-                    mMouseEvent[0] = s_uint(i);
                     pEventMgr->FireEvent(mMouseEvent);
 
                     if (!bOldMouseState)
@@ -454,7 +454,6 @@ namespace Frost
                 else if (bOldMouseState)
                 {
                     mMouseEvent.SetName("MOUSE_RELEASED");
-                    mMouseEvent[0] = s_uint(i);
                     pEventMgr->FireEvent(mMouseEvent);
                 }
             }
@@ -487,7 +486,7 @@ namespace Frost
             pEventMgr->FireEvent(mMouseMovedEvent);
         }
 
-        if (iMWheel_ != 0)
+        if (bWheelRolled_)
         {
             Event mMouseWheelEvent("MOUSE_WHEEL", true);
             mMouseWheelEvent.Add(iMWheel_);
@@ -553,5 +552,16 @@ namespace Frost
     const s_int& InputManager::GetMouseWheel() const
     {
         return iMWheel_;
+    }
+
+    s_str InputManager::GetMouseButtonString( MouseButton mID ) const
+    {
+        switch (mID)
+        {
+            case MOUSE_LEFT : return "LeftButton";
+            case MOUSE_RIGHT : return "RightButton";
+            case MOUSE_MIDDLE : return "MiddleButton";
+            default : return "";
+        }
     }
 }
