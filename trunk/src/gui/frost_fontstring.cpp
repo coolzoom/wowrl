@@ -330,7 +330,7 @@ void FontString::UpdateBorders_()
             }
         }
 
-        if (uiAbsWidth_.IsValid())
+        if (uiAbsWidth_.IsValid() && !uiAbsWidth_.IsNull())
             pText_->SetBoxWidth(s_float(uiAbsWidth_));
         else
         {
@@ -346,7 +346,7 @@ void FontString::UpdateBorders_()
             }
         }
 
-        if (uiAbsHeight_.IsValid())
+        if (uiAbsHeight_.IsValid() && !uiAbsHeight_.IsNull())
             pText_->SetBoxHeight(s_float(uiAbsHeight_));
         else
         {
