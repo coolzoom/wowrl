@@ -381,7 +381,7 @@ namespace Frost
 
     void GUIManager::Update( const s_float& fDelta )
     {
-        if (pMovedObject_)
+        if (pMovedObject_ || pSizedObject_)
         {
             fMouseMovementX_ += InputManager::GetSingleton()->GetMouseDX();
             fMouseMovementY_ += InputManager::GetSingleton()->GetMouseDY();
@@ -396,6 +396,7 @@ namespace Frost
 
     void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj )
     {
+        pSizedObject_ = NULL;
         pMovedObject_ = pObj;
         fMouseMovementX_ = 0.0f;
         fMouseMovementY_ = 0.0f;
@@ -410,6 +411,25 @@ namespace Frost
     s_bool GUIManager::IsMoving( s_ptr<GUI::UIObject> pObj ) const
     {
         return (pMovedObject_ == pObj);
+    }
+
+    void GUIManager::StartSizing( s_ptr<GUI::UIObject> pObj )
+    {
+        pMovedObject_  = NULL;
+        pSizedObject_ = pObj;
+        fMouseMovementX_ = 0.0f;
+        fMouseMovementY_ = 0.0f;
+    }
+
+    void GUIManager::StopSizing( s_ptr<GUI::UIObject> pObj )
+    {
+        if (pSizedObject_ == pObj)
+            pSizedObject_ = NULL;
+    }
+
+    s_bool GUIManager::IsSizing( s_ptr<GUI::UIObject> pObj ) const
+    {
+        return (pSizedObject_ == pObj);
     }
 
     s_int GUIManager::GetMovementX() const

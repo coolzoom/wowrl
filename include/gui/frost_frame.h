@@ -242,10 +242,9 @@ namespace Frost
             /// Checks if the provided coordinates are in the Frame.
             /** \param iX           The horizontal coordinate
             *   \param iY           The vertical coordinate
-            *   \param bTitleRegion 'true' to only consider the Frame's title region
             *   \return 'true' if the provided coordinates are in the Frame
             */
-            s_bool              IsInFrame(const s_int& iX, const s_int& iY, const s_bool& bTitleRegion = false) const;
+            s_bool              IsInFrame(const s_int& iX, const s_int& iY) const;
 
             /// Checks if this Frame can receive keyboard input.
             /** \return 'true' if this Frame can receive keyboard input
@@ -415,6 +414,14 @@ namespace Frost
             /// Ends moving this Frame.
             void                StopMoving();
 
+            /// Starts resizing this Frame with the mouse.
+            /** \param mPoint The corner to move
+            */
+            void                StartSizing(const AnchorPoint& mPoint);
+
+            /// Ends resizing this Frame.
+            void                StopSizing();
+
             /// Tells the Frame not to react to all events.
             void                UnregisterAllEvents();
 
@@ -473,11 +480,22 @@ namespace Frost
 
             s_float fScale_;
 
-            s_int                iMovementStartX_;
-            s_int                iMovementStartY_;
+            s_bool bMouseInFrame_;
+            s_int  iMovementStartX_;
+            s_int  iMovementStartY_;
+            s_uint uiResizingStartW_;
+            s_uint uiResizingStartH_;
+            s_bool bResizeWidth_;
+            s_bool bResizeFromRight_;
+            s_bool bResizeHeight_;
+            s_bool bResizeFromBottom_;
+
             s_ptr<LayeredRegion> pTitleRegion_;
 
             s_ptr<Frame> pParentFrame_;
+
+            s_ctnr<s_str> lMouseButtonList_;
+            s_bool        bMouseDragged_;
         };
 
         /** \cond NOT_REMOVE_FROM_DOC
@@ -550,7 +568,7 @@ namespace Frost
             int _SetTopLevel(lua_State*);
             int _SetUserPlaced(lua_State*);
             int _StartMoving(lua_State*);
-            /**/ int _StartSizing(lua_State*) { return 0; }
+            int _StartSizing(lua_State*);
             int _StopMovingOrSizing(lua_State*);
             int _UnregisterAllEvents(lua_State*);
             int _UnregisterEvent(lua_State*);
