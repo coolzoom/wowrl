@@ -36,11 +36,6 @@ s_ptr<Engine> pFrost;
 s_ptr<Character> pChar;
 s_ptr<Character> pChar2;
 
-s_ptr<Sprite> pSprite;
-s_ptr<Sprite> pRTSprite;
-s_ptr<RenderTarget> pRTarget;
-s_ptr<Text>   pText;
-
 s_ptr<Camera> pCam;
 
 s_ptr<Plane>  pPlane;
@@ -110,26 +105,12 @@ s_bool RenderFunc()
 {
     static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
 
-    //pText->SetText("FPS : "+TimeManager::GetSingleton()->GetFPS());
-
-    pSpriteMgr->Begin(pRTarget);
-
-        pSpriteMgr->Clear(Color::VOID);
-
-        //pSprite->Render(0, 0);
-
-    pSpriteMgr->End();
-
     // Render in the main target
     pSpriteMgr->Begin();
 
         pSpriteMgr->Clear(Color::VOID);
 
         GUIManager::GetSingleton()->RenderUI();
-
-        //pText->Render(s_float(pFrost->GetScreenWidth())-2-pText->GetTextWidth(), s_float(pFrost->GetScreenHeight())-18);
-
-        pRTSprite->Render(0, 0);
 
     pSpriteMgr->End();
 
@@ -199,39 +180,6 @@ int main(int argc, char *argv[])
             pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
             pLight1->SetRange(50.0f);
 
-            s_refptr<Text> pTxt = s_refptr<Text>(new Text("Fonts/Calibri.ttf", 16));
-            pTxt->SetAlignment(Text::ALIGN_RIGHT);
-            pText = pTxt.Get();
-
-            /*pLight2 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
-            pLight2->SetPosition(Vector(0, 5, 1));
-            pLight2->SetColor(Color(0, 255, 0));
-            pLight2->SetAttenuation(0.0f, 0.125f, 0.0f);
-            pLight2->SetRange(100.0f);
-
-            pLight3 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
-            pLight3->SetPosition(Vector(0, 0, 1));
-            pLight3->SetColor(Color(0, 0, 255));
-            pLight3->SetAttenuation(0.0f, 0.125f, 0.0f);
-            pLight3->SetRange(100.0f);*/
-
-            // UI
-            /*s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
-                "Textures/UI/UI-CloseButton-Up.png"
-            );*/
-            /*s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(
-                "UI-UnitFrame.png"
-            );
-            s_refptr<Sprite> pSpr = s_refptr<Sprite>(new Sprite(pMat));
-            pSprite = pSpr.Get();
-            pSprite->SetColor(Color(128, 255, 255, 255));*/
-
-            pRTarget = SpriteManager::GetSingleton()->CreateRenderTarget("RttTex", 1024, 768);
-            s_refptr<Material> pMat2 = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
-                pRTarget
-            );
-            s_refptr<Sprite> pSpr2 = s_refptr<Sprite>(new Sprite(pMat2, 1024, 768));
-            pRTSprite = pSpr2.Get();
 
             // Enter the main loop
             pFrost->Loop();
@@ -240,9 +188,6 @@ int main(int argc, char *argv[])
         {
             std::cerr << "An error has occured while loading.\nSee Frost.log." << std::endl;
         }
-
-        pText.SetNull();
-        pSprite.SetNull();
 
         // Close the engine
         Engine::Delete();
