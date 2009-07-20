@@ -904,12 +904,12 @@ s_bool Document::Check()
                         break;
                     }
                 }
-                else if (bOpened)
+                else if (bOpened && !bComment)
                 {
                     pActual->SetValue(pActual->GetValue() + "\n" + sLine);
                     bValue = true;
                 }
-                else
+                else if (!bComment)
                 {
                     Error(sFileName_+":"+uiLineNbr_, "Invalid line.");
                     bValid_ = false;
