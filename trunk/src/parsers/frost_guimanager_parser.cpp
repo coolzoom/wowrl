@@ -539,7 +539,17 @@ namespace Frost
 
     s_bool GUIManager::ParseTexCoordsBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pTextureBlock )
     {
-        // TODO : parse TexCoords
+        s_ptr<XML::Block> pTexCoordsBlock = pTextureBlock->GetBlock("TexCoords");
+        if (pTexCoordsBlock)
+        {
+            pTexture->SetTexCoord(s_array<s_float,4>((
+                s_float(pTexCoordsBlock->GetAttribute("left")),
+                s_float(pTexCoordsBlock->GetAttribute("right")),
+                s_float(pTexCoordsBlock->GetAttribute("top")),
+                s_float(pTexCoordsBlock->GetAttribute("bottom"))
+            )));
+        }
+
         return true;
     }
 
@@ -819,7 +829,7 @@ namespace Frost
                 }
                 else if (pElemBlock->GetName() == "Include")
                 {
-                    // TODO : parse Include
+                    this->ParseXMLFile_(pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"), pAddOn);
                 }
                 else if (pElemBlock->GetName() == "Frame")
                 {

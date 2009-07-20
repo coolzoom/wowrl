@@ -60,6 +60,11 @@ namespace Frost
         void                 StartMoving(s_ptr<GUI::UIObject> pObj);
         void                 StopMoving(s_ptr<GUI::UIObject> pObj);
         s_bool               IsMoving(s_ptr<GUI::UIObject> pObj) const;
+
+        void                 StartSizing(s_ptr<GUI::UIObject> pObj);
+        void                 StopSizing(s_ptr<GUI::UIObject> pObj);
+        s_bool               IsSizing(s_ptr<GUI::UIObject> pObj) const;
+
         s_int                GetMovementX() const;
         s_int                GetMovementY() const;
 
@@ -154,6 +159,7 @@ namespace Frost
         s_map<s_str, AddOn> lAddOnList_;
 
         s_ptr<GUI::UIObject> pMovedObject_;
+        s_ptr<GUI::UIObject> pSizedObject_;
         s_float              fMouseMovementX_;
         s_float              fMouseMovementY_;
     };

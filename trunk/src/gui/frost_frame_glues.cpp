@@ -525,7 +525,7 @@ int LuaFrame::_RegisterForDrag(lua_State* pLua)
     if (mFunc.Check())
     {
         s_ctnr<s_str> lButtonList;
-        for (s_uint i; i<3; i++)
+        for (s_uint i; i < 3; ++i)
         {
             if (mFunc.IsProvided(i))
                 lButtonList.PushBack(mFunc.Get(i)->GetString());
@@ -836,11 +836,24 @@ int LuaFrame::_StartMoving(lua_State* pLua)
     return mFunc.Return();
 }
 
+int LuaFrame::_StartSizing(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:StartSizing", pLua);
+    mFunc.Add(0, "point", Lua::TYPE_STRING);
+    if (mFunc.Check())
+    {
+        pFrameParent_->StartSizing(Anchor::GetAnchorPoint(mFunc.Get(0)->GetString()));
+    }
+
+    return mFunc.Return();
+}
+
 int LuaFrame::_StopMovingOrSizing(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:StopMovingOrSizing", pLua);
 
     pFrameParent_->StopMoving();
+    pFrameParent_->StopSizing();
 
     return mFunc.Return();
 }

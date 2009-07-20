@@ -343,6 +343,28 @@ void Frame::CreateTitleRegion()
 
 void Frame::CheckPosition()
 {
+    if (lBorderList_[BORDER_RIGHT] - lBorderList_[BORDER_LEFT] < s_int(uiMinWidth_))
+    {
+        lBorderList_[BORDER_RIGHT] = lBorderList_[BORDER_LEFT] + s_int(uiMinWidth_);
+        uiAbsWidth_ = uiMinWidth_;
+    }
+    else if (lBorderList_[BORDER_RIGHT] - lBorderList_[BORDER_LEFT] > s_int(uiMaxWidth_))
+    {
+        lBorderList_[BORDER_RIGHT] = lBorderList_[BORDER_LEFT] + s_int(uiMaxWidth_);
+        uiAbsWidth_ = uiMaxWidth_;
+    }
+
+    if (lBorderList_[BORDER_BOTTOM] - lBorderList_[BORDER_TOP] < s_int(uiMinHeight_))
+    {
+        lBorderList_[BORDER_BOTTOM] = lBorderList_[BORDER_TOP] + s_int(uiMinHeight_);
+        uiAbsHeight_ = uiMinHeight_;
+    }
+    else if (lBorderList_[BORDER_BOTTOM] - lBorderList_[BORDER_TOP] > s_int(uiMaxHeight_))
+    {
+        lBorderList_[BORDER_BOTTOM] = lBorderList_[BORDER_TOP] + s_int(uiMaxHeight_);
+        uiAbsHeight_ = uiMaxHeight_;
+    }
+
     if (bIsClampedToScreen_)
     {
         s_int iScreenW = s_int(Engine::GetSingleton()->GetScreenWidth());
@@ -350,23 +372,56 @@ void Frame::CheckPosition()
 
         if (lBorderList_[BORDER_RIGHT] > iScreenW)
         {
-            lBorderList_[BORDER_RIGHT] = iScreenW;
-            lBorderList_[BORDER_LEFT] = iScreenW - s_int(uiAbsWidth_);
-        }
-        if (lBorderList_[BORDER_BOTTOM] > iScreenH)
-        {
-            lBorderList_[BORDER_BOTTOM] = iScreenH;
-            lBorderList_[BORDER_TOP] = iScreenH - s_int(uiAbsHeight_);
+            if (lBorderList_[BORDER_RIGHT]-lBorderList_[BORDER_LEFT] > iScreenW)
+            {
+                lBorderList_[BORDER_LEFT] = 0;
+                lBorderList_[BORDER_RIGHT] = iScreenW;
+            }
+            else
+            {
+                lBorderList_[BORDER_RIGHT] = iScreenW;
+                lBorderList_[BORDER_LEFT] = iScreenW - s_int(uiAbsWidth_);
+            }
         }
         if (lBorderList_[BORDER_LEFT] < 0)
         {
-            lBorderList_[BORDER_LEFT] = 0;
-            lBorderList_[BORDER_RIGHT] = s_int(uiAbsWidth_);
+            if (lBorderList_[BORDER_RIGHT]-lBorderList_[BORDER_LEFT] > iScreenW)
+            {
+                lBorderList_[BORDER_LEFT] = 0;
+                lBorderList_[BORDER_RIGHT] = iScreenW;
+            }
+            else
+            {
+                lBorderList_[BORDER_LEFT] = 0;
+                lBorderList_[BORDER_RIGHT] = s_int(uiAbsWidth_);
+            }
+        }
+
+        if (lBorderList_[BORDER_BOTTOM] > iScreenH)
+        {
+            if (lBorderList_[BORDER_BOTTOM]-lBorderList_[BORDER_TOP] > iScreenH)
+            {
+                lBorderList_[BORDER_TOP] = 0;
+                lBorderList_[BORDER_BOTTOM] = iScreenH;
+            }
+            else
+            {
+                lBorderList_[BORDER_BOTTOM] = iScreenH;
+                lBorderList_[BORDER_TOP] = iScreenH - s_int(uiAbsHeight_);
+            }
         }
         if (lBorderList_[BORDER_TOP] < 0)
         {
-            lBorderList_[BORDER_TOP] = 0;
-            lBorderList_[BORDER_BOTTOM] = s_int(uiAbsHeight_);
+            if (lBorderList_[BORDER_BOTTOM]-lBorderList_[BORDER_TOP] > iScreenH)
+            {
+                lBorderList_[BORDER_TOP] = 0;
+                lBorderList_[BORDER_BOTTOM] = iScreenH;
+            }
+            else
+            {
+                lBorderList_[BORDER_TOP] = 0;
+                lBorderList_[BORDER_BOTTOM] = s_int(uiAbsHeight_);
+            }
         }
     }
 }
@@ -649,28 +704,18 @@ const s_bool& Frame::IsClampedToScreen() const
     return bIsClampedToScreen_;
 }
 
-s_bool Frame::IsInFrame( const s_int& iX, const s_int& iY, const s_bool& bTitleRegion ) const
+s_bool Frame::IsInFrame( const s_int& iX, const s_int& iY ) const
 {
-    if (bTitleRegion)
-    {
-        if (pTitleRegion_)
-            return pTitleRegion_->IsInRegion(iX, iY);
-        else
-            return false;
-    }
-    else
-    {
-        return (
-            iX.IsInRange(
-                lBorderList_[BORDER_LEFT]  + lAbsHitRectInsetList_[BORDER_LEFT],
-                lBorderList_[BORDER_RIGHT] - lAbsHitRectInsetList_[BORDER_RIGHT]
-            ) &&
-            iY.IsInRange(
-                lBorderList_[BORDER_TOP]    + lAbsHitRectInsetList_[BORDER_TOP],
-                lBorderList_[BORDER_BOTTOM] - lAbsHitRectInsetList_[BORDER_BOTTOM]
-            )
-        );
-    }
+    return (
+        iX.IsInRange(
+            lBorderList_[BORDER_LEFT]  + lAbsHitRectInsetList_[BORDER_LEFT],
+            lBorderList_[BORDER_RIGHT] - lAbsHitRectInsetList_[BORDER_RIGHT]
+        ) &&
+        iY.IsInRange(
+            lBorderList_[BORDER_TOP]    + lAbsHitRectInsetList_[BORDER_TOP],
+            lBorderList_[BORDER_BOTTOM] - lAbsHitRectInsetList_[BORDER_BOTTOM]
+        )
+    );
 }
 
 const s_bool& Frame::IsKeyboardEnabled() const
@@ -722,7 +767,7 @@ void Frame::NotifyScriptDefined( const s_str& sScriptName )
 
 void Frame::OnEvent( const Event& mEvent )
 {
-    if (lDefinedScriptList_.Find("Event"))
+    if (lDefinedScriptList_.Find("Event") && (lRegEventList_.Find(mEvent.GetName()) || bHasAllEventsRegistred_))
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
 
@@ -746,19 +791,73 @@ void Frame::OnEvent( const Event& mEvent )
         pLua->CallFunction(sName_+":OnEvent");
     }
 
-    if (bIsMouseEnabled_ && bIsMovable_)
+    if (bIsMouseEnabled_)
     {
-        if (mEvent.GetName() == "MOUSE_PRESSED")
+
+        if (mEvent.GetName() == "MOUSE_MOVED")
         {
-            if (IsInFrame(s_int(mEvent[1].Get<s_float>()),
-                          s_int(mEvent[2].Get<s_float>()), true))
+            if (!lMouseButtonList_.IsEmpty() && !bMouseDragged_)
             {
-                StartMoving();
+                s_ctnr<s_str>::iterator iterButton;
+                foreach (iterButton, lMouseButtonList_)
+                {
+                    if (lRegDragList_.Find(*iterButton))
+                    {
+                        On("DragStart");
+                        bMouseDragged_ = true;
+                        break;
+                    }
+                }
+            }
+        }
+        else if (mEvent.GetName() == "MOUSE_PRESSED")
+        {
+            if (bIsMovable_)
+            {
+                if (pTitleRegion_ && pTitleRegion_->IsInRegion(
+                    s_int(mEvent[1].Get<s_float>()),
+                    s_int(mEvent[2].Get<s_float>())))
+                {
+                    StartMoving();
+                }
+            }
+
+            if (bMouseInFrame_)
+            {
+                On("MouseDown");
+                lMouseButtonList_.PushBack(
+                    InputManager::GetSingleton()->GetMouseButtonString(
+                        (MouseButton)mEvent[0].Get<s_uint>().Get()
+                    )
+                );
             }
         }
         else if (mEvent.GetName() == "MOUSE_RELEASED")
         {
-            StopMoving();
+            if (bIsMovable_)
+            {
+                StopMoving();
+            }
+
+            if (bMouseInFrame_)
+            {
+                On("MouseUp");
+            }
+
+            lMouseButtonList_.Clear();
+
+            if (bMouseDragged_)
+            {
+                On("DragStop");
+            }
+            bMouseDragged_ = false;
+        }
+        else if (mEvent.GetName() == "MOUSE_WHEEL")
+        {
+            if (bMouseInFrame_)
+            {
+                On("MouseWheel");
+            }
         }
     }
 }
@@ -816,6 +915,11 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             pLua->PushString(sMouseState);
             pLua->SetGlobal("arg1");
         }
+        else if (sScriptName == "MouseWheel")
+        {
+            pLua->PushNumber(InputManager::GetSingleton()->GetMouseWheel());
+            pLua->SetGlobal("arg1");
+        }
         else if (sScriptName == "Update")
         {
             // Set delta time
@@ -830,7 +934,7 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
     {
         // OnLoad must be called from parent to childs, because childs often
         // rely on their parent's state
-        map<s_uint, s_ptr<Frame> >::iterator iterChild;
+        s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
         foreach (iterChild, lChildList_)
         {
             iterChild->second->On("Load");
@@ -1028,25 +1132,111 @@ void Frame::SetUserPlaced( const s_bool& bIsUserPlaced )
 
 void Frame::StartMoving()
 {
-    if (lAnchorList_.GetSize() > 1)
+    if (bIsMovable_)
     {
-        lAnchorList_.Clear();
-        Anchor mAnchor(this, ANCHOR_TOPLEFT, NULL, ANCHOR_TOPLEFT);
-        mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
-        lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
+        if (lAnchorList_.GetSize() > 1)
+        {
+            lAnchorList_.Clear();
+            Anchor mAnchor(this, ANCHOR_TOPLEFT, NULL, ANCHOR_TOPLEFT);
+            mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
+            lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
 
-        FireUpdateBorders();
+            FireUpdateBorders();
+        }
+
+        iMovementStartX_ = lAnchorList_.Begin()->second.GetAbsOffsetX();
+        iMovementStartY_ = lAnchorList_.Begin()->second.GetAbsOffsetY();
+
+        GUIManager::GetSingleton()->StartMoving(this);
     }
-
-    iMovementStartX_ = lAnchorList_.Begin()->second.GetAbsOffsetX();
-    iMovementStartY_ = lAnchorList_.Begin()->second.GetAbsOffsetY();
-
-    GUIManager::GetSingleton()->StartMoving(this);
 }
 
 void Frame::StopMoving()
 {
     GUIManager::GetSingleton()->StopMoving(this);
+}
+
+void Frame::StartSizing( const AnchorPoint& mPoint )
+{
+    if (bIsResizable_)
+    {
+        AnchorPoint mOppositePoint;
+        s_int iOffX;
+        s_int iOffY;
+        switch (mPoint)
+        {
+            case ANCHOR_TOPLEFT :
+            case ANCHOR_TOP :
+                mOppositePoint = ANCHOR_BOTTOMRIGHT;
+                iOffX = lBorderList_[BORDER_RIGHT];
+                iOffY = lBorderList_[BORDER_BOTTOM];
+                bResizeFromRight_ = false;
+                bResizeFromBottom_ = false;
+                break;
+            case ANCHOR_TOPRIGHT :
+            case ANCHOR_RIGHT :
+                mOppositePoint = ANCHOR_BOTTOMLEFT;
+                iOffX = lBorderList_[BORDER_LEFT];
+                iOffY = lBorderList_[BORDER_BOTTOM];
+                bResizeFromRight_ = true;
+                bResizeFromBottom_ = false;
+                break;
+            case ANCHOR_BOTTOMRIGHT :
+            case ANCHOR_BOTTOM :
+                mOppositePoint = ANCHOR_TOPLEFT;
+                iOffX = lBorderList_[BORDER_LEFT];
+                iOffY = lBorderList_[BORDER_TOP];
+                bResizeFromRight_ = true;
+                bResizeFromBottom_ = true;
+                break;
+            case ANCHOR_BOTTOMLEFT :
+            case ANCHOR_LEFT :
+                mOppositePoint = ANCHOR_TOPRIGHT;
+                iOffX = lBorderList_[BORDER_RIGHT];
+                iOffY = lBorderList_[BORDER_TOP];
+                bResizeFromRight_ = false;
+                bResizeFromBottom_ = true;
+                break;
+            case ANCHOR_CENTER :
+                Error(lType_.Back(),
+                    "Can't resize \""+sName_+"\" from its center."
+                );
+                return;
+        }
+
+        lAnchorList_.Clear();
+        Anchor mAnchor(this, mOppositePoint, NULL, ANCHOR_TOPLEFT);
+        mAnchor.SetAbsOffset(iOffX, iOffY);
+        lAnchorList_[mOppositePoint] = mAnchor;
+
+        FireUpdateBorders();
+
+        uiResizingStartW_ = uiAbsWidth_;
+        uiResizingStartH_ = uiAbsHeight_;
+
+        if (mPoint == ANCHOR_LEFT || mPoint == ANCHOR_RIGHT)
+        {
+            bResizeWidth_ = true;
+            bResizeHeight_ = false;
+        }
+        else if (mPoint == ANCHOR_TOP || mPoint == ANCHOR_BOTTOM)
+        {
+            bResizeWidth_ = false;
+            bResizeHeight_ = true;
+        }
+        else
+        {
+            bResizeWidth_ = true;
+            bResizeHeight_ = true;
+        }
+
+        GUIManager::GetSingleton()->StartSizing(this);
+    }
+}
+
+void Frame::StopSizing()
+{
+    GUIManager::GetSingleton()->StopSizing(this);
 }
 
 void Frame::UnregisterAllEvents()
@@ -1071,9 +1261,73 @@ void Frame::Update()
 
         FireUpdateBorders();
     }
+    else if (GUIManager::GetSingleton()->IsSizing(this))
+    {
+        if (bResizeWidth_)
+        {
+            if (bResizeFromRight_)
+                uiAbsWidth_ = s_uint(
+                    s_int::Max(0, s_int(uiResizingStartW_) + GUIManager::GetSingleton()->GetMovementX())
+                );
+            else
+                uiAbsWidth_ = s_uint(
+                    s_int::Max(0, s_int(uiResizingStartW_) - GUIManager::GetSingleton()->GetMovementX())
+                );
+        }
+        if (bResizeHeight_)
+        {
+            if (bResizeFromBottom_)
+                uiAbsHeight_ = s_uint(
+                    s_int::Max(0, s_int(uiResizingStartH_) + GUIManager::GetSingleton()->GetMovementY())
+                );
+            else
+                uiAbsHeight_ = s_uint(
+                    s_int::Max(0, s_int(uiResizingStartH_) - GUIManager::GetSingleton()->GetMovementY())
+                );
+        }
 
+        if (uiAbsWidth_ < uiMinWidth_)
+        {
+            uiAbsWidth_ = uiMinWidth_;
+        }
+        else if (uiAbsWidth_ > uiMaxWidth_)
+        {
+            uiAbsWidth_ = uiMaxWidth_;
+        }
+
+        if (uiAbsHeight_ < uiMinHeight_)
+        {
+            uiAbsHeight_ = uiMinHeight_;
+        }
+        else if (uiAbsHeight_ > uiMaxHeight_)
+        {
+            uiAbsHeight_ = uiMaxHeight_;
+        }
+
+        FireUpdateBorders();
+    }
+
+    s_bool bPositionUpdated = bUpdateBorders_;
     UIObject::Update();
-    CheckPosition();
+
+    if (bPositionUpdated)
+        CheckPosition();
+
+    if (IsInFrame(s_int(InputManager::GetSingleton()->GetMousePosX()),
+                  s_int(InputManager::GetSingleton()->GetMousePosY())))
+    {
+        if (!bMouseInFrame_)
+            On("Enter");
+
+        bMouseInFrame_ = true;
+    }
+    else
+    {
+        if (bMouseInFrame_)
+            On("Leave");
+
+        bMouseInFrame_ = false;
+    }
 
     if (bBuildStrataList_)
     {
