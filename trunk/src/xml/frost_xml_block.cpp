@@ -435,6 +435,23 @@ s_str Block::GetAttribute( const s_str& sName )
     }
 }
 
+s_bool Block::IsProvided( const s_str& sName )
+{
+    if (lAttributeList_.Find(sName))
+    {
+        return lAttributeList_[sName].bFound;
+    }
+    else
+    {
+        Error(CLASS_NAME + "("+sName_+")", "Attribute \""+sName+"\" doesn't exist.");
+        Log("List :");
+        s_map<s_str, Attribute>::iterator iterAttr;
+        foreach (iterAttr, lAttributeList_)
+            Log("    "+iterAttr->first);
+        return "";
+    }
+}
+
 s_ptr<Block> Block::GetBlock( const s_str& sName )
 {
     s_multimap< s_str, s_ptr<Block> >::iterator iter = lFoundBlockList_.Get(sName);

@@ -213,10 +213,18 @@ namespace XML
         s_ptr<Block>  Next();
 
         /// Returns one of this Block's attribute.
-        /** \param sName The name of the attribute you want
+        /** \param sName The name of the attribute you need
         *   \return One of this Block's attribute
         */
         s_str         GetAttribute(const s_str& sName);
+
+        /// Checks if one of this Block's attribute has been provided.
+        /** \param sName The name of the attribute to check
+        *   \return 'true' if this attribute has been provided
+        *   \note Calling this function is only usefull when you have
+        *         optionnal attributes.
+        */
+        s_bool        IsProvided(const s_str& sName);
 
         /// Returns one of this Block's sub-block.
         /** \param sName The name of the sub-block you want
