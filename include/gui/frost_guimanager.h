@@ -119,6 +119,7 @@ namespace Frost
         s_bool ParseAnchorsBlock_(s_ptr<GUI::UIObject> pObject, s_ptr<XML::Block> pMainBlock);
 
         // Widget block parsers
+        s_bool ParseResizeBoundsBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseTitleRegionBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseBackdropBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
         s_bool ParseHitRectInsetsBlock_(s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock);
@@ -156,7 +157,7 @@ namespace Frost
         s_map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
         s_map< s_uint, s_ptr<GUI::UIObject> > lMainObjectList_;
 
-        s_map<s_str, AddOn> lAddOnList_;
+        s_map< s_str, s_map<s_str, AddOn> > lAddOnList_;
 
         s_ptr<GUI::UIObject> pMovedObject_;
         s_ptr<GUI::UIObject> pSizedObject_;
