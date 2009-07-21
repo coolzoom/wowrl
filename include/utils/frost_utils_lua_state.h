@@ -246,6 +246,13 @@ namespace Frost
             */
             s_str   GetTypeName(Type mType);
 
+            /// Puts a global variable on the stack.
+            /** \param sName The name of the global variable
+            *   \note The name can contain tables, for example :
+            *         "MyTable.MyVariable" is a valid input.
+            */
+            void    GetGlobal(const s_str& sName);
+
             /// Reads an int from Lua.
             /** \param sName         The name of the variable (global scope)
             *   \param bCritical     If 'true', an error will be printed if

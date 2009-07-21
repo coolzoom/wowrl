@@ -249,17 +249,30 @@ s_bool State::HandleError( int iError )
 
 s_bool State::CallFunction( const s_str& sFunctionName )
 {
+    s_ctnr<s_str> lDecomposedName;
     s_ctnr<s_str> lWords = sFunctionName.Cut(":");
-    lua_getglobal(pLua_, lWords.Front().GetASCII().c_str());
+    s_ctnr<s_str>::iterator iter1;
+    foreach (iter1, lWords)
+    {
+        s_ctnr<s_str> lSubWords = iter1->Cut(".");
+        s_ctnr<s_str>::iterator iter2;
+        foreach (iter2, lSubWords)
+        {
+            lDecomposedName.PushBack(*iter2);
+        }
+    }
+
+    lua_getglobal(pLua_, lDecomposedName.Front().GetASCII().c_str());
     s_uint uiCounter = 1;
 
-    if (lWords.GetSize() > 1)
+    if (!lua_isnil(pLua_, -1))
     {
-        lWords.Erase(lWords.Begin());
-        if (!lua_isnil(pLua_, -1))
+        if (lDecomposedName.GetSize() > 1)
         {
+            lDecomposedName.Erase(lDecomposedName.Begin());
+
             s_ctnr<s_str>::iterator iterWords;
-            foreach (iterWords, lWords)
+            foreach (iterWords, lDecomposedName)
             {
                 lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
                 ++uiCounter;
@@ -272,53 +285,67 @@ s_bool State::CallFunction( const s_str& sFunctionName )
                     return false;
                 }
             }
+
+        }
+
+        if (lua_isfunction(pLua_, -1))
+        {
+            int iError = lua_pcall(pLua_, 0, 0, 0);
+            if (!HandleError(iError))
+            {
+                Pop(uiCounter);
+                return false;
+            }
+            --uiCounter;
         }
         else
         {
             Error(CLASS_NAME,
-                "\""+sFunctionName+"\" doesn't exist."
+                "\""+sFunctionName+"\" is not a function."
             );
             Pop(uiCounter);
             return false;
         }
-    }
 
-    if (lua_isfunction(pLua_, -1))
-    {
-        int iError = lua_pcall(pLua_, 0, 0, 0);
-        if (!HandleError(iError))
-        {
-            Pop(uiCounter);
-            return false;
-        }
-        --uiCounter;
+        Pop(uiCounter);
+        return true;
     }
     else
     {
         Error(CLASS_NAME,
-            "\""+sFunctionName+"\" is not a function."
+            "\""+sFunctionName+"\" doesn't exist."
         );
         Pop(uiCounter);
         return false;
     }
-
-    Pop(uiCounter);
-    return true;
 }
 
 s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
 {
+    s_ctnr<s_str> lDecomposedName;
     s_ctnr<s_str> lWords = sFunctionName.Cut(":");
-    lua_getglobal(pLua_, lWords.Front().GetASCII().c_str());
+    s_ctnr<s_str>::iterator iter1;
+    foreach (iter1, lWords)
+    {
+        s_ctnr<s_str> lSubWords = iter1->Cut(".");
+        s_ctnr<s_str>::iterator iter2;
+        foreach (iter2, lSubWords)
+        {
+            lDecomposedName.PushBack(*iter2);
+        }
+    }
+
+    lua_getglobal(pLua_, lDecomposedName.Front().GetASCII().c_str());
     s_uint uiCounter = 1;
 
-    if (lWords.GetSize() > 1)
+    if (!lua_isnil(pLua_, -1))
     {
-        lWords.Erase(lWords.Begin());
-        if (!lua_isnil(pLua_, -1))
+        if (lDecomposedName.GetSize() > 1)
         {
+            lDecomposedName.Erase(lDecomposedName.Begin());
+
             s_ctnr<s_str>::iterator iterWords;
-            foreach (iterWords, lWords)
+            foreach (iterWords, lDecomposedName)
             {
                 lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
                 ++uiCounter;
@@ -331,44 +358,45 @@ s_bool State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lAr
                     return false;
                 }
             }
+
+        }
+
+        if (lua_isfunction(pLua_, -1))
+        {
+            s_ctnr<s_var>::const_iterator iter;
+            foreach (iter, lArgumentStack)
+            {
+                PushVar(*iter);
+            }
+
+            int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, 0);
+            if (!HandleError(iError))
+            {
+                Pop(uiCounter);
+                return false;
+            }
+            --uiCounter;
         }
         else
         {
             Error(CLASS_NAME,
-                "\""+sFunctionName+"\" doesn't exist."
+                "\""+sFunctionName+"\" is not a function."
             );
             Pop(uiCounter);
             return false;
         }
-    }
 
-    if (lua_isfunction(pLua_, -1))
-    {
-        s_ctnr<s_var>::const_iterator iter;
-        foreach (iter, lArgumentStack)
-        {
-            PushVar(*iter);
-        }
-
-        int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, 0);
-        if (!HandleError(iError))
-        {
-            Pop(uiCounter);
-            return false;
-        }
-        --uiCounter;
+        Pop(uiCounter);
+        return true;
     }
     else
     {
         Error(CLASS_NAME,
-            "\""+sFunctionName+"\" is not a function."
+            "\""+sFunctionName+"\" doesn't exist."
         );
         Pop(uiCounter);
         return false;
     }
-
-    Pop(uiCounter);
-    return true;
 }
 
 void State::Register( const s_str& sFunctionName, lua_CFunction mFunction )
@@ -619,6 +647,60 @@ s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const
         lua_pop(pLua_, 1);
     }
     return s;
+}
+
+void State::GetGlobal( const s_str& sName )
+{
+    s_ctnr<s_str> lDecomposedName;
+    s_ctnr<s_str> lWords = sName.Cut(":");
+    s_ctnr<s_str>::iterator iter1;
+    foreach (iter1, lWords)
+    {
+        s_ctnr<s_str> lSubWords = iter1->Cut(".");
+        s_ctnr<s_str>::iterator iter2;
+        foreach (iter2, lSubWords)
+        {
+            lDecomposedName.PushBack(*iter2);
+        }
+    }
+
+    lua_getglobal(pLua_, lDecomposedName.Front().GetASCII().c_str());
+    s_uint uiCounter = 1;
+
+    if (!lua_isnil(pLua_, -1))
+    {
+        if (lDecomposedName.GetSize() > 1)
+        {
+            lDecomposedName.Erase(lDecomposedName.Begin());
+
+            s_ctnr<s_str>::iterator iterWords;
+            foreach (iterWords, lDecomposedName)
+            {
+                lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
+                ++uiCounter;
+                if (lua_isnil(pLua_, -1))
+                {
+                    Error(CLASS_NAME,
+                        "\""+sName+"\" doesn't exist."
+                    );
+                    Pop(uiCounter);
+                    PushNil();
+                    return;
+                }
+            }
+        }
+
+        lua_insert(pLua_, (-uiCounter).Get());
+        Pop(uiCounter-1);
+    }
+    else
+    {
+        Error(CLASS_NAME,
+            "\""+sName+"\" doesn't exist."
+        );
+        Pop(uiCounter);
+        PushNil();
+    }
 }
 
 s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue )
