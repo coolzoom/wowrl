@@ -473,14 +473,67 @@ void State::PushVar( const s_var& vValue )
     else PushNil();
 }
 
+void State::PushValue( const s_int& iIndex )
+{
+    lua_pushvalue(pLua_, iIndex.Get());
+}
+
 void State::PushGlobal( const s_str& sName )
 {
-    lua_getglobal(pLua_, sName.GetASCII().c_str());
+    GetGlobal(sName);
 }
 
 void State::SetGlobal( const s_str& sName )
 {
-    lua_setglobal(pLua_, sName.GetASCII().c_str());
+    s_ctnr<s_str> lDecomposedName;
+    s_str sVarName;
+    s_ctnr<s_str> lWords = sName.Cut(":");
+    s_ctnr<s_str>::iterator iter1;
+    foreach (iter1, lWords)
+    {
+        s_ctnr<s_str> lSubWords = iter1->Cut(".");
+        s_ctnr<s_str>::iterator iter2;
+        foreach (iter2, lSubWords)
+        {
+            lDecomposedName.PushBack(*iter2);
+        }
+    }
+
+    // Start at 1 to pop the value the user has put on the stack.
+    s_uint uiCounter = 1;
+
+    sVarName = lDecomposedName.Back();
+    lDecomposedName.PopBack();
+
+    if (lDecomposedName.GetSize() >= 1)
+    {
+        lua_getglobal(pLua_, lDecomposedName.Begin()->GetASCII().c_str());
+        lDecomposedName.PopFront();
+        ++uiCounter;
+
+        if (!lua_isnil(pLua_, -1))
+        {
+            s_ctnr<s_str>::iterator iterWords;
+            foreach (iterWords, lDecomposedName)
+            {
+                lua_getfield(pLua_, -1, iterWords->GetASCII().c_str());
+                ++uiCounter;
+                if (lua_isnil(pLua_, -1))
+                {
+                    Pop(uiCounter);
+                    return;
+                }
+            }
+        }
+
+        lua_pushvalue(pLua_, (-uiCounter).Get());
+        lua_setfield(pLua_, -2, sVarName.GetASCII().c_str());
+        Pop(uiCounter);
+    }
+    else
+    {
+        lua_setglobal(pLua_, sName.GetASCII().c_str());
+    }
 }
 
 void State::NewTable()
@@ -562,93 +615,6 @@ s_str State::GetTypeName( Type mType )
     }
 }
 
-s_int State::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue )
-{
-    s_int i;
-    lua_getglobal(pLua_, sName.GetASCII().c_str());
-    if (lua_isnil(pLua_, -1))
-    {
-        lua_pop(pLua_, 1);
-        if (bCritical)
-        {
-            PrintError("Missing " + sName + " attribute");
-            i = iDefaultValue;
-        }
-        else
-            i = iDefaultValue;
-    }
-    else if (!lua_isnumber(pLua_, -1))
-    {
-        lua_pop(pLua_, 1);
-        PrintError("\"" + sName + "\" is expected to be a number");
-        i = iDefaultValue;
-    }
-    else
-    {
-        i = (int)lua_tonumber(pLua_, -1);
-        lua_pop(pLua_, 1);
-    }
-    return i;
-}
-
-s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue )
-{
-    s_float f;
-    lua_getglobal(pLua_, sName.GetASCII().c_str());
-    if (lua_isnil(pLua_, -1))
-    {
-        lua_pop(pLua_, 1);
-        if (bCritical)
-        {
-            PrintError("Missing " + sName + " attribute");
-            f = fDefaultValue;
-        }
-        else
-            f = fDefaultValue;
-    }
-    else if (!lua_isnumber(pLua_, -1))
-    {
-        lua_pop(pLua_, 1);
-        PrintError("\"" + sName + "\" is expected to be a number");
-        f = fDefaultValue;
-    }
-    else
-    {
-        f = lua_tonumber(pLua_, -1);
-        lua_pop(pLua_, 1);
-    }
-    return f;
-}
-
-s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue )
-{
-    s_str s;
-    lua_getglobal(pLua_, sName.GetASCII().c_str());
-    if (lua_isnil(pLua_, -1))
-    {
-        lua_pop(pLua_, 1);
-        if (bCritical)
-        {
-            PrintError("Missing " + sName + " attribute");
-            s = sDefaultValue;
-        }
-        else
-            s = sDefaultValue;
-    }
-    else if (!lua_isstring(pLua_, -1))
-    {
-        lua_pop(pLua_, 1);
-        PrintError("\"" + sName + "\" is expected to be a string");
-        s = sDefaultValue;
-    }
-    else
-    {
-        s = lua_tostring(pLua_, -1);
-        lua_pop(pLua_, 1);
-    }
-    return s;
-}
-
 void State::GetGlobal( const s_str& sName )
 {
     s_ctnr<s_str> lDecomposedName;
@@ -680,9 +646,6 @@ void State::GetGlobal( const s_str& sName )
                 ++uiCounter;
                 if (lua_isnil(pLua_, -1))
                 {
-                    Error(CLASS_NAME,
-                        "\""+sName+"\" doesn't exist."
-                    );
                     Pop(uiCounter);
                     PushNil();
                     return;
@@ -695,18 +658,102 @@ void State::GetGlobal( const s_str& sName )
     }
     else
     {
-        Error(CLASS_NAME,
-            "\""+sName+"\" doesn't exist."
-        );
         Pop(uiCounter);
         PushNil();
     }
 }
 
+s_int State::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue )
+{
+    s_int i;
+    GetGlobal(sName);
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+        {
+            PrintError("Missing " + sName + " attribute");
+            i = iDefaultValue;
+        }
+        else
+            i = iDefaultValue;
+    }
+    else if (!lua_isnumber(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        PrintError("\"" + sName + "\" is expected to be a number");
+        i = iDefaultValue;
+    }
+    else
+    {
+        i = (int)lua_tonumber(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return i;
+}
+
+s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue )
+{
+    s_float f;
+    GetGlobal(sName);
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+        {
+            PrintError("Missing " + sName + " attribute");
+            f = fDefaultValue;
+        }
+        else
+            f = fDefaultValue;
+    }
+    else if (!lua_isnumber(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        PrintError("\"" + sName + "\" is expected to be a number");
+        f = fDefaultValue;
+    }
+    else
+    {
+        f = lua_tonumber(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return f;
+}
+
+s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue )
+{
+    s_str s;
+    GetGlobal(sName);
+    if (lua_isnil(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        if (bCritical)
+        {
+            PrintError("Missing " + sName + " attribute");
+            s = sDefaultValue;
+        }
+        else
+            s = sDefaultValue;
+    }
+    else if (!lua_isstring(pLua_, -1))
+    {
+        lua_pop(pLua_, 1);
+        PrintError("\"" + sName + "\" is expected to be a string");
+        s = sDefaultValue;
+    }
+    else
+    {
+        s = lua_tostring(pLua_, -1);
+        lua_pop(pLua_, 1);
+    }
+    return s;
+}
+
 s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue )
 {
     s_bool b;
-    lua_getglobal(pLua_, sName.GetASCII().c_str());
+    GetGlobal(sName);
     if (lua_isnil(pLua_, -1))
     {
         lua_pop(pLua_, 1);
