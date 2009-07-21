@@ -1,4 +1,5 @@
 #Core
-BaseUI_UIParent:1
+UIParent:1
+Templates:0
 #Others
-BaseUI_Test:1
+Test:1

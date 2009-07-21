@@ -782,22 +782,25 @@ int LuaFrame::_SetScript(lua_State* pLua)
         s_str sScriptName = mFunc.Get(0)->GetString();
         if (pFrameParent_->CanUseScript(sScriptName))
         {
-            s_ptr<Lua::Argument> pSecond = mFunc.Get(1);
-            if (pSecond->GetType() == Lua::TYPE_FUNCTION)
+            s_ptr<Lua::State> pLua = mFunc.GetState();
+            s_ptr<Lua::Argument> pArg = mFunc.Get(1);
+            if (pArg->GetType() == Lua::TYPE_FUNCTION)
             {
-                lua_pushvalue(pLua, pSecond->GetIndex().Get());
-                lua_setglobal(pLua, (pFrameParent_->GetName() + ":" + sScriptName).c_str());
+                pLua->PushValue(pArg->GetIndex());
+                pLua->SetGlobal(pFrameParent_->GetName() + ":" + sScriptName);
                 pFrameParent_->NotifyScriptDefined(sScriptName);
             }
             else
             {
-                lua_pushnil(pLua);
-                lua_setglobal(pLua, (pFrameParent_->GetName() + ":" + sScriptName).c_str());
+                pLua->PushNil();
+                pLua->SetGlobal(pFrameParent_->GetName() + ":" + sScriptName);
                 pFrameParent_->NotifyScriptDefined(sScriptName);
             }
         }
         else
-            Error(pFrameParent_->GetFrameType(), "Can't use script \""+sScriptName+"\".");
+            Error(pFrameParent_->GetFrameType(),
+                "\""+pFrameParent_->GetName()+"\" can't use script \""+sScriptName+"\"."
+            );
     }
 
     return mFunc.Return();

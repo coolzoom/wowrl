@@ -202,11 +202,11 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
 
     if (pFrame)
     {
-        s_map<s_str, s_bool>::const_iterator iterScript;
+        s_map<s_str, s_str>::const_iterator iterScript;
         foreach (iterScript, pFrame->lDefinedScriptList_)
         {
-            if (iterScript->second)
-                this->NotifyScriptDefined("On"+iterScript->first);
+            if (!iterScript->second.IsEmpty())
+                this->DefineScript("On"+iterScript->first, iterScript->second);
         }
 
         this->SetFrameStrata(pFrame->GetFrameStrata());
@@ -265,6 +265,8 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             if (pNewChild)
             {
                 pNewChild->SetParent(this);
+                if (this->IsVirtual())
+                    pNewChild->SetVirtual();
                 pNewChild->SetName(pChild->GetName());
                 if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
                 {
@@ -276,6 +278,8 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     continue;
                 }
                 this->AddChild(pNewChild);
+                if (!pNewChild->IsVirtual())
+                    pNewChild->CreateGlue();
                 pNewChild->CopyFrom(pChild);
             }
         }
@@ -288,7 +292,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
 
         if (pFrame->pTitleRegion_)
         {
-            pTitleRegion_ = new LayeredRegion();
+            this->CreateTitleRegion();
             pTitleRegion_->CopyFrom(pFrame->pTitleRegion_);
         }
 
@@ -758,11 +762,27 @@ const s_bool& Frame::IsUserPlaced() const
     return bIsUserPlaced_;
 }
 
+void Frame::DefineScript( const s_str& sScriptName, const s_str& sContent )
+{
+    s_str sCutScriptName = sScriptName;
+    sCutScriptName.EraseFromStart(2);
+    lDefinedScriptList_[sCutScriptName] = sContent;
+
+    if (!bVirtual_)
+    {
+        s_str sStr;
+        sStr += "function " + sName_ + ":" + sScriptName + "()\n";
+        sStr += sContent + "\n";
+        sStr += "end";
+        GUIManager::GetSingleton()->GetLua()->DoString(sStr);
+    }
+}
+
 void Frame::NotifyScriptDefined( const s_str& sScriptName )
 {
     s_str sCutScriptName = sScriptName;
     sCutScriptName.EraseFromStart(2);
-    lDefinedScriptList_[sCutScriptName] = true;
+    lDefinedScriptList_[sCutScriptName] = "";
 }
 
 void Frame::OnEvent( const Event& mEvent )
@@ -1160,7 +1180,7 @@ void Frame::StartSizing( const AnchorPoint& mPoint )
 {
     if (bIsResizable_)
     {
-        AnchorPoint mOppositePoint;
+        AnchorPoint mOppositePoint = ANCHOR_CENTER;
         s_int iOffX;
         s_int iOffY;
         switch (mPoint)

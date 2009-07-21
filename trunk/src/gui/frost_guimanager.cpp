@@ -459,7 +459,6 @@ namespace Frost
                 }
                 Log("|-###\n#");
             }
-            Log("\n");
         }
         if (lObjectList_.GetSize() >= 1)
         {

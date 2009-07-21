@@ -732,3 +732,11 @@ void UIObject::PushOnLua( s_ptr<Lua::State> pLua ) const
 {
     pLua->PushGlobal(sName_);
 }
+
+void UIObject::RemoveGlue(
+) const
+{
+    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+    pLua->PushNil();
+    pLua->SetGlobal(sName_);
+}
