@@ -160,6 +160,11 @@ namespace Frost
             */
             void    PushVar(const s_var& vValue);
 
+            /// Pushes a copy of the value at the given index on the stack.
+            /** \param iIndex The index of the value to push
+            */
+            void    PushValue(const s_int& iIndex);
+
             /// Puts "nil" (NULL) on the stack.
             /** \param uiNumber The number of "nil" to push
             */
