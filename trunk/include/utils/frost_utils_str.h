@@ -170,6 +170,18 @@ namespace Frost
             this->operator<<(bValue);
         }
 
+        /// s_ptr conversion constructor.
+        /** \param pValue The s_ptr to convert
+        */
+        template<class N>
+        explicit s_str_t(s_ptr<N> pValue)
+        {
+            mIntConvType_ = CONV_DECIMAL;
+            mBoolConvType_ = CONV_TRUE_FALSE;
+            sValue_ = "";
+            this->operator<<(pValue);
+        }
+
         /// char/wchar_t conversion constructor.
         /** \param cValue The char/wchar_t to convert
         */
@@ -917,6 +929,17 @@ namespace Frost
         {
             sValue_ += sValue;
             return *this;
+        }
+
+        template<class N>
+        s_str_t& operator << (s_ptr<N> pValue)
+        {
+            if (pValue == NULL)
+                return operator<<("NULL");
+            else
+            {
+                return operator<<(s_ptrdiff((ptrdiff_t)pValue.Get()));
+            }
         }
 
         s_str_t& operator << (const void* pValue)
