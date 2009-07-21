@@ -159,6 +159,23 @@
                 </Scripts>
             </Frame>
         </Frames>
+        <Layers>
+            <Layer level="BACKGROUND">
+				<Texture name="$parentTitleBorder" file="Interface/BaseUI/Templates/DialogHeader.png">
+					<Size>
+						<AbsDimension x="160" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.2" right="0.8" top="0" bottom="0.6"/>
+				</Texture>
+			</Layer>
+        </Layers>
     </Frame>
     
     <Frame name="Test" inherits="FrameTemplate_Dialog" parent="UIParent">

@@ -62,7 +62,7 @@ namespace Frost
             */
             const s_bool& IsEmpty() const;
 
-            static const Gradient EMPTY_GRADIENT;
+            static const Gradient NONE;
 
         private :
 

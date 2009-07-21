@@ -192,7 +192,7 @@ namespace Frost
 
         /// Changes this Sprite's texture coordinates.
         /** \param lTextureCoords The new texture coordinates
-        *   \param bNormalized  'true' if the coords are already clamped to [0, 1]
+        *   \param bNormalized  'true' if the coords are already converted to texture space
         *   \note Texture rectangle is the zone of the texture you want to display.<br>
         *         Note that it doesn't need to be adjusted to this Sprite's dimensions.
         *         The texture will then be stretched to fit the Sprite's dimensions.
@@ -208,7 +208,7 @@ namespace Frost
         *   \param fY3 The sprites's bottom right vertical position
         *   \param fX4 The sprites's bottom left horizontal position
         *   \param fY4 The sprites's bottom left vertical position
-        *   \param bNormalized  'true' if the coords are already clamped to [0, 1]
+        *   \param bNormalized  'true' if the coords are already converted to texture space
         *   \note Texture rectangle is the zone of the texture you want to display.<br>
         *         Note that it doesn't need to be adjusted to this Sprite's dimensions.
         *         The texture will then be stretched to fit the Sprite's dimensions.
@@ -260,9 +260,10 @@ namespace Frost
         s_array<s_float,4> GetTextureRect() const;
 
         /// Returns this Sprite's texture coordinates.
-        /** \return This Sprite's texture coordinates
+        /** \param bNormalized 'true' to get coordinates converted to texture space
+        *   \return This Sprite's texture coordinates
         */
-        s_array<s_float,8> GetTextureCoords() const;
+        s_array<s_float,8> GetTextureCoords( const s_bool& bNormalized = false ) const;
 
         /// Returns this Sprite's width.
         /** \return This Sprite's width

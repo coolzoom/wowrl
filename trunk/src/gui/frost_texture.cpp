@@ -19,6 +19,8 @@ const s_str Texture::CLASS_NAME = "GUI::Texture";
 
 Texture::Texture() : LayeredRegion()
 {
+    lTexCoord_[0] = lTexCoord_[1] = lTexCoord_[3] = lTexCoord_[6] = 0.0f;
+    lTexCoord_[2] = lTexCoord_[4] = lTexCoord_[5] = lTexCoord_[7] = 1.0f;
     mObjectType_ = OJBECT_TYPE_TEXTURE;
     lType_.PushBack("Texture");
 }
@@ -27,7 +29,7 @@ Texture::~Texture()
 {
 }
 
-s_str Texture::Serialize(const s_str& sTab) const
+s_str Texture::Serialize( const s_str& sTab ) const
 {
     s_str sStr = UIObject::Serialize(sTab);
 
@@ -55,9 +57,60 @@ void Texture::CreateGlue()
     pLua->SetGlobal(sName_);
 }
 
+void Texture::CopyFrom( s_ptr<UIObject> pObj )
+{
+    UIObject::CopyFrom(pObj);
+
+    s_ptr<Texture> pTexture = s_ptr<Texture>::DynamicCast(pObj);
+
+    if (pTexture)
+    {
+        s_str sTexture = pTexture->GetTexture();
+        if (!sTexture.IsEmpty())
+        {
+            this->SetTexture(sTexture);
+        }
+        else
+        {
+            const Gradient& mGradient = pTexture->GetGradient();
+            if (!mGradient.IsEmpty())
+            {
+                this->SetGradient(mGradient);
+            }
+            else
+            {
+                this->SetColor(pTexture->GetColor());
+            }
+        }
+
+        this->SetBlendMode(pTexture->GetBlendMode());
+        this->SetTexCoord(pTexture->GetTexCoord());
+        this->SetTexCoordModifiesRect(pTexture->GetTexCoordModifiesRect());
+        this->SetVertexColor(pTexture->GetVertexColor());
+        this->SetDesaturated(pTexture->IsDesaturated());
+    }
+    else
+    {
+        Error(lType_.Back(),
+            "Trying to derive \""+sName_+"\" from \""+pObj->GetName()+"\", but they are not of the same type "
+            "(respectively "+this->GetObjectType()+" and "+pObj->GetObjectType()+")."
+        );
+    }
+}
+
 TextureBlendMode Texture::GetBlendMode() const
 {
     return mBlendMode_;
+}
+
+const Color& Texture::GetColor() const
+{
+    return mColor_;
+}
+
+const Gradient& Texture::GetGradient() const
+{
+    return mGradient_;
 }
 
 const s_array<s_float,8>& Texture::GetTexCoord() const
@@ -139,6 +192,8 @@ void Texture::SetDesaturated( const s_bool& bIsDesaturated )
 
 void Texture::SetGradient( const Gradient& mGradient )
 {
+    mColor_ = Color::NaN;
+    sTextureFile_ = "";
     mGradient_ = mGradient;
     s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
     pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
@@ -169,7 +224,7 @@ void Texture::SetTexCoord( const s_array<s_float,4>& lCoordinates )
         lSortedCoordinates[2] = lCoordinates[1];
         lSortedCoordinates[3] = lCoordinates[3];
         pSprite_->SetTextureRect(lSortedCoordinates, true);
-        lTexCoord_ = pSprite_->GetTextureCoords();
+        lTexCoord_ = pSprite_->GetTextureCoords(true);
     }
     else
     {
@@ -184,7 +239,7 @@ void Texture::SetTexCoord( const s_array<s_float,8>& lCoordinates )
     if (pSprite_)
     {
         pSprite_->SetTextureCoords(lCoordinates, true);
-        lTexCoord_ = pSprite_->GetTextureCoords();
+        lTexCoord_ = lCoordinates;
     }
     else
     {
@@ -201,6 +256,8 @@ void Texture::SetTexCoordModifiesRect( const s_bool& bTexCoordModifiesRect )
 
 void Texture::SetTexture( const s_str& sFile )
 {
+    mGradient_ = Gradient();
+    mColor_ = Color::NaN;
     sTextureFile_ = sFile;
     s_refptr<Material> pMat;
 
@@ -223,10 +280,13 @@ void Texture::SetTexture( const s_str& sFile )
 
 void Texture::SetColor( const Color& mColor )
 {
+    mGradient_ = Gradient();
+    sTextureFile_ = "";
     pSprite_.SetNull(); // Deletes the old sprite and its material
 
     s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", mColor);
     pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
+    mColor_ = mColor;
 }
 
 void Texture::SetVertexColor( const Color& mColor )

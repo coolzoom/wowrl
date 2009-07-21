@@ -18,12 +18,6 @@ namespace Frost
 {
     namespace GUI
     {
-        enum TextureType
-        {
-            TTYPE_FILE,
-            TTYPE_COLOR
-        };
-
         enum TextureBlendMode
         {
             BLEND_NONE,
@@ -56,10 +50,25 @@ namespace Frost
             /// Renders this widget on the current render target.
             void                      Render();
 
-            /// Returns this Textures's blending mode.
-            /** \return This Textures's blending mode
+            /// Copies an UIObject's parameters into this Texture (inheritance).
+            /** \param pObj The UIObject to copy
+            */
+            void                      CopyFrom(s_ptr<UIObject> pObj);
+
+            /// Returns this Texture's blending mode.
+            /** \return This Texture's blending mode
             */
             TextureBlendMode          GetBlendMode() const;
+
+            /// Returns this Texture's color.
+            /** \return This Texture's color (Color::NaN if none)
+            */
+            const Color&              GetColor() const;
+
+            /// Returns this Texture's gradient.
+            /** \return This Texture's gradient (Gradient::NONE if none)
+            */
+            const Gradient&           GetGradient() const;
 
             /// Returns this Texture's texture coordinates.
             /** \return This Texture's texture coordinates
@@ -78,9 +87,7 @@ namespace Frost
             const s_bool&             GetTexCoordModifiesRect() const;
 
             /// Returns this Textures's texture file.
-            /** \return This Textures's texture file
-            *   \note If this Texture is a plain color, this function returns
-            *         "Solid Texture".
+            /** \return This Textures's texture file (empty string if none).
             */
             const s_str&              GetTexture() const;
 
@@ -116,7 +123,7 @@ namespace Frost
 
             /// Adds a Gradient effect to this Texture.
             /** \param mGradient The Gradient to add
-            *   \note To remove a Gradient, call SetGradient(Gradient::EMPTY_GRADIENT).
+            *   \note To remove a Gradient, call SetGradient(Gradient::NONE).
             */
             void                      SetGradient(const Gradient& mGradient);
 
@@ -180,16 +187,16 @@ namespace Frost
 
             s_refptr<Sprite>   pSprite_;
 
-            TextureType        mType_;
             TextureBlendMode   mBlendMode_;
             s_bool             bIsDesaturated_;
+
             Gradient           mGradient_;
+
+            Color              mColor_;
 
             s_str              sTextureFile_;
             s_array<s_float,8> lTexCoord_;
             s_bool             bTexCoordModifiesRect_;
-
-            Color              mColor_;
 
         };
 
