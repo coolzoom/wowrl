@@ -1,5 +1,5 @@
 ## Interface: 0045
-## Title: BaseUI_Test
+## Title: Test
 ## Version: 1.0
 ## Author: Kalith
 ## SavedVariables: 

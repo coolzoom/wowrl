@@ -1,35 +1,13 @@
 <Ui>
     <!Script file="Test.lua"/>
     
-    <Frame name="Template_Child" virtual="true">
-        <Anchors>
-            <Anchor point="TOPLEFT" relativeTo="$parent_Pin" relativePoint="TOPLEFT"/>
-            <Anchor point="BOTTOMRIGHT" relativeTo="$parent_Pin" relativePoint="BOTTOMRIGHT"/>
-        </Anchors>
-        <Frames>
-            <Frame name="$parent_Child">
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="CENTER"/>
-                </Anchors>
-            </Frame>
-        </Frames>
-    </Frame>
-    
-    <Frame name="Test" parent="UIParent" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true">
-        <Size>
-            <AbsDimension x="400" y="400"/>
-        </Size>
-        <Anchors>
-            <Anchor point="TOPLEFT" relativeTo="UIParent" relativePoint="TOPLEFT">
-                <Offset>
-                    <AbsDimension x="0" y="10"/>
-                </Offset>
-            </Anchor>
-        </Anchors>
-        <Backdrop bgFile="Interface/BaseUI/BaseUI_Test/UI-DialogBox-Background.png" edgeFile="Interface/BaseUI/BaseUI_Test/UI-DialogBox-Border.png" tile="true">
+    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true">
+        <ResizeBounds>
+            <Min>
+                <AbsDimension x="64" y="64"/>
+            </Min>
+        </ResizeBounds>
+        <Backdrop bgFile="Interface/BaseUI/Templates/DialogBackground.png" edgeFile="Interface/BaseUI/Templates/DialogBorder.png" tile="true">
             <BackgroundInsets>
                 <AbsInset left="8" right="8" top="8" bottom="8"/>
             </BackgroundInsets>
@@ -42,7 +20,7 @@
                 <AbsDimension x="100" y="30"/>
             </Size>
             <Anchors>
-                <Anchor point="TOP" relativePoint="TOP">
+                <Anchor point="TOP">
                     <Offset>
                         <AbsDimension x="0" y="-10"/>
                     </Offset>
@@ -55,7 +33,7 @@
                     <AbsDimension x="20" y="20"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                    <Anchor point="TOPLEFT">
                         <Offset>
                             <AbsDimension x="5" y="5"/>
                         </Offset>
@@ -67,7 +45,7 @@
                     <AbsDimension x="20" y="20"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+                    <Anchor point="TOPLEFT">
                         <Offset>
                             <AbsDimension x="5" y="5"/>
                         </Offset>
@@ -79,7 +57,7 @@
                     <AbsDimension x="20" y="20"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+                    <Anchor point="BOTTOMRIGHT">
                         <Offset>
                             <AbsDimension x="-5" y="-5"/>
                         </Offset>
@@ -90,10 +68,10 @@
                         this:RegisterForDrag("LeftButton");
                     </OnLoad>
                     <OnDragStart>
-                        Test:StartSizing("BOTTOMRIGHT");
+                        this:GetParent():StartSizing("BOTTOMRIGHT");
                     </OnDragStart>
                     <OnDragStop>
-                        Test:StopMovingOrSizing();
+                        this:GetParent():StopMovingOrSizing();
                     </OnDragStop>
                 </Scripts>
             </Frame>
@@ -102,7 +80,7 @@
                     <AbsDimension x="20" y="20"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
+                    <Anchor point="BOTTOMLEFT">
                         <Offset>
                             <AbsDimension x="5" y="-5"/>
                         </Offset>
@@ -113,10 +91,10 @@
                         this:RegisterForDrag("LeftButton");
                     </OnLoad>
                     <OnDragStart>
-                        Test:StartSizing("BOTTOMLEFT");
+                        this:GetParent():StartSizing("BOTTOMLEFT");
                     </OnDragStart>
                     <OnDragStop>
-                        Test:StopMovingOrSizing();
+                        this:GetParent():StopMovingOrSizing();
                     </OnDragStop>
                 </Scripts>
             </Frame>
@@ -133,10 +111,10 @@
                         this:RegisterForDrag("LeftButton");
                     </OnLoad>
                     <OnDragStart>
-                        Test:StartSizing("LEFT");
+                        this:GetParent():StartSizing("LEFT");
                     </OnDragStart>
                     <OnDragStop>
-                        Test:StopMovingOrSizing();
+                        this:GetParent():StopMovingOrSizing();
                     </OnDragStop>
                 </Scripts>
             </Frame>
@@ -153,10 +131,10 @@
                         this:RegisterForDrag("LeftButton");
                     </OnLoad>
                     <OnDragStart>
-                        Test:StartSizing("RIGHT");
+                        this:GetParent():StartSizing("RIGHT");
                     </OnDragStart>
                     <OnDragStop>
-                        Test:StopMovingOrSizing();
+                        this:GetParent():StopMovingOrSizing();
                     </OnDragStop>
                 </Scripts>
             </Frame>
@@ -173,54 +151,26 @@
                         this:RegisterForDrag("LeftButton");
                     </OnLoad>
                     <OnDragStart>
-                        Test:StartSizing("BOTTOM");
+                        this:GetParent():StartSizing("BOTTOM");
                     </OnDragStart>
                     <OnDragStop>
-                        Test:StopMovingOrSizing();
+                        this:GetParent():StopMovingOrSizing();
                     </OnDragStop>
                 </Scripts>
             </Frame>
         </Frames>
-        <Layers>
-            <Layer level="BACKGROUND">
-				<Texture name="$parentTitleBorder" file="Interface/BaseUI/BaseUI_Test/UI-DialogBox-Header.png">
-					<Size>
-						<AbsDimension x="160" y="32"/>
-					</Size>
-					<Anchors>
-						<Anchor point="TOP" relativePoint="TOP">
-							<Offset>
-								<AbsDimension x="0" y="-10"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<TexCoords left="0.2" right="0.8" top="0" bottom="0.6"/>
-				</Texture>
-			</Layer>
-			<Layer level="ARTWORK">
-                <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="12" justifyH="CENTER" text="Test">
-					<Size>
-						<AbsDimension x="140"/>
-					</Size>
-					<Anchors>
-						<Anchor point="CENTER" relativeTo="$parentTitleBorder" relativePoint="CENTER">
-							<Offset>
-								<AbsDimension x="0" y="13"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-					<Color r="1" g="0.8196079" b="0"/>
-					<Shadow>
-						<Color r="0" g="0" b="0"/>
-						<Offset x="1" y="-1"/>
-					</Shadow>
-				</FontString>
-            </Layer>
-        </Layers>
-        <Scripts>
-            <OnLoad>
-                this:SetMinResize(64, 64);
-            </OnLoad>
-        </Scripts>
+    </Frame>
+    
+    <Frame name="Test" inherits="FrameTemplate_Dialog" parent="UIParent">
+        <Size>
+            <AbsDimension x="400" y="400"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="0" y="10"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
     </Frame>
 </Ui>

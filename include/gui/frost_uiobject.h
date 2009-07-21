@@ -348,6 +348,9 @@ namespace Frost
             */
             virtual void    CreateGlue() = 0;
 
+            /// Removes the Lua glue.
+            void            RemoveGlue() const;
+
             /// Pushes this UIObject on the provided Lua::State.
             /** \param pLua The Lua::State on which to push the glue
             */

@@ -123,18 +123,27 @@ namespace Frost
             }
         }
 
-        if (pMainBlock->GetAttribute("hidden") == "true")
+        if ( (pMainBlock->IsProvided("hidden") || sInheritance.IsEmpty()) && (pMainBlock->GetAttribute("hidden") == "true") )
             pFrame->Hide();
-        if (pMainBlock->GetAttribute("setAllPoints") == "true")
+
+        if ( (pMainBlock->IsProvided("setAllPoints") || sInheritance.IsEmpty()) && (pMainBlock->GetAttribute("setAllPoints") == "true") )
             pFrame->SetAllPoints(pParent);
-        pFrame->SetAlpha(s_float(pMainBlock->GetAttribute("alpha")));
-        pFrame->SetTopLevel(s_bool(pMainBlock->GetAttribute("toplevel")));
-        pFrame->SetMovable(s_bool(pMainBlock->GetAttribute("movable")));
-        pFrame->SetResizable(s_bool(pMainBlock->GetAttribute("resizable")));
-        pFrame->SetFrameStrata(pMainBlock->GetAttribute("frameStrata"));
-        pFrame->EnableMouse(s_bool(pMainBlock->GetAttribute("enableMouse")));
-        pFrame->EnableKeyboard(s_bool(pMainBlock->GetAttribute("enableKeyboard")));
-        pFrame->SetClampedToScreen(s_bool(pMainBlock->GetAttribute("clampedToScreen")));
+        if (pMainBlock->IsProvided("alpha") || sInheritance.IsEmpty())
+            pFrame->SetAlpha(s_float(pMainBlock->GetAttribute("alpha")));
+        if (pMainBlock->IsProvided("toplevel") || sInheritance.IsEmpty())
+            pFrame->SetTopLevel(s_bool(pMainBlock->GetAttribute("toplevel")));
+        if (pMainBlock->IsProvided("movable") || sInheritance.IsEmpty())
+            pFrame->SetMovable(s_bool(pMainBlock->GetAttribute("movable")));
+        if (pMainBlock->IsProvided("resizable") || sInheritance.IsEmpty())
+            pFrame->SetResizable(s_bool(pMainBlock->GetAttribute("resizable")));
+        if (pMainBlock->IsProvided("frameStrata") || sInheritance.IsEmpty())
+            pFrame->SetFrameStrata(pMainBlock->GetAttribute("frameStrata"));
+        if (pMainBlock->IsProvided("enableMouse") || sInheritance.IsEmpty())
+            pFrame->EnableMouse(s_bool(pMainBlock->GetAttribute("enableMouse")));
+        if (pMainBlock->IsProvided("enableKeyboard") || sInheritance.IsEmpty())
+            pFrame->EnableKeyboard(s_bool(pMainBlock->GetAttribute("enableKeyboard")));
+        if (pMainBlock->IsProvided("clampedToScreen") || sInheritance.IsEmpty())
+            pFrame->SetClampedToScreen(s_bool(pMainBlock->GetAttribute("clampedToScreen")));
 
         return true;
     }
@@ -585,15 +594,7 @@ namespace Frost
             s_ptr<XML::Block> pScriptBlock;
             foreach_block (pScriptBlock, pScriptsBlock)
             {
-                // Create the function in Lua
-                s_str sStr;
-                sStr += "function " + pFrame->GetName() + ":" + pScriptBlock->GetName() + "()\n";
-                sStr += pScriptBlock->GetValue() + "\n";
-                sStr += "end";
-                pLua_->DoString(sStr);
-
-                // Tell the Frame it can use it
-                pFrame->NotifyScriptDefined(pScriptBlock->GetName());
+                pFrame->DefineScript(pScriptBlock->GetName(), pScriptBlock->GetValue());
             }
         }
         return true;

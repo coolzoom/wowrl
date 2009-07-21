@@ -286,6 +286,12 @@ namespace Frost
             */
             const s_bool&       IsUserPlaced() const;
 
+            /// Registers a handler script to this Frame.
+            /** \param sScriptName The name of the script
+            *   \param sContent    The content ot the script
+            */
+            void                DefineScript(const s_str& sScriptName, const s_str& sContent);
+
             /// Tells this Frame it can call a script.
             /** \param sScriptName The name of the script
             */
@@ -444,7 +450,7 @@ namespace Frost
             s_map<FrameStrata, Strata>            lStrataList_;
             s_map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
             s_map<LayerType, Layer>               lLayerList_;
-            s_map<s_str, s_bool>                  lDefinedScriptList_;
+            s_map<s_str, s_str>                   lDefinedScriptList_;
             s_map<s_str, s_bool>                  lRegEventList_;
             s_map<s_str, s_bool>                  lRegDragList_;
 
