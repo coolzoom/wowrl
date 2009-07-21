@@ -61,6 +61,17 @@
         <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
     
+    <n[.,1]:ResizeBounds>
+        <n[.,1]:Min>
+            <n[*]:AbsDimension n:x="0"   n:y="0"/>
+            <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
+        </Min>
+        <n[.,1]:Max>
+            <n[*]:AbsDimension n:x="-1"   n:y="-1"/>
+            <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
+        </Max>
+    </ResizeBounds>
+    
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="">
             <n[.,1]:Offset>

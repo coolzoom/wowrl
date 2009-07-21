@@ -141,7 +141,7 @@ namespace Frost
 
     void GUIManager::LoadAddOnTOC_( const s_str& sAddOnName, const s_str& sAddOnFolder )
     {
-        if (!lAddOnList_.Find(sAddOnName))
+        if (!lAddOnList_[sAddOnFolder].Find(sAddOnName))
         {
             AddOn mAddOn;
             mAddOn.bEnabled = true;
@@ -220,7 +220,7 @@ namespace Frost
                 if (mAddOn.sName == "")
                     Error(CLASS_NAME, "Missing AddOn name in "+mFile.GetName()+".");
                 else
-                    lAddOnList_[mAddOn.sName] = mAddOn;
+                    lAddOnList_[sAddOnFolder][sAddOnName] = mAddOn;
             }
             else
             {
@@ -285,16 +285,16 @@ namespace Frost
                         sKey.Trim(' ');
                         s_str sValue = lArgs[1];
                         sValue.Trim(' ');
-                        if (lAddOnList_.Find(sKey))
+                        if (lAddOnList_[sDirectory].Find(sKey))
                         {
                             if (bCore)
-                                lCoreAddOnStack.PushBack(&lAddOnList_[sKey]);
+                                lCoreAddOnStack.PushBack(&lAddOnList_[sDirectory][sKey]);
                             else
-                                lAddOnStack.PushBack(&lAddOnList_[sKey]);
+                                lAddOnStack.PushBack(&lAddOnList_[sDirectory][sKey]);
 
                             if (sValue != "1")
                             {
-                                lAddOnList_[sKey].bEnabled = false;
+                                lAddOnList_[sDirectory][sKey].bEnabled = false;
                             }
                         }
                     }
@@ -328,7 +328,7 @@ namespace Frost
             this->LoadAddOnDirectory_("Interface/BaseUI");
             this->LoadAddOnDirectory_("Interface/AddOns");
 
-            map< s_uint, s_ptr<GUI::UIObject> >::iterator iterUIObject;
+            s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterUIObject;
             foreach (iterUIObject, lMainObjectList_)
             {
                 s_ptr<GUI::Frame>::DynamicCast(iterUIObject->second)->On("Load");
@@ -444,6 +444,23 @@ namespace Frost
 
     void GUIManager::PrintUI()
     {
+        if (lAddOnList_.GetSize() >= 1)
+        {
+            Log("\n\n######################## Loaded AddOns ########################\n");
+            s_map< s_str, s_map<s_str, AddOn> >::iterator iterFolder;
+            foreach (iterFolder, lAddOnList_)
+            {
+                Log("# Folder : "+iterFolder->first+"\n|-###");
+                s_map<s_str, AddOn>::iterator iterAdd;
+                foreach (iterAdd, iterFolder->second)
+                {
+                    if (iterAdd->second.bEnabled)
+                        Log("|   # "+iterAdd->first);
+                }
+                Log("|-###\n#");
+            }
+            Log("\n");
+        }
         if (lObjectList_.GetSize() >= 1)
         {
             Log("\n\n######################## UIObjects ########################\n\n########################\n");

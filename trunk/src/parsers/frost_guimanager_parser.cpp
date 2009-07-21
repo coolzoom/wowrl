@@ -91,29 +91,35 @@ namespace Frost
         s_str sInheritance = pMainBlock->GetAttribute("inherits");
         if (!sInheritance.IsEmpty())
         {
-            s_ptr<GUI::UIObject> pObj = this->GetUIObjectByName(sInheritance, true);
-            if (pObj)
+            s_ctnr<s_str> lObjects = sInheritance.Cut(",");
+            s_ctnr<s_str>::iterator iter;
+            foreach (iter, lObjects)
             {
-                if (pFrame->IsObjectType(pObj->GetObjectType()))
+                iter->Trim(' ');
+                s_ptr<GUI::UIObject> pObj = this->GetUIObjectByName(*iter, true);
+                if (pObj)
                 {
-                    // Inherit from the other Frame
-                    pFrame->CopyFrom(pObj);
+                    if (pFrame->IsObjectType(pObj->GetObjectType()))
+                    {
+                        // Inherit from the other Frame
+                        pFrame->CopyFrom(pObj);
+                    }
+                    else
+                    {
+                        Error(CLASS_NAME,
+                            "\""+pFrame->GetName()+"\" ("+pFrame->GetObjectType()+") cannot inherit "
+                            "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
+                        );
+                        return false;
+                    }
                 }
                 else
                 {
                     Error(CLASS_NAME,
-                        "\""+pFrame->GetName()+"\" ("+pFrame->GetObjectType()+") cannot inherit "
-                        "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
+                        "Couldn't find inherited object \""+*iter+"\". Skipped."
                     );
                     return false;
                 }
-            }
-            else
-            {
-                Error(CLASS_NAME,
-                    "Couldn't find inherited object \""+sInheritance+"\". Skipped."
-                );
-                return false;
             }
         }
 
@@ -329,6 +335,62 @@ namespace Frost
             }
         }
 
+        return true;
+    }
+
+    s_bool GUIManager::ParseResizeBoundsBlock_( s_ptr<GUI::Frame> pFrame, s_ptr<XML::Block> pMainBlock )
+    {
+        s_ptr<XML::Block> pResizeBoundsBlock = pMainBlock->GetBlock("ResizeBounds");
+        if (pResizeBoundsBlock)
+        {
+            s_ptr<XML::Block> pMinBlock = pResizeBoundsBlock->GetBlock("Min");
+            if (pMinBlock)
+            {
+                s_ptr<XML::Block> pDimBlock = pMinBlock->GetRadioBlock();
+                if (pDimBlock->GetName() == "AbsDimension")
+                {
+                    s_int iX = s_int(pDimBlock->GetAttribute("x"));
+                    s_int iY = s_int(pDimBlock->GetAttribute("y"));
+
+                    if (iX < 0)
+                        iX.SetInfinitePlus();
+                    if (iY < 0)
+                        iX.SetInfinitePlus();
+
+                    pFrame->SetMinResize(s_uint(iX), s_uint(iY));
+                }
+                else if (pDimBlock->GetName() == "RelDimension")
+                {
+                    Warning(CLASS_NAME,
+                        "\"RelDimension\" for ResizeBounds:Min is not yet supported. Skipped"
+                    );
+                }
+            }
+
+            s_ptr<XML::Block> pMaxBlock = pResizeBoundsBlock->GetBlock("Max");
+            if (pMaxBlock)
+            {
+                s_ptr<XML::Block> pDimBlock = pMaxBlock->GetRadioBlock();
+                if (pDimBlock->GetName() == "AbsDimension")
+                {
+                    s_int iX = s_int(pDimBlock->GetAttribute("x"));
+                    s_int iY = s_int(pDimBlock->GetAttribute("y"));
+
+                    if (iX < 0)
+                        iX.SetInfinitePlus();
+                    if (iY < 0)
+                        iX.SetInfinitePlus();
+
+                    pFrame->SetMaxResize(s_uint(iX), s_uint(iY));
+                }
+                else if (pDimBlock->GetName() == "RelDimension")
+                {
+                    Warning(CLASS_NAME,
+                        "\"RelDimension\" for ResizeBounds:Max is not yet supported. Skipped"
+                    );
+                }
+            }
+        }
         return true;
     }
 
@@ -686,6 +748,7 @@ namespace Frost
         }
 
         this->ParseSizeBlock_(pFrame, pWidgetBlock);
+        this->ParseResizeBoundsBlock_(pFrame, pWidgetBlock);
         this->ParseAnchorsBlock_(pFrame, pWidgetBlock);
         this->ParseTitleRegionBlock_(pFrame, pWidgetBlock);
         this->ParseBackdropBlock_(pFrame, pWidgetBlock);
