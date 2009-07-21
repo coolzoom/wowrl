@@ -110,7 +110,6 @@ namespace Frost
                             "\""+pFrame->GetName()+"\" ("+pFrame->GetObjectType()+") cannot inherit "
                             "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
                         );
-                        return false;
                     }
                 }
                 else
@@ -118,16 +117,18 @@ namespace Frost
                     Error(CLASS_NAME,
                         "Couldn't find inherited object \""+*iter+"\". Skipped."
                     );
-                    return false;
                 }
             }
         }
 
-        if ( (pMainBlock->IsProvided("hidden") || sInheritance.IsEmpty()) && (pMainBlock->GetAttribute("hidden") == "true") )
+        if ((pMainBlock->IsProvided("hidden") || sInheritance.IsEmpty()) &&
+            (pMainBlock->GetAttribute("hidden") == "true"))
             pFrame->Hide();
 
-        if ( (pMainBlock->IsProvided("setAllPoints") || sInheritance.IsEmpty()) && (pMainBlock->GetAttribute("setAllPoints") == "true") )
+        if ((pMainBlock->IsProvided("setAllPoints") || sInheritance.IsEmpty()) &&
+            (pMainBlock->GetAttribute("setAllPoints") == "true"))
             pFrame->SetAllPoints(pParent);
+
         if (pMainBlock->IsProvided("alpha") || sInheritance.IsEmpty())
             pFrame->SetAlpha(s_float(pMainBlock->GetAttribute("alpha")));
         if (pMainBlock->IsProvided("toplevel") || sInheritance.IsEmpty())
@@ -150,10 +151,15 @@ namespace Frost
 
     s_bool GUIManager::ParseTextureAttributes_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pMainBlock )
     {
-        // TODO : Implementer l'héritage pour Texture
+        // TODO : Implementer l'hÃ©ritage pour Texture
         s_str sName = pMainBlock->GetAttribute("name");
+        s_bool bVirtual = s_bool(pMainBlock->GetAttribute("virtual"));
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pTexture->GetParent());
         if (!sName.IsEmpty(true))
         {
+            if ( bVirtual || (pParent && pParent->IsVirtual()) )
+                pTexture->SetVirtual();
+
             pTexture->SetName(sName);
         }
         else
@@ -167,17 +173,51 @@ namespace Frost
         if (!this->AddUIObject(pTexture))
             return false;
 
-        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pTexture->GetParent());
-
-        if (pParent && !pParent->IsVirtual())
+        if (!pTexture->IsVirtual())
             pTexture->CreateGlue();
 
         if (pParent)
             pParent->AddRegion(pTexture);
 
-        if (pMainBlock->GetAttribute("hidden") == "true")
+        s_str sInheritance = pMainBlock->GetAttribute("inherits");
+        if (!sInheritance.IsEmpty())
+        {
+            s_ctnr<s_str> lObjects = sInheritance.Cut(",");
+            s_ctnr<s_str>::iterator iter;
+            foreach (iter, lObjects)
+            {
+                iter->Trim(' ');
+                s_ptr<GUI::UIObject> pObj = this->GetUIObjectByName(*iter, true);
+                if (pObj)
+                {
+                    if (pTexture->IsObjectType(pObj->GetObjectType()))
+                    {
+                        // Inherit from the other Texture
+                        pTexture->CopyFrom(pObj);
+                    }
+                    else
+                    {
+                        Error(CLASS_NAME,
+                            "\""+pTexture->GetName()+"\" ("+pTexture->GetObjectType()+") cannot inherit "
+                            "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
+                        );
+                    }
+                }
+                else
+                {
+                    Error(CLASS_NAME,
+                        "Couldn't find inherited object \""+*iter+"\". Skipped."
+                    );
+                }
+            }
+        }
+
+        if ((pMainBlock->IsProvided("hidden") || sInheritance.IsEmpty()) &&
+            (pMainBlock->GetAttribute("hidden") == "true"))
             pTexture->Hide();
-        if (pMainBlock->GetAttribute("setAllPoints") == "true")
+
+        if ((pMainBlock->IsProvided("setAllPoints") || sInheritance.IsEmpty()) &&
+            (pMainBlock->GetAttribute("setAllPoints") == "true"))
             pTexture->SetAllPoints(pParent);
 
         s_str sFile = pMainBlock->GetAttribute("file");
@@ -191,7 +231,7 @@ namespace Frost
 
     s_bool GUIManager::ParseFontStringAttributes_( s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pMainBlock )
     {
-        // TODO : Implementer l'héritage pour FontString
+        // TODO : Implementer l'hÃ©ritage pour FontString
         s_str sName = pMainBlock->GetAttribute("name");
         if (!sName.IsEmpty(true))
         {

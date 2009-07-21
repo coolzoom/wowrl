@@ -12,6 +12,8 @@
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
 #include "gui/frost_statusbar.h"
+#include "gui/frost_texture.h"
+#include "gui/frost_fontstring.h"
 #include "gui/frost_guimanager.h"
 #include "gui/frost_backdrop.h"
 #include "frost_inputmanager.h"
@@ -299,7 +301,40 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
         s_map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
         foreach (iterRegion, pFrame->lRegionList_)
         {
-            // TODO : Copier les regions
+            s_ptr<LayeredRegion> pArt = iterRegion->second;
+            s_ptr<LayeredRegion> pNewArt;
+            if (pArt->GetObjectType() == "Texture")
+                pNewArt = new Texture();
+            else if (pArt->GetObjectType() == "FontString")
+                pNewArt = new FontString();
+            else
+            {
+                Warning(lType_.Back(),
+                    "Trying to add \""+pArt->GetName()+"\" (type : "+pArt->GetObjectType()+") to \""+sName_+"\", "
+                    "but no copying code was available. Skipped."
+                );
+            }
+
+            if (pNewArt)
+            {
+                pNewArt->SetParent(this);
+                if (this->IsVirtual())
+                    pNewArt->SetVirtual();
+                pNewArt->SetName(pArt->GetName());
+                if (!GUIManager::GetSingleton()->AddUIObject(pNewArt))
+                {
+                    Warning(lType_.Back(),
+                        "Trying to add \""+pArt->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
+                        +pNewArt->GetName()+"\". Skipped."
+                    );
+                    pNewArt.Delete();
+                    continue;
+                }
+                this->AddRegion(pNewArt);
+                if (!pNewArt->IsVirtual())
+                    pNewArt->CreateGlue();
+                pNewArt->CopyFrom(pArt);
+            }
         }
 
         bBuildStrataList_ = true;

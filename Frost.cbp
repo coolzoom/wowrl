@@ -162,8 +162,8 @@
 		<Unit filename="bin\Gameplays\TopDown.xml" />
 		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.lua" />
 		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.xml" />
-		<Unit filename="bin\Interface\BaseUI\BaseUI_UIParent\UIParent.lua" />
-		<Unit filename="bin\Interface\BaseUI\BaseUI_UIParent\UIParent.xml" />
+		<Unit filename="bin\Interface\BaseUI\Templates\Template_Dialog.xml" />
+		<Unit filename="bin\Interface\BaseUI\UIParent\UIParent.xml" />
 		<Unit filename="bin\Interface\UI.def" />
 		<Unit filename="bin\Locale\enGB\LocaleClass.lua" />
 		<Unit filename="bin\Locale\enGB\LocaleSpells.lua" />

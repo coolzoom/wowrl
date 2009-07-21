@@ -11,7 +11,7 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
 
-const Gradient Gradient::EMPTY_GRADIENT = Gradient();
+const Gradient Gradient::NONE = Gradient();
 
 Gradient::Gradient() : bIsEmpty_(true)
 {

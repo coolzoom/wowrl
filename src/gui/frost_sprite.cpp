@@ -462,12 +462,34 @@ namespace Frost
         return s_array<s_float,4>((fX1_, fY1_, fX3_, fY3_));
     }
 
-    s_array<s_float,8> Sprite::GetTextureCoords() const
+    s_array<s_float,8> Sprite::GetTextureCoords( const s_bool& bNormalized ) const
     {
-        if (bUsing8Coords_)
-            return s_array<s_float,8>((fX1_, fY1_, fX2_, fY2_, fX3_, fY3_, fX4_, fY4_));
+        if (bNormalized)
+        {
+            s_float fTW = s_float(uiTexWidth_);
+            s_float fTH = s_float(uiTexHeight_);
+            if (bUsing8Coords_)
+                return s_array<s_float,8>((
+                    fX1_/fTW, fY1_/fTH,
+                    fX2_/fTW, fY2_/fTH,
+                    fX3_/fTW, fY3_/fTH,
+                    fX4_/fTW, fY4_/fTH
+                ));
+            else
+                return s_array<s_float,8>((
+                    fX1_/fTW, fY1_/fTH,
+                    fX3_/fTW, fY1_/fTH,
+                    fX3_/fTW, fY3_/fTH,
+                    fX1_/fTW, fY3_/fTH
+                ));
+        }
         else
-            return s_array<s_float,8>((fX1_, fY1_, fX3_, fY1_, fX3_, fY3_, fX1_, fY3_));
+        {
+            if (bUsing8Coords_)
+                return s_array<s_float,8>((fX1_, fY1_, fX2_, fY2_, fX3_, fY3_, fX4_, fY4_));
+            else
+                return s_array<s_float,8>((fX1_, fY1_, fX3_, fY1_, fX3_, fY3_, fX1_, fY3_));
+        }
     }
 
     const s_float& Sprite::GetWidth() const
@@ -487,16 +509,18 @@ namespace Frost
 
     void Sprite::UpdateUVs_()
     {
+        s_float fTW = s_float(uiTexWidth_);
+        s_float fTH = s_float(uiTexHeight_);
         if (bUsing8Coords_)
         {
-            s_float fTX1 = fX1_/s_float(uiTexWidth_);
-            s_float fTY1 = fY1_/s_float(uiTexHeight_);
-            s_float fTX2 = fX2_/s_float(uiTexWidth_);
-            s_float fTY2 = fY2_/s_float(uiTexHeight_);
-            s_float fTX3 = fX3_/s_float(uiTexWidth_);
-            s_float fTY3 = fY3_/s_float(uiTexHeight_);
-            s_float fTX4 = fX4_/s_float(uiTexWidth_);
-            s_float fTY4 = fY4_/s_float(uiTexHeight_);
+            s_float fTX1 = fX1_/fTW;
+            s_float fTY1 = fY1_/fTH;
+            s_float fTX2 = fX2_/fTW;
+            s_float fTY2 = fY2_/fTH;
+            s_float fTX3 = fX3_/fTW;
+            s_float fTY3 = fY3_/fTH;
+            s_float fTX4 = fX4_/fTW;
+            s_float fTY4 = fY4_/fTH;
 
             pQuad_->lVertexArray[0].SetUV(fTX1, fTY1);
             pQuad_->lVertexArray[1].SetUV(fTX2, fTY2);
@@ -505,10 +529,10 @@ namespace Frost
         }
         else
         {
-            s_float fTX1 = fX1_/s_float(uiTexWidth_);
-            s_float fTY1 = fY1_/s_float(uiTexHeight_);
-            s_float fTX3 = fX3_/s_float(uiTexWidth_);
-            s_float fTY3 = fY3_/s_float(uiTexHeight_);
+            s_float fTX1 = fX1_/fTW;
+            s_float fTY1 = fY1_/fTH;
+            s_float fTX3 = fX3_/fTW;
+            s_float fTY3 = fY3_/fTH;
 
             pQuad_->lVertexArray[0].SetUV(fTX1, fTY1);
             pQuad_->lVertexArray[1].SetUV(fTX3, fTY1);
