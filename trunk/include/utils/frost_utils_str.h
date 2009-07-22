@@ -770,38 +770,74 @@ namespace Frost
             std::reverse(sValue_.begin(), sValue_.end());
         }
 
+        /// Checks if this string starts with the provided pattern.
+        /** \param sPattern The pattern to search for
+        *   \return 'true' if the pattern has been found
+        */
+        s_bool StartsWith(const s_str_t& sPattern) const
+        {
+            if (sPattern.GetSize() <= GetSize())
+            {
+                const_iterator iterSelf = Begin();
+                const_iterator iterPattern;
+                for (iterPattern = sPattern.Begin(); iterPattern != sPattern.End(); ++iterPattern)
+                {
+                    if (*iterPattern != *iterSelf)
+                        return false;
+
+                    ++iterSelf;
+                }
+
+                return true;
+            }
+            else
+                return false;
+        }
+
+        /// Checks if this string ends with the provided pattern.
+        /** \param sPattern The pattern to search for
+        *   \return 'true' if the pattern has been found
+        */
+        s_bool EndsWith(const s_str_t& sPattern) const
+        {
+            if (sPattern.GetSize() <= GetSize())
+            {
+                const_iterator iterSelf = End() - sPattern.GetSize().Get();
+                const_iterator iterPattern;
+                for (iterPattern = sPattern.Begin(); iterPattern != sPattern.End(); ++iterPattern)
+                {
+                    if (*iterPattern != *iterSelf)
+                        return false;
+
+                    ++iterSelf;
+                }
+
+                return true;
+            }
+            else
+                return false;
+        }
+
         template<class N>
         string_element& operator [] (const s_uint_t<N>& uiIndex)
         {
-            if ( uiIndex.IsValid() &&  (uiIndex.Get() < sValue_.size()) )
-                return sValue_[uiIndex.Get()];
-            else
-                return cDummy;
+            return sValue_[uiIndex.Get()];
         }
 
         template<class N>
         const string_element& operator [] (const s_uint_t<N>& uiIndex) const
         {
-            if ( uiIndex.IsValid() && (uiIndex.Get() < sValue_.size()) )
-                return sValue_[uiIndex.Get()];
-            else
-                return cDummy;
+            return sValue_[uiIndex.Get()];
         }
 
         string_element& operator [] (const uint& uiIndex)
         {
-            if (uiIndex < sValue_.size())
-                return sValue_[uiIndex];
-            else
-                return cDummy;
+            return sValue_[uiIndex];
         }
 
         const string_element& operator [] (const uint& uiIndex) const
         {
-            if (uiIndex < sValue_.size())
-                return sValue_[uiIndex];
-            else
-                return cDummy;
+            return sValue_[uiIndex];
         }
 
         s_str_t operator + (const s_str_t& mValue) const
@@ -1107,6 +1143,7 @@ namespace Frost
                     operator << (lValue[i]) << ", ";
             }
             operator << (")");
+            return *this;
         }
 
         s_str_t& operator << (const IntegerConversionType& mIntConvType)
@@ -1130,8 +1167,6 @@ namespace Frost
         }
 
         static const s_str_t EMPTY;
-
-        static string_element cDummy;
 
         /// Makes the provided string lower case.
         /** \param sValue The string to modify
@@ -1202,8 +1237,6 @@ namespace Frost
 
     };
 
-    template<class T>
-    string_element s_str_t<T>::cDummy = '\0';
     template<class T>
     const s_str_t<T> s_str_t<T>::EMPTY = "";
 
