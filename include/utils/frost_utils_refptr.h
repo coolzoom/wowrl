@@ -145,7 +145,8 @@ namespace Frost
         /// Checks if this pointer equals another
         /** \param pValue The pointer to test
         */
-        s_bool operator == (T* pValue)
+        template<class N>
+        s_bool operator == (N* pValue) const
         {
             return (pValue_ == pValue);
         }
@@ -162,7 +163,8 @@ namespace Frost
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
         */
-        s_bool operator != (T* pValue)
+        template<class N>
+        s_bool operator != (N* pValue) const
         {
             return (pValue_ != pValue);
         }
