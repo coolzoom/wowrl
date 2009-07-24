@@ -151,7 +151,6 @@ namespace Frost
 
     s_bool GUIManager::ParseTextureAttributes_( s_ptr<GUI::Texture> pTexture, s_ptr<XML::Block> pMainBlock )
     {
-        // TODO : Implementer l'héritage pour Texture
         s_str sName = pMainBlock->GetAttribute("name");
         s_bool bVirtual = s_bool(pMainBlock->GetAttribute("virtual"));
         s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pTexture->GetParent());
@@ -231,10 +230,14 @@ namespace Frost
 
     s_bool GUIManager::ParseFontStringAttributes_( s_ptr<GUI::FontString> pFontString, s_ptr<XML::Block> pMainBlock )
     {
-        // TODO : Implementer l'héritage pour FontString
         s_str sName = pMainBlock->GetAttribute("name");
+        s_bool bVirtual = s_bool(pMainBlock->GetAttribute("virtual"));
+        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pFontString->GetParent());
         if (!sName.IsEmpty(true))
         {
+            if ( bVirtual || (pParent && pParent->IsVirtual()) )
+                pFontString->SetVirtual();
+
             pFontString->SetName(sName);
         }
         else
@@ -248,17 +251,50 @@ namespace Frost
         if (!this->AddUIObject(pFontString))
             return false;
 
-        s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pFontString->GetParent());
-
-        if (pParent && !pParent->IsVirtual())
+        if (!pFontString->IsVirtual())
             pFontString->CreateGlue();
 
         if (pParent)
             pParent->AddRegion(pFontString);
 
-        if (pMainBlock->GetAttribute("hidden") == "true")
+        s_str sInheritance = pMainBlock->GetAttribute("inherits");
+        if (!sInheritance.IsEmpty())
+        {
+            s_ctnr<s_str> lObjects = sInheritance.Cut(",");
+            s_ctnr<s_str>::iterator iter;
+            foreach (iter, lObjects)
+            {
+                iter->Trim(' ');
+                s_ptr<GUI::UIObject> pObj = this->GetUIObjectByName(*iter, true);
+                if (pObj)
+                {
+                    if (pFontString->IsObjectType(pObj->GetObjectType()))
+                    {
+                        // Inherit from the other FontString
+                        pFontString->CopyFrom(pObj);
+                    }
+                    else
+                    {
+                        Error(CLASS_NAME,
+                            "\""+pFontString->GetName()+"\" ("+pFontString->GetObjectType()+") cannot inherit "
+                            "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
+                        );
+                    }
+                }
+                else
+                {
+                    Error(CLASS_NAME,
+                        "Couldn't find inherited object \""+*iter+"\". Skipped."
+                    );
+                }
+            }
+        }
+
+        if ((pMainBlock->IsProvided("hidden") || sInheritance.IsEmpty()) &&
+            (pMainBlock->GetAttribute("hidden") == "true"))
             pFontString->Hide();
-        if (pMainBlock->GetAttribute("setAllPoints") == "true")
+        if ((pMainBlock->IsProvided("setAllPoints") || sInheritance.IsEmpty()) &&
+            (pMainBlock->GetAttribute("setAllPoints") == "true"))
             pFontString->SetAllPoints(pParent);
 
         pFontString->SetFont(
@@ -266,35 +302,44 @@ namespace Frost
             s_uint(pMainBlock->GetAttribute("fontHeight"))
         );
 
-        pFontString->SetText(pMainBlock->GetAttribute("text"));
-        pFontString->SetNonSpaceWrap(s_bool(pMainBlock->GetAttribute("nonspacewrap")));
-        pFontString->SetSpacing(s_float(pMainBlock->GetAttribute("spacing")));
+        if (pMainBlock->IsProvided("text") || sInheritance.IsEmpty())
+            pFontString->SetText(pMainBlock->GetAttribute("text"));
+        if (pMainBlock->IsProvided("nonspacewrap") || sInheritance.IsEmpty())
+            pFontString->SetNonSpaceWrap(s_bool(pMainBlock->GetAttribute("nonspacewrap")));
+        if (pMainBlock->IsProvided("spacing") || sInheritance.IsEmpty())
+            pFontString->SetSpacing(s_float(pMainBlock->GetAttribute("spacing")));
 
-        const s_str& sOutline = pMainBlock->GetAttribute("outline");
-        if ( (sOutline == "NORMAL") || (sOutline == "THICK") )
-            pFontString->SetOutlined(true);
-        else if (sOutline == "NONE")
-            pFontString->SetOutlined(false);
-        else
+        if (pMainBlock->IsProvided("outline") || sInheritance.IsEmpty())
         {
-            Warning(CLASS_NAME,
-                "Unkown outline type for "+pFontString->GetName()+" : \""+sOutline+"\"."
-            );
+            const s_str& sOutline = pMainBlock->GetAttribute("outline");
+            if ( (sOutline == "NORMAL") || (sOutline == "THICK") )
+                pFontString->SetOutlined(true);
+            else if (sOutline == "NONE")
+                pFontString->SetOutlined(false);
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Unkown outline type for "+pFontString->GetName()+" : \""+sOutline+"\"."
+                );
+            }
         }
 
-        const s_str& sJustifyH = pMainBlock->GetAttribute("justifyH");
-        if (sJustifyH == "LEFT")
-            pFontString->SetJustifyH(Text::ALIGN_LEFT);
-        else if (sJustifyH == "CENTER")
-            pFontString->SetJustifyH(Text::ALIGN_CENTER);
-        else if (sJustifyH == "RIGHT")
-            pFontString->SetJustifyH(Text::ALIGN_RIGHT);
-        else
+        if (pMainBlock->IsProvided("justifyH") || sInheritance.IsEmpty())
         {
-            Warning(CLASS_NAME,
-                "Unkown horizontal justify behavior for "+pFontString->GetName()+
-                " : \""+sJustifyH+"\"."
-            );
+            const s_str& sJustifyH = pMainBlock->GetAttribute("justifyH");
+            if (sJustifyH == "LEFT")
+                pFontString->SetJustifyH(Text::ALIGN_LEFT);
+            else if (sJustifyH == "CENTER")
+                pFontString->SetJustifyH(Text::ALIGN_CENTER);
+            else if (sJustifyH == "RIGHT")
+                pFontString->SetJustifyH(Text::ALIGN_RIGHT);
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Unkown horizontal justify behavior for "+pFontString->GetName()+
+                    " : \""+sJustifyH+"\"."
+                );
+            }
         }
 
         return true;

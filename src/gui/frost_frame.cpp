@@ -76,7 +76,7 @@ void Frame::Render()
             Layer& mLayer = iterLayer->second;
             if (!mLayer.bDisabled)
             {
-                map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+                s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
                 foreach (iterRegion, mLayer.lRegionList)
                 {
                     s_ptr<LayeredRegion> pRegion = iterRegion->second;
@@ -92,12 +92,12 @@ void Frame::Render()
         {
             Strata& mStrata = iterStrata->second;
 
-            map<s_uint, Level>::iterator iterLevel;
+            s_map<s_uint, Level>::iterator iterLevel;
             foreach (iterLevel, mStrata.lLevelList)
             {
                 Level& mLevel = iterLevel->second;
 
-                map< s_uint, s_ptr<Frame> >::iterator iterFrame;
+                s_map< s_uint, s_ptr<Frame> >::iterator iterFrame;
                 foreach (iterFrame, mLevel.lFrameList)
                 {
                     s_ptr<Frame> pFrame = iterFrame->second;
@@ -279,9 +279,9 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewChild.Delete();
                     continue;
                 }
-                this->AddChild(pNewChild);
                 if (!pNewChild->IsVirtual())
                     pNewChild->CreateGlue();
+                this->AddChild(pNewChild);
                 pNewChild->CopyFrom(pChild);
             }
         }
@@ -330,9 +330,12 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewArt.Delete();
                     continue;
                 }
-                this->AddRegion(pNewArt);
                 if (!pNewArt->IsVirtual())
                     pNewArt->CreateGlue();
+
+                pNewArt->SetDrawLayer(pArt->GetDrawLayer());
+
+                this->AddRegion(pNewArt);
                 pNewArt->CopyFrom(pArt);
             }
         }
@@ -477,19 +480,18 @@ void Frame::EnableDrawLayer( LayerType mLayer )
 
 void Frame::EnableKeyboard( const s_bool& bIsKeyboardEnabled )
 {
-    if (bIsKeyboardEnabled && !bIsKeyboardEnabled_)
+    if (!bVirtual_)
     {
-        EventReceiver::RegisterEvent("KEY_DOWN");
-        EventReceiver::RegisterEvent("KEY_PRESSED");
-        EventReceiver::RegisterEvent("KEY_DOWN_LONG");
-        EventReceiver::RegisterEvent("KEY_RELEASED");
-    }
-    else if (!bIsKeyboardEnabled && bIsKeyboardEnabled_)
-    {
-        EventReceiver::UnregisterEvent("KEY_DOWN");
-        EventReceiver::UnregisterEvent("KEY_PRESSED");
-        EventReceiver::UnregisterEvent("KEY_DOWN_LONG");
-        EventReceiver::UnregisterEvent("KEY_RELEASED");
+        if (bIsKeyboardEnabled && !bIsKeyboardEnabled_)
+        {
+            EventReceiver::RegisterEvent("KEY_PRESSED");
+            EventReceiver::RegisterEvent("KEY_RELEASED");
+        }
+        else if (!bIsKeyboardEnabled && bIsKeyboardEnabled_)
+        {
+            EventReceiver::UnregisterEvent("KEY_PRESSED");
+            EventReceiver::UnregisterEvent("KEY_RELEASED");
+        }
     }
 
     bIsKeyboardEnabled_ = bIsKeyboardEnabled;
@@ -497,23 +499,22 @@ void Frame::EnableKeyboard( const s_bool& bIsKeyboardEnabled )
 
 void Frame::EnableMouse( const s_bool& bIsMouseEnabled )
 {
-    if (bIsMouseEnabled && !bIsMouseEnabled_)
+    if (!bVirtual_)
     {
-        EventReceiver::RegisterEvent("MOUSE_MOVED");
-        EventReceiver::RegisterEvent("MOUSE_PRESSED");
-        EventReceiver::RegisterEvent("MOUSE_DOWN");
-        EventReceiver::RegisterEvent("MOUSE_DOWN_LONG");
-        EventReceiver::RegisterEvent("MOUSE_DOUBLE_CLICKED");
-        EventReceiver::RegisterEvent("MOUSE_RELEASED");
-    }
-    else if (!bIsMouseEnabled && bIsMouseEnabled_)
-    {
-        EventReceiver::UnregisterEvent("MOUSE_MOVED");
-        EventReceiver::UnregisterEvent("MOUSE_PRESSED");
-        EventReceiver::UnregisterEvent("MOUSE_DOWN");
-        EventReceiver::UnregisterEvent("MOUSE_DOWN_LONG");
-        EventReceiver::UnregisterEvent("MOUSE_DOUBLE_CLICKED");
-        EventReceiver::UnregisterEvent("MOUSE_RELEASED");
+        if (bIsMouseEnabled && !bIsMouseEnabled_)
+        {
+            EventReceiver::RegisterEvent("MOUSE_MOVED");
+            EventReceiver::RegisterEvent("MOUSE_PRESSED");
+            EventReceiver::RegisterEvent("MOUSE_DOUBLE_CLICKED");
+            EventReceiver::RegisterEvent("MOUSE_RELEASED");
+        }
+        else if (!bIsMouseEnabled && bIsMouseEnabled_)
+        {
+            EventReceiver::UnregisterEvent("MOUSE_MOVED");
+            EventReceiver::UnregisterEvent("MOUSE_PRESSED");
+            EventReceiver::UnregisterEvent("MOUSE_DOUBLE_CLICKED");
+            EventReceiver::UnregisterEvent("MOUSE_RELEASED");
+        }
     }
 
     bIsMouseEnabled_ = bIsMouseEnabled;
@@ -521,10 +522,13 @@ void Frame::EnableMouse( const s_bool& bIsMouseEnabled )
 
 void Frame::EnableMouseWheel( const s_bool& bIsMouseWheelEnabled )
 {
-    if (bIsMouseWheelEnabled && !bIsMouseWheelEnabled_)
-        EventReceiver::RegisterEvent("MOUSE_WHEEL");
-    else if (!bIsMouseWheelEnabled && bIsMouseWheelEnabled_)
-        EventReceiver::UnregisterEvent("MOUSE_WHEEL");
+    if (!bVirtual_)
+    {
+        if (bIsMouseWheelEnabled && !bIsMouseWheelEnabled_)
+            EventReceiver::RegisterEvent("MOUSE_WHEEL");
+        else if (!bIsMouseWheelEnabled && bIsMouseWheelEnabled_)
+            EventReceiver::UnregisterEvent("MOUSE_WHEEL");
+    }
 
     bIsMouseWheelEnabled_ = bIsMouseWheelEnabled;
 }
@@ -572,6 +576,19 @@ void Frame::AddRegion( s_ptr<LayeredRegion> pRegion )
         {
             lRegionList_[pRegion->GetID()] = pRegion;
             FireBuildLayerList_();
+
+            if (!bVirtual_)
+            {
+                s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+                const s_str& sRawName = pRegion->GetRawName();
+                if (sRawName.StartsWith("$parent"))
+                {
+                    s_str sTempName = pRegion->GetName();
+                    sTempName.EraseFromStart(sName_.GetSize());
+                    pLua->GetGlobal(pRegion->GetName());
+                    pLua->SetGlobal(sName_+"."+sTempName);
+                }
+            }
         }
         else
         {
@@ -611,6 +628,19 @@ void Frame::AddChild( s_ptr<Frame> pChild )
         {
             lChildList_[pChild->GetID()] = pChild;
             FireBuildStrataList_();
+
+            if (!bVirtual_)
+            {
+                s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+                const s_str& sRawName = pChild->GetRawName();
+                if (sRawName.StartsWith("$parent"))
+                {
+                    s_str sTempName = pChild->GetName();
+                    sTempName.EraseFromStart(sName_.GetSize());
+                    pLua->GetGlobal(pChild->GetName());
+                    pLua->SetGlobal(sName_+"."+sTempName);
+                }
+            }
         }
         else
         {

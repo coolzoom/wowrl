@@ -1,5 +1,5 @@
 #Core
 UIParent:1
-Templates:0
+Templates:1
 #Others
 Test:1

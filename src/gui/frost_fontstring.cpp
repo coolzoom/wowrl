@@ -78,7 +78,28 @@ void FontString::Update()
 
 s_str FontString::Serialize(const s_str& sTab) const
 {
-    s_str sStr = UIObject::Serialize(sTab);
+    s_str sStr = LayeredRegion::Serialize(sTab);
+
+    sStr << sTab << "  # Font name   : " << sFontName_ << "\n";
+    sStr << sTab << "  # Font height : " << uiHeight_ << "\n";
+    sStr << sTab << "  # Text ready  : " << pText_.IsValid() << "\n";
+    sStr << sTab << "  # Text        : \"" << sText_ << "\"\n";
+    sStr << sTab << "  # Outlined    : " << bIsOutlined_ << "\n";
+    sStr << sTab << "  # Text color  : " +  mTextColor_ << "\n";
+    sStr << sTab << "  # Spacing     : " << fSpacing_ << "\n";
+    sStr << sTab << "  # Justify     : ";
+    switch (mJustifyH_)
+    {
+        case Text::ALIGN_LEFT : sStr << "LEFT\n"; break;
+        case Text::ALIGN_CENTER : sStr << "CENTER\n"; break;
+        case Text::ALIGN_RIGHT : sStr << "RIGHT\n"; break;
+    }
+    sStr << sTab << "  # NonSpaceW.  : " << bCanNonSpaceWrap_ << "\n";
+    if (bHasShadow_)
+    {
+    sStr << sTab << "  # Shadow off. : " << (iShadowXOffset_, iShadowYOffset_) << "\n";
+    sStr << sTab << "  # Shadow col. : " +  mShadowColor_ << "\n";
+    }
 
     return sStr;
 }
@@ -93,20 +114,52 @@ void FontString::CreateGlue()
     pLua->SetGlobal(sName_);
 }
 
-const s_str& FontString::GetFontName() const
+void FontString::CopyFrom( s_ptr<UIObject> pObj )
 {
-    if (pText_)
-        return pText_->GetFontName();
+    UIObject::CopyFrom(pObj);
+
+    s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pObj);
+
+    if (pFontString)
+    {
+        s_str sFontName = pFontString->GetFontName();
+        s_uint uiHeight = pFontString->GetFontHeight();
+        if (!sFontName.IsEmpty() && !uiHeight.IsNull())
+        {
+            this->SetFont(sFontName, uiHeight);
+        }
+
+        this->SetJustifyH(pFontString->GetJustifyH());
+        this->SetSpacing(pFontString->GetSpacing());
+        this->SetText(pFontString->GetText());
+        this->SetOutlined(pFontString->IsOutlined());
+        if (pFontString->HasShadow())
+        {
+            this->SetShadow(true);
+            this->SetShadowColor(pFontString->GetShadowColor());
+            this->SetShadowOffsets(pFontString->GetShadowOffset());
+        }
+        this->SetTextColor(pFontString->GetTextColor());
+        this->SetNonSpaceWrap(pFontString->CanNonSpaceWrap());
+
+    }
     else
-        return s_str::EMPTY;
+    {
+        Error(lType_.Back(),
+            "Trying to derive \""+sName_+"\" from \""+pObj->GetName()+"\", but they are not of the same type "
+            "(respectively "+this->GetObjectType()+" and "+pObj->GetObjectType()+")."
+        );
+    }
 }
 
-const s_float& FontString::GetFontHeight() const
+const s_str& FontString::GetFontName() const
 {
-    if (pText_)
-        return pText_->GetFontSize();
-    else
-        return s_float::NaN;
+    return sFontName_;
+}
+
+const s_uint& FontString::GetFontHeight() const
+{
+    return uiHeight_;
 }
 
 void FontString::SetOutlined( const s_bool& bIsOutlined )
@@ -121,10 +174,7 @@ const s_bool& FontString::IsOutlined() const
 
 Text::Alignment FontString::GetJustifyH() const
 {
-    if (pText_)
-        return pText_->GetAlignment();
-    else
-        return Text::ALIGN_LEFT;
+    return mJustifyH_;
 }
 
 const Color& FontString::GetShadowColor() const
@@ -149,10 +199,7 @@ const s_int& FontString::GetShadowYOffset() const
 
 const s_float& FontString::GetSpacing() const
 {
-    if (pText_)
-        return pText_->GetTracking();
-    else
-        return s_float::NaN;
+    return fSpacing_;
 }
 
 const Color& FontString::GetTextColor() const
@@ -162,12 +209,15 @@ const Color& FontString::GetTextColor() const
 
 void FontString::SetFont( const s_str& sFontName, const s_uint& uiHeight )
 {
+    sFontName_ = sFontName;
+    uiHeight_ = uiHeight;
     pText_ = s_refptr<Text>(new Text(sFontName, s_float(uiHeight)));
     pText_->SetRemoveStartingSpaces(true);
 }
 
 void FontString::SetJustifyH( Text::Alignment mJustifyH )
 {
+    mJustifyH_ = mJustifyH;
     if (pText_)
         pText_->SetAlignment(mJustifyH);
 }
@@ -191,6 +241,7 @@ void FontString::SetShadowOffsets( const s_array<s_int,2>& lShadowOffsets )
 
 void FontString::SetSpacing( const s_float& fSpacing )
 {
+    fSpacing_ = fSpacing;
     if (pText_)
         pText_->SetTracking(fSpacing);
     else
@@ -229,10 +280,7 @@ s_float FontString::GetStringWidth() const
 
 const s_str& FontString::GetText() const
 {
-    if (pText_)
-        return pText_->GetText();
-    else
-        return s_str::EMPTY;
+    return sText_;
 }
 
 void FontString::SetNonSpaceWrap( const s_bool& bCanNonSpaceWrap )
@@ -252,11 +300,11 @@ void FontString::SetShadow( const s_bool& bHasShadow )
 
 void FontString::SetText( const s_str& sText )
 {
+    sText_ = sText;
     if (pText_)
     {
         pText_->SetText(sText);
         FireUpdateBorders();
-        uiAbsWidth_ = uiAbsHeight_ = s_uint::NaN;
     }
     else
     {
@@ -342,7 +390,6 @@ void FontString::UpdateBorders_()
             else
             {
                 pText_->SetBoxWidth(s_float::NaN);
-                uiAbsWidth_ = s_uint(pText_->GetWidth());
             }
         }
 
@@ -358,12 +405,11 @@ void FontString::UpdateBorders_()
             else
             {
                 pText_->SetBoxHeight(s_float::NaN);
-                uiAbsHeight_ = s_uint(pText_->GetHeight());
             }
         }
 
-        MakeBorders_(iTop, iBottom, iYCenter, s_int(uiAbsHeight_));
-        MakeBorders_(iLeft, iRight, iXCenter, s_int(uiAbsWidth_));
+        MakeBorders_(iTop, iBottom, iYCenter, s_int(pText_->GetHeight()));
+        MakeBorders_(iLeft, iRight, iXCenter, s_int(pText_->GetWidth()));
 
         if (bReady_)
         {
@@ -371,12 +417,6 @@ void FontString::UpdateBorders_()
             lBorderList_[BORDER_RIGHT] = iRight;
             lBorderList_[BORDER_TOP] = iTop;
             lBorderList_[BORDER_BOTTOM] = iBottom;
-
-            bIsWidthAbs_ = true;
-            uiAbsWidth_ = s_uint(iRight - iLeft);
-
-            bIsHeightAbs_ = true;
-            uiAbsHeight_ = s_uint(iBottom - iTop);
 
             this->UpdateDimensions_();
         }
