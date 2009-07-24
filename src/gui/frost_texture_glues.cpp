@@ -79,10 +79,10 @@ int LuaTexture::_GetVertexColor( lua_State* pLua )
 
     Color mColor = pTextureParent_->GetVertexColor();
 
-    mFunc.Push(mColor.GetR());
-    mFunc.Push(mColor.GetG());
-    mFunc.Push(mColor.GetB());
-    mFunc.Push(mColor.GetA());
+    mFunc.Push(s_float(mColor.GetR())/255.0f);
+    mFunc.Push(s_float(mColor.GetG())/255.0f);
+    mFunc.Push(s_float(mColor.GetB())/255.0f);
+    mFunc.Push(s_float(mColor.GetA())/255.0f);
 
     return mFunc.Return();
 }
@@ -171,14 +171,14 @@ int LuaTexture::_SetGradient( lua_State* pLua )
         pTextureParent_->SetGradient(Gradient(
             mOrientation,
             Color(
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber()),
-                s_uint(255*mFunc.Get(3)->GetNumber())
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(3)->GetNumber())
             ),
             Color(
-                s_uint(255*mFunc.Get(4)->GetNumber()),
-                s_uint(255*mFunc.Get(5)->GetNumber()),
-                s_uint(255*mFunc.Get(6)->GetNumber())
+                s_uint(255.0f*mFunc.Get(4)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(5)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(6)->GetNumber())
             )
         ));
     }
@@ -217,16 +217,16 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
         pTextureParent_->SetGradient(Gradient(
             mOrientation,
             Color(
-                s_uint(255*mFunc.Get(4)->GetNumber()),
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber()),
-                s_uint(255*mFunc.Get(3)->GetNumber())
+                s_uint(255.0f*mFunc.Get(4)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(3)->GetNumber())
             ),
             Color(
-                s_uint(255*mFunc.Get(8)->GetNumber()),
-                s_uint(255*mFunc.Get(5)->GetNumber()),
-                s_uint(255*mFunc.Get(6)->GetNumber()),
-                s_uint(255*mFunc.Get(7)->GetNumber())
+                s_uint(255.0f*mFunc.Get(8)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(5)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(6)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(7)->GetNumber())
             )
         ));
     }
@@ -313,18 +313,18 @@ int LuaTexture::_SetTexture( lua_State* pLua )
             if (mFunc.IsProvided(3))
             {
                 mColor = Color(
-                    s_uint(255*mFunc.Get(3)->GetNumber()),
-                    s_uint(255*mFunc.Get(0)->GetNumber()),
-                    s_uint(255*mFunc.Get(1)->GetNumber()),
-                    s_uint(255*mFunc.Get(2)->GetNumber())
+                    s_uint(255.0f*mFunc.Get(3)->GetNumber()),
+                    s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uint(255.0f*mFunc.Get(2)->GetNumber())
                 );
             }
             else
             {
                 mColor = Color(
-                    s_uint(255*mFunc.Get(0)->GetNumber()),
-                    s_uint(255*mFunc.Get(1)->GetNumber()),
-                    s_uint(255*mFunc.Get(2)->GetNumber())
+                    s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uint(255.0f*mFunc.Get(2)->GetNumber())
                 );
             }
             pTextureParent_->SetColor(mColor);
@@ -348,18 +348,18 @@ int LuaTexture::_SetVertexColor( lua_State* pLua )
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(3)->GetNumber()),
-                s_uint(255*mFunc.Get(0)->GetNumber()),
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber())
+                s_uint(255.0f*mFunc.Get(3)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
         else
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(0)->GetNumber()),
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber())
+                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
 
