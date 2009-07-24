@@ -37,8 +37,8 @@ Block::Block()
 {
 }
 
-Block::Block( const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_bool& bRadio ) :
-    sName_(sName), uiMaxNumber_(uiMaxNbr), uiMinNumber_(uiMinNbr), bRadio_(bRadio)
+Block::Block( const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_str& sFile, const s_uint& uiLineNbr, const s_bool& bRadio ) :
+    sName_(sName), uiMaxNumber_(uiMaxNbr), uiMinNumber_(uiMinNbr), bRadio_(bRadio), sFile_(sFile), uiLineNbr_(uiLineNbr)
 {
 }
 
@@ -53,6 +53,9 @@ Block::Block( const Block& mValue )
     pDoc_ = mValue.pDoc_;
     pParent_ = mValue.pParent_;
     bCreating_ = mValue.bCreating_;
+
+    sFile_ = mValue.sFile_;
+    uiLineNbr_ = mValue.uiLineNbr_;
 
     lDerivatedList_ = mValue.lDerivatedList_;
 
@@ -74,7 +77,7 @@ Block::Block( const Block& mValue )
 
 Block::~Block()
 {
-    multimap< s_str, s_ptr<Block> >::iterator iterBlock;
+    s_multimap< s_str, s_ptr<Block> >::iterator iterBlock;
     foreach (iterBlock, lFoundBlockList_)
     {
         iterBlock->second.Delete();
@@ -83,18 +86,13 @@ Block::~Block()
 
 s_bool Block::Add( const Attribute& mAttrib )
 {
-    if (!lAttributeList_.Find(mAttrib.sName))
-    {
-        lAttributeList_[mAttrib.sName] = mAttrib;
-        return true;
-    }
-    else
-    {
-        Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
-            "Redefining \""+mAttrib.sName+"\" attribute (check inheritance). Skipped."
-        );
-        return false;
-    }
+    lAttributeList_[mAttrib.sName] = mAttrib;
+    return true;
+}
+
+void Block::RemoveAttribute( const s_str& sAttributeName )
+{
+    lAttributeList_.Erase(sAttributeName);
 }
 
 s_bool Block::CheckAttributes( const s_str& sAttributes )
@@ -443,12 +441,7 @@ s_bool Block::IsProvided( const s_str& sName )
     }
     else
     {
-        Error(CLASS_NAME + "("+sName_+")", "Attribute \""+sName+"\" doesn't exist.");
-        Log("List :");
-        s_map<s_str, Attribute>::iterator iterAttr;
-        foreach (iterAttr, lAttributeList_)
-            Log("    "+iterAttr->first);
-        return "";
+        return false;
     }
 }
 
@@ -541,31 +534,20 @@ void Block::AddBlock()
 
 s_ptr<Block> Block::CreateDefBlock( const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr )
 {
-    if (!HasBlock(sName))
+    if (bRadioChilds_)
     {
-        if (bRadioChilds_)
-        {
-            Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
-                "A neighbour has been declared as a radio block, but \""+sName+"\" isn't. "
-                "I'll be marked as radio block as well."
-            );
-            lDefBlockList_[sName] = Block(sName, 0, 1, true);
-        }
-        else
-            lDefBlockList_[sName] = Block(sName, uiMinNbr, uiMaxNbr);
-        s_ptr<Block> pBlock = &lDefBlockList_[sName];
-        pBlock->SetParent(this);
-        pBlock->SetDocument(pDoc_);
-        return pBlock;
+        Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            "A neighbour has been declared as a radio block, but \""+sName+"\" isn't. "
+            "I'll be marked as radio block as well."
+        );
+        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetFileName(), pDoc_->GetLineNbr(), true);
     }
     else
-    {
-        Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
-            "There is already a \""+sName+"\" block defined."
-        );
-
-        return NULL;
-    }
+        lDefBlockList_[sName] = Block(sName, uiMinNbr, uiMaxNbr, pDoc_->GetFileName(), pDoc_->GetLineNbr());
+    s_ptr<Block> pBlock = &lDefBlockList_[sName];
+    pBlock->SetParent(this);
+    pBlock->SetDocument(pDoc_);
+    return pBlock;
 }
 
 s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
@@ -595,7 +577,7 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
         }
 
         bRadioChilds_ = true;
-        lDefBlockList_[sName] = Block(sName, 0, 1, true);
+        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetFileName(), pDoc_->GetLineNbr(), true);
         s_ptr<Block> pBlock = &lDefBlockList_[sName];
         pBlock->SetParent(this);
         pBlock->SetDocument(pDoc_);
@@ -657,7 +639,7 @@ s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock )
                 iterPreDef->second.uiMax = 1;
             }
 
-            map<s_str, Block>::iterator iterDef;
+            s_map<s_str, Block>::iterator iterDef;
             foreach (iterDef, lDefBlockList_)
             {
                 iterDef->second.SetRadio();
@@ -677,4 +659,14 @@ s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock )
 
         return NULL;
     }
+}
+
+const s_str& Block::GetFile() const
+{
+    return sFile_;
+}
+
+const s_uint& Block::GetLineNbr() const
+{
+    return uiLineNbr_;
 }
