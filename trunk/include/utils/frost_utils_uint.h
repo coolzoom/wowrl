@@ -743,8 +743,12 @@ namespace Frost
     typedef s_uint_t<uint>   s_uint;
     typedef s_uint_t<ulong>  s_ulong;
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class TypeTraits<uchar>     { public : typedef s_uchar  Type; };
     template<> class TypeTraits<ushort>    { public : typedef s_ushort Type; };
     template<> class TypeTraits<uint>      { public : typedef s_uint   Type; };
     template<> class TypeTraits<ulong>     { public : typedef s_ulong  Type; };
+    /** \endcond
+    */
 }
