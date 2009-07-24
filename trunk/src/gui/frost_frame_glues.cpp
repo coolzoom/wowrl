@@ -177,10 +177,10 @@ int LuaFrame::_GetBackdropBorderColor(lua_State* pLua)
     if (pFrameParent_->GetBackdrop())
     {
         const Color& mColor = pFrameParent_->GetBackdrop()->GetEdgeColor();
-        mFunc.Push(mColor.GetR());
-        mFunc.Push(mColor.GetG());
-        mFunc.Push(mColor.GetB());
-        mFunc.Push(mColor.GetA());
+        mFunc.Push(s_float(mColor.GetR())/255.0f);
+        mFunc.Push(s_float(mColor.GetG())/255.0f);
+        mFunc.Push(s_float(mColor.GetB())/255.0f);
+        mFunc.Push(s_float(mColor.GetA())/255.0f);
     }
     else
     {
@@ -197,10 +197,10 @@ int LuaFrame::_GetBackdropColor(lua_State* pLua)
     if (pFrameParent_->GetBackdrop())
     {
         const Color& mColor = pFrameParent_->GetBackdrop()->GetBackgroundColor();
-        mFunc.Push(mColor.GetR());
-        mFunc.Push(mColor.GetG());
-        mFunc.Push(mColor.GetB());
-        mFunc.Push(mColor.GetA());
+        mFunc.Push(s_float(mColor.GetR())/255.0f);
+        mFunc.Push(s_float(mColor.GetG())/255.0f);
+        mFunc.Push(s_float(mColor.GetB())/255.0f);
+        mFunc.Push(s_float(mColor.GetA())/255.0f);
     }
     else
     {
@@ -601,18 +601,18 @@ int LuaFrame::_SetBackdropBorderColor(lua_State* pLua)
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(3)->GetNumber()),
-                s_uint(255*mFunc.Get(0)->GetNumber()),
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber())
+                s_uint(255.0f*mFunc.Get(3)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
         else
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(0)->GetNumber()),
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber())
+                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
 
@@ -637,18 +637,18 @@ int LuaFrame::_SetBackdropColor(lua_State* pLua)
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(3)->GetNumber()),
-                s_uint(255*mFunc.Get(0)->GetNumber()),
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber())
+                s_uint(255.0f*mFunc.Get(3)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
         else
         {
             mColor = Color(
-                s_uint(255*mFunc.Get(0)->GetNumber()),
-                s_uint(255*mFunc.Get(1)->GetNumber()),
-                s_uint(255*mFunc.Get(2)->GetNumber())
+                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uint(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
 
