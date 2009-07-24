@@ -30,7 +30,8 @@ namespace Frost
     {
         fBoxW_ = fBoxH_ = s_float::INFPLUS;
         mAlign_ = ALIGN_LEFT;
-        fLineSpacing_ = 1.0f;
+        mVertAlign_ = ALIGN_MIDDLE;
+        fLineSpacing_ = 1.5f;
         fTracking_ = 0.0f;
         sFileName_ = sFileName;
         fSize_ = fSize;
@@ -68,8 +69,7 @@ namespace Frost
 
     s_float Text::GetLineHeight() const
     {
-        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)'0');
-        return (mUVRect.bottom - mUVRect.top)*pFontMat_->GetWidth();
+        return fSize_;
     }
 
     void Text::SetText( const s_str& sText )
@@ -200,7 +200,7 @@ namespace Frost
 
         if (bReady_)
         {
-            fHeight = s_float(sText_.CountOccurences("\n")+1)*GetLineHeight();
+            fHeight = GetLineHeight()*(s_float(sText_.CountOccurences("\n"))*GetLineHeight()*fLineSpacing_ + 1.0f);
         }
 
         return fHeight;
@@ -260,9 +260,19 @@ namespace Frost
         mAlign_ = mAlign;
     }
 
+    void Text::SetVerticalAlignment( const Text::VerticalAlignment& mVertAlign )
+    {
+        mVertAlign_ = mVertAlign;
+    }
+
     const Text::Alignment& Text::GetAlignment() const
     {
         return mAlign_;
+    }
+
+    const Text::VerticalAlignment& Text::GetVerticalAlignment() const
+    {
+        return mVertAlign_;
     }
 
     void Text::SetTracking( const s_float& fTracking )
@@ -412,185 +422,188 @@ namespace Frost
         else
             uiMaxLineNbr = s_uint::INF;
 
-        s_ctnr<s_str> lManualLineList = sText_.CutEach("\n");
-        s_ctnr<s_str>::iterator iterManual;
-        foreach (iterManual, lManualLineList)
+        if (uiMaxLineNbr >= 1)
         {
-            // Make a temporary line array
-            s_ctnr<Line> lLines;
-            Line mLine;
-
-            s_str::iterator iterChar1;
-            foreach (iterChar1, *iterManual)
+            s_ctnr<s_str> lManualLineList = sText_.CutEach("\n");
+            s_ctnr<s_str>::iterator iterManual;
+            foreach (iterManual, lManualLineList)
             {
-                // Read format tags
-                if (*iterChar1 == '|')
+                // Make a temporary line array
+                s_ctnr<Line> lLines;
+                Line mLine;
+
+                s_str::iterator iterChar1;
+                foreach (iterChar1, *iterManual)
                 {
-                    iterChar1++;
-                    if (iterChar1 != iterManual->End())
+                    // Read format tags
+                    if (*iterChar1 == '|')
                     {
-                        if (*iterChar1 == '|')
-                        {
-                        }
-                        else
-                        {
-                            GetFormat(iterChar1, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
-                            continue;
-                        }
-                    }
-                    else
-                        break;
-                }
-
-                if (*iterChar1 == ' ')
-                    mLine.fWidth += fSpaceWidth_;
-                else
-                {
-                    mLine.fWidth += GetCharacterWidth(*iterChar1);
-                    s_str::iterator iterNext = iterChar1 + 1;
-                    if (iterNext != iterManual->End())
-                    {
-                        if (*iterNext != ' ')
-                            mLine.fWidth += GetCharacterKerning((uint)*iterChar1, (uint)*iterNext);
-                    }
-                }
-                mLine.sCaption += *iterChar1;
-
-                if (mLine.fWidth > fBoxW_)
-                {
-                    // Whoops, the line is too long...
-                    if (mLine.sCaption.FindPos(" ").IsValid())
-                    {
-                        // There are several words on this line, we'll
-                        // be able to put the last one on the next line
-                        s_str::iterator iterChar2 = mLine.sCaption.End();
-                        s_str sErasedString;
-                        s_uint uiCharToErase;
-                        s_float fErasedWidth;
-                        s_bool bLastWasWord;
-                        while ( (mLine.fWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
-                        {
-                            iterChar2--;
-                            if (*iterChar2 == ' ')
-                            {
-                                if ( bLastWasWord && (mLine.fWidth-fErasedWidth <= fBoxW_) && !bRemoveStartingSpaces_ )
-                                {
-                                    break;
-                                }
-                                else
-                                {
-                                    mLine.fWidth -= fErasedWidth + fSpaceWidth_;
-                                    sErasedString.PushFront(*iterChar2);
-                                    fErasedWidth = 0.0f;
-                                    uiCharToErase++;
-                                }
-                            }
-                            else
-                            {
-                                fErasedWidth += GetCharacterWidth(*iterChar2);
-                                sErasedString.PushFront(*iterChar2);
-                                uiCharToErase++;
-                                bLastWasWord = true;
-                            }
-                        }
-
-                        if (bRemoveStartingSpaces_)
-                        {
-                            while (*iterChar2 == ' ')
-                            {
-                                uiCharToErase--;
-                                sErasedString.EraseFromStart(1);
-                                iterChar2++;
-                            }
-                        }
-
-                        mLine.sCaption.EraseFromEnd(uiCharToErase);
-
-                        lLines.PushBack(mLine);
-                        uiCounter += mLine.sCaption.GetLength();
-                        mLine.fWidth = GetStringWidth(sErasedString);
-                        mLine.sCaption = sErasedString;
-                    }
-                    else
-                    {
-                        // There is only one word on this line, so this
-                        // word is just too long for the text box : our
-                        // only option is to truncate it.
-                        s_float fWordWidth = 3*(GetCharacterWidth((uint)'.') + fTracking_);
-                        s_str::iterator iterChar2 = mLine.sCaption.End();
-                        s_str sErasedWord;
-                        s_uint uiCharToErase;
-                        while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
-                        {
-                            iterChar2--;
-                            mLine.fWidth -= GetCharacterWidth(*iterChar2);
-                            uiCharToErase++;
-                        }
-                        mLine.sCaption.EraseFromEnd(uiCharToErase);
-                        mLine.sCaption << "...";
-
-                        s_str::iterator iterTemp = iterChar1;
-                        iterChar1 = iterManual->Get(" ", s_uint(s_ptrdiff(iterChar1 - iterManual->begin())));
-
+                        iterChar1++;
                         if (iterChar1 != iterManual->End())
                         {
-                            // Read cutted format tags
-                            while (iterTemp != iterChar1)
+                            if (*iterChar1 == '|')
                             {
-                                if ((*iterTemp) == '|')
-                                {
-                                    iterTemp++;
-                                    if (iterTemp != iterChar1)
-                                    {
-                                        if ((*iterTemp) == '|')
-                                        {
-                                        }
-                                        else
-                                        {
-                                            GetFormat(iterTemp, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
-                                        }
-                                    }
-                                }
-                                iterTemp++;
-                            }
-
-                            // Look for the next word
-                            while (iterChar1 != iterManual->End())
-                            {
-                                if ((*iterChar1) == ' ')
-                                    iterChar1++;
-                                else
-                                    break;
-                            }
-
-                            // Add the line
-                            if (iterChar1 != iterManual->End())
-                            {
-                                iterChar1--;
-                                lLines.PushBack(mLine);
-                                uiCounter += mLine.sCaption.GetLength();
-                                mLine.fWidth = 0.0f;
-                                mLine.sCaption = "";
                             }
                             else
-                                break;
+                            {
+                                GetFormat(iterChar1, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
+                                continue;
+                            }
                         }
                         else
                             break;
                     }
-                }
-            }
-            lLines.PushBack(mLine);
-            uiCounter += mLine.sCaption.GetLength();
 
-            // Add the maximum number of line to this Text
-            s_ctnr<Line>::iterator iterLine;
-            foreach (iterLine, lLines)
-            {
-                lLineList_.PushBack(*iterLine);
-                if (lLineList_.GetSize() == uiMaxLineNbr)
+                    if (*iterChar1 == ' ')
+                        mLine.fWidth += fSpaceWidth_;
+                    else
+                    {
+                        mLine.fWidth += GetCharacterWidth(*iterChar1);
+                        s_str::iterator iterNext = iterChar1 + 1;
+                        if (iterNext != iterManual->End())
+                        {
+                            if (*iterNext != ' ')
+                                mLine.fWidth += GetCharacterKerning((uint)*iterChar1, (uint)*iterNext);
+                        }
+                    }
+                    mLine.sCaption += *iterChar1;
+
+                    if (mLine.fWidth > fBoxW_)
+                    {
+                        // Whoops, the line is too long...
+                        if (mLine.sCaption.FindPos(" ").IsValid())
+                        {
+                            // There are several words on this line, we'll
+                            // be able to put the last one on the next line
+                            s_str::iterator iterChar2 = mLine.sCaption.End();
+                            s_str sErasedString;
+                            s_uint uiCharToErase;
+                            s_float fErasedWidth;
+                            s_bool bLastWasWord;
+                            while ( (mLine.fWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
+                            {
+                                iterChar2--;
+                                if (*iterChar2 == ' ')
+                                {
+                                    if ( bLastWasWord && (mLine.fWidth-fErasedWidth <= fBoxW_) && !bRemoveStartingSpaces_ )
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        mLine.fWidth -= fErasedWidth + fSpaceWidth_;
+                                        sErasedString.PushFront(*iterChar2);
+                                        fErasedWidth = 0.0f;
+                                        uiCharToErase++;
+                                    }
+                                }
+                                else
+                                {
+                                    fErasedWidth += GetCharacterWidth(*iterChar2);
+                                    sErasedString.PushFront(*iterChar2);
+                                    uiCharToErase++;
+                                    bLastWasWord = true;
+                                }
+                            }
+
+                            if (bRemoveStartingSpaces_)
+                            {
+                                while (*iterChar2 == ' ')
+                                {
+                                    uiCharToErase--;
+                                    sErasedString.EraseFromStart(1);
+                                    iterChar2++;
+                                }
+                            }
+
+                            mLine.sCaption.EraseFromEnd(uiCharToErase);
+
+                            lLines.PushBack(mLine);
+                            uiCounter += mLine.sCaption.GetLength();
+                            mLine.fWidth = GetStringWidth(sErasedString);
+                            mLine.sCaption = sErasedString;
+                        }
+                        else
+                        {
+                            // There is only one word on this line, so this
+                            // word is just too long for the text box : our
+                            // only option is to truncate it.
+                            s_float fWordWidth = 3*(GetCharacterWidth((uint)'.') + fTracking_);
+                            s_str::iterator iterChar2 = mLine.sCaption.End();
+                            s_str sErasedWord;
+                            s_uint uiCharToErase;
+                            while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
+                            {
+                                iterChar2--;
+                                mLine.fWidth -= GetCharacterWidth(*iterChar2);
+                                uiCharToErase++;
+                            }
+                            mLine.sCaption.EraseFromEnd(uiCharToErase);
+                            mLine.sCaption << "...";
+
+                            s_str::iterator iterTemp = iterChar1;
+                            iterChar1 = iterManual->Get(" ", s_uint(s_ptrdiff(iterChar1 - iterManual->begin())));
+
+                            if (iterChar1 != iterManual->End())
+                            {
+                                // Read cutted format tags
+                                while (iterTemp != iterChar1)
+                                {
+                                    if ((*iterTemp) == '|')
+                                    {
+                                        iterTemp++;
+                                        if (iterTemp != iterChar1)
+                                        {
+                                            if ((*iterTemp) == '|')
+                                            {
+                                            }
+                                            else
+                                            {
+                                                GetFormat(iterTemp, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
+                                            }
+                                        }
+                                    }
+                                    iterTemp++;
+                                }
+
+                                // Look for the next word
+                                while (iterChar1 != iterManual->End())
+                                {
+                                    if ((*iterChar1) == ' ')
+                                        iterChar1++;
+                                    else
+                                        break;
+                                }
+
+                                // Add the line
+                                if (iterChar1 != iterManual->End())
+                                {
+                                    iterChar1--;
+                                    lLines.PushBack(mLine);
+                                    uiCounter += mLine.sCaption.GetLength();
+                                    mLine.fWidth = 0.0f;
+                                    mLine.sCaption = "";
+                                }
+                                else
+                                    break;
+                            }
+                            else
+                                break;
+                        }
+                    }
+                }
+                lLines.PushBack(mLine);
+                uiCounter += mLine.sCaption.GetLength();
+
+                // Add the maximum number of line to this Text
+                s_ctnr<Line>::iterator iterLine;
+                foreach (iterLine, lLines)
                 {
-                    return;
+                    lLineList_.PushBack(*iterLine);
+                    if (lLineList_.GetSize() == uiMaxLineNbr)
+                    {
+                        return;
+                    }
                 }
             }
         }
@@ -598,96 +611,158 @@ namespace Frost
 
     void Text::UpdateCache_()
     {
-        if (fBoxW_.IsValid())
+        lLetterCache_.Clear();
+
+        if (!lLineList_.IsEmpty())
         {
-            fW_ = fBoxW_;
-        }
-        else
-        {
-            fW_ = 0;
+            if (fBoxW_.IsValid())
+            {
+                fW_ = fBoxW_;
+            }
+            else
+            {
+                fW_ = 0.0f;
+                s_ctnr<Line>::iterator iterLine;
+                foreach (iterLine, lLineList_)
+                {
+                    fW_ = s_float::Max(fW_, iterLine->fWidth);
+                }
+            }
+
+            fH_ = GetLineHeight()*(s_float(lLineList_.GetSize() - 1)*fLineSpacing_ + 1.0f);
+
+            s_float fX, fY;
+            s_float fX0;
+
+            if (fBoxW_.IsValid())
+            {
+                switch (mAlign_)
+                {
+                    case ALIGN_LEFT :
+                        fX0 = 0.0f;
+                        break;
+                    case ALIGN_CENTER :
+                        fX0 = fBoxW_*0.5f;
+                        break;
+                    case ALIGN_RIGHT :
+                        fX0 = fBoxW_;
+                        break;
+                }
+            }
+            else
+            {
+                fX0 = 0.0f;
+            }
+
+            s_float fYOffset;
+            if (fBoxH_.IsValid())
+            {
+                switch (mVertAlign_)
+                {
+                    case ALIGN_TOP :
+                        fY = 0.0f;
+                        break;
+                    case ALIGN_MIDDLE :
+                        fY = (fBoxH_ - fH_)*0.5f;
+                        break;
+                    case ALIGN_BOTTOM :
+                        fY = (fBoxH_ - fH_);
+                        break;
+                }
+            }
+            else
+            {
+                switch (mVertAlign_)
+                {
+                    case ALIGN_TOP :
+                        fY = 0.0f;
+                        break;
+                    case ALIGN_MIDDLE :
+                        fY = -fH_*0.5f;
+                        break;
+                    case ALIGN_BOTTOM :
+                        fY = -fH_;
+                        break;
+                }
+            }
+
+            s_uint uiCounter;
+
+            Letter mLetter;
+
+            Color mColor = Color(s_uint::NaN);
+
             s_ctnr<Line>::iterator iterLine;
             foreach (iterLine, lLineList_)
             {
-                fW_ = s_float::Max(fW_, iterLine->fWidth);
-            }
-        }
-
-        s_float fX, fY = 0;
-        s_uint uiCounter;
-
-        lLetterCache_.Clear();
-
-        Letter mLetter;
-
-        Color mColor = Color(s_uint::NaN);
-
-        s_ctnr<Line>::iterator iterLine;
-        foreach (iterLine, lLineList_)
-        {
-            switch (mAlign_)
-            {
-                case ALIGN_LEFT :
-                    fX = 0;
-                    break;
-                case ALIGN_CENTER :
-                    fX = (fW_ - iterLine->fWidth)/2;
-                    break;
-                case ALIGN_RIGHT :
-                    fX = (fW_ - iterLine->fWidth);
-                    break;
-            }
-
-            s_str::iterator iterChar;
-            foreach (iterChar, iterLine->sCaption)
-            {
-                // Format our text
-                if (lFormatList_.Find(uiCounter))
+                switch (mAlign_)
                 {
-                    const Format& f = lFormatList_[uiCounter];
-                    switch (f.mColorAction)
+                    case ALIGN_LEFT :
+                        fX = fX0;
+                        break;
+                    case ALIGN_CENTER :
+                        fX = fX0 - iterLine->fWidth*0.5f;
+                        break;
+                    case ALIGN_RIGHT :
+                        fX = fX0 - iterLine->fWidth;
+                        break;
+                }
+
+                s_str::iterator iterChar;
+                foreach (iterChar, iterLine->sCaption)
+                {
+                    // Format our text
+                    if (lFormatList_.Find(uiCounter))
                     {
-                        case COLOR_ACTION_SET :
-                            mColor = f.mColor;
-                            break;
-                        case COLOR_ACTION_RESET :
-                            mColor = Color(s_uint::NaN);
-                            break;
-                        default : break;
+                        const Format& f = lFormatList_[uiCounter];
+                        switch (f.mColorAction)
+                        {
+                            case COLOR_ACTION_SET :
+                                mColor = f.mColor;
+                                break;
+                            case COLOR_ACTION_RESET :
+                                mColor = Color(s_uint::NaN);
+                                break;
+                            default : break;
+                        }
                     }
+
+                    s_float fCharWidth, fCharHeight;
+
+                    // Add the character to the cache
+                    if (*iterChar == ' ')
+                    {
+                        fCharWidth = fSpaceWidth_;
+                    }
+                    else
+                    {
+                        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)*iterChar);
+                        fCharWidth = GetCharacterWidth((uint)*iterChar);
+                        fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
+                        s_float fYOffset = -fCharHeight/2+fSize_/2;
+
+                        mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
+                        mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fCharHeight;
+
+                        mLetter.fU1 = mUVRect.left;  mLetter.fV1 = mUVRect.top;
+                        mLetter.fU2 = mUVRect.right; mLetter.fV2 = mUVRect.bottom;
+
+                        mLetter.mColor = mColor;
+
+                        lLetterCache_.PushBack(mLetter);
+                    }
+
+                    fX += fCharWidth + fTracking_;
+                    uiCounter++;
                 }
 
-                s_float fCharWidth, fCharHeight;
-
-                // Add the character to the cache
-                if (*iterChar == ' ')
-                {
-                    fCharWidth = fSpaceWidth_;
-                }
-                else
-                {
-                    const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)*iterChar);
-                    fCharWidth = GetCharacterWidth((uint)*iterChar);
-                    fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
-                    s_float fYOffset = -fCharHeight/2+fSize_/2;
-
-                    mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
-                    mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fCharHeight;
-
-                    mLetter.fU1 = mUVRect.left;  mLetter.fV1 = mUVRect.top;
-                    mLetter.fU2 = mUVRect.right; mLetter.fV2 = mUVRect.bottom;
-
-                    mLetter.mColor = mColor;
-
-                    lLetterCache_.PushBack(mLetter);
-                }
-
-                fX += fCharWidth + fTracking_;
-                uiCounter++;
+                fY += GetLineHeight()*fLineSpacing_;
             }
-
-			fY += GetLineHeight()*fLineSpacing_;
         }
-
-        fH_ = fY;
+        else
+        {
+            fW_ = 0.0f;
+            fH_ = 0.0f;
+        }
     }
 }

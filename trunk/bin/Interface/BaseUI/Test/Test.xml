@@ -15,6 +15,7 @@
         <Scripts>
             <OnLoad>
                 this.TitleString:SetText("Test");
+                this.Content:SetText("Welcome in Frost Engine 0.045 !");
             </OnLoad>
         </Scripts>
     </Frame>

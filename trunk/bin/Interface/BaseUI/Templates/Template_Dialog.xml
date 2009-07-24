@@ -176,20 +176,30 @@
 			<Layer level="ARTWORK">
                 <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="12" justifyH="CENTER" text="">
 					<Size>
-						<AbsDimension x="140"/>
+						<AbsDimension x="140" y="32"/>
 					</Size>
 					<Anchors>
-						<Anchor point="CENTER" relativeTo="$parentTitleBorder">
-							<Offset>
-								<AbsDimension x="0" y="13"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="CENTER" relativeTo="$parentTitleBorder"/>
 					</Anchors>
 					<Color r="1" g="0.8196079" b="0"/>
 					<Shadow>
 						<Color r="0" g="0" b="0"/>
-						<Offset x="1" y="-1"/>
+						<Offset x="1" y="1"/>
 					</Shadow>
+				</FontString>
+                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT" justifyV="TOP" text="">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="25" y="25"/>
+							</Offset>
+						</Anchor>
+                        <Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-25" y="-25"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
 				</FontString>
             </Layer>
         </Layers>
