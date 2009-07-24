@@ -873,8 +873,12 @@ namespace Frost
     typedef s_int_t<long>      s_long;
     typedef s_int_t<ptrdiff_t> s_ptrdiff;
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class TypeTraits<char>      { public : typedef s_char    Type; };
     template<> class TypeTraits<short>     { public : typedef s_short   Type; };
     template<> class TypeTraits<int>       { public : typedef s_int     Type; };
     template<> class TypeTraits<long>      { public : typedef s_long    Type; };
+    /** \endcond
+    */
 }

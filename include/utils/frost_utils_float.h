@@ -691,17 +691,29 @@ namespace Frost
     template<> const float   s_float::EPS;
     template<> const s_float s_float::PI;
     template<> const uint    s_float::DIGIT;
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class TypeTraits<float> { public : typedef s_float  Type; };
+    /** \endcond
+    */
 
     typedef s_float_t<double> s_double;
     template<> const double   s_double::EPS;
     template<> const s_double s_double::PI;
     template<> const uint     s_double::DIGIT;
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class TypeTraits<double> { public : typedef s_double Type; };
+    /** \endcond
+    */
 
     typedef s_float_t<long double> s_ldouble;
     template<> const long double   s_ldouble::EPS;
     template<> const s_ldouble     s_ldouble::PI;
     template<> const uint          s_ldouble::DIGIT;
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class TypeTraits<long double> { public : typedef s_ldouble Type; };
+    /** \endcond
+    */
 }

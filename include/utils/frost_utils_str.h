@@ -1248,5 +1248,9 @@ namespace Frost
 
     typedef s_str_t<char> s_str;
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class TypeTraits<string_object> { public : typedef s_str Type; };
+    /** \endcond
+    */
 }
