@@ -40,6 +40,11 @@ namespace Frost
             /// Renders this widget on the current render target.
             void             Render();
 
+            /// Copies an UIObject's parameters into this FontString (inheritance).
+            /** \param pObj The UIObject to copy
+            */
+            void             CopyFrom(s_ptr<UIObject> pObj);
+
             /// Updates this widget's logic.
             void             Update();
 
@@ -51,7 +56,7 @@ namespace Frost
             /// Returns the heigh of the font.
             /** \return The heigh of the font
             */
-            const s_float&   GetFontHeight() const;
+            const s_uint&    GetFontHeight() const;
 
             /// Adds or remove the outline around the text.
             /** \param bIsOutlined 'true' to enable the outline
@@ -194,14 +199,19 @@ namespace Frost
 
             virtual void UpdateBorders_();
 
-            s_refptr<Text> pText_;
-            s_bool bIsOutlined_;
-            s_bool bHasShadow_;
-            s_bool bCanNonSpaceWrap_;
-            Color mTextColor_;
-            Color mShadowColor_;
-            s_int iShadowXOffset_;
-            s_int iShadowYOffset_;
+            s_refptr<Text>  pText_;
+            s_str           sText_;
+            s_str           sFontName_;
+            s_uint          uiHeight_;
+            s_float         fSpacing_;
+            Text::Alignment mJustifyH_;
+            s_bool          bIsOutlined_;
+            s_bool          bHasShadow_;
+            s_bool          bCanNonSpaceWrap_;
+            Color           mTextColor_;
+            Color           mShadowColor_;
+            s_int           iShadowXOffset_;
+            s_int           iShadowYOffset_;
 
         };
 
