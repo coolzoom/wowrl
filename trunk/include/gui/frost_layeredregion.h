@@ -22,6 +22,11 @@ namespace Frost
 
             LayeredRegion();
 
+            /// Prints all relevant information about this widget in a string.
+            /** \param sTab The offset to give to all lines
+            *   \return All relevant information about this widget
+            */
+            s_str Serialize(const s_str& sTab) const;
             void Render();
             void CreateGlue();
 

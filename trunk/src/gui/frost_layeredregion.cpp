@@ -27,6 +27,24 @@ void LayeredRegion::Render()
 {
 }
 
+s_str LayeredRegion::Serialize( const s_str& sTab ) const
+{
+    s_str sStr = UIObject::Serialize(sTab);
+
+    sStr << sTab << "  # Layer       : ";
+    switch (mLayer_)
+    {
+        case LAYER_BACKGROUND : sStr << "BACKGROUND\n"; break;
+        case LAYER_BORDER : sStr << "BORDER\n"; break;
+        case LAYER_ARTWORK : sStr << "ARTWORK\n"; break;
+        case LAYER_OVERLAY : sStr << "OVERLAY\n"; break;
+        case LAYER_HIGHLIGHT : sStr << "HIGHLIGHT\n"; break;
+        case LAYER_SPECIALHIGH : sStr << "SPECIALHIGH\n"; break;
+    };
+
+    return sStr;
+}
+
 void LayeredRegion::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
