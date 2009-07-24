@@ -1,13 +1,6 @@
 // Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
-    enum RoundType
-    {
-        ROUND_CEIL,
-        ROUND_MID,
-        ROUND_FLOOR
-    };
-
     /// Base type : float
     /** Frost's base types are made to allow simpler
     *   manipulation of numbers, booleans and strings.
@@ -323,22 +316,24 @@ namespace Frost
         }
 
         /// Rounds the value.
-        /** \param mRoundType How to round the value (see RoundType)
+        /** \note If the decimal part is greater than 0.5, the number is rounded up.
+        *         Else the number is rounded down.
         */
-        void Round(const RoundType& mRoundType = ROUND_MID)
+        void Round()
         {
-            switch (mRoundType)
-            {
-                case ROUND_CEIL :
-                    fValue_ = ceil(fValue_);
-                    break;
-                case ROUND_MID :
-                    fValue_ = round(fValue_);
-                    break;
-                case ROUND_FLOOR :
-                    fValue_ = floor(fValue_);
-                    break;
-            }
+            fValue_ = round(fValue_);
+        }
+
+        /// Rounds up the value.
+        void RoundUp()
+        {
+            fValue_ = ceil(fValue_);
+        }
+
+        /// Rounds down the value.
+        void RoundDown()
+        {
+            fValue_ = floor(fValue_);
         }
 
         /// Sets this float to infinite (negative).
@@ -593,22 +588,29 @@ namespace Frost
         }
 
         /// Rounds a float value.
-        /** \param fValue     The value to round
-        *   \param mRoundType How to round the value (see RoundType)
+        /** \param fValue The value to round
+        *   \note If the decimal part is greater than 0.5, the number is rounded up.
+        *         Else the number is rounded down.
         */
-        static s_float_t Round(const s_float_t& fValue, const RoundType& mRoundType = ROUND_MID)
+        static s_float_t Round(const s_float_t& fValue)
         {
-            switch (mRoundType)
-            {
-                case ROUND_CEIL :
-                    return ceil(fValue.fValue_);
-                case ROUND_MID :
-                    return round(fValue.fValue_);
-                case ROUND_FLOOR :
-                    return floor(fValue.fValue_);
-                default :
-                    return s_float_t::NaN;
-            }
+            return round(fValue.fValue_);
+        }
+
+        /// Rounds a float value up.
+        /** \param fValue The value to round
+        */
+        static s_float_t RoundUp(const s_float_t& fValue)
+        {
+            return ceil(fValue.fValue_);
+        }
+
+        /// Rounds a float value down.
+        /** \param fValue The value to round
+        */
+        static s_float_t RoundDown(const s_float_t& fValue)
+        {
+            return floor(fValue.fValue_);
         }
 
     private :

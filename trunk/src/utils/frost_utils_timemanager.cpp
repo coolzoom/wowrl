@@ -130,13 +130,13 @@ namespace Frost
     s_str TimeManager::GetPlayTime() const
     {
         s_double dTime = GetTime();
-        s_uint uiHours(s_double::Round((dTime/3600.0), ROUND_FLOOR));
+        s_uint uiHours(s_double::RoundDown(dTime/3600.0));
         dTime -= s_double(uiHours)*3600.0;
-        s_uint uiMinutes(s_double::Round((dTime/60.0), ROUND_FLOOR));
+        s_uint uiMinutes(s_double::RoundDown(dTime/60.0));
         dTime -= s_double(uiMinutes)*60.0;
-        s_uint uiSeconds(s_double::Round((dTime), ROUND_FLOOR));
+        s_uint uiSeconds(s_double::RoundDown(dTime));
         dTime -= s_double(uiSeconds);
-        s_uint uiMilliseconds(s_double::Round((dTime*1000), ROUND_FLOOR));
+        s_uint uiMilliseconds(s_double::RoundDown(dTime*1000));
 
         s_str sTime = "[";
         sTime += s_str(uiHours, 2) + ":";
