@@ -75,6 +75,11 @@ namespace Frost
             */
             Text::Alignment  GetJustifyH() const;
 
+            /// Returns the vertical alignment behavior.
+            /** \return The vertical alignment behavior
+            */
+            Text::VerticalAlignment GetJustifyV() const;
+
             /// Returns this FontString's shadow color.
             /** \return This FontString's shadow color
             */
@@ -116,6 +121,11 @@ namespace Frost
             /** \param mJustifyH The horizontal alignment behavior
             */
             void             SetJustifyH(Text::Alignment mJustifyH);
+
+            /// Sets this FontString's vertical aligment behavior.
+            /** \param mJustifyV The vertical alignment behavior
+            */
+            void             SetJustifyV(Text::VerticalAlignment mJustifyV);
 
             /// Sets this FontString's shadow color.
             /** \param mShadowColor The shadow color
@@ -205,6 +215,7 @@ namespace Frost
             s_uint          uiHeight_;
             s_float         fSpacing_;
             Text::Alignment mJustifyH_;
+            Text::VerticalAlignment mJustifyV_;
             s_bool          bIsOutlined_;
             s_bool          bHasShadow_;
             s_bool          bCanNonSpaceWrap_;

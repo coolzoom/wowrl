@@ -50,6 +50,13 @@ namespace Frost
             ALIGN_RIGHT
         };
 
+        enum VerticalAlignment
+        {
+            ALIGN_TOP,
+            ALIGN_MIDDLE,
+            ALIGN_BOTTOM
+        };
+
         /// Holds the position, tex. coordinates and color of a character.
         struct Letter
         {
@@ -193,10 +200,20 @@ namespace Frost
         */
         void           SetAlignment(const Alignment& mAlign);
 
+        /// Sets text vertical alignment.
+        /** \param mVertAlign The new vertical alignment
+        */
+        void           SetVerticalAlignment(const VerticalAlignment& mVertAlign);
+
         /// Returns the text aligment.
         /** \return The text alignment
         */
         const Alignment& GetAlignment() const;
+
+        /// Returns the text aligment.
+        /** \return The text alignment
+        */
+        const VerticalAlignment& GetVerticalAlignment() const;
 
         /// Sets this Text's tracking.
         /** \param fTracking The new tracking
@@ -214,7 +231,7 @@ namespace Frost
         /** \param fLineSpacing The new line spacing
         *   \note Line spacing is a coefficient that, multiplied by the
         *         height of a line, gives the space between two lines.
-        *         Default is 1.0f.
+        *         Default is 1.5f.
         */
         void           SetLineSpacing(const s_float& fLineSpacing);
 
@@ -284,6 +301,7 @@ namespace Frost
         s_float   fBoxW_, fBoxH_;
         s_str     sText_;
         Alignment mAlign_;
+        VerticalAlignment mVertAlign_;
 
         s_ctnr<Line>          lLineList_;
         s_map<s_uint, Format> lFormatList_;

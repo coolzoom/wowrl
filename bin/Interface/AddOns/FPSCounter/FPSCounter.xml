@@ -10,11 +10,11 @@
         </Anchors>
         <Layers>
             <Layer>
-                <FontString name="FPSCounter_Text" font="Fonts/Vera.ttf" fontHeight="16" outline="NORMAL">
+                <FontString name="FPSCounter_Text" font="Fonts/Vera.ttf" fontHeight="16" justifyH="RIGHT" justifyV="BOTTOM" outline="NORMAL">
                     <Anchors>
                         <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
                             <Offset>
-                                <AbsDimension x="-2" y="5"/>
+                                <AbsDimension x="-5" y="-5"/>
                             </Offset>
                         </Anchor>
                     </Anchors>

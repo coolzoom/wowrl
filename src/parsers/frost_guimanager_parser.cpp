@@ -342,6 +342,24 @@ namespace Frost
             }
         }
 
+        if (pMainBlock->IsProvided("justifyV") || sInheritance.IsEmpty())
+        {
+            const s_str& sJustifyV = pMainBlock->GetAttribute("justifyV");
+            if (sJustifyV == "TOP")
+                pFontString->SetJustifyV(Text::ALIGN_TOP);
+            else if (sJustifyV == "MIDDLE")
+                pFontString->SetJustifyV(Text::ALIGN_MIDDLE);
+            else if (sJustifyV == "BOTTOM")
+                pFontString->SetJustifyV(Text::ALIGN_BOTTOM);
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Unkown vertical justify behavior for "+pFontString->GetName()+
+                    " : \""+sJustifyV+"\"."
+                );
+            }
+        }
+
         return true;
     }
 

@@ -36,10 +36,40 @@ void FontString::Render()
 {
     if (pText_ && IsVisible())
     {
+        s_float fX, fY;
+
+        if (pText_->GetBoxWidth().IsValid())
+        {
+            fX = s_float(lBorderList_[BORDER_LEFT]);
+        }
+        else
+        {
+            switch (mJustifyH_)
+            {
+                case Text::ALIGN_LEFT   : fX = s_float(lBorderList_[BORDER_LEFT]); break;
+                case Text::ALIGN_CENTER : fX = s_float(lBorderList_[BORDER_LEFT] + lBorderList_[BORDER_RIGHT])/2.0f; break;
+                case Text::ALIGN_RIGHT  : fX = s_float(lBorderList_[BORDER_RIGHT]); break;
+            }
+        }
+
+        if (pText_->GetBoxHeight().IsValid())
+        {
+            fY = s_float(lBorderList_[BORDER_TOP]);
+        }
+        else
+        {
+            switch (mJustifyV_)
+            {
+                case Text::ALIGN_TOP    : fY = s_float(lBorderList_[BORDER_TOP]); break;
+                case Text::ALIGN_MIDDLE : fY = s_float(lBorderList_[BORDER_TOP] + lBorderList_[BORDER_BOTTOM])/2.0f; break;
+                case Text::ALIGN_BOTTOM : fY = s_float(lBorderList_[BORDER_BOTTOM]); break;
+            }
+        }
+
         if (bHasShadow_)
         {
             pText_->SetColor(mShadowColor_, true);
-            pText_->Render(s_float(lBorderList_[BORDER_LEFT] + iShadowXOffset_), s_float(lBorderList_[BORDER_TOP] + iShadowYOffset_));
+            pText_->Render(fX + s_float(iShadowXOffset_), fY + s_float(iShadowYOffset_));
         }
 
         if (bIsOutlined_)
@@ -48,8 +78,8 @@ void FontString::Render()
             for (int i = 0; i < OUTLINE_QUALITY; i++)
             {
                 pText_->Render(
-                    s_float(lBorderList_[BORDER_LEFT]) + OUTLINE_THICKNESS*cos(s_float(i)/OUTLINE_QUALITY),
-                    s_float(lBorderList_[BORDER_TOP])  + OUTLINE_THICKNESS*sin(s_float(i)/OUTLINE_QUALITY)
+                    fX + OUTLINE_THICKNESS*cos(s_float(i)/OUTLINE_QUALITY),
+                    fY + OUTLINE_THICKNESS*sin(s_float(i)/OUTLINE_QUALITY)
                 );
             }
         }
@@ -57,10 +87,7 @@ void FontString::Render()
         SpriteManager::GetSingleton()->EnablePreciseRendering();
 
         pText_->SetColor(mTextColor_);
-        pText_->Render(
-            s_float(lBorderList_[BORDER_LEFT]),
-            s_float(lBorderList_[BORDER_TOP])
-        );
+        pText_->Render(fX, fY);
 
         SpriteManager::GetSingleton()->DisablePreciseRendering();
     }
@@ -87,13 +114,25 @@ s_str FontString::Serialize(const s_str& sTab) const
     sStr << sTab << "  # Outlined    : " << bIsOutlined_ << "\n";
     sStr << sTab << "  # Text color  : " +  mTextColor_ << "\n";
     sStr << sTab << "  # Spacing     : " << fSpacing_ << "\n";
-    sStr << sTab << "  # Justify     : ";
+    sStr << sTab << "  # Justify     :\n";
+    sStr << sTab << "  #-###\n";
+    sStr << sTab << "  |   # horizontal : ";
     switch (mJustifyH_)
     {
         case Text::ALIGN_LEFT : sStr << "LEFT\n"; break;
         case Text::ALIGN_CENTER : sStr << "CENTER\n"; break;
         case Text::ALIGN_RIGHT : sStr << "RIGHT\n"; break;
+        default : sStr << "<error>\n"; break;
     }
+    sStr << sTab << "  |   # vertical   : ";
+    switch (mJustifyH_)
+    {
+        case Text::ALIGN_TOP : sStr << "TOP\n"; break;
+        case Text::ALIGN_MIDDLE : sStr << "MIDDLE\n"; break;
+        case Text::ALIGN_BOTTOM : sStr << "BOTTOM\n"; break;
+        default : sStr << "<error>\n"; break;
+    }
+    sStr << sTab << "  #-###\n";
     sStr << sTab << "  # NonSpaceW.  : " << bCanNonSpaceWrap_ << "\n";
     if (bHasShadow_)
     {
@@ -130,6 +169,7 @@ void FontString::CopyFrom( s_ptr<UIObject> pObj )
         }
 
         this->SetJustifyH(pFontString->GetJustifyH());
+        this->SetJustifyV(pFontString->GetJustifyV());
         this->SetSpacing(pFontString->GetSpacing());
         this->SetText(pFontString->GetText());
         this->SetOutlined(pFontString->IsOutlined());
@@ -177,6 +217,11 @@ Text::Alignment FontString::GetJustifyH() const
     return mJustifyH_;
 }
 
+Text::VerticalAlignment FontString::GetJustifyV() const
+{
+    return mJustifyV_;
+}
+
 const Color& FontString::GetShadowColor() const
 {
     return mShadowColor_;
@@ -220,6 +265,13 @@ void FontString::SetJustifyH( Text::Alignment mJustifyH )
     mJustifyH_ = mJustifyH;
     if (pText_)
         pText_->SetAlignment(mJustifyH);
+}
+
+void FontString::SetJustifyV( Text::VerticalAlignment mJustifyV )
+{
+    mJustifyV_ = mJustifyV;
+    if (pText_)
+        pText_->SetVerticalAlignment(mJustifyV);
 }
 
 void FontString::SetShadowColor( const Color& mShadowColor )
@@ -384,8 +436,7 @@ void FontString::UpdateBorders_()
         {
             if (lDefinedBorderList_[BORDER_LEFT] && lDefinedBorderList_[BORDER_RIGHT])
             {
-                uiAbsWidth_ = s_uint(iRight - iLeft);
-                pText_->SetBoxWidth(s_float(uiAbsWidth_));
+                pText_->SetBoxWidth(s_float(iRight - iLeft));
             }
             else
             {
@@ -394,13 +445,14 @@ void FontString::UpdateBorders_()
         }
 
         if (uiAbsHeight_.IsValid() && !uiAbsHeight_.IsNull())
+        {
             pText_->SetBoxHeight(s_float(uiAbsHeight_));
+        }
         else
         {
             if (lDefinedBorderList_[BORDER_TOP] && lDefinedBorderList_[BORDER_BOTTOM])
             {
-                uiAbsHeight_ = s_uint(iBottom - iTop);
-                pText_->SetBoxHeight(s_float(uiAbsHeight_));
+                pText_->SetBoxHeight(s_float(iBottom - iTop));
             }
             else
             {
@@ -408,8 +460,15 @@ void FontString::UpdateBorders_()
             }
         }
 
-        MakeBorders_(iTop, iBottom, iYCenter, s_int(pText_->GetHeight()));
-        MakeBorders_(iLeft, iRight, iXCenter, s_int(pText_->GetWidth()));
+        if (uiAbsHeight_.IsValid())
+            MakeBorders_(iTop, iBottom, iYCenter, s_int(uiAbsHeight_));
+        else
+            MakeBorders_(iTop, iBottom, iYCenter, s_int(pText_->GetHeight()));
+
+        if (uiAbsWidth_.IsValid())
+            MakeBorders_(iLeft, iRight, iXCenter, s_int(uiAbsWidth_));
+        else
+            MakeBorders_(iLeft, iRight, iXCenter, s_int(pText_->GetWidth()));
 
         if (bReady_)
         {
