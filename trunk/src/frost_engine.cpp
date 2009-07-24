@@ -1,5 +1,5 @@
 /* ###################################### */
-/* ###   WoW Raid Leader, by Kalith   ### */
+/* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
 /*                                        */
 
@@ -473,7 +473,8 @@ namespace Frost
 
         uiScreenWidth_ = s_uint(pLua_->GetGlobalInt("iScreenWidth", false, 1024));
         uiScreenHeight_ = s_uint(pLua_->GetGlobalInt("iScreenHeight", false, 768));
-        s_uint uiScreenDepth = 32; // 32 is required for A8R8G8B8 format
+        // NOTE : 32bit is required for A8R8G8B8 format
+        s_uint uiScreenDepth = 32;
         s_bool bFullScreen = pLua_->GetGlobalBool("bFullScreen", false, false);
         s_bool bVSync = pLua_->GetGlobalBool("bVSync", false, false);
         s_uint uiFSAA = s_uint(pLua_->GetGlobalInt("iFSAA", false, 0));

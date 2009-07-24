@@ -3,8 +3,6 @@
 /* ###################################### */
 /*          InputManager source           */
 /*                                        */
-/*  ## : ...                              */
-/*                                        */
 
 #include "frost_inputmanager.h"
 

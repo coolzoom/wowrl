@@ -1,4 +1,3 @@
-
 #include "frost.h"
 #include "model/frost_model.h"
 #include "model/frost_modelmanager.h"

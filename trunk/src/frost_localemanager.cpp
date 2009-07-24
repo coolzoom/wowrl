@@ -1,13 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*           Font manager source          */
-/*                                        */
-/*  ## : Contains the member functions    */
-/*  of the FontManager class.             */
-/*       A FontManager is obviously a     */
-/*  class that manages font creation and  */
-/*  storage.                              */
+/*          LocaleManager source          */
 /*                                        */
 
 
