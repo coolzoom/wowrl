@@ -129,7 +129,7 @@ int LuaUIObject::_GetHeight( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetHeight", pLua, 1);
 
-    mFunc.Push(pParent_->GetAbsHeight());
+    mFunc.Push(pParent_->GetAppearentHeight());
 
     return mFunc.Return();
 }
@@ -216,7 +216,7 @@ int LuaUIObject::_GetWidth( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetWidth", pLua, 1);
 
-    mFunc.Push(pParent_->GetAbsWidth());
+    mFunc.Push(pParent_->GetAppearentWidth());
 
     return mFunc.Return();
 }

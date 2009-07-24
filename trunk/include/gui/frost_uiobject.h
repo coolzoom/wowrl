@@ -33,10 +33,10 @@ namespace Frost
 
         enum BorderType
         {
-            BORDER_LEFT,
-            BORDER_RIGHT,
-            BORDER_TOP,
-            BORDER_BOTTOM
+            BORDER_LEFT   = 0,
+            BORDER_RIGHT  = 1,
+            BORDER_TOP    = 2,
+            BORDER_BOTTOM = 3
         };
 
         enum LayerType
@@ -106,6 +106,13 @@ namespace Frost
             /** \return This widget's name
             */
             const s_str&    GetName() const;
+
+            /// Returns this widget's raw name.
+            /** \return This widget's raw name
+            *   \note This is the name of the widget before "$parent"
+            *         has been replaced by its parent's name.
+            */
+            const s_str&    GetRawName() const;
 
             /// Sets this widget's name.
             /** \param sName This widget's name
@@ -203,13 +210,35 @@ namespace Frost
 
             /// Returns this widget's absolute width (in pixels).
             /** \return This widget's absolute width (in pixels)
+            *   \note If you need to get the size of a widget on the,
+            *         use GetAppearentWidth() instead, because some
+            *         widgets can have an infinite or undefined width.
             */
             const s_uint&   GetAbsWidth() const;
 
+            /// Returns this widget's appearend width (in pixels).
+            /** \return This widget's appearend width (in pixels)
+            *   \note If you need to get the size of a widget on the,
+            *         use this function instead of GetAbsWidth(), because
+            *         some widgets can have an infinite or undefined width.
+            */
+            s_uint          GetAppearentWidth() const;
+
             /// Returns this widget's absolute height (in pixels).
             /** \return This widget's absolute height (in pixels)
+            *   \note If you need to get the size of a widget on the,
+            *         use GetAppearentHeight() instead, because some
+            *         widgets can have an infinite or undefined height.
             */
             const s_uint&   GetAbsHeight() const;
+
+            /// Returns this widget's appearend height (in pixels).
+            /** \return This widget's appearend height (in pixels)
+            *   \note If you need to get the size of a widget on the,
+            *         use this function instead of GetAbsHeight(), because
+            *         some widgets can have an infinite or undefined height.
+            */
+            s_uint          GetAppearentHeight() const;
 
             /// Returns this widget's width (relative to its parent).
             /** \return This widget's width (relative to its parent)
@@ -365,6 +394,7 @@ namespace Frost
             virtual void UpdateDimensions_();
 
             s_str           sName_;
+            s_str           sRawName_;
             s_uint          uiID_;
             ObjectType      mObjectType_;
             s_ptr<UIObject> pParent_;
