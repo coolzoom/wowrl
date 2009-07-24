@@ -519,14 +519,14 @@ namespace Frost
         if (bPreciseRendering_)
         {
             Quad& q = lQuadList_.Back();
-            q.lVertexArray[0].fX.Round(ROUND_FLOOR);
-            q.lVertexArray[0].fY.Round(ROUND_FLOOR);
-            q.lVertexArray[1].fX.Round(ROUND_FLOOR);
-            q.lVertexArray[1].fY.Round(ROUND_FLOOR);
-            q.lVertexArray[2].fX.Round(ROUND_FLOOR);
-            q.lVertexArray[2].fY.Round(ROUND_FLOOR);
-            q.lVertexArray[3].fX.Round(ROUND_FLOOR);
-            q.lVertexArray[3].fY.Round(ROUND_FLOOR);
+            q.lVertexArray[0].fX.RoundDown();
+            q.lVertexArray[0].fY.RoundDown();
+            q.lVertexArray[1].fX.RoundDown();
+            q.lVertexArray[1].fY.RoundDown();
+            q.lVertexArray[2].fX.RoundDown();
+            q.lVertexArray[2].fY.RoundDown();
+            q.lVertexArray[3].fX.RoundDown();
+            q.lVertexArray[3].fY.RoundDown();
         }
     }
 
