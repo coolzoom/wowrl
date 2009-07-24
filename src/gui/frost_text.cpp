@@ -99,7 +99,8 @@ namespace Frost
 
     void Text::SetDimensions( const s_float& fW, const s_float& fH )
     {
-        if ( (fBoxW_ != fW) || (fBoxH_ != fH) )
+        if (((fBoxW_ != fW) && (!fBoxW_.IsNaN() && !fW.IsNaN())) ||
+            ((fBoxH_ != fH) && (!fBoxH_.IsNaN() && !fH.IsNaN())))
         {
             fBoxW_ = fW; fBoxH_ = fH;
             bUpdateCache_ = true;
@@ -108,7 +109,7 @@ namespace Frost
 
     void Text::SetBoxWidth( const s_float& fBoxW )
     {
-        if (fBoxW_ != fBoxW)
+        if ( (fBoxW_ != fBoxW) && (!fBoxW_.IsNaN() && !fBoxW.IsNaN()) )
         {
             fBoxW_ = fBoxW;
             bUpdateCache_ = true;
@@ -117,7 +118,7 @@ namespace Frost
 
     void Text::SetBoxHeight( const s_float& fBoxH )
     {
-        if (fBoxH_ != fBoxH)
+        if ( (fBoxH_ != fBoxH) && (!fBoxH_.IsNaN() && !fBoxH.IsNaN()) )
         {
             fBoxH_ = fBoxH;
             bUpdateCache_ = true;
@@ -181,7 +182,7 @@ namespace Frost
                 else
                 {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
-                    if (iterNext != sText_.end())
+                    if (iterNext != sText_.End())
                     {
                         if (*iterNext != ' ' && *iterNext != '\n')
                             fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
@@ -226,7 +227,7 @@ namespace Frost
                 else
                 {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
-                    if (iterNext != sString.end())
+                    if (iterNext != sString.End())
                     {
                         if (*iterNext != ' ' && *iterNext != '\n')
                             fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
@@ -407,7 +408,7 @@ namespace Frost
 
         s_uint uiMaxLineNbr, uiCounter;
         if (fBoxH_.IsValid())
-            uiMaxLineNbr = s_uint(s_float::Round(fBoxH_/(GetLineHeight()*fLineSpacing_), ROUND_FLOOR));
+            uiMaxLineNbr = s_uint(s_float::RoundDown(fBoxH_/(GetLineHeight()*fLineSpacing_)));
         else
             uiMaxLineNbr = s_uint::INF;
 
@@ -415,8 +416,6 @@ namespace Frost
         s_ctnr<s_str>::iterator iterManual;
         foreach (iterManual, lManualLineList)
         {
-            static s_int si = 0;
-            si++;
             // Make a temporary line array
             s_ctnr<Line> lLines;
             Line mLine;
@@ -428,7 +427,7 @@ namespace Frost
                 if (*iterChar1 == '|')
                 {
                     iterChar1++;
-                    if (iterChar1 != iterManual->end())
+                    if (iterChar1 != iterManual->End())
                     {
                         if (*iterChar1 == '|')
                         {
@@ -449,7 +448,7 @@ namespace Frost
                 {
                     mLine.fWidth += GetCharacterWidth(*iterChar1);
                     s_str::iterator iterNext = iterChar1 + 1;
-                    if (iterNext != iterManual->end())
+                    if (iterNext != iterManual->End())
                     {
                         if (*iterNext != ' ')
                             mLine.fWidth += GetCharacterKerning((uint)*iterChar1, (uint)*iterNext);
@@ -464,17 +463,17 @@ namespace Frost
                     {
                         // There are several words on this line, we'll
                         // be able to put the last one on the next line
-                        s_str::iterator iterChar2 = mLine.sCaption.end();
+                        s_str::iterator iterChar2 = mLine.sCaption.End();
                         s_str sErasedString;
                         s_uint uiCharToErase;
                         s_float fErasedWidth;
                         s_bool bLastWasWord;
-                        while ( (mLine.fWidth > fBoxW_) && (iterChar2 != mLine.sCaption.begin()) )
+                        while ( (mLine.fWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
                         {
                             iterChar2--;
                             if (*iterChar2 == ' ')
                             {
-                                if ( bLastWasWord && (mLine.fWidth-fErasedWidth < fBoxW_) && !bRemoveStartingSpaces_ )
+                                if ( bLastWasWord && (mLine.fWidth-fErasedWidth <= fBoxW_) && !bRemoveStartingSpaces_ )
                                 {
                                     break;
                                 }
@@ -518,10 +517,10 @@ namespace Frost
                         // word is just too long for the text box : our
                         // only option is to truncate it.
                         s_float fWordWidth = 3*(GetCharacterWidth((uint)'.') + fTracking_);
-                        s_str::iterator iterChar2 = mLine.sCaption.end();
+                        s_str::iterator iterChar2 = mLine.sCaption.End();
                         s_str sErasedWord;
                         s_uint uiCharToErase;
-                        while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.begin()) )
+                        while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
                         {
                             iterChar2--;
                             mLine.fWidth -= GetCharacterWidth(*iterChar2);
@@ -533,7 +532,7 @@ namespace Frost
                         s_str::iterator iterTemp = iterChar1;
                         iterChar1 = iterManual->Get(" ", s_uint(s_ptrdiff(iterChar1 - iterManual->begin())));
 
-                        if (iterChar1 != iterManual->end())
+                        if (iterChar1 != iterManual->End())
                         {
                             // Read cutted format tags
                             while (iterTemp != iterChar1)
@@ -556,7 +555,7 @@ namespace Frost
                             }
 
                             // Look for the next word
-                            while (iterChar1 != iterManual->end())
+                            while (iterChar1 != iterManual->End())
                             {
                                 if ((*iterChar1) == ' ')
                                     iterChar1++;
@@ -565,7 +564,7 @@ namespace Frost
                             }
 
                             // Add the line
-                            if (iterChar1 != iterManual->end())
+                            if (iterChar1 != iterManual->End())
                             {
                                 iterChar1--;
                                 lLines.PushBack(mLine);
@@ -573,7 +572,11 @@ namespace Frost
                                 mLine.fWidth = 0.0f;
                                 mLine.sCaption = "";
                             }
+                            else
+                                break;
                         }
+                        else
+                            break;
                     }
                 }
             }
