@@ -6,6 +6,8 @@
 #include "gui/frost_button.h"
 
 #include "gui/frost_frame.h"
+#include "gui/frost_fontstring.h"
+#include "gui/frost_texture.h"
 
 using namespace std;
 using namespace Frost;
@@ -20,4 +22,427 @@ LuaButton::LuaButton(lua_State* pLua) : LuaFrame(pLua)
     {
         Error(CLASS_NAME, "Dynamic cast failed !");
     }
+}
+
+int LuaButton::_Click( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:Click", pLua);
+
+    pButtonParent_->On("Click");
+
+    return mFunc.Return();
+}
+
+int LuaButton::_Disable( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:Disable", pLua);
+
+    pButtonParent_->Disable();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_Enable( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:Enable", pLua);
+
+    pButtonParent_->Enable();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetButtonState( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetButtonState", pLua, 1);
+
+    switch (pButtonParent_->GetButtonState())
+    {
+        case BUTTON_UP : mFunc.Push(s_str("NORMAL")); break;
+        case BUTTON_DOWN : mFunc.Push(s_str("PUSHED")); break;
+        case BUTTON_DISABLED : mFunc.Push(s_str("DISABLED")); break;
+        default : mFunc.PushNil(); break;
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetDisabledFontObject( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetDisabledFontObject", pLua, 1);
+
+    s_ptr<FontString> pFontString = pButtonParent_->GetDisabledText();
+    if (pFontString)
+    {
+        pFontString->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetDisabledTextColor( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetDisabledTextColor", pLua, 4);
+
+    s_ptr<FontString> pFontString = pButtonParent_->GetDisabledText();
+    if (pFontString)
+    {
+        const Color& mColor = pFontString->GetTextColor();
+        mFunc.Push(s_float(mColor.GetR())/255.0f);
+        mFunc.Push(s_float(mColor.GetG())/255.0f);
+        mFunc.Push(s_float(mColor.GetB())/255.0f);
+        mFunc.Push(s_float(mColor.GetA())/255.0f);
+    }
+    else
+        mFunc.PushNil(4);
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetDisabledTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetDisabledTexture", pLua, 1);
+
+    s_ptr<Texture> pTexture = pButtonParent_->GetDisabledTexture();
+    if (pTexture)
+    {
+        pTexture->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetHighlightFontObject( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetHighlightFontObject", pLua, 1);
+
+    s_ptr<FontString> pFontString = pButtonParent_->GetHighlightText();
+    if (pFontString)
+    {
+        pFontString->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetHighlightTextColor( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetHighlightTextColor", pLua, 4);
+
+    s_ptr<FontString> pFontString = pButtonParent_->GetHighlightText();
+    if (pFontString)
+    {
+        const Color& mColor = pFontString->GetTextColor();
+        mFunc.Push(s_float(mColor.GetR())/255.0f);
+        mFunc.Push(s_float(mColor.GetG())/255.0f);
+        mFunc.Push(s_float(mColor.GetB())/255.0f);
+        mFunc.Push(s_float(mColor.GetA())/255.0f);
+    }
+    else
+        mFunc.PushNil(4);
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetHighlightTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetHighlightTexture", pLua, 1);
+
+    s_ptr<Texture> pTexture = pButtonParent_->GetHighlightTexture();
+    if (pTexture)
+    {
+        pTexture->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetNormalFontObject( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetNormalFontObject", pLua);
+
+    s_ptr<FontString> pFontString = pButtonParent_->GetNormalText();
+    if (pFontString)
+    {
+        pFontString->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetNormalTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetNormalTexture", pLua, 1);
+
+    s_ptr<Texture> pTexture = pButtonParent_->GetNormalTexture();
+    if (pTexture)
+    {
+        pTexture->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetPushedTextOffset( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetPushedTextOffset", pLua, 2);
+
+    // TODO : Implement Button:GetPushedTextOffset
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetPushedTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetPushedTexture", pLua, 1);
+
+    s_ptr<Texture> pTexture = pButtonParent_->GetPushedTexture();
+    if (pTexture)
+    {
+        pTexture->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetText( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetText", pLua, 1);
+
+    mFunc.Push(pButtonParent_->GetText());
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetTextHeight( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetTextHeight", pLua, 1);
+
+    s_ptr<FontString> pCurrentFont = pButtonParent_->GetCurrentFontString();
+    if (pCurrentFont)
+        mFunc.Push(pCurrentFont->GetStringHeight());
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_GetTextWidth( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:GetTextWidth", pLua, 1);
+
+    s_ptr<FontString> pCurrentFont = pButtonParent_->GetCurrentFontString();
+    if (pCurrentFont)
+        mFunc.Push(pCurrentFont->GetStringWidth());
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_IsEnabled( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:IsEnabled", pLua, 1);
+
+    mFunc.Push(pButtonParent_->IsEnabled());
+
+    return mFunc.Return();
+}
+
+int LuaButton::_LockHighlight( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:LockHighlight", pLua);
+
+    pButtonParent_->LockHighlight();
+
+    return mFunc.Return();
+}
+
+int LuaButton::_RegisterForClicks( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:RegisterForClicks", pLua);
+
+    // TODO : Implement Button:RegisterForClicks
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetButtonState( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetButtonState", pLua);
+    mFunc.Add(0, "button state", Lua::TYPE_STRING);
+    if (mFunc.Check())
+    {
+        s_str sState = mFunc.Get(0)->GetString();
+        if (sState == "NORMAL")
+        {
+            pButtonParent_->Enable();
+        }
+        else if (sState == "PUSHED")
+        {
+            // TODO : Implement Buton:SetButtonState
+        }
+        else if (sState == "DISABLED")
+        {
+            pButtonParent_->Disable();
+        }
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetDisabledFontObject( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetDisabledFontObject", pLua);
+    mFunc.Add(0, "font object", Lua::TYPE_USERDATA);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetDisabledFontObject
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetDisabledTextColor( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:Click", pLua);
+    mFunc.Add(0, "r", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "g", Lua::TYPE_NUMBER);
+    mFunc.Add(2, "b", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "a", Lua::TYPE_NUMBER, true);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetDisabledFontObject
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetDisabledTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetDisabledTexture", pLua);
+    mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetDisabledTexture
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetHighlightFontObject( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetHighlightFontObject", pLua);
+    mFunc.Add(0, "font object", Lua::TYPE_USERDATA);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetHighlightFontObject
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetHighlightTextColor( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetHighlightTextColor", pLua);
+    mFunc.Add(0, "r", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "g", Lua::TYPE_NUMBER);
+    mFunc.Add(2, "b", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "a", Lua::TYPE_NUMBER, true);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetHighlightTextColor
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetHighlightTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetHighlightTexture", pLua);
+    mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetHighlightTexture
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetNormalTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetNormalTexture", pLua);
+    mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetNormalTexture
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetPushedTextOffset( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetPushedTextOffset", pLua);
+    mFunc.Add(0, "x offset", Lua::TYPE_NUMBER);
+    mFunc.Add(0, "y offset", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetPushedTextOffset
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetPushedTexture( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetPushedTexture", pLua);
+    mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
+    if (mFunc.Check())
+    {
+        // TODO : Implement Buton:SetPushedTexture
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_SetText( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:SetText", pLua);
+    mFunc.Add(0, "text", Lua::TYPE_STRING);
+    if (mFunc.Check())
+    {
+        pButtonParent_->SetText(mFunc.Get(0)->GetString());
+    }
+
+    return mFunc.Return();
+}
+
+int LuaButton::_UnlockHighlight( lua_State* pLua )
+{
+    Lua::Function mFunc("Button:UnlockHighlight", pLua);
+
+    pButtonParent_->UnlockHighlight();
+
+    return mFunc.Return();
 }

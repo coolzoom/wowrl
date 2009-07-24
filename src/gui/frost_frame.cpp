@@ -878,7 +878,6 @@ void Frame::OnEvent( const Event& mEvent )
 
     if (bIsMouseEnabled_)
     {
-
         if (mEvent.GetName() == "MOUSE_MOVED")
         {
             if (!lMouseButtonList_.IsEmpty() && !bMouseDragged_)

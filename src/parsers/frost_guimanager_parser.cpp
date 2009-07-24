@@ -11,6 +11,7 @@
 #include "gui/frost_uiobject.h"
 #include "gui/frost_frame.h"
 #include "gui/frost_backdrop.h"
+#include "gui/frost_button.h"
 #include "gui/frost_texture.h"
 #include "gui/frost_fontstring.h"
 #include "gui/frost_spritemanager.h"
@@ -46,7 +47,7 @@ namespace Frost
                         if (bVirtual)
                             pFrame->SetVirtual();
                         pFrame->SetName(sName);
-                        Warning(CLASS_NAME,
+                        Warning(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                             "Can't find \""+pFrame->GetName()+"\"'s parent : \""+sParent+"\". "
                             "No parent given to that widget."
                         );
@@ -54,7 +55,7 @@ namespace Frost
                 }
                 else
                 {
-                    Error(CLASS_NAME,
+                    Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                         "Can't create an UIObject with a blank name. Skipped."
                     );
                     return false;
@@ -65,7 +66,7 @@ namespace Frost
                 if ( bVirtual || pFrame->GetParent()->IsVirtual() )
                     pFrame->SetVirtual();
                 pFrame->SetName(pMainBlock->GetAttribute("name"));
-                Warning(CLASS_NAME,
+                Warning(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                     "Can't use the \"parent\" attribute on \""+pFrame->GetName()+"\", "
                     "because it is a nested UIObject. Attribute ignored."
                 );
@@ -106,7 +107,7 @@ namespace Frost
                     }
                     else
                     {
-                        Error(CLASS_NAME,
+                        Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                             "\""+pFrame->GetName()+"\" ("+pFrame->GetObjectType()+") cannot inherit "
                             "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
                         );
@@ -114,7 +115,7 @@ namespace Frost
                 }
                 else
                 {
-                    Error(CLASS_NAME,
+                    Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                         "Couldn't find inherited object \""+*iter+"\". Skipped."
                     );
                 }
@@ -163,7 +164,7 @@ namespace Frost
         }
         else
         {
-            Error(CLASS_NAME,
+            Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                 "Can't create an UIObject with a blank name. Skipped."
             );
             return false;
@@ -196,7 +197,7 @@ namespace Frost
                     }
                     else
                     {
-                        Error(CLASS_NAME,
+                        Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                             "\""+pTexture->GetName()+"\" ("+pTexture->GetObjectType()+") cannot inherit "
                             "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
                         );
@@ -204,7 +205,7 @@ namespace Frost
                 }
                 else
                 {
-                    Error(CLASS_NAME,
+                    Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                         "Couldn't find inherited object \""+*iter+"\". Skipped."
                     );
                 }
@@ -242,7 +243,7 @@ namespace Frost
         }
         else
         {
-            Error(CLASS_NAME,
+            Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                 "Can't create an UIObject with a blank name. Skipped."
             );
             return false;
@@ -275,7 +276,7 @@ namespace Frost
                     }
                     else
                     {
-                        Error(CLASS_NAME,
+                        Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                             "\""+pFontString->GetName()+"\" ("+pFontString->GetObjectType()+") cannot inherit "
                             "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Skipped."
                         );
@@ -283,7 +284,7 @@ namespace Frost
                 }
                 else
                 {
-                    Error(CLASS_NAME,
+                    Error(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                         "Couldn't find inherited object \""+*iter+"\". Skipped."
                     );
                 }
@@ -318,7 +319,7 @@ namespace Frost
                 pFontString->SetOutlined(false);
             else
             {
-                Warning(CLASS_NAME,
+                Warning(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                     "Unkown outline type for "+pFontString->GetName()+" : \""+sOutline+"\"."
                 );
             }
@@ -335,7 +336,7 @@ namespace Frost
                 pFontString->SetJustifyH(Text::ALIGN_RIGHT);
             else
             {
-                Warning(CLASS_NAME,
+                Warning(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                     "Unkown horizontal justify behavior for "+pFontString->GetName()+
                     " : \""+sJustifyH+"\"."
                 );
@@ -353,7 +354,7 @@ namespace Frost
                 pFontString->SetJustifyV(Text::ALIGN_BOTTOM);
             else
             {
-                Warning(CLASS_NAME,
+                Warning(pMainBlock->GetFile()+":"+pMainBlock->GetLineNbr(),
                     "Unkown vertical justify behavior for "+pFontString->GetName()+
                     " : \""+sJustifyV+"\"."
                 );
@@ -393,7 +394,7 @@ namespace Frost
         s_ptr<XML::Block> pAnchorsBlock = pMainBlock->GetBlock("Anchors");
         if (pAnchorsBlock)
         {
-            vector<s_str> lFoundPoints;
+            s_ctnr<s_str> lFoundPoints;
             s_ptr<XML::Block> pAnchorBlock;
             foreach_block (pAnchorBlock, pAnchorsBlock)
             {
@@ -401,9 +402,9 @@ namespace Frost
                 s_str sParent = pAnchorBlock->GetAttribute("relativeTo");
                 s_str sRelativePoint = pAnchorBlock->GetAttribute("relativePoint");
 
-                if (VECTORFIND(sPoint, lFoundPoints))
+                if (lFoundPoints.Find(sPoint))
                 {
-                    Warning(CLASS_NAME,
+                    Warning(pAnchorsBlock->GetFile()+":"+pAnchorsBlock->GetLineNbr(),
                         "Anchor point \""+sPoint+"\" has already been defined "
                         "for \""+pObject->GetName()+"\". Skipped."
                     );
@@ -473,7 +474,7 @@ namespace Frost
                 }
                 else if (pDimBlock->GetName() == "RelDimension")
                 {
-                    Warning(CLASS_NAME,
+                    Warning(pDimBlock->GetFile()+":"+pDimBlock->GetLineNbr(),
                         "\"RelDimension\" for ResizeBounds:Min is not yet supported. Skipped"
                     );
                 }
@@ -497,7 +498,7 @@ namespace Frost
                 }
                 else if (pDimBlock->GetName() == "RelDimension")
                 {
-                    Warning(CLASS_NAME,
+                    Warning(pDimBlock->GetFile()+":"+pDimBlock->GetLineNbr(),
                         "\"RelDimension\" for ResizeBounds:Max is not yet supported. Skipped"
                     );
                 }
@@ -551,7 +552,7 @@ namespace Frost
                 }
                 else
                 {
-                    Warning(CLASS_NAME,
+                    Warning(pInsetBlock->GetFile()+":"+pInsetBlock->GetLineNbr(),
                         "RelInset for Backdrop:BackgroundInsets is not yet supported ("+pFrame->GetName()+")."
                     );
                 }
@@ -567,7 +568,7 @@ namespace Frost
                 }
                 else
                 {
-                    Warning(CLASS_NAME,
+                    Warning(pSizeBlock->GetFile()+":"+pSizeBlock->GetLineNbr(),
                         "RelValue for Backdrop:EdgeSize is not yet supported ("+pFrame->GetName()+")."
                     );
                 }
@@ -583,7 +584,7 @@ namespace Frost
                 }
                 else
                 {
-                    Warning(CLASS_NAME,
+                    Warning(pTileBlock->GetFile()+":"+pTileBlock->GetLineNbr(),
                         "RelValue for Backdrop:TileSize is not yet supported ("+pFrame->GetName()+")."
                     );
                 }
@@ -638,11 +639,15 @@ namespace Frost
                 {
                     if (pRegionBlock->GetName() == "FontString")
                     {
-                        this->ParseFontStringBlock_(pFrame, sLevel, pRegionBlock);
+                        s_ptr<GUI::FontString> pFontString = new GUI::FontString();
+                        if (!this->ParseFontStringBlock_(pFontString, pFrame, sLevel, pRegionBlock))
+                            pFontString.Delete();
                     }
                     else if (pRegionBlock->GetName() == "Texture")
                     {
-                        this->ParseTextureBlock_(pFrame, sLevel, pRegionBlock);
+                        s_ptr<GUI::Texture> pTexture = new GUI::Texture();
+                        if (!this->ParseTextureBlock_(pTexture, pFrame, sLevel, pRegionBlock))
+                            pTexture.Delete();
                     }
                 }
             }
@@ -725,10 +730,10 @@ namespace Frost
         if (pColorBlock)
         {
             pTexture->SetColor(Color(
-                s_uint(s_float(pColorBlock->GetAttribute("a"))*255),
-                s_uint(s_float(pColorBlock->GetAttribute("r"))*255),
-                s_uint(s_float(pColorBlock->GetAttribute("g"))*255),
-                s_uint(s_float(pColorBlock->GetAttribute("b"))*255)
+                s_uint(s_float(pColorBlock->GetAttribute("a"))*255.0f),
+                s_uint(s_float(pColorBlock->GetAttribute("r"))*255.0f),
+                s_uint(s_float(pColorBlock->GetAttribute("g"))*255.0f),
+                s_uint(s_float(pColorBlock->GetAttribute("b"))*255.0f)
             ));
         }
         return true;
@@ -747,7 +752,7 @@ namespace Frost
                 mOrient = GUI::ORIENTATION_VERTICAL;
             else
             {
-                Error(CLASS_NAME,
+                Error(pGradientBlock->GetFile()+":"+pGradientBlock->GetLineNbr(),
                     "Unknown gradient orientation for "+pTexture->GetName()+" : \""+sOrientation+"\"."
                 );
                 return false;
@@ -755,36 +760,17 @@ namespace Frost
 
             Color mMinColor, mMaxColor;
             s_ptr<XML::Block> pMinColorBlock = pGradientBlock->GetBlock("MinColor");
-            if (pMinColorBlock)
-            {
-                mMinColor.SetA(s_uint(255*s_float(pMinColorBlock->GetAttribute("a"))));
-                mMinColor.SetR(s_uint(255*s_float(pMinColorBlock->GetAttribute("r"))));
-                mMinColor.SetG(s_uint(255*s_float(pMinColorBlock->GetAttribute("g"))));
-                mMinColor.SetB(s_uint(255*s_float(pMinColorBlock->GetAttribute("b"))));
-            }
-            else
-            {
-                Error(CLASS_NAME,
-                    "Missins \"MinColor\" block in "+pTexture->GetName()+"'s gradient."
-                );
-                return false;
-            }
+            mMinColor.SetA(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("a"))));
+            mMinColor.SetR(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("r"))));
+            mMinColor.SetG(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("g"))));
+            mMinColor.SetB(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("b"))));
+
 
             s_ptr<XML::Block> pMaxColorBlock = pGradientBlock->GetBlock("MaxColor");
-            if (pMaxColorBlock)
-            {
-                mMaxColor.SetA(s_uint(255*s_float(pMaxColorBlock->GetAttribute("a"))));
-                mMaxColor.SetR(s_uint(255*s_float(pMaxColorBlock->GetAttribute("r"))));
-                mMaxColor.SetG(s_uint(255*s_float(pMaxColorBlock->GetAttribute("g"))));
-                mMaxColor.SetB(s_uint(255*s_float(pMaxColorBlock->GetAttribute("b"))));
-            }
-            else
-            {
-                Error(CLASS_NAME,
-                    "Missins \"MaxColor\" block in "+pTexture->GetName()+"'s gradient."
-                );
-                return false;
-            }
+            mMaxColor.SetA(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("a"))));
+            mMaxColor.SetR(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("r"))));
+            mMaxColor.SetG(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("g"))));
+            mMaxColor.SetB(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("b"))));
 
             pTexture->SetGradient(GUI::Gradient(mOrient, mMinColor, mMaxColor));
         }
@@ -798,10 +784,10 @@ namespace Frost
         if (pColorBlock)
         {
             pFontString->SetTextColor(Color(
-                s_uint(s_float(pColorBlock->GetAttribute("a"))*255),
-                s_uint(s_float(pColorBlock->GetAttribute("r"))*255),
-                s_uint(s_float(pColorBlock->GetAttribute("g"))*255),
-                s_uint(s_float(pColorBlock->GetAttribute("b"))*255)
+                s_uint(s_float(pColorBlock->GetAttribute("a"))*255.0f),
+                s_uint(s_float(pColorBlock->GetAttribute("r"))*255.0f),
+                s_uint(s_float(pColorBlock->GetAttribute("g"))*255.0f),
+                s_uint(s_float(pColorBlock->GetAttribute("b"))*255.0f)
             ));
         }
         return true;
@@ -818,10 +804,10 @@ namespace Frost
             if (pColorBlock)
             {
                 pFontString->SetShadowColor(Color(
-                    s_uint(s_float(pColorBlock->GetAttribute("a"))*255),
-                    s_uint(s_float(pColorBlock->GetAttribute("r"))*255),
-                    s_uint(s_float(pColorBlock->GetAttribute("g"))*255),
-                    s_uint(s_float(pColorBlock->GetAttribute("b"))*255)
+                    s_uint(s_float(pColorBlock->GetAttribute("a"))*255.0f),
+                    s_uint(s_float(pColorBlock->GetAttribute("r"))*255.0f),
+                    s_uint(s_float(pColorBlock->GetAttribute("g"))*255.0f),
+                    s_uint(s_float(pColorBlock->GetAttribute("b"))*255.0f)
                 ));
             }
 
@@ -866,7 +852,94 @@ namespace Frost
 
     s_bool GUIManager::ParseButtonBlock_( s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock )
     {
-        // TODO : parse Button
+        s_ptr<GUI::Button> pButton = new GUI::Button();
+
+        if (pParent)
+            pButton->SetParent(pParent);
+
+        // Parse attributes
+        if (!this->ParseFrameAttributes_(pButton, pWidgetBlock))
+        {
+            pButton.Delete(); return false;
+        }
+
+        if ((pWidgetBlock->IsProvided("text") || !pWidgetBlock->IsProvided("inherits")))
+            pButton->SetText(pWidgetBlock->GetAttribute("text"));
+
+        this->ParseSizeBlock_(pButton, pWidgetBlock);
+        this->ParseResizeBoundsBlock_(pButton, pWidgetBlock);
+        this->ParseAnchorsBlock_(pButton, pWidgetBlock);
+        this->ParseTitleRegionBlock_(pButton, pWidgetBlock);
+        this->ParseBackdropBlock_(pButton, pWidgetBlock);
+        this->ParseHitRectInsetsBlock_(pButton, pWidgetBlock);
+        this->ParseLayersBlock_(pButton, pWidgetBlock);
+        this->ParseFramesBlock_(pButton, pWidgetBlock);
+        this->ParseScriptsBlock_(pButton, pWidgetBlock);
+
+        s_ptr<XML::Block> pNormalTextureBlock = pWidgetBlock->GetBlock("NormalTexture");
+        if (pNormalTextureBlock)
+        {
+            pButton->CreateNormalTexture();
+            s_ptr<GUI::Texture> pTexture = pButton->GetNormalTexture();
+            if (pTexture)
+                this->ParseTextureBlock_(pTexture, pButton, "BORDER", pNormalTextureBlock);
+        }
+
+        s_ptr<XML::Block> pPushedTextureBlock = pWidgetBlock->GetBlock("PushedTexture");
+        if (pPushedTextureBlock)
+        {
+            pButton->CreatePushedTexture();
+            s_ptr<GUI::Texture> pTexture = pButton->GetPushedTexture();
+            if (pTexture)
+                this->ParseTextureBlock_(pTexture, pButton, "BORDER", pPushedTextureBlock);
+        }
+
+        s_ptr<XML::Block> pDisabledTextureBlock = pWidgetBlock->GetBlock("DisabledTexture");
+        if (pDisabledTextureBlock)
+        {
+            pButton->CreateDisabledTexture();
+            s_ptr<GUI::Texture> pTexture = pButton->GetDisabledTexture();
+            if (pTexture)
+                this->ParseTextureBlock_(pTexture, pButton, "BORDER", pDisabledTextureBlock);
+        }
+
+        s_ptr<XML::Block> pHighlightTextureBlock = pWidgetBlock->GetBlock("HighlightTexture");
+        if (pHighlightTextureBlock)
+        {
+            pButton->CreateHighlightTexture();
+            s_ptr<GUI::Texture> pTexture = pButton->GetHighlightTexture();
+            if (pTexture)
+                this->ParseTextureBlock_(pTexture, pButton, "HIGHLIGHT", pHighlightTextureBlock);
+        }
+
+
+        s_ptr<XML::Block> pNormalTextBlock = pWidgetBlock->GetBlock("NormalText");
+        if (pNormalTextBlock)
+        {
+            pButton->CreateNormalText();
+            s_ptr<GUI::FontString> pFontString = pButton->GetNormalText();
+            if (pFontString)
+                this->ParseFontStringBlock_(pFontString, pButton, "ARTWORK", pNormalTextBlock);
+        }
+
+        s_ptr<XML::Block> pHighlightTextBlock = pWidgetBlock->GetBlock("HighlightText");
+        if (pHighlightTextBlock)
+        {
+            pButton->CreateHighlightText();
+            s_ptr<GUI::FontString> pFontString = pButton->GetHighlightText();
+            if (pFontString)
+                this->ParseFontStringBlock_(pFontString, pButton, "ARTWORK", pHighlightTextBlock);
+        }
+
+        s_ptr<XML::Block> pDisabledTextBlock = pWidgetBlock->GetBlock("DisabledText");
+        if (pDisabledTextBlock)
+        {
+            pButton->CreateDisabledText();
+            s_ptr<GUI::FontString> pFontString = pButton->GetDisabledText();
+            if (pFontString)
+                this->ParseFontStringBlock_(pFontString, pButton, "ARTWORK", pDisabledTextBlock);
+        }
+
         return true;
     }
 
@@ -894,9 +967,8 @@ namespace Frost
         return true;
     }
 
-    s_bool GUIManager::ParseFontStringBlock_( s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock )
+    s_bool GUIManager::ParseFontStringBlock_( s_ptr<GUI::FontString> pFontString, s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock )
     {
-        s_ptr<GUI::FontString> pFontString = new GUI::FontString();
         pFontString->SetDrawLayer(sLevel);
 
         if (pParent)
@@ -904,40 +976,29 @@ namespace Frost
 
         // Parse attributes
         if (!this->ParseFontStringAttributes_(pFontString, pArtBlock))
-        {
-            pFontString.Delete(); return false;
-        }
+            return false;
 
         // Parse Size
         if (!this->ParseSizeBlock_(pFontString, pArtBlock))
-        {
-            pFontString.Delete(); return false;
-        }
+            return false;
 
         // Parse Anchors
         if (!this->ParseAnchorsBlock_(pFontString, pArtBlock))
-        {
-            pFontString.Delete(); return false;
-        }
+            return false;
 
         // Parse Color
         if (!this->ParseFontStringColorBlock_(pFontString, pArtBlock))
-        {
-            pFontString.Delete(); return false;
-        }
+            return false;
 
         // Parse Shadow
         if (!this->ParseShadowBlock_(pFontString, pArtBlock))
-        {
-            pFontString.Delete(); return false;
-        }
+            return false;
 
         return true;
     }
 
-    s_bool GUIManager::ParseTextureBlock_( s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock )
+    s_bool GUIManager::ParseTextureBlock_( s_ptr<GUI::Texture> pTexture, s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock )
     {
-        s_ptr<GUI::Texture> pTexture = new GUI::Texture();
         pTexture->SetDrawLayer(sLevel);
 
         if (pParent)
@@ -945,39 +1006,27 @@ namespace Frost
 
         // Parse attributes
         if (!this->ParseTextureAttributes_(pTexture, pArtBlock))
-        {
-            pTexture.Delete(); return false;
-        }
+            return false;
 
         // Parse Size
         if (!this->ParseSizeBlock_(pTexture, pArtBlock))
-        {
-            pTexture.Delete(); return false;
-        }
+            return false;
 
         // Parse Anchors
         if (!this->ParseAnchorsBlock_(pTexture, pArtBlock))
-        {
-            pTexture.Delete(); return false;
-        }
+            return false;
 
         // Parse TexCoords
         if (!this->ParseTexCoordsBlock_(pTexture, pArtBlock))
-        {
-            pTexture.Delete(); return false;
-        }
+            return false;
 
         // Parse Color
         if (!this->ParseTextureColorBlock_(pTexture, pArtBlock))
-        {
-            pTexture.Delete(); return false;
-        }
+            return false;
 
         // Parse Gradient
         if (!this->ParseGradientBlock_(pTexture, pArtBlock))
-        {
-            pTexture.Delete(); return false;
-        }
+            return false;
 
         return true;
     }

@@ -174,7 +174,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="ARTWORK">
-                <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="12" justifyH="CENTER" text="">
+                <FontString name="$parentTitleString" font="Fonts/VeraBold.ttf" fontHeight="10" justifyH="CENTER" text="">
 					<Size>
 						<AbsDimension x="140" y="32"/>
 					</Size>
@@ -187,7 +187,7 @@
 						<Offset x="1" y="1"/>
 					</Shadow>
 				</FontString>
-                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT" justifyV="TOP" text="">
+                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" justifyV="TOP" text="">
 					<Anchors>
 						<Anchor point="TOPLEFT">
 							<Offset>
