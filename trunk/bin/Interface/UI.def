@@ -48,13 +48,13 @@
     <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
     
     <n[.,1]:Gradient orientation="HORIZONTAL">
-        <n[.,1]:MinColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
-        <n[.,1]:MaxColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
+        <n[1,1]:MinColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
+        <n[1,1]:MaxColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
     </Gradient>
     
 </Texture>
 
-<d:Frame name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" n:alpha="1.0" parent="" b:toplevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" b:enableMouse="false" b:enableKeyboard="false" b:clampedToScreen="true">
+<d:Frame name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" n:alpha="1.0" parent="" b:toplevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" b:enableMouse="false" b:enableKeyboard="false" b:clampedToScreen="false">
 
     <n[.,1]:Size>
         <n[*]:AbsDimension n:x="0"   n:y="0"/>
@@ -151,7 +151,52 @@
     
 </Frame>
 
-<d[Frame]:Button>
+<c[Texture]:NormalTexture name="$parentNormalTexture" b:setAllPoints="true"/>
+<c[Texture]:PushedTexture name="$parentPushedTexture" b:setAllPoints="true" hidden="true"/>
+<c[Texture]:DisabledTexture name="$parentDisabledTexture" b:setAllPoints="true" hidden="true"/>
+<c[Texture]:HighlightTexture name="$parentHighlightTexture" b:setAllPoints="true" hidden="true"/>
+
+<c[FontString]:NormalText name="$parentNormalText"/>
+<c[FontString]:HighlightText name="$parentHighlightText" hidden="true"/>
+<c[FontString]:DisabledText name="$parentDisabledText" hidden="true"/>
+
+<d[Frame]:Button text="" b:enableMouse="true">
+
+    <n[.,1]:l:NormalTexture/>
+    <n[.,1]:l:PushedTexture/>
+    <n[.,1]:l:DisabledTexture/>
+    <n[.,1]:l:HighlightTexture/>
+    
+    <n[.,1]:l:NormalText/>
+    <n[.,1]:l:HighlightText/>
+    <n[.,1]:l:DisabledText/>
+    
+    <n[.,1]:PushedTextOffset>
+        <n[*]:AbsDimension n:x="0" n:y="0"/>
+        <n[*]:RelDimension n:x="0.0" n:y="0.0"/>   
+    </PushedTextOffset>
+    
+    <n[.,1]:Scripts>
+        <n[.,1]:OnClick/>
+        <n[.,1]:OnDoubleClick/>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnUpdate/>
+    </Scripts>
+    
 </Button>
 
 <d[Frame]:EditBox>

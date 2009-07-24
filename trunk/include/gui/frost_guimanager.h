@@ -145,8 +145,8 @@ namespace Frost
         s_bool ParseStatusBarBlock_(s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock);
 
         // Region parsers
-        s_bool ParseFontStringBlock_(s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
-        s_bool ParseTextureBlock_(s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
+        s_bool ParseFontStringBlock_(s_ptr<GUI::FontString> pFontString, s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
+        s_bool ParseTextureBlock_(s_ptr<GUI::Texture> pTexture, s_ptr<GUI::Frame> pParent, const s_str& sLevel, s_ptr<XML::Block> pArtBlock);
 
         s_ptr<Lua::State> pLua_;
         s_bool            bClosed_;
