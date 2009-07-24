@@ -52,18 +52,18 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 {
     s_str sStr;
 
-    sStr << sTab << "  # Name        : "        << sName_ << " ("+s_str(bReady_ ? "ready" : "not ready")+")\n";
-    sStr << sTab << "  # ID          : "        << uiID_ << "\n";
-    sStr << sTab << "  # Type        : "        << lType_.Back() << "\n";
+    sStr << sTab << "  # Name        : " << sName_ << " ("+s_str(bReady_ ? "ready" : "not ready")+")\n";
+    sStr << sTab << "  # ID          : " << uiID_ << "\n";
+    sStr << sTab << "  # Type        : " << lType_.Back() << "\n";
     if (pParent_)
-    sStr << sTab << "  # Parent      : "  << pParent_->GetName() << "\n";
+    sStr << sTab << "  # Parent      : " << pParent_->GetName() << "\n";
     else
     sStr << sTab << "  # Parent      : none\n";
     sStr << sTab << "  # Num anchors : " << lAnchorList_.GetSize() << "\n";
     if (!lAnchorList_.IsEmpty())
     {
         sStr << sTab << "  |-###\n";
-        map<AnchorPoint, Anchor>::const_iterator iterAnchor;
+        s_map<AnchorPoint, Anchor>::const_iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
             sStr << iterAnchor->second.Serialize(sTab);
@@ -77,12 +77,12 @@ s_str UIObject::Serialize( const s_str& sTab ) const
     sStr << sTab << "  |   # right  : " << lBorderList_[BORDER_RIGHT] << "\n";
     sStr << sTab << "  |   # bottom : " << lBorderList_[BORDER_BOTTOM] << "\n";
     sStr << sTab << "  |-###\n";
-    sStr << sTab << "  # Alpha       : "       << fAlpha_ << "\n";
-    sStr << sTab << "  # Shown       : "       << bIsShown_ << "\n";
-    sStr << sTab << "  # Abs width   : "  << uiAbsWidth_ << "\n";
-    sStr << sTab << "  # Abs height  : "  << uiAbsHeight_ << "\n";
-    sStr << sTab << "  # Rel width   : "  << fRelWidth_ << "\n";
-    sStr << sTab << "  # Rel height  : "  << fRelHeight_ << "\n";
+    sStr << sTab << "  # Alpha       : " << fAlpha_ << "\n";
+    sStr << sTab << "  # Shown       : " << bIsShown_ << "\n";
+    sStr << sTab << "  # Abs width   : " << uiAbsWidth_ << "\n";
+    sStr << sTab << "  # Abs height  : " << uiAbsHeight_ << "\n";
+    sStr << sTab << "  # Rel width   : " << fRelWidth_ << "\n";
+    sStr << sTab << "  # Rel height  : " << fRelHeight_ << "\n";
 
     return sStr;
 }

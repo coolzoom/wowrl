@@ -56,6 +56,7 @@ s_str Texture::Serialize( const s_str& sTab ) const
         {
             case ORIENTATION_HORIZONTAL : sStr << "HORIZONTAL\n"; break;
             case ORIENTATION_VERTICAL : sStr << "VERTICAL\n"; break;
+            default : sStr << "<error>\n"; break;
         }
         sStr << sTab << "  #-###\n";
     }
@@ -72,6 +73,7 @@ s_str Texture::Serialize( const s_str& sTab ) const
         case BLEND_KEY : sStr << "KEY\n"; break;
         case BLEND_ADD : sStr << "ADD\n"; break;
         case BLEND_MOD : sStr << "MOD\n"; break;
+        default : sStr << "<error>\n"; break;
     }
 
     sStr << sTab << "  # Desaturated : " << bIsDesaturated_ << "\n";
