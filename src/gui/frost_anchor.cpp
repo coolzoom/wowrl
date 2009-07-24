@@ -74,14 +74,14 @@ const s_int& Anchor::GetAbsX()
         else if ((mParentPoint_ == ANCHOR_TOP) || (mParentPoint_ == ANCHOR_CENTER) || (mParentPoint_ == ANCHOR_BOTTOM))
         {
             if (pParent_ != NULL)
-                iParentOffset = s_int(pParent_->GetAbsWidth())/2;
+                iParentOffset = s_int(pParent_->GetAppearentWidth())/2;
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenWidth())/2;
         }
         else if ((mParentPoint_ == ANCHOR_TOPRIGHT) || (mParentPoint_ == ANCHOR_RIGHT) || (mParentPoint_ == ANCHOR_BOTTOMRIGHT))
         {
             if (pParent_ != NULL)
-                iParentOffset = s_int(pParent_->GetAbsWidth());
+                iParentOffset = s_int(pParent_->GetAppearentWidth());
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenWidth());
         }
@@ -110,14 +110,14 @@ const s_int& Anchor::GetAbsY()
         else if ((mParentPoint_ == ANCHOR_LEFT) || (mParentPoint_ == ANCHOR_CENTER) || (mParentPoint_ == ANCHOR_RIGHT))
         {
             if (pParent_ != NULL)
-                iParentOffset = s_int(pParent_->GetAbsHeight())/2;
+                iParentOffset = s_int(pParent_->GetAppearentHeight())/2;
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenHeight())/2;
         }
         else if ((mParentPoint_ == ANCHOR_BOTTOMLEFT) || (mParentPoint_ == ANCHOR_BOTTOM) || (mParentPoint_ == ANCHOR_BOTTOMRIGHT))
         {
             if (pParent_ != NULL)
-                iParentOffset = s_int(pParent_->GetAbsHeight());
+                iParentOffset = s_int(pParent_->GetAppearentHeight());
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenHeight());
         }

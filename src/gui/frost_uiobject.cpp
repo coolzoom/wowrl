@@ -118,11 +118,16 @@ const s_str& UIObject::GetName() const
     return sName_;
 }
 
+const s_str& UIObject::GetRawName() const
+{
+    return sRawName_;
+}
+
 void UIObject::SetName( const s_str& sName )
 {
     if (sName_.IsEmpty())
     {
-        sName_ = sName;
+        sName_ = sRawName_ = sName;
         if (pParent_ && !bVirtual_)
         {
             sName_.Replace("$parent", pParent_->GetName());
@@ -237,9 +242,19 @@ const s_uint& UIObject::GetAbsWidth() const
     return uiAbsWidth_;
 }
 
+s_uint UIObject::GetAppearentWidth() const
+{
+    return s_uint(lBorderList_[BORDER_RIGHT] - lBorderList_[BORDER_LEFT]);
+}
+
 const s_uint& UIObject::GetAbsHeight() const
 {
     return uiAbsHeight_;
+}
+
+s_uint UIObject::GetAppearentHeight() const
+{
+    return s_uint(lBorderList_[BORDER_BOTTOM] - lBorderList_[BORDER_TOP]);
 }
 
 const s_float& UIObject::GetRelWidth() const
@@ -537,14 +552,14 @@ void UIObject::UpdateDimensions_()
     if (pParent_ != NULL)
     {
         if (bIsHeightAbs_)
-            fRelHeight_ = s_float(uiAbsHeight_)/s_float(pParent_->GetAbsHeight());
+            fRelHeight_ = s_float(uiAbsHeight_)/s_float(pParent_->GetAppearentHeight());
         else
-            uiAbsHeight_ = s_uint(fRelHeight_*s_float(pParent_->GetAbsHeight()));
+            uiAbsHeight_ = s_uint(fRelHeight_*s_float(pParent_->GetAppearentHeight()));
 
         if (bIsWidthAbs_)
-            fRelWidth_ = s_float(uiAbsWidth_)/s_float(pParent_->GetAbsWidth());
+            fRelWidth_ = s_float(uiAbsWidth_)/s_float(pParent_->GetAppearentWidth());
         else
-            uiAbsWidth_ = s_uint(fRelWidth_*s_float(pParent_->GetAbsWidth()));
+            uiAbsWidth_ = s_uint(fRelWidth_*s_float(pParent_->GetAppearentWidth()));
     }
     else
     {
@@ -569,7 +584,7 @@ void UIObject::MakeBorders_( s_int& iMin, s_int& iMax, const s_int& iCenter, con
             if (iCenter.IsValid())
             {
                 iMin = iCenter - iSize/2;
-                iMax = iCenter + iSize/2;
+                iMax = iCenter + s_int(s_float(iSize)/2.0f);
             }
             else
                 bReady_ = false;
