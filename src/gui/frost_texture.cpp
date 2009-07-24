@@ -31,7 +31,50 @@ Texture::~Texture()
 
 s_str Texture::Serialize( const s_str& sTab ) const
 {
-    s_str sStr = UIObject::Serialize(sTab);
+    s_str sStr = LayeredRegion::Serialize(sTab);
+
+    if (!sTextureFile_.IsEmpty())
+    {
+        sStr << sTab << "  # File        : " << sTextureFile_ << "\n";
+        sStr << sTab << "  # Tex. coord. :\n";
+        sStr << sTab << "  #-###\n";
+        sStr << sTab << "  |   # top-left     : " << (lTexCoord_[0], lTexCoord_[1])  << "\n";
+        sStr << sTab << "  |   # top-right    : " << (lTexCoord_[2], lTexCoord_[3]) << "\n";
+        sStr << sTab << "  |   # bottom-right : " << (lTexCoord_[4], lTexCoord_[5]) << "\n";
+        sStr << sTab << "  |   # bottom-left  : " << (lTexCoord_[6], lTexCoord_[7]) << "\n";
+        sStr << sTab << "  #-###\n";
+        sStr << sTab << "  # TexCModRect : " << bTexCoordModifiesRect_ << "\n";
+    }
+    else if (!mGradient_.IsEmpty())
+    {
+        sStr << sTab << "  # Gradient    :\n";
+        sStr << sTab << "  #-###\n";
+        sStr << sTab << "  |   # min color   : " + mGradient_.GetMinColor() << "\n";
+        sStr << sTab << "  |   # max color   : " + mGradient_.GetMaxColor() << "\n";
+        sStr << sTab << "  |   # orientation : ";
+        switch (mGradient_.GetOrientation())
+        {
+            case ORIENTATION_HORIZONTAL : sStr << "HORIZONTAL\n"; break;
+            case ORIENTATION_VERTICAL : sStr << "VERTICAL\n"; break;
+        }
+        sStr << sTab << "  #-###\n";
+    }
+    else
+    {
+        sStr << sTab << "  # Color       : " + mColor_ << "\n";
+    }
+
+    sStr << sTab << "  # Blend mode  : ";
+    switch (mBlendMode_)
+    {
+        case BLEND_NONE : sStr << "NONE\n"; break;
+        case BLEND_BLEND : sStr << "BLEND\n"; break;
+        case BLEND_KEY : sStr << "KEY\n"; break;
+        case BLEND_ADD : sStr << "ADD\n"; break;
+        case BLEND_MOD : sStr << "MOD\n"; break;
+    }
+
+    sStr << sTab << "  # Desaturated : " << bIsDesaturated_ << "\n";
 
     return sStr;
 }
