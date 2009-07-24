@@ -75,7 +75,7 @@ s_bool Document::CheckLineSynthax_( s_str& sLine )
     return false;
 }
 
-s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline, s_ptr<Block> pParent )
+s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline, s_ptr<Block> pParent )
 {
     s_ctnr<s_str> lCommands = sName.Cut(":");
     sName = lCommands.Back();
@@ -83,9 +83,12 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
     s_ctnr<s_str>::iterator iterCommand;
     foreach (iterCommand, lCommands)
     {
-        s_str sLetterCode = s_str((*iterCommand)[0]);
-        if (sLetterCode == "d")
+        s_char sLetterCode = *iterCommand->Begin();
+        if ((sLetterCode == 'd') || (sLetterCode == 'c'))
         {
+            if (sLetterCode == 'c')
+                bCopy = true;
+
             // Pre-definintion
             if (pParent)
             {
@@ -107,7 +110,7 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
                 }
             }
         }
-        else if (sLetterCode == "l")
+        else if (sLetterCode == 'l')
         {
             // Load pre-definition
             if (bMultiline)
@@ -132,7 +135,7 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
                 }
             }
         }
-        else if (sLetterCode == "n")
+        else if (sLetterCode == 'n')
         {
             // Min/max count
             s_uint uiStart = iterCommand->FindPos("[");
@@ -202,6 +205,7 @@ s_bool Document::ParseArguments_( s_ptr<Block> pActual, const s_ctnr<s_str>& lAt
         sAttr = lCommands.Back();
         lCommands.PopBack();
         s_ctnr<s_str>::iterator iterCommand;
+        s_bool bAdd = true;
         foreach (iterCommand, lCommands)
         {
             s_str sLetterCode = s_str((*iterCommand)[0]);
@@ -217,6 +221,11 @@ s_bool Document::ParseArguments_( s_ptr<Block> pActual, const s_ctnr<s_str>& lAt
             {
                 mType = ATTR_TYPE_BOOL;
             }
+            else if (sLetterCode == "-")
+            {
+                pActual->RemoveAttribute(sAttr);
+                bAdd = false;
+            }
             else
             {
                 Warning(sDefFileName_+":"+uiLineNbr_,
@@ -225,8 +234,11 @@ s_bool Document::ParseArguments_( s_ptr<Block> pActual, const s_ctnr<s_str>& lAt
             }
         }
 
-        if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
-            return false;
+        if (bAdd)
+        {
+            if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
+                return false;
+        }
     }
 
     return true;
@@ -301,6 +313,7 @@ s_bool Document::LoadDefinition_()
                         s_uint uiMin = 0u;
                         s_uint uiMax = s_uint::INF;
                         s_bool bPreDefining = false;
+                        s_bool bCopy = false;
                         s_bool bRadio = false;
                         s_bool bLoad = false;
                         s_str sParent;
@@ -309,6 +322,7 @@ s_bool Document::LoadDefinition_()
                         ReadPreDefCommands_(
                             sName, sParent,
                             uiMin, uiMax,
+                            bCopy,
                             bPreDefining,
                             bLoad, bRadio,
                             false, pParent
@@ -357,7 +371,7 @@ s_bool Document::LoadDefinition_()
                         {
                             if (bLoad)
                             {
-                                if (MAPFIND(sName, lPredefinedBlockList_))
+                                if (lPredefinedBlockList_.Find(sName))
                                 {
                                     s_ptr<PredefinedBlock> pAdded;
                                     if (bRadio)
@@ -385,7 +399,7 @@ s_bool Document::LoadDefinition_()
                             }
                             else
                             {
-                                if (!MAPFIND(sName, lPredefinedBlockList_))
+                                if (!lPredefinedBlockList_.Find(sName))
                                 {
                                     if (bRadio)
                                         pActual = pParent->CreateRadioDefBlock(sName);
@@ -404,7 +418,7 @@ s_bool Document::LoadDefinition_()
                                 {
                                     Error(sDefFileName_+":"+uiLineNbr_,
                                         "Defining a new block named \""+sName+"\", which is the name "
-                                        "of a pre-defined block."
+                                        "of a pre-defined block (use the 'l' command to load it)."
                                     );
                                     return false;
                                 }
@@ -418,10 +432,11 @@ s_bool Document::LoadDefinition_()
                                 if (!sParent.IsEmpty())
                                 {
                                     // Inheritance
-                                    if (MAPFIND(sParent, lPredefinedBlockList_))
+                                    if (lPredefinedBlockList_.Find(sParent))
                                     {
                                         lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
-                                        lPredefinedBlockList_[sParent].AddDerivated(sName);
+                                        if (!bCopy)
+                                            lPredefinedBlockList_[sParent].AddDerivated(sName);
                                     }
                                     else
                                     {
@@ -441,7 +456,7 @@ s_bool Document::LoadDefinition_()
                             else
                             {
                                 // Main block
-                                if (!MAPFIND(sName, lPredefinedBlockList_))
+                                if (!lPredefinedBlockList_.Find(sName))
                                 {
                                     pActual = &mMainBlock_;
                                     pActual->SetName(sName);
@@ -453,7 +468,7 @@ s_bool Document::LoadDefinition_()
                                 {
                                     Error(sDefFileName_+":"+uiLineNbr_,
                                         "Defining a new block named \""+sName+"\", which is the name "
-                                        "of a pre-defined block."
+                                        "of a pre-defined block (use the 'l' command to load it)."
                                     );
                                     return false;
                                 }
@@ -530,6 +545,7 @@ s_bool Document::LoadDefinition_()
                             s_uint uiMin = 0;
                             s_uint uiMax = s_uint::INF;
                             s_bool bPreDefining = false;
+                            s_bool bCopy = false;
                             s_bool bRadio = false;
                             s_bool bLoad = false;
                             s_str sParent;
@@ -537,6 +553,7 @@ s_bool Document::LoadDefinition_()
                             ReadPreDefCommands_(
                                 sName, sParent,
                                 uiMin, uiMax,
+                                bCopy,
                                 bPreDefining,
                                 bLoad, bRadio,
                                 true, pParent
@@ -553,7 +570,7 @@ s_bool Document::LoadDefinition_()
 
                             if (pParent)
                             {
-                                if (!MAPFIND(sName, lPredefinedBlockList_))
+                                if (!lPredefinedBlockList_.Find(sName))
                                 {
                                     if (bRadio)
                                         pActual = pParent->CreateRadioDefBlock(sName);
@@ -586,10 +603,11 @@ s_bool Document::LoadDefinition_()
                                     if (!sParent.IsEmpty())
                                     {
                                         // Inheritance
-                                        if (MAPFIND(sParent, lPredefinedBlockList_))
+                                        if (lPredefinedBlockList_.Find(sParent))
                                         {
                                             lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
-                                            lPredefinedBlockList_[sParent].AddDerivated(sName);
+                                            if (!bCopy)
+                                                lPredefinedBlockList_[sParent].AddDerivated(sName);
                                         }
                                         else
                                         {
@@ -938,7 +956,7 @@ s_bool Document::Check()
 
 s_ptr<Block> Document::GetPredefinedBlock( const s_str& sName )
 {
-    if (MAPFIND(sName, lPredefinedBlockList_))
+    if (lPredefinedBlockList_.Find(sName))
     {
         return &lPredefinedBlockList_[sName];
     }

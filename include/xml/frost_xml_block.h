@@ -70,9 +70,11 @@ namespace XML
         /** \param sName        The name of this block
         *   \param uiMinNbr     The minimum number of occurences
         *   \param uiMaxNbr     The maximum number of occurences
+        *   \param sFile        The file in which this block is defined
+        *   \param uiLine       The line at which this block is defined
         *   \param bRadio       'true' if only one Block can be present on this level
         */
-        Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_bool& bRadio = false);
+        Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_str& sFile, const s_uint& uiLineNbr, const s_bool& bRadio = false);
 
         /// Copy constructor.
         /** \param mValue The Block to copy
@@ -87,6 +89,12 @@ namespace XML
         *   \note Only used in the definition stage.
         */
         s_bool        Add(const Attribute& mAttrib);
+
+        /// Removes an attribute from the available list.
+        /** \param sAttributeName The name of the attribute to remove
+        *   \note Only used in the definition stage.
+        */
+        void          RemoveAttribute(const s_str& sAttributeName);
 
         /// Retrieves attributes from a string.
         /** \param sAttributes The string containing attributes
@@ -303,6 +311,16 @@ namespace XML
         */
         s_ptr<PredefinedBlock> AddPredefinedRadioBlock(s_ptr<Block> pBlock);
 
+        /// Returns the file into which this Block has been found.
+        /** \return The file into which this Block has been found
+        */
+        const s_str& GetFile() const;
+
+        /// Returns the line at which this Block has been found.
+        /** \return The line at which this Block has been found
+        */
+        const s_uint& GetLineNbr() const;
+
         static const s_str CLASS_NAME;
 
     private :
@@ -317,6 +335,9 @@ namespace XML
         s_ptr<Block>    pParent_;
         s_refptr<Block> pNewBlock_;
         s_bool          bCreating_;
+
+        s_str  sFile_;
+        s_uint uiLineNbr_;
 
         s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator>::iterator mCurrIter_;
         s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator>::iterator mEndIter_;
