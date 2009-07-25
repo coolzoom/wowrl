@@ -34,36 +34,28 @@ void Button::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 {
     Frame::On(sScriptName, pEvent);
 
-    if ( pHighlightTexture_ && (sScriptName == "Enter") )
+    if (IsEnabled())
     {
-        pHighlightTexture_->Show();
-    }
-
-    if ( pHighlightTexture_ && (sScriptName == "Leave") )
-    {
-        pHighlightTexture_->Hide();
-        if (pPushedTexture_)
+        if (sScriptName == "Enter")
         {
-            pPushedTexture_->Hide();
-            if (pNormalTexture_)
-                pNormalTexture_->Show();
+            Highlight();
         }
-    }
 
-    if ( pPushedTexture_ && (sScriptName == "MouseDown") )
-    {
-        pPushedTexture_->Show();
-        if (pNormalTexture_)
-            pNormalTexture_->Hide();
-    }
+        if (sScriptName == "Leave")
+        {
+            Unlight();
+        }
 
-    if ( pPushedTexture_ && (sScriptName == "MouseUp") )
-    {
-        pPushedTexture_->Hide();
-        if (pNormalTexture_)
-            pNormalTexture_->Show();
+        if (sScriptName == "MouseDown")
+        {
+            Push();
+        }
 
-        On("Click");
+        if (sScriptName == "MouseUp")
+        {
+            Release();
+            On("Click");
+        }
     }
 }
 
@@ -193,22 +185,182 @@ s_ptr<FontString> Button::GetDisabledText()
     return pDisabledText_;
 }
 
+void Button::SetNormalTexture( s_ptr<Texture> pTexture )
+{
+    pNormalTexture_ = pTexture;
+}
+
+void Button::SetPushedTexture( s_ptr<Texture> pTexture )
+{
+    pPushedTexture_ = pTexture;
+}
+
+void Button::SetDisabledTexture( s_ptr<Texture> pTexture )
+{
+    pDisabledTexture_ = pTexture;
+}
+
+void Button::SetHighlightTexture( s_ptr<Texture> pTexture )
+{
+    pHighlightTexture_ = pTexture;
+}
+
+void Button::SetNormalText( s_ptr<FontString> pFont )
+{
+    pNormalText_ = pFont;
+}
+
+void Button::SetHighlightText( s_ptr<FontString> pFont )
+{
+    pHighlightText_ = pFont;
+}
+
+void Button::SetDisabledText( s_ptr<FontString> pFont )
+{
+    pDisabledText_ = pFont;
+}
+
 s_ptr<FontString> Button::GetCurrentFontString()
 {
-    return NULL;
+    return pCurrentFontString_;
 }
 
 void Button::Disable()
 {
+    if (IsEnabled())
+    {
+        mState_ = BUTTON_DISABLED;
+        if (pDisabledTexture_)
+        {
+            if (pNormalTexture_)
+                pNormalTexture_->Hide();
+            if (pPushedTexture_)
+                pPushedTexture_->Hide();
+
+            pDisabledTexture_->Show();
+        }
+        else
+        {
+            if (pNormalTexture_)
+                pNormalTexture_->Show();
+            if (pPushedTexture_)
+                pPushedTexture_->Hide();
+        }
+
+        if (pDisabledText_)
+        {
+            if (pNormalText_)
+                pNormalText_->Hide();
+
+            pDisabledText_->Show();
+            pCurrentFontString_ = pDisabledText_;
+        }
+        else
+        {
+            if (pNormalText_)
+                pNormalText_->Show();
+
+            pCurrentFontString_ = pNormalText_;
+        }
+    }
 }
 
 void Button::Enable()
 {
+    if (!IsEnabled())
+    {
+        mState_ = BUTTON_UP;
+        if (pDisabledTexture_)
+        {
+            if (pNormalTexture_)
+                pNormalTexture_->Show();
+            if (pPushedTexture_)
+                pPushedTexture_->Hide();
+
+            pDisabledTexture_->Hide();
+        }
+        else
+        {
+            if (pNormalTexture_)
+                pNormalTexture_->Show();
+            if (pPushedTexture_)
+                pPushedTexture_->Hide();
+        }
+
+        if (pNormalText_)
+            pNormalText_->Show();
+
+        pCurrentFontString_ = pNormalText_;
+
+        if (pDisabledText_)
+            pDisabledText_->Hide();
+    }
 }
 
 s_bool Button::IsEnabled() const
 {
     return (mState_ != BUTTON_DISABLED);
+}
+
+void Button::Push()
+{
+    if (IsEnabled())
+    {
+        pPushedTexture_->Show();
+        if (pNormalTexture_)
+            pNormalTexture_->Hide();
+    }
+}
+
+void Button::Release()
+{
+    if (IsEnabled())
+    {
+        pPushedTexture_->Hide();
+        if (pNormalTexture_)
+            pNormalTexture_->Show();
+    }
+}
+
+void Button::Highlight()
+{
+    if (!bHighlighted_)
+    {
+        if (pHighlightTexture_)
+            pHighlightTexture_->Show();
+
+        if (pCurrentFontString_)
+            pCurrentFontString_->Hide();
+        pCurrentFontString_ = pHighlightText_;
+        if (pCurrentFontString_)
+            pCurrentFontString_->Show();
+
+        bHighlighted_ = true;
+    }
+}
+
+void Button::Unlight()
+{
+    if (!bLockHighlight_ && bHighlighted_)
+    {
+        if (pHighlightTexture_)
+            pHighlightTexture_->Hide();
+
+        if (pCurrentFontString_)
+            pCurrentFontString_->Hide();
+
+        switch (mState_)
+        {
+            case BUTTON_UP       : pCurrentFontString_ = pNormalText_; break;
+            case BUTTON_DOWN     : pCurrentFontString_ = pNormalText_; break;
+            case BUTTON_DISABLED : pCurrentFontString_ = pDisabledText_; break;
+        }
+
+        if (pCurrentFontString_)
+            pCurrentFontString_->Show();
+
+        bHighlighted_ = false;
+    }
 }
 
 ButtonState Button::GetButtonState() const
@@ -218,9 +370,25 @@ ButtonState Button::GetButtonState() const
 
 void Button::LockHighlight()
 {
+    Highlight();
+    bLockHighlight_ = true;
 }
 
 void Button::UnlockHighlight()
 {
+    if (!bMouseInFrame_)
+        Unlight();
+
+    bLockHighlight_ = false;
+}
+
+void Button::SetPushedTextOffset( const s_array<s_int,2>& lOffset )
+{
+    lPushedTextOffset_ = lOffset;
+}
+
+const s_array<s_int,2>& Button::GetPushedTextOffset() const
+{
+    return lPushedTextOffset_;
 }
 
