@@ -317,12 +317,12 @@ namespace GUI
         method(Button, SetHighlightFontObject),
         method(Button, SetHighlightTextColor),
         method(Button, SetHighlightTexture),
+        method(Button, SetNormalFontObject),
+        method(Button, SetNormalTextColor),
         method(Button, SetNormalTexture),
         method(Button, SetPushedTextOffset),
         method(Button, SetPushedTexture),
         method(Button, SetText),
-        method(Button, SetTextColor),
-        method(Button, SetTextFontObject),
         method(Button, UnlockHighlight),
 
         {0,0}

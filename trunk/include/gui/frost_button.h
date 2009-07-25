@@ -65,13 +65,29 @@ namespace Frost
             s_ptr<FontString> GetDisabledText();
             s_ptr<FontString> GetCurrentFontString();
 
+            void SetNormalTexture(s_ptr<Texture> pTexture);
+            void SetPushedTexture(s_ptr<Texture> pTexture);
+            void SetDisabledTexture(s_ptr<Texture> pTexture);
+            void SetHighlightTexture(s_ptr<Texture> pTexture);
+
+            void SetNormalText(s_ptr<FontString> pFont);
+            void SetHighlightText(s_ptr<FontString> pFont);
+            void SetDisabledText(s_ptr<FontString> pFont);
+
             void Disable();
             void Enable();
             s_bool IsEnabled() const;
+            void Push();
+            void Release();
+            void Highlight();
+            void Unlight();
             ButtonState GetButtonState() const;
 
             void LockHighlight();
             void UnlockHighlight();
+
+            void SetPushedTextOffset(const s_array<s_int,2>& lOffset);
+            const s_array<s_int,2>& GetPushedTextOffset() const;
 
 
             static const s_str CLASS_NAME;
@@ -80,6 +96,7 @@ namespace Frost
 
             ButtonState mState_;
             s_bool      bHighlighted_;
+            s_bool      bLockHighlight_;
 
             s_str sText_;
 
@@ -91,6 +108,9 @@ namespace Frost
             s_ptr<FontString> pNormalText_;
             s_ptr<FontString> pHighlightText_;
             s_ptr<FontString> pDisabledText_;
+            s_ptr<FontString> pCurrentFontString_;
+
+            s_array<s_int,2> lPushedTextOffset_;
 
         };
 
@@ -136,12 +156,13 @@ namespace Frost
             int _SetHighlightFontObject(lua_State*);
             int _SetHighlightTextColor(lua_State*);
             int _SetHighlightTexture(lua_State*);
+            int _SetNormalFontObject(lua_State*);
+            int _SetNormalTextColor(lua_State*);
             int _SetNormalTexture(lua_State*);
             int _SetPushedTextOffset(lua_State*);
             int _SetPushedTexture(lua_State*);
             int _SetText(lua_State*);
-            int _SetTextColor(lua_State*) { return 0; }  // WBI;
-            int _SetTextFontObject(lua_State*) { return 0; }  // WBI;
+
             int _UnlockHighlight(lua_State*);
 
             static const char className[];
