@@ -109,6 +109,7 @@ namespace Frost
                     uiRnd.Randomize(1, pAS->lSequence.GetSize()-1);
                 else
                     uiRnd = 0u;
+
                 pActualAnim_ = &pAS->lSequence[uiRnd];
             }
             else if (!pAS->lSequence.IsEmpty())
@@ -123,7 +124,6 @@ namespace Frost
                 return;
             }
 
-            // FIXME : Random bug
             pActualAnim_->pOgreAnim->setEnabled(true);
             pActualAnim_->pOgreAnim->setTimePosition(0.0f);
 
