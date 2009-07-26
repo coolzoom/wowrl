@@ -84,6 +84,11 @@ namespace XML
         /// Destructor.
         ~Block();
 
+        /// Copies a Block's data into another.
+        /** \param pBlock The Block to copy
+        */
+        void          Copy(s_ptr<Block> pBlock);
+
         /// Adds an attribute to the list.
         /** \param mAttrib The new attribute
         *   \note Only used in the definition stage.

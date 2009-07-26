@@ -90,7 +90,7 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
                 bCopy = true;
 
             // Pre-definintion
-            if (pParent)
+            if ( pParent && (sLetterCode == 'd') )
             {
                 Error(sDefFileName_+":"+uiLineNbr_,
                     "Can't pre-define a block outside root level (nested \'d\' command forbidden)."
@@ -397,6 +397,38 @@ s_bool Document::LoadDefinition_()
                                     return false;
                                 }
                             }
+                            else if (bCopy)
+                            {
+                                if (bRadio)
+                                    pActual = pParent->CreateRadioDefBlock(sName);
+                                else
+                                    pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
+
+                                if (!pActual)
+                                    return false;
+
+                                // Pre-definition
+                                if (!sParent.IsEmpty())
+                                {
+                                    // Inheritance
+                                    if (lPredefinedBlockList_.Find(sParent))
+                                    {
+                                        pActual->Copy(&lPredefinedBlockList_[sParent]);
+                                    }
+                                    else
+                                    {
+                                        Error(sDefFileName_+":"+uiLineNbr_,
+                                            "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
+                                            "copied."
+                                        );
+                                    }
+                                }
+
+                                if (!ParseArguments_(pActual, lAttribs))
+                                    return false;
+
+                                pActual = pParent;
+                            }
                             else
                             {
                                 if (!lPredefinedBlockList_.Find(sName))
@@ -441,8 +473,8 @@ s_bool Document::LoadDefinition_()
                                     else
                                     {
                                         Error(sDefFileName_+":"+uiLineNbr_,
-                                            "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "
-                                            "inherited."
+                                            "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
+                                            (bCopy ? s_str("copied.") : s_str("inherited."))
                                         );
                                     }
                                 }
@@ -570,7 +602,36 @@ s_bool Document::LoadDefinition_()
 
                             if (pParent)
                             {
-                                if (!lPredefinedBlockList_.Find(sName))
+                                if (bCopy)
+                                {
+                                    if (bRadio)
+                                        pActual = pParent->CreateRadioDefBlock(sName);
+                                    else
+                                        pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
+
+                                    if (!pActual)
+                                        return false;
+
+                                    // Copy
+                                    if (!sParent.IsEmpty())
+                                    {
+                                        // Inheritance
+                                        if (lPredefinedBlockList_.Find(sParent))
+                                        {
+                                            pActual->Copy(&lPredefinedBlockList_[sParent]);
+                                        }
+                                        else
+                                        {
+                                            Error(sDefFileName_+":"+uiLineNbr_,
+                                                "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "
+                                                "copied."
+                                            );
+                                        }
+                                    }
+
+                                    pParent = pActual;
+                                }
+                                else if (!lPredefinedBlockList_.Find(sName))
                                 {
                                     if (bRadio)
                                         pActual = pParent->CreateRadioDefBlock(sName);
@@ -596,7 +657,6 @@ s_bool Document::LoadDefinition_()
                             }
                             else
                             {
-
                                 if (bPreDefining)
                                 {
                                     // Pre-definition
@@ -612,8 +672,8 @@ s_bool Document::LoadDefinition_()
                                         else
                                         {
                                             Error(sDefFileName_+":"+uiLineNbr_,
-                                                "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "
-                                                "inherited."
+                                                "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
+                                                (bCopy ? s_str("copied.") : s_str("inherited."))
                                             );
                                         }
                                     }
