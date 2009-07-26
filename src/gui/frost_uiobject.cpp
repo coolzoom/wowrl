@@ -52,7 +52,7 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 {
     s_str sStr;
 
-    sStr << sTab << "  # Name        : " << sName_ << " ("+s_str(bReady_ ? "ready" : "not ready")+")\n";
+    sStr << sTab << "  # Name        : " << sName_ << " ("+s_str(bReady_ ? "ready" : "not ready")+s_str(bSpecial_ ? ", special)\n" : ")\n");
     sStr << sTab << "  # ID          : " << uiID_ << "\n";
     sStr << sTab << "  # Type        : " << lType_.Back() << "\n";
     if (pParent_)
@@ -748,10 +748,19 @@ void UIObject::PushOnLua( s_ptr<Lua::State> pLua ) const
     pLua->PushGlobal(sName_);
 }
 
-void UIObject::RemoveGlue(
-) const
+void UIObject::RemoveGlue() const
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushNil();
     pLua->SetGlobal(sName_);
+}
+
+void UIObject::SetSpecial()
+{
+    bSpecial_ = true;
+}
+
+const s_bool& UIObject::IsSpecial() const
+{
+    return bSpecial_;
 }

@@ -18,6 +18,8 @@ const s_str StatusBar::CLASS_NAME = "GUI::StatusBar";
 
 StatusBar::StatusBar() : Frame()
 {
+    mObjectType_ = OJBECT_TYPE_STATUSBAR;
+    lType_.PushBack("StatusBar");
 }
 
 void StatusBar::CreateGlue()

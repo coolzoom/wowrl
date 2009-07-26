@@ -372,6 +372,21 @@ namespace Frost
             */
             void            SetID(const s_uint& uiID);
 
+            /// Flags this object as "special".
+            /** \note Special objects are not automatically copied
+            *         in the Frame inheritance process. They must be
+            *         explicitely copyied by the derived class
+            *         (example : Button will have to copy its button
+            *         textures itself).
+            */
+            void            SetSpecial();
+
+            /// Checks if this object is special.
+            /** \return 'true' if this objet is special
+            *   \note For more informations, see SetSpecial().
+            */
+            const s_bool&   IsSpecial() const;
+
             /// Creates the associated Lua glue.
             /** \note This method is pure virtual : it must be overriden.
             */
@@ -398,6 +413,7 @@ namespace Frost
             s_uint          uiID_;
             ObjectType      mObjectType_;
             s_ptr<UIObject> pParent_;
+            s_bool          bSpecial_;
 
             s_bool          bVirtual_;
             s_bool          bReady_;
