@@ -84,6 +84,19 @@ Block::~Block()
     }
 }
 
+void Block::Copy( s_ptr<Block> pBlock )
+{
+    if (pBlock)
+    {
+        bRadioChilds_ = pBlock->bRadioChilds_;
+        sValue_ = pBlock->sValue_;
+
+        lAttributeList_ = pBlock->lAttributeList_;
+        lDefBlockList_ = pBlock->lDefBlockList_;
+        lPreDefBlockList_ = pBlock->lPreDefBlockList_;
+    }
+}
+
 s_bool Block::Add( const Attribute& mAttrib )
 {
     lAttributeList_[mAttrib.sName] = mAttrib;
