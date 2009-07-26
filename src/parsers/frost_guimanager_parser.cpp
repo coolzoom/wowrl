@@ -12,6 +12,10 @@
 #include "gui/frost_frame.h"
 #include "gui/frost_backdrop.h"
 #include "gui/frost_button.h"
+#include "gui/frost_statusbar.h"
+#include "gui/frost_slider.h"
+#include "gui/frost_scrollingmessageframe.h"
+#include "gui/frost_editbox.h"
 #include "gui/frost_texture.h"
 #include "gui/frost_fontstring.h"
 #include "gui/frost_spritemanager.h"
@@ -946,24 +950,108 @@ namespace Frost
     s_bool GUIManager::ParseEditBoxBlock_( s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock )
     {
         // TODO : parse EditBox
+        s_ptr<GUI::EditBox> pEditBox = new GUI::EditBox();
+
+        if (pParent)
+            pEditBox->SetParent(pParent);
+
+        // Parse attributes
+        if (!this->ParseFrameAttributes_(pEditBox, pWidgetBlock))
+        {
+            pEditBox.Delete(); return false;
+        }
+
+        this->ParseSizeBlock_(pEditBox, pWidgetBlock);
+        this->ParseResizeBoundsBlock_(pEditBox, pWidgetBlock);
+        this->ParseAnchorsBlock_(pEditBox, pWidgetBlock);
+        this->ParseTitleRegionBlock_(pEditBox, pWidgetBlock);
+        this->ParseBackdropBlock_(pEditBox, pWidgetBlock);
+        this->ParseHitRectInsetsBlock_(pEditBox, pWidgetBlock);
+        this->ParseLayersBlock_(pEditBox, pWidgetBlock);
+        this->ParseFramesBlock_(pEditBox, pWidgetBlock);
+        this->ParseScriptsBlock_(pEditBox, pWidgetBlock);
+
         return true;
     }
 
     s_bool GUIManager::ParseSMFBlock_( s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock )
     {
         // TODO : parse SMF
+        s_ptr<GUI::ScrollingMessageFrame> pSMF = new GUI::ScrollingMessageFrame();
+
+        if (pParent)
+            pSMF->SetParent(pParent);
+
+        // Parse attributes
+        if (!this->ParseFrameAttributes_(pSMF, pWidgetBlock))
+        {
+            pSMF.Delete(); return false;
+        }
+
+        this->ParseSizeBlock_(pSMF, pWidgetBlock);
+        this->ParseResizeBoundsBlock_(pSMF, pWidgetBlock);
+        this->ParseAnchorsBlock_(pSMF, pWidgetBlock);
+        this->ParseTitleRegionBlock_(pSMF, pWidgetBlock);
+        this->ParseBackdropBlock_(pSMF, pWidgetBlock);
+        this->ParseHitRectInsetsBlock_(pSMF, pWidgetBlock);
+        this->ParseLayersBlock_(pSMF, pWidgetBlock);
+        this->ParseFramesBlock_(pSMF, pWidgetBlock);
+        this->ParseScriptsBlock_(pSMF, pWidgetBlock);
+
         return true;
     }
 
     s_bool GUIManager::ParseSliderBlock_( s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock )
     {
         // TODO : parse Slider
+        s_ptr<GUI::Slider> pSlider = new GUI::Slider();
+
+        if (pParent)
+            pSlider->SetParent(pParent);
+
+        // Parse attributes
+        if (!this->ParseFrameAttributes_(pSlider, pWidgetBlock))
+        {
+            pSlider.Delete(); return false;
+        }
+
+        this->ParseSizeBlock_(pSlider, pWidgetBlock);
+        this->ParseResizeBoundsBlock_(pSlider, pWidgetBlock);
+        this->ParseAnchorsBlock_(pSlider, pWidgetBlock);
+        this->ParseTitleRegionBlock_(pSlider, pWidgetBlock);
+        this->ParseBackdropBlock_(pSlider, pWidgetBlock);
+        this->ParseHitRectInsetsBlock_(pSlider, pWidgetBlock);
+        this->ParseLayersBlock_(pSlider, pWidgetBlock);
+        this->ParseFramesBlock_(pSlider, pWidgetBlock);
+        this->ParseScriptsBlock_(pSlider, pWidgetBlock);
+
         return true;
     }
 
     s_bool GUIManager::ParseStatusBarBlock_( s_ptr<GUI::Frame> pParent, s_ptr<XML::Block> pWidgetBlock )
     {
         // TODO : parse StatusBar
+        s_ptr<GUI::StatusBar> pStatusBar = new GUI::StatusBar();
+
+        if (pParent)
+            pStatusBar->SetParent(pParent);
+
+        // Parse attributes
+        if (!this->ParseFrameAttributes_(pStatusBar, pWidgetBlock))
+        {
+            pStatusBar.Delete(); return false;
+        }
+
+        this->ParseSizeBlock_(pStatusBar, pWidgetBlock);
+        this->ParseResizeBoundsBlock_(pStatusBar, pWidgetBlock);
+        this->ParseAnchorsBlock_(pStatusBar, pWidgetBlock);
+        this->ParseTitleRegionBlock_(pStatusBar, pWidgetBlock);
+        this->ParseBackdropBlock_(pStatusBar, pWidgetBlock);
+        this->ParseHitRectInsetsBlock_(pStatusBar, pWidgetBlock);
+        this->ParseLayersBlock_(pStatusBar, pWidgetBlock);
+        this->ParseFramesBlock_(pStatusBar, pWidgetBlock);
+        this->ParseScriptsBlock_(pStatusBar, pWidgetBlock);
+
         return true;
     }
 
