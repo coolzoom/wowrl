@@ -43,7 +43,7 @@ namespace Frost
 
             pFontMat_ = MaterialManager::GetSingleton()->CreateMaterial2D(pOgreFont_->getMaterial().get());
 
-            fSpaceWidth_ = GetCharacterWidth((uint)'0');
+            fSpaceWidth_ = GetCharacterWidth((uint)'0')*0.5f;
         }
         else
         {
@@ -252,9 +252,7 @@ namespace Frost
 
     s_float Text::GetCharacterKerning( const s_uint& uiChar1, const s_uint& uiChar2 ) const
     {
-        s_float fKerning = pFontMat_->GetWidth()*pOgreFont_->getGlyphInfo(uiChar1.Get()).kerningTable.find(uiChar2.Get())->second.x;
-        Log(s_str(s_char(uiChar1))+" / "+s_str(s_char(uiChar2))+" : "+fKerning);
-        return fKerning;
+        return pFontMat_->GetWidth()*pOgreFont_->getGlyphInfo(uiChar1.Get()).kerningTable.find(uiChar2.Get())->second.x;
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
@@ -741,7 +739,7 @@ namespace Frost
                         const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)*iterChar);
                         fCharWidth = GetCharacterWidth((uint)*iterChar);
                         fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
-                        s_float fYOffset = -fCharHeight/2+fSize_/2;
+                        s_float fYOffset = fSize_/2 - fCharHeight/2;
 
                         mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
                         mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fCharHeight;
@@ -755,11 +753,13 @@ namespace Frost
                     }
 
                     iterNext = iterChar + 1;
-                    s_float fKerning;
+                    s_float fKerning = 0.0f;
                     if (iterNext != iterLine->sCaption.End())
                     {
-                        if (*iterNext != ' ')
+                        if (*iterNext != ' ' && *iterChar != ' ')
+                        {
                             fKerning = GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                        }
                     }
 
                     fX += fCharWidth + fKerning + fTracking_;
