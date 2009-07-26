@@ -178,17 +178,6 @@ namespace Frost
         */
         s_float        GetCharacterWidth(const s_uint& uiChar) const;
 
-        /// Returns the kerning between two characters.
-        /** \param uiChar1 The first character
-        *   \param uiChar2 The second character
-        *   \return The kerning between two characters
-        *   \note Kerning is a letter spacing adjustment that makes the
-        *         text look more condensed : is you stick an A near a V,
-        *         you can reduce the space between the two letters, but not
-        *         if you put two Vs side to side.
-        */
-        s_float        GetCharacterKerning(const s_uint& uiChar1, const s_uint& uiChar2) const;
-
         /// Returns the height of the text.
         /** \return The height of one text
         *   \note Ignores the text box, but not manual line jumps.
