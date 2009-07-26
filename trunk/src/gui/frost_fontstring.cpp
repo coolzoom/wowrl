@@ -258,6 +258,11 @@ void FontString::SetFont( const s_str& sFontName, const s_uint& uiHeight )
     uiHeight_ = uiHeight;
     pText_ = s_refptr<Text>(new Text(sFontName, s_float(uiHeight)));
     pText_->SetRemoveStartingSpaces(true);
+    pText_->SetText(sText_);
+    pText_->SetAlignment(mJustifyH_);
+    pText_->SetVerticalAlignment(mJustifyV_);
+    pText_->SetTracking(fSpacing_);
+    FireUpdateBorders();
 }
 
 void FontString::SetJustifyH( Text::Alignment mJustifyH )
