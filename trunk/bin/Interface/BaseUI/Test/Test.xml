@@ -18,31 +18,5 @@
                 this.Content:SetText("Welcome in Frost Engine 0.045 !");
             </OnLoad>
         </Scripts>
-        <Frames>
-            <Button name="$parentCloseButton">
-                <Size>
-                    <AbsDimension x="32" y="32"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPRIGHT">
-                        <Offset>
-                            <AbsDimension x="-5" y="5"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <HitRectInsets>
-					<AbsInset left="6" right="8" top="6" bottom="8"/>
-				</HitRectInsets>
-                <NormalTexture    file="Interface/BaseUI/Templates/DialogCloseButtonUp.png"/>
-                <PushedTexture    file="Interface/BaseUI/Templates/DialogCloseButtonDown.png"/>
-                <DisabledTexture  file="Interface/BaseUI/Templates/DialogCloseButtonDisabled.png"/>
-                <HighlightTexture file="Interface/BaseUI/Templates/DialogCloseButtonHighlight.png"/>
-                <Scripts>
-                    <OnClick>
-                        this:GetParent():Hide();
-                    </OnClick>
-                </Scripts>
-            </Button>
-        </Frames>
     </Frame>
 </Ui>

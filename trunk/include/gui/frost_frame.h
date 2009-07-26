@@ -164,6 +164,18 @@ namespace Frost
             */
             s_ctnr< s_ptr<Frame> > GetChildren();
 
+            /// Returns one of this Frame's children.
+            /** \param The name of the child
+            *   \return One of this Frame's children
+            */
+            s_ptr<Frame>        GetChild(const s_str& sName) const;
+
+            /// Returns one of this Frame's region.
+            /** \param The name of the region
+            *   \return One of this Frame's region
+            */
+            s_ptr<LayeredRegion> GetRegion(const s_str& sName) const;
+
             /// Calculates effective alpha.
             /** \return Effective alpha (alpha*parent->alpha)
             */

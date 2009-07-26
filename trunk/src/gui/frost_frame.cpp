@@ -138,6 +138,64 @@ s_str Frame::Serialize( const s_str& sTab ) const
 {
     s_str sStr = UIObject::Serialize(sTab);
 
+    if (!bIsMouseEnabled_ && !bIsKeyboardEnabled_ && !bIsMouseWheelEnabled_)
+        sStr << sTab << "  # Inputs      : none\n";
+    else
+    {
+        sStr << sTab << "  # Inputs      :\n";
+        sStr << sTab << "  |-###\n";
+        if (bIsMouseEnabled_)
+            sStr << sTab << "  |   # mouse\n";
+        if (bIsKeyboardEnabled_)
+            sStr << sTab << "  |   # keyboard\n";
+        if (bIsMouseWheelEnabled_)
+            sStr << sTab << "  |   # mouse wheel\n";
+        sStr << sTab << "  |-###\n";
+    }
+    sStr << sTab << "  # Movable     : " << bIsMovable_ << "\n";
+    sStr << sTab << "  # Resizable   : " << bIsResizable_ << "\n";
+    sStr << sTab << "  # Clamped     : " << bIsClampedToScreen_ << "\n";
+    sStr << sTab << "  # HRect inset :\n";
+    sStr << sTab << "  |-###\n";
+    sStr << sTab << "  |   # left   : " << lAbsHitRectInsetList_[BORDER_LEFT] << "\n";
+    sStr << sTab << "  |   # right  : " << lAbsHitRectInsetList_[BORDER_RIGHT] << "\n";
+    sStr << sTab << "  |   # top    : " << lAbsHitRectInsetList_[BORDER_TOP] << "\n";
+    sStr << sTab << "  |   # bottom : " << lAbsHitRectInsetList_[BORDER_BOTTOM] << "\n";
+    sStr << sTab << "  |-###\n";
+    sStr << sTab << "  # Min width   : " << uiMinWidth_ << "\n";
+    sStr << sTab << "  # Max width   : " << uiMaxWidth_ << "\n";
+    sStr << sTab << "  # Min height  : " << uiMinHeight_ << "\n";
+    sStr << sTab << "  # Max height  : " << uiMaxHeight_ << "\n";
+    sStr << sTab << "  # Scale       : " << fScale_ << "\n";
+    if (pTitleRegion_)
+    {
+        sStr << sTab << "  # Title reg.  :\n";
+        sStr << sTab << "  |-###\n";
+        sStr << pTitleRegion_->Serialize(sTab+"  | ");
+        sStr << sTab << "  |-###\n";
+    }
+    if (pBackdrop_)
+    {
+        const s_array<s_int,4>& lInsets = pBackdrop_->GetBackgroundInsets();
+
+        sStr << sTab << "  # Backdrop    :\n";
+        sStr << sTab << "  |-###\n";
+        sStr << sTab << "  |   # Background : " << pBackdrop_->GetBackgroundFile() << "\n";
+        sStr << sTab << "  |   # Tilling    : " << pBackdrop_->IsBackgroundTilling() << "\n";
+        if (pBackdrop_->IsBackgroundTilling())
+            sStr << sTab << "  |   # Tile size  : " << pBackdrop_->GetTileSize() << "\n";
+        sStr << sTab << "  |   # BG Insets  :\n";
+        sStr << sTab << "  |   |-###\n";
+        sStr << sTab << "  |   |   # left   : " << lInsets[BORDER_LEFT] << "\n";
+        sStr << sTab << "  |   |   # right  : " << lInsets[BORDER_RIGHT] << "\n";
+        sStr << sTab << "  |   |   # top    : " << lInsets[BORDER_TOP] << "\n";
+        sStr << sTab << "  |   |   # bottom : " << lInsets[BORDER_BOTTOM] << "\n";
+        sStr << sTab << "  |   |-###\n";
+        sStr << sTab << "  |   # Edge       : " << pBackdrop_->GetEdgeFile() << "\n";
+        sStr << sTab << "  |   # Edge size  : " << pBackdrop_->GetEdgeSize() << "\n";
+        sStr << sTab << "  |-###\n";
+    }
+
     if (!lRegionList_.IsEmpty())
     {
         if (lChildList_.GetSize() == 1)
@@ -243,46 +301,49 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
         foreach (iterChild, pFrame->lChildList_)
         {
             s_ptr<Frame> pChild = iterChild->second;
-            s_ptr<Frame> pNewChild;
-            if (pChild->GetObjectType() == "Frame")
-                pNewChild = new Frame();
-            else if (pChild->GetObjectType() == "Button")
-                pNewChild = new Button();
-            else if (pChild->GetObjectType() == "EditBox")
-                pNewChild = new EditBox();
-            else if (pChild->GetObjectType() == "ScrollingMessageFrame")
-                pNewChild = new ScrollingMessageFrame();
-            else if (pChild->GetObjectType() == "Slider")
-                pNewChild = new Slider();
-            else if (pChild->GetObjectType() == "StatusBar")
-                pNewChild = new StatusBar();
-            else
+            if (!pChild->IsSpecial())
             {
-                Warning(lType_.Back(),
-                    "Trying to add \""+pChild->GetName()+"\" (type : "+pChild->GetObjectType()+") to \""+sName_+"\", "
-                    "but no copying code was available. Skipped."
-                );
-            }
-
-            if (pNewChild)
-            {
-                pNewChild->SetParent(this);
-                if (this->IsVirtual())
-                    pNewChild->SetVirtual();
-                pNewChild->SetName(pChild->GetName());
-                if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
+                s_ptr<Frame> pNewChild;
+                if (pChild->GetObjectType() == "Frame")
+                    pNewChild = new Frame();
+                else if (pChild->GetObjectType() == "Button")
+                    pNewChild = new Button();
+                else if (pChild->GetObjectType() == "EditBox")
+                    pNewChild = new EditBox();
+                else if (pChild->GetObjectType() == "ScrollingMessageFrame")
+                    pNewChild = new ScrollingMessageFrame();
+                else if (pChild->GetObjectType() == "Slider")
+                    pNewChild = new Slider();
+                else if (pChild->GetObjectType() == "StatusBar")
+                    pNewChild = new StatusBar();
+                else
                 {
                     Warning(lType_.Back(),
-                        "Trying to add \""+pChild->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                        +pNewChild->GetName()+"\". Skipped."
+                        "Trying to add \""+pChild->GetName()+"\" (type : "+pChild->GetObjectType()+") to \""+sName_+"\", "
+                        "but no copying code was available. Skipped."
                     );
-                    pNewChild.Delete();
-                    continue;
                 }
-                if (!pNewChild->IsVirtual())
-                    pNewChild->CreateGlue();
-                this->AddChild(pNewChild);
-                pNewChild->CopyFrom(pChild);
+
+                if (pNewChild)
+                {
+                    pNewChild->SetParent(this);
+                    if (this->IsVirtual())
+                        pNewChild->SetVirtual();
+                    pNewChild->SetName(pChild->GetName());
+                    if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
+                    {
+                        Warning(lType_.Back(),
+                            "Trying to add \""+pChild->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
+                            +pNewChild->GetName()+"\". Skipped."
+                        );
+                        pNewChild.Delete();
+                        continue;
+                    }
+                    if (!pNewChild->IsVirtual())
+                        pNewChild->CreateGlue();
+                    this->AddChild(pNewChild);
+                    pNewChild->CopyFrom(pChild);
+                }
             }
         }
 
@@ -302,41 +363,44 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
         foreach (iterRegion, pFrame->lRegionList_)
         {
             s_ptr<LayeredRegion> pArt = iterRegion->second;
-            s_ptr<LayeredRegion> pNewArt;
-            if (pArt->GetObjectType() == "Texture")
-                pNewArt = new Texture();
-            else if (pArt->GetObjectType() == "FontString")
-                pNewArt = new FontString();
-            else
+            if (!pArt->IsSpecial())
             {
-                Warning(lType_.Back(),
-                    "Trying to add \""+pArt->GetName()+"\" (type : "+pArt->GetObjectType()+") to \""+sName_+"\", "
-                    "but no copying code was available. Skipped."
-                );
-            }
-
-            if (pNewArt)
-            {
-                pNewArt->SetParent(this);
-                if (this->IsVirtual())
-                    pNewArt->SetVirtual();
-                pNewArt->SetName(pArt->GetName());
-                if (!GUIManager::GetSingleton()->AddUIObject(pNewArt))
+                s_ptr<LayeredRegion> pNewArt;
+                if (pArt->GetObjectType() == "Texture")
+                    pNewArt = new Texture();
+                else if (pArt->GetObjectType() == "FontString")
+                    pNewArt = new FontString();
+                else
                 {
                     Warning(lType_.Back(),
-                        "Trying to add \""+pArt->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                        +pNewArt->GetName()+"\". Skipped."
+                        "Trying to add \""+pArt->GetName()+"\" (type : "+pArt->GetObjectType()+") to \""+sName_+"\", "
+                        "but no copying code was available. Skipped."
                     );
-                    pNewArt.Delete();
-                    continue;
                 }
-                if (!pNewArt->IsVirtual())
-                    pNewArt->CreateGlue();
 
-                pNewArt->SetDrawLayer(pArt->GetDrawLayer());
+                if (pNewArt)
+                {
+                    pNewArt->SetParent(this);
+                    if (this->IsVirtual())
+                        pNewArt->SetVirtual();
+                    pNewArt->SetName(pArt->GetName());
+                    if (!GUIManager::GetSingleton()->AddUIObject(pNewArt))
+                    {
+                        Warning(lType_.Back(),
+                            "Trying to add \""+pArt->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
+                            +pNewArt->GetName()+"\". Skipped."
+                        );
+                        pNewArt.Delete();
+                        continue;
+                    }
+                    if (!pNewArt->IsVirtual())
+                        pNewArt->CreateGlue();
 
-                this->AddRegion(pNewArt);
-                pNewArt->CopyFrom(pArt);
+                    pNewArt->SetDrawLayer(pArt->GetDrawLayer());
+
+                    this->AddRegion(pNewArt);
+                    pNewArt->CopyFrom(pArt);
+                }
             }
         }
 
@@ -359,6 +423,7 @@ void Frame::CreateTitleRegion()
         pTitleRegion_ = new LayeredRegion();
         if (this->IsVirtual())
             pTitleRegion_->SetVirtual();
+        pTitleRegion_->SetSpecial();
         pTitleRegion_->SetParent(this);
         pTitleRegion_->SetName(sName_+"TitleRegion");
 
@@ -381,6 +446,26 @@ void Frame::CreateTitleRegion()
             "\""+sName_+"\" already has a title region."
         );
     }
+}
+
+s_ptr<Frame> Frame::GetChild( const s_str& sName ) const
+{
+    s_ptr<UIObject> pObj = GUIManager::GetSingleton()->GetUIObjectByName(sName);
+
+    if (pObj && lChildList_.Find(pObj->GetID()))
+        return lChildList_.Get(pObj->GetID())->second;
+    else
+        return NULL;
+}
+
+s_ptr<LayeredRegion> Frame::GetRegion( const s_str& sName ) const
+{
+    s_ptr<UIObject> pObj = GUIManager::GetSingleton()->GetUIObjectByName(sName);
+
+    if (pObj && lRegionList_.Find(pObj->GetID()))
+        return lRegionList_.Get(pObj->GetID())->second;
+    else
+        return NULL;
 }
 
 void Frame::CheckPosition()

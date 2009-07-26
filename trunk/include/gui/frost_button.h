@@ -43,6 +43,11 @@ namespace Frost
             */
             void OnEvent(const Event& mEvent);
 
+            /// Copies an UIObject's parameters into this Button (inheritance).
+            /** \param pObj The UIObject to copy
+            */
+            void CopyFrom(s_ptr<UIObject> pObj);
+
             void SetText(const s_str& sText);
             const s_str& GetText() const;
 
