@@ -146,7 +146,7 @@ s_str Frame::Serialize( const s_str& sTab ) const
             sStr << sTab << "  # Regions     : " << lRegionList_.GetSize() << "\n";
         sStr << sTab << "  |-###\n";
 
-        map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
+        s_map< s_uint, s_ptr<LayeredRegion> >::const_iterator iterRegion;
         foreach (iterRegion, lRegionList_)
         {
             sStr << iterRegion->second->Serialize(sTab+"  | ");
@@ -162,7 +162,7 @@ s_str Frame::Serialize( const s_str& sTab ) const
             sStr << sTab << "  # Children    : " << lChildList_.GetSize() << "\n";
         sStr << sTab << "  |-###\n";
 
-        map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
+        s_map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
         foreach (iterChild, lChildList_)
         {
             sStr << iterChild->second->Serialize(sTab+"  | ");
