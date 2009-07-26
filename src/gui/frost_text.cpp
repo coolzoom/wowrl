@@ -182,6 +182,11 @@ namespace Frost
                 else
                 {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
+                    if (iterNext != sText_.End())
+                    {
+                        if (*iterNext != ' ' && *iterNext != '\n')
+                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                    }
                 }
             }
         }
@@ -222,6 +227,11 @@ namespace Frost
                 else
                 {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
+                    if (iterNext != sString.End())
+                    {
+                        if (*iterNext != ' ' && *iterNext != '\n')
+                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                    }
                 }
             }
         }
@@ -238,6 +248,13 @@ namespace Frost
         }
         else
             return 0.0f;
+    }
+
+    s_float Text::GetCharacterKerning( const s_uint& uiChar1, const s_uint& uiChar2 ) const
+    {
+        s_float fKerning = pFontMat_->GetWidth()*pOgreFont_->getGlyphInfo(uiChar1.Get()).kerningTable.find(uiChar2.Get())->second.x;
+        Log(s_str(s_char(uiChar1))+" / "+s_str(s_char(uiChar2))+" : "+fKerning);
+        return fKerning;
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
@@ -445,6 +462,11 @@ namespace Frost
                     {
                         mLine.fWidth += GetCharacterWidth(*iterChar1);
                         s_str::iterator iterNext = iterChar1 + 1;
+                        if (iterNext != iterManual->End())
+                        {
+                            if (*iterNext != ' ')
+                                mLine.fWidth += GetCharacterKerning((uint)*iterChar1, (uint)*iterNext);
+                        }
                     }
                     mLine.sCaption += *iterChar1;
 
@@ -688,7 +710,7 @@ namespace Frost
                         break;
                 }
 
-                s_str::iterator iterChar;
+                s_str::iterator iterChar, iterNext;
                 foreach (iterChar, iterLine->sCaption)
                 {
                     // Format our text
@@ -732,7 +754,15 @@ namespace Frost
                         lLetterCache_.PushBack(mLetter);
                     }
 
-                    fX += fCharWidth + fTracking_;
+                    iterNext = iterChar + 1;
+                    s_float fKerning;
+                    if (iterNext != iterLine->sCaption.End())
+                    {
+                        if (*iterNext != ' ')
+                            fKerning = GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                    }
+
+                    fX += fCharWidth + fKerning + fTracking_;
                     uiCounter++;
                 }
 
