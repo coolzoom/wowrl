@@ -3,12 +3,12 @@
 <--------------------->
 
 <d:FontString name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" n:fontHeight="0" text="" n:spacing="0.0" outline="NONE" b:monochrome="false" b:nonspacewrap="false" justifyV="MIDDLE" justifyH="CENTER" n:maxLines="0" font="" n:bytes="255">
-    
+
     <n[.,1]:Size>
         <n[*]:AbsDimension n:x="0"   n:y="0"/>
         <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
-    
+
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="">
             <n[.,1]:Offset>
@@ -17,14 +17,14 @@
             </Offset>
         </Anchor>
     </Anchors>
-    
+
     <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
-    
+
     <n[.,1]:Shadow>
         <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
         <n[.,1]:Offset n:x="0" n:y="0"/>
     </Shadow>
-    
+
 </FontString>
 
 <d:Texture name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" file="" alphaMode="BLEND">
@@ -33,7 +33,7 @@
         <n[*]:AbsDimension n:x="0"   n:y="0"/>
         <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
-    
+
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="">
             <n[.,1]:Offset>
@@ -42,16 +42,16 @@
             </Offset>
         </Anchor>
     </Anchors>
-    
+
     <n[.,1]:TexCoords n:left="0.0" n:right="1.0" n:top="0.0" n:bottom="1.0"/>
-    
+
     <n[.,1]:Color n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
-    
+
     <n[.,1]:Gradient orientation="HORIZONTAL">
         <n[1,1]:MinColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
         <n[1,1]:MaxColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
     </Gradient>
-    
+
 </Texture>
 
 <d:Frame name inherits="" b:virtual="false" b:setAllPoints="false" b:hidden="false" n:alpha="1.0" parent="" b:toplevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" b:enableMouse="false" b:enableKeyboard="false" b:clampedToScreen="false">
@@ -60,7 +60,7 @@
         <n[*]:AbsDimension n:x="0"   n:y="0"/>
         <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
-    
+
     <n[.,1]:ResizeBounds>
         <n[.,1]:Min>
             <n[*]:AbsDimension n:x="0"   n:y="0"/>
@@ -71,7 +71,7 @@
             <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
         </Max>
     </ResizeBounds>
-    
+
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="">
             <n[.,1]:Offset>
@@ -80,13 +80,13 @@
             </Offset>
         </Anchor>
     </Anchors>
-    
+
     <n[.,1]:TitleRegion b:setAllPoints="false">
         <n[.,1]:Size>
             <n[*]:AbsDimension n:x="0"   n:y="0"/>
             <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
         </Size>
-        
+
         <n[.,1]:Anchors>
             <Anchor point="TOPLEFT" relativeTo="" relativePoint="">
                 <n[.,1]:Offset>
@@ -96,40 +96,40 @@
             </Anchor>
         </Anchors>
     </TitleRegion>
-    
+
     <n[.,1]:Backdrop bgFile="" edgeFile="" b:tile="false">
         <n[.,1]:BackgroundInsets>
             <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
             <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
         </BackgroundInsets>
-        
+
         <n[.,1]:TileSize>
             <n[*]:AbsValue n:x/>
             <n[*]:RelValue n:x/>
         </TileSize>
-        
+
         <n[.,1]:EdgeSize>
             <n[*]:AbsValue n:x/>
             <n[*]:RelValue n:x/>
         </EdgeSize>
     </Backdrop>
-    
+
     <n[.,1]:HitRectInsets>
         <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
         <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
     </HitRectInsets>
-    
+
     <n[.,1]:Layers>
         <Layer level="ARTWORK">
             <l:Texture/>
             <l:FontString/>
         </Layer>
     </Layers>
-    
+
     <n[.,1]:Frames>
         <l:Frame/>
     </Frames>
-    
+
     <n[.,1]:Scripts>
         <n[.,1]:OnDragStart/>
         <n[.,1]:OnDragStop/>
@@ -148,34 +148,25 @@
         <n[.,1]:OnSizeChanged/>
         <n[.,1]:OnUpdate/>
     </Scripts>
-    
+
 </Frame>
-
-<c[Texture]:NormalTexture name="$parentNormalTexture" b:setAllPoints="true"/>
-<c[Texture]:PushedTexture name="$parentPushedTexture" b:setAllPoints="true" hidden="true"/>
-<c[Texture]:DisabledTexture name="$parentDisabledTexture" b:setAllPoints="true" hidden="true"/>
-<c[Texture]:HighlightTexture name="$parentHighlightTexture" b:setAllPoints="true" hidden="true"/>
-
-<c[FontString]:NormalText name="$parentNormalText"/>
-<c[FontString]:HighlightText name="$parentHighlightText" hidden="true"/>
-<c[FontString]:DisabledText name="$parentDisabledText" hidden="true"/>
 
 <d[Frame]:Button text="" b:enableMouse="true">
 
-    <n[.,1]:l:NormalTexture/>
-    <n[.,1]:l:PushedTexture/>
-    <n[.,1]:l:DisabledTexture/>
-    <n[.,1]:l:HighlightTexture/>
-    
-    <n[.,1]:l:NormalText/>
-    <n[.,1]:l:HighlightText/>
-    <n[.,1]:l:DisabledText/>
-    
+    <n[.,1]:c[Texture]:NormalTexture    name="$parentNormalTexture"    b:setAllPoints="true"/>
+    <n[.,1]:c[Texture]:PushedTexture    name="$parentPushedTexture"    b:setAllPoints="true" hidden="true"/>
+    <n[.,1]:c[Texture]:DisabledTexture  name="$parentDisabledTexture"  b:setAllPoints="true" hidden="true"/>
+    <n[.,1]:c[Texture]:HighlightTexture name="$parentHighlightTexture" b:setAllPoints="true" hidden="true"/>
+
+    <n[.,1]:c[FontString]:NormalText    name="$parentNormalText"/>
+    <n[.,1]:c[FontString]:HighlightText name="$parentHighlightText" hidden="true"/>
+    <n[.,1]:c[FontString]:DisabledText  name="$parentDisabledText"  hidden="true"/>
+
     <n[.,1]:PushedTextOffset>
         <n[*]:AbsDimension n:x="0" n:y="0"/>
-        <n[*]:RelDimension n:x="0.0" n:y="0.0"/>   
+        <n[*]:RelDimension n:x="0.0" n:y="0.0"/>
     </PushedTextOffset>
-    
+
     <n[.,1]:Scripts>
         <n[.,1]:OnClick/>
         <n[.,1]:OnDoubleClick/>
@@ -196,19 +187,135 @@
         <n[.,1]:OnSizeChanged/>
         <n[.,1]:OnUpdate/>
     </Scripts>
-    
+
 </Button>
 
-<d[Frame]:EditBox>
+<d[Frame]:EditBox n:letters="0" n:blinkSpeed="0.5" b:numeric="false" b:password="false" b:multiLine="false" n:historyLines="0" b:autoFocus="true" b:ignoreArrows="false">
+
+    <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
+
+    <n[.,1]:HighlightColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
+
+    <n[.,1]:TextInsets>
+        <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
+        <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
+    </TextInsets>
+
+    <n[.,1]:Scripts>
+        <n[.,1]:OnChar/>
+        <n[.,1]:OnCursorChanged/>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEditFocusGained/>
+        <n[.,1]:OnEditFocusLost/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEnterPressed/>
+        <n[.,1]:OnEscapePressed/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnInputLanguageChanged/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnSpaceChanged/>
+        <n[.,1]:OnTabPressed/>
+        <n[.,1]:OnTextChanged/>
+        <n[.,1]:OnTextSet/>
+        <n[.,1]:OnUpdate/>
+    </Scripts>
+
 </EditBox>
 
-<d[Frame]:ScrollingMessageFrame>
+<d[Frame]:ScrollingMessageFrame b:fade="true" n:fadeDuration="3.0" n:displayDuration="10.0" maxLines="8">
+
+    <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
+
+    <n[.,1]:TextInsets>
+        <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
+        <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
+    </TextInsets>
+
+    <n[.,1]:Scripts>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMessageScrollChanged/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnUpdate/>
+    </Scripts>
+
 </ScrollingMessageFrame>
 
-<d[Frame]:Slider>
+<d[Frame]:Slider n:minValue="0" n:maxValue="1" n:defaultValue="1" n:valueStep="0.1" orientation="VERTICAL" drawLayer="OVERLAY">
+
+    <n[.,1]:c[Texture]:ThumbTexture name="$parentThumbTexture"/>
+
+    <n[.,1]:Scripts>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnUpdate/>
+        <n[.,1]:OnValueChanged/>
+    </Scripts>
+
 </Slider>
 
-<d[Frame]:StatusBar>
+<d[Frame]:StatusBar n:minValue="0" n:maxValue="1" n:defaultValue="1" drawLayer="ARTWORK">
+
+    <n[.,1]:c[Texture]:BarTexture name="$parentBarTexture" b:setAllPoints="true"/>
+
+    <n[.,1]:BarColor n:a="1" n:r="0.0" n:g="0.0" n:b="0.0"/>
+
+    <n[.,1]:Scripts>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnUpdate/>
+        <n[.,1]:OnValueChanged/>
+    </Scripts>
+
 </StatusBar>
 
 <-------------------->
@@ -223,14 +330,14 @@
 
     <-- Include : Parses another XML file -->
     <Include file/>
-    <-- Script : Parses a Lua file -->    
+    <-- Script : Parses a Lua file -->
     <Script file/>
-    
+
     <----------->
     <--Objects-->
     <----------->
-    
+
     <l:Frame/>
-    
+
 </Ui>
 
