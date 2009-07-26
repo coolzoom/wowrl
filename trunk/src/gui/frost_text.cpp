@@ -182,11 +182,6 @@ namespace Frost
                 else
                 {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
-                    if (iterNext != sText_.End())
-                    {
-                        if (*iterNext != ' ' && *iterNext != '\n')
-                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
-                    }
                 }
             }
         }
@@ -227,11 +222,6 @@ namespace Frost
                 else
                 {
                     fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
-                    if (iterNext != sString.End())
-                    {
-                        if (*iterNext != ' ' && *iterNext != '\n')
-                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
-                    }
                 }
             }
         }
@@ -248,11 +238,6 @@ namespace Frost
         }
         else
             return 0.0f;
-    }
-
-    s_float Text::GetCharacterKerning( const s_uint& uiChar1, const s_uint& uiChar2 ) const
-    {
-        return 0.0f;
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
@@ -460,11 +445,6 @@ namespace Frost
                     {
                         mLine.fWidth += GetCharacterWidth(*iterChar1);
                         s_str::iterator iterNext = iterChar1 + 1;
-                        if (iterNext != iterManual->End())
-                        {
-                            if (*iterNext != ' ')
-                                mLine.fWidth += GetCharacterKerning((uint)*iterChar1, (uint)*iterNext);
-                        }
                     }
                     mLine.sCaption += *iterChar1;
 
