@@ -176,50 +176,208 @@ namespace Frost
     friend class Manager<InputManager>;
     public :
 
-        s_bool         Initialize(s_ptr<Ogre::RenderWindow> pWindow);
+        /// Initializes this manager.
+        /** \param pWindow The Ogre::RenderWindow
+        *   \return 'true' if everything went fine
+        */
+        s_bool          Initialize(s_ptr<Ogre::RenderWindow> pWindow);
 
-        void           Update();
+        /// Updates input (keyboard and mouse).
+        void            Update();
 
-        // Keyboard
+        /// Returns the typed character.
+        /** \param bFormated 'true' to filter non printable chars
+        *   \param bForce    'true' to bypass focus (see SetFocus())
+        *   \return The typed character ('\0' if none)
+        */
         s_char          GetChar(s_bool bFormated, s_bool bForce = false) const;
+
+        /// Checks if a key has been pressed.
+        /** \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if a key has been pressed
+        */
         s_bool          GetKey(s_bool bForce = false) const;
+
+        /// Checks if a key is being pressed.
+        /** \param mKey   The ID code of the key you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the key is being pressed
+        */
         s_bool          KeyIsDown(KeyCode mKey, s_bool bForce = false) const;
+
+        /// Checks if a key is being pressed for a long time.
+        /** \param mKey   The ID code of the key you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the key is being pressed for a long time
+        */
         s_bool          KeyIsDownLong(KeyCode mKey, s_bool bForce = false) const;
+
+        /// Returns elapsed time since the key has been pressed.
+        /** \param mKey The ID code of the key you're interested in
+        *   \return Elapsed time since the key has been pressed
+        */
         const s_double& GetKeyDownDuration(KeyCode mKey) const;
+
+        /// Checks if a key has been pressed.
+        /** \param mKey   The ID code of the key you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the key has been pressed
+        *   \note Happens just when the key is pressed.
+        */
         s_bool          KeyIsPressed(KeyCode mKey, s_bool bForce = false) const;
+
+        /// Checks if a key has been released.
+        /** \param mKey   The ID code of the key you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the key has been released
+        *   \note Happens just when the key is released.
+        */
         s_bool          KeyIsReleased(KeyCode mKey, s_bool bForce = false) const;
 
+        /// Returns the string associated with a key.
+        /** \param mKey   The ID code of the key you're interested in
+        *   \return The string associated with a key
+        *   \note Untested function...
+        */
         s_str           GetKeyString(KeyCode mKey) const;
 
+        /// Returns the next key that has been released in this frame.
+        /** \return The next key that has been released in this frame
+        *   \note Pops it from the stack.<br>
+        *         When there is no key in the stack, this function returns
+        *         s_uint::NaN.
+        */
         s_uint          GetNextUp();
+
+        /// Returns the next key that has been pressed in this frame.
+        /** \return The next key that has been pressed in this frame
+        *   \note Pops it from the stack.<br>
+        *         When there is no key in the stack, this function returns
+        *         s_uint::NaN.
+        */
         s_uint          GetNextDown();
 
-        // Special keys
+        /// Checks if Alt is beeing pressed.
+        /** \return 'true' if Alt is beeing pressed
+        */
         const s_bool&   AltPressed() const;
+
+        /// Checks if Shift is beeing pressed.
+        /** \return 'true' if Shift is beeing pressed
+        */
         const s_bool&   ShiftPressed() const;
+
+        /// Checks if Control (Ctrl) is beeing pressed.
+        /** \return 'true' if Control (Ctrl) is beeing pressed
+        */
         const s_bool&   CtrlPressed() const;
 
-        // Mouse
+        /// Checks if a mouse button is being pressed.
+        /** \param mID    The ID code of the mouse button you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the mouse button is being pressed
+        */
         s_bool          MouseIsDown(MouseButton mID, s_bool bForce = false) const;
+
+        /// Checks if a mouse button is being pressed for a long time.
+        /** \param mID    The ID code of the mouse button you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the mouse button is being pressed for a long time
+        */
         s_bool          MouseIsDownLong(MouseButton mID, s_bool bForce = false) const;
+
+        /// Returns elapsed time since the mouse button has been pressed.
+        /** \param mID The ID code of the mouse button you're interested in
+        *   \return Elapsed time since the mouse button has been pressed
+        */
         const s_double& GetMouseDownDuration(MouseButton mKey) const;
+
+        /// Checks if a mouse button has been pressed.
+        /** \param mID    The ID code of the mouse button you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the mouse button has been pressed
+        *   \note Happens just when the mouse button is pressed.
+        */
         s_bool          MouseIsPressed(MouseButton mID, s_bool bForce = false) const;
+
+        /// Checks if a mouse button has been released.
+        /** \param mID    The ID code of the mouse button you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the mouse button has been released
+        *   \note Happens just when the mouse button is released.
+        */
         s_bool          MouseIsReleased(MouseButton mID, s_bool bForce = false) const;
+
+        /// Checks if a mouse button has been double clicked.
+        /** \param mID    The ID code of the mouse button you're interested in
+        *   \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the mouse button has been double clicked
+        */
         s_bool          MouseIsDoubleClicked(MouseButton mID, s_bool bForce = false) const;
+
+        /// Checks if the mouse wheel has been rolled.
+        /** \param bForce 'true' to bypass focus (see SetFocus())
+        *   \return 'true' if the mouse wheel has been rolled
+        */
         s_bool          WheelIsRolled(s_bool bForce = false) const;
+
+        /// Checks if the mouse has just started beeing dragged.
+        /** \return 'true' if the mouse has just started beeing dragged
+        */
         const s_bool&   MouseLastDragged() const;
+
+        /// Returns a mouse button's state.
+        /** \param mID The ID code of the mouse button you're interested in
+        *   \return The mouse button's state
+        */
         MouseState      GetMouseState(MouseButton mID) const;
+
+        /// Returns the horizontal position of the mouse.
+        /** \return The horizontal position of the mouse
+        */
         const s_float&  GetMousePosX() const;
+
+        /// Returns the vertical position of the mouse.
+        /** \return The vertical position of the mouse
+        */
         const s_float&  GetMousePosY() const;
+
+        /// Returns the horizontal position variation of the mouse.
+        /** \return The horizontal position variation of the mouse
+        */
         const s_float&  GetMouseDX() const;
+
+        /// Returns the vertical position variation of the mouse.
+        /** \return The vertical position variation of the mouse
+        */
         const s_float&  GetMouseDY() const;
+
+        /// Returns the rolling ammount of the mouse wheel.
+        /** \return The rolling ammount of the mouse wheel
+        */
         const s_int&    GetMouseWheel() const;
 
+        /// Returns the string associated to a mouse button.
+        /** \param mID The ID code of the mouse button you're interested in
+        *   \return The string associated with the mouse button
+        */
         s_str           GetMouseButtonString(MouseButton mID) const;
 
-        // Parameters
-        void           SetDoubleclickTime(s_double dDoubleclickTime);
-        void           SetFocus(s_bool bFocus);
+        /// Sets the double click maximum time.
+        /** \param dDoubleclickTime
+        */
+        void            SetDoubleclickTime(const s_double& dDoubleclickTime);
+
+        /// Sets whether input should be stopped.
+        /** \param bFocus 'true' to stop inputs
+        *   \note This function is usefull if you need to implement
+        *         an edit box : the user can type letters binded to
+        *         actions in the game, and you should prevent them
+        *         from happening. So, you just have to call this function
+        *         and use the second argument of all input functions to
+        *         force focus in your edit box.
+        */
+        void            SetFocus(s_bool bFocus);
 
         static const s_str CLASS_NAME;
 

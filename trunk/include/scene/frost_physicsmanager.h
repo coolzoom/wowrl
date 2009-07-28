@@ -14,6 +14,7 @@
 
 namespace Frost
 {
+    /// Handles all PhysicsHandlers.
     class PhysicsManager : public Manager<PhysicsManager>
     {
     friend class Manager<PhysicsManager>;

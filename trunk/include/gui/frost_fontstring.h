@@ -200,7 +200,7 @@ namespace Frost
             */
             void             SetText(const s_str& sText);
 
-            /// Returns this widget's Lua glue.
+            /// Creates the associated Lua glue.
             void             CreateGlue();
 
             static const s_str CLASS_NAME;

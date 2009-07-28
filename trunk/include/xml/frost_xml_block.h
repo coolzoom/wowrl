@@ -67,12 +67,12 @@ namespace XML
         Block();
 
         /// Definition constructor.
-        /** \param sName        The name of this block
-        *   \param uiMinNbr     The minimum number of occurences
-        *   \param uiMaxNbr     The maximum number of occurences
-        *   \param sFile        The file in which this block is defined
-        *   \param uiLine       The line at which this block is defined
-        *   \param bRadio       'true' if only one Block can be present on this level
+        /** \param sName     The name of this block
+        *   \param uiMinNbr  The minimum number of occurences
+        *   \param uiMaxNbr  The maximum number of occurences
+        *   \param sFile     The file in which this block is defined
+        *   \param uiLineNbr The line at which this block is defined
+        *   \param bRadio    'true' if only one Block can be present on this level
         */
         Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_str& sFile, const s_uint& uiLineNbr, const s_bool& bRadio = false);
 

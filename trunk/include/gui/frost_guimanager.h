@@ -43,31 +43,99 @@ namespace Frost
     friend class Manager<GUIManager>;
     public :
 
+        /// Initializes this manager.
         void                 Initialize();
 
+        /// Adds an UIObject to be handled by this manager.
+        /** \param pObj The object to add
+        *   \return 'false' if the name of the widget was already taken
+        */
         s_bool               AddUIObject(s_ptr<GUI::UIObject> pObj);
+
+        /// Returns the UIObject associated with the given name.
+        /** \param sName    The name of the widget you're after
+        *   \param bVirtual 'true' to search for a virtual frame
+        *   \return The UIObject associated with the given name
+        */
         s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName, const s_bool& bVirtual = false);
 
+        /// Prints debug informations in the log file.
+        /** \note Calls UIObject::Serialize().
+        */
         void                 PrintUI();
 
+        /// Returns the GUI Lua state.
+        /** \return The GUI Lua state
+        */
         s_ptr<Lua::State>    GetLua();
 
+        /// Loads the UI.
         void                 LoadUI();
+
+        /// Closes the UI, deletes widgets.
         void                 CloseUI();
+
+        /// Closes the current UI and load it again.
         void                 ReloadUI();
+
+        /// Renders the UI into the current render target.
         void                 RenderUI();
 
+        /// Ask this manager for movement management.
+        /** \param pObj The object to move
+        *   \note This manager will not do any movement code.
+        *         It will only allow this widget to be moved
+        *         through the IsMoving() function.
+        */
         void                 StartMoving(s_ptr<GUI::UIObject> pObj);
+
+        /// Stops movement for the given object.
+        /** \param pObj The object to stop moving
+        */
         void                 StopMoving(s_ptr<GUI::UIObject> pObj);
+
+        /// Checks if the given object is allowed to move.
+        /** \param pObj The object to check
+        *   \return 'true' if the given object is allowed to move
+        */
         s_bool               IsMoving(s_ptr<GUI::UIObject> pObj) const;
 
+        /// Ask this manager for sizing management.
+        /** \param pObj The object to resize
+        *   \note This manager will not do any sizing code.
+        *         It will only allow this widget to be resized
+        *         through the IsSizing() function.
+        */
         void                 StartSizing(s_ptr<GUI::UIObject> pObj);
+
+        /// Stops sizing for the given object.
+        /** \param pObj The object to stop sizing
+        */
         void                 StopSizing(s_ptr<GUI::UIObject> pObj);
+
+        /// Checks if the given object is allowed to be resized.
+        /** \param pObj The object to check
+        *   \return 'true' if the given object is allowed to be resized
+        */
         s_bool               IsSizing(s_ptr<GUI::UIObject> pObj) const;
 
+        /// Returns the cumuled horizontal mouse movement.
+        /** \return The cumuled horizontal mouse movement
+        *   \note This value is reset to zero whenever StartMoving() or
+        *         StartSizing() is called.
+        */
         s_int                GetMovementX() const;
+
+        /// Returns the cumuled vertical mouse movement.
+        /** \return The cumuled vertical mouse movement
+        *   \note This value is reset to zero whenever StartMoving() or
+        *         StartSizing() is called.
+        */
         s_int                GetMovementY() const;
 
+        /// Updates this manager and its widgets.
+        /** \param fDelta The time elapsed since the last call
+        */
         void                 Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
