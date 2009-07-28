@@ -53,8 +53,8 @@ namespace Frost
         /** This widget (GUI element) is a virtual base.
         *   It doesn't display anything on its own and must
         *   be inherited to allow new features. It provides
-        *   two virtual functions : Update and UpdateMaterial.
-        *   Both should be overriden and contain all the
+        *   several virtual functions : Update, Render...
+        *   They should be overriden and contain all the
         *   required logic for it to work.<br>
         *   Look at the provided widgets (Frame, Slider, ...)
         *   to see how it's done.

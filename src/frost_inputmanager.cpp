@@ -129,7 +129,7 @@ namespace Frost
             return uiID;
         }
         else
-            return s_uint::INF;
+            return s_uint::NaN;
     }
 
     s_uint InputManager::GetNextUp()
@@ -141,7 +141,7 @@ namespace Frost
             return uiID;
         }
         else
-            return s_uint::INF;
+            return s_uint::NaN;
     }
 
     s_bool InputManager::KeyIsDown( KeyCode mKey, s_bool bForce ) const
@@ -492,7 +492,7 @@ namespace Frost
         }
     }
 
-    void InputManager::SetDoubleclickTime( s_double dDoubleclickTime )
+    void InputManager::SetDoubleclickTime( const s_double& dDoubleclickTime )
     {
         dDoubleclickTime_ = dDoubleclickTime;
     }

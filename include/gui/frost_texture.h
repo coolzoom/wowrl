@@ -178,7 +178,7 @@ namespace Frost
             */
             void                      SetVertexColor(const Color& mColor);
 
-            /// Returns this widget's Lua glue.
+            /// Creates the associated Lua glue.
             void                      CreateGlue();
 
             static const s_str CLASS_NAME;

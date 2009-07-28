@@ -23,77 +23,223 @@ namespace Frost
             BUTTON_DISABLED
         };
 
+        /// A simple button.
+        /** This class can handle three different states :
+        *   "normal", "pushed" and "disabled". You can provide a
+        *   different texture for each of these states, and
+        *   two different fontstrings for "normal" and "disabled".<br>
+        *   In addition, you can provide another texture/fontstring
+        *   for the "highlight" state (when the mouse is over the
+        *   button widget).<br>
+        *   Note that there is no fontstring for the "pushed" state :
+        *   in this case, the "normal" font is rendered with a slight
+        *   offset that you'll have to define.
+        */
         class Button : public Frame
         {
         public :
 
             Button();
 
-            /// Returns this widget's Lua glue.
-            void CreateGlue();
+            /// Creates the associated Lua glue.
+            void              CreateGlue();
 
             /// Calls a script.
             /** \param sScriptName The name of the script
             *   \param pEvent      Stores scripts arguments
             */
-            void On(const s_str& sScriptName, s_ptr<Event> pEvent = NULL);
+            void              On(const s_str& sScriptName, s_ptr<Event> pEvent = NULL);
 
             /// Calls the OnEvent script.
             /** \param mEvent The Event that occured
             */
-            void OnEvent(const Event& mEvent);
+            void              OnEvent(const Event& mEvent);
 
             /// Copies an UIObject's parameters into this Button (inheritance).
             /** \param pObj The UIObject to copy
             */
-            void CopyFrom(s_ptr<UIObject> pObj);
+            void              CopyFrom(s_ptr<UIObject> pObj);
 
-            void SetText(const s_str& sText);
-            const s_str& GetText() const;
+            /// Sets this Button's text.
+            /** \param sText The new text
+            */
+            void              SetText(const s_str& sText);
 
-            void CreateNormalTexture();
-            void CreatePushedTexture();
-            void CreateDisabledTexture();
-            void CreateHighlightTexture();
+            /// Returns this Button's text.
+            /** \return This Button's text
+            */
+            const s_str&      GetText() const;
 
-            void CreateNormalText();
-            void CreateHighlightText();
-            void CreateDisabledText();
+            /// Creates this Button's normal texture.
+            /** \note The normal texture is displayed when the button is
+            *         neither pushed nor disabled.
+            */
+            void              CreateNormalTexture();
 
-            s_ptr<Texture> GetNormalTexture();
-            s_ptr<Texture> GetPushedTexture();
-            s_ptr<Texture> GetDisabledTexture();
-            s_ptr<Texture> GetHighlightTexture();
+            /// Creates this Button's pushed texture.
+            void              CreatePushedTexture();
 
+            /// Creates this Button's disabled texture.
+            void              CreateDisabledTexture();
+
+            /// Creates this Button's highlight texture.
+            /** \note The highlight texture is displayed when the mouse
+            *         is over the Button frame.
+            */
+            void              CreateHighlightTexture();
+
+            /// Creates this Button's normal text.
+            /** \note The normal text is displayed when the button is
+            *         not disabled.
+            */
+            void              CreateNormalText();
+
+            /// Creates this Button's highlight text.
+            /** \note The highlight text is displayed when the mouse is
+            *         over the Button frame.
+            */
+            void              CreateHighlightText();
+
+            /// Creates this Button's disabled text.
+            void              CreateDisabledText();
+
+            /// Returns this Button's normal texture.
+            /** \return This Button's normal texture
+            */
+            s_ptr<Texture>    GetNormalTexture();
+
+            /// Returns this Button's pushed texture.
+            /** \return This Button's pushed texture
+            */
+            s_ptr<Texture>    GetPushedTexture();
+
+            /// Returns this Button's disabled texture.
+            /** \return This Button's disabled texture
+            */
+            s_ptr<Texture>    GetDisabledTexture();
+
+            /// Returns this Button's highlight texture.
+            /** \return This Button's highlight texture
+            */
+            s_ptr<Texture>    GetHighlightTexture();
+
+            /// Returns this Button's normal text.
+            /** \return This Button's normal text
+            */
             s_ptr<FontString> GetNormalText();
+
+            /// Returns this Button's highlight text.
+            /** \return This Button's highlight text
+            */
             s_ptr<FontString> GetHighlightText();
+
+            /// Returns this Button's disabled text.
+            /** \return This Button's disabled text
+            */
             s_ptr<FontString> GetDisabledText();
+
+            /// Returns the currently displayed text object.
+            /** \return The currently displayed text object
+            */
             s_ptr<FontString> GetCurrentFontString();
 
-            void SetNormalTexture(s_ptr<Texture> pTexture);
-            void SetPushedTexture(s_ptr<Texture> pTexture);
-            void SetDisabledTexture(s_ptr<Texture> pTexture);
-            void SetHighlightTexture(s_ptr<Texture> pTexture);
+            /// Sets this Button's normal texture.
+            /** \param pTexture The new texture
+            */
+            void              SetNormalTexture(s_ptr<Texture> pTexture);
 
-            void SetNormalText(s_ptr<FontString> pFont);
-            void SetHighlightText(s_ptr<FontString> pFont);
-            void SetDisabledText(s_ptr<FontString> pFont);
+            /// Sets this Button's pushed texture.
+            /** \param pTexture The new texture
+            */
+            void              SetPushedTexture(s_ptr<Texture> pTexture);
 
-            void Disable();
-            void Enable();
-            s_bool IsEnabled() const;
-            void Push();
-            void Release();
-            void Highlight();
-            void Unlight();
-            ButtonState GetButtonState() const;
+            /// Sets this Button's disabled texture.
+            /** \param pTexture The new texture
+            */
+            void              SetDisabledTexture(s_ptr<Texture> pTexture);
 
-            void LockHighlight();
-            void UnlockHighlight();
+            /// Sets this Button's highlight texture.
+            /** \param pTexture The new texture
+            */
+            void              SetHighlightTexture(s_ptr<Texture> pTexture);
 
-            void SetPushedTextOffset(const s_array<s_int,2>& lOffset);
+            /// Sets this Button's normal text.
+            /** \param pFont The new text object
+            */
+            void              SetNormalText(s_ptr<FontString> pFont);
+
+            /// Sets this Button's highlight text.
+            /** \param pFont The new text object
+            */
+            void              SetHighlightText(s_ptr<FontString> pFont);
+
+            /// Sets this Button's disabled text.
+            /** \param pFont The new text object
+            */
+            void              SetDisabledText(s_ptr<FontString> pFont);
+
+            /// Disables this Button.
+            /** \note A disabled button doesn't receive any input.
+            */
+            void              Disable();
+
+            /// Enables this Button.
+            void              Enable();
+
+            /// Checks if this Button is enabled.
+            /** \return 'true' if this Button is enabled
+            */
+            s_bool            IsEnabled() const;
+
+            /// Pushed this Button.
+            /** \note This function only has a visual impact :
+            *         the OnClick() handler is not called.
+            */
+            void              Push();
+
+            /// Releases this Button.
+            /** \note This function only has a visual impact :
+            *         the OnClick() handler is not called.
+            */
+            void              Release();
+
+            /// Highlights this Button.
+            /** \note The Button will be highlighted even if the
+            *         mouse is not over it. It will stop when the
+            *         mouse leaves it.
+            */
+            void              Highlight();
+
+            /// Unlights this Button.
+            /** \note The Button will be unlighted even if the
+            *         mouse is over it. It will highlight again
+            *         when the mouse leaves then enters its region.
+            */
+            void              Unlight();
+
+            /// Returns this Button's state.
+            /** \return This Button's state (see ButtonState)
+            */
+            ButtonState       GetButtonState() const;
+
+            /// Locks this Button's highlighting.
+            /** \note The button will always be highlighted
+            *         until you call UnlockHighlight().
+            */
+            void              LockHighlight();
+
+            /// Unlocks this Button's highlighting.
+            void              UnlockHighlight();
+
+            /// Sets this Button's pushed text offset.
+            /** \param lOffset The pused text offset
+            */
+            void              SetPushedTextOffset(const s_array<s_int,2>& lOffset);
+
+            /// Returns this Button's pushed text offset.
+            /** \return This Button's pushed text offset
+            */
             const s_array<s_int,2>& GetPushedTextOffset() const;
-
 
             static const s_str CLASS_NAME;
 

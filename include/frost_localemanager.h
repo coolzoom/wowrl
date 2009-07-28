@@ -20,13 +20,36 @@ namespace Frost
     friend class Manager<LocaleManager>;
     public :
 
+        /// Initializes this manager.
         void         Initialize();
 
+        /// Gets a localized string.
+        /** \param sStr The ID of the localized string
+        *   \return The associated string
+        */
         s_str        GetLocalizedString(const s_str& sStr);
+
+        /// Returns the current game locale.
+        /** \return The current game locale
+        */
         const s_str& GetLocale() const;
+
+        /// Sets the current game locale.
+        /** \param sLocale The new locale
+        *   \note Calls ReadLocale().
+        */
         void         SetLocale(const s_str& sLocale);
 
+        /// Reads the default locale from Config.lua.
+        /** \return 'true' if everything went fine
+        */
         s_bool       ReadConfig();
+
+        /// Reads localization files.
+        /** \return 'true' if everything went fine
+        *   \note ReadConfig() or SetLocale() must have been called
+        *         before this function.
+        */
         s_bool       ReadLocale();
 
         static const s_str CLASS_NAME;

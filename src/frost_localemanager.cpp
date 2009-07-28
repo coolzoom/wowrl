@@ -36,7 +36,10 @@ namespace Frost
     void LocaleManager::SetLocale( const s_str& sLocale )
     {
         if (sLocale_ == "")
+        {
             sLocale_ = sLocale;
+            ReadLocale();
+        }
         else
             Warning(CLASS_NAME, "SetLocale can't be called more than once.");
     }

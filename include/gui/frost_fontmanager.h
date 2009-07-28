@@ -32,12 +32,12 @@ namespace Frost
         /** \return The name of the default font
         *   \note This value is read from config files.
         */
-        const s_str& GetDefaultFont() const;
+        const s_str&      GetDefaultFont() const;
 
         /// Reads the configuration files.
         /** \return 'true' if everything went fine
         */
-        s_bool       ReadConfig();
+        s_bool            ReadConfig();
 
         static const s_str CLASS_NAME;
 
