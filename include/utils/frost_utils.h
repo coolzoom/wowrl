@@ -10,6 +10,7 @@ typedef unsigned int   uint;
 typedef unsigned char  uchar;
 typedef unsigned short ushort;
 typedef unsigned long  ulong;
+typedef unsigned long long ullong;
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
     #define CPP_0X

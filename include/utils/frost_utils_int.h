@@ -831,14 +831,16 @@ namespace Frost
     typedef s_int_t<short>     s_short;
     typedef s_int_t<int>       s_int;
     typedef s_int_t<long>      s_long;
+    typedef s_int_t<long long> s_llong;
     typedef s_int_t<ptrdiff_t> s_ptrdiff;
 
     /** \cond NOT_REMOVE_FROM_DOC
     */
-    template<> class TypeTraits<char>      { public : typedef s_char    Type; };
-    template<> class TypeTraits<short>     { public : typedef s_short   Type; };
-    template<> class TypeTraits<int>       { public : typedef s_int     Type; };
-    template<> class TypeTraits<long>      { public : typedef s_long    Type; };
+    template<> class TypeTraits<char>      { public : typedef s_char  Type; };
+    template<> class TypeTraits<short>     { public : typedef s_short Type; };
+    template<> class TypeTraits<int>       { public : typedef s_int   Type; };
+    template<> class TypeTraits<long>      { public : typedef s_long  Type; };
+    template<> class TypeTraits<long long> { public : typedef s_llong Type; };
     /** \endcond
     */
 }
