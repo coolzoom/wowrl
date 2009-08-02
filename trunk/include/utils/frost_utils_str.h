@@ -486,6 +486,28 @@ namespace Frost
             return s_uint::NaN;
         }
 
+        /// Returns all positions of the pattern in the string.
+        /** \param sValue  The string to search for
+        *   \param uiStart From where to start searching
+        *   \return All positions of the pattern (empty if not found)
+        */
+        s_ctnr<s_uint> FindAllPos(const s_str_t& sPattern, const s_uint& uiStart = 0u)
+        {
+            s_ctnr<s_uint> lList;
+
+            if (uiStart.IsValid())
+            {
+                s_uint ui = FindPos(sPattern, uiStart);
+                while (ui.IsValid())
+                {
+                    lList.PushBack(ui);
+                    ui = FindPos(sPattern, ui+sPattern.GetSize());
+                }
+            }
+
+            return lList;
+        }
+
         /// Returns true is the pattern is found in the string.
         /** \param sValue  The string to search for
         *   \param uiStart From where to start searching
@@ -1190,6 +1212,17 @@ namespace Frost
             return sCopy;
         }
 
+        /// Reverses the provided string.
+        /** \param sValue The string to reverse
+        *   \return The reversed string
+        */
+        static s_str_t Reverse(const s_str_t& sValue)
+        {
+            s_str_t sCopy = sValue;
+            sCopy.Reverse();
+            return sCopy;
+        }
+
         iterator begin()
         {
             return sValue_.begin();
@@ -1251,6 +1284,8 @@ namespace Frost
     /** \cond NOT_REMOVE_FROM_DOC
     */
     template<> class TypeTraits<string_object> { public : typedef s_str Type; };
+    template<> class TypeTraits<const string_element*> { public : typedef s_str Type; };
+    template<int N> class TypeTraits<string_element[N]> { public : typedef s_str Type; };
     /** \endcond
     */
 }
