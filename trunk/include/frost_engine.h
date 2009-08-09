@@ -170,6 +170,7 @@ namespace Frost
         s_bool LoadShaders_();
 
         s_bool bShutDown_;
+        s_bool bRun_;
 
         s_uint uiScreenWidth_;
         s_uint uiScreenHeight_;
