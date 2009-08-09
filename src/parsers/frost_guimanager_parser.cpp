@@ -867,9 +867,6 @@ namespace Frost
             pButton.Delete(); return false;
         }
 
-        if ((pWidgetBlock->IsProvided("text") || !pWidgetBlock->IsProvided("inherits")))
-            pButton->SetText(pWidgetBlock->GetAttribute("text"));
-
         this->ParseSizeBlock_(pButton, pWidgetBlock);
         this->ParseResizeBoundsBlock_(pButton, pWidgetBlock);
         this->ParseAnchorsBlock_(pButton, pWidgetBlock);
@@ -943,6 +940,9 @@ namespace Frost
             if (pFontString)
                 this->ParseFontStringBlock_(pFontString, pButton, "ARTWORK", pDisabledTextBlock);
         }
+
+        if ((pWidgetBlock->IsProvided("text") || !pWidgetBlock->IsProvided("inherits")))
+            pButton->SetText(pWidgetBlock->GetAttribute("text"));
 
         return true;
     }

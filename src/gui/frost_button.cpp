@@ -321,7 +321,6 @@ void Button::CreateNormalText()
     if (!pNormalText_)
     {
         pNormalText_ = new FontString();
-        pNormalText_->SetText(sText_);
         pNormalText_->SetSpecial();
     }
 }
@@ -331,7 +330,6 @@ void Button::CreateHighlightText()
     if (!pHighlightText_)
     {
         pHighlightText_ = new FontString();
-        pHighlightText_->SetText(sText_);
         pHighlightText_->SetSpecial();
     }
 }
@@ -341,7 +339,6 @@ void Button::CreateDisabledText()
     if (!pDisabledText_)
     {
         pDisabledText_ = new FontString();
-        pDisabledText_->SetText(sText_);
         pDisabledText_->SetSpecial();
     }
 }
@@ -502,7 +499,8 @@ void Button::Push()
 {
     if (IsEnabled())
     {
-        pPushedTexture_->Show();
+        if (pPushedTexture_)
+            pPushedTexture_->Show();
         if (pNormalTexture_)
             pNormalTexture_->Hide();
     }
@@ -512,7 +510,8 @@ void Button::Release()
 {
     if (IsEnabled())
     {
-        pPushedTexture_->Hide();
+        if (pPushedTexture_)
+            pPushedTexture_->Hide();
         if (pNormalTexture_)
             pNormalTexture_->Show();
     }
