@@ -46,6 +46,18 @@ namespace Frost
         /// Initializes this manager.
         void                 Initialize();
 
+        /// Adds a new folder to be parsed for UI AddOns.
+        /** \param sFolder The new folder
+        */
+        void                 AddAddOnFolder(const s_str& sFolder);
+
+        /// Clears the AddOn folder list.
+        /** \note This is usefull whenever you need to reload a
+        *         completely different UI (for example, when switching
+        *         from your game's main menu to the real game).
+        */
+        void                 ClearAddOnFolderList();
+
         /// Adds an UIObject to be handled by this manager.
         /** \param pObj The object to add
         *   \return 'false' if the name of the widget was already taken
@@ -225,6 +237,7 @@ namespace Frost
         s_map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
         s_map< s_uint, s_ptr<GUI::UIObject> > lMainObjectList_;
 
+        s_ctnr<s_str>                       lGUIFolderList_;
         s_map< s_str, s_map<s_str, AddOn> > lAddOnList_;
 
         s_ptr<GUI::UIObject> pMovedObject_;

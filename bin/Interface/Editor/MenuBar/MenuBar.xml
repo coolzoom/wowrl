@@ -1,0 +1,232 @@
+<Ui>
+    <Button name="ButtonTemplate_MenuItem" virtual="true">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false">
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+            <Color r="0.0" g="0.0" b="0.0"/>
+        </NormalText>
+        <HighlightTexture file="Interface/Editor/MenuBar/MenuBarButtonHighlight.png"/>
+    </Button>
+
+	<Frame name="MenuBar" parent="UIParent" clampedToScreen="true">
+		<Size>
+			<AbsDimension y="16"/>
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT"/>
+            <Anchor point="TOPRIGHT"/>
+		</Anchors>
+        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+        <Frames>
+            <Button name="$parentFileButton" inherits="ButtonTemplate_MenuItem">
+                <Size>
+                    <AbsDimension y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetText(MenuBar.Locale.File);
+                        this:SetWidth(math.max(this:GetTextWidth()+6, 16));
+                    </OnLoad>
+                    <OnClick>
+                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
+                            MenuBar.DropDown:Hide();
+                            if (MenuBar.DropDown ~= this.DropDown) then
+                                this.DropDown:Show();
+                                MenuBar.DropDown = this.DropDown;
+                            end
+                        else
+                            this.DropDown:Show();
+                            MenuBar.DropDown = this.DropDown;
+                        end
+                    </OnClick>
+                </Scripts>
+                <Frames>
+                    <Frame name="$parentDropDown" hidden="true">
+                        <Size>
+                            <AbsDimension x="100" y="100"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+                        </Anchors>
+                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+                        <Frames>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Button>
+            <Button name="$parentEditButton" inherits="ButtonTemplate_MenuItem">
+                <Size>
+                    <AbsDimension y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentFileButton" relativePoint="TOPRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetText(MenuBar.Locale.Edit);
+                        this:SetWidth(math.max(this:GetTextWidth()+6, 16));
+                    </OnLoad>
+                    <OnClick>
+                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
+                            MenuBar.DropDown:Hide();
+                            if (MenuBar.DropDown ~= this.DropDown) then
+                                this.DropDown:Show();
+                                MenuBar.DropDown = this.DropDown;
+                            end
+                        else
+                            this.DropDown:Show();
+                            MenuBar.DropDown = this.DropDown;
+                        end
+                    </OnClick>
+                </Scripts>
+                <Frames>
+                    <Frame name="$parentDropDown" hidden="true">
+                        <Size>
+                            <AbsDimension x="100" y="100"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+                        </Anchors>
+                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+                        <Frames>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Button>
+            <Button name="$parentViewButton" inherits="ButtonTemplate_MenuItem">
+                <Size>
+                    <AbsDimension y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentEditButton" relativePoint="TOPRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetText(MenuBar.Locale.View);
+                        this:SetWidth(math.max(this:GetTextWidth()+6, 16));
+                    </OnLoad>
+                    <OnClick>
+                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
+                            MenuBar.DropDown:Hide();
+                            if (MenuBar.DropDown ~= this.DropDown) then
+                                this.DropDown:Show();
+                                MenuBar.DropDown = this.DropDown;
+                            end
+                        else
+                            this.DropDown:Show();
+                            MenuBar.DropDown = this.DropDown;
+                        end
+                    </OnClick>
+                </Scripts>
+                <Frames>
+                    <Frame name="$parentDropDown" hidden="true">
+                        <Size>
+                            <AbsDimension x="100" y="100"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+                        </Anchors>
+                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+                        <Frames>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Button>
+            <Button name="$parentSettingsButton" inherits="ButtonTemplate_MenuItem">
+                <Size>
+                    <AbsDimension y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentViewButton" relativePoint="TOPRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetText(MenuBar.Locale.Settings);
+                        this:SetWidth(math.max(this:GetTextWidth()+6, 16));
+                    </OnLoad>
+                    <OnClick>
+                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
+                            MenuBar.DropDown:Hide();
+                            if (MenuBar.DropDown ~= this.DropDown) then
+                                this.DropDown:Show();
+                                MenuBar.DropDown = this.DropDown;
+                            end
+                        else
+                            this.DropDown:Show();
+                            MenuBar.DropDown = this.DropDown;
+                        end
+                    </OnClick>
+                </Scripts>
+                <Frames>
+                    <Frame name="$parentDropDown" hidden="true">
+                        <Size>
+                            <AbsDimension x="100" y="100"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+                        </Anchors>
+                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+                        <Frames>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Button>
+            <Button name="$parentHelpButton" inherits="ButtonTemplate_MenuItem">
+                <Size>
+                    <AbsDimension y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentSettingsButton" relativePoint="TOPRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetText(MenuBar.Locale.Help);
+                        this:SetWidth(math.max(this:GetTextWidth()+6, 16));
+                    </OnLoad>
+                    <OnClick>
+                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
+                            MenuBar.DropDown:Hide();
+                            if (MenuBar.DropDown ~= this.DropDown) then
+                                this.DropDown:Show();
+                                MenuBar.DropDown = this.DropDown;
+                            end
+                        else
+                            this.DropDown:Show();
+                            MenuBar.DropDown = this.DropDown;
+                        end
+                    </OnClick>
+                </Scripts>
+                <Frames>
+                    <Frame name="$parentDropDown" hidden="true">
+                        <Size>
+                            <AbsDimension x="100" y="100"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+                        </Anchors>
+                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+                        <Frames>
+                        </Frames>
+                    </Frame>
+                </Frames>
+            </Button>
+            <Button name="$parentCloseButton"  inherits="ButtonTemplate_MenuItem" text="X">
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        Exit();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+	</Frame>
+</Ui>
