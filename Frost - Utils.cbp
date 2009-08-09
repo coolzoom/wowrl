@@ -8,9 +8,9 @@
 		<Build>
 			<Target title="Debug_Win32">
 				<Option platforms="Windows;" />
-				<Option output="lib/libutils_d" prefix_auto="1" extension_auto="1" />
+				<Option output="lib\libutils_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj_Utils/Debug_Win32/" />
+				<Option object_output="obj_Utils\Debug_Win32\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -21,14 +21,14 @@
 			</Target>
 			<Target title="Release_Win32">
 				<Option platforms="Windows;" />
-				<Option output="lib/libutils" prefix_auto="1" extension_auto="1" />
+				<Option output="lib\libutils" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj_Utils/Release_Win32/" />
+				<Option object_output="obj_Utils\Release_Win32\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add option="-Wall" />
 				</Compiler>
 				<Linker>
@@ -37,9 +37,9 @@
 			</Target>
 			<Target title="Debug_Linux">
 				<Option platforms="Unix;" />
-				<Option output="lib/libutils_l_d" prefix_auto="1" extension_auto="1" />
+				<Option output="lib\libutils_l_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj_Utils/Debug_Linux/" />
+				<Option object_output="obj_Utils\Debug_Linux\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -54,9 +54,9 @@
 			</Target>
 			<Target title="Release_Linux">
 				<Option platforms="Unix;" />
-				<Option output="lib/libutils_l" prefix_auto="1" extension_auto="1" />
+				<Option output="lib\libutils_l" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj_Utils/Release_Linux/" />
+				<Option object_output="obj_Utils\Release_Linux\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -76,70 +76,70 @@
 			<Add alias="Win32" targets="Debug_Win32;Release_Win32;" />
 		</VirtualTargets>
 		<Compiler>
-			<Add directory="include/utils" />
+			<Add directory="include\utils" />
 			<Add directory="dependencies" />
-			<Add directory="../ogre/OgreMain/include" />
+			<Add directory="..\ogre\OgreMain\include" />
 		</Compiler>
 		<Linker>
 			<Add directory="lib" />
 		</Linker>
-		<Unit filename="include/utils/frost_utils.h" />
-		<Unit filename="include/utils/frost_utils_array.h" />
-		<Unit filename="include/utils/frost_utils_bool.h" />
-		<Unit filename="include/utils/frost_utils_color.h" />
-		<Unit filename="include/utils/frost_utils_ctnr.h" />
-		<Unit filename="include/utils/frost_utils_directory.h" />
-		<Unit filename="include/utils/frost_utils_event.h" />
-		<Unit filename="include/utils/frost_utils_eventmanager.h" />
-		<Unit filename="include/utils/frost_utils_eventreceiver.h" />
-		<Unit filename="include/utils/frost_utils_file.h" />
-		<Unit filename="include/utils/frost_utils_float.h" />
-		<Unit filename="include/utils/frost_utils_int.h" />
-		<Unit filename="include/utils/frost_utils_log.h" />
-		<Unit filename="include/utils/frost_utils_lua_function.h" />
-		<Unit filename="include/utils/frost_utils_lua_glues.h" />
-		<Unit filename="include/utils/frost_utils_lua_state.h" />
-		<Unit filename="include/utils/frost_utils_luamanager.h" />
-		<Unit filename="include/utils/frost_utils_manager.h" />
-		<Unit filename="include/utils/frost_utils_map.h" />
-		<Unit filename="include/utils/frost_utils_math.h" />
-		<Unit filename="include/utils/frost_utils_multimap.h" />
-		<Unit filename="include/utils/frost_utils_pair.h" />
-		<Unit filename="include/utils/frost_utils_point.h" />
-		<Unit filename="include/utils/frost_utils_profiler.h" />
-		<Unit filename="include/utils/frost_utils_ptr.h" />
-		<Unit filename="include/utils/frost_utils_range.h" />
-		<Unit filename="include/utils/frost_utils_refptr.h" />
-		<Unit filename="include/utils/frost_utils_stdhelper.h" />
-		<Unit filename="include/utils/frost_utils_str.h" />
-		<Unit filename="include/utils/frost_utils_timemanager.h" />
-		<Unit filename="include/utils/frost_utils_timers.h" />
-		<Unit filename="include/utils/frost_utils_types.h" />
-		<Unit filename="include/utils/frost_utils_uint.h" />
-		<Unit filename="include/utils/frost_utils_var.h" />
-		<Unit filename="include/utils/frost_utils_vector.h" />
-		<Unit filename="include/utils/frost_utilsmanager.h" />
-		<Unit filename="src/utils/frost_utils_color.cpp" />
-		<Unit filename="src/utils/frost_utils_directory.cpp" />
-		<Unit filename="src/utils/frost_utils_event.cpp" />
-		<Unit filename="src/utils/frost_utils_eventmanager.cpp" />
-		<Unit filename="src/utils/frost_utils_eventreceiver.cpp" />
-		<Unit filename="src/utils/frost_utils_file.cpp" />
-		<Unit filename="src/utils/frost_utils_float.cpp" />
-		<Unit filename="src/utils/frost_utils_log.cpp" />
-		<Unit filename="src/utils/frost_utils_lua_argument.cpp" />
-		<Unit filename="src/utils/frost_utils_lua_data.cpp" />
-		<Unit filename="src/utils/frost_utils_lua_function.cpp" />
-		<Unit filename="src/utils/frost_utils_lua_glues.cpp" />
-		<Unit filename="src/utils/frost_utils_lua_state.cpp" />
-		<Unit filename="src/utils/frost_utils_luamanager.cpp" />
-		<Unit filename="src/utils/frost_utils_math.cpp" />
-		<Unit filename="src/utils/frost_utils_profiler.cpp" />
-		<Unit filename="src/utils/frost_utils_timemanager.cpp" />
-		<Unit filename="src/utils/frost_utils_timers.cpp" />
-		<Unit filename="src/utils/frost_utils_var.cpp" />
-		<Unit filename="src/utils/frost_utils_vector.cpp" />
-		<Unit filename="src/utils/frost_utilsmanager.cpp" />
+		<Unit filename="include\utils\frost_utils.h" />
+		<Unit filename="include\utils\frost_utils_array.h" />
+		<Unit filename="include\utils\frost_utils_bool.h" />
+		<Unit filename="include\utils\frost_utils_color.h" />
+		<Unit filename="include\utils\frost_utils_ctnr.h" />
+		<Unit filename="include\utils\frost_utils_directory.h" />
+		<Unit filename="include\utils\frost_utils_event.h" />
+		<Unit filename="include\utils\frost_utils_eventmanager.h" />
+		<Unit filename="include\utils\frost_utils_eventreceiver.h" />
+		<Unit filename="include\utils\frost_utils_file.h" />
+		<Unit filename="include\utils\frost_utils_float.h" />
+		<Unit filename="include\utils\frost_utils_int.h" />
+		<Unit filename="include\utils\frost_utils_log.h" />
+		<Unit filename="include\utils\frost_utils_lua_function.h" />
+		<Unit filename="include\utils\frost_utils_lua_glues.h" />
+		<Unit filename="include\utils\frost_utils_lua_state.h" />
+		<Unit filename="include\utils\frost_utils_luamanager.h" />
+		<Unit filename="include\utils\frost_utils_manager.h" />
+		<Unit filename="include\utils\frost_utils_map.h" />
+		<Unit filename="include\utils\frost_utils_math.h" />
+		<Unit filename="include\utils\frost_utils_multimap.h" />
+		<Unit filename="include\utils\frost_utils_pair.h" />
+		<Unit filename="include\utils\frost_utils_point.h" />
+		<Unit filename="include\utils\frost_utils_profiler.h" />
+		<Unit filename="include\utils\frost_utils_ptr.h" />
+		<Unit filename="include\utils\frost_utils_range.h" />
+		<Unit filename="include\utils\frost_utils_refptr.h" />
+		<Unit filename="include\utils\frost_utils_stdhelper.h" />
+		<Unit filename="include\utils\frost_utils_str.h" />
+		<Unit filename="include\utils\frost_utils_timemanager.h" />
+		<Unit filename="include\utils\frost_utils_timers.h" />
+		<Unit filename="include\utils\frost_utils_types.h" />
+		<Unit filename="include\utils\frost_utils_uint.h" />
+		<Unit filename="include\utils\frost_utils_var.h" />
+		<Unit filename="include\utils\frost_utils_vector.h" />
+		<Unit filename="include\utils\frost_utilsmanager.h" />
+		<Unit filename="src\utils\frost_utils_color.cpp" />
+		<Unit filename="src\utils\frost_utils_directory.cpp" />
+		<Unit filename="src\utils\frost_utils_event.cpp" />
+		<Unit filename="src\utils\frost_utils_eventmanager.cpp" />
+		<Unit filename="src\utils\frost_utils_eventreceiver.cpp" />
+		<Unit filename="src\utils\frost_utils_file.cpp" />
+		<Unit filename="src\utils\frost_utils_float.cpp" />
+		<Unit filename="src\utils\frost_utils_log.cpp" />
+		<Unit filename="src\utils\frost_utils_lua_argument.cpp" />
+		<Unit filename="src\utils\frost_utils_lua_data.cpp" />
+		<Unit filename="src\utils\frost_utils_lua_function.cpp" />
+		<Unit filename="src\utils\frost_utils_lua_glues.cpp" />
+		<Unit filename="src\utils\frost_utils_lua_state.cpp" />
+		<Unit filename="src\utils\frost_utils_luamanager.cpp" />
+		<Unit filename="src\utils\frost_utils_math.cpp" />
+		<Unit filename="src\utils\frost_utils_profiler.cpp" />
+		<Unit filename="src\utils\frost_utils_timemanager.cpp" />
+		<Unit filename="src\utils\frost_utils_timers.cpp" />
+		<Unit filename="src\utils\frost_utils_var.cpp" />
+		<Unit filename="src\utils\frost_utils_vector.cpp" />
+		<Unit filename="src\utils\frost_utilsmanager.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
