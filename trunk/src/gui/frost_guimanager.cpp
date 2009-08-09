@@ -40,6 +40,17 @@ namespace Frost
         bClosed_ = true;
     }
 
+    void GUIManager::AddAddOnFolder( const s_str& sFolder )
+    {
+        if (!lGUIFolderList_.Find(sFolder))
+            lGUIFolderList_.PushBack(sFolder);
+    }
+
+    void GUIManager::ClearAddOnFolderList()
+    {
+        lGUIFolderList_.Clear();
+    }
+
     s_bool GUIManager::AddUIObject( s_ptr<GUI::UIObject> pObj )
     {
         s_map< s_str, s_ptr<GUI::UIObject> >* lNamedList;
@@ -325,8 +336,11 @@ namespace Frost
             Lua::RegisterGUIClasses(pLua_);
             Lua::RegisterGlobalFuncs(pLua_);
 
-            this->LoadAddOnDirectory_("Interface/BaseUI");
-            this->LoadAddOnDirectory_("Interface/AddOns");
+            s_ctnr<s_str>::iterator iterFolder;
+            foreach (iterFolder, lGUIFolderList_)
+            {
+                this->LoadAddOnDirectory_(*iterFolder);
+            }
 
             s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterUIObject;
             foreach (iterUIObject, lMainObjectList_)
