@@ -58,6 +58,7 @@ namespace Frost
     int l_GetTime(lua_State* pLua);
     int l_GetTimeOfTheDay(lua_State* pLua);
     int l_GetMousePos(lua_State* pLua);
+    int l_Exit(lua_State* pLua);
 }
 
 #endif

@@ -34,6 +34,7 @@ void Lua::RegisterGlobalFuncs( s_ptr<Lua::State> pLua )
     pLua->Register("GetLocalizedString", l_GetLocalizedString);
     pLua->Register("GetTime", l_GetTime);
     pLua->Register("GetTimeOfTheDay", l_GetTimeOfTheDay);
+    pLua->Register("Exit", l_Exit);
 }
 
 void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )

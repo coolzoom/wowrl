@@ -183,9 +183,6 @@ namespace Frost
         // Initialize the GUI manager
         pGUIMgr_->Initialize();
 
-        // Load the UI
-        pGUIMgr_->LoadUI();
-
         if (!this->ReadGameConfig_())
             return false;
 
@@ -200,8 +197,10 @@ namespace Frost
         pRoot_->getRenderSystem()->_initRenderTargets();
         pTimeMgr_->Initialize();
 
+        bRun_ = true;
+
         // Start the main loop
-        while (true)
+        while (bRun_)
         {
             Ogre::WindowEventUtilities::messagePump();
 
@@ -267,61 +266,66 @@ namespace Frost
     {
         if (!bShutDown_)
         {
-            Log("\nEngine shutdown.");
-            Log("Average FPS : "+ pTimeMgr_->GetAverageFPS());
-            Log("Best FPS : "+ pTimeMgr_->GetBestFPS());
-            Log("Worst FPS : "+ pTimeMgr_->GetWorstFPS()+"\n");
-
-            // End, delete/free everything
-            // ...
-
-            // Print out profiling info
-            pTimeMgr_->Print();
-
-            // Delete managers
-            GameplayManager::Delete();
-            UnitManager::Delete();
-            GUIManager::Delete();
-            SpriteManager::Delete();
-            ModelManager::Delete();
-            CameraManager::Delete();
-            LightManager::Delete();
-
-            PathManager::Delete();
-            SceneManager::Delete();
-            PhysicsManager::Delete();
-            FontManager::Delete();
-            MaterialManager::Delete();
-            LocaleManager::Delete();
-            InputManager::Delete();
-            EventManager::Delete();
-            LuaManager::Delete();
-
-            Log("Closing Ogre...");
-
-            // Close OGRE
-            if (pRoot_)
+            if (bRun_)
+                bRun_ = false;
+            else
             {
-                if (pOgreSceneMgr_)
+                Log("\nEngine shutdown.");
+                Log("Average FPS : "+ pTimeMgr_->GetAverageFPS());
+                Log("Best FPS : "+ pTimeMgr_->GetBestFPS());
+                Log("Worst FPS : "+ pTimeMgr_->GetWorstFPS()+"\n");
+
+                // End, delete/free everything
+                // ...
+
+                // Print out profiling info
+                pTimeMgr_->Print();
+
+                // Delete managers
+                GameplayManager::Delete();
+                UnitManager::Delete();
+                GUIManager::Delete();
+                SpriteManager::Delete();
+                ModelManager::Delete();
+                CameraManager::Delete();
+                LightManager::Delete();
+
+                PathManager::Delete();
+                SceneManager::Delete();
+                PhysicsManager::Delete();
+                FontManager::Delete();
+                MaterialManager::Delete();
+                LocaleManager::Delete();
+                InputManager::Delete();
+                EventManager::Delete();
+                LuaManager::Delete();
+
+                Log("Closing Ogre...");
+
+                // Close OGRE
+                if (pRoot_)
                 {
-                    pRoot_->destroySceneManager(pOgreSceneMgr_.Get());
-                    pOgreSceneMgr_ = NULL;
+                    if (pOgreSceneMgr_)
+                    {
+                        pRoot_->destroySceneManager(pOgreSceneMgr_.Get());
+                        pOgreSceneMgr_ = NULL;
+                    }
                 }
+                if (pRenderWindow_)
+                {
+                    pRenderWindow_->destroy();
+                    pRenderWindow_ = NULL;
+                }
+
+                pRoot_.Delete();
+
+                bShutDown_ = true;
+
+                Log("Done.");
+
+                TimeManager::Delete();
+                UtilsManager::Delete();
             }
-            if (pRenderWindow_)
-            {
-                pRenderWindow_->destroy();
-                pRenderWindow_ = NULL;
-            }
-
-            pRoot_.Delete();
-
-            bShutDown_ = true;
-
-            Log("Done.");
-
-            TimeManager::Delete();
-            UtilsManager::Delete();
         }
     }
 

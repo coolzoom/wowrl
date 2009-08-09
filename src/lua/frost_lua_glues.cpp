@@ -68,5 +68,14 @@ int Frost::l_GetTimeOfTheDay( lua_State* pLua )
     return mFunc.Return();
 }
 
+int Frost::l_Exit( lua_State* pLua )
+{
+    Lua::Function mFunc("Exit", pLua);
+
+    Engine::GetSingleton()->ShutDown();
+
+    return mFunc.Return();
+}
+
 /** \endcond
 */
