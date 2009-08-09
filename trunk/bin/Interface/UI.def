@@ -158,9 +158,9 @@
     <n[.,1]:c[Texture]:DisabledTexture  name="$parentDisabledTexture"  b:setAllPoints="true" hidden="true"/>
     <n[.,1]:c[Texture]:HighlightTexture name="$parentHighlightTexture" b:setAllPoints="true" hidden="true"/>
 
-    <n[.,1]:c[FontString]:NormalText    name="$parentNormalText"/>
-    <n[.,1]:c[FontString]:HighlightText name="$parentHighlightText" hidden="true"/>
-    <n[.,1]:c[FontString]:DisabledText  name="$parentDisabledText"  hidden="true"/>
+    <n[.,1]:c[FontString]:NormalText    name="$parentNormalText"    b:setAllPoints="true"/>
+    <n[.,1]:c[FontString]:HighlightText name="$parentHighlightText" b:setAllPoints="true" hidden="true"/>
+    <n[.,1]:c[FontString]:DisabledText  name="$parentDisabledText"  b:setAllPoints="true" hidden="true"/>
 
     <n[.,1]:PushedTextOffset>
         <n[*]:AbsDimension n:x="0" n:y="0"/>
