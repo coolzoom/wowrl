@@ -322,6 +322,7 @@ void Button::CreateNormalText()
     {
         pNormalText_ = new FontString();
         pNormalText_->SetSpecial();
+        pCurrentFontString_ = pNormalText_;
     }
 }
 
@@ -400,6 +401,9 @@ void Button::SetHighlightTexture( s_ptr<Texture> pTexture )
 
 void Button::SetNormalText( s_ptr<FontString> pFont )
 {
+    if (pNormalText_ == pCurrentFontString_)
+        pCurrentFontString_ = pFont;
+
     pNormalText_ = pFont;
 }
 
@@ -524,11 +528,13 @@ void Button::Highlight()
         if (pHighlightTexture_)
             pHighlightTexture_->Show();
 
-        if (pCurrentFontString_)
-            pCurrentFontString_->Hide();
-        pCurrentFontString_ = pHighlightText_;
-        if (pCurrentFontString_)
+        if (pHighlightText_)
+        {
+            if (pCurrentFontString_)
+                pCurrentFontString_->Hide();
+            pCurrentFontString_ = pHighlightText_;
             pCurrentFontString_->Show();
+        }
 
         bHighlighted_ = true;
     }
@@ -541,18 +547,22 @@ void Button::Unlight()
         if (pHighlightTexture_)
             pHighlightTexture_->Hide();
 
-        if (pCurrentFontString_)
-            pCurrentFontString_->Hide();
-
-        switch (mState_)
+        if (pHighlightText_)
         {
-            case BUTTON_UP       : pCurrentFontString_ = pNormalText_; break;
-            case BUTTON_DOWN     : pCurrentFontString_ = pNormalText_; break;
-            case BUTTON_DISABLED : pCurrentFontString_ = pDisabledText_; break;
+            if (pCurrentFontString_)
+                pCurrentFontString_->Hide();
+
+            switch (mState_)
+            {
+                case BUTTON_UP       : pCurrentFontString_ = pNormalText_; break;
+                case BUTTON_DOWN     : pCurrentFontString_ = pNormalText_; break;
+                case BUTTON_DISABLED : pCurrentFontString_ = pDisabledText_; break;
+            }
+
+            if (pCurrentFontString_)
+                pCurrentFontString_->Show();
         }
 
-        if (pCurrentFontString_)
-            pCurrentFontString_->Show();
 
         bHighlighted_ = false;
     }
