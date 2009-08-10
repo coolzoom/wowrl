@@ -8,7 +8,7 @@ if (GetLocale() == "frFR") then
         ["FileQuit"] = "Quiter",
         ["Edit"] = "Edition",
         ["View"] = "Affichage",
-        ["Settings"] = "Paramètres",
+        ["Settings"] = "Parametres",
         ["Help"] = "Aide"
     };
 else
