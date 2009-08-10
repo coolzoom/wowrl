@@ -40,6 +40,7 @@ s_str LayeredRegion::Serialize( const s_str& sTab ) const
         case LAYER_OVERLAY : sStr << "OVERLAY\n"; break;
         case LAYER_HIGHLIGHT : sStr << "HIGHLIGHT\n"; break;
         case LAYER_SPECIALHIGH : sStr << "SPECIALHIGH\n"; break;
+        default : sStr << "<error>\n"; break;
     };
 
     return sStr;

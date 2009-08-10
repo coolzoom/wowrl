@@ -7,7 +7,66 @@
             <Color r="0.0" g="0.0" b="0.0"/>
         </NormalText>
         <HighlightTexture file="Interface/Editor/MenuBar/MenuBarButtonHighlight.png"/>
+        <Scripts>
+            <OnClick>
+                if (MenuBar.activeDropDown) then
+                    MenuBar.activeDropDown:Hide();
+                    if (MenuBar.activeDropDown ~= this.DropDown) then
+                        this.DropDown:Show();
+                        MenuBar.activeDropDown = this.DropDown;
+                    else
+                        MenuBar.activeDropDown = nil;
+                    end
+                else
+                    this.DropDown:Show();
+                    MenuBar.activeDropDown = this.DropDown;
+                end
+            </OnClick>
+        </Scripts>
     </Button>
+    
+    <Button name="ButtonTemplate_SubMenuItem" virtual="true">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT">
+            <Color r="0.0" g="0.0" b="0.0"/>
+        </NormalText>
+        <HighlightTexture file="Interface/Editor/MenuBar/MenuBarButtonHighlight.png"/>
+    </Button>
+    
+    <Frame name="FrameTemplate_DropDown" virtual="true" hidden="true">    
+        <Size>
+            <AbsDimension x="100" y="100"/>
+        </Size>
+        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+        <Scripts>
+            <OnLoad>
+                this.updated = false;
+            </OnLoad>
+            <OnShow>
+                if (not this.updated) then
+                    local children = { this:GetChildren() };
+                    local maxWidth = 0;
+                    local totalHeight = 0;
+                    
+                    for name, child in pairs(children) do
+                        maxWidth = math.max(child:GetWidth(), maxWidth);
+                        totalHeight = totalHeight + child:GetHeight();
+                    end
+                    
+                    if (maxWidth > 100) then
+                        for name, child in pairs(children) do
+                            child:SetWidth(maxWidth);
+                        end
+                        
+                        this:SetWidth(maxWidth);
+                    end
+                    
+                    this:SetHeight(math.max(totalHeight, 16));
+                    
+                    this.updated = true;
+                end
+            </OnShow>
+        </Scripts>
+    </Frame>
 
 	<Frame name="MenuBar" parent="UIParent" clampedToScreen="true">
 		<Size>
@@ -18,6 +77,11 @@
             <Anchor point="TOPRIGHT"/>
 		</Anchors>
         <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+        <Scripts>
+            <OnLoad>
+                this.activeDropDown = nil;
+            </OnLoad>
+        </Scripts>
         <Frames>
             <Button name="$parentFileButton" inherits="ButtonTemplate_MenuItem">
                 <Size>
@@ -31,29 +95,86 @@
                         this:SetText(MenuBar.Locale.File);
                         this:SetWidth(math.max(this:GetTextWidth()+6, 16));
                     </OnLoad>
-                    <OnClick>
-                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
-                            MenuBar.DropDown:Hide();
-                            if (MenuBar.DropDown ~= this.DropDown) then
-                                this.DropDown:Show();
-                                MenuBar.DropDown = this.DropDown;
-                            end
-                        else
-                            this.DropDown:Show();
-                            MenuBar.DropDown = this.DropDown;
-                        end
-                    </OnClick>
                 </Scripts>
                 <Frames>
-                    <Frame name="$parentDropDown" hidden="true">
-                        <Size>
-                            <AbsDimension x="100" y="100"/>
-                        </Size>
+                    <Frame name="$parentDropDown" inherits="FrameTemplate_DropDown">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
                         </Anchors>
-                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
                         <Frames>
+                            <Button name="$parentNew" inherits="ButtonTemplate_SubMenuItem">
+                                <Size>
+                                    <AbsDimension y="16"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT"/>
+                                </Anchors>
+                                <Scripts>
+                                    <OnLoad>
+                                        this:SetText(MenuBar.Locale.FileNew);
+                                        this:SetWidth(math.max(this:GetTextWidth()+6, 100));
+                                    </OnLoad>
+                                </Scripts>
+                            </Button>
+                            <Button name="$parentOpen" inherits="ButtonTemplate_SubMenuItem">
+                                <Size>
+                                    <AbsDimension y="16"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentNew" relativePoint="BOTTOMLEFT"/>
+                                </Anchors>
+                                <Scripts>
+                                    <OnLoad>
+                                        this:SetText(MenuBar.Locale.FileOpen);
+                                        this:SetWidth(math.max(this:GetTextWidth()+6, 100));
+                                    </OnLoad>
+                                </Scripts>
+                            </Button>
+                            <Button name="$parentSave" inherits="ButtonTemplate_SubMenuItem">
+                                <Size>
+                                    <AbsDimension y="16"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentOpen" relativePoint="BOTTOMLEFT"/>
+                                </Anchors>
+                                <Scripts>
+                                    <OnLoad>
+                                        this:SetText(MenuBar.Locale.FileSave);
+                                        this:SetWidth(math.max(this:GetTextWidth()+6, 100));
+                                    </OnLoad>
+                                </Scripts>
+                            </Button>
+                            <Button name="$parentSaveAs" inherits="ButtonTemplate_SubMenuItem">
+                                <Size>
+                                    <AbsDimension y="16"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentSave" relativePoint="BOTTOMLEFT"/>
+                                </Anchors>
+                                <Scripts>
+                                    <OnLoad>
+                                        this:SetText(MenuBar.Locale.FileSaveAs);
+                                        this:SetWidth(math.max(this:GetTextWidth()+6, 100));
+                                    </OnLoad>
+                                </Scripts>
+                            </Button>
+                            <Button name="$parentQuit" inherits="ButtonTemplate_SubMenuItem">
+                                <Size>
+                                    <AbsDimension y="16"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativeTo="$parentSaveAs" relativePoint="BOTTOMLEFT"/>
+                                </Anchors>
+                                <Scripts>
+                                    <OnLoad>
+                                        this:SetText(MenuBar.Locale.FileQuit);
+                                        this:SetWidth(math.max(this:GetTextWidth()+6, 100));
+                                    </OnLoad>
+                                    <OnClick>
+                                        Exit();
+                                    </OnClick>
+                                </Scripts>
+                            </Button>
                         </Frames>
                     </Frame>
                 </Frames>
@@ -70,28 +191,12 @@
                         this:SetText(MenuBar.Locale.Edit);
                         this:SetWidth(math.max(this:GetTextWidth()+6, 16));
                     </OnLoad>
-                    <OnClick>
-                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
-                            MenuBar.DropDown:Hide();
-                            if (MenuBar.DropDown ~= this.DropDown) then
-                                this.DropDown:Show();
-                                MenuBar.DropDown = this.DropDown;
-                            end
-                        else
-                            this.DropDown:Show();
-                            MenuBar.DropDown = this.DropDown;
-                        end
-                    </OnClick>
                 </Scripts>
                 <Frames>
-                    <Frame name="$parentDropDown" hidden="true">
-                        <Size>
-                            <AbsDimension x="100" y="100"/>
-                        </Size>
+                    <Frame name="$parentDropDown"  inherits="FrameTemplate_DropDown">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
                         </Anchors>
-                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
                         <Frames>
                         </Frames>
                     </Frame>
@@ -109,28 +214,12 @@
                         this:SetText(MenuBar.Locale.View);
                         this:SetWidth(math.max(this:GetTextWidth()+6, 16));
                     </OnLoad>
-                    <OnClick>
-                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
-                            MenuBar.DropDown:Hide();
-                            if (MenuBar.DropDown ~= this.DropDown) then
-                                this.DropDown:Show();
-                                MenuBar.DropDown = this.DropDown;
-                            end
-                        else
-                            this.DropDown:Show();
-                            MenuBar.DropDown = this.DropDown;
-                        end
-                    </OnClick>
                 </Scripts>
                 <Frames>
-                    <Frame name="$parentDropDown" hidden="true">
-                        <Size>
-                            <AbsDimension x="100" y="100"/>
-                        </Size>
+                    <Frame name="$parentDropDown"  inherits="FrameTemplate_DropDown">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
                         </Anchors>
-                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
                         <Frames>
                         </Frames>
                     </Frame>
@@ -148,28 +237,12 @@
                         this:SetText(MenuBar.Locale.Settings);
                         this:SetWidth(math.max(this:GetTextWidth()+6, 16));
                     </OnLoad>
-                    <OnClick>
-                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
-                            MenuBar.DropDown:Hide();
-                            if (MenuBar.DropDown ~= this.DropDown) then
-                                this.DropDown:Show();
-                                MenuBar.DropDown = this.DropDown;
-                            end
-                        else
-                            this.DropDown:Show();
-                            MenuBar.DropDown = this.DropDown;
-                        end
-                    </OnClick>
                 </Scripts>
                 <Frames>
-                    <Frame name="$parentDropDown" hidden="true">
-                        <Size>
-                            <AbsDimension x="100" y="100"/>
-                        </Size>
+                    <Frame name="$parentDropDown"  inherits="FrameTemplate_DropDown">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
                         </Anchors>
-                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
                         <Frames>
                         </Frames>
                     </Frame>
@@ -187,28 +260,12 @@
                         this:SetText(MenuBar.Locale.Help);
                         this:SetWidth(math.max(this:GetTextWidth()+6, 16));
                     </OnLoad>
-                    <OnClick>
-                        if (MenuBar.DropDown and MenuBar.DropDown:IsShown()) then
-                            MenuBar.DropDown:Hide();
-                            if (MenuBar.DropDown ~= this.DropDown) then
-                                this.DropDown:Show();
-                                MenuBar.DropDown = this.DropDown;
-                            end
-                        else
-                            this.DropDown:Show();
-                            MenuBar.DropDown = this.DropDown;
-                        end
-                    </OnClick>
                 </Scripts>
                 <Frames>
-                    <Frame name="$parentDropDown" hidden="true">
-                        <Size>
-                            <AbsDimension x="100" y="100"/>
-                        </Size>
+                    <Frame name="$parentDropDown"  inherits="FrameTemplate_DropDown">
                         <Anchors>
                             <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
                         </Anchors>
-                        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
                         <Frames>
                         </Frames>
                     </Frame>

@@ -440,6 +440,18 @@ namespace Frost
             /// Ends resizing this Frame.
             void                StopSizing();
 
+            /// Shows this widget.
+            /** \note Its parent must be shown for it to appear on
+            *         the screen.
+            */
+            void                Show();
+
+            /// Hides this widget.
+            /** \note All its childs won't be visible on the screen
+            *   anymore, even if they are still marked as shown.
+            */
+            void                Hide();
+
             /// Tells the Frame not to react to all events.
             void                UnregisterAllEvents();
 
@@ -463,6 +475,7 @@ namespace Frost
             s_map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
             s_map<LayerType, Layer>               lLayerList_;
             s_map<s_str, s_str>                   lDefinedScriptList_;
+            s_ctnr<s_str>                         lQueuedEventList_;
             s_map<s_str, s_bool>                  lRegEventList_;
             s_map<s_str, s_bool>                  lRegDragList_;
 
