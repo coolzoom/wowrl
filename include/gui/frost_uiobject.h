@@ -146,13 +146,13 @@ namespace Frost
             /** \note Its parent must be shown for it to appear on
             *         the screen.
             */
-            void            Show();
+            virtual void    Show();
 
             /// Hides this widget.
             /** \note All its childs won't be visible on the screen
             *   anymore, even if they are still marked as shown.
             */
-            void            Hide();
+            virtual void    Hide();
 
             /// Shows/hides this widget.
             /** \param bIsShown 'true' if you want to show this widget

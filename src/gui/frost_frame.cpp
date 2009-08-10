@@ -1408,6 +1408,22 @@ void Frame::StopSizing()
     GUIManager::GetSingleton()->StopSizing(this);
 }
 
+void Frame::Show()
+{
+    if (!bIsShown_)
+        lQueuedEventList_.PushBack("Show");
+
+    UIObject::Show();
+}
+
+void Frame::Hide()
+{
+    if (bIsShown_)
+        lQueuedEventList_.PushBack("Hide");
+
+    UIObject::Hide();
+}
+
 void Frame::UnregisterAllEvents()
 {
     bHasAllEventsRegistred_ = false;
@@ -1497,6 +1513,14 @@ void Frame::Update()
 
         bMouseInFrame_ = false;
     }
+
+    s_ctnr<s_str>::iterator iterEvent;
+    foreach (iterEvent, lQueuedEventList_)
+    {
+        On(*iterEvent);
+    }
+
+    lQueuedEventList_.Clear();
 
     if (bBuildStrataList_)
     {

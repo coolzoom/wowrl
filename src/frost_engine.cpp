@@ -260,6 +260,8 @@ namespace Frost
 
             pEventMgr_->FrameEnded();
         }
+
+        bRun_ = false;
     }
 
     void Engine::ShutDown()
