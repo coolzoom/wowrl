@@ -184,7 +184,7 @@ s_bool EditorRenderFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor;
+    s_bool bEditor = true;
 
     // Read commands
     if (argc > 1)

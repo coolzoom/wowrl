@@ -25,36 +25,6 @@ namespace Frost
             static const s_str CLASS_NAME;
         };
 
-        enum FrameStrata
-        {
-            STRATA_BACKGROUND,
-            STRATA_LOW,
-            STRATA_MEDIUM,
-            STRATA_HIGH,
-            STRATA_DIALOG,
-            STRATA_FULLSCREEN,
-            STRATA_FULLSCREEN_DIALOG,
-            STRATA_TOOLTIP
-        };
-
-        /// Contains Frame
-        struct Level
-        {
-            s_ptr<Frame>                  pTopLevel;
-            s_map< s_uint, s_ptr<Frame> > lFrameList;
-
-            static const s_str CLASS_NAME;
-        };
-
-        /// Contains Level
-        struct Strata
-        {
-            s_ptr<Frame>         pTopStrata;
-            s_map<s_uint, Level> lLevelList;
-
-            static const s_str CLASS_NAME;
-        };
-
         /// GUI container
         /** Can contain other Frames, or LayeredRegions
         *   (text, images, ...).
@@ -452,6 +422,11 @@ namespace Frost
             */
             void                Hide();
 
+            /// Tells this Frame it is being overed by the mouse.
+            /** \param bMouseInFrame 'true' if the mouse is above this Frame
+            */
+            void                NotifyMouseInFrame(const s_bool& bMouseInFrame);
+
             /// Tells the Frame not to react to all events.
             void                UnregisterAllEvents();
 
@@ -471,7 +446,6 @@ namespace Frost
             void FireBuildLayerList_();
 
             s_map< s_uint, s_ptr<Frame> >         lChildList_;
-            s_map<FrameStrata, Strata>            lStrataList_;
             s_map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
             s_map<LayerType, Layer>               lLayerList_;
             s_map<s_str, s_str>                   lDefinedScriptList_;

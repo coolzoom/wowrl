@@ -37,6 +37,36 @@ namespace Frost
         }
     };
 
+    enum FrameStrata
+    {
+        STRATA_BACKGROUND,
+        STRATA_LOW,
+        STRATA_MEDIUM,
+        STRATA_HIGH,
+        STRATA_DIALOG,
+        STRATA_FULLSCREEN,
+        STRATA_FULLSCREEN_DIALOG,
+        STRATA_TOOLTIP
+    };
+
+    /// Contains Frame
+    struct Level
+    {
+        s_ptr<GUI::Frame>                  pTopLevel;
+        s_map< s_uint, s_ptr<GUI::Frame> > lFrameList;
+
+        static const s_str CLASS_NAME;
+    };
+
+    /// Contains Level
+    struct Strata
+    {
+        s_ptr<GUI::Frame>    pTopStrata;
+        s_map<s_uint, Level> lLevelList;
+
+        static const s_str CLASS_NAME;
+    };
+
     /// Manages the user interface
     class GUIManager : public Manager<GUIManager>
     {
@@ -70,6 +100,22 @@ namespace Frost
         *   \return The UIObject associated with the given name
         */
         s_ptr<GUI::UIObject> GetUIObjectByName(const s_str& sName, const s_bool& bVirtual = false);
+
+        /// Tells this manager it must rebuild its strata list.
+        void                 FireBuildStrataList();
+
+        /// Returns a top strata frame.
+        /** \param mStrata The strata to search in
+        *   \return This strata's top frame
+        */
+        s_ptr<GUI::Frame>    GetTopStrata(FrameStrata mStrata);
+
+        /// Returns a top level frame.
+        /** \param mStrata The strata to search in
+        *   \param uiLevel The strat's level to search in
+        *   \return This level's top frame
+        */
+        s_ptr<GUI::Frame>    GetTopLevel(FrameStrata mStrata, const s_uint& uiLevel);
 
         /// Prints debug informations in the log file.
         /** \note Calls UIObject::Serialize().
@@ -239,6 +285,11 @@ namespace Frost
 
         s_ctnr<s_str>                       lGUIFolderList_;
         s_map< s_str, s_map<s_str, AddOn> > lAddOnList_;
+
+        s_map< s_uint, s_ptr<GUI::Frame> > lFrameList_;
+        s_map<FrameStrata, Strata>         lStrataList_;
+        s_bool                             bBuildStrataList_;
+        s_ptr<GUI::Frame>                  pOveredFrame_;
 
         s_ptr<GUI::UIObject> pMovedObject_;
         s_ptr<GUI::UIObject> pSizedObject_;

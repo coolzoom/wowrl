@@ -24,6 +24,8 @@ namespace Frost
 {
     const s_str GUIManager::CLASS_NAME = "GUIManager";
     const s_str AddOn::CLASS_NAME = "AddOn";
+    const s_str Level::CLASS_NAME  = "GUI::Level";
+    const s_str Strata::CLASS_NAME = "GUI::Strata";
 
     GUIManager::GUIManager()
     {
@@ -96,8 +98,15 @@ namespace Frost
                 (*lNamedList)[pObj->GetName()] = pObj;
                 pObj->SetID(i);
 
-                if (!pObj->IsVirtual() && !pObj->GetParent())
-                    lMainObjectList_[i] = pObj;
+                if (!pObj->IsVirtual())
+                {
+                    if (!pObj->GetParent())
+                        lMainObjectList_[i] = pObj;
+
+                    s_ptr<GUI::Frame> pFrame = s_ptr<GUI::Frame>::DynamicCast(pObj);
+                    if (pFrame)
+                        lFrameList_[i] = pFrame;
+                }
 
                 return true;
             }
@@ -386,11 +395,54 @@ namespace Frost
 
     void GUIManager::RenderUI()
     {
-        s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        /*s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
         foreach (iterObj, lMainObjectList_)
         {
             iterObj->second->Render();
+        }*/
+
+        s_map<FrameStrata, Strata>::iterator iterStrata;
+        foreach (iterStrata, lStrataList_)
+        {
+            Strata& mStrata = iterStrata->second;
+
+            s_map<s_uint, Level>::iterator iterLevel;
+            foreach (iterLevel, mStrata.lLevelList)
+            {
+                Level& mLevel = iterLevel->second;
+
+                s_map< s_uint, s_ptr<GUI::Frame> >::iterator iterFrame;
+                foreach (iterFrame, mLevel.lFrameList)
+                {
+                    s_ptr<GUI::Frame> pFrame = iterFrame->second;
+                    if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
+                    {
+                        pFrame->Render();
+                    }
+                }
+
+                if (mLevel.pTopLevel)
+                    mLevel.pTopLevel->Render();
+            }
+
+            if (mStrata.pTopStrata)
+                mStrata.pTopStrata->Render();
         }
+    }
+
+    void GUIManager::FireBuildStrataList()
+    {
+        bBuildStrataList_ = true;
+    }
+
+    s_ptr<GUI::Frame> GUIManager::GetTopStrata( FrameStrata mStrata )
+    {
+        return lStrataList_[mStrata].pTopStrata;
+    }
+
+    s_ptr<GUI::Frame> GUIManager::GetTopLevel( FrameStrata mStrata, const s_uint& uiLevel )
+    {
+        return lStrataList_[mStrata].lLevelList[uiLevel].pTopLevel;
     }
 
     void GUIManager::Update( const s_float& fDelta )
@@ -406,6 +458,90 @@ namespace Frost
         {
             iterObj->second->Update();
         }
+
+        if (bBuildStrataList_)
+        {
+            lStrataList_.Clear();
+
+            s_map< s_uint, s_ptr<GUI::Frame> >::iterator iterFrame;
+            foreach (iterFrame, lFrameList_)
+            {
+                s_ptr<GUI::Frame> pFrame = iterFrame->second;
+                s_ptr<Strata> pStrata = &lStrataList_[pFrame->GetFrameStrata()];
+                s_ptr<Level> pLevel = &pStrata->lLevelList[pFrame->GetFrameLevel()];
+                pLevel->lFrameList[pFrame->GetID()] = pFrame;
+
+                if (pFrame->IsTopStrata())
+                    pStrata->pTopStrata = pFrame;
+
+                if (pFrame->IsTopLevel())
+                    pLevel->pTopLevel = pFrame;
+            }
+
+        }
+
+        if ( bBuildStrataList_ ||
+            (InputManager::GetSingleton()->GetMouseDX() != 0.0f) ||
+            (InputManager::GetSingleton()->GetMouseDY() != 0.0f))
+        {
+            s_int iX = s_int(InputManager::GetSingleton()->GetMousePosX());
+            s_int iY = s_int(InputManager::GetSingleton()->GetMousePosY());
+            s_ptr<GUI::Frame> pOveredFrame;
+
+            s_map<FrameStrata, Strata>::iterator iterStrata = lStrataList_.End();
+            while (iterStrata != lStrataList_.Begin() && !pOveredFrame)
+            {
+                --iterStrata;
+                Strata& mStrata = iterStrata->second;
+
+                if (mStrata.pTopStrata && mStrata.pTopStrata->IsInFrame(iX, iY) && mStrata.pTopStrata->IsVisible())
+                    pOveredFrame = mStrata.pTopStrata;
+                else
+                {
+                    s_map<s_uint, Level>::iterator iterLevel = mStrata.lLevelList.End();
+                    while (iterLevel != mStrata.lLevelList.Begin() && !pOveredFrame)
+                    {
+                        --iterLevel;
+                        Level& mLevel = iterLevel->second;
+
+                        if (mLevel.pTopLevel && mLevel.pTopLevel->IsInFrame(iX, iY) && mLevel.pTopLevel->IsVisible())
+                            pOveredFrame = mLevel.pTopLevel;
+                        else
+                        {
+                            s_map< s_uint, s_ptr<GUI::Frame> >::iterator iterFrame;
+                            foreach (iterFrame, mLevel.lFrameList)
+                            {
+                                s_ptr<GUI::Frame> pFrame = iterFrame->second;
+                                if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
+                                {
+                                    if (pFrame->IsInFrame(iX, iY) && pFrame->IsVisible())
+                                    {
+                                        pOveredFrame = pFrame;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (pOveredFrame != pOveredFrame_)
+            {
+                if (pOveredFrame_)
+                    pOveredFrame_->NotifyMouseInFrame(false);
+
+                pOveredFrame_ = pOveredFrame;
+
+                if (pOveredFrame_)
+                {
+                    pOveredFrame_->NotifyMouseInFrame(true);
+                    Log(pOveredFrame_->GetName());
+                }
+
+            }
+        }
+
+        bBuildStrataList_ = false;
     }
 
     void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj )

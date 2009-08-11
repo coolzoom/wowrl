@@ -24,8 +24,6 @@ using namespace Frost::GUI;
 
 const s_str Frame::CLASS_NAME  = "GUI::Frame";
 const s_str Layer::CLASS_NAME  = "GUI::Layer";
-const s_str Level::CLASS_NAME  = "GUI::Level";
-const s_str Strata::CLASS_NAME = "GUI::Strata";
 
 Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
 {
@@ -83,42 +81,6 @@ void Frame::Render()
                     if (pRegion->IsShown())
                         pRegion->Render();
                 }
-            }
-        }
-
-        // Render child frames
-        s_map<FrameStrata, Strata>::iterator iterStrata;
-        foreach (iterStrata, lStrataList_)
-        {
-            Strata& mStrata = iterStrata->second;
-
-            s_map<s_uint, Level>::iterator iterLevel;
-            foreach (iterLevel, mStrata.lLevelList)
-            {
-                Level& mLevel = iterLevel->second;
-
-                s_map< s_uint, s_ptr<Frame> >::iterator iterFrame;
-                foreach (iterFrame, mLevel.lFrameList)
-                {
-                    s_ptr<Frame> pFrame = iterFrame->second;
-                    if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
-                    {
-                        if (pFrame->IsShown())
-                            pFrame->Render();
-                    }
-                }
-
-                if (mLevel.pTopLevel)
-                {
-                    if (mLevel.pTopLevel->IsShown())
-                        mLevel.pTopLevel->Render();
-                }
-            }
-
-            if (mStrata.pTopStrata)
-            {
-                if (mStrata.pTopStrata->IsShown())
-                    mStrata.pTopStrata->Render();
             }
         }
     }
@@ -618,11 +580,6 @@ void Frame::EnableMouseWheel( const s_bool& bIsMouseWheelEnabled )
     bIsMouseWheelEnabled_ = bIsMouseWheelEnabled;
 }
 
-void Frame::FireBuildStrataList_()
-{
-    bBuildStrataList_ = true;
-}
-
 void Frame::FireBuildLayerList_()
 {
     bBuildLayerList_ = true;
@@ -712,7 +669,7 @@ void Frame::AddChild( s_ptr<Frame> pChild )
         if (!lChildList_.Find(pChild->GetID()))
         {
             lChildList_[pChild->GetID()] = pChild;
-            FireBuildStrataList_();
+            GUIManager::GetSingleton()->FireBuildStrataList();
 
             if (!bVirtual_)
             {
@@ -745,7 +702,7 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
         if (iter != lChildList_.End())
         {
             lChildList_.Erase(iter);
-            FireBuildStrataList_();
+            GUIManager::GetSingleton()->FireBuildStrataList();
         }
         else
         {
@@ -863,11 +820,11 @@ s_bool Frame::IsInFrame( const s_int& iX, const s_int& iY ) const
     return (
         iX.IsInRange(
             lBorderList_[BORDER_LEFT]  + lAbsHitRectInsetList_[BORDER_LEFT],
-            lBorderList_[BORDER_RIGHT] - lAbsHitRectInsetList_[BORDER_RIGHT]
+            lBorderList_[BORDER_RIGHT] - lAbsHitRectInsetList_[BORDER_RIGHT] - 1
         ) &&
         iY.IsInRange(
             lBorderList_[BORDER_TOP]    + lAbsHitRectInsetList_[BORDER_TOP],
-            lBorderList_[BORDER_BOTTOM] - lAbsHitRectInsetList_[BORDER_BOTTOM]
+            lBorderList_[BORDER_BOTTOM] - lAbsHitRectInsetList_[BORDER_BOTTOM] - 1
         )
     );
 }
@@ -993,12 +950,13 @@ void Frame::OnEvent( const Event& mEvent )
 
             if (bMouseInFrame_)
             {
-                On("MouseDown");
-                lMouseButtonList_.PushBack(
-                    InputManager::GetSingleton()->GetMouseButtonString(
-                        (MouseButton)mEvent[0].Get<s_uint>().Get()
-                    )
+                s_str sMouseButton = InputManager::GetSingleton()->GetMouseButtonString(
+                    (MouseButton)mEvent[0].Get<s_uint>().Get()
                 );
+                Event mEvent;
+                mEvent.Add(sMouseButton);
+                On("MouseDown", &mEvent);
+                lMouseButtonList_.PushBack(sMouseButton);
             }
         }
         else if (mEvent.GetName() == "MOUSE_RELEASED")
@@ -1010,7 +968,12 @@ void Frame::OnEvent( const Event& mEvent )
 
             if (bMouseInFrame_)
             {
-                On("MouseUp");
+                s_str sMouseButton = InputManager::GetSingleton()->GetMouseButtonString(
+                    (MouseButton)mEvent[0].Get<s_uint>().Get()
+                );
+                Event mEvent;
+                mEvent.Add(sMouseButton);
+                On("MouseUp", &mEvent);
             }
 
             lMouseButtonList_.Clear();
@@ -1053,35 +1016,13 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
         else if (sScriptName == "MouseDown")
         {
             // Set mouse button
-            s_str sMouseState;
-            MouseState mState = InputManager::GetSingleton()->GetMouseState(MOUSE_MIDDLE);
-            if ( (mState == MOUSE_CLICKED) || (mState == MOUSE_LONG) )
-                sMouseState = "MiddleButton";
-            mState = InputManager::GetSingleton()->GetMouseState(MOUSE_RIGHT);
-            if ( (mState == MOUSE_CLICKED) || (mState == MOUSE_LONG) )
-                sMouseState = "RightButton";
-            mState = InputManager::GetSingleton()->GetMouseState(MOUSE_LEFT);
-            if ( (mState == MOUSE_CLICKED) || (mState == MOUSE_LONG) )
-                sMouseState = "LeftButton";
-
-            pLua->PushString(sMouseState);
+            pLua->PushString(pEvent->Get(0)->Get<s_str>());
             pLua->SetGlobal("arg1");
         }
         else if (sScriptName == "MouseUp")
         {
             // Set mouse button
-            s_str sMouseState;
-            MouseState mState = InputManager::GetSingleton()->GetMouseState(MOUSE_MIDDLE);
-            if (mState == MOUSE_UP)
-                sMouseState = "MiddleButton";
-            mState = InputManager::GetSingleton()->GetMouseState(MOUSE_RIGHT);
-            if (mState == MOUSE_UP)
-                sMouseState = "RightButton";
-            mState = InputManager::GetSingleton()->GetMouseState(MOUSE_LEFT);
-            if (mState == MOUSE_UP)
-                sMouseState = "LeftButton";
-
-            pLua->PushString(sMouseState);
+            pLua->PushString(pEvent->Get(0)->Get<s_str>());
             pLua->SetGlobal("arg1");
         }
         else if (sScriptName == "MouseWheel")
@@ -1139,10 +1080,8 @@ void Frame::SetClampedToScreen( const s_bool& bIsClampedToScreen )
 
 void Frame::SetFrameStrata( FrameStrata mStrata )
 {
-    if ( (pParent_ != NULL) && (mStrata_ != mStrata) )
-    {
-        pParentFrame_->FireBuildStrataList_();
-    }
+    if (mStrata_ != mStrata)
+        GUIManager::GetSingleton()->FireBuildStrataList();
 
     mStrata_ = mStrata;
 }
@@ -1266,11 +1205,11 @@ void Frame::SetTopLevel( const s_bool& bIsTopLevel )
 {
     if ( (pParent_ != NULL) && (bIsTopLevel_ != bIsTopLevel) )
     {
-        pParentFrame_->FireBuildStrataList_();
+        GUIManager::GetSingleton()->FireBuildStrataList();
         if (bIsTopLevel)
         {
-            s_ptr<Frame> pTopLevel = pParentFrame_->lStrataList_[mStrata_].lLevelList[uiLevel_].pTopLevel;
-            if (pTopLevel != NULL)
+            s_ptr<Frame> pTopLevel = GUIManager::GetSingleton()->GetTopLevel(mStrata_, uiLevel_);
+            if (pTopLevel)
                 pTopLevel->SetTopLevel(false);
         }
     }
@@ -1282,10 +1221,10 @@ void Frame::SetTopStrata( const s_bool& bIsTopStrata )
 {
     if ( (pParent_ != NULL) && (bIsTopStrata_ != bIsTopStrata) )
     {
-        pParentFrame_->FireBuildStrataList_();
+        GUIManager::GetSingleton()->FireBuildStrataList();
         if (bIsTopStrata)
         {
-            s_ptr<Frame> pTopStrata = pParentFrame_->lStrataList_[mStrata_].pTopStrata;
+            s_ptr<Frame> pTopStrata = GUIManager::GetSingleton()->GetTopStrata(mStrata_);
             if (pTopStrata != NULL)
                 pTopStrata->SetTopStrata(false);
         }
@@ -1435,6 +1374,22 @@ void Frame::UnregisterEvent( const s_str& sEvent )
     lRegEventList_[sEvent] = false;
 }
 
+void Frame::NotifyMouseInFrame( const s_bool& bMouseInFrame )
+{
+    if (bMouseInFrame)
+    {
+        if (!bMouseInFrame_)
+            On("Enter");
+    }
+    else
+    {
+        if (bMouseInFrame_)
+            On("Leave");
+    }
+
+    bMouseInFrame_ = bMouseInFrame;
+}
+
 void Frame::Update()
 {
     if (GUIManager::GetSingleton()->IsMoving(this))
@@ -1498,22 +1453,6 @@ void Frame::Update()
     if (bPositionUpdated)
         CheckPosition();
 
-    if (IsInFrame(s_int(InputManager::GetSingleton()->GetMousePosX()),
-                  s_int(InputManager::GetSingleton()->GetMousePosY())))
-    {
-        if (!bMouseInFrame_)
-            On("Enter");
-
-        bMouseInFrame_ = true;
-    }
-    else
-    {
-        if (bMouseInFrame_)
-            On("Leave");
-
-        bMouseInFrame_ = false;
-    }
-
     s_ctnr<s_str>::iterator iterEvent;
     foreach (iterEvent, lQueuedEventList_)
     {
@@ -1521,29 +1460,6 @@ void Frame::Update()
     }
 
     lQueuedEventList_.Clear();
-
-    if (bBuildStrataList_)
-    {
-        lStrataList_.Clear();
-
-        // Build the strata map
-        s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
-        foreach (iterChild, lChildList_)
-        {
-            s_ptr<Frame> pChild = iterChild->second;
-            s_ptr<Strata> pStrata = &lStrataList_[pChild->GetFrameStrata()];
-            s_ptr<Level> pLevel = &pStrata->lLevelList[pChild->GetFrameLevel()];
-            pLevel->lFrameList[pChild->GetID()] = pChild;
-
-            if (pChild->IsTopStrata())
-                pStrata->pTopStrata = pChild;
-
-            if (pChild->IsTopLevel())
-                pLevel->pTopLevel = pChild;
-        }
-
-        bBuildStrataList_ = false;
-    }
 
     if (bBuildLayerList_)
     {

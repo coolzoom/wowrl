@@ -11,6 +11,7 @@
 
 #include "frost.h"
 #include "gui/frost_anchor.h"
+#include "gui/frost_guimanager.h"
 
 namespace Frost
 {
