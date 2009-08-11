@@ -91,7 +91,10 @@ namespace Frost
 
         s_ptr<GUI::Frame> pParent = s_ptr<GUI::Frame>::DynamicCast(pFrame->GetParent());
         if (pParent)
+        {
             pParent->AddChild(pFrame);
+            pFrame->SetLevel(pParent->GetFrameLevel() + 1);
+        }
 
         s_str sInheritance = pMainBlock->GetAttribute("inherits");
         if (!sInheritance.IsEmpty())
@@ -298,6 +301,7 @@ namespace Frost
         if ((pMainBlock->IsProvided("hidden") || sInheritance.IsEmpty()) &&
             (pMainBlock->GetAttribute("hidden") == "true"))
             pFontString->Hide();
+
         if ((pMainBlock->IsProvided("setAllPoints") || sInheritance.IsEmpty()) &&
             (pMainBlock->GetAttribute("setAllPoints") == "true"))
             pFontString->SetAllPoints(pParent);

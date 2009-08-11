@@ -7,9 +7,15 @@ if (GetLocale() == "frFR") then
         ["FileSaveAs"] = "Enregistrer sous...",
         ["FileQuit"] = "Quiter",
         ["Edit"] = "Edition",
+        ["EditUndo"] = "Annuler",
+        ["EditRedo"] = "Retablir",
+        ["EditCopy"] = "Copier",
+        ["EditPaste"] = "Coller",
         ["View"] = "Affichage",
         ["Settings"] = "Parametres",
-        ["Help"] = "Aide"
+        ["Help"] = "Aide",
+        ["HelpShowHelp"] = "Montrer l'aide",
+        ["HelpAbout"] = "A propos"
     };
 else
     MenuBar.Locale = {
@@ -20,8 +26,14 @@ else
         ["FileSaveAs"] = "Save as...",
         ["FileQuit"] = "Quit",
         ["Edit"] = "Edit",
+        ["EditUndo"] = "Undo",
+        ["EditRedo"] = "Redo",
+        ["EditCopy"] = "Copy",
+        ["EditPaste"] = "Paste",
         ["View"] = "View",
         ["Settings"] = "Settings",
-        ["Help"] = "Help"
+        ["Help"] = "Help",
+        ["HelpShowHelp"] = "Show help",
+        ["HelpAbout"] = "About"
     };
 end

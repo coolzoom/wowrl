@@ -51,8 +51,6 @@ namespace Frost
 
         // gui/frost_frame.h
         struct Layer;
-        struct Level;
-        struct Strata;
         class  Frame;
         class  LuaFrame;
 
@@ -91,6 +89,8 @@ namespace Frost
 
     // gui/frost_guimanager.h
     struct AddOn;
+    struct Level;
+    struct Strata;
     class  GUIManager;
 
     // gui/frost_guistructs.h

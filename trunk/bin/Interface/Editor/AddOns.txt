@@ -1,3 +1,4 @@
 #Core
+Editor:1
 MenuBar:1
 #Others
