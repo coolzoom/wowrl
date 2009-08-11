@@ -535,7 +535,6 @@ namespace Frost
                 if (pOveredFrame_)
                 {
                     pOveredFrame_->NotifyMouseInFrame(true);
-                    Log(pOveredFrame_->GetName());
                 }
 
             }
