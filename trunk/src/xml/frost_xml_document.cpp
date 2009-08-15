@@ -156,7 +156,13 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
                 else
                 {
                     if (sParams == "*")
+                    {
                         bRadio = true;
+                    }
+                    else if (sParams.IsNumber())
+                    {
+                        uiMax = uiMin = s_uint(sParams);
+                    }
                     else
                     {
                         Warning(sDefFileName_+":"+uiLineNbr_,
