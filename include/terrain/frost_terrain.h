@@ -25,7 +25,7 @@ namespace Frost
         */
         Terrain(const s_uint& uiID);
 
-        /// Destructor
+        /// Destructor.
         ~Terrain();
 
         /// Returns this Terrain's unique ID.

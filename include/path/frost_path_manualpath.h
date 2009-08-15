@@ -48,7 +48,7 @@ namespace Frost
         */
         ManualPath(const s_uint& uiID, const ManualPath& mPath);
 
-        /// Destructor
+        /// Destructor.
         ~ManualPath();
 
         /// Updates this path.

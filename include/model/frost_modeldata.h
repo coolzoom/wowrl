@@ -21,10 +21,10 @@ namespace Frost
     {
     public :
 
-        /// Default constructor
+        /// Default constructor.
         ModelData(const s_str& sFile, const s_str& sModelName);
 
-        /// Destructor
+        /// Destructor.
         ~ModelData();
 
         static const s_str CLASS_NAME;

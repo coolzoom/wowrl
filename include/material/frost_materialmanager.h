@@ -105,7 +105,7 @@ namespace Frost
 
     protected :
 
-        /// Default constructor
+        /// Default constructor.
         /** \note This is a singleton class. That means that there can
         *         only be a single instance at the same time. That's why
         *         the constructor is not in public scope.<br>
@@ -118,7 +118,7 @@ namespace Frost
         */
         MaterialManager();
 
-        /// Destructor
+        /// Destructor.
         /** \note If GetSingleton() has been called at least once,
         *         you'll have to delete the returned pointer when
         *         you close your program by calling Delete() (this is
@@ -126,10 +126,10 @@ namespace Frost
         */
         ~MaterialManager();
 
-        /// Copy constructor
+        /// Copy constructor.
         MaterialManager(const MaterialManager& mMgr);
 
-        /// Assignment operator
+        /// Assignment operator.
         MaterialManager& operator = (const MaterialManager& mMgr);
 
     private :

@@ -24,7 +24,7 @@ namespace Frost
         /// Default constructor.
         TerrainData(const s_str& sFile);
 
-        /// Destructor
+        /// Destructor.
         ~TerrainData();
 
         static const s_str CLASS_NAME;

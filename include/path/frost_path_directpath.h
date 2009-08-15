@@ -59,7 +59,7 @@ namespace Frost
         */
         DirectPath(const s_uint& uiID, const DirectPath& mPath);
 
-        /// Destructor
+        /// Destructor.
         ~DirectPath();
 
         /// Adds a point at the back of the point list.
