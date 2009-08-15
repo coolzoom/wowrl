@@ -410,12 +410,24 @@ namespace Frost
         template<uint N>
         s_array(const s_array<T,N>& lElemArray) : s_ctnr_t< T, std::vector<T> >(lElemArray) {}
 
+        using s_ctnr_t< T, std::vector<T> >::mContainer_;
+
         /// Returns the underlying C array.
         /** \return The underlying C array
         */
         T* GetClassicArray() const
         {
-            return &s_ctnr_t< T, std::vector<T> >::mContainer_[0];
+            return &mContainer_[0];
+        }
+
+        /// Reserves some space in memory.
+        /** \param uiSize The requested space
+        *   \note Can be used to reduce the number of allocations
+        *         and improve performances.
+        */
+        void Reserve(const s_uint& uiSize)
+        {
+            mContainer_.reserve(uiSize.Get());
         }
     };
 
