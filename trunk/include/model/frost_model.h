@@ -44,10 +44,10 @@ namespace Frost
     {
     public :
 
-        /// Default constructor
+        /// Default constructor.
         Model(const ModelData& mData, const s_str& sEntityName);
 
-        /// Destructor
+        /// Destructor.
         ~Model();
 
         s_refptr<AnimManager> GetAnimMgr();

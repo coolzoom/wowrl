@@ -54,7 +54,7 @@ namespace Frost
 
     protected:
 
-        /// Default constructor
+        /// Default constructor.
         /** \note This is a singleton class. That means that there can
         *         only be a single instance at the same time. That's why
         *         the constructor is not in public scope.<br>
@@ -67,7 +67,7 @@ namespace Frost
         */
         GameplayManager();
 
-        /// Destructor
+        /// Destructor.
         /** \note If GetSingleton() has been called at least once,
         *         you'll have to delete the returned pointer when
         *         you close your program by calling Delete() (this is
@@ -75,10 +75,10 @@ namespace Frost
         */
         ~GameplayManager();
 
-        /// Copy constructor
+        /// Copy constructor.
         GameplayManager(const GameplayManager& mMgr);
 
-        /// Assignment operator
+        /// Assignment operator.
         GameplayManager& operator = (const GameplayManager& mMgr);
 
     private:

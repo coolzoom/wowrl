@@ -38,7 +38,7 @@ namespace Frost
         */
         Path(const s_uint& uiID, PathType mType);
 
-        /// Destructor
+        /// Destructor.
         virtual ~Path();
 
         /// Sets whether this path should be followed forever or just once.
