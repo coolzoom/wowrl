@@ -20,6 +20,7 @@ namespace Frost
     template<class T> class s_int_t;
     template<class T> class s_uint_t;
     template<class T> class s_float_t;
+    template<class T, class C> class s_ctnr_t;
     template<class T> class s_ctnr;
     template<class T, uint N> class s_array;
     template<class T, class N> class s_pair;
