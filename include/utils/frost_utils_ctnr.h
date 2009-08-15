@@ -415,7 +415,7 @@ namespace Frost
         /// Returns the underlying C array.
         /** \return The underlying C array
         */
-        T* GetClassicArray() const
+        T* GetClassicArray()
         {
             return &mContainer_[0];
         }
