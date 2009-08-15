@@ -8,7 +8,6 @@
 #include "scene/frost_scenemanager.h"
 #include "scene/frost_plane.h"
 #include "scene/frost_node.h"
-#include "terrain/frost_terrain.h"
 
 #include <OgreMeshManager.h>
 
@@ -29,12 +28,6 @@ namespace Frost
         foreach (iterPlane, lPlaneList_)
         {
             iterPlane->second.Delete();
-        }
-
-        s_map<s_uint, s_ptr<Terrain> >::iterator iterTerrain;
-        foreach (iterTerrain, lTerrainList_)
-        {
-            iterTerrain->second.Delete();
         }
 
         s_map<s_uint, s_ptr<Node> >::iterator iterNode;
@@ -113,33 +106,6 @@ namespace Frost
             Warning(CLASS_NAME,
                 "Trying to call DeletePlane on a Plane that has not been created "
                 "by SceneManager (ID:"+pPlane->GetID()+")."
-            );
-        }
-    }
-
-    void SceneManager::DeleteTerrain( s_ptr<Terrain> pTerrain )
-    {
-        if (pTerrain)
-        {
-            s_map< s_uint, s_ptr<Terrain> >::iterator iterTerrain;
-            iterTerrain = lTerrainList_.Get(pTerrain->GetID());
-
-            if (iterTerrain != lTerrainList_.End())
-            {
-                if (iterTerrain->second->GetID() == pTerrain->GetID())
-                {
-                    // Everything went fine, delete, erase from map and return
-                    iterTerrain->second.Delete();
-                    lObjectList_.Erase(iterTerrain->first);
-                    lTerrainList_.Erase(iterTerrain);
-
-                    return;
-                }
-            }
-
-            Warning(CLASS_NAME,
-                "Trying to call DeleteTerrain on a Terrain that has not been created "
-                "by SceneManager (ID:"+pTerrain->GetID()+")."
             );
         }
     }
