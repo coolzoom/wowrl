@@ -5,60 +5,65 @@ namespace Frost
     /** This class is basically a wrapper around std::deque.
     *   A "cool feature" is the overloading of the ',' operator,
     *   which allows you to write :<br><br>
-    *   s_ctnr<s_int> myArray((x, y, ...));<br><br>
+    *   s_ctnr_t<s_int> myArray((x, y, ...));<br><br>
     *   ... with any class that has overloaded its ',' operator.<br><br>
     *   <b>Don't forget the double parenthesis</b> : if you don't
     *   use them, myArray will only contain the latest value.
     */
-    template<class T>
-    class s_ctnr
+    template< class T, class C >
+    class s_ctnr_t
     {
     public :
 
-        typedef typename std::deque<T>::iterator       iterator;
-        typedef typename std::deque<T>::const_iterator const_iterator;
-        typedef          s_range<iterator>             range;
-        typedef          s_range<const_iterator>       const_range;
+        typedef typename C::iterator             iterator;
+        typedef typename C::const_iterator       const_iterator;
+        typedef          s_range<iterator>       range;
+        typedef          s_range<const_iterator> const_range;
 
         /// Default constructor.
-        s_ctnr()
+        s_ctnr_t()
+        {
+        }
+
+        /// Destructor.
+        virtual ~s_ctnr_t()
         {
         }
 
         /// Constructor.
         /** \param mElem The first element of the sequence
         *   \note You can use this constructor, but it's main use is to build
-        *         s_ctnr by enclosing a series of values by parenthesis (if these
+        *         s_ctnr_t by enclosing a series of values by parenthesis (if these
         *         values have implemented the ',' operator).
         */
-        s_ctnr(T mElem)
+        s_ctnr_t(T mElem)
         {
-            mDeque_.push_back(mElem);
+            mContainer_.push_back(mElem);
         }
 
         #ifdef CPP_0X
             /// Initializer list constructor.
             /** \param mList Brace enclosed element list
             *   \note This constructor uses a C++0x feature.<br>
-            *         It allows : s_ctnr<s_int> v = {1, 2, 3, 4};
+            *         It allows : s_ctnr_t<s_int> v = {1, 2, 3, 4};
             */
-            s_ctnr(std::initializer_list<T> mList)
+            s_ctnr_t(std::initializer_list<T> mList)
             {
                 for (const T* p = mList.begin(); p != mList.end(); ++p)
-                    mDeque_.push_back(*p);
+                    mContainer_.push_back(*p);
             }
         #endif
 
         template<uint N>
         /// Constructor.
-        /** \param lElemArray The array to use to initialize this s_ctnr
+        /** \param lElemArray The array to use to initialize this s_ctnr_t
         *   \note Takes every elements contained by the s_array and puts them
-        *         inside this s_ctnr.
+        *         inside this s_ctnr_t.
         */
-        s_ctnr(const s_array<T,N>& lElemArray)
+        s_ctnr_t(const s_array<T,N>& lElemArray)
         {
             for (uint i = 0; i < N; ++i)
-                mDeque_.push_back(lElemArray[i]);
+                mContainer_.push_back(lElemArray[i]);
         }
 
         /// Returns the last element of this container.
@@ -68,7 +73,7 @@ namespace Frost
         */
         T& Back()
         {
-            return mDeque_.back();
+            return mContainer_.back();
         }
 
         /// Returns the last element of this container.
@@ -78,7 +83,7 @@ namespace Frost
         */
         const T& Back() const
         {
-            return mDeque_.back();
+            return mContainer_.back();
         }
 
         /// Adds a value at the end of the container.
@@ -86,24 +91,24 @@ namespace Frost
         */
         void PushBack(const T& mElem)
         {
-            mDeque_.push_back(mElem);
+            mContainer_.push_back(mElem);
         }
 
         /// Adds a set of values at the end of the container.
         /** \param lArray The array of value to add
         *   \note Order is preserved.
         */
-        void PushBack(const s_ctnr& lArray)
+        void PushBack(const s_ctnr_t& lArray)
         {
             const_iterator iter;
             for (iter = lArray.begin(); iter != lArray.end(); ++iter)
-                mDeque_.push_back(*iter);
+                mContainer_.push_back(*iter);
         }
 
         /// Removes the last value of the container.
         void PopBack()
         {
-            mDeque_.pop_back();
+            mContainer_.pop_back();
         }
 
         /// Removes values from the end of the container.
@@ -111,12 +116,12 @@ namespace Frost
         */
         void PopBack(const s_uint& uiNbr)
         {
-            if (uiNbr >= mDeque_.size())
-                mDeque_.clear();
+            if (uiNbr >= mContainer_.size())
+                mContainer_.clear();
             else
             {
                 for (uint ui; ui < uiNbr.Get(); ++ui)
-                    mDeque_.pop_back();
+                    mContainer_.pop_back();
             }
         }
 
@@ -127,7 +132,7 @@ namespace Frost
         */
         T& Front()
         {
-            return mDeque_.front();
+            return mContainer_.front();
         }
 
         /// Returns the first element of this container.
@@ -137,7 +142,7 @@ namespace Frost
         */
         const T& Front() const
         {
-            return mDeque_.front();
+            return mContainer_.front();
         }
 
         /// Adds a value at the beginning of the container.
@@ -145,27 +150,27 @@ namespace Frost
         */
         void PushFront(const T& mElem)
         {
-            mDeque_.push_front(mElem);
+            mContainer_.push_front(mElem);
         }
 
         /// Adds a set of values at the beginning of the container.
         /** \param lArray The array of value to add
         *   \note Order is preserved.
         */
-        void PushFront(const s_ctnr& lArray)
+        void PushFront(const s_ctnr_t& lArray)
         {
             const_iterator iter = lArray.end();
             while (iter != lArray.begin())
             {
                 --iter;
-                mDeque_.push_front(*iter);
+                mContainer_.push_front(*iter);
             }
         }
 
         /// Removes the first value of the container.
         void PopFront()
         {
-            mDeque_.pop_front();
+            mContainer_.pop_front();
         }
 
         /// Removes values from the beginning of the container.
@@ -173,19 +178,19 @@ namespace Frost
         */
         void PopFront(const s_uint& uiNbr)
         {
-            if (uiNbr >= mDeque_.size())
-                mDeque_.clear();
+            if (uiNbr >= mContainer_.size())
+                mContainer_.clear();
             else
             {
                 for (uint ui; ui < uiNbr.Get(); ++ui)
-                    mDeque_.pop_front();
+                    mContainer_.pop_front();
             }
         }
 
         /// Removes all elements from this container.
         void Clear()
         {
-            mDeque_.clear();
+            mContainer_.clear();
         }
 
         /// Inserts or erases elements from the end of this container.
@@ -198,7 +203,7 @@ namespace Frost
         */
         void Resize(const s_uint& uiSize, const T& mElem = T())
         {
-            mDeque_.resize(uiSize.Get(), mElem);
+            mContainer_.resize(uiSize.Get(), mElem);
         }
 
         /// Searches the container for the provided element.
@@ -208,7 +213,7 @@ namespace Frost
         */
         s_bool Find(const T& mElem, const s_uint& uiStart = 0u) const
         {
-            return (std::find(mDeque_.begin() + uiStart.Get(), mDeque_.end(), mElem) != mDeque_.end());
+            return (std::find(mContainer_.begin() + uiStart.Get(), mContainer_.end(), mElem) != mContainer_.end());
         }
 
         /// Searches the container for the provided element.
@@ -220,11 +225,11 @@ namespace Frost
         */
         s_uint FindPos(const T& mElem, const s_uint& uiStart = 0u) const
         {
-            const_iterator iterPos = std::find(mDeque_.begin() + uiStart.Get(), mDeque_.end(), mElem);
-            if (iterPos == mDeque_.end())
+            const_iterator iterPos = std::find(mContainer_.begin() + uiStart.Get(), mContainer_.end(), mElem);
+            if (iterPos == mContainer_.end())
                 return s_uint::NaN;
             else
-                return s_uint((uint)(iterPos - mDeque_.begin()));
+                return s_uint((uint)(iterPos - mContainer_.begin()));
         }
 
         /// Searches the container for the provided element.
@@ -236,8 +241,8 @@ namespace Frost
         */
         iterator Get(const T& mElem, const s_uint& uiStart = 0u)
         {
-            iterator iterStart = mDeque_.begin() + uiStart.Get();
-            return std::find(iterStart, mDeque_.end(), mElem);
+            iterator iterStart = mContainer_.begin() + uiStart.Get();
+            return std::find(iterStart, mContainer_.end(), mElem);
         }
 
         /// Searches the container for the provided element.
@@ -249,8 +254,8 @@ namespace Frost
         */
         const_iterator Get(const T& mElem, const s_uint& uiStart = 0u) const
         {
-            const_iterator iterStart = mDeque_.begin() + uiStart.Get();
-            return std::find(iterStart, mDeque_.end(), mElem);
+            const_iterator iterStart = mContainer_.begin() + uiStart.Get();
+            return std::find(iterStart, mContainer_.end(), mElem);
         }
 
         /// Erases an element from the container.
@@ -258,8 +263,8 @@ namespace Frost
         */
         void Erase(const s_uint& uiPos)
         {
-            if (uiPos.IsValid() && uiPos < mDeque_.size())
-                mDeque_.erase(mDeque_.begin() + uiPos.Get());
+            if (uiPos.IsValid() && uiPos < mContainer_.size())
+                mContainer_.erase(mContainer_.begin() + uiPos.Get());
         }
 
         /// Erases an element from the container.
@@ -270,7 +275,7 @@ namespace Frost
         */
         iterator Erase(const iterator& mIter)
         {
-            return mDeque_.erase(mIter);
+            return mContainer_.erase(mIter);
         }
 
         /// Returns the number of elements in this container.
@@ -278,7 +283,7 @@ namespace Frost
         */
         s_uint GetSize() const
         {
-            return mDeque_.size();
+            return mContainer_.size();
         }
 
         /// Checks if this container is empty.
@@ -286,95 +291,128 @@ namespace Frost
         */
         s_bool IsEmpty() const
         {
-            return mDeque_.empty();
+            return mContainer_.empty();
         }
 
         /// Inverts the order of the elements.
         void Reverse()
         {
-            std::reverse(mDeque_.begin(), mDeque_.end());
+            std::reverse(mContainer_.begin(), mContainer_.end());
         }
 
-        s_ctnr& operator, (const T& mElem)
+        s_ctnr_t& operator, (const T& mElem)
         {
-            mDeque_.push_back(mElem);
+            mContainer_.push_back(mElem);
             return (*this);
         }
 
-        s_ctnr<s_ctnr> operator, (const s_ctnr& lValue)
+        s_ctnr_t<s_ctnr_t, C> operator, (const s_ctnr_t& lValue)
         {
-            s_ctnr<s_ctnr> mContainer;
+            s_ctnr_t<s_ctnr_t, C> mContainer;
             mContainer.PushBack(*this);
             mContainer.PushBack(lValue);
             return mContainer;
         }
 
         template<uint N>
-        s_ctnr& operator = (const s_array<T,N>& lElemArray)
+        s_ctnr_t& operator = (const s_array<T,N>& lElemArray)
         {
-            mDeque_.clear();
+            mContainer_.clear();
 
             for (uint i = 0; i < N; ++i)
-                mDeque_.push_back(lElemArray[i]);
+                mContainer_.push_back(lElemArray[i]);
         }
 
         T& operator[] (const s_uint& uiIndex)
         {
-            return mDeque_[uiIndex.Get()];
+            return mContainer_[uiIndex.Get()];
         }
 
         const T& operator[] (const s_uint& uiIndex) const
         {
-            return mDeque_[uiIndex.Get()];
+            return mContainer_[uiIndex.Get()];
         }
 
         iterator Begin()
         {
-            return mDeque_.begin();
+            return mContainer_.begin();
         }
 
         const_iterator Begin() const
         {
-            return mDeque_.begin();
+            return mContainer_.begin();
         }
 
         iterator End()
         {
-            return mDeque_.end();
+            return mContainer_.end();
         }
 
         const_iterator End() const
         {
-            return mDeque_.end();
+            return mContainer_.end();
         }
 
         iterator begin()
         {
-            return mDeque_.begin();
+            return mContainer_.begin();
         }
 
         const_iterator begin() const
         {
-            return mDeque_.begin();
+            return mContainer_.begin();
         }
 
         iterator end()
         {
-            return mDeque_.end();
+            return mContainer_.end();
         }
 
         const_iterator end() const
         {
-            return mDeque_.end();
+            return mContainer_.end();
         }
 
     private :
 
-        std::deque<T> mDeque_;
+        C mContainer_;
     };
 
-    template<class T, class N>
-    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_ctnr<T>& mRight)
+    template<class T>
+    class s_ctnr : public s_ctnr_t< T, std::deque<T> >
+    {
+    public :
+
+        s_ctnr() : s_ctnr_t< T, std::deque<T> >() {}
+
+        s_ctnr(T mElem) : s_ctnr_t< T, std::deque<T> >(mElem) {}
+
+        #ifdef CPP_0X
+            s_ctnr(std::initializer_list<T> mList) : s_ctnr_t< T, std::deque<T> >(mList) {}
+        #endif
+
+        template<uint N>
+        s_ctnr(const s_array<T,N>& lElemArray) : s_ctnr_t< T, std::deque<T> >(lElemArray) {}
+    };
+
+    template<class T>
+    class s_array<T,0> : public s_ctnr_t< T, std::vector<T> >
+    {
+    public :
+        s_array() : s_ctnr_t< T, std::vector<T> >() {}
+
+        s_array(T mElem) : s_ctnr_t< T, std::vector<T> >(mElem) {}
+
+        #ifdef CPP_0X
+            s_array(std::initializer_list<T> mList) : s_ctnr_t< T, std::vector<T> >(mList) {}
+        #endif
+
+        template<uint N>
+        s_array(const s_array<T,N>& lElemArray) : s_ctnr_t< T, std::vector<T> >(lElemArray) {}
+    };
+
+    template<class T, class N, class C>
+    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_ctnr_t<T,C>& mRight)
     {
         s_str_t<N> sTemp = "(";
         for (s_uint i = 0; i < mRight.GetSize(); ++i)
@@ -389,8 +427,8 @@ namespace Frost
         return sLeft + sTemp;
     }
 
-    template<class T, class N>
-    s_str_t<N> operator + (const N* sLeft, const s_ctnr<T>& mRight)
+    template<class T, class N, class C>
+    s_str_t<N> operator + (const N* sLeft, const s_ctnr_t<T,C>& mRight)
     {
         return s_str_t<N>(sLeft) + mRight;
     }

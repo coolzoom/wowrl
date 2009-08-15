@@ -6,7 +6,7 @@ namespace Frost
     *   It comes with a few features that make it simpler
     *   to use.
     */
-    template<class T, uint N>
+    template<class T, uint N = 0>
     class s_array
     {
     public :
@@ -28,7 +28,8 @@ namespace Frost
             }
         }
 
-        s_array(const s_ctnr<T>& mContainer)
+        template<class U, class C>
+        s_array(const s_ctnr_t<U, C>& mContainer)
         {
             uint i;
             for (i = 0; i < N; ++i)
@@ -208,7 +209,8 @@ namespace Frost
             return *this;
         }
 
-        s_array& operator = (const s_ctnr<T>& mContainer)
+        template<class U, class C>
+        s_array& operator = (const s_ctnr_t<U, C>& mContainer)
         {
             uint i;
             for (i = 0; (i < N) && (i < mContainer.GetSize().Get()); ++i)
