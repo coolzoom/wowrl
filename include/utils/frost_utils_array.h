@@ -72,6 +72,14 @@ namespace Frost
             memcpy(lArray_, mValue.lArray_, N*sizeof(T));
         }
 
+        /// Returns the underlying C array.
+        /** \return The underlying C array
+        */
+        T* GetClassicArray() const
+        {
+            return lArray_;
+        }
+
         void Set(const T& mValue)
         {
             for (uint i = 0; i < N; ++i)
