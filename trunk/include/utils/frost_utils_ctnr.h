@@ -373,7 +373,7 @@ namespace Frost
             return mContainer_.end();
         }
 
-    private :
+    protected :
 
         C mContainer_;
     };
@@ -409,6 +409,14 @@ namespace Frost
 
         template<uint N>
         s_array(const s_array<T,N>& lElemArray) : s_ctnr_t< T, std::vector<T> >(lElemArray) {}
+
+        /// Returns the underlying C array.
+        /** \return The underlying C array
+        */
+        T* GetClassicArray() const
+        {
+            return &s_ctnr_t< T, std::vector<T> >::mContainer_[0];
+        }
     };
 
     template<class T, class N, class C>
