@@ -52,12 +52,6 @@ namespace Frost
         */
         s_ptr<Plane>   CreatePlane(const s_float& fWidth, const s_float& fHeight, const s_float& fDensity = 0.5f);
 
-        /// Creates a new Terrain.
-        /** \param sFileName The path to the file containing terrain info
-        *   \return The created Terrain
-        */
-        s_ptr<Terrain> CreateTerrain(const s_str& sFileName);
-
         /// Creates a new Node.
         /** \param mPos The position to give to this Node.
         *   \return The created Node
@@ -76,13 +70,6 @@ namespace Frost
         *         when the application closes.
         */
         void           DeletePlane(s_ptr<Plane> pPlane);
-
-        /// Deletes a particular Terrain.
-        /** \param pTerrain The Terrain to delete
-        *   \note All terrains created by this manager are automatically deleted
-        *         when the application closes.
-        */
-        void           DeleteTerrain(s_ptr<Terrain> pTerrain);
 
         /// Deletes a particular Node.
         /** \param pNode The Node to delete
@@ -139,10 +126,6 @@ namespace Frost
 
         s_map< s_uint, s_ptr<Plane> > lPlaneList_;
         s_map< s_uint, s_ptr<Node> >  lNodeList_;
-
-        s_map< s_str, s_ptr<TerrainData> > lLoadedModelList_;
-        s_map< s_uint, s_ptr<Terrain> >    lTerrainList_;
-
 
     };
 }
