@@ -10,6 +10,7 @@
 #include "path/frost_pathmanager.h"
 #include "path/frost_path.h"
 
+#include <OgreAxisAlignedBox.h>
 #include <OgreSceneManager.h>
 #include <OgreCamera.h>
 
@@ -35,6 +36,23 @@ namespace Frost
         Frost::Engine::GetSingleton()->GetOgreSceneManager()->destroyCamera(
             pOgreCamera_.Get()
         );
+    }
+
+    s_bool Camera::IsVisible( const Vector& mPoint ) const
+    {
+        return pOgreCamera_->isVisible(Vector::FrostToOgre(mPoint));
+    }
+
+    s_bool Camera::IsVisible( const Vector& mMin, const Vector& mMax ) const
+    {
+        return pOgreCamera_->isVisible(Ogre::AxisAlignedBox(
+            Vector::FrostToOgre(mMin), Vector::FrostToOgre(mMax)
+        ));
+    }
+
+    s_float Camera::GetFarClipDistance() const
+    {
+        return pOgreCamera_->getFarClipDistance();
     }
 
     void Camera::NotifyMainCamera( const s_bool& bMainCamera )
