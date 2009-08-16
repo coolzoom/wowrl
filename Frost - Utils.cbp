@@ -85,6 +85,7 @@
 		</Linker>
 		<Unit filename="include\utils\frost_utils.h" />
 		<Unit filename="include\utils\frost_utils_array.h" />
+		<Unit filename="include\utils\frost_utils_axisalignedbox.h" />
 		<Unit filename="include\utils\frost_utils_bool.h" />
 		<Unit filename="include\utils\frost_utils_color.h" />
 		<Unit filename="include\utils\frost_utils_ctnr.h" />
@@ -119,6 +120,7 @@
 		<Unit filename="include\utils\frost_utils_var.h" />
 		<Unit filename="include\utils\frost_utils_vector.h" />
 		<Unit filename="include\utils\frost_utilsmanager.h" />
+		<Unit filename="src\utils\frost_utils_axisalignedbox.cpp" />
 		<Unit filename="src\utils\frost_utils_color.cpp" />
 		<Unit filename="src\utils\frost_utils_directory.cpp" />
 		<Unit filename="src\utils\frost_utils_event.cpp" />
