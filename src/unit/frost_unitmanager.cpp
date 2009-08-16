@@ -164,16 +164,19 @@ namespace Frost
             {
                 s_ptr<Ogre::MovableObject> pObject = iter->movable;
                 s_ptr<Ogre::UserDefinedObject> pMyObject = pObject->getUserObject();
-                s_str sType = pMyObject->getTypeName();
-                if (sType == "CHARACTER")
+                if (pMyObject)
                 {
-                    pUnit = s_ptr<CharacterOgreInterface>::DynamicCast(pMyObject)->GetCharacter();
-                    break;
-                }
-                else if (sType == "CREATURE")
-                {
-                    pUnit = s_ptr<CreatureOgreInterface>::DynamicCast(pMyObject)->GetCreature();
-                    break;
+                    s_str sType = pMyObject->getTypeName();
+                    if (sType == "CHARACTER")
+                    {
+                        pUnit = s_ptr<CharacterOgreInterface>::DynamicCast(pMyObject)->GetCharacter();
+                        break;
+                    }
+                    else if (sType == "CREATURE")
+                    {
+                        pUnit = s_ptr<CreatureOgreInterface>::DynamicCast(pMyObject)->GetCreature();
+                        break;
+                    }
                 }
             }
         }
