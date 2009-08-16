@@ -30,19 +30,19 @@ namespace Frost
         Color();
 
         /// Constructor.
-        /** \param uiR The red component
-        *   \param uiG The green component
-        *   \param uiB The blue component
+        /** \param ucR The red component
+        *   \param ucG The green component
+        *   \param ucB The blue component
         */
-        Color(const s_uint& uiR, const s_uint& uiG, const s_uint& uiB);
+        Color(const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB);
 
         /// Constructor.
-        /** \param uiA The alpha component
-        *   \param uiR The green component
-        *   \param uiG The green component
-        *   \param uiB The blue component
+        /** \param ucA The alpha component
+        *   \param ucR The green component
+        *   \param ucG The green component
+        *   \param ucB The blue component
         */
-        Color(const s_uint& uiA, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB);
+        Color(const s_uchar& ucA, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB);
 
         /// Constructor.
         /** \param uiColor The ARGB packed color
@@ -52,22 +52,22 @@ namespace Frost
         /// Returns the alpha component.
         /** \return The alpha component
         */
-        const s_uint& GetA() const;
+        const s_uchar& GetA() const;
 
         /// Returns the red component.
         /** \return The red component
         */
-        const s_uint& GetR() const;
+        const s_uchar& GetR() const;
 
         /// Returns the green component.
         /** \return The green component
         */
-        const s_uint& GetG() const;
+        const s_uchar& GetG() const;
 
         /// Returns the blue component.
         /** \return The blue component
         */
-        const s_uint& GetB() const;
+        const s_uchar& GetB() const;
 
         /// Returns the packed ARGB value.
         /** \return The packed ARGB value
@@ -75,24 +75,24 @@ namespace Frost
         const s_uint& GetPacked() const;
 
         /// Sets the alpha component.
-        /** \param uiA The alpha component
+        /** \param ucA The alpha component
         */
-        void          SetA(const s_uint& uiA);
+        void          SetA(const s_uchar& ucA);
 
         /// Sets the red component.
-        /** \param uiR The red component
+        /** \param ucR The red component
         */
-        void          SetR(const s_uint& uiR);
+        void          SetR(const s_uchar& ucR);
 
         /// Sets the green component.
-        /** \param uiG The green component
+        /** \param ucG The green component
         */
-        void          SetG(const s_uint& uiG);
+        void          SetG(const s_uchar& ucG);
 
         /// Sets the blue component.
-        /** \param uiB The blue component
+        /** \param ucB The blue component
         */
-        void          SetB(const s_uint& uiB);
+        void          SetB(const s_uchar& ucB);
 
         /// Sets the packed ARGB component.
         /** \param uiColor packed ARGB component.
@@ -141,10 +141,10 @@ namespace Frost
         void BuildUIColor_();
         void BuildABGRColor_();
 
-        s_uint uiA_;
-        s_uint uiR_;
-        s_uint uiG_;
-        s_uint uiB_;
+        s_uchar ucA_;
+        s_uchar ucR_;
+        s_uchar ucG_;
+        s_uchar ucB_;
 
         s_uint uiColor_;
     };

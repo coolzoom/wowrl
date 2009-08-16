@@ -601,18 +601,18 @@ int LuaFrame::_SetBackdropBorderColor(lua_State* pLua)
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uint(255.0f*mFunc.Get(3)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(2)->GetNumber())
+                s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
         else
         {
             mColor = Color(
-                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(2)->GetNumber())
+                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
 
@@ -637,18 +637,18 @@ int LuaFrame::_SetBackdropColor(lua_State* pLua)
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uint(255.0f*mFunc.Get(3)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(2)->GetNumber())
+                s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
         else
         {
             mColor = Color(
-                s_uint(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uint(255.0f*mFunc.Get(2)->GetNumber())
+                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
             );
         }
 

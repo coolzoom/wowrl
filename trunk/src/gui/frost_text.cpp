@@ -392,22 +392,22 @@ namespace Frost
             iterChar++;
             sColorPart += *iterChar; iterChar++;
             sColorPart += *iterChar; iterChar++;
-            s_uint uiA = sColorPart.HexToUInt();
+            s_uchar ucA = s_uchar(sColorPart.HexToUInt());
             sColorPart.Clear();
             sColorPart += *iterChar; iterChar++;
             sColorPart += *iterChar; iterChar++;
-            s_uint uiR = sColorPart.HexToUInt();
+            s_uchar ucR = s_uchar(sColorPart.HexToUInt());
             sColorPart.Clear();
             sColorPart += *iterChar; iterChar++;
             sColorPart += *iterChar; iterChar++;
-            s_uint uiG = sColorPart.HexToUInt();
+            s_uchar ucG = s_uchar(sColorPart.HexToUInt());
             sColorPart.Clear();
             sColorPart += *iterChar; iterChar++;
             sColorPart += *iterChar;
-            s_uint uiB = sColorPart.HexToUInt();
+            s_uchar ucB = s_uchar(sColorPart.HexToUInt());
 
             mFormat.mColorAction = Text::COLOR_ACTION_SET;
-            mFormat.mColor = Color(uiA, uiR, uiG, uiB);
+            mFormat.mColor = Color(ucA, ucR, ucG, ucB);
         }
     }
 

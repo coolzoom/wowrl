@@ -738,10 +738,10 @@ namespace Frost
         if (pColorBlock)
         {
             pTexture->SetColor(Color(
-                s_uint(s_float(pColorBlock->GetAttribute("a"))*255.0f),
-                s_uint(s_float(pColorBlock->GetAttribute("r"))*255.0f),
-                s_uint(s_float(pColorBlock->GetAttribute("g"))*255.0f),
-                s_uint(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+                s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
             ));
         }
         return true;
@@ -768,17 +768,17 @@ namespace Frost
 
             Color mMinColor, mMaxColor;
             s_ptr<XML::Block> pMinColorBlock = pGradientBlock->GetBlock("MinColor");
-            mMinColor.SetA(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("a"))));
-            mMinColor.SetR(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("r"))));
-            mMinColor.SetG(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("g"))));
-            mMinColor.SetB(s_uint(255.0f*s_float(pMinColorBlock->GetAttribute("b"))));
+            mMinColor.SetA(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("a"))));
+            mMinColor.SetR(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("r"))));
+            mMinColor.SetG(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("g"))));
+            mMinColor.SetB(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("b"))));
 
 
             s_ptr<XML::Block> pMaxColorBlock = pGradientBlock->GetBlock("MaxColor");
-            mMaxColor.SetA(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("a"))));
-            mMaxColor.SetR(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("r"))));
-            mMaxColor.SetG(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("g"))));
-            mMaxColor.SetB(s_uint(255.0f*s_float(pMaxColorBlock->GetAttribute("b"))));
+            mMaxColor.SetA(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("a"))));
+            mMaxColor.SetR(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("r"))));
+            mMaxColor.SetG(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("g"))));
+            mMaxColor.SetB(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("b"))));
 
             pTexture->SetGradient(GUI::Gradient(mOrient, mMinColor, mMaxColor));
         }
@@ -792,10 +792,10 @@ namespace Frost
         if (pColorBlock)
         {
             pFontString->SetTextColor(Color(
-                s_uint(s_float(pColorBlock->GetAttribute("a"))*255.0f),
-                s_uint(s_float(pColorBlock->GetAttribute("r"))*255.0f),
-                s_uint(s_float(pColorBlock->GetAttribute("g"))*255.0f),
-                s_uint(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+                s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
             ));
         }
         return true;
@@ -812,10 +812,10 @@ namespace Frost
             if (pColorBlock)
             {
                 pFontString->SetShadowColor(Color(
-                    s_uint(s_float(pColorBlock->GetAttribute("a"))*255.0f),
-                    s_uint(s_float(pColorBlock->GetAttribute("r"))*255.0f),
-                    s_uint(s_float(pColorBlock->GetAttribute("g"))*255.0f),
-                    s_uint(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+                    s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
+                    s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
+                    s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
+                    s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
                 ));
             }
 

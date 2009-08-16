@@ -38,13 +38,13 @@ namespace Frost
 
         /// Creates a new Material (for 2D rendering).
         /** \param sName The name of the new Material
-        *   \param uiR   The red component
-        *   \param uiG   The green component
-        *   \param uiB   The blue component
+        *   \param ucR   The red component
+        *   \param ucG   The green component
+        *   \param ucB   The blue component
         *   \return The new Material
         *   \note Creates a blank Material filled with a color
         */
-        s_refptr<Material> CreateMaterial2D(const s_str& sName, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB);
+        s_refptr<Material> CreateMaterial2D(const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB);
 
         /// Creates a new Material (for 2D rendering).
         /** \param sName  The name of the new Material
@@ -81,13 +81,13 @@ namespace Frost
 
         /// Creates a new Material (for 3D rendering).
         /** \param sName The name of the new Material
-        *   \param uiR   The red component
-        *   \param uiG   The green component
-        *   \param uiB   The blue component
+        *   \param ucR   The red component
+        *   \param ucG   The green component
+        *   \param ucB   The blue component
         *   \return The new Material
         *   \note Creates a blank Material filled with a color
         */
-        s_refptr<Material> CreateMaterial3D(const s_str& sName, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB);
+        s_refptr<Material> CreateMaterial3D(const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB);
 
         /// Creates a new Material (for 3D rendering).
         /** \param sFileName The file name of the texture to use

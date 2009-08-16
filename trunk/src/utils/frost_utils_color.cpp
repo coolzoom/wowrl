@@ -23,25 +23,25 @@ namespace Frost
 
     Color::Color()
     {
-        uiA_ = 255;
+        ucA_ = 255;
         BuildUIColor_();
     }
 
-    Color::Color( const s_uint& uiR, const s_uint& uiG, const s_uint& uiB )
+    Color::Color( const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB )
     {
-        uiA_ = 255;
-        uiR_ = uiR;
-        uiG_ = uiG;
-        uiB_ = uiB;
+        ucA_ = 255;
+        ucR_ = ucR;
+        ucG_ = ucG;
+        ucB_ = ucB;
         BuildUIColor_();
     }
 
-    Color::Color( const s_uint& uiA, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB )
+    Color::Color( const s_uchar& ucA, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB )
     {
-        uiA_ = uiA;
-        uiR_ = uiR;
-        uiG_ = uiG;
-        uiB_ = uiB;
+        ucA_ = ucA;
+        ucR_ = ucR;
+        ucG_ = ucG;
+        ucB_ = ucB;
         BuildUIColor_();
     }
 
@@ -51,24 +51,24 @@ namespace Frost
         BuildABGRColor_();
     }
 
-    const s_uint& Color::GetA() const
+    const s_uchar& Color::GetA() const
     {
-        return uiA_;
+        return ucA_;
     }
 
-    const s_uint& Color::GetR() const
+    const s_uchar& Color::GetR() const
     {
-        return uiR_;
+        return ucR_;
     }
 
-    const s_uint& Color::GetG() const
+    const s_uchar& Color::GetG() const
     {
-        return uiG_;
+        return ucG_;
     }
 
-    const s_uint& Color::GetB() const
+    const s_uchar& Color::GetB() const
     {
-        return uiB_;
+        return ucB_;
     }
 
     const s_uint& Color::GetPacked() const
@@ -76,27 +76,27 @@ namespace Frost
         return uiColor_;
     }
 
-    void Color::SetA( const s_uint& uiA )
+    void Color::SetA( const s_uchar& ucA )
     {
-        uiA_ = uiA;
+        ucA_ = ucA;
         BuildUIColor_();
     }
 
-    void Color::SetR( const s_uint& uiR )
+    void Color::SetR( const s_uchar& ucR )
     {
-        uiR_ = uiR;
+        ucR_ = ucR;
         BuildUIColor_();
     }
 
-    void Color::SetG( const s_uint& uiG )
+    void Color::SetG( const s_uchar& ucG )
     {
-        uiG_ = uiG;
+        ucG_ = ucG;
         BuildUIColor_();
     }
 
-    void Color::SetB( const s_uint& uiB )
+    void Color::SetB( const s_uchar& ucB )
     {
-        uiB_ = uiB;
+        ucB_ = ucB;
         BuildUIColor_();
     }
 
@@ -113,12 +113,12 @@ namespace Frost
 
     void Color::BuildUIColor_()
     {
-        if (!uiA_.IsNaN() && !uiB_.IsNaN() && !uiG_.IsNaN() && !uiR_.IsNaN())
+        if (!ucA_.IsNaN() && !ucB_.IsNaN() && !ucG_.IsNaN() && !ucR_.IsNaN())
         {
-            uiColor_  = static_cast<uchar>(uiA_.Get()) << 24;
-            uiColor_ += static_cast<uchar>(uiB_.Get()) << 16;
-            uiColor_ += static_cast<uchar>(uiG_.Get()) << 8;
-            uiColor_ += static_cast<uchar>(uiR_.Get());
+            uiColor_  = ucA_.Get() << 24;
+            uiColor_ += ucB_.Get() << 16;
+            uiColor_ += ucG_.Get() << 8;
+            uiColor_ += ucR_.Get();
         }
         else
             uiColor_ = s_uint::NaN;
@@ -128,14 +128,14 @@ namespace Frost
     {
         if (!uiColor_.IsNaN())
         {
-            uiA_ = (static_cast<uchar>(uiColor_.Get()) >> 24) & 0xFF;
-            uiB_ = (static_cast<uchar>(uiColor_.Get()) >> 16) & 0xFF;
-            uiG_ = (static_cast<uchar>(uiColor_.Get()) >> 8)  & 0xFF;
-            uiR_ =  static_cast<uchar>(uiColor_.Get())        & 0xFF;
+            ucA_ = (uiColor_.Get() >> 24) & 0xFF;
+            ucB_ = (uiColor_.Get() >> 16) & 0xFF;
+            ucG_ = (uiColor_.Get() >> 8)  & 0xFF;
+            ucR_ =  uiColor_.Get()        & 0xFF;
         }
         else
         {
-            uiA_ = uiB_ = uiG_ = uiR_ = s_uint::NaN;
+            ucA_ = ucB_ = ucG_ = ucR_ = s_uchar::NaN;
         }
     }
 
@@ -143,16 +143,16 @@ namespace Frost
     {
         if (bRandomAlpha)
             return Color(
-                s_uint::Random(0, 255),
-                s_uint::Random(0, 255),
-                s_uint::Random(0, 255),
-                s_uint::Random(0, 255)
+                s_uchar::Random(0, 255),
+                s_uchar::Random(0, 255),
+                s_uchar::Random(0, 255),
+                s_uchar::Random(0, 255)
             );
         else
             return Color(
-                s_uint::Random(0, 255),
-                s_uint::Random(0, 255),
-                s_uint::Random(0, 255)
+                s_uchar::Random(0, 255),
+                s_uchar::Random(0, 255),
+                s_uchar::Random(0, 255)
             );
     }
 
@@ -172,12 +172,12 @@ namespace Frost
 
     s_bool Color::operator == ( const Color& mColor ) const
     {
-        return (uiA_ == mColor.uiA_) && (uiR_ == mColor.uiR_) && (uiG_ == mColor.uiG_) && (uiB_ == mColor.uiB_);
+        return (ucA_ == mColor.ucA_) && (ucR_ == mColor.ucR_) && (ucG_ == mColor.ucG_) && (ucB_ == mColor.ucB_);
     }
 
     s_bool Color::operator != ( const Color& mColor ) const
     {
-        return (uiA_ != mColor.uiA_) || (uiR_ != mColor.uiR_) || (uiG_ != mColor.uiG_) || (uiB_ != mColor.uiB_);
+        return (ucA_ != mColor.ucA_) || (ucR_ != mColor.ucR_) || (ucG_ != mColor.ucG_) || (ucB_ != mColor.ucB_);
     }
 
     s_str operator+ ( const string_element* sLeft, const Color& mRight )
@@ -188,11 +188,11 @@ namespace Frost
     s_str operator+ (const s_str& sLeft, const Color& mRight)
     {
         s_str sTemp;
-        sTemp += "(a:"+s_str(mRight.GetA());
-        sTemp += ", r:"+s_str(mRight.GetR());
-        sTemp += ", g:"+s_str(mRight.GetG());
-        sTemp += ", b:"+s_str(mRight.GetB());
-        sTemp += ", packed:"+s_str(mRight.GetPacked())+")";
+        sTemp += "(a:"+s_uint(mRight.GetA());
+        sTemp += ", r:"+s_uint(mRight.GetR());
+        sTemp += ", g:"+s_uint(mRight.GetG());
+        sTemp += ", b:"+s_uint(mRight.GetB());
+        sTemp += ", packed:"+mRight.GetPacked()+")";
         return sLeft + sTemp;
     }
 }
