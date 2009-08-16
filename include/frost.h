@@ -184,16 +184,18 @@ namespace Frost
     // scene/frost_scenemanager.h
     class  SceneManager;
 
+    // scene/frost_terrainchunk.h
+    class  TerrainChunk;
+
+    // scene/frost_zone.h
+    class  Zone;
+
+    // scene/frost_zonemanager.h
+    class  ZoneManager;
+
     /* SPELL *********************************************/
     // spell/frost_spell.h
     class  Spell;
-
-    /* TERRAIN *******************************************/
-    // terrain/frost_terrain.h
-    class  Terrain;
-
-    // terrain/frost_terraindata.h
-    class  TerrainData;
 
     /* UNIT **********************************************/
     // unit/frost_character.h

@@ -24,6 +24,7 @@
 
 #include "utils/frost_utils_color.h"
 #include "utils/frost_utils_vector.h"
+#include "utils/frost_utils_axisalignedbox.h"
 #include "utils/frost_utils_directory.h"
 #include "utils/frost_utils_file.h"
 #include "utils/frost_utils_point.h"

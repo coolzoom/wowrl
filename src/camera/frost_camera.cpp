@@ -43,11 +43,9 @@ namespace Frost
         return pOgreCamera_->isVisible(Vector::FrostToOgre(mPoint));
     }
 
-    s_bool Camera::IsVisible( const Vector& mMin, const Vector& mMax ) const
+    s_bool Camera::IsVisible( const AxisAlignedBox& mBox ) const
     {
-        return pOgreCamera_->isVisible(Ogre::AxisAlignedBox(
-            Vector::FrostToOgre(mMin), Vector::FrostToOgre(mMax)
-        ));
+        return pOgreCamera_->isVisible(AxisAlignedBox::FrostToOgre(mBox));
     }
 
     s_float Camera::GetFarClipDistance() const
