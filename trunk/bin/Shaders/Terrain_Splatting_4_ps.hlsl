@@ -9,16 +9,16 @@ void main_ps(
               out float4 oColor : COLOR,
 
             // Provided by Ogre
-              uniform sampler2D mMask     : TEXUNIT0,
-              uniform sampler2D mTexture1 : TEXUNIT1,
-              uniform sampler2D mTexture2 : TEXUNIT2,
-              uniform sampler2D mTexture3 : TEXUNIT3,
-              uniform sampler2D mTexture4 : TEXUNIT4,
+              uniform sampler2D mMask      : TEXUNIT0,
+              uniform sampler2D mTexture1  : TEXUNIT1,
+              uniform sampler2D mTexture2  : TEXUNIT2,
+              uniform sampler2D mTexture3  : TEXUNIT3,
+              uniform sampler2D mTexture4  : TEXUNIT4,
               
-              uniform float2x2  mTexCoordMat1,
-              uniform float2x2  mTexCoordMat2,
-              uniform float2x2  mTexCoordMat3,
-              uniform float2x2  mTexCoordMat4
+              uniform float4x4  mTexCoordMat1,
+              uniform float4x4  mTexCoordMat2,
+              uniform float4x4  mTexCoordMat3,
+              uniform float4x4  mTexCoordMat4
             )
 {
     float4 tMask = tex2D(mMask, iTexture);
