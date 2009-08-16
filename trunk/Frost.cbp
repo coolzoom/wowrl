@@ -169,6 +169,8 @@
 		<Unit filename="bin\Locale\enGB\LocaleSpells.lua" />
 		<Unit filename="bin\Locale\frFR\LocaleClass.lua" />
 		<Unit filename="bin\Locale\frFR\LocaleSpells.lua" />
+		<Unit filename="bin\Zones\Test\Test.xml" />
+		<Unit filename="bin\Zones\Zone.def" />
 		<Unit filename="include\camera\frost_camera.h" />
 		<Unit filename="include\camera\frost_cameramanager.h" />
 		<Unit filename="include\frost.h" />
@@ -225,10 +227,10 @@
 		<Unit filename="include\scene\frost_physicsmanager.h" />
 		<Unit filename="include\scene\frost_plane.h" />
 		<Unit filename="include\scene\frost_scenemanager.h" />
+		<Unit filename="include\scene\frost_terrainchunk.h" />
+		<Unit filename="include\scene\frost_zone.h" />
+		<Unit filename="include\scene\frost_zonemanager.h" />
 		<Unit filename="include\spell\frost_spell.h" />
-		<Unit filename="include\terrain\frost_terrain.h" />
-		<Unit filename="include\terrain\frost_terraindata.h" />
-		<Unit filename="include\terrain\frost_terrainstructs.h" />
 		<Unit filename="include\unit\frost_character.h" />
 		<Unit filename="include\unit\frost_creature.h" />
 		<Unit filename="include\unit\frost_healthtype.h" />
@@ -294,6 +296,7 @@
 		<Unit filename="src\parsers\frost_gameplaymanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_guimanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_unitmanager_parser.cpp" />
+		<Unit filename="src\parsers\frost_zonemanager_parser.cpp" />
 		<Unit filename="src\path\frost_path.cpp" />
 		<Unit filename="src\path\frost_path_directpath.cpp" />
 		<Unit filename="src\path\frost_path_manualpath.cpp" />
@@ -309,9 +312,10 @@
 		<Unit filename="src\scene\frost_physicsmanager.cpp" />
 		<Unit filename="src\scene\frost_plane.cpp" />
 		<Unit filename="src\scene\frost_scenemanager.cpp" />
+		<Unit filename="src\scene\frost_terrainchunk.cpp" />
+		<Unit filename="src\scene\frost_zone.cpp" />
+		<Unit filename="src\scene\frost_zonemanager.cpp" />
 		<Unit filename="src\spell\frost_spell.cpp" />
-		<Unit filename="src\terrain\frost_terrain.cpp" />
-		<Unit filename="src\terrain\frost_terraindata.cpp" />
 		<Unit filename="src\unit\frost_character.cpp" />
 		<Unit filename="src\unit\frost_character_glues.cpp" />
 		<Unit filename="src\unit\frost_creature.cpp" />

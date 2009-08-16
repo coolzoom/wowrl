@@ -111,6 +111,12 @@ namespace Frost
         */
         const s_uint&       GetScreenHeight() const;
 
+        /// Returns the name of the currently used renderer.
+        /** \return The name of the currently used renderer
+        *   \note Can be either "Direct3D9" or "OpenGL".
+        */
+        const s_str&        GetRenderer() const;
+
         /// Returns the Ogre::RenderWindow used by the engine.
         /** \return The Ogre::RenderWindow used by the engine
         */
@@ -172,6 +178,8 @@ namespace Frost
         s_bool bShutDown_;
         s_bool bRun_;
 
+        s_str  sRenderer_;
+
         s_uint uiScreenWidth_;
         s_uint uiScreenHeight_;
 
@@ -205,6 +213,7 @@ namespace Frost
         s_ptr<UnitManager>     pUnitMgr_;
         s_ptr<GameplayManager> pGameplayMgr_;
         s_ptr<PhysicsManager>  pPhysicsMgr_;
+        s_ptr<ZoneManager>     pZoneMgr_;
 
         // Lua
         s_ptr<Lua::State> pLua_;

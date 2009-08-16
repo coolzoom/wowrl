@@ -2,64 +2,84 @@
 <-- FILE STRUCTURE -->
 <-------------------->
 
-<Zone name>
+<Zone>
 
     <-------------->
     <-- Geometry -->
     <-------------->
     
-    <-- Models : lists all models that could be used by this zone -->
+    <-- Sky : the sky model -->
+    <n[.,1]:Sky model/>
+    
+    <-- Terrain : the zones's terrain, with texture splatting -->
+    <n[.,1]:Terrain>
+        <-- Chunks : list of all 'terrain units' -->
+        <n[1]:Chunks>
+            <-- Chunk : a piece of the world's terrain -->
+            <Chunk>
+                <-- Position : position of the center of the chunk -->
+                <n[.,1]:Position n:x="0"  n:y="0"  n:z="0"/>
+            
+                <-- BoudingBox : defines how far the chunk extends -->
+                <n[1]:BoundingBox alwaysVisible="false">
+                    <-- Size : dimensions of the chunk -->
+                    <n[.,1]:Size     n:x="10" n:y="10" n:z="10"/>
+                </BoundingBox>
+                
+                <-- Data : contains the terrain data -->
+                <n[1]:Data>
+                    <-- TerrainFile : heightmaped terrain -->
+                    <n[*]:TerrainFile file/>
+                    <-- Plane : a simple plane -->
+                    <n[*]:Plane n:xSize="150" n:zSize="150" n:density="0.167"/>
+                </Data>
+                
+                <-- Textures : contains this chunk's textures -->
+                <n[.,1]:Textures>
+                    <-- Mask : the blending file -->
+                    <n[.,1]:Mask file/>
+                    <-- Layer : contains diffuse and specular textures -->
+                    <n[.,4]:Layer>
+                        <-- Diffuse : the color of the terrain -->
+                        <n[1]:Diffuse file>
+                            <-- Tilling : the ammount of time the texture is repeated -->
+                            <n[.,1]:Tilling n:x="1.0" n:y="1.0"/>
+                        </Diffuse>
+                        <-- Specular : the reflectivity of the terrain -->
+                        <n[.,1]:Specular file>
+                            <-- Tilling : the ammount of time the texture is repeated -->
+                            <n[.,1]:Tilling n:x="1.0" n:y="1.0"/>
+                        </Specular>
+                    </Layer>
+                </Textures>
+            </Chunk>
+        </Chunks>        
+    </Terrain>
+    
+    <-- Models : lists all models that could be used by this zone (they'll be preloaded) -->
     <n[.,1]:Models>
         <-- Model : binds a file to a model name -->
         <Model name file>
             <-- Texture : applies a texture to this model -->
             <n[.,1]:Texture>
                 <-- Diffuse : the picture to use as diffuse color -->
-                <Diffuse file/>
+                <n[.,1]:Diffuse file/>
             </Texture>
         </Model>
     </Models>
     
-    <-- Sky : the sky model -->
-    <n[.,1]:Sky model/>
-    
-    <-- Terrain : heightmaped terrain, with texture splatting -->
-    <n[.,1]:Terrain>
-        <-- HeightMap : the picture to use as heightmap (black is low, white is high) -->
-        <n[1,1]:HeightMap file/>
-            <-- MinHeight : the height to give to black pixels -->
-            <n[.,1]:MinHeight n:val="0"/>
-            <-- MaxHeight : the height to give to white pixels -->
-            <n[.,1]:MaxHeight n:val="1"/>
-        </HeightMap>
-        <-- Dimensions : the size of the terrain (in world units) -->
-        <n[1,1]:Dimensions n:x="20" n:y="20"/>
-        <-- SubDivisions : the number of subdivisions to create (the more there are, the nicer the terrain looks) -->
-        <n[.,1]:SubDivisions n:nx="1" n:ny="1"/>
-        <-- Textures :  -->
-        <n[.,1]:Textures>
-            <n[.,1]:Coverage file>
-            <n[1,1]:Diffuse file>
-                <n[.,1]:Tilling n:nx="1" n:ny="1"/>
-            </Diffuse>
-            <n[.,1]:Specular file>
-                <n[.,1]:Tilling n:nx="1" n:ny="1"/>
-            </Specular>
-        </Textures>
-    </Terrain>
-    
     <-- Doodads : lists all doodads in the scene -->
     <n[.,1]:Doodads>
         <-- Doodad : instance of model -->
-        <Doodad name model b:static="true" b:shown="false">
+        <Doodad name model b:movable="false" b:hidden="false">
             <-- Position : the position of this doodad (in world unit) -->
-            <n[1,1]:Position n:x="0" n:y="0" n:z="0"/>
+            <n[1,1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
             <-- Scale : the scale of this doodad (relative : 1 is normal) -->
-            <n[.,1]:Scale n:x="1" n:y="1" n:z="1"/>
+            <n[.,1]:Scale n:x="1.0" n:y="1.0" n:z="1.0"/>
             <-- Orientation : the orientation of this doodad (quaternion) -->
-            <n[.,1]:Orientation n:x="0" n:y="0" n:z="0" n:w="1"/>
+            <n[.,1]:Orientation n:x="0.0" n:y="0.0" n:z="0.0" n:w="1.0"/>
             <-- SelfLighting : ambient light to add to this doodad -->
-            <n[.,1]:SelfLighting n:r="0" n:g="0" n:b="0"/>
+            <n[.,1]:SelfLighting n:r="0.0" n:g="0.0" n:b="0.0"/>
         </Doodad>
     </Doodads>
     
@@ -68,60 +88,66 @@
     <-------------->
     
     <-- AmbientColor : the ambient light to add to all objects in the scene -->
-    <n[.,1]:AmbientColor n:r="0" n:g="0" n:b="0"/>
+    <n[.,1]:AmbientColor n:r="0.0" n:g="0.0" n:b="0.0"/>
     
     <-- Fog : colors pixels depending on their distance -->
     <n[1,1]:Fog>
         <-- Color : the color to apply -->
-        <n[1,1]:Color n:r="0" n:g="0" n:b="0"/>
+        <n[1,1]:Color n:r="0.0" n:g="0.0" n:b="0.0"/>
         <-- Distance : the range into which pixels are affected -->
-        <n[.,1]:Distance n:min="100" n:max="120"/>
+        <n[.,1]:Distance n:min="100.0" n:max="120.0"/>
     </Fog>
     
     <-- Lights : lists all lights in the scene -->
     <n[.,1]:Lights>
+    
         <-- Point : a point light -->
-        <Point name b:active="false">
+        <Point name b:hidden="false">
             <-- Position : coordinates (in world units) -->
-            <n[1,1]:Position n:x="0" n:y="0" n:z="0"/>
+            <n[1,1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
             <-- Diffuse : the diffuse color -->
-            <n[.,1]:Diffuse n:r="0" n:g="0" n:b="0"/>
+            <n[.,1]:Diffuse n:r="0.0" n:g="0.0" n:b="0.0"/>
             <-- Specular : the specular color -->
-            <n[.,1]:Specular n:r="0" n:g="0" n:b="0"/>
+            <n[.,1]:Specular n:r="0.0" n:g="0.0" n:b="0.0"/>
             <-- Attenuation : attenuation factors -->
-            <n[.,1]:Attenuation n:constant="0" n:linear="1" n:quadratic="0"/>
+            <n[.,1]:Attenuation n:constant="0.0" n:linear="0.125" n:quadratic="0.0"/>
         </Point>
+        
         <-- Directional : a directional light -->
-        <Directional name b:active="false">
+        <Directional name b:hidden="false">
             <-- Direction : vector(x, y, z) -->
-            <n[1,1]:Direction n:x="1" n:y="0" n:z="0"/>
+            <n[1,1]:Direction n:x="1.0" n:y="0.0" n:z="0.0"/>
             <-- Diffuse : the diffuse color -->
-            <n[.,1]:Diffuse n:r="0" n:g="0" n:b="0"/>
+            <n[.,1]:Diffuse n:r="0.0" n:g="0.0" n:b="0.0"/>
             <-- Specular : the specular color -->
-            <n[.,1]:Specular n:r="0" n:g="0" n:b="0"/>
+            <n[.,1]:Specular n:r="0.0" n:g="0.0" n:b="0.0"/>
         </Directional>
+        
         <-- Spot : a spot light -->
-        <Spot name b:active="false">
+        <Spot name b:hidden="false">
             <-- Position : coordinates (in world units) -->
-            <n[1,1]:Position n:x="0" n:y="0" n:z="0"/>
+            <n[1,1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
             <-- Direction : vector(x, y, z) -->
-            <n[1,1]:Direction n:x="1" n:y="0" n:z="0"/>
+            <n[1,1]:Direction n:x="1.0" n:y="0.0" n:z="0.0"/>
             <-- Dimensions : inner and outer angles (defines the cone) -->
             <n[1,1]:Dimensions n:inAngle="0.1" n:outAngle="0.125"/>
             <-- Fallof : transition type (1 is linear) -->
             <n[.,1]:Fallof n:val="1.0"/>
             <-- Diffuse : the diffuse color -->
-            <n[.,1]:Diffuse n:r="0" n:g="0" n:b="150"/>
+            <n[.,1]:Diffuse n:r="0.0" n:g="0.0" n:b="0.0"/>
             <-- Specular : the specular color -->
-            <n[.,1]:Specular n:r="0" n:g="0" n:b="150"/>
+            <n[.,1]:Specular n:r="0.0" n:g="0.0" n:b="0.0"/>
             <-- Attenuation : attenuation factors -->
-            <n[.,1]:Attenuation n:constant="0" n:linear="1" n:quadratic="0"/>
+            <n[.,1]:Attenuation n:constant="0.0" n:linear="0.125" n:quadratic="0.0"/>
         </Spot>
     </Lights>
     
     <--------------->
     <-- Scripting -->
     <--------------->
+    
+    <-- Script : a Lua file to execute -->
+    <Script file/>
     
     <-- Scripts : lists Lua scripts -->
     <n[.,1]:Scripts>

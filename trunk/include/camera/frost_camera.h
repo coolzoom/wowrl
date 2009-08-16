@@ -37,11 +37,10 @@ namespace Frost
         s_bool IsVisible(const Vector& mPoint) const;
 
         /// Checks if a box is visible in this Camera.
-        /** \param mMin The first point of the box
-        *   \param mMax The second point of the box
+        /** \param mBox The box to check
         *   \return 'true' if the box is visible in this Camera
         */
-        s_bool IsVisible(const Vector& mMin, const Vector& mMax) const;
+        s_bool IsVisible(const AxisAlignedBox& mBox) const;
 
         /// Returns this Camera's far clip distance.
         /** \return This Camera's far clip distance
