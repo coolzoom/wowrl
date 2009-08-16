@@ -105,11 +105,6 @@ namespace Frost
         return NULL;
     }
 
-    s_ptr<Obstacle> PhysicsManager::AddObstacle( s_ptr<Terrain> pTerrain )
-    {
-        return NULL;
-    }
-
     s_ptr<Obstacle> PhysicsManager::AddObstacle( s_ptr<Model> pModel )
     {
         return NULL;

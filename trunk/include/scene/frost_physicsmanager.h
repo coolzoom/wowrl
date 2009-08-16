@@ -58,12 +58,6 @@ namespace Frost
         */
         s_ptr<Obstacle>       AddObstacle(s_ptr<Plane> pPlane);
 
-        /// Adds a terrain to the obstacle list.
-        /** \param pTerrain The terrain to add
-        *   \return The new obstacle
-        */
-        s_ptr<Obstacle>       AddObstacle(s_ptr<Terrain> pTerrain);
-
         /// Adds a model to the obstacle list.
         /** \param pModel The model to add
         *   \return The new obstacle
