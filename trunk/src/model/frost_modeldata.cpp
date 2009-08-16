@@ -149,7 +149,7 @@ namespace Frost
         sModelName_ = sModelName;
 
         // The main mesh
-        pMesh_ = Ogre::MeshManager::getSingleton().createManual(sModelName.Get(), "Frost").get();
+        pMesh_ = Ogre::MeshManager::getSingletonPtr()->createManual(sModelName.Get(), "Frost").get();
 
         File mFile(sFile, FILE_I, true);
         if (!mFile.IsValid())

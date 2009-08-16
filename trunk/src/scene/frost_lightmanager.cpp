@@ -24,7 +24,8 @@ namespace Frost
 
     LightManager::~LightManager()
     {
-        map< s_uint, s_ptr<Light> >::iterator iterLight;
+        Log("Closing "+CLASS_NAME+"...");
+        s_map< s_uint, s_ptr<Light> >::iterator iterLight;
         foreach (iterLight, lLightList_)
         {
             iterLight->second.Delete();

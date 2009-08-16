@@ -23,7 +23,7 @@ namespace Frost
     MovableObject::MovableObject()
     {
         uiID_ = SceneManager::GetSingleton()->GetNewID(this);
-        pNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode(
+        pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
             Ogre::Vector3::ZERO
         );
         pNode_->setFixedYawAxis(true);
@@ -36,7 +36,7 @@ namespace Frost
             pNode_ = mObject.pNode_->getParentSceneNode()->createChildSceneNode(mObject.pNode_->getPosition());
         else
         {
-            pNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode(
+            pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
                 mObject.pNode_->getPosition()
             );
         }
@@ -63,7 +63,7 @@ namespace Frost
     MovableObject::MovableObject( const Vector& mPosition )
     {
         uiID_ = SceneManager::GetSingleton()->GetNewID(this);
-        pNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode(
+        pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
             Vector::FrostToOgre(mPosition)
         );
         pNode_->setFixedYawAxis(true);
@@ -80,9 +80,7 @@ namespace Frost
             pObj->UnlockTracking();
         }
 
-        Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->destroySceneNode(
-            pNode_.Get()
-        );
+        Engine::GetSingleton()->GetOgreSceneManager()->destroySceneNode(pNode_.Get());
 
         s_ctnr< s_ptr<LuaMovableObject> >::iterator iterGlue;
         foreach (iterGlue, lGlueList_)
@@ -121,12 +119,12 @@ namespace Frost
             if (bOrbits_)
             {
                 pParent_->GetOgreNode()->removeChild(pTargetNode_.Get());
-                Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->addChild(pTargetNode_.Get());
+                Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->addChild(pTargetNode_.Get());
             }
             else
             {
                 pParent_->GetOgreNode()->removeChild(pNode_.Get());
-                Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->addChild(pNode_.Get());
+                Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->addChild(pNode_.Get());
             }
 
             pParent_ = NULL;
@@ -140,7 +138,7 @@ namespace Frost
         Vector mPosition = GetPosition();
 
         // - Create target orbiting node
-        pTargetNode_ = Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->getRootSceneNode()->createChildSceneNode();
+        pTargetNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode();
         pTargetNode_->setPosition(Vector::FrostToOgre(mOrbitCenter_));
         pTargetNode_->setFixedYawAxis(true);
         pTargetNode_->lookAt(-Vector::FrostToOgre(mPosition), Ogre::SceneNode::TS_WORLD);
@@ -158,7 +156,7 @@ namespace Frost
     {
         pTargetNode_->removeChild(pNode_.Get());
         pTargetNode_->getParent()->addChild(pNode_.Get());
-        Ogre::Root::getSingletonPtr()->getSceneManager("FrostSceneMgr")->destroySceneNode(
+        Engine::GetSingleton()->GetOgreSceneManager()->destroySceneNode(
             pTargetNode_.Get()
         );
     }

@@ -41,7 +41,7 @@ namespace Frost
     {
         // Create the default plane mesh
         Ogre::Plane mPlane(Ogre::Vector3::UNIT_Y, 0);
-        Ogre::MeshManager::getSingleton().createPlane(
+        Ogre::MeshManager::getSingletonPtr()->createPlane(
             "Plane", "Frost", mPlane,
             150, 150, 25, 25, true, 1, 1, 1, Ogre::Vector3::UNIT_Z
         );
