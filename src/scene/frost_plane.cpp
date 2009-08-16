@@ -34,7 +34,7 @@ namespace Frost
     {
         // Create the mesh
         Ogre::Plane mPlane(Ogre::Vector3::UNIT_Y, 0);
-        Ogre::MeshManager::getSingleton().createPlane(
+        Ogre::MeshManager::getSingletonPtr()->createPlane(
             ("Plane_"+uiID_).Get(), "Frost", mPlane,
             fWidth.Get(), fHeight.Get(), s_uint(fWidth*fDensity).Get(), s_uint(fHeight*fDensity).Get(),
             true, 1, 1, 1, Ogre::Vector3::UNIT_Z
