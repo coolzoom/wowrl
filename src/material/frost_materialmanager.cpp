@@ -82,7 +82,7 @@ namespace Frost
         return pMat;
     }
 
-    s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sName, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB )
+    s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB )
     {
         s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
             sName.Get(), "Frost"
@@ -96,7 +96,7 @@ namespace Frost
 
         pPass = pOgreMat->getTechnique(0)->createPass();*/
         pPass->setDiffuse(
-            Ogre::ColourValue(uiR.Get()/255.0f, uiG.Get()/255.0f, uiB.Get()/255.0f)
+            Ogre::ColourValue(ucR.Get()/255.0f, ucG.Get()/255.0f, ucB.Get()/255.0f)
         );
         pPass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
         pPass->setCullingMode(Ogre::CULL_NONE);
@@ -214,14 +214,14 @@ namespace Frost
         return pDefault2D_;
     }
 
-    s_refptr<Material> MaterialManager::CreateMaterial3D( const s_str& sName, const s_uint& uiR, const s_uint& uiG, const s_uint& uiB )
+    s_refptr<Material> MaterialManager::CreateMaterial3D( const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB )
     {
         s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
             sName.Get(), "Frost"
         ).get();
 
         pOgreMat->getTechnique(0)->getPass(0)->setDiffuse(
-            Ogre::ColourValue(uiR.Get()/255.0f, uiG.Get()/255.0f, uiB.Get()/255.0f)
+            Ogre::ColourValue(ucR.Get()/255.0f, ucG.Get()/255.0f, ucB.Get()/255.0f)
         );
 
         s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_3D_PLAIN, pOgreMat));
