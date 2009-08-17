@@ -106,6 +106,7 @@ namespace Frost
 
                 if (pMaskBlock && pTexturesBlock->GetChildNumber() > 2)
                 {
+                    s_bool bEnableSpecular = Engine::GetSingleton()->GetConstant("EnableSpecular").Get<s_bool>();
                     s_str sMaskFile = pMaskBlock->GetAttribute("file");
 
                     s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
@@ -115,32 +116,11 @@ namespace Frost
                     s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
                     pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
 
-                    Ogre::TextureManager::getSingleton().load(sMaskFile.Get(), "Frost");
-                    pPass->createTextureUnitState()->setTextureName(sMaskFile.Get());
+                    s_uint uiLayerNbr = pTexturesBlock->GetChildNumber("Layer");
 
-                    s_ptr<XML::Block> pLayerBlock;
-                    s_uint uiLayerNbr;
-                    foreach_named_block (pLayerBlock, "Layer", pTexturesBlock)
-                    {
-                        s_ptr<XML::Block> pDiffuseBlock = pLayerBlock->GetBlock("Diffuse");
-                        s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
-                        s_str sFileName = pDiffuseBlock->GetAttribute("file");
-                        Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
-                        Log(sFileName);
-                        pTUS->setTextureName(sFileName.Get());
+                    pPass->setVertexProgram(("Terrain_Splatting_"+uiLayerNbr+"_VS").Get());
+                    pPass->setFragmentProgram(("Terrain_Splatting_"+uiLayerNbr+"_PS").Get());
 
-                        s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
-                        if (pTillingBlock)
-                        {
-                            pTUS->setTextureScale(
-                                s_float(pTillingBlock->GetAttribute("x")).Get(),
-                                s_float(pTillingBlock->GetAttribute("y")).Get()
-                            );
-                        }
-                        ++uiLayerNbr;
-                    }
-
-                    pPass->setVertexProgram("Terrain_Splatting_VS");
                     Ogre::GpuProgramParametersSharedPtr pParams = pPass->getVertexProgramParameters();
                     pParams->setNamedAutoConstant(
                         "mWorldViewProj",
@@ -171,25 +151,75 @@ namespace Frost
                         "mAmbient",
                         Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR
                     );
-
-                    pPass->setFragmentProgram(("Terrain_Splatting_"+uiLayerNbr+"_PS").Get());
-
-                    pParams = pPass->getFragmentProgramParameters();
-                    for (s_uint ui = 1; ui <= uiLayerNbr; ++ui)
+                    if (bEnableSpecular)
                     {
                         pParams->setNamedAutoConstant(
-                            ("mTexCoordMat"+ui).Get(),
-                            Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX,
-                            ui.Get()
+                            "mCamPos",
+                            Ogre::GpuProgramParameters::ACT_CAMERA_POSITION
                         );
+                    }
+
+                    s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
+                    Ogre::TextureManager::getSingleton().load(sMaskFile.Get(), "Frost");
+                    pTUS->setTextureName(sMaskFile.Get());
+                    pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
+
+                    s_ptr<XML::Block> pLayerBlock;
+                    s_uint uiLayer = 1;
+                    foreach_named_block (pLayerBlock, "Layer", pTexturesBlock)
+                    {
+                        s_ptr<XML::Block> pDiffuseBlock = pLayerBlock->GetBlock("Diffuse");
+                        s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
+                        s_str sFileName = pDiffuseBlock->GetAttribute("file");
+                        Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
+                        pTUS->setTextureName(sFileName.Get());
+                        pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
 
                         if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
                         {
+                            pParams = pPass->getFragmentProgramParameters();
                             pParams->setNamedConstant(
-                                ("mTexture"+ui).Get(),
-                                (int)ui.Get()
+                                ("mTexture"+uiLayer).Get(),
+                                pPass->getNumTextureUnitStates()-1
                             );
                         }
+
+                        s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
+                        if (pTillingBlock)
+                        {
+                            pTUS->setTextureScale(
+                                s_float(pTillingBlock->GetAttribute("x")).Get(),
+                                s_float(pTillingBlock->GetAttribute("y")).Get()
+                            );
+
+                            pParams = pPass->getVertexProgramParameters();
+                            pParams->setNamedAutoConstant(
+                                ("mTexCoordMat"+uiLayer).Get(),
+                                Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX,
+                                pPass->getNumTextureUnitStates()-1
+                            );
+                        }
+
+                        s_ptr<XML::Block> pSpecularBlock = pLayerBlock->GetBlock("Specular");
+                        if (pSpecularBlock && bEnableSpecular)
+                        {
+                            pTUS = pPass->createTextureUnitState();
+                            sFileName = pSpecularBlock->GetAttribute("file");
+                            Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
+                            pTUS->setTextureName(sFileName.Get());
+                            pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
+
+                            if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
+                            {
+                                pParams = pPass->getFragmentProgramParameters();
+                                pParams->setNamedConstant(
+                                    ("mTexture"+uiLayer+"S").Get(),
+                                    pPass->getNumTextureUnitStates()-1
+                                );
+                            }
+                        }
+
+                        ++uiLayer;
                     }
 
                     pChunk->SetMaterial(MaterialManager::GetSingleton()->CreateMaterial(pOgreMat));
