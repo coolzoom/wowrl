@@ -205,9 +205,13 @@ namespace XML
 
         /// Returns the number of sub-blocks found in this Block.
         /** \return the number of sub-blocks found in this Block
-        *   \note Only used in loading stage.
         */
         s_uint        GetChildNumber() const;
+
+        /// Returns the number of sub-blocks with a given name found in this Block.
+        /** \return the number of sub-blocks with a given name found in this Block
+        */
+        s_uint        GetChildNumber(const s_str& sName) const;
 
         /// Starts iteration through this Block's sub-blocks.
         /** \param sName The name of the sub-blocks you need

@@ -385,6 +385,11 @@ s_uint Block::GetChildNumber() const
     return lFoundBlockList_.GetSize();
 }
 
+s_uint Block::GetChildNumber( const s_str& sName ) const
+{
+    return lFoundBlockList_.Count(sName);
+}
+
 s_ptr<Block> Block::First( const s_str& sName )
 {
     if (sName.IsEmpty())
