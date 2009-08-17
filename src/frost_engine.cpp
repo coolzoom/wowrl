@@ -44,6 +44,7 @@ namespace Frost
         bGamePaused_ = false;
         sGameVersion_ = "0.045";
         iMaxComputedPaths_ = 2;
+        bEnableSpecular_ = false;
         pFrameFunc_ = NULL;
 
         bShutDown_ = false;
@@ -432,27 +433,88 @@ namespace Frost
         // Terrain : simple vertex shaders
         // --------
 
+        s_str sParams;
+        if (bEnableSpecular_) sParams += ",SPECULAR=1";
+
+        // [2] Textures
+
         // HLSL vertex shader
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            "Terrain_Splatting_HLSL_VS", "Frost", "hlsl", Ogre::GPT_VERTEX_PROGRAM
+            "Terrain_Splatting_2_HLSL_VS", "Frost", "hlsl", Ogre::GPT_VERTEX_PROGRAM
         ).get();
         pProgram->setSourceFile("Shaders/Terrain_Splatting_vs.hlsl");
         pProgram->setParameter("entry_point", "main_vs");
         pProgram->setParameter("target", "vs_2_0");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=2"+sParams).Get());
 
         // GLSL vertex shader
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            "Terrain_Splatting_GLSL_VS", "Frost", "glsl", Ogre::GPT_VERTEX_PROGRAM
+            "Terrain_Splatting_2_GLSL_VS", "Frost", "glsl", Ogre::GPT_VERTEX_PROGRAM
         ).get();
         pProgram->setSourceFile("Shaders/Terrain_Splatting_vs.glsl");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=2"+sParams).Get());
 
         // Unified vertex shader
         pUProgram = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
             Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            "Terrain_Splatting_VS", "Frost", "unified", Ogre::GPT_VERTEX_PROGRAM
+            "Terrain_Splatting_2_VS", "Frost", "unified", Ogre::GPT_VERTEX_PROGRAM
         ).get());
-        pUProgram->addDelegateProgram("Terrain_Splatting_HLSL_VS");
-        pUProgram->addDelegateProgram("Terrain_Splatting_GLSL_VS");
+        pUProgram->addDelegateProgram("Terrain_Splatting_2_HLSL_VS");
+        pUProgram->addDelegateProgram("Terrain_Splatting_2_GLSL_VS");
+        pUProgram->load();
+
+        // [3] Textures
+
+        // HLSL vertex shader
+        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "Terrain_Splatting_3_HLSL_VS", "Frost", "hlsl", Ogre::GPT_VERTEX_PROGRAM
+        ).get();
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_vs.hlsl");
+        pProgram->setParameter("entry_point", "main_vs");
+        pProgram->setParameter("target", "vs_2_0");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=3"+sParams).Get());
+
+        // GLSL vertex shader
+        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "Terrain_Splatting_3_GLSL_VS", "Frost", "glsl", Ogre::GPT_VERTEX_PROGRAM
+        ).get();
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_vs.glsl");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=3"+sParams).Get());
+
+        // Unified vertex shader
+        pUProgram = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
+            Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "Terrain_Splatting_3_VS", "Frost", "unified", Ogre::GPT_VERTEX_PROGRAM
+        ).get());
+        pUProgram->addDelegateProgram("Terrain_Splatting_3_HLSL_VS");
+        pUProgram->addDelegateProgram("Terrain_Splatting_3_GLSL_VS");
+        pUProgram->load();
+
+        // [4] Textures
+
+        // HLSL vertex shader
+        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "Terrain_Splatting_4_HLSL_VS", "Frost", "hlsl", Ogre::GPT_VERTEX_PROGRAM
+        ).get();
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_vs.hlsl");
+        pProgram->setParameter("entry_point", "main_vs");
+        pProgram->setParameter("target", "vs_2_0");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=4"+sParams).Get());
+
+        // GLSL vertex shader
+        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "Terrain_Splatting_4_GLSL_VS", "Frost", "glsl", Ogre::GPT_VERTEX_PROGRAM
+        ).get();
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_vs.glsl");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=4"+sParams).Get());
+
+        // Unified vertex shader
+        pUProgram = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
+            Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            "Terrain_Splatting_4_VS", "Frost", "unified", Ogre::GPT_VERTEX_PROGRAM
+        ).get());
+        pUProgram->addDelegateProgram("Terrain_Splatting_4_HLSL_VS");
+        pUProgram->addDelegateProgram("Terrain_Splatting_4_GLSL_VS");
         pUProgram->load();
 
         // --------
@@ -465,15 +527,17 @@ namespace Frost
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
             "Terrain_Splatting_2_HLSL_PS", "Frost", "hlsl", Ogre::GPT_FRAGMENT_PROGRAM
         ).get();
-        pProgram->setSourceFile("Shaders/Terrain_Splatting_2_ps.hlsl");
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_ps.hlsl");
         pProgram->setParameter("entry_point", "main_ps");
         pProgram->setParameter("target", "ps_2_0");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=2"+sParams).Get());
 
         // GLSL pixel shader
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
             "Terrain_Splatting_2_GLSL_PS", "Frost", "glsl", Ogre::GPT_FRAGMENT_PROGRAM
         ).get();
-        pProgram->setSourceFile("Shaders/Terrain_Splatting_2_ps.glsl");
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_ps.glsl");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=2"+sParams).Get());
 
         // Unified pixel shader
         pUProgram = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
@@ -490,15 +554,17 @@ namespace Frost
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
             "Terrain_Splatting_3_HLSL_PS", "Frost", "hlsl", Ogre::GPT_FRAGMENT_PROGRAM
         ).get();
-        pProgram->setSourceFile("Shaders/Terrain_Splatting_3_ps.hlsl");
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_ps.hlsl");
         pProgram->setParameter("entry_point", "main_ps");
         pProgram->setParameter("target", "ps_2_0");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=3"+sParams).Get());
 
         // GLSL pixel shader
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
             "Terrain_Splatting_3_GLSL_PS", "Frost", "glsl", Ogre::GPT_FRAGMENT_PROGRAM
         ).get();
-        pProgram->setSourceFile("Shaders/Terrain_Splatting_3_ps.glsl");
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_ps.glsl");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=3"+sParams).Get());
 
         // Unified pixel shader
         pUProgram = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
@@ -515,15 +581,17 @@ namespace Frost
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
             "Terrain_Splatting_4_HLSL_PS", "Frost", "hlsl", Ogre::GPT_FRAGMENT_PROGRAM
         ).get();
-        pProgram->setSourceFile("Shaders/Terrain_Splatting_4_ps.hlsl");
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_ps.hlsl");
         pProgram->setParameter("entry_point", "main_ps");
         pProgram->setParameter("target", "ps_2_0");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=4"+sParams).Get());
 
         // GLSL pixel shader
         pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
             "Terrain_Splatting_4_GLSL_PS", "Frost", "glsl", Ogre::GPT_FRAGMENT_PROGRAM
         ).get();
-        pProgram->setSourceFile("Shaders/Terrain_Splatting_4_ps.glsl");
+        pProgram->setSourceFile("Shaders/Terrain_Splatting_ps.glsl");
+        pProgram->setParameter("preprocessor_defines", ("LAYER=4"+sParams).Get());
 
         // Unified pixel shader
         pUProgram = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
@@ -588,6 +656,7 @@ namespace Frost
         s_bool bFullScreen = pLua_->GetGlobalBool("bFullScreen", false, false);
         s_bool bVSync = pLua_->GetGlobalBool("bVSync", false, false);
         s_uint uiFSAA = s_uint(pLua_->GetGlobalInt("iFSAA", false, 0));
+        bEnableSpecular_ = s_bool(pLua_->GetGlobalBool("bEnableSpecular", false, false));
 
         Ogre::NameValuePairList lOptions;
         lOptions.insert(Ogre::NameValuePairList::value_type("colourDepth", s_str(uiScreenDepth).Get()));
@@ -624,6 +693,10 @@ namespace Frost
         else if (sName == "GameVersion")
         {
             return sGameVersion_;
+        }
+        else if (sName == "EnableSpecular")
+        {
+            return bEnableSpecular_;
         }
         else
             return s_var();

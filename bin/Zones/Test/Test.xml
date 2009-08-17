@@ -1,6 +1,6 @@
 <Zone>
 
-    <AmbientColor r="0.4" g="0.4" b="0.4"/>
+    <AmbientColor r="0.0" g="0.0" b="0.0"/>
     
     <Fog>
         <Color r="0" g="0" b="0"/>
@@ -17,6 +17,22 @@
                 <Textures>
                     <Mask file="Textures/Tileset/Aerie Peaks/AeriePeaks_splat4.png"/>
                     <Layer>
+                        <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksRockRoadBase.png">
+                            <Tilling x="0.03" y="0.03"/>
+                        </Diffuse>
+                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksRockRoadBase_s.png">
+                            <Tilling x="0.03" y="0.03"/>
+                        </Specular>
+                    </Layer>
+                    <Layer>
+                        <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase.png">
+                            <Tilling x="0.03" y="0.03"/>
+                        </Diffuse>
+                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase_s.png">
+                            <Tilling x="0.03" y="0.03"/>
+                        </Specular>
+                    </Layer>
+                    <Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksGrassHighlight.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
@@ -32,6 +48,9 @@
                             <Tilling x="0.03" y="0.03"/>
                         </Specular>
                     </Layer>
+                </Textures>
+                <!Textures>
+                    <Mask file="Textures/Tileset/Aerie Peaks/AeriePeaks_splat2.png"/>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksRockRoadBase.png">
                             <Tilling x="0.03" y="0.03"/>

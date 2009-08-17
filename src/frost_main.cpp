@@ -147,7 +147,7 @@ s_bool EditorRenderFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = true;
+    s_bool bEditor = false;
 
     // Read commands
     if (argc > 1)
@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
                 //pZone->ShowAllChunks();
 
                 s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
-                pLight1->SetPosition(Vector(0, 5, 0));
+                pLight1->SetPosition(Vector(0, 10, 0));
                 pLight1->SetColor(Color(255, 255, 255));
                 pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
                 pLight1->SetRange(50.0f);

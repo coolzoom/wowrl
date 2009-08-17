@@ -188,8 +188,9 @@ namespace Frost
         s_bool bGamePaused_;
 
         // Game constants
-        s_str sGameVersion_;
-        s_int iMaxComputedPaths_;
+        s_str  sGameVersion_;
+        s_int  iMaxComputedPaths_;
+        s_bool bEnableSpecular_;
 
         // Frame function
         Function pFrameFunc_;

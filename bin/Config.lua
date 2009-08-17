@@ -12,6 +12,7 @@ end
 bVSync = true;
 iScreenDepth = 32;
 iFSAA = 4;
+bEnableSpecular = true;
 --sRenderSystem = "Direct3D9 Rendering Subsystem";
 sRenderSystem = "OpenGL Rendering Subsystem";
 
