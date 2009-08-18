@@ -208,6 +208,8 @@
 		<Unit filename="include\material\frost_decal.h" />
 		<Unit filename="include\material\frost_material.h" />
 		<Unit filename="include\material\frost_materialmanager.h" />
+		<Unit filename="include\material\frost_shader.h" />
+		<Unit filename="include\material\frost_shadermanager.h" />
 		<Unit filename="include\model\frost_animmanager.h" />
 		<Unit filename="include\model\frost_model.h" />
 		<Unit filename="include\model\frost_modeldata.h" />
@@ -288,6 +290,8 @@
 		<Unit filename="src\material\frost_decal.cpp" />
 		<Unit filename="src\material\frost_material.cpp" />
 		<Unit filename="src\material\frost_materialmanager.cpp" />
+		<Unit filename="src\material\frost_shader.cpp" />
+		<Unit filename="src\material\frost_shadermanager.cpp" />
 		<Unit filename="src\model\frost_animmanager.cpp" />
 		<Unit filename="src\model\frost_model.cpp" />
 		<Unit filename="src\model\frost_modeldata.cpp" />
