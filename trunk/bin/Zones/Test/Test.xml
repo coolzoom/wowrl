@@ -20,33 +20,25 @@
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
-                        <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png">
-                            <Tilling x="0.03" y="0.03"/>
-                        </Specular>
+                        <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
-                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase_s.png">
-                            <Tilling x="0.03" y="0.03"/>
-                        </Specular>
+                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase_s.png"/>
                     </Layer>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksGrassHighlight.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
-                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGrassHighlight_s.png">
-                            <Tilling x="0.03" y="0.03"/>
-                        </Specular>
+                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGrassHighlight_s.png"/>
                     </Layer>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksRockyMudBase.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
-                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksRockyMudBase_s.png">
-                            <Tilling x="0.03" y="0.03"/>
-                        </Specular>
+                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksRockyMudBase_s.png"/>
                     </Layer>
                 </Textures>
                 <!Textures>
@@ -55,17 +47,13 @@
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksRockRoadBase.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
-                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksRockRoadBase_s.png">
-                            <Tilling x="0.03" y="0.03"/>
-                        </Specular>
+                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksRockRoadBase_s.png"/>
                     </Layer>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
-                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase_s.png">
-                            <Tilling x="0.03" y="0.03"/>
-                        </Specular>
+                        <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase_s.png"/>
                     </Layer>
                 </Textures>
             </Chunk>

@@ -46,10 +46,7 @@
                             <n[.,1]:Tilling n:x="1.0" n:y="1.0"/>
                         </Diffuse>
                         <-- Specular : the reflectivity of the terrain -->
-                        <n[.,1]:Specular file>
-                            <-- Tilling : the ammount of time the texture is repeated -->
-                            <n[.,1]:Tilling n:x="1.0" n:y="1.0"/>
-                        </Specular>
+                        <n[.,1]:Specular file/>
                     </Layer>
                 </Textures>
             </Chunk>
