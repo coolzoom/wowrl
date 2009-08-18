@@ -40,13 +40,6 @@ namespace Frost
         */
         void            SetAlphaReject(const s_bool& bEnable);
 
-        /// Sets whether hardware skinning should be on or off.
-        /** \param bEnable 'true' to enable
-        *   \note Only works for 3D materials.<br>
-        *         Not compatible with SetDesaturated().
-        */
-        void            SetHardwareSkinning(const s_bool& bEnable);
-
         /// Tiles the texture.
         /** \param fTileFactorH The horizontal tilling
         *   \param fTileFactorV The vertical tilling
@@ -61,12 +54,6 @@ namespace Frost
         /** \param mColor The diffuse color
         */
         void            SetDiffuse(const Color& mColor);
-
-        /// Makes this Material render without any color.
-        /** \param bIsDesaturated 'true' if you want to remove colors
-        *   \note Not compatible with SetHardwareSkinning().
-        */
-        void            SetDesaturated(const s_bool& bIsDesaturated);
 
         /// Sets this Material's self illumination color.
         /** \param mColor The self illumination color
@@ -131,6 +118,38 @@ namespace Frost
         /** \return The wrapped Ogre::Material
         */
         s_ptr<Ogre::Material> GetOgreMaterial();
+
+        /// Sets vertex and pixel shaders to use for the default pass.
+        /** \param sSName The shader name
+        *   \note The vertex and pixel shaders must have the same name
+        *         for this method to work.<br>
+        *         Use "" to disable shaders.
+        */
+        void            SetShaders(const s_str& sSName);
+
+        /// Sets the vertex shader to use for the default pass.
+        /** \param pVS The vertex shader
+        *   \note Use NULL to remove the vertex shader
+        */
+        void            SetVertexShader(s_ptr<VertexShader> pVS);
+
+        /// Sets the vertex shader to use for the default pass.
+        /** \param sVSName The name of the vertex shader
+        *   \note Use "" to remove the vertex shader
+        */
+        void            SetVertexShader(const s_str& sVSName);
+
+        /// Sets the pixel shader to use for the default pass.
+        /** \param pPS The pixel shader
+        *   \note Use NULL to remove the pixel shader
+        */
+        void            SetPixelShader(s_ptr<PixelShader> pPS);
+
+        /// Sets the pixel shader to use for the default pass.
+        /** \param sPSName The name of the pixel shader
+        *   \note Use "" to remove the pixel shader
+        */
+        void            SetPixelShader(const s_str& sPSName);
 
         /// Sets a new default pass.
         /** \param uiIndex The index of the new pass
