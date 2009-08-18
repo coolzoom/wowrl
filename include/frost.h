@@ -119,6 +119,16 @@ namespace Frost
     // material/frost_materialmanager.h
     class  MaterialManager;
 
+    // material/frost_shader.h
+    struct AutoParam;
+    struct SamplerParam;
+    class  Shader;
+    class  VertexShader;
+    class  PixelShader;
+
+    // material/frost_shadermanager.h
+    class  ShaderManager;
+
     /* MODEL *********************************************/
     // model/frost_animmanager.h
     struct Animation;

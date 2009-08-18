@@ -55,7 +55,7 @@ namespace Frost
             s_refptr<Material> pBodyMat = MaterialManager::GetSingleton()->CreateMaterial3D(
                 pCharModelInfo->lBodyTextureList.Back()
             );
-            pBodyMat->SetHardwareSkinning(true);
+            pBodyMat->SetShaders("Character_Skinning");
 
             pBodyModel_->SetMaterial(pBodyMat);
         }

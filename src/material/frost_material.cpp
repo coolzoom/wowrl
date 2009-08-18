@@ -13,6 +13,8 @@
 #include <OgrePass.h>
 
 #include "material/frost_decal.h"
+#include "material/frost_shadermanager.h"
+#include "material/frost_shader.h"
 
 using namespace std;
 
@@ -86,55 +88,6 @@ namespace Frost
         }
     }
 
-    void Material::SetHardwareSkinning( const s_bool& bEnable )
-    {
-        if (!bHardwareSkinning_ && bEnable)
-        {
-            pDefaultPass_->setVertexProgram("Character_Skinning_VS");
-            pDefaultPass_->setFragmentProgram("Character_Skinning_PS");
-
-            Ogre::GpuProgramParametersSharedPtr pParams = pDefaultPass_->getVertexProgramParameters();
-            pParams->setNamedAutoConstant(
-                "mViewProj",
-                Ogre::GpuProgramParameters::ACT_VIEWPROJ_MATRIX
-            );
-            pParams->setNamedAutoConstant(
-                "mBoneMat",
-                Ogre::GpuProgramParameters::ACT_WORLD_MATRIX_ARRAY_3x4
-            );
-
-            pParams = pDefaultPass_->getFragmentProgramParameters();
-            pParams->setNamedAutoConstant(
-                "mLightPos",
-                Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY,
-                5
-            );
-            pParams->setNamedAutoConstant(
-                "mLightDiffuseColor",
-                Ogre::GpuProgramParameters::ACT_DERIVED_LIGHT_DIFFUSE_COLOUR_ARRAY,
-                5
-            );
-            pParams->setNamedAutoConstant(
-                "mLightAtten",
-                Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION_ARRAY,
-                5
-            );
-            pParams->setNamedAutoConstant(
-                "mAmbient",
-                Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR
-            );
-
-            bHardwareSkinning_ = bEnable;
-        }
-        else if (bHardwareSkinning_ && !bEnable)
-        {
-            pDefaultPass_->setVertexProgram("");
-            pDefaultPass_->setFragmentProgram("");
-
-            bHardwareSkinning_ = bEnable;
-        }
-    }
-
     void Material::SetTilling( const s_float& fTileFactorH, const s_float& fTileFactorV )
     {
         pDefaultPass_->getTextureUnitState(0)->setTextureScale(
@@ -151,23 +104,6 @@ namespace Frost
             mColor.GetB().Get()/255.0f,
             mColor.GetA().Get()/255.0f
         );
-    }
-
-    void Material::SetDesaturated( const s_bool& bIsDesaturated )
-    {
-        if (bIsDesaturated_ != bIsDesaturated)
-        {
-            bIsDesaturated_ = bIsDesaturated;
-
-            if (bIsDesaturated_)
-            {
-                pDefaultPass_->setFragmentProgram("GUI_Desaturation_PS");
-            }
-            else
-            {
-                pDefaultPass_->setFragmentProgram("");
-            }
-        }
     }
 
     void Material::SetSelfIllumination( const Color& mColor )
@@ -254,6 +190,46 @@ namespace Frost
     s_ptr<Ogre::Material> Material::GetOgreMaterial()
     {
         return pOgreMat_;
+    }
+
+    void Material::SetVertexShader( s_ptr<VertexShader> pVS )
+    {
+        if (pVS)
+            pVS->BindTo(pDefaultPass_);
+        else
+            pDefaultPass_->setVertexProgram("");
+    }
+
+    void Material::SetPixelShader( s_ptr<PixelShader> pPS )
+    {
+        if (pPS)
+            pPS->BindTo(pDefaultPass_);
+        else
+            pDefaultPass_->setFragmentProgram("");
+    }
+
+    void Material::SetShaders( const s_str& sSName )
+    {
+        SetVertexShader(sSName);
+        SetPixelShader(sSName);
+    }
+
+    void Material::SetVertexShader( const s_str& sVSName )
+    {
+        s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader(sVSName);
+        if (pVS)
+            pVS->BindTo(pDefaultPass_);
+        else
+            pDefaultPass_->setVertexProgram("");
+    }
+
+    void Material::SetPixelShader( const s_str& sPSName )
+    {
+        s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader(sPSName);
+        if (pPS)
+            pPS->BindTo(pDefaultPass_);
+        else
+            pDefaultPass_->setFragmentProgram("");
     }
 
     void Material::SetDefaultPass( const s_uint& uiIndex )

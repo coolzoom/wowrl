@@ -209,6 +209,7 @@ namespace Frost
         s_ptr<CameraManager>   pCameraMgr_;
         s_ptr<PathManager>     pPathMgr_;
         s_ptr<SceneManager>    pSceneMgr_;
+        s_ptr<ShaderManager>   pShaderMgr_;
         s_ptr<MaterialManager> pMaterialMgr_;
         s_ptr<LightManager>    pLightMgr_;
         s_ptr<UnitManager>     pUnitMgr_;

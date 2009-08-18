@@ -11,6 +11,8 @@
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
 #include "xml/frost_xml_document.h"
+#include "material/frost_shadermanager.h"
+#include "material/frost_shader.h"
 
 #include <OgreTextureManager.h>
 #include <OgreMaterialManager.h>
@@ -118,46 +120,10 @@ namespace Frost
 
                     s_uint uiLayerNbr = pTexturesBlock->GetChildNumber("Layer");
 
-                    pPass->setVertexProgram(("Terrain_Splatting_"+uiLayerNbr+"_VS").Get());
-                    pPass->setFragmentProgram(("Terrain_Splatting_"+uiLayerNbr+"_PS").Get());
-
-                    Ogre::GpuProgramParametersSharedPtr pParams = pPass->getVertexProgramParameters();
-                    pParams->setNamedAutoConstant(
-                        "mWorldViewProj",
-                        Ogre::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX
-                    );
-
-                    pParams->setNamedAutoConstant(
-                        "mWorld",
-                        Ogre::GpuProgramParameters::ACT_WORLD_MATRIX
-                    );
-
-                    pParams->setNamedAutoConstant(
-                        "mLightPos",
-                        Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY,
-                        5
-                    );
-                    pParams->setNamedAutoConstant(
-                        "mLightDiffuseColor",
-                        Ogre::GpuProgramParameters::ACT_DERIVED_LIGHT_DIFFUSE_COLOUR_ARRAY,
-                        5
-                    );
-                    pParams->setNamedAutoConstant(
-                        "mLightAtten",
-                        Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION_ARRAY,
-                        5
-                    );
-                    pParams->setNamedAutoConstant(
-                        "mAmbient",
-                        Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR
-                    );
-                    if (bEnableSpecular)
-                    {
-                        pParams->setNamedAutoConstant(
-                            "mCamPos",
-                            Ogre::GpuProgramParameters::ACT_CAMERA_POSITION
-                        );
-                    }
+                    s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader("Terrain_Splatting_"+uiLayerNbr);
+                    s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader("Terrain_Splatting_"+uiLayerNbr);
+                    pVS->BindTo(pPass);
+                    pPS->BindTo(pPass);
 
                     s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
                     Ogre::TextureManager::getSingleton().load(sMaskFile.Get(), "Frost");
@@ -175,28 +141,12 @@ namespace Frost
                         pTUS->setTextureName(sFileName.Get());
                         pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
 
-                        if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
-                        {
-                            pParams = pPass->getFragmentProgramParameters();
-                            pParams->setNamedConstant(
-                                ("mTexture"+uiLayer).Get(),
-                                pPass->getNumTextureUnitStates()-1
-                            );
-                        }
-
                         s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
                         if (pTillingBlock)
                         {
                             pTUS->setTextureScale(
                                 s_float(pTillingBlock->GetAttribute("x")).Get(),
                                 s_float(pTillingBlock->GetAttribute("y")).Get()
-                            );
-
-                            pParams = pPass->getVertexProgramParameters();
-                            pParams->setNamedAutoConstant(
-                                ("mTexCoordMat"+uiLayer).Get(),
-                                Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX,
-                                pPass->getNumTextureUnitStates()-1
                             );
                         }
 
@@ -208,15 +158,6 @@ namespace Frost
                             Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
                             pTUS->setTextureName(sFileName.Get());
                             pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
-
-                            if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
-                            {
-                                pParams = pPass->getFragmentProgramParameters();
-                                pParams->setNamedConstant(
-                                    ("mTexture"+uiLayer+"S").Get(),
-                                    pPass->getNumTextureUnitStates()-1
-                                );
-                            }
                         }
 
                         ++uiLayer;
@@ -271,58 +212,10 @@ namespace Frost
                         pTUS->setTextureName(sFileName.Get());
                         pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
 
-                        pPass->setVertexProgram("Terrain_Specular_VS");
-                        pPass->setFragmentProgram("Terrain_Specular_PS");
-
-                        Ogre::GpuProgramParametersSharedPtr pParams = pPass->getVertexProgramParameters();
-                        pParams->setNamedAutoConstant(
-                            "mWorldViewProj",
-                            Ogre::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX
-                        );
-
-                        pParams->setNamedAutoConstant(
-                            "mWorld",
-                            Ogre::GpuProgramParameters::ACT_WORLD_MATRIX
-                        );
-
-                        pParams->setNamedAutoConstant(
-                            "mLightPos",
-                            Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY,
-                            5
-                        );
-                        pParams->setNamedAutoConstant(
-                            "mLightDiffuseColor",
-                            Ogre::GpuProgramParameters::ACT_DERIVED_LIGHT_DIFFUSE_COLOUR_ARRAY,
-                            5
-                        );
-                        pParams->setNamedAutoConstant(
-                            "mLightAtten",
-                            Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION_ARRAY,
-                            5
-                        );
-                        pParams->setNamedAutoConstant(
-                            "mAmbient",
-                            Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR
-                        );
-                        pParams->setNamedAutoConstant(
-                            "mCamPos",
-                            Ogre::GpuProgramParameters::ACT_CAMERA_POSITION
-                        );
-                        if (pTillingBlock)
-                        {
-                            pParams->setNamedAutoConstant(
-                                "mTexCoordMat",
-                                Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX,
-                                0
-                            );
-                        }
-
-                        if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
-                        {
-                            pParams = pPass->getFragmentProgramParameters();
-                            pParams->setNamedConstant("mTexture",  0);
-                            pParams->setNamedConstant("mTextureS", 1);
-                        }
+                        s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader("Terrain_Specular");
+                        s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader("Terrain_Specular");
+                        pVS->BindTo(pPass);
+                        pPS->BindTo(pPass);
                     }
 
                     pChunk->SetMaterial(pMat);
