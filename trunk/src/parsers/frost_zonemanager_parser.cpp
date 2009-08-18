@@ -102,11 +102,11 @@ namespace Frost
             s_ptr<XML::Block> pTexturesBlock = pChunkBlock->GetBlock("Textures");
             if (pTexturesBlock)
             {
+                s_bool bEnableSpecular = Engine::GetSingleton()->GetConstant("EnableSpecular").Get<s_bool>();
                 s_ptr<XML::Block> pMaskBlock = pTexturesBlock->GetBlock("Mask");
 
                 if (pMaskBlock && pTexturesBlock->GetChildNumber() > 2)
                 {
-                    s_bool bEnableSpecular = Engine::GetSingleton()->GetConstant("EnableSpecular").Get<s_bool>();
                     s_str sMaskFile = pMaskBlock->GetAttribute("file");
 
                     s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
@@ -259,6 +259,70 @@ namespace Frost
                             s_float(pTillingBlock->GetAttribute("x")),
                             s_float(pTillingBlock->GetAttribute("y"))
                         );
+                    }
+
+                    s_ptr<XML::Block> pSpecularBlock = pLayerBlock->GetBlock("Specular");
+                    if (pSpecularBlock && bEnableSpecular)
+                    {
+                        s_ptr<Ogre::Pass> pPass = pMat->GetDefaultPass();
+                        s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
+                        s_str sFileName = pSpecularBlock->GetAttribute("file");
+                        Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
+                        pTUS->setTextureName(sFileName.Get());
+                        pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
+
+                        pPass->setVertexProgram("Terrain_Specular_VS");
+                        pPass->setFragmentProgram("Terrain_Specular_PS");
+
+                        Ogre::GpuProgramParametersSharedPtr pParams = pPass->getVertexProgramParameters();
+                        pParams->setNamedAutoConstant(
+                            "mWorldViewProj",
+                            Ogre::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX
+                        );
+
+                        pParams->setNamedAutoConstant(
+                            "mWorld",
+                            Ogre::GpuProgramParameters::ACT_WORLD_MATRIX
+                        );
+
+                        pParams->setNamedAutoConstant(
+                            "mLightPos",
+                            Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY,
+                            5
+                        );
+                        pParams->setNamedAutoConstant(
+                            "mLightDiffuseColor",
+                            Ogre::GpuProgramParameters::ACT_DERIVED_LIGHT_DIFFUSE_COLOUR_ARRAY,
+                            5
+                        );
+                        pParams->setNamedAutoConstant(
+                            "mLightAtten",
+                            Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION_ARRAY,
+                            5
+                        );
+                        pParams->setNamedAutoConstant(
+                            "mAmbient",
+                            Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR
+                        );
+                        pParams->setNamedAutoConstant(
+                            "mCamPos",
+                            Ogre::GpuProgramParameters::ACT_CAMERA_POSITION
+                        );
+                        if (pTillingBlock)
+                        {
+                            pParams->setNamedAutoConstant(
+                                "mTexCoordMat",
+                                Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX,
+                                0
+                            );
+                        }
+
+                        if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
+                        {
+                            pParams = pPass->getFragmentProgramParameters();
+                            pParams->setNamedConstant("mTexture",  0);
+                            pParams->setNamedConstant("mTextureS", 1);
+                        }
                     }
 
                     pChunk->SetMaterial(pMat);
