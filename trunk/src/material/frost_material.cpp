@@ -90,8 +90,8 @@ namespace Frost
     {
         if (!bHardwareSkinning_ && bEnable)
         {
-            pDefaultPass_->setVertexProgram("Skinning_VS");
-            pDefaultPass_->setFragmentProgram("Skinning_PS");
+            pDefaultPass_->setVertexProgram("Character_Skinning_VS");
+            pDefaultPass_->setFragmentProgram("Character_Skinning_PS");
 
             Ogre::GpuProgramParametersSharedPtr pParams = pDefaultPass_->getVertexProgramParameters();
             pParams->setNamedAutoConstant(
