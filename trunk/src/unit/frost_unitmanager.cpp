@@ -195,7 +195,7 @@ namespace Frost
         {
             if (pInputMgr->GetMouseDownDuration(MOUSE_LEFT) < 0.2f)
             {
-                map< s_uint, s_ptr<Unit> >::iterator iterUnit;
+                s_map< s_uint, s_ptr<Unit> >::iterator iterUnit;
                 foreach (iterUnit, lSelectedUnitList_)
                 {
                     iterUnit->second->NotifySelected(false);
@@ -213,7 +213,7 @@ namespace Frost
         pMouseOveredUnit_ = pUnit;
 
         // Update units
-        map< s_uint, s_ptr<Unit> >::iterator iterUnit;
+        s_map< s_uint, s_ptr<Unit> >::iterator iterUnit;
         foreach (iterUnit, lUnitList_)
         {
             iterUnit->second->Update(fDelta);

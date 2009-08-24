@@ -717,7 +717,7 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
 s_ctnr< s_ptr<Frame> > Frame::GetChildren()
 {
     s_ctnr< s_ptr<Frame> > lChilds;
-    map<s_uint, s_ptr<Frame> >::iterator iterChild;
+    s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList_)
     {
         lChilds.PushBack(iterChild->second);

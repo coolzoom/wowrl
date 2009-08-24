@@ -60,7 +60,7 @@ namespace Frost
 
     Material::~Material()
     {
-        map< s_uint, s_ptr<Decal> >::iterator iterDecal;
+        s_map< s_uint, s_ptr<Decal> >::iterator iterDecal;
         foreach (iterDecal, lDecalList_)
         {
             iterDecal->second.Delete();

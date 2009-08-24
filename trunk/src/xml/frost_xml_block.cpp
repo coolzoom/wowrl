@@ -579,7 +579,7 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
                 "All previously defined childs will be marked as radio blocks."
             );
 
-            map<s_str, PredefinedBlock>::iterator iterPreDef;
+            s_map<s_str, PredefinedBlock>::iterator iterPreDef;
             foreach (iterPreDef, lPreDefBlockList_)
             {
                 iterPreDef->second.bRadio = true;
@@ -587,7 +587,7 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
                 iterPreDef->second.uiMax = 1;
             }
 
-            map<s_str, Block>::iterator iterDef;
+            s_map<s_str, Block>::iterator iterDef;
             foreach (iterDef, lDefBlockList_)
             {
                 iterDef->second.SetRadio();
