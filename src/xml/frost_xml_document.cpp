@@ -272,6 +272,7 @@ s_bool Document::LoadDefinition_()
                 if (CheckLineSynthax_(sLine))
                 {
                     // It's a tag
+
                     if (sLine.Find("<!"))
                     {
                         // Comment
@@ -731,10 +732,21 @@ s_bool Document::LoadDefinition_()
     return true;
 }
 
-s_bool Document::Check()
+s_bool Document::Check( const s_str& sPreProcCommands )
 {
     if (bValid_)
     {
+        s_ctnr<s_str> lPreProcessorCommands;
+        if (sPreProcCommands != "")
+        {
+            lPreProcessorCommands = sPreProcCommands.Cut(",");
+            s_ctnr<s_str>::iterator iter;
+            foreach (iter, lPreProcessorCommands)
+            {
+                iter->Trim(' ');
+            }
+        }
+
         sActualFileName_ = sFileName_;
         File mFile(sFileName_, FILE_I);
         uiLineNbr_ = 1u;
@@ -746,6 +758,8 @@ s_bool Document::Check()
         s_bool       bComment;
         s_str        sCommentTag;
         s_uint       uiCommentTagCount;
+        s_uint       uiSkipUntil = s_uint::NaN;
+        s_uint       uiPreProcessorCount;
 
         while (mFile.IsValid())
         {
@@ -756,10 +770,88 @@ s_bool Document::Check()
                 if (CheckLineSynthax_(sLine))
                 {
                     // It's a tag
-                    if (sLine.Find("<!"))
+
+                    if (sLine.Find("<#"))
+                    {
+                        // Preprocessor
+                        if (uiSkipUntil.IsValid())
+                            ++uiPreProcessorCount;
+                        else
+                        {
+                            if (!sLine.Find("/>"))
+                            {
+                                sLine.EraseFromStart(2);
+                                s_str sParams = sLine.Cut(">", 1).Front();
+                                s_uint i = sParams.FindPos("[");
+                                s_uint j = sParams.FindPos("]");
+                                if (i.IsValid() && j.IsValid() && (i < j) && (j-i > 1))
+                                {
+                                    ++uiPreProcessorCount;
+                                    sParams = sParams.ExtractRange(i+1, j);
+                                    s_ctnr<s_str> lParamList = sParams.Cut(",");
+                                    s_ctnr<s_str>::iterator iterParam;
+                                    foreach (iterParam, lParamList)
+                                    {
+                                        iterParam->Trim(' ');
+                                        s_bool bState;
+                                        if ((*iterParam)[0] == '!')
+                                        {
+                                            iterParam->EraseFromStart(1);
+                                            bState = false;
+                                        }
+                                        else
+                                        {
+                                            bState = true;
+                                        }
+
+                                        if (lPreProcessorCommands.Find(*iterParam) != bState)
+                                        {
+                                            uiSkipUntil = uiPreProcessorCount;
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Error(sFileName_+":"+uiLineNbr_,
+                                        "PreProcessor command with no argument (expected \"[some parameter]\")."
+                                    );
+                                    bValid_ = false;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                Warning(sFileName_+":"+uiLineNbr_,
+                                    "PreProcessor block has no effect."
+                                );
+                            }
+                        }
+                    }
+                    else if (sLine.Find("</#"))
+                    {
+                        // End of preprocessor
+                        if (uiPreProcessorCount > 0)
+                        {
+                            if (uiSkipUntil == uiPreProcessorCount)
+                            {
+                                uiSkipUntil = s_uint::NaN;
+                            }
+                            --uiPreProcessorCount;
+                        }
+                        else
+                        {
+                            Error(sFileName_+":"+uiLineNbr_,
+                                "Unexpected preprocessor closing block."
+                            );
+                            bValid_ = false;
+                            break;
+                        }
+                    }
+                    else if (sLine.Find("<!") && !uiSkipUntil.IsValid())
                     {
                         // Comment
-                        if (!sLine.Find("/>"))
+                        if (!sLine.Find("/>") && !uiSkipUntil.IsValid())
                         {
                             bComment = true;
                             uiCommentTagCount = 1;
@@ -768,7 +860,7 @@ s_bool Document::Check()
                             sCommentTag = sCommentTag.Cut(" ", 1).Front();
                         }
                     }
-                    else if (sLine.Find("<--"))
+                    else if (sLine.Find("<--") && !uiSkipUntil.IsValid())
                     {
                         // Multi-line comment
                         s_uint uiStartLineNbr = uiLineNbr_;
@@ -793,7 +885,7 @@ s_bool Document::Check()
                             }
                         }
                     }
-                    else if (sLine.Find("/>") && !bValue && !bComment)
+                    else if (sLine.Find("/>") && !uiSkipUntil.IsValid() && !bValue && !bComment)
                     {
                         // Monoline block
                         bOpened = false;
@@ -859,7 +951,7 @@ s_bool Document::Check()
                             }
                         }
                     }
-                    else if (sLine.Find("</"))
+                    else if (sLine.Find("</") && !uiSkipUntil.IsValid())
                     {
                         // End tag
                         if (bComment)
@@ -915,7 +1007,7 @@ s_bool Document::Check()
                             }
                         }
                     }
-                    else if (!bValue)
+                    else if (!uiSkipUntil.IsValid() && !bValue)
                     {
                         // Multiline block
                         bOpened = true;
@@ -981,7 +1073,7 @@ s_bool Document::Check()
                             }
                         }
                     }
-                    else if (!bComment)
+                    else if (!uiSkipUntil.IsValid() && !bComment)
                     {
                         Error(sFileName_+":"+uiLineNbr_, "Invalid line.");
                         bValid_ = false;
@@ -1014,6 +1106,13 @@ s_bool Document::Check()
                 pParent = pParent->GetParent();
             }
             bValid_ = false;
+        }
+
+        if (uiPreProcessorCount > 0)
+        {
+            Warning(sFileName_,
+                "Some preprocessor commands have not been closed."
+            );
         }
     }
 
