@@ -10,6 +10,7 @@
 #include "gui/frost_guimanager.h"
 #include "frost_localemanager.h"
 #include "gui/frost_spritemanager.h"
+#include "gui/frost_guistructs.h"
 #include "path/frost_pathmanager.h"
 #include "model/frost_modelmanager.h"
 #include "camera/frost_cameramanager.h"
@@ -158,7 +159,7 @@ namespace Frost
         pOgreSceneMgr_ = pRoot_->createSceneManager(Ogre::ST_GENERIC, "FrostSceneMgr");
 
         // Load shaders
-        if (!LoadShaders_())
+        if (!pShaderMgr_->LoadShaders())
             return false;
 
         pUnitMgr_->Initialize();
@@ -342,196 +343,6 @@ namespace Frost
         }
     }
 
-    s_bool Engine::LoadShaders_()
-    {
-        s_ptr<VertexShader> pVS;
-        s_ptr<PixelShader> pPS;
-
-        // Skinning
-        pVS = pShaderMgr_->CreateVertexShader(
-            "Character_Skinning", "Shaders/Character/Character_Skinning_vs"
-        );
-        pVS->NotifyUsesSkeletalAnimation();
-        pVS->AddAutoParam("mViewProj");
-        pVS->AddAutoParam("mBoneMat",
-            Ogre::GpuProgramParameters::ACT_WORLD_MATRIX_ARRAY_3x4
-        );
-        pVS->Load();
-
-        pPS = pShaderMgr_->CreatePixelShader(
-            "Character_Skinning", "Shaders/Character/Character_Skinning_ps"
-        );
-        pPS->AddLightParams(5);
-        pPS->AddAutoParam("mAmbient");
-        pPS->Load();
-
-        // GUI : desaturation
-        pPS = pShaderMgr_->CreatePixelShader(
-            "GUI_Desaturation", "Shaders/GUI/GUI_Desaturation_ps"
-        );
-        pPS->Load();
-
-        // Terrain
-
-        if (bEnableSpecular_)
-        {
-            // [1] Texture
-            pVS = pShaderMgr_->CreateVertexShader(
-                "Terrain_Specular", "Shaders/Terrain/Terrain_Specular_vs"
-            );
-            pVS->AddAutoParam("mWorldViewProj");
-            pVS->AddAutoParam("mWorld");
-            pVS->AddLightParams(5);
-            pVS->AddAutoParam("mAmbient");
-            pVS->AddAutoParam("mCamPos");
-            pVS->AddAutoParam("mTexCoordMat", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 0);
-            pVS->Load();
-
-            pPS = pShaderMgr_->CreatePixelShader(
-                "Terrain_Specular", "Shaders/Terrain/Terrain_Specular_ps"
-            );
-            pPS->BindTextureSampler("mTexture",  0);
-            pPS->BindTextureSampler("mTextureS", 1);
-            pPS->Load();
-        }
-
-        // [2] Textures
-        pVS = pShaderMgr_->CreateVertexShader(
-            "Terrain_Splatting_2", "Shaders/Terrain/Terrain_Splatting_vs"
-        );
-        pVS->AddAutoParam("mWorldViewProj");
-        pVS->AddAutoParam("mWorld");
-        pVS->AddLightParams(5);
-        pVS->AddAutoParam("mAmbient");
-        if (bEnableSpecular_) pVS->AddAutoParam("mCamPos");
-        pVS->AddAutoParam("mTexCoordMat1", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 1);
-        if (bEnableSpecular_)
-            pVS->AddAutoParam("mTexCoordMat2", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 3);
-        else
-            pVS->AddAutoParam("mTexCoordMat2", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 2);
-        pVS->AddPreprocessor("LAYER=2");
-        if (bEnableSpecular_) pVS->AddPreprocessor("SPECULAR=1");
-        pVS->Load();
-
-        pPS = pShaderMgr_->CreatePixelShader(
-            "Terrain_Splatting_2", "Shaders/Terrain/Terrain_Splatting_ps"
-        );
-        pPS->BindTextureSampler("mMask", 0);
-        pPS->BindTextureSampler("mTexture1", 1);
-        if (bEnableSpecular_)
-        {
-            pPS->BindTextureSampler("mTexture1S", 2);
-            pPS->BindTextureSampler("mTexture2",  3);
-            pPS->BindTextureSampler("mTexture2S", 4);
-        }
-        else
-        {
-            pPS->BindTextureSampler("mTexture2", 2);
-        }
-        pPS->AddPreprocessor("LAYER=2");
-        if (bEnableSpecular_) pPS->AddPreprocessor("SPECULAR=1");
-        pPS->Load();
-
-        // [3] Textures
-        pVS = pShaderMgr_->CreateVertexShader(
-            "Terrain_Splatting_3", "Shaders/Terrain/Terrain_Splatting_vs"
-        );
-        pVS->AddAutoParam("mWorldViewProj");
-        pVS->AddAutoParam("mWorld");
-        pVS->AddLightParams(5);
-        pVS->AddAutoParam("mAmbient");
-        if (bEnableSpecular_) pVS->AddAutoParam("mCamPos");
-        pVS->AddAutoParam("mTexCoordMat1", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 1);
-        if (bEnableSpecular_)
-        {
-            pVS->AddAutoParam("mTexCoordMat2", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 3);
-            pVS->AddAutoParam("mTexCoordMat3", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 5);
-        }
-        else
-        {
-            pVS->AddAutoParam("mTexCoordMat2", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 2);
-            pVS->AddAutoParam("mTexCoordMat3", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 3);
-        }
-        pVS->AddPreprocessor("LAYER=3");
-        if (bEnableSpecular_) pVS->AddPreprocessor("SPECULAR=1");
-        pVS->Load();
-
-        pPS = pShaderMgr_->CreatePixelShader(
-            "Terrain_Splatting_3", "Shaders/Terrain/Terrain_Splatting_ps"
-        );
-        pPS->BindTextureSampler("mMask", 0);
-        pPS->BindTextureSampler("mTexture1", 1);
-        if (bEnableSpecular_)
-        {
-            pPS->BindTextureSampler("mTexture1S", 2);
-            pPS->BindTextureSampler("mTexture2",  3);
-            pPS->BindTextureSampler("mTexture2S", 4);
-            pPS->BindTextureSampler("mTexture3",  5);
-            pPS->BindTextureSampler("mTexture3S", 6);
-        }
-        else
-        {
-            pPS->BindTextureSampler("mTexture2", 2);
-            pPS->BindTextureSampler("mTexture3", 3);
-        }
-        pPS->AddPreprocessor("LAYER=3");
-        if (bEnableSpecular_) pPS->AddPreprocessor("SPECULAR=1");
-        pPS->Load();
-
-        // [4] Textures
-        pVS = pShaderMgr_->CreateVertexShader(
-            "Terrain_Splatting_4", "Shaders/Terrain/Terrain_Splatting_vs"
-        );
-        pVS->AddAutoParam("mWorldViewProj");
-        pVS->AddAutoParam("mWorld");
-        pVS->AddLightParams(5);
-        pVS->AddAutoParam("mAmbient");
-        if (bEnableSpecular_) pVS->AddAutoParam("mCamPos");
-        pVS->AddAutoParam("mTexCoordMat1", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 1);
-        if (bEnableSpecular_)
-        {
-            pVS->AddAutoParam("mTexCoordMat2", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 3);
-            pVS->AddAutoParam("mTexCoordMat3", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 5);
-            pVS->AddAutoParam("mTexCoordMat4", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 7);
-        }
-        else
-        {
-            pVS->AddAutoParam("mTexCoordMat2", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 2);
-            pVS->AddAutoParam("mTexCoordMat3", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 3);
-            pVS->AddAutoParam("mTexCoordMat4", Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX, 4);
-        }
-        pVS->AddPreprocessor("LAYER=4");
-        if (bEnableSpecular_) pVS->AddPreprocessor("SPECULAR=1");
-        pVS->Load();
-
-        pPS = pShaderMgr_->CreatePixelShader(
-            "Terrain_Splatting_4", "Shaders/Terrain/Terrain_Splatting_ps"
-        );
-        pPS->BindTextureSampler("mMask", 0);
-        pPS->BindTextureSampler("mTexture1", 1);
-        if (bEnableSpecular_)
-        {
-            pPS->BindTextureSampler("mTexture1S", 2);
-            pPS->BindTextureSampler("mTexture2",  3);
-            pPS->BindTextureSampler("mTexture2S", 4);
-            pPS->BindTextureSampler("mTexture3",  5);
-            pPS->BindTextureSampler("mTexture3S", 6);
-            pPS->BindTextureSampler("mTexture4",  7);
-            pPS->BindTextureSampler("mTexture4S", 8);
-        }
-        else
-        {
-            pPS->BindTextureSampler("mTexture2", 2);
-            pPS->BindTextureSampler("mTexture3", 3);
-            pPS->BindTextureSampler("mTexture4", 4);
-        }
-        pPS->AddPreprocessor("LAYER=4");
-        if (bEnableSpecular_) pPS->AddPreprocessor("SPECULAR=1");
-        pPS->Load();
-
-        return true;
-    }
-
     s_bool Engine::ReadGameConfig_()
     {
         sGameVersion_ = pLua_->GetGlobalString("sGameVersion", false, "0");
@@ -678,7 +489,7 @@ namespace Frost
         sFileName += "_"+s_str(pTimeMgr_->GetHour(), 2);
         sFileName += "_"+s_str(pTimeMgr_->GetMinutes(), 2);
         sFileName += "_"+s_str(pTimeMgr_->GetSeconds(), 2);
-        sFileName += ".jpg";
+        sFileName += ".png";
         pRenderWindow_->writeContentsToFile(sFileName.Get());
     }
 }

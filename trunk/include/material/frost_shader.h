@@ -33,6 +33,17 @@ namespace Frost
             s_uint uiInfo;
         };
 
+        struct Param
+        {
+            Param(const s_str& sName_, const s_var& vValue_) :
+                sName(sName_), vValue(vValue_)
+            {
+            }
+
+            s_str sName;
+            s_var vValue;
+        };
+
 
         /// Constructor.
         /** \param sName The name of this shader
@@ -56,6 +67,12 @@ namespace Frost
         *         by separating them by commas ','.
         */
         void AddPreProcessor(const s_str& sPPCommand);
+
+        /// Adds a fixed parameter to this shader.
+        /** \param sName  The name of the shader parameter
+        *   \param vValue The value to assign it
+        */
+        void AddParam(const s_str& sName, const s_var& vValue);
 
         /// Adds an automatic parameter.
         /** \param mAuto The automatic parameter
@@ -126,6 +143,7 @@ namespace Frost
         s_str sPPCommands_;
         s_ptr<Ogre::UnifiedHighLevelGpuProgram> pOgreShader_;
         s_ctnr<AutoParam> lAutoParamList_;
+        s_ctnr<Param>     lParamList_;
     };
 
     /// Controls vertices in the graphics card

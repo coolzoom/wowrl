@@ -143,6 +143,13 @@ namespace Frost
                         pShader->AddAutoParam(pParamBlock->GetAttribute("name"));
                     }
                 }
+                else if (pParamBlock->GetName() == "Param")
+                {
+                    pShader->AddParam(
+                        pParamBlock->GetAttribute("name"),
+                        s_float(pParamBlock->GetAttribute("value"))
+                    );
+                }
             }
         }
 
