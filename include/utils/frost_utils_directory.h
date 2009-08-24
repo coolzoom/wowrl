@@ -45,6 +45,18 @@ namespace Frost
         */
         s_ctnr<s_str> GetFileList(const s_bool& bWithPath = false, const s_str& sExtensionFilter = "") const;
 
+        /// Returns the list of the contained files (recursive).
+        /** \param bWithPath       'true' to include this Directory's relative path
+        *   \param sExtensionFilter Use it to filter files depending on their extention
+        *   \return The list of the contained files (recursive)
+        *   \note Example : if you use "xml" as the extention filter, then only *.xml
+        *         files will appear on the list.<br>
+        *         Example : if you use "xml, lua", then you'll only get *.xml and *.lua
+        *         files.<br>
+        *         This function searches through subfolders too.
+        */
+        s_ctnr<s_str> GetRecursiveFileList(const s_bool& bWithPath = false, const s_str& sExtensionFilter = "") const;
+
         /// Returns this directory's name.
         /** \return This directory's name
         *   \note For example : Interface/Base_UI.<br>
