@@ -43,6 +43,11 @@ namespace Frost
         }
     }
 
+    void Shader::AddParam( const s_str& sName, const s_var& vValue )
+    {
+        lParamList_.PushBack(Param(sName, vValue));
+    }
+
     void Shader::AddAutoParam( const AutoParam& mAuto )
     {
         lAutoParamList_.PushBack(mAuto);
@@ -116,12 +121,56 @@ namespace Frost
 
     void Shader::WriteParams_(s_ptr<Ogre::GpuProgramParameters> pOgreShaderParams)
     {
-        s_ctnr<AutoParam>::iterator iterParam;
-        foreach (iterParam, lAutoParamList_)
+        s_ctnr<AutoParam>::iterator iterAutoParam;
+        foreach (iterAutoParam, lAutoParamList_)
         {
             pOgreShaderParams->setNamedAutoConstant(
-                iterParam->sName.Get(), iterParam->mType, iterParam->uiInfo.Get()
+                iterAutoParam->sName.Get(), iterAutoParam->mType, iterAutoParam->uiInfo.Get()
             );
+        }
+
+        s_ctnr<Param>::iterator iterParam;
+        foreach (iterParam, lParamList_)
+        {
+            if (iterParam->vValue.IsOfType<s_float>())
+            {
+                pOgreShaderParams->setNamedConstant(
+                    iterParam->sName.Get(),
+                    iterParam->vValue.Get<s_float>().Get()
+                );
+            }
+            if (iterParam->vValue.IsOfType<s_int>())
+            {
+                pOgreShaderParams->setNamedConstant(
+                    iterParam->sName.Get(),
+                    iterParam->vValue.Get<s_int>().Get()
+                );
+            }
+            if (iterParam->vValue.IsOfType<Vector>())
+            {
+                pOgreShaderParams->setNamedConstant(
+                    iterParam->sName.Get(),
+                    Vector::FrostToOgre(iterParam->vValue.Get<Vector>())
+                );
+            }
+            if (iterParam->vValue.IsOfType< s_array<float> >())
+            {
+                s_array<float> lArray = iterParam->vValue.Get< s_array<float> >();
+                pOgreShaderParams->setNamedConstant(
+                    iterParam->sName.Get(),
+                    lArray.GetClassicArray(),
+                    lArray.GetSize().Get()
+                );
+            }
+            if (iterParam->vValue.IsOfType< s_array<s_int> >())
+            {
+                s_array<int> lArray = iterParam->vValue.Get< s_array<int> >();
+                pOgreShaderParams->setNamedConstant(
+                    iterParam->sName.Get(),
+                    lArray.GetClassicArray(),
+                    lArray.GetSize().Get()
+                );
+            }
         }
     }
 
