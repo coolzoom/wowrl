@@ -117,6 +117,19 @@ namespace Frost
         }
     }
 
+    s_ctnr<s_str> Directory::GetRecursiveFileList(const s_bool& bWithPath, const s_str& sExtensionFilter) const
+    {
+        s_ctnr<s_str> lFileList = GetFileList(bWithPath, sExtensionFilter);
+
+        s_ctnr<Directory>::const_iterator iterSubDir;
+        foreach (iterSubDir, lSubDirectoryList_)
+        {
+            lFileList.PushBack(iterSubDir->GetRecursiveFileList(bWithPath, sExtensionFilter));
+        }
+
+        return lFileList;
+    }
+
     const s_str& Directory::GetName() const
     {
         return sName_;
