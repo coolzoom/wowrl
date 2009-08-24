@@ -56,13 +56,16 @@ namespace XML
         const s_uint& GetLineNbr() const;
 
         /// Parses and validates the XML file.
-        /** \return 'true' if everything went fine
+        /** \param sPreProcCommands Preprocessor commands to use when parsing
+        *                           the xml file
+        *   \return 'true' if everything went fine
         *   \note This function takes care of retreiving
         *         values from the file and also checks the
         *         content of the file acording to the *.def
-        *         file you provided.
+        *         file you provided.<br>
+        *         The preprocessor commands must be separated by commas ','.
         */
-        s_bool        Check();
+        s_bool        Check(const s_str& sPreProcCommands = "");
 
         /// Returns a predefined Block.
         /** \param sName The name of the predefined Block you want
