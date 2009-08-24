@@ -378,7 +378,7 @@ namespace Frost
 
         /// Removes all characters between the provided positions.
         /** \param uiStart From where to start erasing
-        *   \param uiEnd   From where to end (inclusive)
+        *   \param uiEnd   From where to end (exclusive)
         */
         void EraseRange(const s_uint& uiStart = 0u, const s_uint& uiEnd = s_uint::INF)
         {
@@ -406,7 +406,7 @@ namespace Frost
 
         /// Returns all characters between the provided positions.
         /** \param uiStart From where to start reading
-        *   \param uiEnd   From where to end (inlusive)
+        *   \param uiEnd   From where to end (exclusive)
         *   \return The resulting string
         */
         s_str_t ExtractRange(const s_uint& uiStart = 0u, const s_uint& uiEnd = s_uint::INF) const
