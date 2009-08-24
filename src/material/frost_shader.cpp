@@ -31,7 +31,7 @@ namespace Frost
         sFile_ = sFile;
     }
 
-    void Shader::AddPreprocessor( const s_str& sPPCommand )
+    void Shader::AddPreProcessor( const s_str& sPPCommand )
     {
         if (sPPCommands_.IsEmpty())
         {
@@ -50,6 +50,24 @@ namespace Frost
 
     void Shader::AddAutoParam( const s_str& sName, Ogre::GpuProgramParameters::AutoConstantType mType, const s_uint& uiInfo )
     {
+        lAutoParamList_.PushBack(AutoParam(sName, mType, uiInfo));
+    }
+
+    void Shader::AddAutoParam( const s_str& sName, const s_str& sType, const s_uint& uiInfo )
+    {
+        Ogre::GpuProgramParameters::AutoConstantType mType;
+        if (sType == "texture_matrix")
+            mType = Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX;
+        else if (sType == "world_matrix_array_3x4")
+            mType = Ogre::GpuProgramParameters::ACT_WORLD_MATRIX_ARRAY_3x4;
+        else
+        {
+            Error(CLASS_NAME,
+                "Unsupported auto param : \""+sType+"\"."
+            );
+            mType = Ogre::GpuProgramParameters::ACT_TIME;
+        }
+
         lAutoParamList_.PushBack(AutoParam(sName, mType, uiInfo));
     }
 
