@@ -40,7 +40,7 @@ namespace Frost
         fPowerRegenRatio.AddBonus(mBonusSet.fPowerRegenRatio);
         fMovementSpeedPercent.AddBonus(mBonusSet.fMovementSpeedPercent);
 
-        map< s_str, Bonus<s_var> >::iterator iterBonus;
+        s_map< s_str, Bonus<s_var> >::iterator iterBonus;
         foreach (iterBonus, mBonusSet.lBonusList)
         {
             if (lCharactList.Find(iterBonus->first))
@@ -64,7 +64,7 @@ namespace Frost
         fPowerRegenRatio.RemoveBonus(mBonusSet.fPowerRegenRatio);
         fMovementSpeedPercent.RemoveBonus(mBonusSet.fMovementSpeedPercent);
 
-        map< s_str, Bonus<s_var> >::iterator iterBonus;
+        s_map< s_str, Bonus<s_var> >::iterator iterBonus;
         foreach (iterBonus, mBonusSet.lBonusList)
         {
             if (lCharactList.Find(iterBonus->first))

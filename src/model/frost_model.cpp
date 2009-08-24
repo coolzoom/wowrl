@@ -41,7 +41,7 @@ namespace Frost
 
         pAnimMgr_ = s_refptr<AnimManager>(new AnimManager(this, mData.lAnimList_));
 
-        map< s_uint, s_ptr<ModelPart> >::const_iterator iterMP;
+        s_map< s_uint, s_ptr<ModelPart> >::const_iterator iterMP;
         foreach (iterMP, mData.lModelPartList_)
         {
             lModelPartList_[iterMP->first] = new ModelPart(*iterMP->second, this);
@@ -50,7 +50,7 @@ namespace Frost
 
     Model::~Model()
     {
-        map< s_uint, s_ptr<ModelPart> >::iterator iterPart;
+        s_map< s_uint, s_ptr<ModelPart> >::iterator iterPart;
         foreach (iterPart, lModelPartList_)
         {
             iterPart->second.Delete();

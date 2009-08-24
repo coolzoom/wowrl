@@ -191,7 +191,6 @@ int main(int argc, char* argv[])
             }
             else
             {
-
                 // Set render and frame functions
                 pFrost->SetFrameFunction(&GameFrameFunc);
                 SpriteManager::GetSingleton()->SetRenderFunction(&GameRenderFunc);

@@ -71,7 +71,7 @@ namespace Frost
 
         if (bNewViewport_)
         {
-            map< s_uint, s_ptr<Camera> >::iterator iterCamera;
+            s_map< s_uint, s_ptr<Camera> >::iterator iterCamera;
             foreach (iterCamera, lCameraList_)
             {
                 iterCamera->second->GetOgreCamera()->setAspectRatio(
@@ -124,7 +124,7 @@ namespace Frost
 
     void CameraManager::UpdateCameras(const s_float& fDelta)
     {
-        map< s_uint, s_ptr<Camera> >::iterator iterCamera;
+        s_map< s_uint, s_ptr<Camera> >::iterator iterCamera;
         foreach (iterCamera, lCameraList_)
         {
             iterCamera->second->Update(fDelta);

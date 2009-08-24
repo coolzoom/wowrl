@@ -75,7 +75,7 @@ namespace Frost
         else
         {
             s_ptr<Animation> pAnim;
-            map<s_uint, AnimationSequence>::iterator iterAnim;
+            s_map<s_uint, AnimationSequence>::iterator iterAnim;
             iterAnim = lAnimList_.Get(static_cast<uint>(mID));
             if (iterAnim != lAnimList_.End())
                 pAnim = &iterAnim->second.lSequence[0];

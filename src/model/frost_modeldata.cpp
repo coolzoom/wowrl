@@ -254,12 +254,12 @@ namespace Frost
                 pBone->setPosition(mBonePos - mParentPos);
 
                 // Pre-load animation data
-                std::map<uint, Ogre::Vector3> lTranslation;
-                std::map<uint, Ogre::Vector3> lScaling;
-                std::map<uint, Ogre::Quaternion> lRotation;
+                map<uint, Ogre::Vector3> lTranslation;
+                map<uint, Ogre::Vector3> lScaling;
+                map<uint, Ogre::Quaternion> lRotation;
 
                 // Pre-load animation data
-                std::map<uint, AnimData> lData;
+                map<uint, AnimData> lData;
                 // Translation
                 uint* lTimes = (uint*)(sBuffer + lBones[i].translation.ofsTimes);
                 float* lValues = (float*)(sBuffer + lBones[i].translation.ofsKeys);
@@ -546,7 +546,7 @@ namespace Frost
 
     ModelData::~ModelData()
     {
-        map< s_uint, s_ptr<ModelPart> >::iterator iterPart;
+        s_map< s_uint, s_ptr<ModelPart> >::iterator iterPart;
         foreach (iterPart, lModelPartList_)
         {
             iterPart->second.Delete();
