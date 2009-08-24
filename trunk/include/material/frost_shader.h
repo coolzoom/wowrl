@@ -55,7 +55,7 @@ namespace Frost
         *   \note You can add several commands at the same time
         *         by separating them by commas ','.
         */
-        void AddPreprocessor(const s_str& sPPCommand);
+        void AddPreProcessor(const s_str& sPPCommand);
 
         /// Adds an automatic parameter.
         /** \param mAuto The automatic parameter
@@ -74,6 +74,16 @@ namespace Frost
         *         object (nearby lights, animation matrices, ...).
         */
         void AddAutoParam(const s_str& sName, Ogre::GpuProgramParameters::AutoConstantType mType, const s_uint& uiInfo = 0);
+
+                /// Adds an automatic parameter.
+        /** \param sName  The name of the shader parameter
+        *   \param sType  What kind of value to put in this parameter
+        *   \param uiInfo Optionnal parameter (number of light, texture id, ...)
+        *   \note Automatic parameters are handled by Ogre. It automatically
+        *         (hence the name) sets the value depending on the rendered
+        *         object (nearby lights, animation matrices, ...).
+        */
+        void AddAutoParam(const s_str& sName, const s_str& sType, const s_uint& uiInfo = 0);
 
         /// Adds an automatic parameter.
         /** \param sName The name of the shader parameter

@@ -1,0 +1,3 @@
+<Shaders>
+    <PixelShader name="GUI_Desaturation" file="Shaders/GUI/GUI_Desaturation_ps"/>
+</Shaders>

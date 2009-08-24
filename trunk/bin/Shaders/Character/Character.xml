@@ -1,0 +1,14 @@
+<Shaders>
+    <VertexShader name="Character_Skinning" file="Shaders/Character/Character_Skinning_vs" skeletalAnimation="true">
+        <Params>
+            <AutoParam name="mViewProj"/>
+            <AutoParam name="mBoneMat" param="world_matrix_array_3x4"/>
+        </Params>
+    </VertexShader>
+    <PixelShader name="Character_Skinning" file="Shaders/Character/Character_Skinning_ps">
+        <Params>
+            <LightParams number="5"/>
+            <AutoParam name="mAmbient"/>
+        </Params>
+    </PixelShader>
+</Shaders>

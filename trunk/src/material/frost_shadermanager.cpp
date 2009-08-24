@@ -87,4 +87,18 @@ namespace Frost
             return NULL;
         }
     }
+
+    s_bool ShaderManager::LoadShaders()
+    {
+        Directory mDir("Shaders");
+
+        s_ctnr<s_str> lFileList = mDir.GetRecursiveFileList(true, "xml");
+        s_ctnr<s_str>::iterator iterFile;
+        foreach (iterFile, lFileList)
+        {
+            ParseXMLFile_(*iterFile);
+        }
+
+        return true;
+    }
 }

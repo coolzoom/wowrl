@@ -56,6 +56,11 @@ namespace Frost
         */
         s_ptr<PixelShader>  GetPixelShader(const s_str& sName) const;
 
+        /// Reads the content of the Shaders folder.
+        /** \return 'true' if everything went fine
+        */
+        s_bool LoadShaders();
+
         static const s_str CLASS_NAME;
 
     protected :
@@ -88,6 +93,12 @@ namespace Frost
         ShaderManager& operator = (const ShaderManager& mMgr);
 
     private :
+
+        s_bool ParseXMLFile_(const s_str& sFile);
+        s_bool ParseVertexShader_(s_ptr<XML::Block> pShaderBlock);
+        s_bool ParsePixelShader_(s_ptr<XML::Block> pShaderBlock);
+        s_bool ParsePreProcessor_(s_ptr<XML::Block> pShaderBlock, s_ptr<Shader> pShader);
+        s_bool ParseParams_(s_ptr<XML::Block> pShaderBlock, s_ptr<Shader> pShader);
 
         s_map< s_str, s_ptr<Shader> > lShaderList_;
 
