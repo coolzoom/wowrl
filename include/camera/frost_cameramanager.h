@@ -102,7 +102,9 @@ namespace Frost
         s_map< s_uint, s_ptr<Camera> > lCameraList_;
 
         s_ptr<Camera>         pMainCamera_;
-        s_ptr<Ogre::Viewport> pViewport_;
+        s_ptr<Camera>         pDefaultCamera_;
+        s_ptr<Ogre::Viewport> pMainViewport_;
+        s_ptr<Ogre::Viewport> pSceneViewport_;
         s_bool                bNewViewport_;
 
     };

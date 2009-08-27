@@ -65,6 +65,8 @@ namespace Frost
             mType = Ogre::GpuProgramParameters::ACT_TEXTURE_MATRIX;
         else if (sType == "world_matrix_array_3x4")
             mType = Ogre::GpuProgramParameters::ACT_WORLD_MATRIX_ARRAY_3x4;
+        else if (sType == "far_clip_distance")
+            mType = Ogre::GpuProgramParameters::ACT_FAR_CLIP_DISTANCE;
         else
         {
             Error(CLASS_NAME,

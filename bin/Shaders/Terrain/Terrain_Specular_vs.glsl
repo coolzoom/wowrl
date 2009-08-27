@@ -6,6 +6,9 @@ attribute vec4 uv0;
 // Output
 varying vec3 vColor;
 varying vec3 vSpecColor;
+#ifdef MOTION_BLUR
+    varying float vDepth;
+#endif
 
 // Provided by Ogre
 uniform mat4 mWorldViewProj;
@@ -18,6 +21,10 @@ uniform vec4 mLightAtten[5];
 uniform vec4 mAmbient;
 
 uniform mat4 mTexCoordMat;
+
+#ifdef MOTION_BLUR
+    uniform float mCamMaxDepth;
+#endif
 
 void main()
 {
@@ -57,6 +64,9 @@ void main()
 
     // Apply position and camera projection
     gl_Position = mWorldViewProj * vertex;
+    #ifdef MOTION_BLUR
+        vDepth = distance(tPosition, mCamPos.xyz)/mCamMaxDepth;
+    #endif
 
     gl_TexCoord[0] = mTexCoordMat * uv0;
 }

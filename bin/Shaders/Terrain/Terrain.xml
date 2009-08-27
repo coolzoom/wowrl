@@ -8,13 +8,26 @@
                 <AutoParam name="mWorld"/>
                 <AutoParam name="mCamPos"/>
                 <AutoParam name="mTexCoordMat" param="texture_matrix" data="0"/>
+                <#[MOTION_BLUR]>
+                    <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
+                </#>
             </Params>
+            <#[MOTION_BLUR]>
+                <PreProcessor>
+                    <Directive variable="MOTION_BLUR"/>
+                </PreProcessor>
+            </#>
         </VertexShader>
         <PixelShader name="Terrain_Specular" file="Shaders/Terrain/Terrain_Specular_ps">
             <TextureBinds>
                 <TextureBind name="mTexture"  id="0"/>
                 <TextureBind name="mTextureS" id="1"/>
             </TextureBinds>
+            <#[MOTION_BLUR]>
+                <PreProcessor>
+                    <Directive variable="MOTION_BLUR"/>
+                </PreProcessor>
+            </#>
         </PixelShader>
     </#>
     
@@ -33,11 +46,21 @@
             <#[!SPECULAR]>
                 <AutoParam name="mTexCoordMat2" param="texture_matrix" data="2"/>
             </#>
+            
+            <#[MOTION_BLUR]>
+                <#[!SPECULAR]>
+                    <AutoParam name="mCamPos"/>
+                </#>
+                <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
+            </#>
         </Params>
         <PreProcessor>
             <Directive variable="LAYER" value="2"/>
             <#[SPECULAR]>
                 <Directive variable="SPECULAR"/>
+            </#>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
             </#>
         </PreProcessor>
     </VertexShader>
@@ -60,6 +83,9 @@
             <#[SPECULAR]>
                 <Directive variable="SPECULAR"/>
             </#>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
         </PreProcessor>
     </PixelShader>
     
@@ -80,11 +106,21 @@
                 <AutoParam name="mTexCoordMat2" param="texture_matrix" data="2"/>
                 <AutoParam name="mTexCoordMat3" param="texture_matrix" data="3"/>
             </#>
+            
+            <#[MOTION_BLUR]>
+                <#[!SPECULAR]>
+                    <AutoParam name="mCamPos"/>
+                </#>
+                <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
+            </#>
         </Params>
         <PreProcessor>
             <Directive variable="LAYER" value="3"/>
             <#[SPECULAR]>
                 <Directive variable="SPECULAR"/>
+            </#>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
             </#>
         </PreProcessor>
     </VertexShader>
@@ -110,6 +146,9 @@
             <#[SPECULAR]>
                 <Directive variable="SPECULAR"/>
             </#>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
         </PreProcessor>
     </PixelShader>
     
@@ -132,11 +171,21 @@
                 <AutoParam name="mTexCoordMat3" param="texture_matrix" data="3"/>
                 <AutoParam name="mTexCoordMat4" param="texture_matrix" data="4"/>
             </#>
+            
+            <#[MOTION_BLUR]>
+                <#[!SPECULAR]>
+                    <AutoParam name="mCamPos"/>
+                </#>
+                <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
+            </#>
         </Params>
         <PreProcessor>
             <Directive variable="LAYER" value="4"/>
             <#[SPECULAR]>
                 <Directive variable="SPECULAR"/>
+            </#>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
             </#>
         </PreProcessor>
     </VertexShader>
@@ -164,6 +213,9 @@
             <Directive variable="LAYER" value="4"/>
             <#[SPECULAR]>
                 <Directive variable="SPECULAR"/>
+            </#>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
             </#>
         </PreProcessor>
     </PixelShader>

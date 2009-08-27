@@ -11,10 +11,17 @@ void main_vs(
               out float2 oTexture   : TEXCOORD0,
               out float3 oColor     : TEXCOORD1,
               out float3 oSpecColor : TEXCOORD2,
+            #ifdef MOTION_BLUR
+              out float  oDepth     : TEXCOORD3,
+            #endif
 
             // Provided by Ogre
               uniform float4x4 mWorldViewProj,
               uniform float4x4 mWorld,
+              
+            #ifdef MOTION_BLUR
+              uniform float    mCamMaxDepth,
+            #endif
              
               uniform float4x4 mTexCoordMat,
             
@@ -61,6 +68,9 @@ void main_vs(
 
     // Apply position and camera projection
     oPosition = mul(mWorldViewProj, iPosition);
+    #ifdef MOTION_BLUR
+        oDepth = distance(tPosition, mCamPos.xyz)/mCamMaxDepth;
+    #endif
 
     oTexture = mul(mTexCoordMat, iTexture);
 }

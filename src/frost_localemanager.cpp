@@ -51,7 +51,7 @@ namespace Frost
 
     s_bool LocaleManager::ReadConfig()
     {
-        sLocale_ = LuaManager::GetSingleton()->GetDefaultLua()->GetGlobalString("sLocale");
+        sLocale_ = Engine::GetSingleton()->GetStringConstant("GameLocale");
         if (sLocale_ == "")
         {
             Error(CLASS_NAME, "No locale specified.");

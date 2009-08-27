@@ -7,6 +7,7 @@
 
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include "gui/frost_guistructs.h"
 
 #include <OgreCamera.h>
 #include <OgreRenderWindow.h>
@@ -29,13 +30,6 @@ namespace Frost
         foreach (iterCamera, lCameraList_)
         {
             iterCamera->second.Delete();
-        }
-
-        if (pMainCamera_)
-        {
-            Engine::GetSingleton()->GetRenderWindow()->removeViewport(
-                pViewport_->getZOrder()
-            );
         }
     }
 
@@ -63,7 +57,7 @@ namespace Frost
             Error(CLASS_NAME, "No main camera defined.");
             return false;
         }
-        if (pViewport_ == NULL)
+        if (pMainViewport_ == NULL)
         {
             Error(CLASS_NAME, "Viewport not created.");
             return false;
@@ -75,8 +69,8 @@ namespace Frost
             foreach (iterCamera, lCameraList_)
             {
                 iterCamera->second->GetOgreCamera()->setAspectRatio(
-                    Ogre::Real(pViewport_->getActualWidth()) /
-                    Ogre::Real(pViewport_->getActualHeight())
+                    Ogre::Real(pSceneViewport_->getActualWidth()) /
+                    Ogre::Real(pSceneViewport_->getActualHeight())
                 );
             }
             bNewViewport_ = false;
@@ -96,17 +90,29 @@ namespace Frost
                 pMainCamera_ = pCamera;
                 pMainCamera_->NotifyMainCamera(true);
 
-                if (pViewport_ == NULL)
+                if (pMainViewport_ == NULL)
                 {
-                    pViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
+                    pDefaultCamera_ = CreateCamera();
+                    pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
+                        pDefaultCamera_->GetOgreCamera().Get()
+                    );
+                    pMainViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+                    pDefaultCamera_->GetOgreCamera()->setAspectRatio(
+                        Ogre::Real(pMainViewport_->getActualWidth()) /
+                        Ogre::Real(pMainViewport_->getActualHeight())
+                    );
+
+                    pSceneViewport_ = Engine::GetSingleton()->GetSceneRenderTarget()->GetOgreRenderTarget()->addViewport(
                         pMainCamera_->GetOgreCamera().Get()
                     );
-                    pViewport_->setBackgroundColour(Ogre::ColourValue(0.0f,0.0f,0.0f));
+                    pSceneViewport_->setClearEveryFrame(true);
+                    pSceneViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+
                     bNewViewport_ = true;
                 }
                 else
                 {
-                    pViewport_->setCamera(pMainCamera_->GetOgreCamera().Get());
+                    pSceneViewport_->setCamera(pMainCamera_->GetOgreCamera().Get());
                 }
             }
         }
@@ -119,7 +125,7 @@ namespace Frost
 
     s_ptr<Ogre::Viewport> CameraManager::GetMainViewport()
     {
-        return pViewport_;
+        return pMainViewport_;
     }
 
     void CameraManager::UpdateCameras(const s_float& fDelta)

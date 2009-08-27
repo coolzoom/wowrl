@@ -67,7 +67,7 @@ namespace Frost
 
     s_bool FontManager::ReadConfig()
     {
-        sDefaultFont_ = LuaManager::GetSingleton()->GetDefaultLua()->GetGlobalString("sDefaultFont");
+        sDefaultFont_ = Engine::GetSingleton()->GetStringConstant("DefaultFont");
         if (sDefaultFont_ == "")
         {
             Error(CLASS_NAME, "No default font specified.");
