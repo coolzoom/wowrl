@@ -42,6 +42,7 @@
 #define FROST_SPRITEMANAGER_H
 
 #include "frost.h"
+#include "gui/frost_guistructs.h"
 
 #include <OgreRenderOperation.h>
 #include <OgreHardwareVertexBuffer.h>
@@ -72,12 +73,9 @@ namespace Frost
         virtual void renderQueueEnded(Ogre::uint8 uiQueueGroupId, const Ogre::String &sInvocation, bool &bRepeat);
 
         /// Initializes this manager.
-        /** \param pSceneMgr The scene manager to use
-        *   \param fWidth    The width of the rendering region
-        *   \param fHeight   The height of the rendering region
-        *   \note Automatically called by Engine.
+        /** \note Automatically called by Engine.
         */
-        void         Initialize(s_ptr<Ogre::SceneManager> pSceneMgr, const s_float& fWidth, const s_float& fHeight);
+        void         Initialize();
 
         /// Renders a single quad on the screen.
         /** \param mQuad A reference to a Quad
@@ -161,6 +159,34 @@ namespace Frost
         */
         void         DisablePreciseRendering();
 
+        /// Enables automatic rendering on the screen.
+        /** \note What you render in the RenderFunction is actually rendered
+        *         into a (hidden) render target, which is drawn on the "screen"
+        *         when Ogre updates it.<br>
+        *         But Ogre also updates all other render targets (only those
+        *         created with USAGE_3D), and you may want to disable 2D
+        *         rendering for those.<br>
+        *         This function (and DisableAutomaticRendering()) allow you
+        *         to do that.<br>
+        *         Note that the content of your RenderFunction will always be
+        *         executed.
+        */
+        void         EnableAutomaticRendering();
+
+        /// Disables automatic rendering on the screen.
+        /** \note What you render in the RenderFunction is actually rendered
+        *         into a (hidden) render target, which is drawn on the "screen"
+        *         when Ogre updates it.<br>
+        *         But Ogre also updates all other render targets (only those
+        *         created with USAGE_3D), and you may want to disable 2D
+        *         rendering for those.<br>
+        *         This function (and EnableAutomaticRendering()) allow you
+        *         to do that.<br>
+        *         Note that the content of your RenderFunction will always be
+        *         executed.
+        */
+        void         DisableAutomaticRendering();
+
         /// Checks if precise rendering is enabled.
         /** \return 'true' if precise rendering is enabled
         */
@@ -170,6 +196,8 @@ namespace Frost
         /** \param sTargetName The name of this render target
         *   \param uiWidth     The width of this render target
         *   \param uiHeight    The height of this render target
+        *   \param mType       The pixel type to use
+        *   \param mUsage      The render target usage (2D or 3D)
         *   \return The new RenderTarget
         *   \note For compatibility issues, the created render target will be
         *         enlarged to have a power of two for both height and width. This won't
@@ -179,11 +207,19 @@ namespace Frost
         *         To get the "rendered" width, use Frost::RenderTarget::uiWidth.<br>
         *         Same goes for the height.
         */
-        s_ptr<RenderTarget> CreateRenderTarget(const s_str& sTargetName, const s_uint& uiWidth, const s_uint& uiHeight);
+        s_ptr<RenderTarget> CreateRenderTarget(
+            const s_str& sTargetName,
+            const s_uint& uiWidth,
+            const s_uint& uiHeight,
+            const RenderTarget::PixelType& mType = RenderTarget::PIXEL_ARGB,
+            const RenderTarget::Usage& mUsage = RenderTarget::USAGE_2D
+        );
 
         /// Creates a new RenderTarget.
         /** \param uiWidth     The width of this render target
         *   \param uiHeight    The height of this render target
+        *   \param mType       The pixel type to use
+        *   \param mUsage      The render target usage (2D or 3D)
         *   \return The new RenderTarget
         *   \note For compatibility issues, the created render target will be
         *         enlarged to have a power of two for both height and width. This won't
@@ -193,7 +229,12 @@ namespace Frost
         *         To get the "rendered" width, use Frost::RenderTarget::uiWidth.<br>
         *         Same goes for the height.
         */
-        s_ptr<RenderTarget> CreateRenderTarget(const s_uint& uiWidth, const s_uint& uiHeight);
+        s_ptr<RenderTarget> CreateRenderTarget(
+            const s_uint& uiWidth,
+            const s_uint& uiHeight,
+            const RenderTarget::PixelType& mType = RenderTarget::PIXEL_ARGB,
+            const RenderTarget::Usage& mUsage = RenderTarget::USAGE_2D
+        );
 
         /// Deletes a RenderTarget.
         /** \param mTarget The RenderTarget you want to delete
@@ -259,6 +300,8 @@ namespace Frost
 
         s_ptr<Ogre::SceneManager> pSceneMgr_;
         s_ptr<Ogre::RenderSystem> pRS_;
+
+        s_bool bAutoRenderingDisabled_;
 
         // Ogre specifics
         Ogre::RenderOperation               mRenderOp_;

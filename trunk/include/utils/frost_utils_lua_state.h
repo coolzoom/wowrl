@@ -64,12 +64,12 @@ namespace Frost
             */
             lua_State* GetState();
 
-            /// Concatenates a Lua table into a string
+            /// Concatenates a Lua table into a string.
             /** \param sTable The name of the table in Lua
             */
             s_str   ConcTable(const s_str& sTable);
 
-            /// Copy the content of a table from a Lua state to another
+            /// Copy the content of a table from a Lua state to another.
             /** \param pLua      The other Lua state into wich the table will be copied
             *   \param sSrcName  The name of the table in the source state
             *   \param sDestName The name of the table in the destination state
@@ -77,28 +77,28 @@ namespace Frost
             */
             void    CopyTable(s_ptr<State> pLua , const s_str& sSrcName, const s_str& sDestName = "");
 
-            /// Executes a Lua file
+            /// Executes a Lua file.
             /** \param sFile The name of the file
             *   \return 'false' if there was an error in the file
             *   \note This function prints the errors in the log file
             */
             s_bool  DoFile(const s_str& sFile);
 
-            /// Executes a string containing Lua instructions
+            /// Executes a string containing Lua instructions.
             /** \param sStr The string to execute
             *   \return 'false' if there was an error in the string
             *   \note This function prints the errors in the log file
             */
             s_bool  DoString(const s_str& sStr);
 
-            /// Executes a Lua function
+            /// Executes a Lua function.
             /** \param sFunctionName The name of the function to execute
             *   \return 'false' if there was an error
             *   \note This function prints the errors in the log file
             */
             s_bool  CallFunction(const s_str& sFunctionName);
 
-            /// Executes a Lua function with arguments
+            /// Executes a Lua function with arguments.
             /** \param sFunctionName  The name of the function to execute
             *   \param lArgumentStack The agument stack (order matters)
             *   \return 'false' if there was an error
@@ -119,7 +119,7 @@ namespace Frost
                 Lunar<T>::Register(pLua_);
             }
 
-            /// Prints an error string in the log file with the Lua tag
+            /// Prints an error string in the log file with the Lua tag.
             /** \param sError The error string to output
             *   \note This function will print out the actual file and line
             */

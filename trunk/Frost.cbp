@@ -299,6 +299,7 @@
 		<Unit filename="src\model\frost_modelpart.cpp" />
 		<Unit filename="src\parsers\frost_gameplaymanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_guimanager_parser.cpp" />
+		<Unit filename="src\parsers\frost_shadermanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_unitmanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_zonemanager_parser.cpp" />
 		<Unit filename="src\path\frost_path.cpp" />

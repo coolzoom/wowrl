@@ -23,6 +23,8 @@ namespace Frost
         GAMESTATE_LOADING
     };
 
+    class SceneDepthTargetListener;
+
     /// Game manager
     /** A typical application using Frost :
     *   - create a new Engine by calling Engine::GetSingleton()
@@ -86,6 +88,24 @@ namespace Frost
         */
         s_var               GetConstant(const s_str& sConstantName) const;
 
+        /// Returns a game constant.
+        /** \param sConstantName The name of the constant you're searching for
+        *   \return A string containing the value you asked
+        */
+        s_str               GetStringConstant(const s_str& sConstantName) const;
+
+        /// Returns a game constant.
+        /** \param sConstantName The name of the constant you're searching for
+        *   \return A uint containing the value you asked
+        */
+        s_uint              GetUIntConstant(const s_str& sConstantName) const;
+
+        /// Returns a game constant.
+        /** \param sConstantName The name of the constant you're searching for
+        *   \return A bool containing the value you asked
+        */
+        s_bool              GetBoolConstant(const s_str& sConstantName) const;
+
         /// Returns the log file used to print debug infos.
         /** \return The log file used to print debug infos
         */
@@ -104,23 +124,28 @@ namespace Frost
         /// Returns the render window's width.
         /** \return The render window's width
         */
-        const s_uint&       GetScreenWidth() const;
+        s_uint              GetScreenWidth() const;
 
         /// Returns the render window's height.
         /** \return The render window's height
         */
-        const s_uint&       GetScreenHeight() const;
+        s_uint              GetScreenHeight() const;
 
         /// Returns the name of the currently used renderer.
         /** \return The name of the currently used renderer
-        *   \note Can be either "Direct3D9" or "OpenGL".
+        *   \note Can be either "DirectX" or "OpenGL".
         */
-        const s_str&        GetRenderer() const;
+        s_str               GetRenderer() const;
 
         /// Returns the Ogre::RenderWindow used by the engine.
         /** \return The Ogre::RenderWindow used by the engine
         */
         s_ptr<Ogre::RenderWindow> GetRenderWindow();
+
+        /// Returns the render target on which the scene is drawn in.
+        /** \return The render target on which the scene is drawn in
+        */
+        s_ptr<RenderTarget> GetSceneRenderTarget();
 
         typedef             s_bool (*Function)();
         /// Sets the new function to call on each frame.
@@ -139,6 +164,12 @@ namespace Frost
         *         Screenshots folder.
         */
         void                TakeScreenshot();
+
+        /// Renders a quad containing the 3D scene.
+        /** \note Must be called between SpriteManager::Begin() and
+        *         SpriteManager::End().
+        */
+        void                RenderScene();
 
         static const s_str CLASS_NAME;
 
@@ -177,19 +208,12 @@ namespace Frost
         s_bool bShutDown_;
         s_bool bRun_;
 
-        s_str  sRenderer_;
-
-        s_uint uiScreenWidth_;
-        s_uint uiScreenHeight_;
-
         // Game state
         s_int  iGameState_;
         s_bool bGamePaused_;
 
         // Game constants
-        s_str  sGameVersion_;
-        s_int  iMaxComputedPaths_;
-        s_bool bEnableSpecular_;
+        s_map<s_str, s_var> lGameOptionList_;
 
         // Frame function
         Function pFrameFunc_;
@@ -218,6 +242,10 @@ namespace Frost
 
         // Lua
         s_ptr<Lua::State> pLua_;
+
+        // Render targets
+        s_ptr<RenderTarget> pSceneRenderTarget_;
+        s_ptr<Sprite>       pSceneSprite_;
 
         // OGRE variables
         s_ptr<Ogre::Root>         pRoot_;

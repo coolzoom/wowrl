@@ -18,27 +18,64 @@ namespace Frost
     {
     public :
 
+        enum PixelType
+        {
+            PIXEL_ARGB, /// Alpha, Red, Green, Blue (8 bits each)
+            PIXEL_XRGB, /// Red, Green, Blue (8 bits each, Alpha is discarded)
+            PIXEL_FLOAT /// A 32 bit floating point target (depth, ...)
+        };
+
+        enum Usage
+        {
+            USAGE_2D, /// The render target is only used to draw 2D quads (it is not assigned any camera)
+            USAGE_3D  /// The render target is used to draw 3D objects and needs a camera (a viewport acutally)
+        };
+
         /// Constructor.
         /** \param uiID     The unique ID to give to that RenderTarget
         *   \param uiWidth  The width of the RenderTarget
         *   \param uiHeight The height of the RenderTarget
+        *   \param mType    The pixel type to use
+        *   \param mUsage   The render usage (2D or 3D)
         *   \note You shouldn't have to call this. Use the
         *         SpriteManager instead.
         */
-        RenderTarget(const s_uint& uiID, const s_uint& uiWidth, const s_uint& uiHeight);
+        RenderTarget(
+            const s_uint& uiID,
+            const s_uint& uiWidth,
+            const s_uint& uiHeight,
+            const PixelType& mType = PIXEL_ARGB,
+            const Usage& mUsage = USAGE_2D
+        );
 
         /// Constructor.
         /** \param uiID     The unique ID to give to that RenderTarget
         *   \param sName    The name to give to this RenderTarget
         *   \param uiWidth  The width of the RenderTarget
         *   \param uiHeight The height of the RenderTarget
+        *   \param mType    The pixel type to use
+        *   \param mUsage   The render usage (2D or 3D)
         *   \note You shouldn't have to call this. Use the
         *         SpriteManager instead.
         */
-        RenderTarget(const s_uint& uiID, const s_str& sName, const s_uint& uiWidth, const s_uint& uiHeight);
+        RenderTarget(
+            const s_uint& uiID,
+            const s_str& sName,
+            const s_uint& uiWidth,
+            const s_uint& uiHeight,
+            const PixelType& mType = PIXEL_ARGB,
+            const Usage& mUsage = USAGE_2D
+        );
 
         /// Destructor.
         ~RenderTarget();
+
+        /// Adds a new listener to this RenderTarget.
+        /** \param pListener The new listener
+        *   \note The listener will automatically be deleted along
+        *         with this RenderTarget.
+        */
+        void                      AddListener(s_ptr<Ogre::RenderTargetListener> pListener);
 
         /// Returns this render target's width.
         /** \return This render target's width
@@ -99,6 +136,8 @@ namespace Frost
         s_uint                    uiRealHeight_;
         s_uint                    uiWidth_;
         s_uint                    uiHeight_;
+
+        s_ctnr< s_ptr<Ogre::RenderTargetListener> > lListenerList_;
 
     };
 

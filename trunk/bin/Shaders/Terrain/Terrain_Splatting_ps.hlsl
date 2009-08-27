@@ -15,6 +15,9 @@ void main_ps(
             #ifdef SPECULAR
               float3 iSpecColor : TEXCOORD6,
             #endif
+            #ifdef MOTION_BLUR
+              float  iDepth     : TEXCOORD7,
+            #endif
 
             // Provided by Ogre
               uniform sampler2D mMask     : TEXUNIT0,
@@ -76,5 +79,8 @@ void main_ps(
     
     #ifdef SPECULAR
         oColor.rgb += iSpecColor*tSpec.rgb*tSpec.a;
+    #endif
+    #ifdef MOTION_BLUR
+        oColor.a = iDepth;
     #endif
 }

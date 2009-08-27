@@ -13,8 +13,16 @@ void main_vs(
               out float2 oTexture    : TEXCOORD0,
               out float3 oNormal     : TEXCOORD1,
               out float3 oPosition3D : TEXCOORD2,
+            #ifdef MOTION_BLUR
+              out float  oDepth      : TEXCOORD3,
+            #endif
 
             // Provided by Ogre
+            
+            #ifdef MOTION_BLUR
+              uniform float4 mCamPos,
+              uniform float  mCamMaxDepth,
+            #endif
               uniform float4x4 mViewProj,   // viewproj_matrix
               uniform float3x4 mBoneMat[60] // world_matrix_array_3x4
             )
@@ -41,6 +49,9 @@ void main_vs(
     // Apply position and camera projection
     oPosition3D = oPosition.xyz;
     oPosition = mul(mViewProj, oPosition);
+    #ifdef MOTION_BLUR
+        oDepth = distance(oPosition3D, mCamPos.xyz)/mCamMaxDepth;
+    #endif
 
     // Do not change texture coordinates
     oTexture = iTexture;

@@ -26,6 +26,9 @@ varying vec3 vColor;
 #ifdef SPECULAR
     varying vec3 vSpecColor;
 #endif
+#if MOTION_BLUR
+    varying float vDepth;
+#endif
 
 void main()
 {
@@ -55,5 +58,9 @@ void main()
     
     #ifdef SPECULAR
         gl_FragColor.rgb += vSpecColor*tSpec.rgb*tSpec.a;
+    #endif
+    
+    #if MOTION_BLUR
+        gl_FragColor.a = vDepth;
     #endif
 }

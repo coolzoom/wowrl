@@ -104,7 +104,7 @@ namespace Frost
             s_ptr<XML::Block> pTexturesBlock = pChunkBlock->GetBlock("Textures");
             if (pTexturesBlock)
             {
-                s_bool bEnableSpecular = Engine::GetSingleton()->GetConstant("EnableSpecular").Get<s_bool>();
+                s_bool bEnableSpecular = Engine::GetSingleton()->GetBoolConstant("EnableSpecular");
                 s_ptr<XML::Block> pMaskBlock = pTexturesBlock->GetBlock("Mask");
 
                 if (pMaskBlock && pTexturesBlock->GetChildNumber() > 2)

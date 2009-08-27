@@ -11,6 +11,7 @@
 #include "frost_localemanager.h"
 #include "gui/frost_spritemanager.h"
 #include "gui/frost_guistructs.h"
+#include "gui/frost_sprite.h"
 #include "path/frost_pathmanager.h"
 #include "model/frost_modelmanager.h"
 #include "camera/frost_cameramanager.h"
@@ -30,25 +31,54 @@
 #include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>
 #include <OgreWindowEventUtilities.h>
+#include <OgreRenderTargetListener.h>
+#include <OgrePass.h>
 
 using namespace std;
 
 namespace Frost
 {
+    class SceneTargetListener : public Ogre::RenderTargetListener
+    {
+    public :
+
+        void preRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
+        {
+            SpriteManager::GetSingleton()->DisableAutomaticRendering();
+        }
+
+        void postRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
+        {
+            SpriteManager::GetSingleton()->EnableAutomaticRendering();
+        }
+    };
+
+    class RenderWindowListener : public Ogre::RenderTargetListener
+    {
+    public :
+
+        void preRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
+        {
+            Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->setVisible(false);
+        }
+
+        void postRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
+        {
+            Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->setVisible(true);
+        }
+    };
+
     const s_str Engine::CLASS_NAME = "Engine";
 
     Engine::Engine() : mLog_("Frost.log", FILE_O)
     {
-        uiScreenWidth_ = 1024;
-        uiScreenHeight_ = 768;
         iGameState_ = 0;
         bGamePaused_ = false;
-        sGameVersion_ = "0.045";
-        iMaxComputedPaths_ = 2;
-        bEnableSpecular_ = false;
-        pFrameFunc_ = NULL;
-
         bShutDown_ = false;
+
+        lGameOptionList_["GameVersion"] = s_str("0.045");
+
+        pFrameFunc_ = NULL;
 
         // Initialize OGRE
         pRoot_ = new Ogre::Root("", "");
@@ -132,14 +162,22 @@ namespace Frost
 
         //pEventMgr_->ToggleDebugOutput();
 
-        s_str sLine = "# Starting Frost Engine (" + sGameVersion_ + ") #";
-        Log(s_str('#', sLine.GetLength()));
-        Log(sLine);
-        Log(s_str('#', sLine.GetLength())+"\n");
-
         // Load configuration
         if (!pLua_->DoFile("Config.lua"))
             return false;
+
+        pLua_->PushGlobal("GameOptions");
+        pLua_->PushNil();
+        while (lua_next(pLua_->GetState(), -2) != 0)
+        {
+            lGameOptionList_[pLua_->GetString(-2)] = pLua_->GetValue(-1);
+            pLua_->Pop();
+        }
+
+        s_str sLine = "# Starting Frost Engine (" + lGameOptionList_["GameVersion"].Get<s_str>() + ") #";
+        Log(s_str('#', sLine.GetLength()));
+        Log(sLine);
+        Log(s_str('#', sLine.GetLength())+"\n");
 
         if (!this->ReadGraphicsConfig_())
             return false;
@@ -183,7 +221,7 @@ namespace Frost
         pLightMgr_->Initialize();
 
         // Initialize the sprite manager
-        pSpriteMgr_->Initialize(pOgreSceneMgr_, s_float(uiScreenWidth_), s_float(uiScreenHeight_));
+        pSpriteMgr_->Initialize();
 
         // Initialize the GUI manager
         pGUIMgr_->Initialize();
@@ -289,6 +327,9 @@ namespace Frost
 
                 // End, delete/free everything
                 // ...
+                pSceneSprite_.Delete();
+                pSpriteMgr_->DeleteRenderTarget(pSceneRenderTarget_);
+                pSceneRenderTarget_ = NULL;
 
                 // Print out profiling info
                 pTimeMgr_->Print();
@@ -345,61 +386,61 @@ namespace Frost
 
     s_bool Engine::ReadGameConfig_()
     {
-        sGameVersion_ = pLua_->GetGlobalString("sGameVersion", false, "0");
-
-        s_str sGameplay = pLua_->GetGlobalString("sDefaultGameplay");
-        pGameplayMgr_->SetCurrentGameplay(sGameplay);
+        pGameplayMgr_->SetCurrentGameplay(lGameOptionList_["DefaultGameplay"].Get<s_str>());
 
         return true;
     }
 
     s_bool Engine::ReadGraphicsConfig_()
     {
-        s_str sRenderSystem = pLua_->GetGlobalString("sRenderSystem");
-        if (sRenderSystem[0] == 'D')
+        s_str sRenderSystem = lGameOptionList_["RenderSystem"].Get<s_str>();
+        if (sRenderSystem == "OpenGL")
         {
-            #ifdef _DEBUG
-                pRoot_->loadPlugin("RenderSystem_Direct3D9_d");
-            #else
-                pRoot_->loadPlugin("RenderSystem_Direct3D9");
-            #endif
-            sRenderer_ = "Direct3D9";
-        }
-        else
-        {
+            sRenderSystem = "OpenGL Rendering Subsystem";
             #ifdef _DEBUG
                 pRoot_->loadPlugin("RenderSystem_GL_d");
             #else
                 pRoot_->loadPlugin("RenderSystem_GL");
             #endif
-            sRenderer_ = "OpenGL";
+        }
+        else if (sRenderSystem == "DirectX")
+        {
+            sRenderSystem = "Direct3D9 Rendering Subsystem";
+            #ifdef _DEBUG
+                pRoot_->loadPlugin("RenderSystem_Direct3D9_d");
+            #else
+                pRoot_->loadPlugin("RenderSystem_Direct3D9");
+            #endif
         }
 
         Ogre::RenderSystem* pRS = pRoot_->getRenderSystemByName(sRenderSystem.Get());
+
         if (!pRS)
         {
-            Error(CLASS_NAME, "No render system with the name \""+ sRenderSystem +"\".");
+            Error(CLASS_NAME,
+                "Unsupported render system : \""+sRenderSystem+"\"."
+            );
             return false;
         }
-        else
-            pRoot_->setRenderSystem(pRS);
 
-        // Initialize the Root
+        pRoot_->setRenderSystem(pRS);
         pRoot_->initialise(false);
 
-        uiScreenWidth_ = s_uint(pLua_->GetGlobalInt("iScreenWidth", false, 1024));
-        uiScreenHeight_ = s_uint(pLua_->GetGlobalInt("iScreenHeight", false, 768));
-        // NOTE : 32bit is required for A8R8G8B8 format
-        s_uint uiScreenDepth = 32;
-        s_bool bFullScreen = pLua_->GetGlobalBool("bFullScreen", false, false);
-        s_bool bVSync = pLua_->GetGlobalBool("bVSync", false, false);
-        s_uint uiFSAA = s_uint(pLua_->GetGlobalInt("iFSAA", false, 0));
-        bEnableSpecular_ = s_bool(pLua_->GetGlobalBool("bEnableSpecular", false, false));
+        s_uint uiScreenWidth = s_uint(lGameOptionList_["ScreenWidth"].Get<s_float>());
+        s_uint uiScreenHeight = s_uint(lGameOptionList_["ScreenHeight"].Get<s_float>());
+
+        s_uint uiWindowWidth = s_uint(lGameOptionList_["WindowWidth"].Get<s_float>());
+        s_uint uiWindowHeight = s_uint(lGameOptionList_["WindowHeight"].Get<s_float>());
+
+        s_bool bFullScreen = lGameOptionList_["FullScreen"].Get<s_bool>();
+        s_bool bVSync = lGameOptionList_["EnableVSync"].Get<s_bool>();
+
+        s_uint uiFSAA = s_uint(lGameOptionList_["AntiAliasingLevel"].Get<s_float>());
 
         Ogre::NameValuePairList lOptions;
-        lOptions.insert(Ogre::NameValuePairList::value_type("colourDepth", s_str(uiScreenDepth).Get()));
-        s_str sVSync(CONV_YES_NO); sVSync << bVSync;
-        lOptions.insert(Ogre::NameValuePairList::value_type("vsync", sVSync.Get()));
+        // NOTE : 32bit is required for A8R8G8B8 format
+        lOptions.insert(Ogre::NameValuePairList::value_type("colourDepth", "32"));
+        lOptions.insert(Ogre::NameValuePairList::value_type("vsync", (bVSync ? "yes" : "no")));
         lOptions.insert(Ogre::NameValuePairList::value_type("FSAA", s_str(uiFSAA).Get()));
 
         pRenderWindow_ = pRoot_->createRenderWindow(
@@ -408,8 +449,8 @@ namespace Frost
             #else
                 "Frost Engine - WoWRL",
             #endif
-            uiScreenWidth_.Get(),
-            uiScreenHeight_.Get(),
+            bFullScreen ? uiScreenWidth.Get()  : uiWindowWidth.Get(),
+            bFullScreen ? uiScreenHeight.Get() : uiWindowHeight.Get(),
             bFullScreen,
             &lOptions
         );
@@ -418,31 +459,54 @@ namespace Frost
             Error(CLASS_NAME, "Couldn't create render window.");
             return false;
         }
+        pRenderWindow_->addListener(
+            new RenderWindowListener()
+        );
+
+        pSceneRenderTarget_ = pSpriteMgr_->CreateRenderTarget(
+            "SceneTarget",
+            bFullScreen ? uiScreenWidth  : uiWindowWidth,
+            bFullScreen ? uiScreenHeight : uiWindowHeight,
+            RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
+        );
+        pSceneRenderTarget_->AddListener(
+            new SceneTargetListener()
+        );
+
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(Engine::GetSingleton()->GetSceneRenderTarget());
+        pMat->GetDefaultPass()->setSeparateSceneBlending(
+            Ogre::SBF_ONE, Ogre::SBF_ZERO,
+            Ogre::SBF_ZERO, Ogre::SBF_ZERO
+        );
+
+        pSceneSprite_ = new Sprite(pMat);
 
         return true;
     }
 
-    s_var Engine::GetConstant( const s_str& sName ) const
+    s_var Engine::GetConstant( const s_str& sConstantName ) const
     {
-        if (sName == "MaxComputedPaths")
-        {
-            return iMaxComputedPaths_;
-        }
-        else if (sName == "GameVersion")
-        {
-            return sGameVersion_;
-        }
-        else if (sName == "EnableSpecular")
-        {
-            return bEnableSpecular_;
-        }
-        else
-            return s_var();
+        return lGameOptionList_.Get(sConstantName)->second;
     }
 
-    const s_str& Engine::GetRenderer() const
+    s_str Engine::GetStringConstant( const s_str& sConstantName ) const
     {
-        return sRenderer_;
+        return lGameOptionList_.Get(sConstantName)->second.Get<s_str>();
+    }
+
+    s_uint Engine::GetUIntConstant( const s_str& sConstantName ) const
+    {
+        return lGameOptionList_.Get(sConstantName)->second.Get<s_uint>();
+    }
+
+    s_bool Engine::GetBoolConstant( const s_str& sConstantName ) const
+    {
+        return lGameOptionList_.Get(sConstantName)->second.Get<s_bool>();
+    }
+
+    s_str Engine::GetRenderer() const
+    {
+        return lGameOptionList_.Get("RenderSystem")->second.Get<s_str>();
     }
 
     s_ptr<File> Engine::GetLog()
@@ -460,19 +524,24 @@ namespace Frost
         return pRenderWindow_;
     }
 
+    s_ptr<RenderTarget> Engine::GetSceneRenderTarget()
+    {
+        return pSceneRenderTarget_;
+    }
+
     s_ptr<Lua::State> Engine::GetLua()
     {
         return pLua_;
     }
 
-    const s_uint& Engine::GetScreenWidth() const
+    s_uint Engine::GetScreenWidth() const
     {
-        return uiScreenWidth_;
+        return s_uint(s_float(pRenderWindow_->getWidth()));
     }
 
-    const s_uint& Engine::GetScreenHeight() const
+    s_uint Engine::GetScreenHeight() const
     {
-        return uiScreenHeight_;
+        return s_uint(s_float(pRenderWindow_->getHeight()));
     }
 
     void Engine::SetFrameFunction( Function pFrameFunc )
@@ -489,7 +558,13 @@ namespace Frost
         sFileName += "_"+s_str(pTimeMgr_->GetHour(), 2);
         sFileName += "_"+s_str(pTimeMgr_->GetMinutes(), 2);
         sFileName += "_"+s_str(pTimeMgr_->GetSeconds(), 2);
-        sFileName += ".png";
+        sFileName += ".jpg";
         pRenderWindow_->writeContentsToFile(sFileName.Get());
+        //pSceneRenderTarget_->GetOgreRenderTarget()->writeContentsToFile(sFileName.Get());
+    }
+
+    void Engine::RenderScene()
+    {
+        pSceneSprite_->Render(0, 0);
     }
 }

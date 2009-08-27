@@ -1,29 +1,28 @@
 -- Frost Engine configuration file
+GameOptions = {
 
--- GFX
-bFullScreen = false;
-if (bFullScreen) then
-    iScreenWidth = 1280;
-    iScreenHeight = 1024;
-else
-    iScreenWidth = 1024;
-    iScreenHeight = 768;
-end
-bVSync = true;
-iScreenDepth = 32;
-iFSAA = 4;
-bEnableSpecular = true;
---sRenderSystem = "Direct3D9 Rendering Subsystem";
-sRenderSystem = "OpenGL Rendering Subsystem";
-
--- Files
-
-
--- Game
-sDefaultGameplay = "Free";
-sGameVersion = "0.045";
-sLocale = "enGB";
-iMaxComputedPaths = 2;
-
--- UI
-sDefaultFont = "Fonts/Vera.ttf";
+    -- Generic
+    ["GameVersion"] = "0.045",
+    ["GameLocale"] = "enGB",
+    
+    -- Gameplay
+    ["DefaultGameplay"] = "Free",
+    
+    -- GFX
+    ["FullScreen"] = false,
+    ["WindowWidth"] = 1024,
+    ["WindowHeight"] = 768,
+    ["ScreenWidth"] = 1280,
+    ["ScreenHeight"] = 1024,
+    ["AntiAliasingLevel"] = 4,
+    
+    ["RenderSystem"] = "OpenGL",
+    --["RenderSystem"] = "DirectX",
+    
+    ["EnableSpecular"] = true,
+    ["EnableMotionBlur"] = true,
+    ["EnableVSync"] = false,
+    
+    ["DefaultFont"] = "Fonts/Vera.ttf",
+    
+};

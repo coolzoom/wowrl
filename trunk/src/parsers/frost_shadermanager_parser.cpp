@@ -19,8 +19,10 @@ namespace Frost
         XML::Document mDoc(sFile, "Shaders/Shader.def");
 
         s_str sPreProcessorCommands;
-        if (Engine::GetSingleton()->GetConstant("EnableSpecular").Get<s_bool>())
+        if (Engine::GetSingleton()->GetBoolConstant("EnableSpecular"))
             sPreProcessorCommands += "SPECULAR,";
+        if (Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
+            sPreProcessorCommands += "MOTION_BLUR,";
 
         if (mDoc.Check(sPreProcessorCommands))
         {

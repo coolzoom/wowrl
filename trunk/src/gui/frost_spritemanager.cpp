@@ -93,15 +93,18 @@ namespace Frost
 
     void SpriteManager::renderQueueEnded( Ogre::uint8 uiQueueGroupId, const Ogre::String &sInvocation, bool &bRepeat )
     {
-        if (uiQueueGroupId == Ogre::RENDER_QUEUE_OVERLAY)
+        if (uiQueueGroupId == Ogre::RENDER_QUEUE_OVERLAY && !bAutoRenderingDisabled_)
         {
             RenderMainTarget_();
         }
     }
 
-    void SpriteManager::Initialize( s_ptr<Ogre::SceneManager> pSceneMgr, const s_float& fWidth, const s_float& fHeight )
+    void SpriteManager::Initialize()
     {
-        pSceneMgr_ = pSceneMgr;
+        pSceneMgr_ = Engine::GetSingleton()->GetOgreSceneManager();
+
+        s_float fWidth = s_float(Engine::GetSingleton()->GetScreenWidth());
+        s_float fHeight = s_float(Engine::GetSingleton()->GetScreenHeight());
 
         mHardwareBuffer_.setNull();
         mColorBuffer_.setNull();
@@ -555,25 +558,35 @@ namespace Frost
         bPreciseRendering_ = false;
     }
 
+    void SpriteManager::EnableAutomaticRendering()
+    {
+        bAutoRenderingDisabled_ = false;
+    }
+
+    void SpriteManager::DisableAutomaticRendering()
+    {
+        bAutoRenderingDisabled_ = true;
+    }
+
     const s_bool& SpriteManager::GetPreciseRendering() const
     {
         return bPreciseRendering_;
     }
 
-    s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_str& sTargetName, const s_uint& uiWidth, const s_uint& uiHeight )
+    s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_str& sTargetName, const s_uint& uiWidth, const s_uint& uiHeight, const RenderTarget::PixelType& mType, const RenderTarget::Usage& mUsage )
     {
         s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
-            uiTargetCounter_, sTargetName, uiWidth, uiHeight
+            uiTargetCounter_, sTargetName, uiWidth, uiHeight, mType, mUsage
         );
         uiTargetCounter_++;
 
         return pRTarget;
     }
 
-    s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_uint& uiWidth, const s_uint& uiHeight )
+    s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_uint& uiWidth, const s_uint& uiHeight, const RenderTarget::PixelType& mType, const RenderTarget::Usage& mUsage )
     {
         s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
-            uiTargetCounter_, uiWidth, uiHeight
+            uiTargetCounter_, uiWidth, uiHeight, mType, mUsage
         );
         uiTargetCounter_++;
 
