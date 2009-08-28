@@ -6,7 +6,7 @@
     <n[.,1]:Params>
         <n[.,1]:LightParams number/>
         <AutoParam name param="auto" n:data="0"/>
-        <Param name value/>
+        <Param name value type="float"/>
     </Params>
     
     <n[.,1]:PreProcessor>
