@@ -192,6 +192,21 @@ namespace Frost
         if (!pShaderMgr_->LoadShaders())
             return false;
 
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
+            pSceneRenderTarget_
+        );
+        pMat->GetDefaultPass()->setSeparateSceneBlending(
+            Ogre::SBF_ONE, Ogre::SBF_ZERO,
+            Ogre::SBF_ZERO, Ogre::SBF_ZERO
+        );
+        pMat->GetDefaultPass()->getTextureUnitState(0)->setTextureAddressingMode(
+            Ogre::TextureUnitState::TAM_CLAMP
+        );
+        if (lGameOptionList_["EnableMotionBlur"].Get<s_bool>())
+            pMat->SetPixelShader("MotionBlur");
+
+        pSceneSprite_ = new Sprite(pMat);
+
         pUnitMgr_->Initialize();
 
         if (!pUnitMgr_->ParseData())
@@ -236,6 +251,8 @@ namespace Frost
         pTimeMgr_->Initialize();
 
         bRun_ = true;
+
+        s_bool bFirstIteration = true;
 
         // Start the main loop
         while (bRun_)
@@ -288,6 +305,19 @@ namespace Frost
             if (!pSpriteMgr_->RenderTargets())
                 break;
 
+            if (lGameOptionList_["EnableMotionBlur"].Get<s_bool>())
+            {
+                s_ptr<Ogre::Camera> pCam = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera();
+                Ogre::GpuProgramParametersSharedPtr pParam = pSceneSprite_->GetMaterial()->GetDefaultPass()->getFragmentProgramParameters();
+                Ogre::Matrix4 mViewProj = pCam->getProjectionMatrixWithRSDepth() * pCam->getViewMatrix(true);
+                Ogre::Matrix4 mViewProjInverse = mViewProj.inverse();
+                pParam->setNamedConstant("mViewProjInverse", mViewProjInverse);
+
+                static Ogre::Matrix4 mPrevViewProj = Ogre::Matrix4::IDENTITY;
+                pParam->setNamedConstant("mPrevViewProj", mPrevViewProj);
+                mPrevViewProj = mViewProj;
+            }
+
             // Render everyting
             pRoot_->_updateAllRenderTargets();
 
@@ -299,6 +329,8 @@ namespace Frost
                 break;
 
             pEventMgr_->FrameEnded();
+
+            bFirstIteration = false;
         }
 
         bRun_ = false;
@@ -462,14 +494,6 @@ namespace Frost
             RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
         );
 
-        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(Engine::GetSingleton()->GetSceneRenderTarget());
-        pMat->GetDefaultPass()->setSeparateSceneBlending(
-            Ogre::SBF_ONE, Ogre::SBF_ZERO,
-            Ogre::SBF_ZERO, Ogre::SBF_ZERO
-        );
-
-        pSceneSprite_ = new Sprite(pMat);
-
         return true;
     }
 
@@ -547,9 +571,8 @@ namespace Frost
         sFileName += "_"+s_str(pTimeMgr_->GetHour(), 2);
         sFileName += "_"+s_str(pTimeMgr_->GetMinutes(), 2);
         sFileName += "_"+s_str(pTimeMgr_->GetSeconds(), 2);
-        sFileName += ".jpg";
+        sFileName += ".png";
         pRenderWindow_->writeContentsToFile(sFileName.Get());
-        //pSceneRenderTarget_->GetOgreRenderTarget()->writeContentsToFile(sFileName.Get());
     }
 
     void Engine::RenderScene()
