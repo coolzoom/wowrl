@@ -3,7 +3,6 @@ uniform sampler2D mTexture;
 
 uniform mat4  mViewProjInverse;
 uniform mat4  mPrevViewProj;
-uniform int   mIterNumber;
 
 void main()
 {
@@ -19,13 +18,13 @@ void main()
     
     vec2 tVelocity = (tViewportPosition - tPrevPosition).xy/2;
     
-    tTexCoord += tVelocity/mIterNumber;
+    tTexCoord += tVelocity/5;
     
-    for (int i = 1; i < mIterNumber; ++i)
+    for (int i = 1; i < 5; ++i)
     {
         gl_FragColor += texture2D(mTexture, tTexCoord);
-        tTexCoord += tVelocity/mIterNumber;
+        tTexCoord += tVelocity/5;
     }
     
-    gl_FragColor /= mIterNumber;
+    gl_FragColor /= 5;
 }
