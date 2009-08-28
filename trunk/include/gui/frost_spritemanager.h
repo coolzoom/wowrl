@@ -306,7 +306,6 @@ namespace Frost
         // Ogre specifics
         Ogre::RenderOperation               mRenderOp_;
         Ogre::HardwareVertexBufferSharedPtr mHardwareBuffer_;
-        Ogre::HardwareVertexBufferSharedPtr mColorBuffer_;
 
         // Sprite list
         s_ctnr<Quad> lQuadList_;
