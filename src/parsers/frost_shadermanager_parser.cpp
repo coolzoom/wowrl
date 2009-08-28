@@ -147,10 +147,27 @@ namespace Frost
                 }
                 else if (pParamBlock->GetName() == "Param")
                 {
-                    pShader->AddParam(
-                        pParamBlock->GetAttribute("name"),
-                        s_float(pParamBlock->GetAttribute("value"))
-                    );
+                    s_str sType = pParamBlock->GetAttribute("type");
+                    if (sType == "float")
+                    {
+                        pShader->AddParam(
+                            pParamBlock->GetAttribute("name"),
+                            s_float(pParamBlock->GetAttribute("value"))
+                        );
+                    }
+                    else if (sType == "int")
+                    {
+                        pShader->AddParam(
+                            pParamBlock->GetAttribute("name"),
+                            s_int(pParamBlock->GetAttribute("value"))
+                        );
+                    }
+                    else
+                    {
+                        Warning(CLASS_NAME,
+                            "Unsupported param type : \""+sType+"\"."
+                        );
+                    }
                 }
             }
         }
