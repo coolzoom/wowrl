@@ -38,33 +38,24 @@ using namespace std;
 
 namespace Frost
 {
-    class SceneTargetListener : public Ogre::RenderTargetListener
-    {
-    public :
-
-        void preRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
-        {
-            SpriteManager::GetSingleton()->DisableAutomaticRendering();
-        }
-
-        void postRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
-        {
-            SpriteManager::GetSingleton()->EnableAutomaticRendering();
-        }
-    };
-
     class RenderWindowListener : public Ogre::RenderTargetListener
     {
     public :
 
         void preRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
         {
-            Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->setVisible(false);
+            // Only render the SpriteManager's render target on the screen
+            Engine::GetSingleton()->GetOgreSceneManager()->setSpecialCaseRenderQueueMode(
+                Ogre::SceneManager::SCRQM_INCLUDE
+            );
         }
 
         void postRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
         {
-            Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->setVisible(true);
+            // ... and disable it for the scene render target
+            Engine::GetSingleton()->GetOgreSceneManager()->setSpecialCaseRenderQueueMode(
+                Ogre::SceneManager::SCRQM_EXCLUDE
+            );
         }
     };
 
@@ -195,6 +186,7 @@ namespace Frost
 
         // Create Ogre's scene manager
         pOgreSceneMgr_ = pRoot_->createSceneManager(Ogre::ST_GENERIC, "FrostSceneMgr");
+        pOgreSceneMgr_->addSpecialCaseRenderQueue(Ogre::RENDER_QUEUE_OVERLAY);
 
         // Load shaders
         if (!pShaderMgr_->LoadShaders())
@@ -468,9 +460,6 @@ namespace Frost
             bFullScreen ? uiScreenWidth  : uiWindowWidth,
             bFullScreen ? uiScreenHeight : uiWindowHeight,
             RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
-        );
-        pSceneRenderTarget_->AddListener(
-            new SceneTargetListener()
         );
 
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(Engine::GetSingleton()->GetSceneRenderTarget());

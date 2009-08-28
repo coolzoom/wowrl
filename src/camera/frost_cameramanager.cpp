@@ -69,8 +69,8 @@ namespace Frost
             foreach (iterCamera, lCameraList_)
             {
                 iterCamera->second->GetOgreCamera()->setAspectRatio(
-                    Ogre::Real(pSceneViewport_->getActualWidth()) /
-                    Ogre::Real(pSceneViewport_->getActualHeight())
+                    Ogre::Real(pMainViewport_->getActualWidth()) /
+                    Ogre::Real(pMainViewport_->getActualHeight())
                 );
             }
             bNewViewport_ = false;
@@ -107,6 +107,12 @@ namespace Frost
                     );
                     pSceneViewport_->setClearEveryFrame(true);
                     pSceneViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+
+                    pSceneViewport_->setDimensions(
+                        0, 0,
+                        pMainViewport_->getActualWidth()/(float)pSceneViewport_->getActualWidth(),
+                        pMainViewport_->getActualHeight()/(float)pSceneViewport_->getActualHeight()
+                    );
 
                     bNewViewport_ = true;
                 }
