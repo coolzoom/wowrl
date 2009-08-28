@@ -22,10 +22,6 @@ uniform vec4 mAmbient;
 
 uniform mat4 mTexCoordMat;
 
-#ifdef MOTION_BLUR
-    uniform float mCamMaxDepth;
-#endif
-
 void main()
 {
     vColor = mAmbient.rgb;
@@ -65,7 +61,7 @@ void main()
     // Apply position and camera projection
     gl_Position = mWorldViewProj * vertex;
     #ifdef MOTION_BLUR
-        vDepth = distance(tPosition, mCamPos.xyz)/mCamMaxDepth;
+        vDepth = gl_Position.x/gl_Position.w;
     #endif
 
     gl_TexCoord[0] = mTexCoordMat * uv0;

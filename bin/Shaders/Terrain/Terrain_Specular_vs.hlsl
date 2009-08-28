@@ -69,7 +69,7 @@ void main_vs(
     // Apply position and camera projection
     oPosition = mul(mWorldViewProj, iPosition);
     #ifdef MOTION_BLUR
-        oDepth = distance(tPosition, mCamPos.xyz)/mCamMaxDepth;
+        oDepth = oPosition.x/oPosition.w;
     #endif
 
     oTexture = mul(mTexCoordMat, iTexture);

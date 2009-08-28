@@ -3,10 +3,6 @@
         <Params>
             <AutoParam name="mViewProj"/>
             <AutoParam name="mBoneMat" param="world_matrix_array_3x4"/>
-            <#[MOTION_BLUR]>
-                <AutoParam name="mCamPos"/>
-                <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
-            </#>
         </Params>
         <#[MOTION_BLUR]>
             <PreProcessor>
