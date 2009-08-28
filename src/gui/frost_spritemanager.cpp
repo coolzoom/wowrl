@@ -107,7 +107,6 @@ namespace Frost
         s_float fHeight = s_float(Engine::GetSingleton()->GetScreenHeight());
 
         mHardwareBuffer_.setNull();
-        mColorBuffer_.setNull();
 
         pRS_ = Ogre::Root::getSingletonPtr()->getRenderSystem();
 
@@ -159,7 +158,7 @@ namespace Frost
 
     /** \cond NOT_REMOVE_FROM_DOC
     */
-    inline void WriteVertex( float* &pBuffer, uint* &pColorBuffer, Frost::Vertex &mV )
+    inline void WriteVertex( float* &pBuffer, Frost::Vertex &mV )
     {
         *pBuffer = mV.fX.Get();  // x
         pBuffer++;
@@ -173,8 +172,17 @@ namespace Frost
         *pBuffer = mV.fTY.Get(); // v
         pBuffer++;
 
-        *pColorBuffer = mV.mColor.GetPacked().Get();  // argb
-        pColorBuffer++;
+        *pBuffer = mV.mColor.GetR().Get()/255.0f;  // r
+        pBuffer++;
+
+        *pBuffer = mV.mColor.GetG().Get()/255.0f;  // g
+        pBuffer++;
+
+        *pBuffer = mV.mColor.GetB().Get()/255.0f;  // b
+        pBuffer++;
+
+        *pBuffer = mV.mColor.GetA().Get()/255.0f;  // a
+        pBuffer++;
     }
     /** \endcond
     */
@@ -205,7 +213,6 @@ namespace Frost
 
         // Write quads to the hardware buffer, and remember chunks
         float* pBuffer = (float*)mHardwareBuffer_->lock(Ogre::HardwareBuffer::HBL_DISCARD);
-        uint*  pColorBuffer = (uint*)mColorBuffer_->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 
         itEndQuad = lQuadList_.End();
         itCurrQuad = lQuadList_.Begin();
@@ -213,13 +220,13 @@ namespace Frost
         mThisChunk.uiVertexCount = 0u;
         while (itCurrQuad != itEndQuad)
         {
-            WriteVertex(pBuffer, pColorBuffer, itCurrQuad->lVertexArray[0]);
-            WriteVertex(pBuffer, pColorBuffer, itCurrQuad->lVertexArray[1]);
-            WriteVertex(pBuffer, pColorBuffer, itCurrQuad->lVertexArray[2]);
+            WriteVertex(pBuffer, itCurrQuad->lVertexArray[0]);
+            WriteVertex(pBuffer, itCurrQuad->lVertexArray[1]);
+            WriteVertex(pBuffer, itCurrQuad->lVertexArray[2]);
 
-            WriteVertex(pBuffer, pColorBuffer, itCurrQuad->lVertexArray[2]);
-            WriteVertex(pBuffer, pColorBuffer, itCurrQuad->lVertexArray[3]);
-            WriteVertex(pBuffer, pColorBuffer, itCurrQuad->lVertexArray[0]);
+            WriteVertex(pBuffer, itCurrQuad->lVertexArray[2]);
+            WriteVertex(pBuffer, itCurrQuad->lVertexArray[3]);
+            WriteVertex(pBuffer, itCurrQuad->lVertexArray[0]);
 
             // Remember this chunk
             mThisChunk.uiVertexCount += 6u;
@@ -236,7 +243,6 @@ namespace Frost
         }
 
         mHardwareBuffer_->unlock();
-        mColorBuffer_->unlock();
 
         // Do the real render!
         s_ctnr<VertexChunk>::iterator itCurrChunk;
@@ -483,9 +489,10 @@ namespace Frost
 
         // Texture coordinates
         pDecl->addElement(0, uiOffset, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES);
+        uiOffset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT2);
 
         // Color
-        pDecl->addElement(1, 0, Ogre::VET_COLOUR_ARGB, Ogre::VES_DIFFUSE);
+        pDecl->addElement(0, uiOffset, Ogre::VET_FLOAT4, Ogre::VES_DIFFUSE);
 
         mHardwareBuffer_ = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
             pDecl->getVertexSize(0),
@@ -494,15 +501,7 @@ namespace Frost
             false
         );
 
-        mColorBuffer_ = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
-            pDecl->getVertexSize(1),
-            uiSize,
-            Ogre::HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE,
-            false
-        );
-
         mRenderOp_.vertexData->vertexBufferBinding->setBinding(0, mHardwareBuffer_);
-        mRenderOp_.vertexData->vertexBufferBinding->setBinding(1, mColorBuffer_);
 
         mRenderOp_.operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
         mRenderOp_.useIndexes = false;
@@ -511,9 +510,8 @@ namespace Frost
     void SpriteManager::DestroyHardwareBuffers_()
     {
         delete mRenderOp_.vertexData;
-        mRenderOp_.vertexData = 0;
+        mRenderOp_.vertexData = NULL;
         mHardwareBuffer_.setNull();
-        mColorBuffer_.setNull();
     }
 
     void SpriteManager::RenderQuad( const Quad &mQuad )
