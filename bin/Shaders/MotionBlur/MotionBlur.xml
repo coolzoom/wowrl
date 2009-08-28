@@ -1,11 +1,8 @@
 <Shaders>
     <#[MOTION_BLUR]>
         <PixelShader name="MotionBlur" file="Shaders/MotionBlur/MotionBlur_ps">
-            <Params>
-                <Param name="mIterNumber" type="int" value="5"/>
-            </Params>
             <TextureBinds>
-                <TextureBind name="mTexture"  id="0"/>
+                <TextureBind name="mTexture" id="0"/>
             </TextureBinds>
         </PixelShader>
     </#>
