@@ -8,9 +8,6 @@
                 <AutoParam name="mWorld"/>
                 <AutoParam name="mCamPos"/>
                 <AutoParam name="mTexCoordMat" param="texture_matrix" data="0"/>
-                <#[MOTION_BLUR]>
-                    <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
-                </#>
             </Params>
             <#[MOTION_BLUR]>
                 <PreProcessor>
@@ -45,13 +42,6 @@
             </#>
             <#[!SPECULAR]>
                 <AutoParam name="mTexCoordMat2" param="texture_matrix" data="2"/>
-            </#>
-            
-            <#[MOTION_BLUR]>
-                <#[!SPECULAR]>
-                    <AutoParam name="mCamPos"/>
-                </#>
-                <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
             </#>
         </Params>
         <PreProcessor>
@@ -105,13 +95,6 @@
             <#[!SPECULAR]>
                 <AutoParam name="mTexCoordMat2" param="texture_matrix" data="2"/>
                 <AutoParam name="mTexCoordMat3" param="texture_matrix" data="3"/>
-            </#>
-            
-            <#[MOTION_BLUR]>
-                <#[!SPECULAR]>
-                    <AutoParam name="mCamPos"/>
-                </#>
-                <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
             </#>
         </Params>
         <PreProcessor>
@@ -170,13 +153,6 @@
                 <AutoParam name="mTexCoordMat2" param="texture_matrix" data="2"/>
                 <AutoParam name="mTexCoordMat3" param="texture_matrix" data="3"/>
                 <AutoParam name="mTexCoordMat4" param="texture_matrix" data="4"/>
-            </#>
-            
-            <#[MOTION_BLUR]>
-                <#[!SPECULAR]>
-                    <AutoParam name="mCamPos"/>
-                </#>
-                <AutoParam name="mCamMaxDepth" param="far_clip_distance"/>
             </#>
         </Params>
         <PreProcessor>

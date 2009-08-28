@@ -41,9 +41,6 @@ void main_vs(
             #ifdef SPECULAR
               uniform float4   mCamPos,
             #endif
-            #ifdef MOTION_BLUR
-              uniform float    mCamMaxDepth,
-            #endif
             
               uniform float4   mLightPos[5],
               uniform float4   mLightDiffuseColor[5],
@@ -92,7 +89,7 @@ void main_vs(
     // Apply position and camera projection
     oPosition = mul(mWorldViewProj, iPosition);
     #ifdef MOTION_BLUR
-        oDepth = distance(tPosition, mCamPos.xyz)/mCamMaxDepth;
+        oDepth = oPosition.x/oPosition.w;
     #endif
 
     oTexture0 = iTexture;

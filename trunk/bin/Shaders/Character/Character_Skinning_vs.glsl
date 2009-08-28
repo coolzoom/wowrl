@@ -17,10 +17,6 @@ varying vec3  vBlendedPosition;
 // Provided by Ogre
 uniform mat4  mViewProj;     // viewproj_matrix
 uniform vec4  mBoneMat[180]; // world_matrix_array_3x4
-#ifdef MOTION_BLUR
-    uniform vec4  mCamPos;
-    uniform float mCamMaxDepth;
-#endif
 
 void main()
 {
@@ -52,7 +48,7 @@ void main()
     // Apply position and camera projection
     gl_Position = mViewProj * vec4(vBlendedPosition, 1);
     #ifdef MOTION_BLUR
-        vDepth = distance(vBlendedPosition, mCamPos.xyz)/mCamMaxDepth;
+        vDepth = gl_Position.z/gl_Position.w;
     #endif
 
     // Do not change texture coordinates

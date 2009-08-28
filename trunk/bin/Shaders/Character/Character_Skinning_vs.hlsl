@@ -18,11 +18,6 @@ void main_vs(
             #endif
 
             // Provided by Ogre
-            
-            #ifdef MOTION_BLUR
-              uniform float4 mCamPos,
-              uniform float  mCamMaxDepth,
-            #endif
               uniform float4x4 mViewProj,   // viewproj_matrix
               uniform float3x4 mBoneMat[60] // world_matrix_array_3x4
             )
@@ -50,7 +45,8 @@ void main_vs(
     oPosition3D = oPosition.xyz;
     oPosition = mul(mViewProj, oPosition);
     #ifdef MOTION_BLUR
-        oDepth = distance(oPosition3D, mCamPos.xyz)/mCamMaxDepth;
+        oDepth = oPosition.x/oPosition.w;
+        
     #endif
 
     // Do not change texture coordinates
