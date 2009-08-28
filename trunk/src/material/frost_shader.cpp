@@ -67,6 +67,8 @@ namespace Frost
             mType = Ogre::GpuProgramParameters::ACT_WORLD_MATRIX_ARRAY_3x4;
         else if (sType == "far_clip_distance")
             mType = Ogre::GpuProgramParameters::ACT_FAR_CLIP_DISTANCE;
+        else if (sType == "inverse_viewproj_matrix")
+            mType = Ogre::GpuProgramParameters::ACT_INVERSE_VIEWPROJ_MATRIX;
         else
         {
             Error(CLASS_NAME,
@@ -91,6 +93,8 @@ namespace Frost
             mType = Ogre::GpuProgramParameters::ACT_VIEWPROJ_MATRIX;
         else if (sName == "mCamPos")
             mType = Ogre::GpuProgramParameters::ACT_CAMERA_POSITION;
+        else if (sName == "mDelta")
+            mType = Ogre::GpuProgramParameters::ACT_FRAME_TIME;
         else
             return;
 
@@ -141,21 +145,21 @@ namespace Frost
                     iterParam->vValue.Get<s_float>().Get()
                 );
             }
-            if (iterParam->vValue.IsOfType<s_int>())
+            else if (iterParam->vValue.IsOfType<s_int>())
             {
                 pOgreShaderParams->setNamedConstant(
                     iterParam->sName.Get(),
                     iterParam->vValue.Get<s_int>().Get()
                 );
             }
-            if (iterParam->vValue.IsOfType<Vector>())
+            else if (iterParam->vValue.IsOfType<Vector>())
             {
                 pOgreShaderParams->setNamedConstant(
                     iterParam->sName.Get(),
                     Vector::FrostToOgre(iterParam->vValue.Get<Vector>())
                 );
             }
-            if (iterParam->vValue.IsOfType< s_array<float> >())
+            else if (iterParam->vValue.IsOfType< s_array<float> >())
             {
                 s_array<float> lArray = iterParam->vValue.Get< s_array<float> >();
                 pOgreShaderParams->setNamedConstant(
@@ -164,13 +168,19 @@ namespace Frost
                     lArray.GetSize().Get()
                 );
             }
-            if (iterParam->vValue.IsOfType< s_array<s_int> >())
+            else if (iterParam->vValue.IsOfType< s_array<int> >())
             {
                 s_array<int> lArray = iterParam->vValue.Get< s_array<int> >();
                 pOgreShaderParams->setNamedConstant(
                     iterParam->sName.Get(),
                     lArray.GetClassicArray(),
                     lArray.GetSize().Get()
+                );
+            }
+            else
+            {
+                Error(CLASS_NAME,
+                    "Unsupported param type : \""+s_str(iterParam->vValue.GetType().name())+"\"."
                 );
             }
         }
