@@ -1,8 +1,13 @@
 FreeGameplay = {
     ["camera"] = nil,                -- The camera handled by this gameplay
     ["maxSpeed"] = 20,               -- The camera movement speed
-    ["translate"] = Vector(0, 0, 0), -- Translation vector
     ["MRPressed"] = false,           -- 'true' if the mouse right button is pressed
+    ["leadToward"] = Vector(0, 0, 0),
+    ["prevLeadToward"] = Vector(0, 0, 0),
+    ["acceleration"] = Vector(0, 0, 0),
+    ["speed"] = Vector(0, 0, 0),
+    ["prevSpeed"] = Vector(0, 0, 0),
+    ["maxAcceleration"] = 5,
 };
 
 -----------------------------------
@@ -29,34 +34,47 @@ function FreeGameplay.OnLoad()
     this:SetCamera(FreeGameplay.camera); 
 end
 
+function FreeGameplay.UpdateAcceleration(axis)
+    if (FreeGameplay.leadToward[axis] == 0.0 and (FreeGameplay.speed[axis] * FreeGameplay.prevSpeed[axis] < 0.0)) then
+        FreeGameplay.acceleration[axis] = 0.0;
+        FreeGameplay.speed[axis] = 0.0;
+    else
+        if (FreeGameplay.leadToward[axis] - FreeGameplay.speed[axis] > 0.0) then
+            FreeGameplay.acceleration[axis] = FreeGameplay.maxAcceleration;
+        elseif (FreeGameplay.speed[axis] - FreeGameplay.leadToward[axis] > 0.0) then
+            FreeGameplay.acceleration[axis] = -FreeGameplay.maxAcceleration;
+        end
+    end
+end
+
 function FreeGameplay.OnEvent()
     if (event == "KEY_PRESSED") then
         if (arg1 == KEY_W) then
-            FreeGameplay.translate.z = FreeGameplay.translate.z - 1;
+            FreeGameplay.leadToward.z = FreeGameplay.leadToward.z - 1;
         elseif (arg1 == KEY_S) then
-            FreeGameplay.translate.z = FreeGameplay.translate.z + 1;
+            FreeGameplay.leadToward.z = FreeGameplay.leadToward.z + 1;
         elseif (arg1 == KEY_A) then
-            FreeGameplay.translate.x = FreeGameplay.translate.x - 1;
+            FreeGameplay.leadToward.x = FreeGameplay.leadToward.x - 1;
         elseif (arg1 == KEY_D) then
-            FreeGameplay.translate.x = FreeGameplay.translate.x + 1;
+            FreeGameplay.leadToward.x = FreeGameplay.leadToward.x + 1;
         elseif (arg1 == KEY_Q) then
-            FreeGameplay.translate.y = FreeGameplay.translate.y + 1;
+            FreeGameplay.leadToward.y = FreeGameplay.leadToward.y + 1;
         elseif (arg1 == KEY_E) then
-            FreeGameplay.translate.y = FreeGameplay.translate.y - 1;
+            FreeGameplay.leadToward.y = FreeGameplay.leadToward.y - 1;
         end
     elseif (event == "KEY_RELEASED") then
         if (arg1 == KEY_W) then
-            FreeGameplay.translate.z = FreeGameplay.translate.z + 1;
+            FreeGameplay.leadToward.z = FreeGameplay.leadToward.z + 1;
         elseif (arg1 == KEY_S) then
-            FreeGameplay.translate.z = FreeGameplay.translate.z - 1;
+            FreeGameplay.leadToward.z = FreeGameplay.leadToward.z - 1;
         elseif (arg1 == KEY_A) then
-            FreeGameplay.translate.x = FreeGameplay.translate.x + 1;
+            FreeGameplay.leadToward.x = FreeGameplay.leadToward.x + 1;
         elseif (arg1 == KEY_D) then
-            FreeGameplay.translate.x = FreeGameplay.translate.x - 1;
+            FreeGameplay.leadToward.x = FreeGameplay.leadToward.x - 1;
         elseif (arg1 == KEY_Q) then
-            FreeGameplay.translate.y = FreeGameplay.translate.y - 1;
+            FreeGameplay.leadToward.y = FreeGameplay.leadToward.y - 1;
         elseif (arg1 == KEY_E) then
-            FreeGameplay.translate.y = FreeGameplay.translate.y + 1;
+            FreeGameplay.leadToward.y = FreeGameplay.leadToward.y + 1;
         end
     elseif (event == "MOUSE_MOVED") then
         if (FreeGameplay.MRPressed) then
@@ -75,9 +93,14 @@ function FreeGameplay.OnEvent()
 end
 
 function FreeGameplay.OnUpdate()
-    local norm = FreeGameplay.translate:GetNorm();
-    if (norm ~= 0) then
-        local speed = arg1*FreeGameplay.maxSpeed/norm;
-        FreeGameplay.camera:Translate(speed*FreeGameplay.translate, true);
-    end
+    FreeGameplay.prevSpeed = FreeGameplay.speed;
+    FreeGameplay.speed = FreeGameplay.speed + arg1*FreeGameplay.acceleration;
+    
+    FreeGameplay.UpdateAcceleration("x");
+    FreeGameplay.UpdateAcceleration("y");
+    FreeGameplay.UpdateAcceleration("z");
+
+    FreeGameplay.camera:Translate(arg1*FreeGameplay.maxSpeed*FreeGameplay.speed, true);
+    
+    FreeGameplay.prevLeadToward = FreeGameplay.leadToward;
 end
