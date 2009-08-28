@@ -124,6 +124,10 @@ function Vector:Rotate(angle, vec)
     self.z = self.z + uv.z + uuv.z;
 end
 
+function Vector:IsNull()
+    return (self.x == 0.0 and self.y == 0.0 and self.z == 0.0);
+end
+
 function Vector:Log()
     Log("("..self.x..", "..self.y..", "..self.z..")");
 end
