@@ -95,6 +95,8 @@ namespace Frost
             mType = Ogre::GpuProgramParameters::ACT_CAMERA_POSITION;
         else if (sName == "mDelta")
             mType = Ogre::GpuProgramParameters::ACT_FRAME_TIME;
+        else if (sName == "mFPS")
+            mType = Ogre::GpuProgramParameters::ACT_FPS;
         else
             return;
 

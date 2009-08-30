@@ -23,6 +23,10 @@ namespace Frost
             sPreProcessorCommands += "SPECULAR,";
         if (Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
             sPreProcessorCommands += "MOTION_BLUR,";
+        if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
+            sPreProcessorCommands += "OPEN_GL,";
+        if (Engine::GetSingleton()->GetRenderer() == "DirectX")
+            sPreProcessorCommands += "DIRECT_X,";
 
         if (mDoc.Check(sPreProcessorCommands))
         {
