@@ -256,6 +256,7 @@ namespace Frost
         int _SetDirection(lua_State*);
         int _Yaw(lua_State*);
         int _Pitch(lua_State*);
+        int _Roll(lua_State*);
 
         s_ptr<MovableObject> GetObject();
 

@@ -249,6 +249,18 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaMovableObject::_Roll(lua_State* pLua)
+    {
+        Lua::Function mFunc("MovableObject:Roll", pLua);
+        mFunc.Add(0, "angle", Lua::TYPE_NUMBER);
+        if (mFunc.Check())
+        {
+            pParent_->Roll(mFunc.Get(0)->GetNumber());
+        }
+
+        return mFunc.Return();
+    }
+
     s_ptr<MovableObject> LuaMovableObject::GetObject()
     {
         return pParent_;
@@ -265,6 +277,7 @@ namespace Frost
         method(MovableObject, SetDirection),
         method(MovableObject, Yaw),
         method(MovableObject, Pitch),
+        method(MovableObject, Roll),
 
         {0,0}
     };
