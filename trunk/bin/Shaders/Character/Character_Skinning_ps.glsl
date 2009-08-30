@@ -11,7 +11,7 @@ uniform vec4      mAmbient;
 varying vec3  vBlendedNormal;
 varying vec3  vBlendedPosition;
 #ifdef MOTION_BLUR
-    varying float vDepth;
+    varying vec4 vPosition;
 #endif
 
 void main()
@@ -33,6 +33,6 @@ void main()
     gl_FragColor = texture2D(mTexture, gl_TexCoord[0].st);
     gl_FragColor.rgb *= tLightColor;
     #ifdef MOTION_BLUR
-        gl_FragColor.a = vDepth;
+        gl_FragColor.a = vPosition.z/vPosition.w;
     #endif
 }

@@ -316,6 +316,17 @@ namespace Frost
                 static Ogre::Matrix4 mPrevViewProj = Ogre::Matrix4::IDENTITY;
                 pParam->setNamedConstant("mPrevViewProj", mPrevViewProj);
                 mPrevViewProj = mViewProj;
+
+                pParam->setNamedConstant("mFPS", 1/fDelta.Get());
+
+                if (bFirstIteration)
+                {
+                    pParam->setNamedConstant("mMaxUV", Ogre::Vector4(
+                        (s_float(pSceneRenderTarget_->GetWidth()-1)/s_float(pSceneRenderTarget_->GetRealWidth())).Get(),
+                        (s_float(pSceneRenderTarget_->GetHeight()-1)/s_float(pSceneRenderTarget_->GetRealHeight())).Get(),
+                        0.0f, 0.0f
+                    ));
+                }
             }
 
             // Render everyting

@@ -12,7 +12,7 @@ void main_vs(
               out float3 oColor     : TEXCOORD1,
               out float3 oSpecColor : TEXCOORD2,
             #ifdef MOTION_BLUR
-              out float  oDepth     : TEXCOORD3,
+              out float4 oPosition2 : TEXCOORD3,
             #endif
 
             // Provided by Ogre
@@ -69,7 +69,7 @@ void main_vs(
     // Apply position and camera projection
     oPosition = mul(mWorldViewProj, iPosition);
     #ifdef MOTION_BLUR
-        oDepth = oPosition.x/oPosition.w;
+        oPosition2 = oPosition;
     #endif
 
     oTexture = mul(mTexCoordMat, iTexture);

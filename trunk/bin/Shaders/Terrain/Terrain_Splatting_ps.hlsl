@@ -16,7 +16,7 @@ void main_ps(
               float3 iSpecColor : TEXCOORD6,
             #endif
             #ifdef MOTION_BLUR
-              float  iDepth     : TEXCOORD7,
+              float4 oPosition2 : TEXCOORD7,
             #endif
 
             // Provided by Ogre
@@ -81,6 +81,6 @@ void main_ps(
         oColor.rgb += iSpecColor*tSpec.rgb*tSpec.a;
     #endif
     #ifdef MOTION_BLUR
-        oColor.a = iDepth;
+        oColor.a = oPosition2.z/oPosition2.w;
     #endif
 }

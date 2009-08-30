@@ -11,7 +11,7 @@ attribute vec4 uv0;
 varying vec3  vBlendedNormal;
 varying vec3  vBlendedPosition;
 #ifdef MOTION_BLUR
-    varying float vDepth;
+    varying vec4 vPosition;
 #endif
 
 // Provided by Ogre
@@ -48,7 +48,7 @@ void main()
     // Apply position and camera projection
     gl_Position = mViewProj * vec4(vBlendedPosition, 1);
     #ifdef MOTION_BLUR
-        vDepth = gl_Position.z/gl_Position.w;
+        vPosition = gl_Position;
     #endif
 
     // Do not change texture coordinates
