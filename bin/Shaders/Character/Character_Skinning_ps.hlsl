@@ -6,7 +6,7 @@ void main_ps(
               float3 iNormal    : TEXCOORD1,
               float3 iPosition  : TEXCOORD2,
             #ifdef MOTION_BLUR
-              float  iDepth     : TEXCOORD3,
+              float4 oPosition2 : TEXCOORD3,
             #endif
 
             // Outputs
@@ -37,6 +37,6 @@ void main_ps(
     oColor = tex2D(mTexture, iTexture);
     oColor.rgb *= tLightColor;
     #ifdef MOTION_BLUR
-        oColor.a = iDepth;
+        oColor.a = oPosition2.z/oPosition2.w;
     #endif
 }

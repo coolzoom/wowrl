@@ -9,7 +9,7 @@ varying vec3 vColor;
     varying vec3 vSpecColor;
 #endif
 #ifdef MOTION_BLUR
-    varying float vDepth;
+    varying vec4 vPosition;
 #endif
 
 // Provided by Ogre
@@ -76,7 +76,7 @@ void main()
     // Apply position and camera projection
     gl_Position = mWorldViewProj * vertex;
     #ifdef MOTION_BLUR
-        vDepth = gl_Position.z/gl_Position.w;
+        vPosition = gl_Position;
     #endif
 
     gl_TexCoord[0] = uv0;

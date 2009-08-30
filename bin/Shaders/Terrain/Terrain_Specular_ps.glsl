@@ -8,7 +8,7 @@ uniform sampler2D mTextureS;
 varying vec3 vColor;
 varying vec3 vSpecColor;
 #ifdef MOTION_BLUR
-    varying float vDepth;
+    varying vec4 vPosition;
 #endif
 
 void main()
@@ -20,6 +20,6 @@ void main()
     gl_FragColor.rgb *= vColor;
     gl_FragColor.rgb += vSpecColor*tSpec.rgb*tSpec.a;
     #ifdef MOTION_BLUR
-        gl_FragColor.a = vDepth;
+        gl_FragColor.a = vPosition.z/vPosition.w;
     #endif
 }

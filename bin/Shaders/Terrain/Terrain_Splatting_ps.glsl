@@ -27,7 +27,7 @@ varying vec3 vColor;
     varying vec3 vSpecColor;
 #endif
 #if MOTION_BLUR
-    varying float vDepth;
+    varying vec4 vPosition;
 #endif
 
 void main()
@@ -61,6 +61,6 @@ void main()
     #endif
     
     #if MOTION_BLUR
-        gl_FragColor.a = vDepth;
+        gl_FragColor.a = vPosition.z/vPosition.w;
     #endif
 }

@@ -4,6 +4,10 @@
             <TextureBinds>
                 <TextureBind name="mTexture" id="0"/>
             </TextureBinds>
+            <PreProcessor>
+                <Directive variable="BLUR_QUALITY" value="5"/>
+                <Directive variable="BLUR_INTENSITY" value="0.005"/>
+            </PreProcessor>
         </PixelShader>
     </#>
 </Shaders>
