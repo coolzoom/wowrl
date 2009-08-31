@@ -135,7 +135,7 @@ namespace Frost
         */
         const AxisType& GetYAxisType() const;
 
-        /// Enables presice rendering.
+        /// Enables precise rendering.
         /** \note If precise rendering is enabled, all rendering coordinates
         *         are rounded per pixel before being sent to the Ogre renderer.
         *         This may result in less fluid movement, but textures and fonts
@@ -147,7 +147,7 @@ namespace Frost
         */
         void         EnablePreciseRendering();
 
-        /// Disables presice rendering.
+        /// Disables precise rendering.
         /** \note If precise rendering is enabled, all rendering coordinates
         *         are rounded per pixel before being sent to the Ogre renderer.
         *         This may result in less fluid movement, but textures and fonts
@@ -158,6 +158,11 @@ namespace Frost
         *         Disabled by default.
         */
         void         DisablePreciseRendering();
+
+        /// Checks if precise rendering is enabled.
+        /** \return 'true' if precise rendering is enabled
+        */
+        const s_bool& IsPreciseRenderingEnabled() const;
 
         /// Enables automatic rendering on the screen.
         /** \note What you render in the RenderFunction is actually rendered
@@ -186,11 +191,6 @@ namespace Frost
         *         executed.
         */
         void         DisableAutomaticRendering();
-
-        /// Checks if precise rendering is enabled.
-        /** \return 'true' if precise rendering is enabled
-        */
-        const s_bool& GetPreciseRendering() const;
 
         /// Creates a new RenderTarget.
         /** \param sTargetName The name of this render target

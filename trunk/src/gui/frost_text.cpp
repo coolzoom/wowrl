@@ -36,6 +36,7 @@ namespace Frost
         sFileName_ = sFileName;
         fSize_ = fSize;
         mColor_ = Color(255, 255, 255);
+        fX_ = fY_ = s_float::INFPLUS;
         pOgreFont_ = FontManager::GetSingleton()->GetFont(sFileName_, s_uint(fSize_));
         if (pOgreFont_)
         {
@@ -88,8 +89,12 @@ namespace Frost
 
     void Text::SetColor( const Color& mColor, const s_bool& bForceColor )
     {
-        mColor_ = mColor;
-        bForceColor_ = bForceColor;
+        if (mColor_ != mColor || bForceColor_ != bForceColor)
+        {
+            mColor_ = mColor;
+            bForceColor_ = bForceColor;
+            bUpdateQuads_ = true;
+        }
     }
 
     const Color& Text::GetColor() const
@@ -257,12 +262,20 @@ namespace Frost
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
     {
-        mAlign_ = mAlign;
+        if (mAlign_ != mAlign)
+        {
+            mAlign_ = mAlign;
+            bUpdateCache_ = true;
+        }
     }
 
     void Text::SetVerticalAlignment( const Text::VerticalAlignment& mVertAlign )
     {
-        mVertAlign_ = mVertAlign;
+        if (mVertAlign_ != mVertAlign)
+        {
+            mVertAlign_ = mVertAlign;
+            bUpdateCache_ = true;
+        }
     }
 
     const Text::Alignment& Text::GetAlignment() const
@@ -326,36 +339,59 @@ namespace Frost
                 UpdateLines_();
                 UpdateCache_();
                 bUpdateCache_ = false;
+                bUpdateQuads_ = true;
             }
 
-            Quad mQuad;
-            mQuad.pMat = pFontMat_;
+            if (fX != fX_ || fY != fY_)
+                bUpdateQuads_ = true;
 
-            s_ctnr<Letter>::iterator iterLetter;
-            foreach (iterLetter, lLetterCache_)
+            if (bUpdateQuads_)
             {
-                mQuad.lVertexArray[0].Set(iterLetter->fX1+fX, iterLetter->fY1+fY);
-                mQuad.lVertexArray[1].Set(iterLetter->fX2+fX, iterLetter->fY1+fY);
-                mQuad.lVertexArray[2].Set(iterLetter->fX2+fX, iterLetter->fY2+fY);
-                mQuad.lVertexArray[3].Set(iterLetter->fX1+fX, iterLetter->fY2+fY);
+                fX_ = fX;
+                fY_ = fY;
 
-                mQuad.lVertexArray[0].SetUV(iterLetter->fU1, iterLetter->fV1);
-                mQuad.lVertexArray[1].SetUV(iterLetter->fU2, iterLetter->fV1);
-                mQuad.lVertexArray[2].SetUV(iterLetter->fU2, iterLetter->fV2);
-                mQuad.lVertexArray[3].SetUV(iterLetter->fU1, iterLetter->fV2);
+                lQuadList_.Clear();
 
-                if (!iterLetter->mColor.IsNaN() && !bForceColor_)
+                Quad mQuad;
+                mQuad.pMat = pFontMat_;
+
+                s_ctnr<Letter>::iterator iterLetter;
+                foreach (iterLetter, lLetterCache_)
                 {
-                    mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-                    mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = iterLetter->mColor;
-                }
-                else
-                {
-                    mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-                    mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = mColor_;
+                    Quad mQuad;
+                    mQuad.pMat = pFontMat_;
+
+                    mQuad.lVertexArray[0].Set(iterLetter->fX1+fX, iterLetter->fY1+fY);
+                    mQuad.lVertexArray[1].Set(iterLetter->fX2+fX, iterLetter->fY1+fY);
+                    mQuad.lVertexArray[2].Set(iterLetter->fX2+fX, iterLetter->fY2+fY);
+                    mQuad.lVertexArray[3].Set(iterLetter->fX1+fX, iterLetter->fY2+fY);
+
+                    mQuad.lVertexArray[0].SetUV(iterLetter->fU1, iterLetter->fV1);
+                    mQuad.lVertexArray[1].SetUV(iterLetter->fU2, iterLetter->fV1);
+                    mQuad.lVertexArray[2].SetUV(iterLetter->fU2, iterLetter->fV2);
+                    mQuad.lVertexArray[3].SetUV(iterLetter->fU1, iterLetter->fV2);
+
+                    if (!iterLetter->mColor.IsNaN() && !bForceColor_)
+                    {
+                        mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                        mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = iterLetter->mColor;
+                    }
+                    else
+                    {
+                        mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                        mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = mColor_;
+                    }
+
+                    lQuadList_.PushBack(mQuad);
                 }
 
-                SpriteManager::GetSingleton()->RenderQuad(mQuad);
+                bUpdateQuads_ = false;
+            }
+
+            s_ctnr<Quad>::iterator iterQuad;
+            foreach (iterQuad, lQuadList_)
+            {
+                SpriteManager::GetSingleton()->RenderQuad(*iterQuad);
             }
         }
     }
