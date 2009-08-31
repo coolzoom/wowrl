@@ -56,7 +56,7 @@ void main_vs(
     
     oColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
     tReflected = 2.0f*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
-    oSpecColor += mLightDiffuseColor[i].rgb * saturate(dot(tReflected, tEyeDir));
+    oSpecColor += mSunColor.rgb * saturate(dot(tReflected, tEyeDir));
 
     // Apply position and camera projection
     oPosition = mul(mWorldViewProj, iPosition);
