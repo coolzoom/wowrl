@@ -81,7 +81,7 @@ void main_vs(
     oColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
     #ifdef SPECULAR
         tReflected = 2.0f*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
-        oSpecColor += mLightDiffuseColor[i].rgb * saturate(dot(tReflected, tEyeDir));
+        oSpecColor += mSunColor.rgb * saturate(dot(tReflected, tEyeDir));
     #endif
 
     // Apply position and camera projection
