@@ -76,6 +76,14 @@ namespace Frost
         return mSpecular_;
     }
 
+    void Light::SetDirection( const Vector& mDir )
+    {
+        if (mType_ == LIGHT_SPOT || mType_ == LIGHT_DIRECTIONAL)
+        {
+            pOgreLight_->setDirection(Vector::FrostToOgre(mDir));
+        }
+    }
+
     void Light::SetSpotDimensions( const s_float& fInAngle, const s_float& fOutAngle )
     {
         if (mType_ == LIGHT_SPOT)

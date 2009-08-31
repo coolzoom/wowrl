@@ -107,6 +107,21 @@ namespace Frost
                 s_bool bEnableSpecular = Engine::GetSingleton()->GetBoolConstant("EnableSpecular");
                 s_ptr<XML::Block> pMaskBlock = pTexturesBlock->GetBlock("Mask");
 
+                s_str sTFO = Engine::GetSingleton()->GetStringConstant("TerrainTextureFiltering");
+                Ogre::TextureFilterOptions mTFO;
+                if (sTFO == "ANISOTROPIC")
+                    mTFO = Ogre::TFO_ANISOTROPIC;
+                else if (sTFO == "BILINEAR")
+                    mTFO = Ogre::TFO_BILINEAR;
+                else
+                {
+                    Warning("Engine",
+                        "Unknown value for \"TerrainTextureFiltering\" : \""+sTFO+"\". "
+                        "Using no filtering."
+                    );
+                    mTFO = Ogre::TFO_NONE;
+                }
+
                 if (pMaskBlock && pTexturesBlock->GetChildNumber() > 2)
                 {
                     s_str sMaskFile = pMaskBlock->GetAttribute("file");
@@ -128,7 +143,6 @@ namespace Frost
                     s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
                     Ogre::TextureManager::getSingleton().load(sMaskFile.Get(), "Frost");
                     pTUS->setTextureName(sMaskFile.Get());
-                    pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
 
                     s_ptr<XML::Block> pLayerBlock;
                     s_uint uiLayer = 1;
@@ -139,7 +153,7 @@ namespace Frost
                         s_str sFileName = pDiffuseBlock->GetAttribute("file");
                         Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
                         pTUS->setTextureName(sFileName.Get());
-                        pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
+                        pTUS->setTextureFiltering(mTFO);
 
                         s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
                         if (pTillingBlock)
@@ -157,7 +171,7 @@ namespace Frost
                             sFileName = pSpecularBlock->GetAttribute("file");
                             Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
                             pTUS->setTextureName(sFileName.Get());
-                            pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
+                            pTUS->setTextureFiltering(mTFO);
                         }
 
                         ++uiLayer;
@@ -192,6 +206,7 @@ namespace Frost
                     s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(
                         pDiffuseBlock->GetAttribute("file")
                     );
+                    pMat->GetDefaultPass()->getTextureUnitState(0)->setTextureFiltering(mTFO);
 
                     s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
                     if (pTillingBlock)
@@ -210,7 +225,7 @@ namespace Frost
                         s_str sFileName = pSpecularBlock->GetAttribute("file");
                         Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
                         pTUS->setTextureName(sFileName.Get());
-                        pTUS->setTextureFiltering(Ogre::TFO_ANISOTROPIC);
+                        pTUS->setTextureFiltering(mTFO);
 
                         s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader("Terrain_Specular");
                         s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader("Terrain_Specular");

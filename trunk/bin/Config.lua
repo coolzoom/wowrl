@@ -5,24 +5,28 @@ GameOptions = {
     ["GameVersion"] = "0.045",
     ["GameLocale"] = "enGB",
     
-    -- Gameplay
-    ["DefaultGameplay"] = "Free",
-    
-    -- GFX
+    -- Screen resolution
     ["FullScreen"] = false,
     ["WindowWidth"] = 1024,
     ["WindowHeight"] = 768,
     ["ScreenWidth"] = 1280,
     ["ScreenHeight"] = 1024,
-    ["AntiAliasingLevel"] = 4,
     
+    -- Renderer
     ["RenderSystem"] = "OpenGL",
     --["RenderSystem"] = "DirectX",
     
-    ["EnableSpecular"] = true,
-    ["EnableMotionBlur"] = true,
+    -- Advanced graphics options
+    ["TerrainTextureFiltering"] = "ANISOTROPIC";
+    ["AntiAliasingLevel"] = 4,
     ["EnableVSync"] = false,
+    ["EnableSpecular"] = true,
     
+    ["EnablePostProcessing"] = true,
+    ["EnableMotionBlur"] = true,
+    
+    -- Defaults
     ["DefaultFont"] = "Fonts/Vera.ttf",
+    ["DefaultGameplay"] = "Free",
     
 };

@@ -34,6 +34,8 @@
 #include <OgreRenderTargetListener.h>
 #include <OgrePass.h>
 
+#undef VOID
+
 using namespace std;
 
 namespace Frost
@@ -165,7 +167,12 @@ namespace Frost
             pLua_->Pop();
         }
 
-        s_str sLine = "# Starting Frost Engine (" + lGameOptionList_["GameVersion"].Get<s_str>() + ") #";
+        if (!GetBoolConstant("EnablePostProcessing"))
+        {
+            lGameOptionList_["EnableMotionBlur"] = s_bool(false);
+        }
+
+        s_str sLine = "# Starting Frost Engine ("+GetStringConstant("GameVersion")+") #";
         Log(s_str('#', sLine.GetLength()));
         Log(sLine);
         Log(s_str('#', sLine.GetLength())+"\n");
@@ -186,26 +193,30 @@ namespace Frost
 
         // Create Ogre's scene manager
         pOgreSceneMgr_ = pRoot_->createSceneManager(Ogre::ST_GENERIC, "FrostSceneMgr");
-        pOgreSceneMgr_->addSpecialCaseRenderQueue(Ogre::RENDER_QUEUE_OVERLAY);
+        if (GetBoolConstant("EnablePostProcessing"))
+            pOgreSceneMgr_->addSpecialCaseRenderQueue(Ogre::RENDER_QUEUE_OVERLAY);
 
         // Load shaders
         if (!pShaderMgr_->LoadShaders())
             return false;
 
-        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
-            pSceneRenderTarget_
-        );
-        pMat->GetDefaultPass()->setSeparateSceneBlending(
-            Ogre::SBF_ONE, Ogre::SBF_ZERO,
-            Ogre::SBF_ZERO, Ogre::SBF_ZERO
-        );
-        pMat->GetDefaultPass()->getTextureUnitState(0)->setTextureAddressingMode(
-            Ogre::TextureUnitState::TAM_CLAMP
-        );
-        if (lGameOptionList_["EnableMotionBlur"].Get<s_bool>())
-            pMat->SetPixelShader("MotionBlur");
+        if (GetBoolConstant("EnablePostProcessing"))
+        {
+            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
+                pSceneRenderTarget_
+            );
+            pMat->GetDefaultPass()->setSeparateSceneBlending(
+                Ogre::SBF_ONE, Ogre::SBF_ZERO,
+                Ogre::SBF_ZERO, Ogre::SBF_ZERO
+            );
+            pMat->GetDefaultPass()->getTextureUnitState(0)->setTextureAddressingMode(
+                Ogre::TextureUnitState::TAM_CLAMP
+            );
+            if (GetBoolConstant("EnableMotionBlur"))
+                pMat->SetPixelShader("MotionBlur");
 
-        pSceneSprite_ = new Sprite(pMat);
+            pSceneSprite_ = new Sprite(pMat);
+        }
 
         pUnitMgr_->Initialize();
 
@@ -254,6 +265,11 @@ namespace Frost
 
         s_bool bFirstIteration = true;
 
+        s_double d[10];
+        Timer t;
+        t.Start();
+        s_ulong iterNbr;
+
         // Start the main loop
         while (bRun_)
         {
@@ -273,6 +289,9 @@ namespace Frost
                 if (!(*pFrameFunc_)())
                     break;
             }
+
+            d[0] += t.GetElapsed();
+            t.Zero();
 
             // Check there is a camera ready for rendering
             if (!pCameraMgr_->CheckSettings())
@@ -301,14 +320,23 @@ namespace Frost
             // Update the GUI
             pGUIMgr_->Update(fDelta);
 
+            // Send shader parameters
+            pShaderMgr_->UpdateShaders();
+
+            d[1] += t.GetElapsed();
+            t.Zero();
+
             // Update our own render targets
             if (!pSpriteMgr_->RenderTargets())
                 break;
 
-            if (lGameOptionList_["EnableMotionBlur"].Get<s_bool>())
+            d[2] += t.GetElapsed();
+            t.Zero();
+
+            if (GetBoolConstant("EnableMotionBlur"))
             {
-                s_ptr<Ogre::Camera> pCam = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera();
                 Ogre::GpuProgramParametersSharedPtr pParam = pSceneSprite_->GetMaterial()->GetDefaultPass()->getFragmentProgramParameters();
+                s_ptr<Ogre::Camera> pCam = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera();
                 Ogre::Matrix4 mViewProj = pCam->getProjectionMatrixWithRSDepth() * pCam->getViewMatrix(true);
                 Ogre::Matrix4 mViewProjInverse = mViewProj.inverse();
                 pParam->setNamedConstant("mViewProjInverse", mViewProjInverse);
@@ -329,8 +357,14 @@ namespace Frost
                 }
             }
 
+            d[3] += t.GetElapsed();
+            t.Zero();
+
             // Render everyting
             pRoot_->_updateAllRenderTargets();
+
+            d[4] += t.GetElapsed();
+            t.Zero();
 
             // Update inputs and timers
             pTimeMgr_->Update();
@@ -341,7 +375,17 @@ namespace Frost
 
             pEventMgr_->FrameEnded();
 
+            d[5] += t.GetElapsed();
+            t.Zero();
+
             bFirstIteration = false;
+            ++iterNbr;
+        }
+
+        for (int i=0; i < 10; ++i)
+        {
+            d[i] /= s_double(iterNbr);
+            Log("["+s_int(i)+"] : "+d[i]);
         }
 
         bRun_ = false;
@@ -421,14 +465,14 @@ namespace Frost
 
     s_bool Engine::ReadGameConfig_()
     {
-        pGameplayMgr_->SetCurrentGameplay(lGameOptionList_["DefaultGameplay"].Get<s_str>());
+        pGameplayMgr_->SetCurrentGameplay(GetStringConstant("DefaultGameplay"));
 
         return true;
     }
 
     s_bool Engine::ReadGraphicsConfig_()
     {
-        s_str sRenderSystem = lGameOptionList_["RenderSystem"].Get<s_str>();
+        s_str sRenderSystem = GetStringConstant("RenderSystem");
         if (sRenderSystem == "OpenGL")
         {
             sRenderSystem = "OpenGL Rendering Subsystem";
@@ -461,16 +505,16 @@ namespace Frost
         pRoot_->setRenderSystem(pRS);
         pRoot_->initialise(false);
 
-        s_uint uiScreenWidth = s_uint(lGameOptionList_["ScreenWidth"].Get<s_float>());
-        s_uint uiScreenHeight = s_uint(lGameOptionList_["ScreenHeight"].Get<s_float>());
+        s_uint uiScreenWidth = GetUIntConstant("ScreenWidth");
+        s_uint uiScreenHeight = GetUIntConstant("ScreenHeight");
 
-        s_uint uiWindowWidth = s_uint(lGameOptionList_["WindowWidth"].Get<s_float>());
-        s_uint uiWindowHeight = s_uint(lGameOptionList_["WindowHeight"].Get<s_float>());
+        s_uint uiWindowWidth = GetUIntConstant("WindowWidth");
+        s_uint uiWindowHeight = GetUIntConstant("WindowHeight");
 
-        s_bool bFullScreen = lGameOptionList_["FullScreen"].Get<s_bool>();
-        s_bool bVSync = lGameOptionList_["EnableVSync"].Get<s_bool>();
+        s_bool bFullScreen = GetBoolConstant("FullScreen");
+        s_bool bVSync = GetBoolConstant("EnableVSync");
 
-        s_uint uiFSAA = s_uint(lGameOptionList_["AntiAliasingLevel"].Get<s_float>());
+        s_uint uiFSAA = GetUIntConstant("AntiAliasingLevel");
 
         Ogre::NameValuePairList lOptions;
         // NOTE : 32bit is required for A8R8G8B8 format
@@ -494,38 +538,54 @@ namespace Frost
             Error(CLASS_NAME, "Couldn't create render window.");
             return false;
         }
-        pRenderWindow_->addListener(
-            new RenderWindowListener()
-        );
 
-        pSceneRenderTarget_ = pSpriteMgr_->CreateRenderTarget(
-            "SceneTarget",
-            bFullScreen ? uiScreenWidth  : uiWindowWidth,
-            bFullScreen ? uiScreenHeight : uiWindowHeight,
-            RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
-        );
+        if (GetBoolConstant("EnablePostProcessing"))
+        {
+            pRenderWindow_->addListener(
+                new RenderWindowListener()
+            );
+
+            pSceneRenderTarget_ = pSpriteMgr_->CreateRenderTarget(
+                "SceneTarget",
+                bFullScreen ? uiScreenWidth  : uiWindowWidth,
+                bFullScreen ? uiScreenHeight : uiWindowHeight,
+                RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
+            );
+        }
 
         return true;
     }
 
-    s_var Engine::GetConstant( const s_str& sConstantName ) const
+    s_var Engine::GetConstant( const s_str& sConstantName )
     {
-        return lGameOptionList_.Get(sConstantName)->second;
+        s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
+        if (iter == lGameOptionList_.End())
+            iter->second =  s_var();
+        return iter->second;
     }
 
-    s_str Engine::GetStringConstant( const s_str& sConstantName ) const
+    s_str Engine::GetStringConstant( const s_str& sConstantName )
     {
-        return lGameOptionList_.Get(sConstantName)->second.Get<s_str>();
+        s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
+        if (iter == lGameOptionList_.End())
+            iter->second = s_str();
+        return iter->second.Get<s_str>();
     }
 
-    s_uint Engine::GetUIntConstant( const s_str& sConstantName ) const
+    s_uint Engine::GetUIntConstant( const s_str& sConstantName )
     {
-        return lGameOptionList_.Get(sConstantName)->second.Get<s_uint>();
+        s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
+        if (iter == lGameOptionList_.End())
+            iter->second = s_float();
+        return s_uint(iter->second.Get<s_float>());
     }
 
-    s_bool Engine::GetBoolConstant( const s_str& sConstantName ) const
+    s_bool Engine::GetBoolConstant( const s_str& sConstantName )
     {
-        return lGameOptionList_.Get(sConstantName)->second.Get<s_bool>();
+        s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
+        if (iter == lGameOptionList_.End())
+            iter->second = s_bool();
+        return iter->second.Get<s_bool>();
     }
 
     s_str Engine::GetRenderer() const
@@ -588,6 +648,9 @@ namespace Frost
 
     void Engine::RenderScene()
     {
-        pSceneSprite_->Render(0, 0);
+        if (GetBoolConstant("EnablePostProcessing"))
+            pSceneSprite_->Render(0, 0);
+        else
+            pSpriteMgr_->Clear(Color::VOID);
     }
 }

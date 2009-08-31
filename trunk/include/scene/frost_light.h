@@ -52,6 +52,12 @@ namespace Frost
         */
         const Color&  GetSpecularColor() const;
 
+        /// Sets this light's direction.
+        /** \param mDir The new direction
+        *   \note Only works for directionnal and spot lights.
+        */
+        void          SetDirection(const Vector& mDir);
+
         /// Sets the spot angles.
         /** \param fInAngle  Inner angle (non dimensional angle)
         *   \param fOutAngle Outer angle (non dimensional angle)

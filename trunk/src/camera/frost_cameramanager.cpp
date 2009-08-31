@@ -90,35 +90,54 @@ namespace Frost
                 pMainCamera_ = pCamera;
                 pMainCamera_->NotifyMainCamera(true);
 
-                if (pMainViewport_ == NULL)
+                if (Engine::GetSingleton()->GetBoolConstant("EnablePostProcessing"))
                 {
-                    pDefaultCamera_ = CreateCamera();
-                    pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
-                        pDefaultCamera_->GetOgreCamera().Get()
-                    );
-                    pMainViewport_->setBackgroundColour(Ogre::ColourValue::Black);
-                    pDefaultCamera_->GetOgreCamera()->setAspectRatio(
-                        Ogre::Real(pMainViewport_->getActualWidth()) /
-                        Ogre::Real(pMainViewport_->getActualHeight())
-                    );
+                    if (pMainViewport_ == NULL)
+                    {
+                        pDefaultCamera_ = CreateCamera();
+                        pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
+                            pDefaultCamera_->GetOgreCamera().Get()
+                        );
+                        pMainViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+                        pDefaultCamera_->GetOgreCamera()->setAspectRatio(
+                            Ogre::Real(pMainViewport_->getActualWidth()) /
+                            Ogre::Real(pMainViewport_->getActualHeight())
+                        );
 
-                    pSceneViewport_ = Engine::GetSingleton()->GetSceneRenderTarget()->GetOgreRenderTarget()->addViewport(
-                        pMainCamera_->GetOgreCamera().Get()
-                    );
-                    pSceneViewport_->setClearEveryFrame(true);
-                    pSceneViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+                        pSceneViewport_ = Engine::GetSingleton()->GetSceneRenderTarget()->GetOgreRenderTarget()->addViewport(
+                            pMainCamera_->GetOgreCamera().Get()
+                        );
+                        pSceneViewport_->setClearEveryFrame(true);
+                        pSceneViewport_->setBackgroundColour(Ogre::ColourValue::Black);
 
-                    pSceneViewport_->setDimensions(
-                        0, 0,
-                        pMainViewport_->getActualWidth()/(float)pSceneViewport_->getActualWidth(),
-                        pMainViewport_->getActualHeight()/(float)pSceneViewport_->getActualHeight()
-                    );
+                        pSceneViewport_->setDimensions(
+                            0, 0,
+                            pMainViewport_->getActualWidth()/(float)pSceneViewport_->getActualWidth(),
+                            pMainViewport_->getActualHeight()/(float)pSceneViewport_->getActualHeight()
+                        );
 
-                    bNewViewport_ = true;
+                        bNewViewport_ = true;
+                    }
+                    else
+                    {
+                        pSceneViewport_->setCamera(pMainCamera_->GetOgreCamera().Get());
+                    }
                 }
                 else
                 {
-                    pSceneViewport_->setCamera(pMainCamera_->GetOgreCamera().Get());
+                    if (pMainViewport_ == NULL)
+                    {
+                        pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
+                            pMainCamera_->GetOgreCamera().Get()
+                        );
+                        pMainViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+
+                        bNewViewport_ = true;
+                    }
+                    else
+                    {
+                        pMainViewport_->setCamera(pMainCamera_->GetOgreCamera().Get());
+                    }
                 }
             }
         }

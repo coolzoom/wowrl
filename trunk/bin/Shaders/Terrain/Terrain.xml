@@ -2,7 +2,7 @@
     <#[SPECULAR]>
         <VertexShader name="Terrain_Specular" file="Shaders/Terrain/Terrain_Specular_vs">
             <Params>
-                <LightParams number="5"/>
+                <LightParams number="5" includeDirectional="true"/>
                 <AutoParam name="mAmbient"/>
                 <AutoParam name="mWorldViewProj"/>
                 <AutoParam name="mWorld"/>
@@ -30,7 +30,7 @@
     
     <VertexShader name="Terrain_Splatting_2" file="Shaders/Terrain/Terrain_Splatting_vs">
         <Params>
-            <LightParams number="5"/>
+            <LightParams number="5" includeDirectional="true"/>
             <AutoParam name="mAmbient"/>
             <AutoParam name="mWorldViewProj"/>
             <AutoParam name="mWorld"/>
@@ -81,7 +81,7 @@
     
     <VertexShader name="Terrain_Splatting_3" file="Shaders/Terrain/Terrain_Splatting_vs">
         <Params>
-            <LightParams number="5"/>
+            <LightParams number="5" includeDirectional="true"/>
             <AutoParam name="mAmbient"/>
             <AutoParam name="mWorldViewProj"/>
             <AutoParam name="mWorld"/>
@@ -137,7 +137,7 @@
     
     <VertexShader name="Terrain_Splatting_4" file="Shaders/Terrain/Terrain_Splatting_vs">
         <Params>
-            <LightParams number="5"/>
+            <LightParams number="5" includeDirectional="true"/>
             <AutoParam name="mAmbient"/>
             <AutoParam name="mWorldViewProj"/>
             <AutoParam name="mWorld"/>

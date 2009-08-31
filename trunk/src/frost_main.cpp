@@ -242,11 +242,14 @@ int main(int argc, char* argv[])
 
 
                 // Some light
-                s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+                /*s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
                 pLight1->SetPosition(Vector(0, 5, 0));
                 pLight1->SetColor(Color(255, 255, 255));
                 pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
-                pLight1->SetRange(50.0f);
+                pLight1->SetRange(50.0f);*/
+
+                LightManager::GetSingleton()->SetSunDirection(Vector(-1, -1, 0));
+                LightManager::GetSingleton()->SetSunColor(Color(255, 255, 255));
             }
 
             // Enter the main loop

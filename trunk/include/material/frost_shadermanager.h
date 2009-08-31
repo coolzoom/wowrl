@@ -59,7 +59,10 @@ namespace Frost
         /// Reads the content of the Shaders folder.
         /** \return 'true' if everything went fine
         */
-        s_bool LoadShaders();
+        s_bool              LoadShaders();
+
+        /// Sends shaders parameters.
+        void                UpdateShaders();
 
         static const s_str CLASS_NAME;
 
