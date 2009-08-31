@@ -265,11 +265,6 @@ namespace Frost
 
         s_bool bFirstIteration = true;
 
-        s_double d[10];
-        Timer t;
-        t.Start();
-        s_ulong iterNbr;
-
         // Start the main loop
         while (bRun_)
         {
@@ -289,9 +284,6 @@ namespace Frost
                 if (!(*pFrameFunc_)())
                     break;
             }
-
-            d[0] += t.GetElapsed();
-            t.Zero();
 
             // Check there is a camera ready for rendering
             if (!pCameraMgr_->CheckSettings())
@@ -323,15 +315,9 @@ namespace Frost
             // Send shader parameters
             pShaderMgr_->UpdateShaders();
 
-            d[1] += t.GetElapsed();
-            t.Zero();
-
             // Update our own render targets
             if (!pSpriteMgr_->RenderTargets())
                 break;
-
-            d[2] += t.GetElapsed();
-            t.Zero();
 
             if (GetBoolConstant("EnableMotionBlur"))
             {
@@ -357,14 +343,8 @@ namespace Frost
                 }
             }
 
-            d[3] += t.GetElapsed();
-            t.Zero();
-
             // Render everyting
             pRoot_->_updateAllRenderTargets();
-
-            d[4] += t.GetElapsed();
-            t.Zero();
 
             // Update inputs and timers
             pTimeMgr_->Update();
@@ -375,17 +355,7 @@ namespace Frost
 
             pEventMgr_->FrameEnded();
 
-            d[5] += t.GetElapsed();
-            t.Zero();
-
             bFirstIteration = false;
-            ++iterNbr;
-        }
-
-        for (int i=0; i < 10; ++i)
-        {
-            d[i] /= s_double(iterNbr);
-            Log("["+s_int(i)+"] : "+d[i]);
         }
 
         bRun_ = false;
