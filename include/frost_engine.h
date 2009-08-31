@@ -86,25 +86,25 @@ namespace Frost
         /** \param sConstantName The name of the constant you're searching for
         *   \return An untyped value containing the value you asked
         */
-        s_var               GetConstant(const s_str& sConstantName) const;
+        s_var               GetConstant(const s_str& sConstantName);
 
         /// Returns a game constant.
         /** \param sConstantName The name of the constant you're searching for
         *   \return A string containing the value you asked
         */
-        s_str               GetStringConstant(const s_str& sConstantName) const;
+        s_str               GetStringConstant(const s_str& sConstantName);
 
         /// Returns a game constant.
         /** \param sConstantName The name of the constant you're searching for
         *   \return A uint containing the value you asked
         */
-        s_uint              GetUIntConstant(const s_str& sConstantName) const;
+        s_uint              GetUIntConstant(const s_str& sConstantName);
 
         /// Returns a game constant.
         /** \param sConstantName The name of the constant you're searching for
         *   \return A bool containing the value you asked
         */
-        s_bool              GetBoolConstant(const s_str& sConstantName) const;
+        s_bool              GetBoolConstant(const s_str& sConstantName);
 
         /// Returns the log file used to print debug infos.
         /** \return The log file used to print debug infos

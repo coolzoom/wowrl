@@ -23,7 +23,7 @@
                 <-- BoudingBox : defines how far the chunk extends -->
                 <n[1]:BoundingBox alwaysVisible="false">
                     <-- Size : dimensions of the chunk -->
-                    <n[.,1]:Size     n:x="10" n:y="10" n:z="10"/>
+                    <n[.,1]:Size n:x="10" n:y="10" n:z="10"/>
                 </BoundingBox>
                 
                 <-- Data : contains the terrain data -->

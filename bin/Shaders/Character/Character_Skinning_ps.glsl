@@ -5,6 +5,8 @@ uniform sampler2D mTexture;
 uniform vec4      mLightPos[5];
 uniform vec4      mLightDiffuseColor[5];
 uniform vec4      mLightAtten[5];
+uniform vec4      mSunDir;
+uniform vec4      mSunColor;
 uniform vec4      mAmbient;
 
 // Input
@@ -19,16 +21,18 @@ void main()
     vec3  tLightColor = mAmbient.rgb;
     vec3  tLightDir;
     float tDistance;
+    float tAtten;
 
     for (int i = 0; i < 5; ++i)
     {
         tLightDir = normalize(mLightPos[i].xyz - vBlendedPosition);
         tDistance = distance(mLightPos[i].xyz, vBlendedPosition);
-    
-        tLightColor += mLightDiffuseColor[i].rgb *
-            clamp(dot(tLightDir, vBlendedNormal), 0.0f, 1.0f) *
-            clamp(1.0f/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w), 0.0f, 1.0f);
+        
+        tAtten = 1.0/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
+        tLightColor += mLightDiffuseColor[i].rgb * max(dot(tLightDir, vBlendedNormal), 0.0) * tAtten;
     }
+    
+    tLightColor += mSunColor.rgb * max(dot(mSunDir.xyz, vBlendedNormal), 0.0);
         
     gl_FragColor = texture2D(mTexture, gl_TexCoord[0].st);
     gl_FragColor.rgb *= tLightColor;

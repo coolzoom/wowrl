@@ -6,6 +6,7 @@
 /*                                        */
 
 #include "material/frost_shader.h"
+#include "scene/frost_lightmanager.h"
 
 #include <OgrePass.h>
 
@@ -103,7 +104,7 @@ namespace Frost
         AddAutoParam(sName, mType);
     }
 
-    void Shader::AddLightParams(const s_uint& uiLightNbr)
+    void Shader::AddLightParams( const s_uint& uiLightNbr, const s_bool& bDirectional )
     {
         AddAutoParam(
             "mLightPos",
@@ -120,6 +121,11 @@ namespace Frost
             Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION_ARRAY,
             uiLightNbr.Get()
         );
+
+        if (bDirectional)
+        {
+            bSendSunParameters_ = true;
+        }
     }
 
     const s_str& Shader::GetOgreName()
@@ -127,63 +133,118 @@ namespace Frost
         return sName_;
     }
 
-    void Shader::WriteParams_(s_ptr<Ogre::GpuProgramParameters> pOgreShaderParams)
+    void Shader::WriteParams_( s_ptr<Ogre::Pass> pPass )
     {
-        s_ctnr<AutoParam>::iterator iterAutoParam;
-        foreach (iterAutoParam, lAutoParamList_)
+        if (!lAutoParamList_.IsEmpty())
         {
-            pOgreShaderParams->setNamedAutoConstant(
-                iterAutoParam->sName.Get(), iterAutoParam->mType, iterAutoParam->uiInfo.Get()
-            );
+            Ogre::GpuProgramParametersSharedPtr pParam = GetOgreParamList_(pPass);
+            s_ctnr<AutoParam>::iterator iterAutoParam;
+            foreach (iterAutoParam, lAutoParamList_)
+            {
+                pParam->setNamedAutoConstant(
+                    iterAutoParam->sName.Get(), iterAutoParam->mType, iterAutoParam->uiInfo.Get()
+                );
+            }
         }
 
         s_ctnr<Param>::iterator iterParam;
         foreach (iterParam, lParamList_)
         {
-            if (iterParam->vValue.IsOfType<s_float>())
+            SetParameter(iterParam->sName, iterParam->vValue, pPass);
+        }
+    }
+
+    void Shader::UnBind( s_ptr<Ogre::Pass> pPass )
+    {
+        s_ctnr< s_ptr<Ogre::Pass> >::iterator iter = lBindedPassList_.Get(pPass);
+        if (iter != lBindedPassList_.End())
+        {
+            lBindedPassList_.Erase(iter);
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "Trying to unbind \""+sName_+"\" from a pass that it has not been binded to."
+            );
+        }
+    }
+
+    void Shader::SetParameter( const s_str& sName, const s_var& vValue, s_ptr<Ogre::Pass> pPass )
+    {
+        if (pPass)
+        {
+            Ogre::GpuProgramParametersSharedPtr pParam = GetOgreParamList_(pPass);
+            try
             {
-                pOgreShaderParams->setNamedConstant(
-                    iterParam->sName.Get(),
-                    iterParam->vValue.Get<s_float>().Get()
-                );
+                if (vValue.IsOfType<Vector>())
+                    pParam->setNamedConstant(
+                        sName.Get(),
+                        Ogre::Vector4(Vector::FrostToOgre(vValue.Get<Vector>()))
+                    );
+                else if (vValue.IsOfType<Ogre::Vector3>())
+                    pParam->setNamedConstant(
+                        sName.Get(),
+                        Ogre::Vector4(vValue.Get<Ogre::Vector3>())
+                    );
+                else if (vValue.IsOfType<Ogre::Vector4>())
+                    pParam->setNamedConstant(
+                        sName.Get(),
+                        vValue.Get<Ogre::Vector4>()
+                    );
+                else if (vValue.IsOfType<Color>())
+                    pParam->setNamedConstant(
+                        sName.Get(),
+                        Color::FrostToOgre(vValue.Get<Color>())
+                    );
+                else if (vValue.IsOfType<Ogre::ColourValue>())
+                    pParam->setNamedConstant(
+                        sName.Get(),
+                        vValue.Get<Ogre::ColourValue>()
+                    );
+                else
+                {
+                    Error(CLASS_NAME,
+                        "Unsupported param type : \""+s_str(vValue.GetType().name())+"\"."
+                    );
+                }
             }
-            else if (iterParam->vValue.IsOfType<s_int>())
-            {
-                pOgreShaderParams->setNamedConstant(
-                    iterParam->sName.Get(),
-                    iterParam->vValue.Get<s_int>().Get()
-                );
-            }
-            else if (iterParam->vValue.IsOfType<Vector>())
-            {
-                pOgreShaderParams->setNamedConstant(
-                    iterParam->sName.Get(),
-                    Vector::FrostToOgre(iterParam->vValue.Get<Vector>())
-                );
-            }
-            else if (iterParam->vValue.IsOfType< s_array<float> >())
-            {
-                s_array<float> lArray = iterParam->vValue.Get< s_array<float> >();
-                pOgreShaderParams->setNamedConstant(
-                    iterParam->sName.Get(),
-                    lArray.GetClassicArray(),
-                    lArray.GetSize().Get()
-                );
-            }
-            else if (iterParam->vValue.IsOfType< s_array<int> >())
-            {
-                s_array<int> lArray = iterParam->vValue.Get< s_array<int> >();
-                pOgreShaderParams->setNamedConstant(
-                    iterParam->sName.Get(),
-                    lArray.GetClassicArray(),
-                    lArray.GetSize().Get()
-                );
-            }
-            else
+            catch (Ogre::Exception e)
             {
                 Error(CLASS_NAME,
-                    "Unsupported param type : \""+s_str(iterParam->vValue.GetType().name())+"\"."
+                    "Parameter \""+sName+"\" doesn't exist in \""+sName_+"\"."
                 );
+            }
+        }
+        else
+        {
+            s_ctnr< s_ptr<Ogre::Pass> >::iterator iterPass;
+            foreach (iterPass, lBindedPassList_)
+            {
+                SetParameter(sName, vValue, *iterPass);
+            }
+        }
+    }
+
+    void Shader::Update()
+    {
+        if (bIsValid_)
+        {
+            if (bSendSunParameters_)
+            {
+                Ogre::GpuProgramParametersSharedPtr pParam;
+                s_ctnr< s_ptr<Ogre::Pass> >::iterator iterPass;
+                foreach (iterPass, lBindedPassList_)
+                {
+                    SetParameter("mSunDir",
+                        -LightManager::GetSingleton()->GetSunDirection(),
+                        *iterPass
+                    );
+
+                    SetParameter("mSunColor",
+                        LightManager::GetSingleton()->GetSunColor(),
+                        *iterPass
+                    );
+                }
             }
         }
     }
@@ -204,53 +265,76 @@ namespace Frost
 
     void VertexShader::Load()
     {
-        Ogre::HighLevelGpuProgram* pProgram;
+        if (!bIsLoaded_)
+        {
+            try
+            {
+                Ogre::HighLevelGpuProgram* pProgram;
 
-        // HLSL
-        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            (sName_+"_HLSL").Get(), "Frost", "hlsl", Ogre::GPT_VERTEX_PROGRAM
-        ).get();
-        pProgram->setSourceFile((sFile_+".hlsl").Get());
-        pProgram->setParameter("entry_point", "main_vs");
-        pProgram->setParameter("target", "vs_2_0");
-        if (bSkeletalAnim_)
-        {
-            pProgram->setSkeletalAnimationIncluded(true);
-            pProgram->setParameter("column_major_matrices", "false");
-        }
-        if (!sPPCommands_.IsEmpty())
-        {
-            pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
-        }
+                // HLSL
+                pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+                    (sName_+"_HLSL").Get(), "Frost", "hlsl", Ogre::GPT_VERTEX_PROGRAM
+                ).get();
+                pProgram->setSourceFile((sFile_+".hlsl").Get());
+                pProgram->setParameter("entry_point", "main_vs");
+                pProgram->setParameter("target", "vs_2_0");
+                if (bSkeletalAnim_)
+                {
+                    pProgram->setSkeletalAnimationIncluded(true);
+                    pProgram->setParameter("column_major_matrices", "false");
+                }
+                if (!sPPCommands_.IsEmpty())
+                {
+                    pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
+                }
 
-        // GLSL
-        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            (sName_+"_GLSL").Get(), "Frost", "glsl", Ogre::GPT_VERTEX_PROGRAM
-        ).get();
-        pProgram->setSourceFile((sFile_+".glsl").Get());
-        if (bSkeletalAnim_)
-        {
-            pProgram->setSkeletalAnimationIncluded(true);
-        }
-        if (!sPPCommands_.IsEmpty())
-        {
-            pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
-        }
+                // GLSL
+                pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+                    (sName_+"_GLSL").Get(), "Frost", "glsl", Ogre::GPT_VERTEX_PROGRAM
+                ).get();
+                pProgram->setSourceFile((sFile_+".glsl").Get());
+                if (bSkeletalAnim_)
+                {
+                    pProgram->setSkeletalAnimationIncluded(true);
+                }
+                if (!sPPCommands_.IsEmpty())
+                {
+                    pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
+                }
 
-        // Unified vertex shader
-        pOgreShader_ = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
-            Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            sName_.Get(), "Frost", "unified", Ogre::GPT_VERTEX_PROGRAM
-        ).get());
-        pOgreShader_->addDelegateProgram((sName_+"_HLSL").Get());
-        pOgreShader_->addDelegateProgram((sName_+"_GLSL").Get());
-        pOgreShader_->load();
+                // Unified vertex shader
+                pOgreShader_ = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
+                    Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+                    sName_.Get(), "Frost", "unified", Ogre::GPT_VERTEX_PROGRAM
+                ).get());
+                pOgreShader_->addDelegateProgram((sName_+"_HLSL").Get());
+                pOgreShader_->addDelegateProgram((sName_+"_GLSL").Get());
+                pOgreShader_->load();
+
+                bIsValid_ = true;
+            }
+            catch (Ogre::Exception e)
+            {
+                Error(CLASS_NAME, e.getDescription());
+            }
+
+            bIsLoaded_ = true;
+        }
     }
 
     void VertexShader::BindTo( s_ptr<Ogre::Pass> pPass )
     {
-        pPass->setVertexProgram(sName_.Get());
-        WriteParams_(pPass->getVertexProgramParameters().get());
+        if (bIsValid_)
+        {
+            lBindedPassList_.PushBack(pPass);
+            pPass->setVertexProgram(sName_.Get());
+            WriteParams_(pPass);
+        }
+    }
+
+    Ogre::GpuProgramParametersSharedPtr VertexShader::GetOgreParamList_( s_ptr<Ogre::Pass> pPass )
+    {
+        return pPass->getVertexProgramParameters();
     }
 
     PixelShader::PixelShader( const s_str& sName ) :
@@ -262,61 +346,83 @@ namespace Frost
     {
     }
 
-    void PixelShader::BindTextureSampler(const s_str& sName, const s_uint& uiID)
+    void PixelShader::BindTextureSampler( const s_str& sName, const s_uint& uiID )
     {
         lSamplerParamList_.PushBack(SamplerParam(sName, uiID));
     }
 
     void PixelShader::Load()
     {
-        Ogre::HighLevelGpuProgram* pProgram;
-
-        // HLSL
-        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            (sName_+"_HLSL").Get(), "Frost", "hlsl", Ogre::GPT_FRAGMENT_PROGRAM
-        ).get();
-        pProgram->setSourceFile((sFile_+".hlsl").Get());
-        pProgram->setParameter("entry_point", "main_ps");
-        pProgram->setParameter("target", "ps_2_0");
-        if (!sPPCommands_.IsEmpty())
+        if (!bIsLoaded_)
         {
-            pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
-        }
+            try
+            {
+                Ogre::HighLevelGpuProgram* pProgram;
 
-        // GLSL
-        pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            (sName_+"_GLSL").Get(), "Frost", "glsl", Ogre::GPT_FRAGMENT_PROGRAM
-        ).get();
-        pProgram->setSourceFile((sFile_+".glsl").Get());
-        if (!sPPCommands_.IsEmpty())
-        {
-            pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
-        }
+                // HLSL
+                pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+                    (sName_+"_HLSL").Get(), "Frost", "hlsl", Ogre::GPT_FRAGMENT_PROGRAM
+                ).get();
+                pProgram->setSourceFile((sFile_+".hlsl").Get());
+                pProgram->setParameter("entry_point", "main_ps");
+                pProgram->setParameter("target", "ps_2_0");
+                if (!sPPCommands_.IsEmpty())
+                {
+                    pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
+                }
 
-        // Unified pixel shader
-        pOgreShader_ = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
-            Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
-            sName_.Get(), "Frost", "unified", Ogre::GPT_FRAGMENT_PROGRAM
-        ).get());
-        pOgreShader_->addDelegateProgram((sName_+"_HLSL").Get());
-        pOgreShader_->addDelegateProgram((sName_+"_GLSL").Get());
-        pOgreShader_->load();
+                // GLSL
+                pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+                    (sName_+"_GLSL").Get(), "Frost", "glsl", Ogre::GPT_FRAGMENT_PROGRAM
+                ).get();
+                pProgram->setSourceFile((sFile_+".glsl").Get());
+                if (!sPPCommands_.IsEmpty())
+                {
+                    pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
+                }
+
+                // Unified pixel shader
+                pOgreShader_ = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
+                    Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+                    sName_.Get(), "Frost", "unified", Ogre::GPT_FRAGMENT_PROGRAM
+                ).get());
+                pOgreShader_->addDelegateProgram((sName_+"_HLSL").Get());
+                pOgreShader_->addDelegateProgram((sName_+"_GLSL").Get());
+                pOgreShader_->load();
+
+                bIsValid_ = true;
+            }
+            catch (Ogre::Exception e)
+            {
+                Error(CLASS_NAME, e.getDescription());
+            }
+            bIsLoaded_ = true;
+        }
     }
 
     void PixelShader::BindTo( s_ptr<Ogre::Pass> pPass )
     {
-        pPass->setFragmentProgram(sName_.Get());
-        WriteParams_(pPass->getFragmentProgramParameters().get());
-
-        if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
+        if (bIsValid_)
         {
-            s_ctnr<SamplerParam>::iterator iterParam;
-            foreach (iterParam, lSamplerParamList_)
+            lBindedPassList_.PushBack(pPass);
+            pPass->setFragmentProgram(sName_.Get());
+            WriteParams_(pPass);
+
+            if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
             {
-                pPass->getFragmentProgramParameters()->setNamedConstant(
-                    iterParam->sName.Get(), (int)iterParam->uiID.Get()
-                );
+                s_ctnr<SamplerParam>::iterator iterParam;
+                foreach (iterParam, lSamplerParamList_)
+                {
+                    pPass->getFragmentProgramParameters()->setNamedConstant(
+                        iterParam->sName.Get(), (int)iterParam->uiID.Get()
+                    );
+                }
             }
         }
+    }
+
+    Ogre::GpuProgramParametersSharedPtr PixelShader::GetOgreParamList_( s_ptr<Ogre::Pass> pPass )
+    {
+        return pPass->getFragmentProgramParameters();
     }
 }

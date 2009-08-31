@@ -19,16 +19,14 @@ void main_vs(
               uniform float4x4 mWorldViewProj,
               uniform float4x4 mWorld,
               
-            #ifdef MOTION_BLUR
-              uniform float    mCamMaxDepth,
-            #endif
-             
               uniform float4x4 mTexCoordMat,
             
               uniform float4   mCamPos,
               uniform float4   mLightPos[5],
               uniform float4   mLightDiffuseColor[5],
               uniform float4   mLightAtten[5],
+              uniform float4   mSunDir,
+              uniform float4   mSunColor,
               uniform float4   mAmbient
             )
 {
@@ -41,7 +39,7 @@ void main_vs(
     float3 tNormal = normalize(mul(mWorld, iNormal));
     
     float3 tReflected;
-    oSpecColor = float3(0,0,0);
+    oSpecColor = float3(0.0f, 0.0f, 0.0f);
     float3 tEyeDir = normalize(mCamPos.xyz - tPosition);
 
     for (int i = 0; i < 5; ++i)
@@ -49,22 +47,16 @@ void main_vs(
         tLightDir = normalize(mLightPos[i].xyz - tPosition);
         tDistance = distance(mLightPos[i].xyz, tPosition);
 
-        if (tDistance < mLightAtten[i].x)
-        {
-            if (tDistance == 0.0f)
-            {
-                oColor += mLightDiffuseColor[i].rgb;
-            }
-            else
-            {
-                tAtten = 1.0f/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
-                oColor += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, tNormal)) * tAtten;
-            }
-            
-            tReflected = 2*tNormal*dot(tLightDir, tNormal) - tLightDir;
-            oSpecColor += mLightDiffuseColor[i].rgb * saturate(dot(tReflected, tEyeDir)) * tAtten;
-        }
+        tAtten = 1.0f/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
+        oColor += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, tNormal)) * tAtten;
+        
+        tReflected = 2.0f*tNormal*dot(tLightDir, tNormal) - tLightDir;
+        oSpecColor += mLightDiffuseColor[i].rgb * saturate(dot(tReflected, tEyeDir)) * tAtten;
     }
+    
+    oColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
+    tReflected = 2.0f*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
+    oSpecColor += mLightDiffuseColor[i].rgb * saturate(dot(tReflected, tEyeDir));
 
     // Apply position and camera projection
     oPosition = mul(mWorldViewProj, iPosition);

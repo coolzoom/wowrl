@@ -101,4 +101,13 @@ namespace Frost
 
         return true;
     }
+
+    void ShaderManager::UpdateShaders()
+    {
+        s_map< s_str, s_ptr<Shader> >::iterator iterShader;
+        foreach (iterShader, lShaderList_)
+        {
+            iterShader->second->Update();
+        }
+    }
 }

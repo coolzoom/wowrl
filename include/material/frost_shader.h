@@ -110,11 +110,20 @@ namespace Frost
         void AddAutoParam(const s_str& sName);
 
         /// Adds lights automatic parameters.
-        /** \param uiLightNbr The maximum number of light sent to the shader
+        /** \param uiLightNbr   The maximum number of light sent to the shader
+        *   \param bDirectional 'true' to include one directional light
         *   \note For each light, Ogre will send its position, its attenuation
         *         factors and the color.
         */
-        void AddLightParams(const s_uint& uiLightNbr);
+        void AddLightParams(const s_uint& uiLightNbr, const s_bool& bDirectional);
+
+        /// Sets the value of a parameter.
+        /** \param sName  The name of the parameter
+        *   \param vValue The value to assign
+        *   \param pPass  The pass for which to set the parameter
+        *   \note If pPass is ommited, the value is assigned in all binded passes.
+        */
+        void SetParameter(const s_str& sName, const s_var& vValue, s_ptr<Ogre::Pass> pPass = NULL);
 
         /// Compiles this shader.
         virtual void Load() = 0;
@@ -123,6 +132,14 @@ namespace Frost
         /** \param pPass The pass to bind
         */
         virtual void BindTo(s_ptr<Ogre::Pass> pPass) = 0;
+
+        /// Removes this shader from an Ogre::Pass.
+        /** \param pPass The pass to unbind
+        */
+        void UnBind(s_ptr<Ogre::Pass> pPass);
+
+        /// Updates some of this shaders parameters.
+        virtual void Update();
 
         /// Returns this shader's internal name.
         /** \return This shader's internal name
@@ -136,14 +153,21 @@ namespace Frost
 
     protected :
 
-        void WriteParams_(s_ptr<Ogre::GpuProgramParameters> pOgreShaderParams);
+        void WriteParams_(s_ptr<Ogre::Pass> pPass);
+        virtual Ogre::GpuProgramParametersSharedPtr GetOgreParamList_(s_ptr<Ogre::Pass> pPass) = 0;
 
         s_str sName_;
         s_str sFile_;
+        s_bool bIsValid_;
+        s_bool bIsLoaded_;
         s_str sPPCommands_;
         s_ptr<Ogre::UnifiedHighLevelGpuProgram> pOgreShader_;
         s_ctnr<AutoParam> lAutoParamList_;
         s_ctnr<Param>     lParamList_;
+
+        s_ctnr< s_ptr<Ogre::Pass> > lBindedPassList_;
+
+        s_bool bSendSunParameters_;
     };
 
     /// Controls vertices in the graphics card
@@ -177,6 +201,8 @@ namespace Frost
         static const s_str CLASS_NAME;
 
     private :
+
+        Ogre::GpuProgramParametersSharedPtr GetOgreParamList_(s_ptr<Ogre::Pass> pPass);
 
         s_bool bSkeletalAnim_;
 
@@ -225,6 +251,8 @@ namespace Frost
         static const s_str CLASS_NAME;
 
     private :
+
+        Ogre::GpuProgramParametersSharedPtr GetOgreParamList_(s_ptr<Ogre::Pass> pPass);
 
         s_ctnr<SamplerParam> lSamplerParamList_;
 

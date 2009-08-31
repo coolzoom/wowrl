@@ -15,26 +15,26 @@
                     <Plane xSize="50" zSize="50"/>
                 </Data>
                 <Textures>
-                    <Mask file="Textures/Tileset/Aerie Peaks/AeriePeaks_splat4.png"/>
+                    <!Mask file="Textures/Tileset/Aerie Peaks/AeriePeaks_splat4.png"/>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
-                    <Layer>
+                    <!Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGravelNeedlesBase_s.png"/>
                     </Layer>
-                    <Layer>
+                    <!Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksGrassHighlight.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Aerie Peaks/AeriePeaksGrassHighlight_s.png"/>
                     </Layer>
-                    <Layer>
+                    <!Layer>
                         <Diffuse file="Textures/Tileset/Aerie Peaks/AeriePeaksRockyMudBase.png">
                             <Tilling x="0.03" y="0.03"/>
                         </Diffuse>

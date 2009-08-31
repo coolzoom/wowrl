@@ -24,6 +24,26 @@ namespace Frost
         /// Initializes this manager.
         void         Initialize();
 
+        /// Sets the sun's light direction.
+        /** \param mSunDir The new direction
+        */
+        void           SetSunDirection(const Vector& mSunDir);
+
+        /// Returns the sun's light direction.
+        /** \return The sun's light direction
+        */
+        const Vector&  GetSunDirection() const;
+
+        /// Sets the sun's light color.
+        /** \param mSunDir The new color
+        */
+        void           SetSunColor(const Color& mSunColor);
+
+        /// Returns the sun's light color.
+        /** \return The sun's light color
+        */
+        const Color&   GetSunColor() const;
+
         /// Creates a new light.
         /** \param mType The type of this light
         *   \return The new light
@@ -88,8 +108,9 @@ namespace Frost
 
         s_map<s_uint, s_ptr<Light> > lLightList_;
 
-        Color mAmbient_;
-
+        Color  mAmbient_;
+        Vector mSunDir_;
+        Color  mSunColor_;
     };
 }
 

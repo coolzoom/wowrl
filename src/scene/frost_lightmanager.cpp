@@ -39,6 +39,27 @@ namespace Frost
         );
     }
 
+    void LightManager::SetSunDirection(const Vector& mSunDir)
+    {
+        mSunDir_ = mSunDir;
+        mSunDir_.Normalize();
+    }
+
+    const Vector& LightManager::GetSunDirection() const
+    {
+        return mSunDir_;
+    }
+
+    void LightManager::SetSunColor(const Color& mSunColor)
+    {
+        mSunColor_ = mSunColor;
+    }
+
+    const Color& LightManager::GetSunColor() const
+    {
+        return mSunColor_;
+    }
+
     s_ptr<Light> LightManager::CreateLight( LightType mType )
     {
         s_ptr<Light> pLight = new Light(mType);
