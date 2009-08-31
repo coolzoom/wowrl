@@ -298,6 +298,7 @@ namespace Frost
         Color     mColor_;
         s_bool    bForceColor_;
         s_float   fW_, fH_;
+        s_float   fX_, fY_;
         s_float   fBoxW_, fBoxH_;
         s_str     sText_;
         Alignment mAlign_;
@@ -306,11 +307,16 @@ namespace Frost
         s_ctnr<Line>          lLineList_;
         s_map<s_uint, Format> lFormatList_;
 
+        s_refptr<Quad> pQuad_;
+
         s_ptr<Ogre::Font>  pOgreFont_;
         s_refptr<Material> pFontMat_;
 
         s_bool         bUpdateCache_;
         s_ctnr<Letter> lLetterCache_;
+
+        s_bool         bUpdateQuads_;
+        s_ctnr<Quad>   lQuadList_;
 
     };
 }

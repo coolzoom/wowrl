@@ -161,28 +161,28 @@ namespace Frost
     inline void WriteVertex( float* &pBuffer, Frost::Vertex &mV )
     {
         *pBuffer = mV.fX.Get();  // x
-        pBuffer++;
+        ++pBuffer;
         *pBuffer = mV.fY.Get();  // y
-        pBuffer++;
+        ++pBuffer;
         *pBuffer = -1;           // z
-        pBuffer++;
+        ++pBuffer;
 
         *pBuffer = mV.fTX.Get(); // u
-        pBuffer++;
+        ++pBuffer;
         *pBuffer = mV.fTY.Get(); // v
-        pBuffer++;
+        ++pBuffer;
 
         *pBuffer = mV.mColor.GetR().Get()/255.0f;  // r
-        pBuffer++;
+        ++pBuffer;
 
         *pBuffer = mV.mColor.GetG().Get()/255.0f;  // g
-        pBuffer++;
+        ++pBuffer;
 
         *pBuffer = mV.mColor.GetB().Get()/255.0f;  // b
-        pBuffer++;
+        ++pBuffer;
 
         *pBuffer = mV.mColor.GetA().Get()/255.0f;  // a
-        pBuffer++;
+        ++pBuffer;
     }
     /** \endcond
     */
@@ -191,8 +191,6 @@ namespace Frost
     {
         if (lQuadList_.IsEmpty())
             return;
-
-        s_ctnr<Quad>::iterator itCurrQuad, itEndQuad;
 
         VertexChunk mThisChunk;
         s_ctnr<VertexChunk> lChunkList;
@@ -214,8 +212,8 @@ namespace Frost
         // Write quads to the hardware buffer, and remember chunks
         float* pBuffer = (float*)mHardwareBuffer_->lock(Ogre::HardwareBuffer::HBL_DISCARD);
 
-        itEndQuad = lQuadList_.End();
-        itCurrQuad = lQuadList_.Begin();
+        s_ctnr<Quad>::iterator itEndQuad = lQuadList_.End();
+        s_ctnr<Quad>::iterator itCurrQuad = lQuadList_.Begin();
         mThisChunk.pMat = itCurrQuad->pMat.Get();
         mThisChunk.uiVertexCount = 0u;
         while (itCurrQuad != itEndQuad)
@@ -230,7 +228,7 @@ namespace Frost
 
             // Remember this chunk
             mThisChunk.uiVertexCount += 6u;
-            itCurrQuad++;
+            ++itCurrQuad;
             if ( (itCurrQuad == itEndQuad) || (mThisChunk.pMat->GetOgreMaterial() != itCurrQuad->pMat->GetOgreMaterial()) )
             {
                 lChunkList.PushBack(mThisChunk);
@@ -514,7 +512,7 @@ namespace Frost
         mHardwareBuffer_.setNull();
     }
 
-    void SpriteManager::RenderQuad( const Quad &mQuad )
+    void SpriteManager::RenderQuad( const Quad& mQuad )
     {
         lQuadList_.PushBack(mQuad);
         if (bPreciseRendering_)
@@ -556,6 +554,11 @@ namespace Frost
         bPreciseRendering_ = false;
     }
 
+    const s_bool& SpriteManager::IsPreciseRenderingEnabled() const
+    {
+        return bPreciseRendering_;
+    }
+
     void SpriteManager::EnableAutomaticRendering()
     {
         bAutoRenderingDisabled_ = false;
@@ -564,11 +567,6 @@ namespace Frost
     void SpriteManager::DisableAutomaticRendering()
     {
         bAutoRenderingDisabled_ = true;
-    }
-
-    const s_bool& SpriteManager::GetPreciseRendering() const
-    {
-        return bPreciseRendering_;
     }
 
     s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_str& sTargetName, const s_uint& uiWidth, const s_uint& uiHeight, const RenderTarget::PixelType& mType, const RenderTarget::Usage& mUsage )
