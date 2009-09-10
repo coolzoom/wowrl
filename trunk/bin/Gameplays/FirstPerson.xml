@@ -13,6 +13,9 @@
             <OnEvent>
                 FirstPersonGameplay.OnEvent();
             </OnEvent>
+            <OnUpdate>
+                FirstPersonGameplay.OnUpdate();
+            </OnUpdate>
         </Scripts>
     </Gameplay>
 </Gameplays>

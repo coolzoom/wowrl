@@ -70,7 +70,7 @@ namespace Frost
         if (pOgreInputMgr_)
         {
             pKeyboard_ = static_cast<OIS::Keyboard*>(pOgreInputMgr_->createInputObject(OIS::OISKeyboard, true));
-            pMouse_ = static_cast<OIS::Mouse*>(pOgreInputMgr_->createInputObject(OIS::OISMouse, true));
+            pMouse_ = static_cast<OIS::Mouse*>(pOgreInputMgr_->createInputObject(OIS::OISMouse, false));
 
             // Oww... these are "mutable" attributes, and can be changed even
             // if the object is declared "const". This is ugly, but it's not
