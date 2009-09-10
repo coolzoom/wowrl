@@ -12,16 +12,6 @@
 
 namespace Frost
 {
-    enum FileType
-    {
-        /// Input - Output
-        FILE_IO,
-        /// Input
-        FILE_I,
-        /// Output
-        FILE_O
-    };
-
     typedef char string_element;
     typedef std::string string_object;
     typedef std::stringstream string_stream;
@@ -37,12 +27,19 @@ namespace Frost
     {
     public :
 
+        enum FileType
+        {
+            IO, /// Input - Output
+            I,  /// Input
+            O   /// Output
+        };
+
         /// Call that constructor to open a file.
         /** \param sName   The file's name
         *   \param mType   How to open this file, see FileType
         *   \param bBinary 'false' if the file is plain text
         */
-        File(const s_str& sName, const FileType& mType = FILE_IO, const s_bool& bBinary = false);
+        File(const s_str& sName, const FileType& mType = IO, const s_bool& bBinary = false);
 
         /// Destructor.
         /** \note Automatically closes the file.
@@ -105,49 +102,68 @@ namespace Frost
         */
         string_element Get();
 
-        /// Extracts a block(n-1) of unformated data until \\n is found.
-        /** \param[out] sBuffer A buffer string object
-        *   \param      uiSize  The number of character to extract
-        */
-        void        Get(s_str& sBuffer, const s_uint& uiSize);
-
-        /// Extracts a block(n) of unformated data.
+        /// Extracts a block of unformated data.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
         void        Read(s_str& sBuffer, const s_uint& uiSize);
 
-        /// Extracts a block(n-1) of unformated data until \\n is found.
-        /** \param[out] sBuffer A buffer string object
-        *   \param      uiSize  The number of character to extract
-        */
-        void        Get(string_element* sBuffer, const s_uint& uiSize);
-
-        /// Extracts a block(n) of unformated data.
+        /// Extracts a block of unformated data.
         /** \param[out] sBuffer A buffer string object
         *   \param      uiSize  The number of character to extract
         */
         void        Read(string_element* sBuffer, const s_uint& uiSize);
 
-        /// Extracts a block(n-1) of unformated data until a character is found.
-        /** \param[out] sBuffer A buffer string object
+        /// Extracts a block of unformated data.
+        /** \param[out] pBuffer A pointer to the object/array to fill
         *   \param      uiSize  The number of character to extract
-        *   \param      cDelim  Extraction should stop when this char is encountered
         */
-        void        Get(s_str& sBuffer, const s_uint& uiSize, const string_element& cDelim);
+        void        Read(void* pBuffer, const s_uint& uiSize);
+
+        /// Fills an object.
+        /** \param[out] mObject The object to fill
+        *   \note The object provided should only contain POD types and no pointers.
+        */
+        template<class T>
+        void        Read(T& mObject)
+        {
+            Read(&mObject, sizeof(T));
+        }
 
         /// Writes down a char array into the file.
-        /** \param sBuffer The char array (can be a casted type)
+        /** \param sBuffer The char array
         *   \param uiSize  The number of char to write to the file
         *   \note This function changes the writing position
         */
         void        Write(const string_element* sBuffer, const s_uint& uiSize);
+
+        /// Writes down some data into the file.
+        /** \param pBuffer The object/array to write
+        *   \param uiSize  The object's size
+        *   \note This function changes the writing position
+        */
+        void        Write(const void* pBuffer, const s_uint& uiSize);
+
+        /// Writes an object into the file.
+        /** \param mObject The object to write
+        *   \note This function changes the writing position
+        */
+        template<class T>
+        void        Write(const T& mObject)
+        {
+            Write(&mObject, sizeof(T));
+        }
 
         /// Writes down a single char into the file.
         /** \param cChar The char to write down
         *   \note This function changes the writing position
         */
         void        Write(const string_element& cChar);
+
+        /// Writes the content of the provided string into the file.
+        /** \param sLine The string to write
+        */
+        void        Write(const s_str& sLine);
 
         /// Writes the content of the provided string and go to the next line.
         /** \param sLine The string to write
