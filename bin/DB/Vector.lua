@@ -93,7 +93,7 @@ function Vector.__pow(vec1, vec2)
 end
 
 function Vector.__tostring(p)
-  return "("..self.x..", "..self.y..", "..self.z..")";
+  return "("..p.x..", "..p.y..", "..p.z..")";
 end
 
 -- Member functions

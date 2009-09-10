@@ -1,13 +1,23 @@
 FirstPersonGameplay = {
     ["camera"] = nil,                -- The camera handled by this gameplay
     ["defaultCamera"] = nil,         -- The camera to use if something goes wrong
-    ["maxSpeed"] = 20,               -- The camera movement speed
     ["translate"] = Vector(0, 0, 0), -- Translation vector
-    ["MRPressed"] = false,           -- 'true' if the mouse right button is pressed
-    ["MLPressed"] = false,           -- 'true' if the mouse left button is pressed
+    ["mouseLeftPressed"] = false,    -- 'true' if the mouse left button is pressed
+    ["mouseRightPressed"] = false,   -- 'true' if the mouse right button is pressed
     ["unit"] = nil,                  -- The followed unit
     ["ready"] = false,               -- 'true' if this gameplay can be used
     
+    ["mouse"] = {
+        ["lastYaw"] = 0,
+        ["lastPitch"] = 0,
+        ["averagedYaw"] = 0,
+        ["averagedPitch"] = 0,
+        ["yawHistoric"] = {},
+        ["pitchHistoric"] = {},
+        
+        ["historicLength"] = 50,
+        ["historicSmoothFactor"] = 1,
+    },
 };
 
 -----------------------------------
@@ -92,28 +102,80 @@ function FirstPersonGameplay.OnEvent()
                 FirstPersonGameplay.unit:SetMoveRight(false);
             end
         elseif (event == "MOUSE_MOVED") then
-            if (FirstPersonGameplay.MLPressed) then
-                FirstPersonGameplay.unit:RotateCamera(-arg3, -arg4);
-            elseif (FirstPersonGameplay.MRPressed) then
-                FirstPersonGameplay.unit:RotateModel(-arg3, -arg4);
+            if (FirstPersonGameplay.mouseLeftPressed or FirstPersonGameplay.mouseRightPressed) then
+                FirstPersonGameplay.mouse.lastYaw = arg3;
+                FirstPersonGameplay.mouse.lastPitch = arg4;
             end
         elseif (event == "MOUSE_PRESSED") then
             if (arg1 == MOUSE_RIGHT) then
                 FirstPersonGameplay.unit:ToggleTurning();
                 FirstPersonGameplay.unit:RotateModel(0, 0);
-                FirstPersonGameplay.MRPressed = true;
+                FirstPersonGameplay.mouseRightPressed = true;
             elseif (arg1 == MOUSE_LEFT) then
-                FirstPersonGameplay.MLPressed = true;
+                FirstPersonGameplay.mouseLeftPressed = true;
             end
         elseif (event == "MOUSE_RELEASED") then
             if (arg1 == MOUSE_RIGHT) then
                 FirstPersonGameplay.unit:ToggleTurning();
-                FirstPersonGameplay.MRPressed = false;
+                FirstPersonGameplay.mouseRightPressed = false;
             elseif (arg1 == MOUSE_LEFT) then
-                FirstPersonGameplay.MLPressed = false;
+                FirstPersonGameplay.mouseLeftPressed = false;
             end
         elseif (event == "MOUSE_WHEEL") then
             FirstPersonGameplay.unit:ZoomCamera(-arg1/120);
         end
+    end
+end
+
+function FirstPersonGameplay.UpdateMouseMovement()
+    local input = FirstPersonGameplay.mouse;
+    
+    table.insert(input.yawHistoric, 1, input.lastYaw);
+    local yawNbr = table.maxn(input.yawHistoric);
+    if (yawNbr > input.historicLength) then
+        table.remove(input.yawHistoric);
+        yawNbr = yawNbr - 1;
+    end
+    
+    local factor = 1;
+    local totalWeight = 0;
+    
+    input.averagedYaw = 0;
+    for i=1, yawNbr do
+        input.averagedYaw = input.averagedYaw + input.yawHistoric[i]*factor;
+        totalWeight = totalWeight + factor;
+        factor = factor * input.historicSmoothFactor;
+    end
+    input.averagedYaw = input.averagedYaw / totalWeight;
+    
+    table.insert(input.pitchHistoric, 1, input.lastPitch);
+    local pitchNbr = table.maxn(input.pitchHistoric);
+    if (pitchNbr > input.historicLength) then
+        table.remove(input.pitchHistoric);
+        pitchNbr = pitchNbr - 1;
+    end
+    
+    factor = 1;
+    totalWeight = 0;
+    
+    input.averagedPitch = 0;
+    for i=1, pitchNbr do
+        input.averagedPitch = input.averagedPitch + input.pitchHistoric[i]*factor;
+        totalWeight = totalWeight + factor;
+        factor = factor * input.historicSmoothFactor;
+    end
+    input.averagedPitch = input.averagedPitch / totalWeight;
+end
+
+function FirstPersonGameplay.OnUpdate()
+    FirstPersonGameplay.UpdateMouseMovement();
+    
+    FirstPersonGameplay.mouse.lastYaw = 0;
+    FirstPersonGameplay.mouse.lastPitch = 0;
+    
+    if (FirstPersonGameplay.mouseLeftPressed) then
+        FirstPersonGameplay.unit:RotateCamera(-FirstPersonGameplay.mouse.averagedYaw, -FirstPersonGameplay.mouse.averagedPitch);
+    elseif (FirstPersonGameplay.mouseRightPressed) then
+        FirstPersonGameplay.unit:RotateModel(-FirstPersonGameplay.mouse.averagedYaw, -FirstPersonGameplay.mouse.averagedPitch);
     end
 end
