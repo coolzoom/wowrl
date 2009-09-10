@@ -71,7 +71,7 @@ namespace Frost
 
         /// Returns the contained value.
         /** \return The contained value
-        *   \note If the provided type doesn't math the
+        *   \note If the provided type doesn't match the
         *         contained value's, a Warning is printed
         *         in the log, and this function returns a
         *         default value.

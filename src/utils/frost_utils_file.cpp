@@ -18,7 +18,7 @@ namespace Frost
 
         switch (mType)
         {
-            case FILE_IO :
+            case IO :
             {
                 if (bBinary)
                     mFile_.open(sName.GetASCII().c_str(), ios_base::in | ios_base::out | ios::binary);
@@ -26,7 +26,7 @@ namespace Frost
                     mFile_.open(sName.GetASCII().c_str(), ios_base::in | ios_base::out);
                 break;
             }
-            case FILE_I :
+            case I :
             {
                 if (bBinary)
                     mFile_.open(sName.GetASCII().c_str(), ios::in | ios::binary);
@@ -34,7 +34,7 @@ namespace Frost
                     mFile_.open(sName.GetASCII().c_str(), ios::in);
                 break;
             }
-            case FILE_O :
+            case O :
             {
                 if (bBinary)
                     mFile_.open(sName.GetASCII().c_str(), ios::out | ios::binary);
@@ -118,14 +118,6 @@ namespace Frost
         return cTemp;
     }
 
-    void File::Get( s_str& sBuffer, const s_uint& uiSize )
-    {
-        string_element* sTemp = new string_element[uiSize.Get()];
-        mFile_.get(sTemp, uiSize.Get());
-        sBuffer = sTemp;
-        delete sTemp;
-    }
-
     void File::Read( s_str& sBuffer, const s_uint& uiSize )
     {
         string_element* sTemp = new string_element[uiSize.Get()];
@@ -134,22 +126,14 @@ namespace Frost
         delete sTemp;
     }
 
-    void File::Get( string_element* sBuffer, const s_uint& uiSize )
-    {
-        mFile_.get(sBuffer, uiSize.Get());
-    }
-
     void File::Read( string_element* sBuffer, const s_uint& uiSize )
     {
         mFile_.read(sBuffer, uiSize.Get());
     }
 
-    void File::Get( s_str& sBuffer, const s_uint& uiSize, const string_element& cDelim )
+    void File::Read( void* pBuffer, const s_uint& uiSize )
     {
-        string_element* sTemp = new string_element[uiSize.Get()];
-        mFile_.get(sTemp, uiSize.Get(), cDelim);
-        sBuffer = sTemp;
-        delete sTemp;
+        mFile_.read((char*)pBuffer, uiSize.Get());
     }
 
     void File::Write( const string_element* sBuffer, const s_uint& uiSize )
@@ -157,9 +141,19 @@ namespace Frost
         mFile_.write(sBuffer, uiSize.Get());
     }
 
+    void File::Write( const void* sBuffer, const s_uint& uiSize )
+    {
+        mFile_.write((const char*)sBuffer, uiSize.Get());
+    }
+
     void File::Write( const string_element& cChar )
     {
         mFile_.put(cChar);
+    }
+
+    void File::Write( const s_str& sLine )
+    {
+        mFile_.write(sLine.c_str(), sLine.GetSize().Get());
     }
 
     void File::WriteLine( const s_str& sLine )

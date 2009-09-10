@@ -167,7 +167,7 @@ namespace Frost
             mAddOn.bEnabled = true;
             mAddOn.sFolder = sAddOnFolder + "/" + sAddOnName;
 
-            File mFile(mAddOn.sFolder + "/" + sAddOnName + ".toc", FILE_I);
+            File mFile(mAddOn.sFolder + "/" + sAddOnName + ".toc", File::I);
 
             if (mFile.IsOpen())
             {
@@ -281,7 +281,7 @@ namespace Frost
         s_ctnr< s_ptr<AddOn> > lAddOnStack;
         s_bool bCore = false;
 
-        File mFile(sDirectory + "/AddOns.txt", FILE_I);
+        File mFile(sDirectory + "/AddOns.txt", File::I);
         if (mFile.IsOpen())
         {
             while (mFile.IsValid())

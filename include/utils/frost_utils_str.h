@@ -71,6 +71,18 @@ namespace Frost
             mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
+        /// Constructor.
+        /** \param sValue The string to use
+        *   \param uiSize The number of character to copy
+        */
+        s_str_t(const string_element* sValue, const s_uint& uiSize)
+        {
+            sValue_ = sValue;
+            sValue_.resize(uiSize.Get());
+            mIntConvType_ = CONV_DECIMAL;
+            mBoolConvType_ = CONV_TRUE_FALSE;
+        }
+
         /// s_int_t conversion constructor.
         /** \param iValue The s_int_t to convert
         */

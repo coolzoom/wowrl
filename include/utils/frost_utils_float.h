@@ -312,8 +312,8 @@ namespace Frost
                     fValue_ = fMin.fValue_;
                 else
                 {
-                    T fRange = fMax.fValue_ - fMin.fValue_ + 1.0;
-                    fValue_ = fRange*(rand()/(RAND_MAX + 1.0)) + fMin.fValue_;
+                    T fRange = fMax.fValue_ - fMin.fValue_;
+                    fValue_ = fRange*(rand()/((T)RAND_MAX)) + fMin.fValue_;
                 }
             }
         }
@@ -583,8 +583,8 @@ namespace Frost
                 }
                 else
                 {
-                    T fRange = fMax.fValue_ - fMin.fValue_ + 1.0;
-                    return fRange*(rand()/(RAND_MAX + 1.0)) + fMin.fValue_;
+                    T fRange = fMax.fValue_ - fMin.fValue_;
+                    return fRange*(rand()/((T)RAND_MAX)) + fMin.fValue_;
                 }
             }
             else

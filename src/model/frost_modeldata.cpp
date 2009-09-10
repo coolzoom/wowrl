@@ -151,7 +151,7 @@ namespace Frost
         // The main mesh
         pMesh_ = Ogre::MeshManager::getSingletonPtr()->createManual(sModelName.Get(), "Frost").get();
 
-        File mFile(sFile, FILE_I, true);
+        File mFile(sFile, File::I, true);
         if (!mFile.IsValid())
         {
             mFile.Close();

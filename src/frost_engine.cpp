@@ -63,7 +63,7 @@ namespace Frost
 
     const s_str Engine::CLASS_NAME = "Engine";
 
-    Engine::Engine() : mLog_("Frost.log", FILE_O)
+    Engine::Engine() : mLog_("Frost.log", File::O)
     {
         iGameState_ = 0;
         bGamePaused_ = false;

@@ -255,7 +255,7 @@ s_bool Document::LoadDefinition_()
     if (bValid_)
     {
         sActualFileName_ = sDefFileName_;
-        File mFile(sDefFileName_, FILE_I);
+        File mFile(sDefFileName_, File::I);
 
         s_ptr<Block> pActual;
         s_ptr<Block> pParent;
@@ -748,7 +748,7 @@ s_bool Document::Check( const s_str& sPreProcCommands )
         }
 
         sActualFileName_ = sFileName_;
-        File mFile(sFileName_, FILE_I);
+        File mFile(sFileName_, File::I);
         uiLineNbr_ = 1u;
 
         s_ptr<Block> pActual = &mMainBlock_;
