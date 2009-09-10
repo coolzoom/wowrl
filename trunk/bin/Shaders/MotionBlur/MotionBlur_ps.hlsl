@@ -22,7 +22,7 @@ void main_ps(
     float4 tPrevPosition = mul(mPrevViewProj, tPosition);
     tPrevPosition /= tPrevPosition.w;
     
-    float2 tVelocity = mFPS*BLUR_INTENSITY/BLUR_QUALITY*float2(1, -1)*(tViewportPosition - tPrevPosition).xy;
+    float2 tVelocity = mFPS*BLUR_INTENSITY/BLUR_QUALITY*float2(1, -1)*(tPrevPosition - tViewportPosition).xy;
     
     iTexture += tVelocity;
 
