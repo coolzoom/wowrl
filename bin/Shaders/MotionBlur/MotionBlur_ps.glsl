@@ -18,7 +18,7 @@ void main()
     vec4 tPrevPosition = mPrevViewProj * tPosition;
     tPrevPosition /= tPrevPosition.w;
     
-    vec2 tVelocity = mFPS*BLUR_INTENSITY/BLUR_QUALITY*vec2(1, -1)*(tViewportPosition - tPrevPosition).xy;
+    vec2 tVelocity = mFPS*BLUR_INTENSITY/BLUR_QUALITY*vec2(1, -1)*(tPrevPosition - tViewportPosition).xy;
     
     tTexCoord += tVelocity;
     
