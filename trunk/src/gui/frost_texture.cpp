@@ -225,7 +225,10 @@ void Texture::SetDesaturated( const s_bool& bIsDesaturated )
     if (pSprite_)
     {
         bIsDesaturated_ = bIsDesaturated;
-        pSprite_->GetMaterial()->SetPixelShader("GUI_Desaturation");
+        if (bIsDesaturated_)
+            pSprite_->GetMaterial()->SetPixelShader("GUI_Desaturation");
+        else
+            pSprite_->GetMaterial()->RemovePixelShader();
     }
     else
     {

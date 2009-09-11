@@ -200,12 +200,22 @@ namespace Frost
             pDefaultPass_->setVertexProgram("");
     }
 
+    void Material::RemoveVertexShader()
+    {
+        pDefaultPass_->setVertexProgram("");
+    }
+
     void Material::SetPixelShader( s_ptr<PixelShader> pPS )
     {
         if (pPS)
             pPS->BindTo(pDefaultPass_);
         else
             pDefaultPass_->setFragmentProgram("");
+    }
+
+    void Material::RemovePixelShader()
+    {
+        pDefaultPass_->setFragmentProgram("");
     }
 
     void Material::SetShaders( const s_str& sSName )
