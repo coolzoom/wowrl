@@ -80,6 +80,18 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaUnit::_DisableMotionBlur( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:DisableMotionBlur", pLua);
+
+        if (mFunc.Check())
+        {
+            pParent_->DisableMotionBlur();
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaUnit::_FillHealthGauge( lua_State* pLua )
     {
         Lua::Function mFunc("Unit:FillHealthGauge", pLua);
@@ -123,6 +135,18 @@ namespace Frost
         if (mFunc.Check())
         {
             pParent_->EmptyPowerGauge();
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaUnit::_EnableMotionBlur( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:EnableMotionBlur", pLua);
+
+        if (mFunc.Check())
+        {
+            pParent_->EnableMotionBlur();
         }
 
         return mFunc.Return();
@@ -343,10 +367,12 @@ namespace Frost
         method(Unit, AddHealth),
         method(Unit, AddPower),
         method(Unit, Damage),
+        method(Unit, DisableMotionBlur),
         method(Unit, FillHealthGauge),
         method(Unit, FillPowerGauge),
         method(Unit, EmptyHealthGauge),
         method(Unit, EmptyPowerGauge),
+        method(Unit, EnableMotionBlur),
         method(Unit, Die),
         method(Unit, GetCamera),
         method(Unit, GetClass),

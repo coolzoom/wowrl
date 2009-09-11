@@ -34,15 +34,6 @@ void main()
 {
     vec4 tMask = texture2D(mMask, gl_TexCoord[0].st);
     
-    gl_FragColor  = texture2D(mTexture1,  gl_TexCoord[1].st)*tMask.a;
-    gl_FragColor += texture2D(mTexture2,  gl_TexCoord[2].st)*tMask.r;
-    #if LAYER > 2
-        gl_FragColor += texture2D(mTexture3, gl_TexCoord[3].st)*tMask.g;
-    #endif
-    #if LAYER > 3
-        gl_FragColor += texture2D(mTexture4, gl_TexCoord[4].st)*tMask.b;
-    #endif
-    
     #ifdef SPECULAR
         vec4 tSpec = texture2D(mTexture1S, gl_TexCoord[1].st)*tMask.a;
         tSpec     += texture2D(mTexture2S, gl_TexCoord[2].st)*tMask.r;
@@ -54,13 +45,39 @@ void main()
         #endif
     #endif
     
-    gl_FragColor.rgb *= vColor;
-    
-    #ifdef SPECULAR
-        gl_FragColor.rgb += vSpecColor*tSpec.rgb*tSpec.a;
-    #endif
-    
-    #if MOTION_BLUR
-        gl_FragColor.a = vPosition.z/vPosition.w;
+    #ifdef MOTION_BLUR
+        gl_FragData[0]  = texture2D(mTexture1,  gl_TexCoord[1].st)*tMask.a;
+        gl_FragData[0] += texture2D(mTexture2,  gl_TexCoord[2].st)*tMask.r;
+        #if LAYER > 2
+            gl_FragData[0] += texture2D(mTexture3, gl_TexCoord[3].st)*tMask.g;
+        #endif
+        #if LAYER > 3
+            gl_FragData[0] += texture2D(mTexture4, gl_TexCoord[4].st)*tMask.b;
+        #endif
+        
+        gl_FragData[0].rgb *= vColor;
+        
+        #ifdef SPECULAR
+            gl_FragData[0].rgb += vSpecColor*tSpec.rgb*tSpec.a;
+        #endif
+        
+        gl_FragData[0].a = vPosition.z/vPosition.w;
+        
+        gl_FragData[1] = vec4(1,1,1,1);
+    #else
+        gl_FragColor  = texture2D(mTexture1,  gl_TexCoord[1].st)*tMask.a;
+        gl_FragColor += texture2D(mTexture2,  gl_TexCoord[2].st)*tMask.r;
+        #if LAYER > 2
+            gl_FragColor += texture2D(mTexture3, gl_TexCoord[3].st)*tMask.g;
+        #endif
+        #if LAYER > 3
+            gl_FragColor += texture2D(mTexture4, gl_TexCoord[4].st)*tMask.b;
+        #endif
+        
+        gl_FragColor.rgb *= vColor;
+        
+        #ifdef SPECULAR
+            gl_FragColor.rgb += vSpecColor*tSpec.rgb*tSpec.a;
+        #endif
     #endif
 }

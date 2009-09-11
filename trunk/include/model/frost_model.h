@@ -12,6 +12,8 @@
 #include "frost.h"
 #include "scene/frost_movableobject.h"
 
+#include <OgreVector4.h>
+
 namespace Frost
 {
     /// A sub-mesh
@@ -26,6 +28,7 @@ namespace Frost
         void               Hide();
         void               SetMaterial(s_refptr<Material> pMat);
         s_refptr<Material> GetMaterial();
+        void               SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
         void               AddSubEntity(const s_uint& uiID);
 
@@ -61,6 +64,7 @@ namespace Frost
         void                  Hide(s_bool bSubMeshes = false);
         void                  SetMaterial(s_refptr<Material> pMat);
         s_refptr<Material>    GetMaterial();
+        void                  SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
         void                  SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj);
 

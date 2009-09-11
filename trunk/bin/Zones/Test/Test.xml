@@ -12,7 +12,8 @@
             <Chunk>
                 <BoundingBox alwaysVisible="true"/>
                 <Data>
-                    <Plane xSize="50" zSize="50"/>
+                    <!Plane xSize="50" zSize="50"/>
+                    <TerrainFile file="Zones/Test/Test001.ter"/>
                 </Data>
                 <Textures>
                     <!Mask file="Textures/Tileset/Aerie Peaks/AeriePeaks_splat4.png"/>

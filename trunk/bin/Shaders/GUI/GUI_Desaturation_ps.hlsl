@@ -13,6 +13,6 @@ void main_ps(
 {
     float3 mTemp;
     oColor = tex2D(mTexture, iTexture);
-    mTemp.r = mTemp.g = mTemp.b = (oColor.r + oColor.g + oColor.b)/3;
+    mTemp.r = mTemp.g = mTemp.b = (oColor.r + oColor.g + oColor.b)/3.0;
     oColor.rgb = mTemp.rgb;
 }

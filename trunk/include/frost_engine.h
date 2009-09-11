@@ -147,6 +147,13 @@ namespace Frost
         */
         s_ptr<RenderTarget> GetSceneRenderTarget();
 
+        /// Returns the multi render target on which the scene is drawn in.
+        /** \return The multi render target on which the scene is drawn in
+        *   \note This render target "contains" several ones : the scene is
+        *         drawn on each of these with a different shader code.
+        */
+        s_ptr<Ogre::MultiRenderTarget> GetSceneMultiRenderTarget();
+
         typedef             s_bool (*Function)();
         /// Sets the new function to call on each frame.
         /** \param pFrameFunc The new function
@@ -244,7 +251,9 @@ namespace Frost
         s_ptr<Lua::State> pLua_;
 
         // Render targets
+        s_ptr<Ogre::MultiRenderTarget> pSceneMRT_;
         s_ptr<RenderTarget> pSceneRenderTarget_;
+        s_ptr<RenderTarget> pMotionBlurMask_;
         s_ptr<Sprite>       pSceneSprite_;
 
         // OGRE variables

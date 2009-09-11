@@ -232,6 +232,21 @@ namespace Frost
         */
         Vector           GetPosition() const;
 
+        /// Enables motion blur for this unit.
+        /** \note See DisableMotionBlur() for more infos.
+        */
+        void             EnableMotionBlur();
+
+        /// Disables motion blur for this unit.
+        /** \note This unit will no longer cast motion blur nor receive it.
+        */
+        void             DisableMotionBlur();
+
+        /// Checks if motion blur is enabled for this unit.
+        /** \return 'true' if motion blur is enabled for this unit
+        */
+        const s_bool&    IsMotionBlurEnabled() const;
+
         /// Returns this Unit's body model.
         /** \return This Unit's body model
         */
@@ -301,6 +316,7 @@ namespace Frost
         s_refptr<Decal> pSelectionDecal_;
         s_uint          uiSelectionDecalID_;
         s_uint          uiShadowDecalID_;
+        s_bool          bMotionBlurEnabled_;
 
         s_bool          bSelected_;
         s_bool          bHighlighted_;
@@ -322,10 +338,12 @@ namespace Frost
         int _AddHealth(lua_State*);
         int _AddPower(lua_State*);
         int _Damage(lua_State*);
+        int _DisableMotionBlur(lua_State*);
         int _FillHealthGauge(lua_State*);
         int _FillPowerGauge(lua_State*);
         int _EmptyHealthGauge(lua_State*);
         int _EmptyPowerGauge(lua_State*);
+        int _EnableMotionBlur(lua_State*);
         int _Die(lua_State*);
         int _GetCamera(lua_State*);
         int _GetClass(lua_State*);

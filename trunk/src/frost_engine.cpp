@@ -113,24 +113,25 @@ namespace Frost
         ShutDown();
     }
 
-    void PrintInLog( const s_str& sMessage, const s_bool& bTimeStamps )
+    void PrintInLog( const s_str& sMessage, const s_bool& bTimeStamps, const s_uint& uiOffset )
     {
+        s_str sNewMessage;
         if (bTimeStamps)
         {
-            s_str sNewMessage;
             if (sMessage[0] == '|' && sMessage[1] == 't')
             {
                 sNewMessage = sMessage;
+                sNewMessage.Replace("\n", "\n"+s_str(' ', uiOffset));
                 sNewMessage.EraseFromStart(2);
             }
             else
             {
                 s_str sStamps = TimeManager::GetSingleton()->GetPlayTime() + " : ";
                 sNewMessage = sStamps+sMessage;
-                sNewMessage.Replace("\n", "\n"+sStamps);
+                sNewMessage.Replace("\n", "\n"+sStamps+s_str(' ', uiOffset));
             }
 
-            Engine::GetSingleton()->GetLog()->WriteLine(sNewMessage.Get());
+            Engine::GetSingleton()->GetLog()->WriteLine(sNewMessage);
             Engine::GetSingleton()->GetLog()->Flush();
             #ifdef _DEBUG
                 printf("%s\n", sNewMessage.c_str());
@@ -138,13 +139,18 @@ namespace Frost
         }
         else
         {
-            Engine::GetSingleton()->GetLog()->WriteLine(sMessage.Get());
+            sNewMessage = sMessage;
+            sNewMessage.Replace("\n", "\n"+s_str(' ', uiOffset));
+            Engine::GetSingleton()->GetLog()->WriteLine(sNewMessage);
             Engine::GetSingleton()->GetLog()->Flush();
             #ifdef _DEBUG
                 printf("%s\n", sMessage.c_str());
             #endif
         }
     }
+
+    s_ptr<RenderTarget> pMotionBlurMask_;
+    Ogre::MultiRenderTarget* mrtTex;
 
     s_bool Engine::Initialize()
     {
@@ -205,15 +211,20 @@ namespace Frost
             s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
                 pSceneRenderTarget_
             );
-            pMat->GetDefaultPass()->setSeparateSceneBlending(
+            s_ptr<Ogre::Pass> pPass = pMat->GetDefaultPass();
+            pPass->setSeparateSceneBlending(
                 Ogre::SBF_ONE, Ogre::SBF_ZERO,
                 Ogre::SBF_ZERO, Ogre::SBF_ZERO
             );
-            pMat->GetDefaultPass()->getTextureUnitState(0)->setTextureAddressingMode(
+            pPass->getTextureUnitState(0)->setTextureAddressingMode(
                 Ogre::TextureUnitState::TAM_CLAMP
             );
+            s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
+            pTUS->setTextureName(pMotionBlurMask_->GetName().Get());
             if (GetBoolConstant("EnableMotionBlur"))
+            {
                 pMat->SetPixelShader("MotionBlur");
+            }
 
             pSceneSprite_ = new Sprite(pMat);
         }
@@ -509,6 +520,40 @@ namespace Frost
             return false;
         }
 
+        if (sRenderSystem == "OpenGL")
+        {
+            if (!pRS->getCapabilities()->isShaderProfileSupported("glsl"))
+            {
+                Error(CLASS_NAME,
+                    "Frost requires a GLSL compatible card. Try with DirectX."
+                );
+                return false;
+            }
+        }
+        else if (sRenderSystem == "DirectX")
+        {
+            if (!pRS->getCapabilities()->isShaderProfileSupported("hlsl") ||
+                !pRS->getCapabilities()->isShaderProfileSupported("ps_2_0") ||
+                !pRS->getCapabilities()->isShaderProfileSupported("vs_2_0"))
+            {
+                Error(CLASS_NAME,
+                    "Frost requires a HLSL (VS and PS 2.0) compatible card. Try with OpenGL."
+                );
+                return false;
+            }
+        }
+
+        if (GetBoolConstant("EnableMotionBlur"))
+        {
+            if (pRS->getCapabilities()->getNumMultiRenderTargets() < 2)
+            {
+                lGameOptionList_["EnableMotionBlur"] = s_bool(false);
+                Warning(CLASS_NAME, "Your graphic card doesn't support Multiple Render Targets (MRTs).\n"
+                    "Frost needs at least 2 for motion blur to be enabled."
+                );
+            }
+        }
+
         if (GetBoolConstant("EnablePostProcessing"))
         {
             pRenderWindow_->addListener(
@@ -520,6 +565,23 @@ namespace Frost
                 bFullScreen ? uiScreenWidth  : uiWindowWidth,
                 bFullScreen ? uiScreenHeight : uiWindowHeight,
                 RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
+            );
+
+            pMotionBlurMask_ = pSpriteMgr_->CreateRenderTarget(
+                "MotionBlurMask",
+                bFullScreen ? uiScreenWidth  : uiWindowWidth,
+                bFullScreen ? uiScreenHeight : uiWindowHeight,
+                RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
+            );
+
+            pSceneMRT_ = Ogre::Root::getSingleton().getRenderSystem()->createMultiRenderTarget(
+                "Scene_MRT"
+            );
+            pSceneMRT_->bindSurface(0,
+                (Ogre::RenderTexture*)pSceneRenderTarget_->GetOgreRenderTarget().Get()
+            );
+            pSceneMRT_->bindSurface(1,
+                (Ogre::RenderTexture*)pMotionBlurMask_->GetOgreRenderTarget().Get()
             );
         }
 
@@ -581,6 +643,11 @@ namespace Frost
     s_ptr<RenderTarget> Engine::GetSceneRenderTarget()
     {
         return pSceneRenderTarget_;
+    }
+
+    s_ptr<Ogre::MultiRenderTarget> Engine::GetSceneMultiRenderTarget()
+    {
+        return pSceneMRT_;
     }
 
     s_ptr<Lua::State> Engine::GetLua()

@@ -39,7 +39,7 @@ void main_vs(
     float3 tNormal = normalize(mul(mWorld, iNormal));
     
     float3 tReflected;
-    oSpecColor = float3(0.0f, 0.0f, 0.0f);
+    oSpecColor = float3(0.0, 0.0, 0.0);
     float3 tEyeDir = normalize(mCamPos.xyz - tPosition);
 
     for (int i = 0; i < 5; ++i)
@@ -47,15 +47,15 @@ void main_vs(
         tLightDir = normalize(mLightPos[i].xyz - tPosition);
         tDistance = distance(mLightPos[i].xyz, tPosition);
 
-        tAtten = 1.0f/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
+        tAtten = 1.0/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
         oColor += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, tNormal)) * tAtten;
         
-        tReflected = 2.0f*tNormal*dot(tLightDir, tNormal) - tLightDir;
+        tReflected = 2.0*tNormal*dot(tLightDir, tNormal) - tLightDir;
         oSpecColor += mLightDiffuseColor[i].rgb * saturate(dot(tReflected, tEyeDir)) * tAtten;
     }
     
     oColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
-    tReflected = 2.0f*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
+    tReflected = 2.0*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
     oSpecColor += mSunColor.rgb * saturate(dot(tReflected, tEyeDir));
 
     // Apply position and camera projection

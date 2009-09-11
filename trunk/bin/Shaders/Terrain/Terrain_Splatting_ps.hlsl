@@ -50,19 +50,15 @@ void main_ps(
             #endif
               
             // Outputs
+            #ifdef MOTION_BLUR
+              out float4 oColor0 : COLOR0,
+              out float4 oColor1 : COLOR1
+            #else
               out float4 oColor : COLOR
+            #endif
             )
 {
     float4 tMask = tex2D(mMask, iTexture0);
-    
-    oColor  = tex2D(mTexture1, iTexture1)*tMask.a;
-    oColor += tex2D(mTexture2, iTexture2)*tMask.r;
-    #if LAYER > 2
-        oColor += tex2D(mTexture3, iTexture3)*tMask.g;
-    #endif
-    #if LAYER > 3
-        oColor += tex2D(mTexture4, iTexture4)*tMask.b;
-    #endif
     
     #ifdef SPECULAR
         float4 tSpec = tex2D(mTexture1S, iTexture1)*tMask.a;
@@ -75,12 +71,39 @@ void main_ps(
         #endif
     #endif
     
-    oColor.rgb *= iColor;
-    
-    #ifdef SPECULAR
-        oColor.rgb += iSpecColor*tSpec.rgb*tSpec.a;
-    #endif
     #ifdef MOTION_BLUR
-        oColor.a = oPosition2.z/oPosition2.w;
+        oColor0  = tex2D(mTexture1, iTexture1)*tMask.a;
+        oColor0 += tex2D(mTexture2, iTexture2)*tMask.r;
+        #if LAYER > 2
+            oColor0 += tex2D(mTexture3, iTexture3)*tMask.g;
+        #endif
+        #if LAYER > 3
+            oColor0 += tex2D(mTexture4, iTexture4)*tMask.b;
+        #endif
+
+        oColor0.rgb *= iColor;
+        
+        #ifdef SPECULAR
+            oColor0.rgb += iSpecColor*tSpec.rgb*tSpec.a;
+        #endif
+        
+        oColor0.a = oPosition2.z/oPosition2.w;
+        
+        oColor1 = float4(1,1,1,1);
+    #else
+        oColor  = tex2D(mTexture1, iTexture1)*tMask.a;
+        oColor += tex2D(mTexture2, iTexture2)*tMask.r;
+        #if LAYER > 2
+            oColor += tex2D(mTexture3, iTexture3)*tMask.g;
+        #endif
+        #if LAYER > 3
+            oColor += tex2D(mTexture4, iTexture4)*tMask.b;
+        #endif
+        
+        oColor.rgb *= iColor;
+        
+        #ifdef SPECULAR
+            oColor.rgb += iSpecColor*tSpec.rgb*tSpec.a;
+        #endif
     #endif
 }

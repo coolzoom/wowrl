@@ -10,25 +10,26 @@ using namespace std;
 
 namespace Frost
 {
-    void Log( const s_str& sMessage, const s_bool& bTimeStamps )
+    void Log( const s_str& sMessage, const s_bool& bTimeStamps, const s_uint& uiOffset )
     {
-        UtilsManager::GetSingleton()->Log(sMessage, bTimeStamps);
+        UtilsManager::GetSingleton()->Log(sMessage, bTimeStamps, uiOffset);
     }
 
     void Error( const s_str& sClass, const s_str& sMessage )
     {
+        s_str sHeader = "# Error # : ";
         if (sClass != "")
-            Log("# Error # : " + sClass + " : " + sMessage);
-        else
-            Log("# Error # : " + sMessage);
+            sHeader += sClass + " : ";
+
+        Log(sHeader + sMessage, true, sHeader.GetLength());
     }
 
     void Warning( const s_str& sClass, const s_str& sMessage )
     {
-
+        s_str sHeader = "# Warning # : ";
         if (sClass != "")
-            Log("# Warning # : " + sClass + " : " + sMessage);
-        else
-            Log("# Warning # : " + sMessage);
+            sHeader += sClass + " : ";
+
+        Log(sHeader + sMessage, true, sHeader.GetLength());
     }
 }
