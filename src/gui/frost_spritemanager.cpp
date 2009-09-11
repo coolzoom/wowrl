@@ -113,8 +113,8 @@ namespace Frost
         f2_ScreenWidth_ = 2.0f/fWidth;
         f2_ScreenHeight_ = 2.0f/fHeight;
 
-        fXOffset_ = pRS_->getHorizontalTexelOffset()/fWidth;
-        fYOffset_ = pRS_->getVerticalTexelOffset()/fHeight;
+        fXOffset_ = pRS_->getHorizontalTexelOffset();
+        fYOffset_ = pRS_->getVerticalTexelOffset();
 
         pSceneMgr_->addRenderQueueListener(this);
 
@@ -356,11 +356,7 @@ namespace Frost
                         1.0f
                     ));
                 }
-                mProj_ = Ogre::Matrix4::getTrans(
-                    fXOffset_.Get() - 1.0f,
-                    fYOffset_.Get() + 1.0f,
-                    0.0f
-                )*mProj_;
+                mProj_ = Ogre::Matrix4::getTrans(-1.0f, 1.0f, 0.0f) * mProj_;
             }
             else
             {
@@ -372,8 +368,8 @@ namespace Frost
                         1.0f
                     ));
                     mProj_ = Ogre::Matrix4::getTrans(
-                        fXOffset_.Get() - 1.0f,
-                        (-2.0f*pRenderTarget_->GetHeight().Get())/pRenderTarget_->GetRealHeight().Get() + fYOffset_.Get() + 1.0f,
+                        -1.0f,
+                        (-2.0f*pRenderTarget_->GetHeight().Get())/pRenderTarget_->GetRealHeight().Get() + 1.0f,
                         0.0f
                     )*mProj_;
                 }
@@ -384,15 +380,15 @@ namespace Frost
                         f2_ScreenHeight_.Get(),
                         1.0f
                     ));
-                    mProj_ = Ogre::Matrix4::getTrans(
-                        fXOffset_.Get() - 1.0f,
-                        fYOffset_.Get() - 1.0f,
-                        0.0f
-                    )*mProj_;
+                    mProj_ = Ogre::Matrix4::getTrans(-1.0f, -1.0f, 0.0f) * mProj_;
                 }
             }
 
             pRS_->_setProjectionMatrix(mProj_);
+
+            Ogre::Matrix4 mWorld_ = Ogre::Matrix4::getTrans(fXOffset_.Get(), fYOffset_.Get(), 0.0f);
+
+            pRS_->_setWorldMatrix(mWorld_);
             pRS_->_setCullingMode(Ogre::CULL_NONE);
         }
     }

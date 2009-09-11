@@ -542,11 +542,9 @@ namespace Frost
                             mLine.sCaption.EraseFromEnd(uiCharToErase);
 
                             lLines.PushBack(mLine);
-                            Log(mLine.sCaption);
                             s_map<s_uint, Format>::iterator iterFormat;
                             foreach (iterFormat, lTempFormatList)
                             {
-                                Log("f1 : p["+iterFormat->first+"], c : "+iterFormat->second.mColor);
                                 lFormatList_[iterFormat->first] = iterFormat->second;
                             }
                             lTempFormatList.Clear();
@@ -612,21 +610,10 @@ namespace Frost
                                     --iterChar1;
                                     lLines.PushBack(mLine);
                                     uiCounter += mLine.sCaption.GetLength();
-                                    Log(mLine.sCaption);
                                     s_map<s_uint, Format>::iterator iterFormat;
                                     foreach (iterFormat, lTempFormatList)
                                     {
-                                        Log("f2 : p["+iterFormat->first+"], c : "+iterFormat->second.mColor);
-                                        if (s_int(uiCounter) - s_int(iterFormat->first) > 0)
-                                        {
-                                            Log("(ok)");
-                                            lFormatList_[iterFormat->first] = iterFormat->second;
-                                        }
-                                        else
-                                        {
-                                            Log("(cut)");
-                                            lFormatList_[uiCounter] = iterFormat->second;
-                                        }
+                                        lFormatList_[iterFormat->first] = iterFormat->second;
                                     }
                                     lTempFormatList.Clear();
                                     mLine.fWidth = 0.0f;
@@ -641,11 +628,9 @@ namespace Frost
                     }
                 }
                 lLines.PushBack(mLine);
-                Log(mLine.sCaption);
                 s_map<s_uint, Format>::iterator iterFormat;
                 foreach (iterFormat, lTempFormatList)
                 {
-                    Log("f3 : p["+iterFormat->first+"], c : "+iterFormat->second.mColor);
                     lFormatList_[iterFormat->first] = iterFormat->second;
                 }
                 lTempFormatList.Clear();
