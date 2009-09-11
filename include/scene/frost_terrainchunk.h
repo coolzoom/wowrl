@@ -100,6 +100,8 @@ namespace Frost
         */
         const s_uint& GetID() const;
 
+        static const s_str CLASS_NAME;
+
     private :
 
         s_uint uiID_;
