@@ -99,7 +99,7 @@ void Frame::CreateGlue()
 s_str Frame::Serialize( const s_str& sTab ) const
 {
     s_str sStr = UIObject::Serialize(sTab);
-
+    sStr << sTab << "  # Level       : " << uiLevel_ << "\n";
     if (!bIsMouseEnabled_ && !bIsKeyboardEnabled_ && !bIsMouseWheelEnabled_)
         sStr << sTab << "  # Inputs      : none\n";
     else
@@ -235,6 +235,21 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
 
         // ?
         //bIsParentStrata_ = pFrame->bIsParentStrata_;
+
+        if (pFrame->GetFrameLevel() != 0)
+        {
+            s_ptr<UIObject> pHighParent = this;
+            for (s_uint i = 0; i < pFrame->GetFrameLevel(); ++i)
+            {
+                pHighParent = pHighParent->GetParent();
+            }
+
+            this->SetLevel(
+                s_ptr<Frame>::DynamicCast(pHighParent)->GetFrameLevel()+
+                pFrame->GetFrameLevel()
+            );
+        }
+
 
         this->SetTopStrata(pFrame->IsTopStrata());
         this->SetTopLevel(pFrame->IsTopLevel());
@@ -922,13 +937,17 @@ void Frame::OnEvent( const Event& mEvent )
     {
         if (mEvent.GetName() == "MOUSE_MOVED")
         {
+            //Log("0 : "+sName_);
             if (!lMouseButtonList_.IsEmpty() && !bMouseDragged_)
             {
+                //Log("1");
                 s_ctnr<s_str>::iterator iterButton;
                 foreach (iterButton, lMouseButtonList_)
                 {
+                    //Log("2 : "+*iterButton);
                     if (lRegDragList_.Find(*iterButton))
                     {
+                        //Log("3");
                         On("DragStart");
                         bMouseDragged_ = true;
                         break;
@@ -1148,7 +1167,7 @@ void Frame::SetLevel( const s_uint& uiLevel )
     }
     else
     {
-        Warning(lType_.Back(), "SetLevel() can't be called more than once.");
+        Warning(lType_.Back(), sName_+"->SetLevel() can't be called more than once.");
     }
 }
 

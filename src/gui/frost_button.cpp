@@ -91,6 +91,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pNormalTexture_->SetVirtual();
             pNormalTexture_->SetParent(this);
             pNormalTexture_->SetName(pButton->GetNormalTexture()->GetName());
+            pNormalTexture_->SetDrawLayer(LAYER_BORDER);
             if (!GUIManager::GetSingleton()->AddUIObject(pNormalTexture_))
             {
                 Warning(lType_.Back(),
@@ -114,6 +115,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pPushedTexture_->SetVirtual();
             pPushedTexture_->SetParent(this);
             pPushedTexture_->SetName(pButton->GetPushedTexture()->GetName());
+            pPushedTexture_->SetDrawLayer(LAYER_BORDER);
             if (!GUIManager::GetSingleton()->AddUIObject(pPushedTexture_))
             {
                 Warning(lType_.Back(),
@@ -137,6 +139,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pHighlightTexture_->SetVirtual();
             pHighlightTexture_->SetParent(this);
             pHighlightTexture_->SetName(pButton->GetHighlightTexture()->GetName());
+            pHighlightTexture_->SetDrawLayer(LAYER_HIGHLIGHT);
             if (!GUIManager::GetSingleton()->AddUIObject(pHighlightTexture_))
             {
                 Warning(lType_.Back(),
@@ -160,6 +163,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pDisabledTexture_->SetVirtual();
             pDisabledTexture_->SetParent(this);
             pDisabledTexture_->SetName(pButton->GetDisabledTexture()->GetName());
+            pDisabledTexture_->SetDrawLayer(LAYER_BORDER);
             if (!GUIManager::GetSingleton()->AddUIObject(pDisabledTexture_))
             {
                 Warning(lType_.Back(),
@@ -184,6 +188,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pNormalText_->SetVirtual();
             pNormalText_->SetParent(this);
             pNormalText_->SetName(pButton->GetNormalText()->GetName());
+            pNormalText_->SetDrawLayer(LAYER_ARTWORK);
             if (!GUIManager::GetSingleton()->AddUIObject(pNormalText_))
             {
                 Warning(lType_.Back(),
@@ -207,6 +212,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pHighlightText_->SetVirtual();
             pHighlightText_->SetParent(this);
             pHighlightText_->SetName(pButton->GetHighlightText()->GetName());
+            pHighlightText_->SetDrawLayer(LAYER_ARTWORK);
             if (!GUIManager::GetSingleton()->AddUIObject(pHighlightText_))
             {
                 Warning(lType_.Back(),
@@ -230,6 +236,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                     pDisabledText_->SetVirtual();
             pDisabledText_->SetParent(this);
             pDisabledText_->SetName(pButton->GetDisabledText()->GetName());
+            pDisabledText_->SetDrawLayer(LAYER_ARTWORK);
             if (!GUIManager::GetSingleton()->AddUIObject(pDisabledText_))
             {
                 Warning(lType_.Back(),
@@ -526,7 +533,9 @@ void Button::Highlight()
     if (!bHighlighted_)
     {
         if (pHighlightTexture_)
+        {
             pHighlightTexture_->Show();
+        }
 
         if (pHighlightText_)
         {
@@ -545,7 +554,9 @@ void Button::Unlight()
     if (!bLockHighlight_ && bHighlighted_)
     {
         if (pHighlightTexture_)
+        {
             pHighlightTexture_->Hide();
+        }
 
         if (pHighlightText_)
         {

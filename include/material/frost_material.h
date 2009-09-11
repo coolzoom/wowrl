@@ -139,6 +139,9 @@ namespace Frost
         */
         void            SetVertexShader(const s_str& sVSName);
 
+        /// Removes the linked vertex shader and use the fixed pipeline.
+        void            RemoveVertexShader();
+
         /// Sets the pixel shader to use for the default pass.
         /** \param pPS The pixel shader
         *   \note Use NULL to remove the pixel shader
@@ -150,6 +153,9 @@ namespace Frost
         *   \note Use "" to remove the pixel shader
         */
         void            SetPixelShader(const s_str& sPSName);
+
+        /// Removes the linked vertex shader and use the fixed pipeline.
+        void            RemovePixelShader();
 
         /// Sets a new default pass.
         /** \param uiIndex The index of the new pass
