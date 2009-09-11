@@ -547,6 +547,7 @@ namespace Frost
         {
             if (pRS->getCapabilities()->getNumMultiRenderTargets() < 2)
             {
+                lGameOptionList_["EnablePostProcessing"] = s_bool(false);
                 lGameOptionList_["EnableMotionBlur"] = s_bool(false);
                 Warning(CLASS_NAME, "Your graphic card doesn't support Multiple Render Targets (MRTs).\n"
                     "Frost needs at least 2 for motion blur to be enabled."

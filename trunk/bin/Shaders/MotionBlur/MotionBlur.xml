@@ -3,6 +3,7 @@
         <PixelShader name="MotionBlur" file="Shaders/MotionBlur/MotionBlur_ps">
             <TextureBinds>
                 <TextureBind name="mTexture" id="0"/>
+                <TextureBind name="mMask"    id="1"/>
             </TextureBinds>
             <PreProcessor>
                 <Directive variable="BLUR_QUALITY" value="5"/>
