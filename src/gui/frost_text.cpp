@@ -132,24 +132,14 @@ namespace Frost
 
     const s_float& Text::GetWidth()
     {
-        if (bUpdateCache_)
-        {
-            UpdateLines_();
-            UpdateCache_();
-            bUpdateCache_ = false;
-        }
+        Update();
 
         return fW_;
     }
 
     const s_float& Text::GetHeight()
     {
-        if (bUpdateCache_)
-        {
-            UpdateLines_();
-            UpdateCache_();
-            bUpdateCache_ = false;
-        }
+        Update();
 
         return fH_;
     }
@@ -334,13 +324,7 @@ namespace Frost
     {
         if (bReady_)
         {
-            if (bUpdateCache_)
-            {
-                UpdateLines_();
-                UpdateCache_();
-                bUpdateCache_ = false;
-                bUpdateQuads_ = true;
-            }
+            Update();
 
             if (fX != fX_ || fY != fY_)
                 bUpdateQuads_ = true;
@@ -403,6 +387,7 @@ namespace Frost
             UpdateLines_();
             UpdateCache_();
             bUpdateCache_ = false;
+            bUpdateQuads_ = true;
         }
     }
 
@@ -474,7 +459,7 @@ namespace Frost
                     // Read format tags
                     if (*iterChar1 == '|')
                     {
-                        iterChar1++;
+                        ++iterChar1;
                         if (iterChar1 != iterManual->End())
                         {
                             if (*iterChar1 == '|')
@@ -518,7 +503,7 @@ namespace Frost
                             s_bool bLastWasWord;
                             while ( (mLine.fWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
                             {
-                                iterChar2--;
+                                --iterChar2;
                                 if (*iterChar2 == ' ')
                                 {
                                     if ( bLastWasWord && (mLine.fWidth-fErasedWidth <= fBoxW_) && !bRemoveStartingSpaces_ )
@@ -530,14 +515,14 @@ namespace Frost
                                         mLine.fWidth -= fErasedWidth + fSpaceWidth_;
                                         sErasedString.PushFront(*iterChar2);
                                         fErasedWidth = 0.0f;
-                                        uiCharToErase++;
+                                        ++uiCharToErase;
                                     }
                                 }
                                 else
                                 {
                                     fErasedWidth += GetCharacterWidth(*iterChar2);
                                     sErasedString.PushFront(*iterChar2);
-                                    uiCharToErase++;
+                                    ++uiCharToErase;
                                     bLastWasWord = true;
                                 }
                             }
@@ -546,9 +531,9 @@ namespace Frost
                             {
                                 while (*iterChar2 == ' ')
                                 {
-                                    uiCharToErase--;
+                                    --uiCharToErase;
                                     sErasedString.EraseFromStart(1);
-                                    iterChar2++;
+                                    ++iterChar2;
                                 }
                             }
 
@@ -570,9 +555,9 @@ namespace Frost
                             s_uint uiCharToErase;
                             while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
                             {
-                                iterChar2--;
+                                --iterChar2;
                                 mLine.fWidth -= GetCharacterWidth(*iterChar2);
-                                uiCharToErase++;
+                                ++uiCharToErase;
                             }
                             mLine.sCaption.EraseFromEnd(uiCharToErase);
                             mLine.sCaption << "...";
@@ -587,7 +572,7 @@ namespace Frost
                                 {
                                     if ((*iterTemp) == '|')
                                     {
-                                        iterTemp++;
+                                        ++iterTemp;
                                         if (iterTemp != iterChar1)
                                         {
                                             if ((*iterTemp) == '|')
@@ -599,14 +584,14 @@ namespace Frost
                                             }
                                         }
                                     }
-                                    iterTemp++;
+                                    ++iterTemp;
                                 }
 
                                 // Look for the next word
                                 while (iterChar1 != iterManual->End())
                                 {
                                     if ((*iterChar1) == ' ')
-                                        iterChar1++;
+                                        ++iterChar1;
                                     else
                                         break;
                                 }
@@ -614,7 +599,7 @@ namespace Frost
                                 // Add the line
                                 if (iterChar1 != iterManual->End())
                                 {
-                                    iterChar1--;
+                                    --iterChar1;
                                     lLines.PushBack(mLine);
                                     uiCounter += mLine.sCaption.GetLength();
                                     mLine.fWidth = 0.0f;

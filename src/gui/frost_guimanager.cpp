@@ -497,7 +497,6 @@ namespace Frost
                 if (mStrata.pTopStrata && mStrata.pTopStrata->IsInFrame(iX, iY) && mStrata.pTopStrata->IsVisible())
                 {
                     pOveredFrame = mStrata.pTopStrata;
-                    //Log("top strata : "+s_int((int)iterStrata->first));
                     break;
                 }
                 else
@@ -511,7 +510,6 @@ namespace Frost
                         if (mLevel.pTopLevel && mLevel.pTopLevel->IsInFrame(iX, iY) && mLevel.pTopLevel->IsVisible())
                         {
                             pOveredFrame = mLevel.pTopLevel;
-                            //Log("strata : "+s_int((int)iterStrata->first)+", top level : "+iterLevel->first);
                             break;
                         }
                         else
@@ -525,7 +523,6 @@ namespace Frost
                                     if (pFrame->IsInFrame(iX, iY) && pFrame->IsVisible())
                                     {
                                         pOveredFrame = pFrame;
-                                        //Log("strata : "+s_int((int)iterStrata->first)+", level : "+iterLevel->first+", : "+pFrame->GetName());
                                         break;
                                     }
                                 }
