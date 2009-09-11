@@ -157,6 +157,11 @@ void FontString::CopyFrom( s_ptr<UIObject> pObj )
 {
     UIObject::CopyFrom(pObj);
 
+    uiAbsWidth_ = s_uint::NaN;
+    uiAbsHeight_ = s_uint::NaN;
+    fRelWidth_ = s_float::NaN;
+    fRelHeight_ = s_float::NaN;
+
     s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pObj);
 
     if (pFontString)
@@ -181,7 +186,6 @@ void FontString::CopyFrom( s_ptr<UIObject> pObj )
         }
         this->SetTextColor(pFontString->GetTextColor());
         this->SetNonSpaceWrap(pFontString->CanNonSpaceWrap());
-
     }
     else
     {
@@ -436,7 +440,9 @@ void FontString::UpdateBorders_()
         }
 
         if (uiAbsWidth_.IsValid() && !uiAbsWidth_.IsNull())
+        {
             pText_->SetBoxWidth(s_float(uiAbsWidth_));
+        }
         else
         {
             if (lDefinedBorderList_[BORDER_LEFT] && lDefinedBorderList_[BORDER_RIGHT])
