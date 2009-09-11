@@ -38,10 +38,10 @@ namespace Frost
         pLogFunction_ = pFunc;
     }
 
-    void UtilsManager::Log( const s_str& sMessage, const s_bool& bTimeStamps )
+    void UtilsManager::Log( const s_str& sMessage, const s_bool& bTimeStamps, const s_uint& uiOffset )
     {
         if (pLogFunction_)
-            pLogFunction_(sMessage, bTimeStamps);
+            pLogFunction_(sMessage, bTimeStamps, uiOffset);
     }
 }
 

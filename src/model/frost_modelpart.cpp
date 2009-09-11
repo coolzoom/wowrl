@@ -66,6 +66,17 @@ namespace Frost
         return pMaterial_;
     }
 
+    void ModelPart::SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec)
+    {
+        s_ctnr<s_uint>::iterator iterSub;
+        foreach (iterSub, lSubEntity_)
+        {
+            pParent_->GetEntity()->getSubEntity(iterSub->Get())->setCustomParameter(
+                uiID.Get(), mVec
+            );
+        }
+    }
+
     void ModelPart::AddSubEntity( const s_uint& uiID )
     {
         lSubEntity_.PushBack(uiID);

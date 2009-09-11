@@ -10,6 +10,9 @@
             <OnEnabled>
                 FirstPersonGameplay.OnEnabled();
             </OnEnabled>
+            <OnDisabled>
+                FirstPersonGameplay.OnDisabled();
+            </OnDisabled>
             <OnEvent>
                 FirstPersonGameplay.OnEvent();
             </OnEvent>

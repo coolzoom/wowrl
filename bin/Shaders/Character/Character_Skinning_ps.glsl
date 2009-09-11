@@ -9,6 +9,8 @@ uniform vec4      mSunDir;
 uniform vec4      mSunColor;
 uniform vec4      mAmbient;
 
+uniform vec4      mMotionBlurMask;
+
 // Input
 varying vec3  vBlendedNormal;
 varying vec3  vBlendedPosition;
@@ -33,10 +35,14 @@ void main()
     }
     
     tLightColor += mSunColor.rgb * max(dot(mSunDir.xyz, vBlendedNormal), 0.0);
-        
-    gl_FragColor = texture2D(mTexture, gl_TexCoord[0].st);
-    gl_FragColor.rgb *= tLightColor;
+
     #ifdef MOTION_BLUR
-        gl_FragColor.a = vPosition.z/vPosition.w;
+        gl_FragData[0] = texture2D(mTexture, gl_TexCoord[0].st);
+        gl_FragData[0].rgb *= tLightColor;
+        gl_FragData[0].a = vPosition.z/vPosition.w;
+        gl_FragData[1] = mMotionBlurMask;
+    #else
+        gl_FragColor = texture2D(mTexture, gl_TexCoord[0].st);
+        gl_FragColor.rgb *= tLightColor;
     #endif
 }

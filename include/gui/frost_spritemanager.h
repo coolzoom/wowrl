@@ -47,6 +47,7 @@
 #include <OgreRenderOperation.h>
 #include <OgreHardwareVertexBuffer.h>
 #include <OgreRenderQueueListener.h>
+#include <OgreMatrix4.h>
 
 namespace Frost
 {
@@ -306,6 +307,7 @@ namespace Frost
         // Ogre specifics
         Ogre::RenderOperation               mRenderOp_;
         Ogre::HardwareVertexBufferSharedPtr mHardwareBuffer_;
+        Ogre::Matrix4                       mProj_;
 
         // Sprite list
         s_ctnr<Quad> lQuadList_;

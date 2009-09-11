@@ -10,16 +10,27 @@ void main_ps(
             #endif
 
             // Outputs
+            #ifdef MOTION_BLUR
+              out float4 oColor0 : COLOR0,
+              out float4 oColor1 : COLOR1,
+            #else
               out float4 oColor : COLOR,
+            #endif
 
             // Provided by Ogre
               uniform sampler2D mTexture : TEXUNIT0,
+              
+            #ifdef MOTION_BLUR
+              uniform float4    mMotionBlurMask,
+            #endif
+              
               uniform float4    mLightPos[5],
               uniform float4    mLightDiffuseColor[5],
               uniform float4    mLightAtten[5],
               uniform float4    mSunDir,
               uniform float4    mSunColor,
               uniform float4    mAmbient
+              
             )
 {
     float3 tLightColor = mAmbient.rgb;
@@ -32,15 +43,20 @@ void main_ps(
         tLightDir = normalize(mLightPos[i].xyz - iPosition);
         tDistance = distance(mLightPos[i].xyz, iPosition);
         
-        tAtten = 1.0f/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
+        tAtten = 1.0/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
         tLightColor += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, iNormal)) * tAtten;
     }
     
     tLightColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, iNormal));
 
-    oColor = tex2D(mTexture, iTexture);
-    oColor.rgb *= tLightColor;
     #ifdef MOTION_BLUR
-        oColor.a = oPosition2.z/oPosition2.w;
+        oColor0 = tex2D(mTexture, iTexture);
+        oColor0.rgb *= tLightColor;
+        oColor0.a = oPosition2.z/oPosition2.w;
+        
+        oColor1 = mMotionBlurMask;
+    #else
+        oColor = tex2D(mTexture, iTexture);
+        oColor.rgb *= tLightColor;
     #endif
 }

@@ -66,7 +66,12 @@ end
 function FreeGameplay.UpdateMouseMovement()
     local input = FreeGameplay.mouse;
     
-    table.insert(input.yawHistoric, 1, input.lastYaw);
+    -- Yaw
+    if (table.maxn(input.yawHistoric) == 0) then
+        table.insert(input.yawHistoric, input.lastYaw);
+    else
+        table.insert(input.yawHistoric, 1, input.lastYaw);
+    end
     local yawNbr = table.maxn(input.yawHistoric);
     if (yawNbr > input.historicLength) then
         table.remove(input.yawHistoric);
@@ -84,7 +89,12 @@ function FreeGameplay.UpdateMouseMovement()
     end
     input.averagedYaw = input.averagedYaw / totalWeight;
     
-    table.insert(input.pitchHistoric, 1, input.lastPitch);
+    -- Pitch
+    if (table.maxn(input.pitchHistoric) == 0) then
+        table.insert(input.pitchHistoric, input.lastPitch);
+    else
+        table.insert(input.pitchHistoric, 1, input.lastPitch);
+    end
     local pitchNbr = table.maxn(input.pitchHistoric);
     if (pitchNbr > input.historicLength) then
         table.remove(input.pitchHistoric);

@@ -12,7 +12,7 @@
 
 namespace Frost
 {
-    void Log(const s_str& sMessage, const s_bool& bTimeStamps = true);
+    void Log(const s_str& sMessage, const s_bool& bTimeStamps = true, const s_uint& uiOffset = 0);
     void Error(const s_str& sClass, const s_str& sMessage);
     void Warning(const s_str& sClass, const s_str& sMessage);
 }

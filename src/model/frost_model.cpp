@@ -132,6 +132,14 @@ namespace Frost
         }
     }
 
+    void Model::SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec)
+    {
+        for (uint i = 0; i < pEntity_->getNumSubEntities(); i++)
+        {
+            pEntity_->getSubEntity(i)->setCustomParameter(uiID.Get(), mVec);
+        }
+    }
+
     s_refptr<Material> Model::GetMaterial()
     {
         return pMaterial_;

@@ -267,10 +267,21 @@ namespace Frost
                     mDataSource.setWorldMatrices(&Ogre::Matrix4::IDENTITY, 1);
                     mDataSource.setCurrentPass(pPass);
                     pPass->_updateAutoParamsNoLights(&mDataSource);
+
+                    if (pPass->hasVertexProgram())
+                    {
+                        Ogre::GpuProgramParametersSharedPtr pParams = pPass->getVertexProgramParameters();
+                        pParams->setNamedConstant("mProj", mProj_);
+                        pRS_->bindGpuProgramParameters(Ogre::GPT_VERTEX_PROGRAM,
+                            pPass->getVertexProgramParameters()
+                        );
+                    }
+
                     if (pPass->hasFragmentProgram())
                     {
                         pRS_->bindGpuProgramParameters(Ogre::GPT_FRAGMENT_PROGRAM,
-                            pPass->getFragmentProgramParameters());
+                            pPass->getFragmentProgramParameters()
+                        );
                     }
                 }
                 pRS_->_render(mRenderOp_);
@@ -326,12 +337,12 @@ namespace Frost
         }
         else
         {
-            Ogre::Matrix4 mProj = Ogre::Matrix4::IDENTITY;
+            mProj_ = Ogre::Matrix4::IDENTITY;
             if (mAxisType_ == AXIS_DOWN)
             {
                 if (bRenderTargets_)
                 {
-                    mProj.setScale(Ogre::Vector3(
+                    mProj_.setScale(Ogre::Vector3(
                         2.0f/pRenderTarget_->GetRealWidth().Get(),
                         -2.0f/pRenderTarget_->GetRealHeight().Get(),
                         1.0f
@@ -339,49 +350,49 @@ namespace Frost
                 }
                 else
                 {
-                    mProj.setScale(Ogre::Vector3(
+                    mProj_.setScale(Ogre::Vector3(
                         f2_ScreenWidth_.Get(),
                         -f2_ScreenHeight_.Get(),
                         1.0f
                     ));
                 }
-                mProj = Ogre::Matrix4::getTrans(
+                mProj_ = Ogre::Matrix4::getTrans(
                     fXOffset_.Get() - 1.0f,
                     fYOffset_.Get() + 1.0f,
                     0.0f
-                )*mProj;
+                )*mProj_;
             }
             else
             {
                 if (bRenderTargets_)
                 {
-                    mProj.setScale(Ogre::Vector3(
+                    mProj_.setScale(Ogre::Vector3(
                         2.0f/pRenderTarget_->GetRealWidth().Get(),
                         2.0f/pRenderTarget_->GetRealHeight().Get(),
                         1.0f
                     ));
-                    mProj = Ogre::Matrix4::getTrans(
+                    mProj_ = Ogre::Matrix4::getTrans(
                         fXOffset_.Get() - 1.0f,
                         (-2.0f*pRenderTarget_->GetHeight().Get())/pRenderTarget_->GetRealHeight().Get() + fYOffset_.Get() + 1.0f,
                         0.0f
-                    )*mProj;
+                    )*mProj_;
                 }
                 else
                 {
-                    mProj.setScale(Ogre::Vector3(
+                    mProj_.setScale(Ogre::Vector3(
                         f2_ScreenWidth_.Get(),
                         f2_ScreenHeight_.Get(),
                         1.0f
                     ));
-                    mProj = Ogre::Matrix4::getTrans(
+                    mProj_ = Ogre::Matrix4::getTrans(
                         fXOffset_.Get() - 1.0f,
                         fYOffset_.Get() - 1.0f,
                         0.0f
-                    )*mProj;
+                    )*mProj_;
                 }
             }
 
-            pRS_->_setProjectionMatrix(mProj);
+            pRS_->_setProjectionMatrix(mProj_);
             pRS_->_setCullingMode(Ogre::CULL_NONE);
         }
     }

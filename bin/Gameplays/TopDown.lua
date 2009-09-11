@@ -89,7 +89,6 @@ function TopDownGameplay.OnEvent()
             TopDownGameplay.mouseRightPressed = false;
         end
     elseif (event == "MOUSE_WHEEL") then
-        --TopDownGameplay.camera:Translate(-arg1/120*Vector.UNIT_Z, true);
         TopDownGameplay.mouse.lastWheel = arg1/120;
     end
 end
@@ -112,7 +111,11 @@ function TopDownGameplay.UpdateMouseMovement()
     local input = TopDownGameplay.mouse;
     
     -- Yaw
-    table.insert(input.yawHistoric, 1, input.lastYaw);
+    if (table.maxn(input.yawHistoric) == 0) then
+        table.insert(input.yawHistoric, input.lastYaw);
+    else
+        table.insert(input.yawHistoric, 1, input.lastYaw);
+    end
     local yawNbr = table.maxn(input.yawHistoric);
     if (yawNbr > input.historicLength) then
         table.remove(input.yawHistoric);
@@ -131,7 +134,11 @@ function TopDownGameplay.UpdateMouseMovement()
     input.averagedYaw = input.averagedYaw / totalWeight;
     
     -- Pitch
-    table.insert(input.pitchHistoric, 1, input.lastPitch);
+    if (table.maxn(input.pitchHistoric) == 0) then
+        table.insert(input.pitchHistoric, input.lastPitch);
+    else
+        table.insert(input.pitchHistoric, 1, input.lastPitch);
+    end
     local pitchNbr = table.maxn(input.pitchHistoric);
     if (pitchNbr > input.historicLength) then
         table.remove(input.pitchHistoric);
@@ -150,7 +157,11 @@ function TopDownGameplay.UpdateMouseMovement()
     input.averagedPitch = input.averagedPitch / totalWeight;
     
     -- Wheel
-    table.insert(input.wheelHistoric, 1, input.lastWheel);
+    if (table.maxn(input.wheelHistoric) == 0) then
+        table.insert(input.wheelHistoric, input.lastWheel);
+    else
+        table.insert(input.wheelHistoric, 1, input.lastWheel);
+    end
     local wheelNbr = table.maxn(input.wheelHistoric);
     if (wheelNbr > input.historicLength) then
         table.remove(input.wheelHistoric);

@@ -45,11 +45,32 @@ function FirstPersonGameplay.OnLoad()
     FirstPersonGameplay.defaultCamera = this:CreateCamera();
 end
 
-function FirstPersonGameplay.OnEnabled()
-    FirstPersonGameplay.ready = true;
+function FirstPersonGameplay.SetUnit(unit)
+    if (FirstPersonGameplay.unit ~= nil) then
+        FirstPersonGameplay.unit:EnableMotionBlur();
+    end
     
+    FirstPersonGameplay.unit = unit;
+    
+    if (FirstPersonGameplay.unit ~= nil) then
+        FirstPersonGameplay.unit:DisableMotionBlur();
+        FirstPersonGameplay.camera = FirstPersonGameplay.unit:GetCamera();
+        this:SetCamera(FirstPersonGameplay.camera);
+        FirstPersonGameplay.ready = true;
+    else
+        this:SetCamera(nil);
+        FirstPersonGameplay.ready = false;
+    end
+end
+
+function FirstPersonGameplay.OnEnabled()
+
     -- Unit selection is not available for now, so we just pick the first unit
-    FirstPersonGameplay.unit = U_0;
+    if (FirstPersonGameplay.unit == nil) then
+        FirstPersonGameplay.SetUnit(U_0);
+    else
+        FirstPersonGameplay.unit:DisableMotionBlur();
+    end
     
     --[[
     -- First try to follow the selected unit
@@ -68,10 +89,11 @@ function FirstPersonGameplay.OnEnabled()
         end
     end
     ]]--
-    
-    if (FirstPersonGameplay.ready) then
-        FirstPersonGameplay.camera = FirstPersonGameplay.unit:GetCamera();
-        this:SetCamera(FirstPersonGameplay.camera);
+end
+
+function FirstPersonGameplay.OnDisabled()
+    if (FirstPersonGameplay.unit ~= nil) then
+        FirstPersonGameplay.unit:EnableMotionBlur();
     end
 end
 
@@ -130,7 +152,12 @@ end
 function FirstPersonGameplay.UpdateMouseMovement()
     local input = FirstPersonGameplay.mouse;
     
-    table.insert(input.yawHistoric, 1, input.lastYaw);
+    -- Yaw
+    if (table.maxn(input.yawHistoric) == 0) then
+        table.insert(input.yawHistoric, input.lastYaw);
+    else
+        table.insert(input.yawHistoric, 1, input.lastYaw);
+    end
     local yawNbr = table.maxn(input.yawHistoric);
     if (yawNbr > input.historicLength) then
         table.remove(input.yawHistoric);
@@ -148,7 +175,12 @@ function FirstPersonGameplay.UpdateMouseMovement()
     end
     input.averagedYaw = input.averagedYaw / totalWeight;
     
-    table.insert(input.pitchHistoric, 1, input.lastPitch);
+    -- Pitch
+    if (table.maxn(input.pitchHistoric) == 0) then
+        table.insert(input.pitchHistoric, input.lastPitch);
+    else
+        table.insert(input.pitchHistoric, 1, input.lastPitch);
+    end
     local pitchNbr = table.maxn(input.pitchHistoric);
     if (pitchNbr > input.historicLength) then
         table.remove(input.pitchHistoric);

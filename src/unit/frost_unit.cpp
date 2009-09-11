@@ -32,7 +32,8 @@ namespace Frost
     // TODO : Unit : Implémenter les buffs
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
-        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN), uiSelectionDecalID_(s_uint::NaN)
+        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN),
+        uiSelectionDecalID_(s_uint::NaN)
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
         pCamera_ = CameraManager::GetSingleton()->CreateCamera(Vector(0, 4, 5));
@@ -375,6 +376,29 @@ namespace Frost
     Vector Unit::GetPosition() const
     {
         return pNode_->GetPosition(false);
+    }
+
+    void Unit::EnableMotionBlur()
+    {
+        if (!bMotionBlurEnabled_ && Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
+        {
+            bMotionBlurEnabled_ = true;
+            pBodyModel_->SetCustomShaderParameter(0, Ogre::Vector4(1,1,1,1));
+        }
+    }
+
+    void Unit::DisableMotionBlur()
+    {
+        if (bMotionBlurEnabled_ && Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
+        {
+            bMotionBlurEnabled_ = false;
+            pBodyModel_->SetCustomShaderParameter(0, Ogre::Vector4(0,0,0,0));
+        }
+    }
+
+    const s_bool& Unit::IsMotionBlurEnabled() const
+    {
+        return bMotionBlurEnabled_;
     }
 
     const s_uint& Unit::GetID() const

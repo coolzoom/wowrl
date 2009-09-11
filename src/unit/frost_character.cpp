@@ -57,6 +57,12 @@ namespace Frost
             );
             pBodyMat->SetShaders("Character_Skinning");
 
+            if (Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
+            {
+                bMotionBlurEnabled_ = true;
+                pBodyModel_->SetCustomShaderParameter(0, Ogre::Vector4(1,1,1,1));
+            }
+
             pBodyModel_->SetMaterial(pBodyMat);
         }
 

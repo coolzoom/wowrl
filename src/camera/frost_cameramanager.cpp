@@ -12,6 +12,7 @@
 #include <OgreCamera.h>
 #include <OgreRenderWindow.h>
 #include <OgreViewport.h>
+#include <OgreRenderTexture.h>
 
 using namespace std;
 
@@ -104,7 +105,7 @@ namespace Frost
                             Ogre::Real(pMainViewport_->getActualHeight())
                         );
 
-                        pSceneViewport_ = Engine::GetSingleton()->GetSceneRenderTarget()->GetOgreRenderTarget()->addViewport(
+                        pSceneViewport_ = Engine::GetSingleton()->GetSceneMultiRenderTarget()->addViewport(
                             pMainCamera_->GetOgreCamera().Get()
                         );
                         pSceneViewport_->setClearEveryFrame(true);

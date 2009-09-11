@@ -70,12 +70,14 @@ namespace Frost
             mType = Ogre::GpuProgramParameters::ACT_FAR_CLIP_DISTANCE;
         else if (sType == "inverse_viewproj_matrix")
             mType = Ogre::GpuProgramParameters::ACT_INVERSE_VIEWPROJ_MATRIX;
+        else if (sType == "custom")
+            mType = Ogre::GpuProgramParameters::ACT_CUSTOM;
         else
         {
             Error(CLASS_NAME,
                 "Unsupported auto param : \""+sType+"\"."
             );
-            mType = Ogre::GpuProgramParameters::ACT_TIME;
+            return;
         }
 
         lAutoParamList_.PushBack(AutoParam(sName, mType, uiInfo));

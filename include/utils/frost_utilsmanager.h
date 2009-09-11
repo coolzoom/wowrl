@@ -20,7 +20,7 @@ namespace Frost
     friend class Manager<UtilsManager>;
     public :
 
-        typedef void (*LogFunction)(const s_str&, const s_bool&);
+        typedef void (*LogFunction)(const s_str&, const s_bool&, const s_uint&);
 
         /// Initializes this manager.
         /** \note Calls srand().
@@ -40,8 +40,9 @@ namespace Frost
         /// Shortcut to the user specified log function.
         /** \param sMessage    The message to log
         *   \param bTimeStamps 'true' to display time stamps
+        *   \param uiOffset    The line jump offset
         */
-        void Log(const s_str& sMessage, const s_bool& bTimeStamps);
+        void Log(const s_str& sMessage, const s_bool& bTimeStamps, const s_uint& uiOffset);
 
         static const s_str CLASS_NAME;
 

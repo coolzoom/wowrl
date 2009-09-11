@@ -49,12 +49,18 @@ namespace Frost
     {
         Lua::Function mFunc("Gameplay:SetCamera", pLua);
         mFunc.Add(0, "camera", Lua::TYPE_USERDATA);
+        mFunc.Add(0, "nil", Lua::TYPE_NIL);
         if (mFunc.Check())
         {
-            s_ptr<Camera> pCam = s_ptr<Camera>::DynamicCast(
-                Lunar<LuaMovableObject>::check(pLua, mFunc.Get(0)->GetIndex().Get())->GetObject()
-            );
-            pParent_->SetCamera(pCam);
+            if (mFunc.Get(0)->GetType() == Lua::TYPE_USERDATA)
+            {
+                s_ptr<Camera> pCam = s_ptr<Camera>::DynamicCast(
+                    Lunar<LuaMovableObject>::check(pLua, mFunc.Get(0)->GetIndex().Get())->GetObject()
+                );
+                pParent_->SetCamera(pCam);
+            }
+            else
+                pParent_->SetCamera(NULL);
         }
 
         return mFunc.Return();
