@@ -436,6 +436,7 @@ namespace Frost
     {
         // Update the line list, read format tags, do word wrapping, ...
         lLineList_.Clear();
+        lFormatList_.Clear();
 
         s_uint uiMaxLineNbr, uiCounter;
         if (fBoxH_.IsValid())
@@ -452,6 +453,7 @@ namespace Frost
                 // Make a temporary line array
                 s_ctnr<Line> lLines;
                 Line mLine;
+                s_map<s_uint, Format> lTempFormatList;
 
                 s_str::iterator iterChar1;
                 foreach (iterChar1, *iterManual)
@@ -467,7 +469,7 @@ namespace Frost
                             }
                             else
                             {
-                                GetFormat(iterChar1, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
+                                GetFormat(iterChar1, lTempFormatList[uiCounter+mLine.sCaption.GetLength()]);
                                 continue;
                             }
                         }
@@ -540,6 +542,14 @@ namespace Frost
                             mLine.sCaption.EraseFromEnd(uiCharToErase);
 
                             lLines.PushBack(mLine);
+                            Log(mLine.sCaption);
+                            s_map<s_uint, Format>::iterator iterFormat;
+                            foreach (iterFormat, lTempFormatList)
+                            {
+                                Log("f1 : p["+iterFormat->first+"], c : "+iterFormat->second.mColor);
+                                lFormatList_[iterFormat->first] = iterFormat->second;
+                            }
+                            lTempFormatList.Clear();
                             uiCounter += mLine.sCaption.GetLength();
                             mLine.fWidth = GetStringWidth(sErasedString);
                             mLine.sCaption = sErasedString;
@@ -580,7 +590,7 @@ namespace Frost
                                             }
                                             else
                                             {
-                                                GetFormat(iterTemp, lFormatList_[uiCounter+mLine.sCaption.GetLength()]);
+                                                GetFormat(iterTemp, lTempFormatList[uiCounter+mLine.sCaption.GetLength()]);
                                             }
                                         }
                                     }
@@ -602,6 +612,23 @@ namespace Frost
                                     --iterChar1;
                                     lLines.PushBack(mLine);
                                     uiCounter += mLine.sCaption.GetLength();
+                                    Log(mLine.sCaption);
+                                    s_map<s_uint, Format>::iterator iterFormat;
+                                    foreach (iterFormat, lTempFormatList)
+                                    {
+                                        Log("f2 : p["+iterFormat->first+"], c : "+iterFormat->second.mColor);
+                                        if (s_int(uiCounter) - s_int(iterFormat->first) > 0)
+                                        {
+                                            Log("(ok)");
+                                            lFormatList_[iterFormat->first] = iterFormat->second;
+                                        }
+                                        else
+                                        {
+                                            Log("(cut)");
+                                            lFormatList_[uiCounter] = iterFormat->second;
+                                        }
+                                    }
+                                    lTempFormatList.Clear();
                                     mLine.fWidth = 0.0f;
                                     mLine.sCaption = "";
                                 }
@@ -614,6 +641,14 @@ namespace Frost
                     }
                 }
                 lLines.PushBack(mLine);
+                Log(mLine.sCaption);
+                s_map<s_uint, Format>::iterator iterFormat;
+                foreach (iterFormat, lTempFormatList)
+                {
+                    Log("f3 : p["+iterFormat->first+"], c : "+iterFormat->second.mColor);
+                    lFormatList_[iterFormat->first] = iterFormat->second;
+                }
+                lTempFormatList.Clear();
                 uiCounter += mLine.sCaption.GetLength();
 
                 // Add the maximum number of line to this Text
@@ -735,11 +770,11 @@ namespace Frost
                     // Format our text
                     if (lFormatList_.Find(uiCounter))
                     {
-                        const Format& f = lFormatList_[uiCounter];
-                        switch (f.mColorAction)
+                        const Format& mFormat = lFormatList_[uiCounter];
+                        switch (mFormat.mColorAction)
                         {
                             case COLOR_ACTION_SET :
-                                mColor = f.mColor;
+                                mColor = mFormat.mColor;
                                 break;
                             case COLOR_ACTION_RESET :
                                 mColor = Color(s_uint::NaN);
@@ -784,7 +819,7 @@ namespace Frost
                     }
 
                     fX += fCharWidth + fKerning + fTracking_;
-                    uiCounter++;
+                    ++uiCounter;
                 }
 
                 fY += GetLineHeight()*fLineSpacing_;
