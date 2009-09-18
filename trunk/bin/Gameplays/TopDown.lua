@@ -1,32 +1,17 @@
 TopDownGameplay = {
-    ["camera"] = nil,                -- The camera handled by this gameplay
-    ["mouseRightPressed"] = false,   -- 'true' if the mouse right button is pressed
-    
-    ["maxSpeed"] = 20,               -- The camera movement speed
-    ["translate"] = Vector(0, 0, 0), -- Translation vector
-    
+    ["camera"] = nil,                       -- The camera handled by this gameplay
+
     ["key"] = {
-        ["leadToward"] = Vector(0, 0, 0),      -- The direction vector
-        ["acceleration"] = Vector(0, 0, 0),    -- The acceleration vector
-        ["speed"] = Vector(0, 0, 0),           -- The speed vector
-        ["prevSpeed"] = Vector(0, 0, 0),       -- The previous speed vector
-        ["maxSpeed"] = 20.0,                   -- The camera's max speed
-        ["maxAcceleration"] = 5.0,             -- The camera's max acceleration
+        ["leadToward"] = Vector(0, 0, 0),   -- The direction vector
+        ["acceleration"] = Vector(0, 0, 0), -- The acceleration vector
+        ["speed"] = Vector(0, 0, 0),        -- The speed vector
+        ["prevSpeed"] = Vector(0, 0, 0),    -- The previous speed vector
+        ["maxSpeed"] = 20.0,                -- The camera's max speed
+        ["maxAcceleration"] = 5.0,          -- The camera's max acceleration
     },
     
     ["mouse"] = {
-        ["lastYaw"] = 0,
-        ["lastPitch"] = 0,
-        ["lastWheel"] = 0,
-        ["averagedYaw"] = 0,
-        ["averagedPitch"] = 0,
-        ["averagedWheel"] = 0,
-        ["yawHistoric"] = {},
-        ["pitchHistoric"] = {},
-        ["wheelHistoric"] = {},
-        
-        ["historicLength"] = 50,
-        ["historicSmoothFactor"] = 1,
+        ["rightPressed"] = false,           -- 'true' if the mouse right button is pressed
     },
 };
 
@@ -44,10 +29,10 @@ TopDownGameplay = {
 function TopDownGameplay.OnLoad()
     this:RegisterEvent("KEY_PRESSED");
     this:RegisterEvent("KEY_RELEASED");
-    this:RegisterEvent("MOUSE_MOVED");
+    this:RegisterEvent("MOUSE_MOVED_SMOOTH");
     this:RegisterEvent("MOUSE_PRESSED");
     this:RegisterEvent("MOUSE_RELEASED");
-    this:RegisterEvent("MOUSE_WHEEL");
+    this:RegisterEvent("MOUSE_WHEEL_SMOOTH");
     
     TopDownGameplay.camera = this:CreateCamera(2, 8, 2);
     TopDownGameplay.camera:OrbitAround(0, 0, 0, true);
@@ -75,21 +60,21 @@ function TopDownGameplay.OnEvent()
         elseif (arg1 == KEY_D) then
             TopDownGameplay.key.leadToward.x = TopDownGameplay.key.leadToward.x - 1;
         end
-    elseif (event == "MOUSE_MOVED") then
-        if (TopDownGameplay.mouseRightPressed) then
-            TopDownGameplay.mouse.lastYaw = arg3;
-            TopDownGameplay.mouse.lastPitch = arg4;
+    elseif (event == "MOUSE_MOVED_SMOOTH") then
+        if (TopDownGameplay.mouse.rightPressed) then
+            TopDownGameplay.camera:Yaw(-arg3);
+            TopDownGameplay.camera:Pitch(-arg4);
         end
     elseif (event == "MOUSE_PRESSED") then
         if (arg1 == MOUSE_RIGHT) then
-            TopDownGameplay.mouseRightPressed = true;
+            TopDownGameplay.mouse.rightPressed = true;
         end
     elseif (event == "MOUSE_RELEASED") then
         if (arg1 == MOUSE_RIGHT) then
-            TopDownGameplay.mouseRightPressed = false;
+            TopDownGameplay.mouse.rightPressed = false;
         end
-    elseif (event == "MOUSE_WHEEL") then
-        TopDownGameplay.mouse.lastWheel = arg1/120;
+    elseif (event == "MOUSE_WHEEL_SMOOTH") then
+        TopDownGameplay.camera:Translate(-2.0*arg1*Vector.UNIT_Z, true);
     end
 end
 
@@ -107,90 +92,7 @@ function TopDownGameplay.UpdateKeyAcceleration(axis)
     end
 end
 
-function TopDownGameplay.UpdateMouseMovement()
-    local input = TopDownGameplay.mouse;
-    
-    -- Yaw
-    if (table.maxn(input.yawHistoric) == 0) then
-        table.insert(input.yawHistoric, input.lastYaw);
-    else
-        table.insert(input.yawHistoric, 1, input.lastYaw);
-    end
-    local yawNbr = table.maxn(input.yawHistoric);
-    if (yawNbr > input.historicLength) then
-        table.remove(input.yawHistoric);
-        yawNbr = yawNbr - 1;
-    end
-    
-    local factor = 1;
-    local totalWeight = 0;
-    
-    input.averagedYaw = 0;
-    for i=1, yawNbr do
-        input.averagedYaw = input.averagedYaw + input.yawHistoric[i]*factor;
-        totalWeight = totalWeight + factor;
-        factor = factor * input.historicSmoothFactor;
-    end
-    input.averagedYaw = input.averagedYaw / totalWeight;
-    
-    -- Pitch
-    if (table.maxn(input.pitchHistoric) == 0) then
-        table.insert(input.pitchHistoric, input.lastPitch);
-    else
-        table.insert(input.pitchHistoric, 1, input.lastPitch);
-    end
-    local pitchNbr = table.maxn(input.pitchHistoric);
-    if (pitchNbr > input.historicLength) then
-        table.remove(input.pitchHistoric);
-        pitchNbr = pitchNbr - 1;
-    end
-    
-    factor = 1;
-    totalWeight = 0;
-    
-    input.averagedPitch = 0;
-    for i=1, pitchNbr do
-        input.averagedPitch = input.averagedPitch + input.pitchHistoric[i]*factor;
-        totalWeight = totalWeight + factor;
-        factor = factor * input.historicSmoothFactor;
-    end
-    input.averagedPitch = input.averagedPitch / totalWeight;
-    
-    -- Wheel
-    if (table.maxn(input.wheelHistoric) == 0) then
-        table.insert(input.wheelHistoric, input.lastWheel);
-    else
-        table.insert(input.wheelHistoric, 1, input.lastWheel);
-    end
-    local wheelNbr = table.maxn(input.wheelHistoric);
-    if (wheelNbr > input.historicLength) then
-        table.remove(input.wheelHistoric);
-        wheelNbr = wheelNbr - 1;
-    end
-    
-    factor = 1;
-    totalWeight = 0;
-    
-    input.averagedWheel = 0;
-    for i=1, wheelNbr do
-        input.averagedWheel = input.averagedWheel + input.wheelHistoric[i]*factor;
-        totalWeight = totalWeight + factor;
-        factor = factor * input.historicSmoothFactor;
-    end
-    input.averagedWheel = input.averagedWheel / totalWeight;
-end
-
 function TopDownGameplay.OnUpdate()
-    TopDownGameplay.UpdateMouseMovement();
-    
-    TopDownGameplay.mouse.lastYaw = 0;
-    TopDownGameplay.mouse.lastPitch = 0;
-    TopDownGameplay.mouse.lastWheel = 0;
-    
-    TopDownGameplay.camera:Yaw(-TopDownGameplay.mouse.averagedYaw);
-    TopDownGameplay.camera:Pitch(-TopDownGameplay.mouse.averagedPitch);
-    TopDownGameplay.camera:Translate(-2.0*TopDownGameplay.mouse.averagedWheel*Vector.UNIT_Z, true);
-    
     TopDownGameplay.key.prevSpeed = TopDownGameplay.key.speed;
     TopDownGameplay.key.speed = TopDownGameplay.key.speed + arg1*TopDownGameplay.key.acceleration;
     

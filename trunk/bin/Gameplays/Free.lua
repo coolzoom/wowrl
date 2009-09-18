@@ -1,6 +1,5 @@
 FreeGameplay = {
-    ["camera"] = nil,                -- The camera handled by this gameplay
-    ["mouseRightPressed"] = false,           -- 'true' if the mouse right button is pressed
+    ["camera"] = nil,                          -- The camera handled by this gameplay
     
     ["key"] = {
         ["leadToward"] = Vector(0, 0, 0),      -- The direction vector
@@ -12,15 +11,7 @@ FreeGameplay = {
     },
     
     ["mouse"] = {
-        ["lastYaw"] = 0,
-        ["lastPitch"] = 0,
-        ["averagedYaw"] = 0,
-        ["averagedPitch"] = 0,
-        ["yawHistoric"] = {},
-        ["pitchHistoric"] = {},
-        
-        ["historicLength"] = 50,
-        ["historicSmoothFactor"] = 1,
+        ["rightPressed"] = false,              -- 'true' if the mouse right button is pressed
     },
 };
 
@@ -39,7 +30,7 @@ FreeGameplay = {
 function FreeGameplay.OnLoad()
     this:RegisterEvent("KEY_PRESSED");
     this:RegisterEvent("KEY_RELEASED");
-    this:RegisterEvent("MOUSE_MOVED");
+    this:RegisterEvent("MOUSE_MOVED_SMOOTH");
     this:RegisterEvent("MOUSE_PRESSED");
     this:RegisterEvent("MOUSE_RELEASED");
     
@@ -61,56 +52,6 @@ function FreeGameplay.UpdateKeyAcceleration(axis)
             input.acceleration[axis] = -input.maxAcceleration;
         end
     end
-end
-
-function FreeGameplay.UpdateMouseMovement()
-    local input = FreeGameplay.mouse;
-    
-    -- Yaw
-    if (table.maxn(input.yawHistoric) == 0) then
-        table.insert(input.yawHistoric, input.lastYaw);
-    else
-        table.insert(input.yawHistoric, 1, input.lastYaw);
-    end
-    local yawNbr = table.maxn(input.yawHistoric);
-    if (yawNbr > input.historicLength) then
-        table.remove(input.yawHistoric);
-        yawNbr = yawNbr - 1;
-    end
-    
-    local factor = 1;
-    local totalWeight = 0;
-    
-    input.averagedYaw = 0;
-    for i=1, yawNbr do
-        input.averagedYaw = input.averagedYaw + input.yawHistoric[i]*factor;
-        totalWeight = totalWeight + factor;
-        factor = factor * input.historicSmoothFactor;
-    end
-    input.averagedYaw = input.averagedYaw / totalWeight;
-    
-    -- Pitch
-    if (table.maxn(input.pitchHistoric) == 0) then
-        table.insert(input.pitchHistoric, input.lastPitch);
-    else
-        table.insert(input.pitchHistoric, 1, input.lastPitch);
-    end
-    local pitchNbr = table.maxn(input.pitchHistoric);
-    if (pitchNbr > input.historicLength) then
-        table.remove(input.pitchHistoric);
-        pitchNbr = pitchNbr - 1;
-    end
-    
-    factor = 1;
-    totalWeight = 0;
-    
-    input.averagedPitch = 0;
-    for i=1, pitchNbr do
-        input.averagedPitch = input.averagedPitch + input.pitchHistoric[i]*factor;
-        totalWeight = totalWeight + factor;
-        factor = factor * input.historicSmoothFactor;
-    end
-    input.averagedPitch = input.averagedPitch / totalWeight;
 end
 
 function FreeGameplay.OnEvent()
@@ -142,31 +83,23 @@ function FreeGameplay.OnEvent()
         elseif (arg1 == KEY_E) then
             FreeGameplay.key.leadToward.y = FreeGameplay.key.leadToward.y + 1;
         end
-    elseif (event == "MOUSE_MOVED") then
-        if (FreeGameplay.mouseRightPressed) then
-            FreeGameplay.mouse.lastYaw = arg3;
-            FreeGameplay.mouse.lastPitch = arg4;
+    elseif (event == "MOUSE_MOVED_SMOOTH") then
+        if (FreeGameplay.mouse.rightPressed) then
+            FreeGameplay.camera:Yaw(-arg3);
+            FreeGameplay.camera:Pitch(-arg4);
         end
     elseif (event == "MOUSE_PRESSED") then
         if (arg1 == MOUSE_RIGHT) then
-            FreeGameplay.mouseRightPressed = true;
+            FreeGameplay.mouse.rightPressed = true;
         end
     elseif (event == "MOUSE_RELEASED") then
         if (arg1 == MOUSE_RIGHT) then
-            FreeGameplay.mouseRightPressed = false;
+            FreeGameplay.mouse.rightPressed = false;
         end
     end
 end
 
 function FreeGameplay.OnUpdate()
-    FreeGameplay.UpdateMouseMovement();
-    
-    FreeGameplay.mouse.lastYaw = 0;
-    FreeGameplay.mouse.lastPitch = 0;
-    
-    FreeGameplay.camera:Yaw(-FreeGameplay.mouse.averagedYaw);
-    FreeGameplay.camera:Pitch(-FreeGameplay.mouse.averagedPitch);
-
     FreeGameplay.key.prevSpeed = FreeGameplay.key.speed;
     FreeGameplay.key.speed = FreeGameplay.key.speed + arg1*FreeGameplay.key.acceleration;
     
