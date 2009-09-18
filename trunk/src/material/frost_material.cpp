@@ -227,7 +227,7 @@ namespace Frost
     void Material::SetVertexShader( const s_str& sVSName )
     {
         s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader(sVSName);
-        if (pVS)
+        if (pVS && pVS->IsValid())
             pVS->BindTo(pDefaultPass_);
         else
             pDefaultPass_->setVertexProgram("");
@@ -236,7 +236,7 @@ namespace Frost
     void Material::SetPixelShader( const s_str& sPSName )
     {
         s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader(sPSName);
-        if (pPS)
+        if (pPS && pPS->IsValid())
             pPS->BindTo(pDefaultPass_);
         else
             pDefaultPass_->setFragmentProgram("");

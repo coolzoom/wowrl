@@ -14,7 +14,9 @@
         <Params>
             <LightParams number="5" includeDirectional="true"/>
             <AutoParam name="mAmbient"/>
-            <AutoParam name="mMotionBlurMask" param="custom"/>
+            <#[MOTION_BLUR]>
+                <AutoParam name="mMotionBlurMask" param="custom"/>
+            </#>
         </Params>
         <#[MOTION_BLUR]>
             <PreProcessor>

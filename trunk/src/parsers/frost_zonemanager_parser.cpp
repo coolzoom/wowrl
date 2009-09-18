@@ -207,6 +207,7 @@ namespace Frost
                         pDiffuseBlock->GetAttribute("file")
                     );
                     pMat->GetDefaultPass()->getTextureUnitState(0)->setTextureFiltering(mTFO);
+                    pMat->SetShaders("Terrain");
 
                     s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
                     if (pTillingBlock)
@@ -226,11 +227,6 @@ namespace Frost
                         Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
                         pTUS->setTextureName(sFileName.Get());
                         pTUS->setTextureFiltering(mTFO);
-
-                        s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader("Terrain_Specular");
-                        s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader("Terrain_Specular");
-                        pVS->BindTo(pPass);
-                        pPS->BindTo(pPass);
                     }
 
                     pChunk->SetMaterial(pMat);
