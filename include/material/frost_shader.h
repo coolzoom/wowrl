@@ -125,6 +125,11 @@ namespace Frost
         */
         void SetParameter(const s_str& sName, const s_var& vValue, s_ptr<Ogre::Pass> pPass = NULL);
 
+        /// Checks if this shader has loaded fine.
+        /** \return 'true' if everything went fine
+        */
+        const s_bool& IsValid() const;
+
         /// Compiles this shader.
         virtual void Load() = 0;
 

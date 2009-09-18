@@ -135,6 +135,11 @@ namespace Frost
         return sName_;
     }
 
+    const s_bool& Shader::IsValid() const
+    {
+        return bIsValid_;
+    }
+
     void Shader::WriteParams_( s_ptr<Ogre::Pass> pPass )
     {
         if (!lAutoParamList_.IsEmpty())
@@ -313,11 +318,22 @@ namespace Frost
                 pOgreShader_->addDelegateProgram((sName_+"_GLSL").Get());
                 pOgreShader_->load();
 
-                bIsValid_ = true;
+                if (!pOgreShader_->hasCompileError())
+                    bIsValid_ = true;
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "\""+sName_+"\" is not supported by your hardware."
+                    );
+                }
             }
             catch (Ogre::Exception e)
             {
                 Error(CLASS_NAME, e.getDescription());
+            }
+            catch (...)
+            {
+                Error(CLASS_NAME, "Unhandled exception.");
             }
 
             bIsLoaded_ = true;
@@ -392,7 +408,14 @@ namespace Frost
                 pOgreShader_->addDelegateProgram((sName_+"_GLSL").Get());
                 pOgreShader_->load();
 
-                bIsValid_ = true;
+                if (!pOgreShader_->hasCompileError())
+                    bIsValid_ = true;
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "\""+sName_+"\" is not supported by your hardware."
+                    );
+                }
             }
             catch (Ogre::Exception e)
             {
