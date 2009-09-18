@@ -13,6 +13,7 @@
 namespace Ogre
 {
     class Vector3;
+    class Matrix4;
 }
 
 namespace Frost
@@ -38,14 +39,6 @@ namespace Frost
         Vector(const s_float& fX, const s_float& fY, const s_float& fZ);
 
         /// Constructor.
-        /** \param fX    The X coordinate
-        *   \param fY    The Y coordinate
-        *   \param fZ    The Z coordinate
-        *   \param fNorm The pre-calculated norm
-        */
-        Vector(const s_float& fX, const s_float& fY, const s_float& fZ, const s_float& fNorm);
-
-        /// Constructor.
         /** \param fValue The value to put in all coordinates
         */
         Vector(const s_float& fValue);
@@ -64,13 +57,13 @@ namespace Frost
         /** \return The norm of this vector
         *   \note GetLength() does exactly the same thing.
         */
-        const s_float& GetNorm();
+        s_float        GetNorm();
 
         /// Returns the length of this vector.
         /** \return The length of this vector
         *   \note GetNorm() does exactly the same thing.
         */
-        const s_float& GetLength();
+        s_float        GetLength();
 
         /// Returns this vector divided by its norm.
         /** \return This vector divided by its norm
@@ -90,50 +83,35 @@ namespace Frost
         /// Makes this vector invalid.
         void           SetNaN();
 
+        /// Returns a reference to the X coordinate.
+        /** \return A reference to the X coordinate
+        */
+        s_float&       X();
+
+        /// Returns a reference to the Y coordinate.
+        /** \return A reference to the Y coordinate
+        */
+        s_float&       Y();
+
+        /// Returns a reference to the Z coordinate.
+        /** \return A reference to the Z coordinate
+        */
+        s_float&       Z();
+
         /// Returns a const reference to the X coordinate.
         /** \return A const reference to the X coordinate
         */
         const s_float& X() const;
-
-        /// Returns a reference to the X coordinate.
-        /** \return A reference to the X coordinate
-        */
-        s_float&       XR();
-
-        /// Sets the X coordinate.
-        /** \param fX The new X coordinate
-        */
-        void           X(const s_float& fX);
 
         /// Returns a const reference to the Y coordinate.
         /** \return A const reference to the Y coordinate
         */
         const s_float& Y() const;
 
-        /// Returns a reference to the Y coordinate.
-        /** \return A reference to the Y coordinate
-        */
-        s_float&       YR();
-
-        /// Sets the Y coordinate.
-        /** \param fY The new Y coordinate
-        */
-        void           Y(const s_float& fY);
-
         /// Returns a const reference to the Z coordinate.
         /** \return A const reference to the Z coordinate
         */
         const s_float& Z() const;
-
-        /// Returns a reference to the Z coordinate.
-        /** \return A reference to the Z coordinate
-        */
-        s_float&       ZR();
-
-        /// Sets the Z coordinate.
-        /** \param fZ The new Z coordinate
-        */
-        void           Z(const s_float& fZ);
 
         bool           operator !  () const;
         typedef        void (Vector::*MemberFn)();
@@ -197,20 +175,16 @@ namespace Frost
 
     private :
 
-        void UpdateNorm_();
-
         s_float fX_;
         s_float fY_;
         s_float fZ_;
-
-        s_float fNorm_;
-        s_bool  bRebuildNorm_;
     };
 
     s_str  operator + (const char* sLeft, const Vector& mRight);
     s_str  operator + (const s_str& sLeft, const Vector& mRight);
     s_str& operator << (s_str& sLeft, const Vector& mRight);
     Vector operator * (const s_float& fLeft, const Vector& mRight);
+    Vector operator * (const Ogre::Matrix4& mLeft, const Vector& mRight);
 }
 
 #endif
