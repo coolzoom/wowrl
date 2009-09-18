@@ -43,6 +43,16 @@ namespace Frost
             return mPair_.second;
         }
 
+        T& First()
+        {
+            return mPair_.first;
+        }
+
+        N& Second()
+        {
+            return mPair_.second;
+        }
+
     private :
 
         std::pair<T, N> mPair_;
