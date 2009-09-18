@@ -22,7 +22,7 @@ namespace Frost
     {
     public :
 
-        Point() : mX_(0), mY_(0)
+        Point()
         {
         }
 
@@ -73,11 +73,20 @@ namespace Frost
             return !( (mX_ == mPoint.mX_) && (mY_ == mPoint.mY_) );
         }
 
-        T X() const
+        const T& X() const
         {
             return mX_;
         }
-        T Y() const
+        const T& Y() const
+        {
+            return mY_;
+        }
+
+        T& X()
+        {
+            return mX_;
+        }
+        T& Y()
         {
             return mY_;
         }
