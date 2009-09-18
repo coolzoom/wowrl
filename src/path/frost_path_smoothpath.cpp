@@ -121,27 +121,27 @@ namespace Frost
         s_float t3 = t*t*t;
         Vector mVec;
 
-        mVec.X(
+        mVec.X() =
             0.5f*(
             (2.0f*lP_[1]->mPosition.X()) +
             (-lP_[0]->mPosition.X() + lP_[2]->mPosition.X())*t +
             (2.0f*lP_[0]->mPosition.X() - 5.0f*lP_[1]->mPosition.X() + 4.0f*lP_[2]->mPosition.X() - lP_[3]->mPosition.X())*t2 +
             (-lP_[0]->mPosition.X() + 3.0f*lP_[1]->mPosition.X() - 3.0f*lP_[2]->mPosition.X() + lP_[3]->mPosition.X())*t3)
-        );
-        mVec.Y(
+        ;
+        mVec.Y() =
             0.5f*(
             (2.0f*lP_[1]->mPosition.Y()) +
             (-lP_[0]->mPosition.Y() + lP_[2]->mPosition.Y())*t +
             (2.0f*lP_[0]->mPosition.Y() - 5.0f*lP_[1]->mPosition.Y() + 4.0f*lP_[2]->mPosition.Y() - lP_[3]->mPosition.Y())*t2 +
             (-lP_[0]->mPosition.Y() + 3.0f*lP_[1]->mPosition.Y() - 3.0f*lP_[2]->mPosition.Y() + lP_[3]->mPosition.Y())*t3)
-        );
-        mVec.Z(
+        ;
+        mVec.Z() =
             0.5f*(
             (2.0f*lP_[1]->mPosition.Z()) +
             (-lP_[0]->mPosition.Z() + lP_[2]->mPosition.Z())*t +
             (2.0f*lP_[0]->mPosition.Z() - 5.0f*lP_[1]->mPosition.Z() + 4.0f*lP_[2]->mPosition.Z() - lP_[3]->mPosition.Z())*t2 +
             (-lP_[0]->mPosition.Z() + 3.0f*lP_[1]->mPosition.Z() - 3.0f*lP_[2]->mPosition.Z() + lP_[3]->mPosition.Z())*t3)
-        );
+        ;
 
         return mVec;
     }

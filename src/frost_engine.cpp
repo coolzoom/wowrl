@@ -239,6 +239,8 @@ namespace Frost
 
         // Initialize the input manager
         pInputMgr_->Initialize(pRenderWindow_);
+        if (!pInputMgr_->ReadConfig())
+            return false;
 
         // Initialize the material manager
         pMaterialMgr_->Initialize();
@@ -597,12 +599,25 @@ namespace Frost
         return iter->second;
     }
 
+    s_bool Engine::IsConstantDefined( const s_str& sConstantName ) const
+    {
+        return (lGameOptionList_.Get(sConstantName) != lGameOptionList_.End());
+    }
+
     s_str Engine::GetStringConstant( const s_str& sConstantName )
     {
         s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
         if (iter == lGameOptionList_.End())
             iter->second = s_str();
         return iter->second.Get<s_str>();
+    }
+
+    s_float Engine::GetFloatConstant( const s_str& sConstantName )
+    {
+        s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
+        if (iter == lGameOptionList_.End())
+            iter->second = s_float();
+        return iter->second.Get<s_float>();
     }
 
     s_uint Engine::GetUIntConstant( const s_str& sConstantName )

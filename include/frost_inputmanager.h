@@ -182,6 +182,11 @@ namespace Frost
         */
         s_bool          Initialize(s_ptr<Ogre::RenderWindow> pWindow);
 
+        /// Reads configuration.
+        /** \return 'false' if something went wrong
+        */
+        s_bool          ReadConfig();
+
         /// Updates input (keyboard and mouse).
         void            Update();
 
@@ -344,13 +349,39 @@ namespace Frost
 
         /// Returns the horizontal position variation of the mouse.
         /** \return The horizontal position variation of the mouse
+        *   \note This function returns values just as they are given
+        *         by the mouse. A common mouse's update rate is 125Hz
+        *         (it will report its movement every 8ms). In the cases
+        *         where the game updates faster, the mouse will just
+        *         report zero movement for some frames, which can be
+        *         disturbing if you need a continuous movement.<br>
+        *         If that's an issue for you, then use GetMouseSmoothDX().
         */
-        const s_float&  GetMouseDX() const;
+        const s_float&  GetMouseRawDX() const;
 
         /// Returns the vertical position variation of the mouse.
         /** \return The vertical position variation of the mouse
+        *   \note This function returns values just as they are given
+        *         by the mouse. A common mouse's update rate is 125Hz
+        *         (it will report its movement every 8ms). In the cases
+        *         where the game updates faster, the mouse will just
+        *         report zero movement for some frames, which can be
+        *         disturbing if you need a continuous movement.<br>
+        *         If that's an issue for you, then use GetMouseSmoothDY().
         */
-        const s_float&  GetMouseDY() const;
+        const s_float&  GetMouseRawDY() const;
+
+        /// Returns the horizontal position variation of the mouse.
+        /** \return The horizontal position variation of the mouse
+        *   \note See GetMouseRawDY() for more infos.
+        */
+        const s_float&  GetMouseSmoothDX() const;
+
+        /// Returns the vertical position variation of the mouse.
+        /** \return The vertical position variation of the mouse
+        *   \note See GetMouseRawDY() for more infos.
+        */
+        const s_float&  GetMouseSmoothDY() const;
 
         /// Returns the rolling ammount of the mouse wheel.
         /** \return The rolling ammount of the mouse wheel
@@ -364,9 +395,27 @@ namespace Frost
         s_str           GetMouseButtonString(MouseButton mID) const;
 
         /// Sets the double click maximum time.
-        /** \param dDoubleclickTime
+        /** \param dDoubleClickTime
         */
-        void            SetDoubleclickTime(const s_double& dDoubleclickTime);
+        void            SetDoubleClickTime(const s_double& dDoubleClickTime);
+
+        /// Returns the double click maximum time.
+        /** \return The double click maximum time
+        */
+        const s_double& GetDoubleClickTime() const;
+
+        /// Sets the ammount of mouse movement to be buffered.
+        /** \param dMouseHistoryMaxLength The maximum buffer length (in seconds)
+        *   \note If you experience jerky mouse movement, you can try to increase
+        *         this value (default : 0.05s).<br> On the contrary, if you feel
+        *         your mouse is not responsive enough, try to decrease it.
+        */
+        void            SetMouseBufferDuration(const s_double& dMouseHistoryMaxLength);
+
+        /// Returns the ammount of mouse movement to be buffered.
+        /** \return The ammount of mouse movement to be buffered
+        */
+        const s_double& GetMouseBufferDuration() const;
 
         /// Sets whether input should be stopped.
         /** \param bFocus 'true' to stop inputs
@@ -430,8 +479,8 @@ namespace Frost
         s_ctnr<s_uint> lUpStack_;
 
         // Mouse
-        s_double                                      dDoubleclickTime_;
-        s_array<s_double,INPUT_MOUSE_BUTTON_NUMBER>   lDoubleclickDelay_;
+        s_double                                      dDoubleClickTime_;
+        s_array<s_double,INPUT_MOUSE_BUTTON_NUMBER>   lDoubleClickDelay_;
         s_array<s_double,INPUT_MOUSE_BUTTON_NUMBER>   lMouseDelay_;
         s_array<s_bool,INPUT_MOUSE_BUTTON_NUMBER>     lMouseLong_;
         s_array<s_bool,INPUT_MOUSE_BUTTON_NUMBER>     lMouseBuf_;
@@ -440,6 +489,9 @@ namespace Frost
 
         s_float fMX_, fMY_;
         s_float fDMX_, fDMY_;
+        s_double dMouseHistoryMaxLength_;
+        s_ctnr< s_pair< s_double, s_array<s_float,3> > > lMouseHistory_;
+        s_float fSmoothDMX_, fSmoothDMY_, fSmoothMWheel_;
         s_int   iMWheel_;
         s_bool  bWheelRolled_;
         s_str   sMouseButton_;

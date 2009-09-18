@@ -349,7 +349,7 @@ namespace Frost
         if (bCameraMovedAlone_)
         {
             Vector mDirection = pCamera_->GetDirection(false);
-            mDirection.Y(0.0f);
+            mDirection.Y() = 0.0f;
             pNode_->SetDirection(mDirection);
             bCameraMovedAlone_ = false;
         }

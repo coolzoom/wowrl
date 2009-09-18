@@ -88,11 +88,23 @@ namespace Frost
         */
         s_var               GetConstant(const s_str& sConstantName);
 
+        /// Checks if a game constant has been defined.
+        /** \param sConstantName The name of the constant you're searching for
+        *   \return 'true' if the constant has been defined
+        */
+        s_bool              IsConstantDefined(const s_str& sConstantName) const;
+
         /// Returns a game constant.
         /** \param sConstantName The name of the constant you're searching for
         *   \return A string containing the value you asked
         */
         s_str               GetStringConstant(const s_str& sConstantName);
+
+        /// Returns a game constant.
+        /** \param sConstantName The name of the constant you're searching for
+        *   \return A float containing the value you asked
+        */
+        s_float             GetFloatConstant(const s_str& sConstantName);
 
         /// Returns a game constant.
         /** \param sConstantName The name of the constant you're searching for

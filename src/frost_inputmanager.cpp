@@ -21,12 +21,8 @@ namespace Frost
 
     InputManager::InputManager()
     {
-        dDoubleclickTime_ = 0.25;
-        cChar_ = 0;
-
-        pOgreInputMgr_ = NULL;
-        pKeyboard_ = NULL;
-        pMouse_ = NULL;
+        dDoubleClickTime_ = 0.25;
+        dMouseHistoryMaxLength_ = 0.05;
     }
 
     InputManager::~InputManager()
@@ -37,9 +33,6 @@ namespace Frost
             pOgreInputMgr_->destroyInputObject(pMouse_.Get());
             pOgreInputMgr_->destroyInputObject(pKeyboard_.Get());
             OIS::InputManager::destroyInputSystem(pOgreInputMgr_.Get());
-            pOgreInputMgr_ = NULL;
-            pKeyboard_ = NULL;
-            pMouse_ = NULL;
         }
     }
 
@@ -86,6 +79,19 @@ namespace Frost
             Error(CLASS_NAME, "Couldn't create OIS input system.");
             return false;
         }
+    }
+
+    s_bool InputManager::ReadConfig()
+    {
+        s_ptr<Engine> pEngine = Engine::GetSingleton();
+
+        if (pEngine->IsConstantDefined("DoubleClickTime"))
+            dDoubleClickTime_ = s_double(pEngine->GetFloatConstant("DoubleClickTime"));
+
+        if (pEngine->IsConstantDefined("MouseBufferLength"))
+            dMouseHistoryMaxLength_ = s_double(pEngine->GetFloatConstant("MouseBufferLength"));
+
+        return true;
     }
 
     s_char InputManager::GetChar( s_bool bFormated, s_bool bForce ) const
@@ -225,7 +231,7 @@ namespace Frost
             return false;
         else
         {
-            return (MouseIsPressed(mID) && lDoubleclickDelay_[mID] > 0.0);
+            return (MouseIsPressed(mID) && lDoubleClickDelay_[mID] > 0.0);
         }
     }
 
@@ -359,10 +365,10 @@ namespace Frost
             bOldMouseState = lMouseBufOld_[i] = lMouseBuf_[i];
 
             // Handle double clicking
-            lDoubleclickDelay_[i] -= dDelta;
+            lDoubleClickDelay_[i] -= dDelta;
 
             if (bOldMouseState)
-                lDoubleclickDelay_[i] = dDoubleclickTime_;
+                lDoubleClickDelay_[i] = dDoubleClickTime_;
 
             // Update delays
             if (bOldMouseState)
@@ -391,7 +397,7 @@ namespace Frost
                 {
                     lMouseState_[i] = MOUSE_CLICKED; // single pressed
 
-                    if (lDoubleclickDelay_[i] > 0.0)
+                    if (lDoubleClickDelay_[i] > 0.0)
                     {
                         lMouseState_[i] = MOUSE_DOUBLE; // double clicked
                     }
@@ -436,7 +442,7 @@ namespace Frost
                         mMouseEvent.SetName("MOUSE_PRESSED");
                         pEventMgr->FireEvent(mMouseEvent);
 
-                        if (lDoubleclickDelay_[i] > 0.0)
+                        if (lDoubleClickDelay_[i] > 0.0)
                         {
                             mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
                             pEventMgr->FireEvent(mMouseEvent);
@@ -467,14 +473,40 @@ namespace Frost
         fDMX_ = mMouseState.X.rel;
         fDMY_ = mMouseState.Y.rel;
 
-        iMWheel_ = mMouseState.Z.rel;
+        iMWheel_ = mMouseState.Z.rel/120;
         if (iMWheel_ == 0u)
             bWheelRolled_ = false;
         else
             bWheelRolled_ = true;
 
+        lMouseHistory_.PushFront(MakePair(
+            TimeManager::GetSingleton()->GetTime(),
+            s_array<s_float,3>((fDMX_, fDMY_, s_float(iMWheel_)))
+        ));
+
+        s_double dHistoryLength = lMouseHistory_.Front().First() - lMouseHistory_.Back().First();
+        while (dHistoryLength > dMouseHistoryMaxLength_ && (lMouseHistory_.GetSize() > 1))
+        {
+            lMouseHistory_.PopBack();
+            dHistoryLength = lMouseHistory_.Back().First() - lMouseHistory_.Front().First();
+        }
+
+        fSmoothDMX_ = fSmoothDMY_ = fSmoothMWheel_ = 0.0f;
+        s_ctnr< s_pair< s_double, s_array<s_float,3> > >::iterator iterHistory;
+        foreach (iterHistory, lMouseHistory_)
+        {
+            fSmoothDMX_    += iterHistory->Second()[0];
+            fSmoothDMY_    += iterHistory->Second()[1];
+            fSmoothMWheel_ += iterHistory->Second()[2];
+        }
+
+        s_float fHistorySize = s_float(lMouseHistory_.GetSize());
+        fSmoothDMX_    /= fHistorySize;
+        fSmoothDMY_    /= fHistorySize;
+        fSmoothMWheel_ /= fHistorySize;
+
         // Send movement event
-        if ( (fDMX_ != 0.0f) || (fDMY_ != 0.0f) )
+        if ( (!fDMX_.IsNull()) || (!fDMY_.IsNull()) )
         {
             Event mMouseMovedEvent("MOUSE_MOVED", true);
             mMouseMovedEvent.Add(fDMX_);
@@ -484,17 +516,49 @@ namespace Frost
             pEventMgr->FireEvent(mMouseMovedEvent);
         }
 
+        if ( (!fSmoothDMX_.IsNull()) || (!fSmoothDMY_.IsNull()) )
+        {
+            Event mMouseMovedEvent("MOUSE_MOVED_SMOOTH", true);
+            mMouseMovedEvent.Add(fSmoothDMX_);
+            mMouseMovedEvent.Add(fSmoothDMY_);
+            mMouseMovedEvent.Add(fSmoothDMX_/s_float(Engine::GetSingleton()->GetScreenWidth()));
+            mMouseMovedEvent.Add(fSmoothDMY_/s_float(Engine::GetSingleton()->GetScreenHeight()));
+            pEventMgr->FireEvent(mMouseMovedEvent);
+        }
+
         if (bWheelRolled_)
         {
             Event mMouseWheelEvent("MOUSE_WHEEL", true);
             mMouseWheelEvent.Add(iMWheel_);
             pEventMgr->FireEvent(mMouseWheelEvent);
         }
+
+        if (!fSmoothMWheel_.IsNull())
+        {
+            Event mMouseWheelEvent("MOUSE_WHEEL_SMOOTH", true);
+            mMouseWheelEvent.Add(fSmoothMWheel_);
+            pEventMgr->FireEvent(mMouseWheelEvent);
+        }
     }
 
-    void InputManager::SetDoubleclickTime( const s_double& dDoubleclickTime )
+    void InputManager::SetDoubleClickTime( const s_double& dDoubleClickTime )
     {
-        dDoubleclickTime_ = dDoubleclickTime;
+        dDoubleClickTime_ = dDoubleClickTime;
+    }
+
+    const s_double& InputManager::GetDoubleClickTime() const
+    {
+        return dDoubleClickTime_;
+    }
+
+    void InputManager::SetMouseBufferDuration(const s_double& dMouseHistoryMaxLength)
+    {
+        dMouseHistoryMaxLength_ = dMouseHistoryMaxLength;
+    }
+
+    const s_double& InputManager::GetMouseBufferDuration() const
+    {
+        return dMouseHistoryMaxLength_;
     }
 
     void InputManager::SetFocus( s_bool bFocus )
@@ -537,14 +601,24 @@ namespace Frost
         return fMY_;
     }
 
-    const s_float& InputManager::GetMouseDX() const
+    const s_float& InputManager::GetMouseRawDX() const
     {
         return fDMX_;
     }
 
-    const s_float& InputManager::GetMouseDY() const
+    const s_float& InputManager::GetMouseRawDY() const
     {
         return fDMY_;
+    }
+
+    const s_float& InputManager::GetMouseSmoothDX() const
+    {
+        return fSmoothDMX_;
+    }
+
+    const s_float& InputManager::GetMouseSmoothDY() const
+    {
+        return fSmoothDMY_;
     }
 
     const s_int& InputManager::GetMouseWheel() const

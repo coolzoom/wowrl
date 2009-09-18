@@ -449,8 +449,8 @@ namespace Frost
     {
         if (pMovedObject_ || pSizedObject_)
         {
-            fMouseMovementX_ += InputManager::GetSingleton()->GetMouseDX();
-            fMouseMovementY_ += InputManager::GetSingleton()->GetMouseDY();
+            fMouseMovementX_ += InputManager::GetSingleton()->GetMouseRawDX();
+            fMouseMovementY_ += InputManager::GetSingleton()->GetMouseRawDY();
         }
 
         s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
@@ -481,8 +481,8 @@ namespace Frost
         }
 
         if ( bBuildStrataList_ ||
-            (InputManager::GetSingleton()->GetMouseDX() != 0.0f) ||
-            (InputManager::GetSingleton()->GetMouseDY() != 0.0f))
+            (InputManager::GetSingleton()->GetMouseRawDX() != 0.0f) ||
+            (InputManager::GetSingleton()->GetMouseRawDY() != 0.0f))
         {
             s_int iX = s_int(InputManager::GetSingleton()->GetMousePosX());
             s_int iY = s_int(InputManager::GetSingleton()->GetMousePosY());
