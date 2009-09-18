@@ -94,6 +94,11 @@ namespace Frost
         /// Constructor.
         Timer();
 
+        /// Adds time to this Timer.
+        /** \param dAdditionnalTime The time to add (can be negative)
+        */
+        void          AddTime(const s_double& dAdditionnalTime);
+
         /// Returns the total time elapsed.
         /** \return The total time elapsed.
         */

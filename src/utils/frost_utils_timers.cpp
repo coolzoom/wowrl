@@ -106,6 +106,11 @@ namespace Frost
         bPaused_ = true;
     }
 
+    void Timer::AddTime( const s_double& dAdditionnalTime )
+    {
+        dStart_ -= dAdditionnalTime;
+    }
+
     s_double Timer::GetElapsed()
     {
         if (!bPaused_)
