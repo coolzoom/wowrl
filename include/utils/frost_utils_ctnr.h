@@ -2,13 +2,8 @@
 namespace Frost
 {
     /// Base type : container (sequence)
-    /** This class is basically a wrapper around std::deque.
-    *   A "cool feature" is the overloading of the ',' operator,
-    *   which allows you to write :<br><br>
-    *   s_ctnr_t<s_int> myArray((x, y, ...));<br><br>
-    *   ... with any class that has overloaded its ',' operator.<br><br>
-    *   <b>Don't forget the double parenthesis</b> : if you don't
-    *   use them, myArray will only contain the latest value.
+    /** This is a generic 1D container. It is implemented
+    *   by an std::deque for s_ctnr, and an std::vector for s_array.
     */
     template< class T, class C >
     class s_ctnr_t
@@ -378,6 +373,11 @@ namespace Frost
         C mContainer_;
     };
 
+    /// Simple container.
+    /** Implemented with std::deque : supports fast operations
+    *   at both begin and end of the container.<br>
+    *   Usefull for unordered list of elements.
+    */
     template<class T>
     class s_ctnr : public s_ctnr_t< T, std::deque<T> >
     {
@@ -395,6 +395,16 @@ namespace Frost
         s_ctnr(const s_array<T,N>& lElemArray) : s_ctnr_t< T, std::deque<T> >(lElemArray) {}
     };
 
+    /// Dynamic array.
+    /** Implemented with std::vector : supports fast operations
+    *   at the end of the container.<br>
+    *   It's main advantage over s_ctnr is that you can get a pointer
+    *   to the data it contains, if you need to feed it to an external
+    *   library without bothering with dynamic allocations and classic
+    *   C arrays.<br>
+    *   Use the Reserve() function to allocate the needed space : it will
+    *   greatly improve performances.
+    */
     template<class T>
     class s_array<T,0> : public s_ctnr_t< T, std::vector<T> >
     {

@@ -35,7 +35,7 @@ namespace Frost
         const Vector&  GetSunDirection() const;
 
         /// Sets the sun's light color.
-        /** \param mSunDir The new color
+        /** \param mSunColor The new color
         */
         void           SetSunColor(const Color& mSunColor);
 

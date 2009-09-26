@@ -33,6 +33,7 @@ namespace Frost
             s_uint uiInfo;
         };
 
+        /// Contains informations about a shader parameter
         struct Param
         {
             Param(const s_str& sName_, const s_var& vValue_) :
