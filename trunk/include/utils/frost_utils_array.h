@@ -69,7 +69,8 @@ namespace Frost
 
         s_array(const s_array& mValue)
         {
-            memcpy(lArray_, mValue.lArray_, N*sizeof(T));
+            for (uint i = 0; i < N; ++i)
+                lArray_[i] = mValue.lArray_[i];
         }
 
         /// Returns the underlying C array.
@@ -213,7 +214,9 @@ namespace Frost
 
         s_array& operator = (const s_array& mValue)
         {
-            memcpy(lArray_, mValue.lArray_, N*sizeof(T));
+            for (uint i = 0; i < N; ++i)
+                lArray_[i] = mValue.lArray_[i];
+
             return *this;
         }
 
