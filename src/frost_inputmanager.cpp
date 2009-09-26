@@ -22,7 +22,8 @@ namespace Frost
     InputManager::InputManager()
     {
         dDoubleClickTime_ = 0.25;
-        dMouseHistoryMaxLength_ = 0.05;
+        dMouseHistoryMaxLength_ = 0.1;
+        fMouseSensibility_ = 1.0f;
     }
 
     InputManager::~InputManager()
@@ -90,6 +91,9 @@ namespace Frost
 
         if (pEngine->IsConstantDefined("MouseBufferLength"))
             dMouseHistoryMaxLength_ = s_double(pEngine->GetFloatConstant("MouseBufferLength"));
+
+        if (pEngine->IsConstantDefined("MouseSensibility"))
+            fMouseSensibility_ = pEngine->GetFloatConstant("MouseSensibility");
 
         return true;
     }
@@ -470,8 +474,11 @@ namespace Frost
         fMX_ = mMouseState.X.abs;
         fMY_ = mMouseState.Y.abs;
 
-        fDMX_ = mMouseState.X.rel;
-        fDMY_ = mMouseState.Y.rel;
+        fRawDMX_ = fDMX_ = mMouseState.X.rel;
+        fRawDMY_ = fDMY_ = mMouseState.Y.rel;
+
+        fDMX_ *= fMouseSensibility_;
+        fDMY_ *= fMouseSensibility_;
 
         iMWheel_ = mMouseState.Z.rel/120;
         if (iMWheel_ == 0u)
@@ -479,31 +486,40 @@ namespace Frost
         else
             bWheelRolled_ = true;
 
-        lMouseHistory_.PushFront(MakePair(
-            TimeManager::GetSingleton()->GetTime(),
-            s_array<s_float,3>((fDMX_, fDMY_, s_float(iMWheel_)))
-        ));
-
-        s_double dHistoryLength = lMouseHistory_.Front().First() - lMouseHistory_.Back().First();
-        while (dHistoryLength > dMouseHistoryMaxLength_ && (lMouseHistory_.GetSize() > 1))
+        if (dMouseHistoryMaxLength_.IsNull())
         {
-            lMouseHistory_.PopBack();
-            dHistoryLength = lMouseHistory_.Back().First() - lMouseHistory_.Front().First();
+            fSmoothDMX_    = fDMX_;
+            fSmoothDMY_    = fDMY_;
+            fSmoothMWheel_ = s_float(iMWheel_);
         }
-
-        fSmoothDMX_ = fSmoothDMY_ = fSmoothMWheel_ = 0.0f;
-        s_ctnr< s_pair< s_double, s_array<s_float,3> > >::iterator iterHistory;
-        foreach (iterHistory, lMouseHistory_)
+        else
         {
-            fSmoothDMX_    += iterHistory->Second()[0];
-            fSmoothDMY_    += iterHistory->Second()[1];
-            fSmoothMWheel_ += iterHistory->Second()[2];
-        }
+            lMouseHistory_.PushFront(MakePair(
+                TimeManager::GetSingleton()->GetTime(),
+                s_array<s_float,3>((fDMX_, fDMY_, s_float(iMWheel_)))
+            ));
 
-        s_float fHistorySize = s_float(lMouseHistory_.GetSize());
-        fSmoothDMX_    /= fHistorySize;
-        fSmoothDMY_    /= fHistorySize;
-        fSmoothMWheel_ /= fHistorySize;
+            s_double dHistoryLength = lMouseHistory_.Front().First() - lMouseHistory_.Back().First();
+            while (dHistoryLength > dMouseHistoryMaxLength_ && (lMouseHistory_.GetSize() > 1))
+            {
+                lMouseHistory_.PopBack();
+                dHistoryLength = lMouseHistory_.Back().First() - lMouseHistory_.Front().First();
+            }
+
+            fSmoothDMX_ = fSmoothDMY_ = fSmoothMWheel_ = 0.0f;
+            s_ctnr< s_pair< s_double, s_array<s_float,3> > >::iterator iterHistory;
+            foreach (iterHistory, lMouseHistory_)
+            {
+                fSmoothDMX_    += iterHistory->Second()[0];
+                fSmoothDMY_    += iterHistory->Second()[1];
+                fSmoothMWheel_ += iterHistory->Second()[2];
+            }
+
+            s_float fHistorySize = s_float(lMouseHistory_.GetSize());
+            fSmoothDMX_    /= fHistorySize;
+            fSmoothDMY_    /= fHistorySize;
+            fSmoothMWheel_ /= fHistorySize;
+        }
 
         // Send movement event
         if ( (!fDMX_.IsNull()) || (!fDMY_.IsNull()) )
@@ -513,6 +529,16 @@ namespace Frost
             mMouseMovedEvent.Add(fDMY_);
             mMouseMovedEvent.Add(fDMX_/s_float(Engine::GetSingleton()->GetScreenWidth()));
             mMouseMovedEvent.Add(fDMY_/s_float(Engine::GetSingleton()->GetScreenHeight()));
+            pEventMgr->FireEvent(mMouseMovedEvent);
+        }
+
+        if ( (!fDMX_.IsNull()) || (!fDMY_.IsNull()) )
+        {
+            Event mMouseMovedEvent("MOUSE_MOVED_RAW", true);
+            mMouseMovedEvent.Add(fRawDMX_);
+            mMouseMovedEvent.Add(fRawDMY_);
+            mMouseMovedEvent.Add(fRawDMX_/s_float(Engine::GetSingleton()->GetScreenWidth()));
+            mMouseMovedEvent.Add(fRawDMY_/s_float(Engine::GetSingleton()->GetScreenHeight()));
             pEventMgr->FireEvent(mMouseMovedEvent);
         }
 
@@ -603,10 +629,20 @@ namespace Frost
 
     const s_float& InputManager::GetMouseRawDX() const
     {
-        return fDMX_;
+        return fRawDMX_;
     }
 
     const s_float& InputManager::GetMouseRawDY() const
+    {
+        return fRawDMY_;
+    }
+
+    const s_float& InputManager::GetMouseDX() const
+    {
+        return fDMX_;
+    }
+
+    const s_float& InputManager::GetMouseDY() const
     {
         return fDMY_;
     }
@@ -624,6 +660,16 @@ namespace Frost
     const s_int& InputManager::GetMouseWheel() const
     {
         return iMWheel_;
+    }
+
+    void InputManager::SetMouseSensibility(const s_float& fMouseSensibility)
+    {
+        fMouseSensibility_ = fMouseSensibility;
+    }
+
+    const s_float& InputManager::GetMouseSensibility() const
+    {
+        return fMouseSensibility_;
     }
 
     s_str InputManager::GetMouseButtonString( MouseButton mID ) const

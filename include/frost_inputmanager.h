@@ -193,7 +193,7 @@ namespace Frost
         /// Returns the typed character.
         /** \param bFormated 'true' to filter non printable chars
         *   \param bForce    'true' to bypass focus (see SetFocus())
-        *   \return The typed character ('\0' if none)
+        *   \return The typed character (null if none)
         */
         s_char          GetChar(s_bool bFormated, s_bool bForce = false) const;
 
@@ -292,7 +292,7 @@ namespace Frost
         s_bool          MouseIsDownLong(MouseButton mID, s_bool bForce = false) const;
 
         /// Returns elapsed time since the mouse button has been pressed.
-        /** \param mID The ID code of the mouse button you're interested in
+        /** \param mKey The ID code of the mouse button you're interested in
         *   \return Elapsed time since the mouse button has been pressed
         */
         const s_double& GetMouseDownDuration(MouseButton mKey) const;
@@ -350,36 +350,54 @@ namespace Frost
         /// Returns the horizontal position variation of the mouse.
         /** \return The horizontal position variation of the mouse
         *   \note This function returns values just as they are given
-        *         by the mouse. A common mouse's update rate is 125Hz
-        *         (it will report its movement every 8ms). In the cases
-        *         where the game updates faster, the mouse will just
-        *         report zero movement for some frames, which can be
-        *         disturbing if you need a continuous movement.<br>
-        *         If that's an issue for you, then use GetMouseSmoothDX().
+        *         by the mouse.
         */
         const s_float&  GetMouseRawDX() const;
 
         /// Returns the vertical position variation of the mouse.
         /** \return The vertical position variation of the mouse
         *   \note This function returns values just as they are given
-        *         by the mouse. A common mouse's update rate is 125Hz
-        *         (it will report its movement every 8ms). In the cases
-        *         where the game updates faster, the mouse will just
-        *         report zero movement for some frames, which can be
-        *         disturbing if you need a continuous movement.<br>
-        *         If that's an issue for you, then use GetMouseSmoothDY().
+        *         by the mouse.
         */
         const s_float&  GetMouseRawDY() const;
 
         /// Returns the horizontal position variation of the mouse.
         /** \return The horizontal position variation of the mouse
-        *   \note See GetMouseRawDY() for more infos.
+        *   \note This function returns the same thing as GetMouseRawDX(),
+        *         but this time, the game's sensibility factor is applied.
+        */
+        const s_float&  GetMouseDX() const;
+
+        /// Returns the vertical position variation of the mouse.
+        /** \return The vertical position variation of the mouse
+        *   \note This function returns the same thing as GetMouseRawDY(),
+        *         but this time, the game's sensibility factor is applied.
+        */
+        const s_float&  GetMouseDY() const;
+
+        /// Returns the horizontal position variation of the mouse.
+        /** \return The horizontal position variation of the mouse
+        *   \note A common mouse's update rate is 125Hz
+        *         (it will report its movement every 8ms). In the cases
+        *         where the game updates faster, the mouse will just
+        *         report zero movement for some frames, which can be
+        *         disturbing if you need a continuous movement.<br>
+        *         If that's an issue for you, then use this function
+        *         instead of GetMouseDX().<br>
+        *         Sensibility factor is applied on the result.
         */
         const s_float&  GetMouseSmoothDX() const;
 
         /// Returns the vertical position variation of the mouse.
         /** \return The vertical position variation of the mouse
-        *   \note See GetMouseRawDY() for more infos.
+        *   \note A common mouse's update rate is 125Hz
+        *         (it will report its movement every 8ms). In the cases
+        *         where the game updates faster, the mouse will just
+        *         report zero movement for some frames, which can be
+        *         disturbing if you need a continuous movement.<br>
+        *         If that's an issue for you, then use this function
+        *         instead of GetMouseDY().<br>
+        *         Sensibility factor is applied on the result.
         */
         const s_float&  GetMouseSmoothDY() const;
 
@@ -407,7 +425,7 @@ namespace Frost
         /// Sets the ammount of mouse movement to be buffered.
         /** \param dMouseHistoryMaxLength The maximum buffer length (in seconds)
         *   \note If you experience jerky mouse movement, you can try to increase
-        *         this value (default : 0.05s).<br> On the contrary, if you feel
+        *         this value (default : 0.1s).<br> On the contrary, if you feel
         *         your mouse is not responsive enough, try to decrease it.
         */
         void            SetMouseBufferDuration(const s_double& dMouseHistoryMaxLength);
@@ -416,6 +434,17 @@ namespace Frost
         /** \return The ammount of mouse movement to be buffered
         */
         const s_double& GetMouseBufferDuration() const;
+
+        /// Sets the mouse movement factor.
+        /** \param fMouseSensibility The new movement factor
+        *   \note Increase this parameter to make mouse controlled movement faster.
+        */
+        void            SetMouseSensibility(const s_float& fMouseSensibility);
+
+        /// Returns the mouse movement factor.
+        /** \return The mouse movement factor
+        */
+        const s_float&  GetMouseSensibility() const;
 
         /// Sets whether input should be stopped.
         /** \param bFocus 'true' to stop inputs
@@ -489,6 +518,8 @@ namespace Frost
 
         s_float fMX_, fMY_;
         s_float fDMX_, fDMY_;
+        s_float fRawDMX_, fRawDMY_;
+        s_float fMouseSensibility_;
         s_double dMouseHistoryMaxLength_;
         s_ctnr< s_pair< s_double, s_array<s_float,3> > > lMouseHistory_;
         s_float fSmoothDMX_, fSmoothDMY_, fSmoothMWheel_;

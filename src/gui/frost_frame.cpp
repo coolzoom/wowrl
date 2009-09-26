@@ -565,14 +565,14 @@ void Frame::EnableMouse( const s_bool& bIsMouseEnabled )
     {
         if (bIsMouseEnabled && !bIsMouseEnabled_)
         {
-            EventReceiver::RegisterEvent("MOUSE_MOVED");
+            EventReceiver::RegisterEvent("MOUSE_MOVED_RAW");
             EventReceiver::RegisterEvent("MOUSE_PRESSED");
             EventReceiver::RegisterEvent("MOUSE_DOUBLE_CLICKED");
             EventReceiver::RegisterEvent("MOUSE_RELEASED");
         }
         else if (!bIsMouseEnabled && bIsMouseEnabled_)
         {
-            EventReceiver::UnregisterEvent("MOUSE_MOVED");
+            EventReceiver::UnregisterEvent("MOUSE_MOVED_RAW");
             EventReceiver::UnregisterEvent("MOUSE_PRESSED");
             EventReceiver::UnregisterEvent("MOUSE_DOUBLE_CLICKED");
             EventReceiver::UnregisterEvent("MOUSE_RELEASED");
@@ -935,19 +935,15 @@ void Frame::OnEvent( const Event& mEvent )
 
     if (bIsMouseEnabled_)
     {
-        if (mEvent.GetName() == "MOUSE_MOVED")
+        if (mEvent.GetName() == "MOUSE_MOVED_RAW")
         {
-            //Log("0 : "+sName_);
             if (!lMouseButtonList_.IsEmpty() && !bMouseDragged_)
             {
-                //Log("1");
                 s_ctnr<s_str>::iterator iterButton;
                 foreach (iterButton, lMouseButtonList_)
                 {
-                    //Log("2 : "+*iterButton);
                     if (lRegDragList_.Find(*iterButton))
                     {
-                        //Log("3");
                         On("DragStart");
                         bMouseDragged_ = true;
                         break;
