@@ -19,6 +19,7 @@ namespace Ogre
 
 namespace Frost
 {
+    /// An axis aligned bounding box (AABB).
     class AxisAlignedBox
     {
     public :

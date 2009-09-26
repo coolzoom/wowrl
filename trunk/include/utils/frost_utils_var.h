@@ -25,8 +25,8 @@ namespace Frost
     *   does a dynamic_cast (which is not the fastest thing in the
     *   world) each time you call Get().<br>
     *   So this class is definatly slower than base types : <b>use it
-    *   wisely</b>.<br><br>
-    *   <u>Note</u> : This class is highly inspired from boost::any.
+    *   wisely</b>.
+    *   \note This class is highly inspired from boost::any.
     */
     class s_var
     {

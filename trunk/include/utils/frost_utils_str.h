@@ -499,8 +499,8 @@ namespace Frost
         }
 
         /// Returns all positions of the pattern in the string.
-        /** \param sValue  The string to search for
-        *   \param uiStart From where to start searching
+        /** \param sPattern The string to search for
+        *   \param uiStart  From where to start searching
         *   \return All positions of the pattern (empty if not found)
         */
         s_ctnr<s_uint> FindAllPos(const s_str_t& sPattern, const s_uint& uiStart = 0u)
