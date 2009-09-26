@@ -61,6 +61,7 @@ namespace XML
     /// An element in an XML file
     class Block
     {
+    friend class XML::Document;
     public :
 
         /// Default constructor.
@@ -84,49 +85,10 @@ namespace XML
         /// Destructor.
         ~Block();
 
-        /// Copies a Block's data into another.
-        /** \param pBlock The Block to copy
-        */
-        void          Copy(s_ptr<Block> pBlock);
-
-        /// Adds an attribute to the list.
-        /** \param mAttrib The new attribute
-        *   \note Only used in the definition stage.
-        */
-        s_bool        Add(const Attribute& mAttrib);
-
-        /// Removes an attribute from the available list.
-        /** \param sAttributeName The name of the attribute to remove
-        *   \note Only used in the definition stage.
-        */
-        void          RemoveAttribute(const s_str& sAttributeName);
-
-        /// Retrieves attributes from a string.
-        /** \param sAttributes The string containing attributes
-        *   \return 'false' if an attribute is missing or the synthax
-        *           is incorrect
-        *   \note Only used in the loading stage.
-        */
-        s_bool        CheckAttributes(const s_str& sAttributes);
-
-        /// Make sure all required blocks were found.
-        /** \return 'false' if a required block wasn't found
-        *           or if there was too much occurences of a
-        *           particular block
-        *   \note Only used in the loading stage.
-        */
-        s_bool        CheckBlocks();
-
         /// Returns this Block's name.
         /** \return This Block's name
         */
         const s_str&  GetName() const;
-
-        /// Sets this Block's name.
-        /** \param sName The new name
-        *   \note Only used in definition and loading stages.
-        */
-        void          SetName(const s_str& sName);
 
         /// Returns this Block's value.
         /** \return This Block's value
@@ -134,43 +96,11 @@ namespace XML
         */
         const s_str&  GetValue() const;
 
-        /// Sets this Block's value.
-        /** \param sValue The new value
-        *   \note Only used in the loading stage.
-        */
-        void          SetValue(const s_str& sValue);
-
         /// Returns this Block's parent.
         /** \return This Block's parent
         *   \note Returns NULL for the main block.
         */
         s_ptr<Block>  GetParent() const;
-
-        /// Notify this Block that another one derivates from it.
-        /** \param sName The name of the derivated Block
-        *   \note Only works for pre-defined blocks.<br>
-        *         Only used in the definition stage.
-        */
-        void          AddDerivated(const s_str& sName);
-
-        /// Checks if this Block is being derivated from by another Block.
-        /** \param sName The name of the Block you want to test
-        *   \note Only works for pre-defined blocks.<br>
-        *         Only used in the loading stage.
-        */
-        s_bool        HasDerivated(const s_str& sName);
-
-        /// Sets this Block's parent.
-        /** \param pParent The new parent
-        *   \note Only used in definition and loading stages.
-        */
-        void          SetParent(s_ptr<Block> pParent);
-
-        /// Sets this Block's Document.
-        /** \param pDoc The Document this Block belongs to
-        *   \note Only used in definition and loading stages.
-        */
-        void          SetDocument(s_ptr<Document> pDoc);
 
         /// Returns this Block's minimum number of occurences.
         /** \return This Block's minimum number of occurences
@@ -182,11 +112,6 @@ namespace XML
         */
         const s_uint& GetMaxCount() const;
 
-        /// Makes this Block a "radio" Block.
-        /** \note Only used in the definition stage.
-        */
-        void          SetRadio();
-
         /// Checks if this Block can only be present if it's alone on its level.
         /** \return 'true' if this Block can only be present if it's alone on its level
         */
@@ -196,12 +121,6 @@ namespace XML
         /** \return 'true' if this Block can only contain one child
         */
         const s_bool& HasRadioChilds() const;
-
-        /// Returns the number of sub-blocks defined for this Block.
-        /** \return the number of sub-blocks defined for this Block
-        *   \note Only used in definition stage.
-        */
-        s_uint        GetDefChildNumber() const;
 
         /// Returns the number of sub-blocks found in this Block.
         /** \return the number of sub-blocks found in this Block
@@ -257,6 +176,102 @@ namespace XML
         *   \note Only works if this Block has radio childs.
         */
         s_ptr<Block>  GetRadioBlock();
+
+        /// Returns the file into which this Block has been found.
+        /** \return The file into which this Block has been found
+        */
+        const s_str&  GetFile() const;
+
+        /// Returns the line at which this Block has been found.
+        /** \return The line at which this Block has been found
+        */
+        const s_uint& GetLineNbr() const;
+
+        static const s_str CLASS_NAME;
+
+    protected :
+
+        /// Copies a Block's data into another.
+        /** \param pBlock The Block to copy
+        */
+        void          Copy(s_ptr<Block> pBlock);
+
+        /// Adds an attribute to the list.
+        /** \param mAttrib The new attribute
+        *   \note Only used in the definition stage.
+        */
+        s_bool        Add(const Attribute& mAttrib);
+
+        /// Removes an attribute from the available list.
+        /** \param sAttributeName The name of the attribute to remove
+        *   \note Only used in the definition stage.
+        */
+        void          RemoveAttribute(const s_str& sAttributeName);
+
+        /// Retrieves attributes from a string.
+        /** \param sAttributes The string containing attributes
+        *   \return 'false' if an attribute is missing or the synthax
+        *           is incorrect
+        *   \note Only used in the loading stage.
+        */
+        s_bool        CheckAttributes(const s_str& sAttributes);
+
+        /// Make sure all required blocks were found.
+        /** \return 'false' if a required block wasn't found
+        *           or if there was too much occurences of a
+        *           particular block
+        *   \note Only used in the loading stage.
+        */
+        s_bool        CheckBlocks();
+
+        /// Sets this Block's name.
+        /** \param sName The new name
+        *   \note Only used in definition and loading stages.
+        */
+        void          SetName(const s_str& sName);
+
+        /// Sets this Block's value.
+        /** \param sValue The new value
+        *   \note Only used in the loading stage.
+        */
+        void          SetValue(const s_str& sValue);
+
+        /// Notify this Block that another one derivates from it.
+        /** \param sName The name of the derivated Block
+        *   \note Only works for pre-defined blocks.<br>
+        *         Only used in the definition stage.
+        */
+        void          AddDerivated(const s_str& sName);
+
+        /// Checks if this Block is being derivated from by another Block.
+        /** \param sName The name of the Block you want to test
+        *   \note Only works for pre-defined blocks.<br>
+        *         Only used in the loading stage.
+        */
+        s_bool        HasDerivated(const s_str& sName);
+
+        /// Sets this Block's parent.
+        /** \param pParent The new parent
+        *   \note Only used in definition and loading stages.
+        */
+        void          SetParent(s_ptr<Block> pParent);
+
+        /// Sets this Block's Document.
+        /** \param pDoc The Document this Block belongs to
+        *   \note Only used in definition and loading stages.
+        */
+        void          SetDocument(s_ptr<Document> pDoc);
+
+        /// Makes this Block a "radio" Block.
+        /** \note Only used in the definition stage.
+        */
+        void          SetRadio();
+
+        /// Returns the number of sub-blocks defined for this Block.
+        /** \return the number of sub-blocks defined for this Block
+        *   \note Only used in definition stage.
+        */
+        s_uint        GetDefChildNumber() const;
 
         /// Checks if this Block can contain another Block.
         /** \param sName The name of the Block to test
@@ -319,18 +334,6 @@ namespace XML
         *         if none of its defined neighbours are.
         */
         s_ptr<PredefinedBlock> AddPredefinedRadioBlock(s_ptr<Block> pBlock);
-
-        /// Returns the file into which this Block has been found.
-        /** \return The file into which this Block has been found
-        */
-        const s_str& GetFile() const;
-
-        /// Returns the line at which this Block has been found.
-        /** \return The line at which this Block has been found
-        */
-        const s_uint& GetLineNbr() const;
-
-        static const s_str CLASS_NAME;
 
     private :
 
