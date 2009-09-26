@@ -851,13 +851,16 @@ s_bool Document::Check( const s_str& sPreProcCommands )
                     else if (sLine.Find("<!") && !uiSkipUntil.IsValid())
                     {
                         // Comment
-                        if (!sLine.Find("/>") && !uiSkipUntil.IsValid())
+                        if (!bComment)
                         {
-                            bComment = true;
-                            uiCommentTagCount = 1;
-                            sLine.EraseFromStart(2);
-                            sCommentTag = sLine.Cut(">", 1).Front();
-                            sCommentTag = sCommentTag.Cut(" ", 1).Front();
+                            if (!sLine.Find("/>") && !uiSkipUntil.IsValid())
+                            {
+                                bComment = true;
+                                uiCommentTagCount = 1;
+                                sLine.EraseFromStart(2);
+                                sCommentTag = sLine.Cut(">", 1).Front();
+                                sCommentTag = sCommentTag.Cut(" ", 1).Front();
+                            }
                         }
                     }
                     else if (sLine.Find("<--") && !uiSkipUntil.IsValid())
