@@ -64,6 +64,16 @@ namespace Frost
         return sqrt(fX_*fX_ + fY_*fY_ + fZ_*fZ_);
     }
 
+    s_float Vector::GetNormSquared()
+    {
+        return fX_*fX_ + fY_*fY_ + fZ_*fZ_;
+    }
+
+    s_float Vector::GetLengthSquared()
+    {
+        return fX_*fX_ + fY_*fY_ + fZ_*fZ_;
+    }
+
     Vector Vector::GetUnit()
     {
         Vector mTemp = *this;
@@ -94,6 +104,20 @@ namespace Frost
 		uuv *= 2.0f;
 
 		(*this) += uv + uuv;
+    }
+
+    void Vector::ScaleUp( const Vector& mScale )
+    {
+        fX_ *= mScale.fX_;
+        fY_ *= mScale.fY_;
+        fZ_ *= mScale.fZ_;
+    }
+
+    void Vector::ScaleDown( const Vector& mScale )
+    {
+        fX_ /= mScale.fX_;
+        fY_ /= mScale.fY_;
+        fZ_ /= mScale.fZ_;
     }
 
     void Vector::SetNaN()

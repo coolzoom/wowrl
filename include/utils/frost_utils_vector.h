@@ -65,6 +65,18 @@ namespace Frost
         */
         s_float        GetLength();
 
+        /// Returns the square of the norm of this vector.
+        /** \return The square of the norm of this vector
+        *   \note GetLengthSquared() does exactly the same thing.
+        */
+        s_float        GetNormSquared();
+
+        /// Returns the square of the length of this vector.
+        /** \return The square of the length of this vector
+        *   \note GetNormSquared() does exactly the same thing.
+        */
+        s_float        GetLengthSquared();
+
         /// Returns this vector divided by its norm.
         /** \return This vector divided by its norm
         */
@@ -79,6 +91,18 @@ namespace Frost
         *   \note Uses Ogre::Quaternion.
         */
         void           Rotate(const s_float& fAngle, const Vector& mAxis);
+
+        /// Scales this vector component-wise (multiplies).
+        /** \param mScale The scale vector
+        *   \note Results in : (x*mScale.x, y*mScale.y, z*mScale.z).
+        */
+        void           ScaleUp(const Vector& mScale);
+
+        /// Scales this vector component-wise (divides).
+        /** \param mScale The scale vector
+        *   \note Results in : (x/mScale.x, y/mScale.y, z/mScale.z).
+        */
+        void           ScaleDown(const Vector& mScale);
 
         /// Makes this vector invalid.
         void           SetNaN();
