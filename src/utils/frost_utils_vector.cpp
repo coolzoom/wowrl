@@ -54,27 +54,27 @@ namespace Frost
         return (fX_.IsNaN() && fY_.IsNaN() && fZ_.IsNaN());
     }
 
-    s_float Vector::GetNorm()
+    s_float Vector::GetNorm() const
     {
         return sqrt(fX_*fX_ + fY_*fY_ + fZ_*fZ_);
     }
 
-    s_float Vector::GetLength()
+    s_float Vector::GetLength() const
     {
         return sqrt(fX_*fX_ + fY_*fY_ + fZ_*fZ_);
     }
 
-    s_float Vector::GetNormSquared()
+    s_float Vector::GetNormSquared() const
     {
         return fX_*fX_ + fY_*fY_ + fZ_*fZ_;
     }
 
-    s_float Vector::GetLengthSquared()
+    s_float Vector::GetLengthSquared() const
     {
         return fX_*fX_ + fY_*fY_ + fZ_*fZ_;
     }
 
-    Vector Vector::GetUnit()
+    Vector Vector::GetUnit() const
     {
         Vector mTemp = *this;
         mTemp.Normalize();

@@ -57,30 +57,30 @@ namespace Frost
         /** \return The norm of this vector
         *   \note GetLength() does exactly the same thing.
         */
-        s_float        GetNorm();
+        s_float        GetNorm() const;
 
         /// Returns the length of this vector.
         /** \return The length of this vector
         *   \note GetNorm() does exactly the same thing.
         */
-        s_float        GetLength();
+        s_float        GetLength() const;
 
         /// Returns the square of the norm of this vector.
         /** \return The square of the norm of this vector
         *   \note GetLengthSquared() does exactly the same thing.
         */
-        s_float        GetNormSquared();
+        s_float        GetNormSquared() const;
 
         /// Returns the square of the length of this vector.
         /** \return The square of the length of this vector
         *   \note GetNormSquared() does exactly the same thing.
         */
-        s_float        GetLengthSquared();
+        s_float        GetLengthSquared() const;
 
         /// Returns this vector divided by its norm.
         /** \return This vector divided by its norm
         */
-        Vector         GetUnit();
+        Vector         GetUnit() const;
 
         /// Divides this vector by its length.
         void           Normalize();
@@ -162,23 +162,23 @@ namespace Frost
 
         /// (nan, nan, nan)
         static const Vector NaN;
-        /// (0,0,0)
+        /// (0, 0, 0)
         static const Vector ZERO;
-        /// (1,1,1)
+        /// (1, 1, 1)
         static const Vector UNIT;
-        /// (1,0,0)
+        /// (1, 0, 0)
         static const Vector UNIT_X;
-        /// (0,1,0)
+        /// (0, 1, 0)
         static const Vector UNIT_Y;
-        /// (0,0,1)
+        /// (0, 0, 1)
         static const Vector UNIT_Z;
-        /// (sqrt(2),sqrt(2),0)
+        /// (1/sqrt(2), 1/sqrt(2), 0)
         static const Vector UNIT_XY;
-        /// (sqrt(2),0,sqrt(2))
+        /// (1/sqrt(2), 0, 1/sqrt(2))
         static const Vector UNIT_XZ;
-        /// (0,sqrt(2),sqrt(2))
+        /// (0, 1/sqrt(2), 1/sqrt(2))
         static const Vector UNIT_YZ;
-        /// (sqrt(3),sqrt(3),sqrt(3))
+        /// (1/sqrt(3), 1/sqrt(3), 1/sqrt(3))
         static const Vector UNIT_XYZ;
 
         static const s_str CLASS_NAME;
