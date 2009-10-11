@@ -296,14 +296,11 @@ namespace Frost
         /// Returns the sign of this int (either 1 or -1).
         /** \return The sign of this int (either 1 or -1)
         */
-        s_int_t Sign()
+        s_int_t GetSign() const
         {
             if (IsValid())
             {
-                if (iValue_ == 0)
-                    return 1;
-                else
-                    return (iValue_*fabs(iValue_) < 0) ? -1 : 1;
+                return (iValue_ < 0) ? -1 : 1;
             }
             else
                 return s_int_t::NaN;
@@ -774,6 +771,19 @@ namespace Frost
                     T iRange = iMax.iValue_ - iMin.iValue_ + 1;
                     return static_cast<T>(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
                 }
+            }
+            else
+                return s_int_t::NaN;
+        }
+
+        /// Returns the sign of the provided int (either 1 or -1).
+        /** \return The sign of the provided int (either 1 or -1)
+        */
+        s_int_t Sign(const s_int_t& iValue) const
+        {
+            if (iValue.IsValid())
+            {
+                return (iValue.iValue_ < 0) ? -1 : 1;
             }
             else
                 return s_int_t::NaN;

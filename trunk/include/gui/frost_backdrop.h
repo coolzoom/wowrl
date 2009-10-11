@@ -27,10 +27,10 @@ namespace Frost
                 EDGE_RIGHT,
                 EDGE_TOP,
                 EDGE_BOTTOM,
-                EDGE_TOP_LEFT,
-                EDGE_TOP_RIGHT,
-                EDGE_BOTTOM_LEFT,
-                EDGE_BOTTOM_RIGHT
+                EDGE_TOPLEFT,
+                EDGE_TOPRIGHT,
+                EDGE_BOTTOMLEFT,
+                EDGE_BOTTOMRIGHT
             };
 
             /// Constructor.

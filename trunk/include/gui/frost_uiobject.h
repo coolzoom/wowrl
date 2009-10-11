@@ -27,7 +27,7 @@ namespace Frost
             OJBECT_TYPE_TEXTURE,
             OJBECT_TYPE_BUTTON,
             OJBECT_TYPE_EDITBOX,
-            OJBECT_TYPE_SCROLLINGMESSAGE_FRAME,
+            OJBECT_TYPE_SCROLLINGMESSAGEFRAME,
             OJBECT_TYPE_STATUSBAR,
             OJBECT_TYPE_SLIDER
         };

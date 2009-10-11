@@ -18,7 +18,7 @@ const s_str ScrollingMessageFrame::CLASS_NAME = "GUI::ScrollingMessageFrame";
 
 ScrollingMessageFrame::ScrollingMessageFrame() : Frame()
 {
-    mObjectType_ = OJBECT_TYPE_SCROLLINGMESSAGE_FRAME;
+    mObjectType_ = OJBECT_TYPE_SCROLLINGMESSAGEFRAME;
     lType_.PushBack("ScrollingMessageFrame");
 }
 

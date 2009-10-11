@@ -135,16 +135,16 @@ void Backdrop::SetEdge( const s_str& sEdgeFile )
                     );
                 }
 
-                lEdgeList_[EDGE_TOP_LEFT]->SetHotSpot(
+                lEdgeList_[EDGE_TOPLEFT]->SetHotSpot(
                     0.0f, 0.0f
                 );
-                lEdgeList_[EDGE_TOP_RIGHT]->SetHotSpot(
+                lEdgeList_[EDGE_TOPRIGHT]->SetHotSpot(
                     s_float(uiOriginalEdgeSize_), 0.0f
                 );
-                lEdgeList_[EDGE_BOTTOM_LEFT]->SetHotSpot(
+                lEdgeList_[EDGE_BOTTOMLEFT]->SetHotSpot(
                     0.0f, s_float(uiOriginalEdgeSize_)
                 );
-                lEdgeList_[EDGE_BOTTOM_RIGHT]->SetHotSpot(
+                lEdgeList_[EDGE_BOTTOMRIGHT]->SetHotSpot(
                     s_float(uiOriginalEdgeSize_), s_float(uiOriginalEdgeSize_)
                 );
 
@@ -247,25 +247,25 @@ void Backdrop::Render() const
             s_float fEdgeScale = s_float(uiEdgeSize_)/s_float(uiOriginalEdgeSize_);
 
             // Render corners
-            lEdgeList_[EDGE_TOP_LEFT]->RenderEx(
+            lEdgeList_[EDGE_TOPLEFT]->RenderEx(
                 s_float(lParentBorders[BORDER_LEFT]),
                 s_float(lParentBorders[BORDER_TOP]),
                 0.0f, fEdgeScale, fEdgeScale
             );
 
-            lEdgeList_[EDGE_TOP_RIGHT]->RenderEx(
+            lEdgeList_[EDGE_TOPRIGHT]->RenderEx(
                 s_float(lParentBorders[BORDER_RIGHT]),
                 s_float(lParentBorders[BORDER_TOP]),
                 0.0f, fEdgeScale, fEdgeScale
             );
 
-            lEdgeList_[EDGE_BOTTOM_LEFT]->RenderEx(
+            lEdgeList_[EDGE_BOTTOMLEFT]->RenderEx(
                 s_float(lParentBorders[BORDER_LEFT]),
                 s_float(lParentBorders[BORDER_BOTTOM]),
                 0.0f, fEdgeScale, fEdgeScale
             );
 
-            lEdgeList_[EDGE_BOTTOM_RIGHT]->RenderEx(
+            lEdgeList_[EDGE_BOTTOMRIGHT]->RenderEx(
                 s_float(lParentBorders[BORDER_RIGHT]),
                 s_float(lParentBorders[BORDER_BOTTOM]),
                 0.0f, fEdgeScale, fEdgeScale

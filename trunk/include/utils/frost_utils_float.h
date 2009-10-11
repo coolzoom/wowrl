@@ -360,17 +360,14 @@ namespace Frost
         /// Returns the sign of this float.
         /** \return The sign of this float
         */
-        s_int_t<int> Sign()
+        s_float_t GetSign() const
         {
             if (IsValid())
             {
-                if (fValue_ == 0.0)
-                    return 1;
-                else
-                    return (fValue_*fabs(fValue_) < 0) ? -1 : 1;
+                return (fValue_ < 0.0) ? -1 : 1;
             }
             else
-                return s_int_t<int>::NaN;
+                return s_float_t::NaN;
         }
 
         /// Converts this float to an angle in degree.
@@ -615,6 +612,19 @@ namespace Frost
         static s_float_t RoundDown(const s_float_t& fValue)
         {
             return floor(fValue.fValue_);
+        }
+
+        /// Returns the sign of the provided float.
+        /** \return The sign of the provided float
+        */
+        static s_float_t Sign(const s_float_t& fValue)
+        {
+            if (fValue.IsValid())
+            {
+                return (fValue.fValue_ < 0.0) ? -1 : 1;
+            }
+            else
+                return s_float_t::NaN;
         }
 
     private :

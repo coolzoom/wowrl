@@ -34,9 +34,7 @@ namespace Frost
 
     s_ptr<Gameplay> GameplayManager::GetGameplay( const s_str& sName )
     {
-        s_map< s_str, s_ptr<Gameplay> >::iterator iter;
-        iter = lGameplayList_.Get(sName);
-
+        s_map< s_str, s_ptr<Gameplay> >::iterator iter = lGameplayList_.Get(sName);
         if (iter != lGameplayList_.End())
             return iter->second;
         else
