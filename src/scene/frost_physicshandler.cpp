@@ -8,6 +8,7 @@
 #include "scene/frost_physicshandler.h"
 
 #include "scene/frost_physicsmanager.h"
+#include "scene/frost_movableobject.h"
 
 using namespace std;
 
@@ -16,27 +17,12 @@ namespace Frost
     const s_str PhysicsHandler::CLASS_NAME = "PhysicsHandler";
 
     PhysicsHandler::PhysicsHandler( s_ptr<MovableObject> pParent ) :
-        pParent_(pParent), mSpeed_()
+        pParent_(pParent)
     {
     }
 
     PhysicsHandler::~PhysicsHandler()
     {
-    }
-
-    void PhysicsHandler::AddSpeed( const Vector& mAdd )
-    {
-        mSpeed_ += mAdd;
-    }
-
-    void PhysicsHandler::SetSpeed( const Vector& mSpeed )
-    {
-        mSpeed_ = mSpeed;
-    }
-
-    const Vector& PhysicsHandler::GetSpeed() const
-    {
-        return mSpeed_;
     }
 
     void PhysicsHandler::Enable()
@@ -57,5 +43,18 @@ namespace Frost
     s_ptr<MovableObject> PhysicsHandler::GetParent()
     {
         return pParent_;
+    }
+
+    void PhysicsHandler::SetEventReceiver( s_ptr<EventReceiver> pEventReceiver )
+    {
+        pEventReceiver_ = pEventReceiver;
+    }
+
+    s_ptr<EventReceiver> PhysicsHandler::GetEventReceiver()
+    {
+        if (pEventReceiver_)
+            return pEventReceiver_;
+        else
+            return pParent_;
     }
 }

@@ -14,8 +14,6 @@
 namespace Frost
 {
     /// Abstract Unit type.
-    /**
-    */
     class MovableUnit : public Unit
     {
     public :
@@ -70,6 +68,11 @@ namespace Frost
         /// Stops this Unit's movement.
         void         StopMovement();
 
+        /// Returns this Unit's movement speed.
+        /** \return This Unit's movement speed
+        */
+        const Vector& GetMovementSpeed() const;
+
         /// Enables physical interractions for this Unit.
         /** \note Disabled by default.
         */
@@ -92,12 +95,12 @@ namespace Frost
         */
         void         ForceOnGround();
 
-        /// Returns this Unit's PhysicsHandler.
-        /** \return This Unit's PhysicsHandler
+        /// Returns this Unit's MovableUnitHandler.
+        /** \return This Unit's MovableUnitHandler
         *   \note Returns NULL if none (i.e if IsPhysicsEnabled()
         *         returns 'false').
         */
-        s_ptr<PhysicsHandler> GetPhysicsHandler();
+        s_ptr<MovableUnitHandler> GetPhysicsHandler();
 
         /// Creates the associated Lua glue.
         /** \param pLua The Lua::State on which to create the glue
@@ -110,20 +113,25 @@ namespace Frost
         */
         virtual void Update(const s_float& fDelta);
 
+        /// Called whenever an Event occurs.
+        /** \param mEvent The Event which has occured
+        */
+        virtual void OnEvent(const Event& mEvent);
+
     protected :
 
         void UpdateMovement_(const s_float& fDelta);
         void SetYaw_(const s_float& fNewYaw);
 
         Vector  mMovementDirection_;
+        Vector  mMovementSpeed_;
         s_bool  bWalk_;
         s_bool  bTurn_;
         s_float fCumuledYaw_;
 
-        s_bool  bJumping_;
-        s_float fJumpVSpeed_;
-        s_float fCumuledJumpHeight_;
-        s_float fJumpDuration_;
+        Vector  mPreFallingMovement_;
+        s_bool  bFalling_;
+        s_bool  bNextFalling_;
 
         s_float fForwardRunSpeed_;
         s_float fForwardWalkSpeed_;
@@ -131,7 +139,7 @@ namespace Frost
         s_float fBackwardWalkSpeed_;
         s_float fTurnRate_;
 
-        s_ptr<PhysicsHandler> pHandler_;
+        s_ptr<MovableUnitHandler> pHandler_;
 
     };
 

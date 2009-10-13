@@ -222,7 +222,6 @@ namespace Frost
     private :
 
         s_bool ReadGraphicsConfig_();
-        s_bool ReadGameConfig_();
 
         s_bool bShutDown_;
         s_bool bRun_;

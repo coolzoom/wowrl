@@ -95,6 +95,12 @@ namespace Frost
         return pEntity_;
     }
 
+
+    s_ptr<Ogre::Mesh> Model::GetMesh()
+    {
+        return pMesh_;
+    }
+
     void Model::SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj)
     {
         pEntity_->setUserObject(pObj.Get());
@@ -152,13 +158,13 @@ namespace Frost
 
     void Model::Update(const s_float& fDelta)
     {
-        Vector mTemp = GetPosition();
+        /*Vector mTemp = GetPosition();
         MovableObject::Update(fDelta);
         mTemp -= GetPosition();
         if (!mTemp.IsNull())
         {
             SetDirection(mTemp);
-        }
+        }*/
 
         pAnimMgr_->Update(fDelta);
     }

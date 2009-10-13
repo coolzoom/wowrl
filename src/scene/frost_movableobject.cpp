@@ -20,7 +20,7 @@ namespace Frost
 {
     const s_str MovableObject::CLASS_NAME = "MovableObject";
 
-    MovableObject::MovableObject()
+    MovableObject::MovableObject() : mInitialDirection_(-Vector::UNIT_Z)
     {
         uiID_ = SceneManager::GetSingleton()->GetNewID(this);
         pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
@@ -29,7 +29,7 @@ namespace Frost
         pNode_->setFixedYawAxis(true);
     }
 
-    MovableObject::MovableObject( const MovableObject& mObject )
+    MovableObject::MovableObject( const MovableObject& mObject ) : mInitialDirection_(-Vector::UNIT_Z)
     {
         uiID_ = SceneManager::GetSingleton()->GetNewID(this);
         if (!bOrbits_)
@@ -60,7 +60,7 @@ namespace Frost
         }
     }
 
-    MovableObject::MovableObject( const Vector& mPosition )
+    MovableObject::MovableObject( const Vector& mPosition ) : mInitialDirection_(-Vector::UNIT_Z)
     {
         uiID_ = SceneManager::GetSingleton()->GetNewID(this);
         pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
@@ -226,8 +226,16 @@ namespace Frost
             UnlockOrbiting();
             UnlockTracking();
 
-            pNode_->setDirection(Vector::FrostToOgre(mDirection), Ogre::Node::TS_PARENT);
+            pNode_->setDirection(
+                Vector::FrostToOgre(mDirection), Ogre::Node::TS_PARENT,
+                Vector::FrostToOgre(mInitialDirection_)
+            );
         }
+    }
+
+    void MovableObject::SetInitialDirection( const Vector& mInitialDirection )
+    {
+        mInitialDirection_ = mInitialDirection;
     }
 
     void MovableObject::SetPosition( const Vector &mPosition )
@@ -365,6 +373,11 @@ namespace Frost
             return Vector::OgreToFrost(pNode_->_getDerivedOrientation() * -Ogre::Vector3::UNIT_Z);
     }
 
+    const Vector& MovableObject::GetInitialDirection() const
+    {
+        return mInitialDirection_;
+    }
+
     s_refptr<Path> MovableObject::GetPath()
     {
         return pPath_;
@@ -405,7 +418,8 @@ namespace Frost
             {
                 pNode_->lookAt(
                     pLookAtObject_->pNode_->_getDerivedPosition(),
-                    Ogre::Node::TS_WORLD
+                    Ogre::Node::TS_WORLD,
+                    Vector::FrostToOgre(mInitialDirection_)
                 );
             }
             else

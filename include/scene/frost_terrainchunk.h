@@ -95,6 +95,13 @@ namespace Frost
         */
         const Vector& GetSize() const;
 
+        /// Returns the height of a point in the 2D space (X, Z).
+        /** \param fX The X coordinate
+        *   \param fZ The Z coordinate
+        *   \return The height of this point
+        */
+        s_float       GetPointHeight(const s_float& fX, const s_float& fZ) const;
+
         /// Returns this chunk's unique ID.
         /** \return This chunk's unique ID
         */
@@ -124,7 +131,7 @@ namespace Frost
 
         s_refptr<Material> pMat_;
 
-        s_array<Vector>        lVertexList_;
+        s_ptr<Obstacle>        pObstacle_;
         s_ptr<Ogre::Mesh>      pMesh_;
         s_ptr<Ogre::Entity>    pEntity_;
         s_ptr<Ogre::SceneNode> pNode_;

@@ -6,35 +6,6 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug_Win32">
-				<Option platforms="Windows;" />
-				<Option output="bin\FrostD" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin\" />
-				<Option object_output="obj_Frost\Debug_Win32\" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-g" />
-					<Add option="-mthreads" />
-					<Add option="-fmessage-length=0" />
-					<Add option="-fexceptions" />
-					<Add option="-fident" />
-					<Add option="-D_DEBUG" />
-					<Add option="-DWIN32" />
-					<Add option="-D_WINDOWS" />
-				</Compiler>
-				<Linker>
-					<Add option="-Wl,--enable-runtime-pseudo-reloc" />
-					<Add option="-Wl,--enable-auto-image-base" />
-					<Add option="-Wl,--enable-auto-import" />
-					<Add option="-Wl,--add-stdcall-alias" />
-					<Add option="-Wl,--allow-multiple-definition" />
-					<Add library="OgreMain_d" />
-					<Add library="OIS_d" />
-					<Add library="libutils_d.a" />
-					<Add library="liblua5.1_d.a" />
-				</Linker>
-			</Target>
 			<Target title="Release_Win32">
 				<Option platforms="Windows;" />
 				<Option output="bin\Frost" prefix_auto="1" extension_auto="1" />
@@ -65,24 +36,33 @@
 					<Add library="liblua5.1.a" />
 				</Linker>
 			</Target>
-			<Target title="Debug_Linux">
-				<Option platforms="Unix;" />
+			<Target title="Debug_Win32">
+				<Option platforms="Windows;" />
 				<Option output="bin\FrostD" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin\" />
-				<Option object_output="obj_Frost\Debug_Linux\" />
+				<Option object_output="obj_Frost\Debug_Win32\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-mthreads" />
+					<Add option="-fmessage-length=0" />
+					<Add option="-fexceptions" />
+					<Add option="-fident" />
 					<Add option="-D_DEBUG" />
-					<Add option="-DFROST_LINUX" />
-					<Add option="-DLUA_USE_MKSTEMP" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
 				</Compiler>
 				<Linker>
+					<Add option="-Wl,--enable-runtime-pseudo-reloc" />
+					<Add option="-Wl,--enable-auto-image-base" />
+					<Add option="-Wl,--enable-auto-import" />
+					<Add option="-Wl,--add-stdcall-alias" />
+					<Add option="-Wl,--allow-multiple-definition" />
 					<Add library="OgreMain_d" />
-					<Add library="OIS" />
-					<Add library="libutils_l_d.a" />
-					<Add library="liblua5.1_l_d.a" />
+					<Add library="OIS_d" />
+					<Add library="libutils_d.a" />
+					<Add library="liblua5.1_d.a" />
 				</Linker>
 			</Target>
 			<Target title="Release_Linux">
@@ -105,6 +85,26 @@
 					<Add library="OIS" />
 					<Add library="libutils_l.a" />
 					<Add library="liblua5.1_l.a" />
+				</Linker>
+			</Target>
+			<Target title="Debug_Linux">
+				<Option platforms="Unix;" />
+				<Option output="bin\FrostD" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin\" />
+				<Option object_output="obj_Frost\Debug_Linux\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DFROST_LINUX" />
+					<Add option="-DLUA_USE_MKSTEMP" />
+				</Compiler>
+				<Linker>
+					<Add library="OgreMain_d" />
+					<Add library="OIS" />
+					<Add library="libutils_l_d.a" />
+					<Add library="liblua5.1_l_d.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -220,16 +220,23 @@
 		<Unit filename="include\path\frost_path_manualpath.h" />
 		<Unit filename="include\path\frost_path_smoothpath.h" />
 		<Unit filename="include\path\frost_pathmanager.h" />
+		<Unit filename="include\scene\frost_axisalignedobstacle.h" />
+		<Unit filename="include\scene\frost_boxobstacle.h" />
+		<Unit filename="include\scene\frost_cylinderobstacle.h" />
 		<Unit filename="include\scene\frost_light.h" />
 		<Unit filename="include\scene\frost_lightmanager.h" />
+		<Unit filename="include\scene\frost_meshobstacle.h" />
 		<Unit filename="include\scene\frost_movableobject.h" />
 		<Unit filename="include\scene\frost_node.h" />
 		<Unit filename="include\scene\frost_obstacle.h" />
 		<Unit filename="include\scene\frost_physicshandler.h" />
 		<Unit filename="include\scene\frost_physicsmanager.h" />
 		<Unit filename="include\scene\frost_plane.h" />
+		<Unit filename="include\scene\frost_planeobstacle.h" />
 		<Unit filename="include\scene\frost_scenemanager.h" />
+		<Unit filename="include\scene\frost_sphereobstacle.h" />
 		<Unit filename="include\scene\frost_terrainchunk.h" />
+		<Unit filename="include\scene\frost_terrainobstacle.h" />
 		<Unit filename="include\scene\frost_zone.h" />
 		<Unit filename="include\scene\frost_zonemanager.h" />
 		<Unit filename="include\spell\frost_spell.h" />
@@ -237,6 +244,7 @@
 		<Unit filename="include\unit\frost_creature.h" />
 		<Unit filename="include\unit\frost_healthtype.h" />
 		<Unit filename="include\unit\frost_movableunit.h" />
+		<Unit filename="include\unit\frost_movableunithandler.h" />
 		<Unit filename="include\unit\frost_powertype.h" />
 		<Unit filename="include\unit\frost_stats.h" />
 		<Unit filename="include\unit\frost_unit.h" />
@@ -307,8 +315,12 @@
 		<Unit filename="src\path\frost_path_manualpath.cpp" />
 		<Unit filename="src\path\frost_path_smoothpath.cpp" />
 		<Unit filename="src\path\frost_pathmanager.cpp" />
+		<Unit filename="src\scene\frost_axisalignedobstacle.cpp" />
+		<Unit filename="src\scene\frost_boxobstacle.cpp" />
+		<Unit filename="src\scene\frost_cylinderobstacle.cpp" />
 		<Unit filename="src\scene\frost_light.cpp" />
 		<Unit filename="src\scene\frost_lightmanager.cpp" />
+		<Unit filename="src\scene\frost_meshobstacle.cpp" />
 		<Unit filename="src\scene\frost_movableobject.cpp" />
 		<Unit filename="src\scene\frost_movableobject_glues.cpp" />
 		<Unit filename="src\scene\frost_node.cpp" />
@@ -316,8 +328,11 @@
 		<Unit filename="src\scene\frost_physicshandler.cpp" />
 		<Unit filename="src\scene\frost_physicsmanager.cpp" />
 		<Unit filename="src\scene\frost_plane.cpp" />
+		<Unit filename="src\scene\frost_planeobstacle.cpp" />
 		<Unit filename="src\scene\frost_scenemanager.cpp" />
+		<Unit filename="src\scene\frost_sphereobstacle.cpp" />
 		<Unit filename="src\scene\frost_terrainchunk.cpp" />
+		<Unit filename="src\scene\frost_terrainobstacle.cpp" />
 		<Unit filename="src\scene\frost_zone.cpp" />
 		<Unit filename="src\scene\frost_zonemanager.cpp" />
 		<Unit filename="src\spell\frost_spell.cpp" />
@@ -328,6 +343,7 @@
 		<Unit filename="src\unit\frost_healthtype.cpp" />
 		<Unit filename="src\unit\frost_movableunit.cpp" />
 		<Unit filename="src\unit\frost_movableunit_glues.cpp" />
+		<Unit filename="src\unit\frost_movableunithandler.cpp" />
 		<Unit filename="src\unit\frost_powertype.cpp" />
 		<Unit filename="src\unit\frost_stats.cpp" />
 		<Unit filename="src\unit\frost_unit.cpp" />

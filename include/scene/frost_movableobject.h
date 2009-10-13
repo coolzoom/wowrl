@@ -81,6 +81,13 @@ namespace Frost
         */
         virtual void          SetDirection(const Vector& mDirection);
 
+        /// Sets this object's reference direction.
+        /** \param mInitialDirection The initial direction
+        *   \note This is where the object points at when it is created.<br>
+        *         Default is -z.
+        */
+        void                  SetInitialDirection(const Vector& mInitialDirection);
+
         /// Sets this object's position.
         /** \param mPosition The new position
         *   \note Disables orbiting and path following.
@@ -159,6 +166,12 @@ namespace Frost
         */
         Vector                GetDirection(const s_bool& bRelative = true) const;
 
+        /// Returns this object's reference direction.
+        /** \return This object's reference direction
+        *   \note This is where the object points at when it is created.
+        */
+        const Vector&         GetInitialDirection() const;
+
         /// Returns the point this object is tracking on.
         /** \return The point this object is tracking on
         */
@@ -221,6 +234,8 @@ namespace Frost
 
         s_ptr<MovableObject>    pParent_;
         s_ptr<MovableObject>    pLookAtObject_;
+
+        Vector mInitialDirection_;
 
         s_ctnr< s_ptr<MovableObject> > lLookingAtList_;
 

@@ -59,6 +59,7 @@ namespace Frost
         s_ptr<ModelPart>      GetModelPart(const s_uint& uiID);
         const s_map< s_uint, s_ptr<ModelPart> >& GetModelPartList() const;
         s_ptr<Ogre::Entity>   GetEntity();
+        s_ptr<Ogre::Mesh>     GetMesh();
 
         void                  Show();
         void                  Hide(s_bool bSubMeshes = false);
@@ -67,6 +68,8 @@ namespace Frost
         void                  SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
         void                  SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj);
+
+        const Vector&         GetEllipsoidRadius() const;
 
         void                  Update(const s_float& fDelta);
 
