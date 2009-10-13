@@ -10,13 +10,12 @@
 #define FROST_PHYSICSHANDLER_H
 
 #include "frost.h"
+#include "scene/frost_obstacle.h"
 
 namespace Frost
 {
-    /// Controls a MovableObject's movement with the law of physics
-    /** \note This class only supports constant force field (gravity).<br>
-    *         If you need more, you can always create your own handler class
-    *         and use PhysicsManager::
+    /// Controls a MovableObject's movement (abstract)
+    /** This class must be derived and handle collision by itself.
     */
     class PhysicsHandler
     {
@@ -29,21 +28,6 @@ namespace Frost
 
         /// Destructor.
         virtual ~PhysicsHandler();
-
-        /// Adds some speed to this object.
-        /** \param mAdd The ammount of speed to add
-        */
-        void                 AddSpeed(const Vector& mAdd);
-
-        /// Sets the speed of this object.
-        /** \param mSpeed The new speed of this object
-        */
-        virtual void         SetSpeed(const Vector& mSpeed);
-
-        /// Returns the speed of this object.
-        /** \return The speed of this object
-        */
-        const Vector&        GetSpeed() const;
 
         /// Enables controls of the MovableObject.
         /** \note Disabled by default.
@@ -66,12 +50,32 @@ namespace Frost
         */
         s_ptr<MovableObject> GetParent();
 
+        /// Sets the object that will receive physics events.
+        /** \param pEventReceiver The event receiver to use
+        */
+        void                 SetEventReceiver(s_ptr<EventReceiver> pEventReceiver);
+
+        /// Returns the object that should receive physics events.
+        /** \return The object that should receive physics events
+        *   \note If no event receiver has been set, this function
+        *         returns the associated MovableObject.
+        */
+        s_ptr<EventReceiver> GetEventReceiver();
+
+        /// Updates this handler.
+        /** Checks for collision and moves the associated movable object.
+        *   \param fDelta The time elapsed since the last call
+        *   \note Automatically called by PhysicsManager if this handler
+        *         has been registered.
+        */
+        virtual void         Update(const s_float& fDelta) = 0;
+
         static const s_str CLASS_NAME;
 
     protected :
 
         s_ptr<MovableObject> pParent_;
-        Vector               mSpeed_;
+        s_ptr<EventReceiver> pEventReceiver_;
         s_bool               bEnabled_;
     };
 }

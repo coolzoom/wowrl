@@ -166,11 +166,23 @@ namespace Frost
     class  PathManager;
 
     /* SCENE *********************************************/
+    // scene/frost_axisalignedobstacle.h
+    class  AxisAlignedObstacle;
+
+    // scene/frost_boxobstacle.h;
+    class  BoxObstacle;
+
+    // scene/frost_cylinderobstacle.h
+    class  CylinderObstacle;
+
     // scene/frost_light.h
     class  Light;
 
     // scene/frost_lightmanager.h
     class  LightManager;
+
+    // scene/frost_meshobstacle.h
+    class  MeshObstacle;
 
     // scene/frost_movableobject.h
     class  MovableObject;
@@ -180,7 +192,9 @@ namespace Frost
     class  Node;
 
     // scene/frost_obstacle.h
+    struct CollisionData;
     class  Obstacle;
+    class  MovableObstacle;
 
     // scene/frost_physicshandler.h
     class  PhysicsHandler;
@@ -191,11 +205,20 @@ namespace Frost
     // scene/frost_plane.h
     class  Plane;
 
+    // scene/frost_planeobstacle.h
+    class  PlaneObstacle;
+
     // scene/frost_scenemanager.h
     class  SceneManager;
 
+    // scene/frost_sphereobstacle.h
+    class  SphereObstacle;
+
     // scene/frost_terrainchunk.h
     class  TerrainChunk;
+
+    // scene/frost_terrainobstacle.h
+    class  TerrainObstacle;
 
     // scene/frost_zone.h
     class  Zone;
@@ -224,6 +247,9 @@ namespace Frost
     // unit/frost_movableunit.h
     class  MovableUnit;
     class  LuaMovableUnit;
+
+    // unit/frost_movableunithandler.h
+    class  MovableUnitHandler;
 
     // unit/frost_powertype.h
     struct PowerType;

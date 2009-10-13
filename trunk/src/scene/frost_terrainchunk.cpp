@@ -10,6 +10,9 @@
 #include "scene/frost_zone.h"
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
+#include "scene/frost_terrainobstacle.h"
+#include "scene/frost_planeobstacle.h"
+#include "scene/frost_physicsmanager.h"
 
 #include <OgreSceneManager.h>
 #include <OgreMeshManager.h>
@@ -46,7 +49,7 @@ namespace Frost
     {
         /// Vertex height
         float fHeight;
-        /// Flags;
+        /// Flags
         uchar ucFlags;
     };
 
@@ -71,12 +74,13 @@ namespace Frost
 
             if (bPlane_)
             {
-                uint uiNX = s_uint(s_float::RoundDown(fXSize_*fDensity_)).Get();
-                uint uiNZ = s_uint(s_float::RoundDown(fZSize_*fDensity_)).Get();
+                uint uiNX = s_uint(s_float::RoundUp(fXSize_*fDensity_)).Get();
+                uint uiNZ = s_uint(s_float::RoundUp(fZSize_*fDensity_)).Get();
                 float fXSize = fXSize_.Get();
                 float fZSize = fZSize_.Get();
                 uint uiVertexCount = uiNX*uiNZ;
                 uint uiIndexCount = (uiNX-1)*(uiNZ-1)*6;
+                uint uiParamNbr = 8;
 
                 pMesh_ = Ogre::MeshManager::getSingletonPtr()->createManual(
                     ("ChunkMesh_"+uiID_).Get(), "Frost"
@@ -117,17 +121,19 @@ namespace Frost
 
                 pSubMesh->indexData->indexBuffer = pIBuf;
 
-                float fXIncrement = fXSize/uiNX;
-                float fZIncrement = fZSize/uiNZ;
+                float fXIncrement = fXSize/(uiNX-1);
+                float fZIncrement = fZSize/(uiNZ-1);
 
-                lVertexList_.Reserve(uiIndexCount*6);
-                s_array<float> lData; lData.Reserve(uiVertexCount*(3+3+2));
+                s_array<float> lData; lData.Reserve(uiVertexCount*uiParamNbr);
                 s_array<ushort> lIndices; lIndices.Reserve(uiIndexCount);
 
-                for (float x = -fXSize/2.0f; x < fXSize/2.0f; x += fXIncrement)
+                for (uint i = 0; i < uiNX; ++i)
                 {
-                    for (float z = -fZSize/2.0f; z < fZSize/2.0f; z += fZIncrement)
+                    float x = i*fXIncrement - fXSize/2.0f;
+                    for (uint j = 0; j < uiNZ; ++j)
                     {
+                        float z = j*fZIncrement - fZSize/2.0f;
+
                         // Position
                         lData.PushBack(x);
                         lData.PushBack(0.0f);
@@ -190,6 +196,12 @@ namespace Frost
                     Vector::FrostToOgre(mPosition_)
                 );
                 pNode_->attachObject(pEntity_.Get());
+
+                pObstacle_ = new PlaneObstacle(fXSize_, fZSize_);
+                float angle = 0.10f;
+                s_ptr<PlaneObstacle>::DynamicCast(pObstacle_)->Roll(angle);
+                pNode_->roll(Ogre::Degree(angle*360));
+                PhysicsManager::GetSingleton()->AddObstacle(pObstacle_);
             }
             else
             {
@@ -272,7 +284,6 @@ namespace Frost
                 s_array<TerrainVertex> lPointList; lPointList.Resize(uiNX*uiNZ);
                 mFile.Read(lPointList.GetClassicArray(), uiNX*uiNZ*sizeof(TerrainVertex));
 
-                lVertexList_.Reserve(uiIndexCount*6);
                 uint uiParamNbr = 3+3+2;
                 s_array<float> lData; lData.Resize(uiVertexCount*uiParamNbr);
                 s_array<ushort> lIndices; lIndices.Resize(uiIndexCount);
@@ -312,6 +323,9 @@ namespace Frost
                     }
                 }
 
+                s_array<TerrainObstacle::Triangle> lTriangleArray;
+                TerrainObstacle::Triangle mTri;
+
                 // Normals
                 // Calculation code taken from :
                 // http://www.devmaster.net/forums/showthread.php?t=1783
@@ -323,12 +337,14 @@ namespace Frost
                     ushort i2 = lIndices[i+1];
                     ushort i3 = lIndices[i+2];
 
-                    Vector mV1 = Vector(lData[i1*uiParamNbr+0], lData[i1*uiParamNbr+1], lData[i1*uiParamNbr+2]);
-                    Vector mV2 = Vector(lData[i2*uiParamNbr+0], lData[i2*uiParamNbr+1], lData[i2*uiParamNbr+2]);
-                    Vector mV3 = Vector(lData[i3*uiParamNbr+0], lData[i3*uiParamNbr+1], lData[i3*uiParamNbr+2]);
+                    mTri.mP[0] = Vector(lData[i1*uiParamNbr+0], lData[i1*uiParamNbr+1], lData[i1*uiParamNbr+2]);
+                    mTri.mP[1] = Vector(lData[i2*uiParamNbr+0], lData[i2*uiParamNbr+1], lData[i2*uiParamNbr+2]);
+                    mTri.mP[2] = Vector(lData[i3*uiParamNbr+0], lData[i3*uiParamNbr+1], lData[i3*uiParamNbr+2]);
+
+                    lTriangleArray.PushBack(mTri);
 
                     // Calculate the normal
-                    Vector mNormal = (mV2-mV1)^(mV3-mV1);
+                    Vector mNormal = (mTri.mP[1] - mTri.mP[0])^(mTri.mP[2] - mTri.mP[0]);
 
                     // Sum up the face's normal for each of the vertices that make up the face.
                     lNArray[i1] += mNormal;
@@ -383,6 +399,19 @@ namespace Frost
                     Vector::FrostToOgre(mPosition_)
                 );
                 pNode_->attachObject(pEntity_.Get());
+
+                s_array<s_float> lCollisionData;
+                lCollisionData.Reserve(uiNX*uiNZ);
+                for (uint i = 0; i < uiNX*uiNZ; ++i)
+                {
+                    if (lPointList[i].ucFlags == 1)
+                        lCollisionData[i] = s_float::NaN;
+                    else
+                        lCollisionData[i] = lPointList[i].fHeight;
+                }
+
+                pObstacle_ = new TerrainObstacle(lTriangleArray, this);
+                PhysicsManager::GetSingleton()->AddObstacle(pObstacle_);
             }
 
             bLoaded_ = true;
@@ -393,8 +422,6 @@ namespace Frost
     {
         if (bLoaded_)
         {
-            lVertexList_.Clear();
-
             pEntity_->detatchFromParent();
             Engine::GetSingleton()->GetOgreSceneManager()->destroyEntity(pEntity_.Get());
             pEntity_ = NULL;
@@ -405,21 +432,35 @@ namespace Frost
             Engine::GetSingleton()->GetOgreSceneManager()->destroySceneNode(pNode_.Get());
             pNode_ = NULL;
 
+            pObstacle_.Delete();
+
             bLoaded_ = false;
         }
     }
 
     void TerrainChunk::Show()
     {
-        Load();
-        if (pEntity_)
-            pEntity_->setVisible(true);
+        if (!bShown_)
+        {
+            Load();
+            if (pEntity_)
+                pEntity_->setVisible(true);
+
+            //PhysicsManager::GetSingleton()->AddObstacle(pObstacle_);
+            bShown_ = true;
+        }
     }
 
     void TerrainChunk::Hide()
     {
-        if (pEntity_)
-            pEntity_->setVisible(false);
+        if (bShown_)
+        {
+            if (pEntity_)
+                pEntity_->setVisible(false);
+
+            //PhysicsManager::GetSingleton()->RemoveObstacle(pObstacle_);
+            bShown_ = false;
+        }
     }
 
     s_bool TerrainChunk::IsShown()
@@ -481,6 +522,29 @@ namespace Frost
     const Vector& TerrainChunk::GetSize() const
     {
         return mSize_;
+    }
+
+    s_float TerrainChunk::GetPointHeight(const s_float& fX, const s_float& fZ) const
+    {
+        if (bPlane_)
+        {
+            return mPosition_.Y();
+        }
+        else
+        {
+            s_ptr<TerrainObstacle> pTerrainObstacle = s_ptr<TerrainObstacle>::DynamicCast(pObstacle_);
+            if (pTerrainObstacle)
+            {
+                return pTerrainObstacle->GetPointHeight(fX, fZ);
+            }
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Dynamic cast from Obstacle to TerrainObstacle failed."
+                );
+                return s_float::NaN;
+            }
+        }
     }
 
     const s_uint& TerrainChunk::GetID() const

@@ -521,11 +521,12 @@ namespace Frost
             delete[] lSubUVs;
         }
 
-        // Set bounding information for culling
+        // Set bounding information for culling and collisions
         pMesh_->_setBounds(Ogre::AxisAlignedBox(
             fXMin.Get(), fYMin.Get(), fZMin.Get(),
             fXMax.Get(), fYMax.Get(), fZMax.Get()
         ));
+
         pMesh_->_setBoundingSphereRadius(
             std::max(
                 fXMax-fXMin,

@@ -13,13 +13,14 @@ GameOptions = {
     ["ScreenHeight"] = 1024,
     
     -- Renderer
-    ["RenderSystem"] = "OpenGL",
-    --["RenderSystem"] = "DirectX",
+    --["RenderSystem"] = "OpenGL",
+    ["RenderSystem"] = "DirectX",
     
     -- Advanced graphics options
     ["TerrainTextureFiltering"] = "ANISOTROPIC";
-    ["AntiAliasingLevel"] = 4,
-    ["EnableVSync"] = false,
+    --["TerrainTextureFiltering"] = "BILINEAR";
+    ["AntiAliasingLevel"] = 0,
+    ["EnableVSync"] = true,
     ["EnableSpecular"] = true,
     
     ["EnablePostProcessing"] = true,
@@ -27,6 +28,6 @@ GameOptions = {
     
     -- Defaults
     ["DefaultFont"] = "Fonts/Vera.ttf",
-    ["DefaultGameplay"] = "Free",
+    ["DefaultGameplay"] = "FirstPerson",
     
 };

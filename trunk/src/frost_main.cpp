@@ -26,6 +26,9 @@
 #include "gameplay/frost_gameplaymanager.h"
 #include "scene/frost_physicsmanager.h"
 #include "scene/frost_zonemanager.h"
+#include "scene/frost_meshobstacle.h"
+#include "scene/frost_planeobstacle.h"
+#include "scene/frost_physicshandler.h"
 
 #include <OgreException.h>
 
@@ -59,6 +62,11 @@ s_bool GameFrameFunc()
     if (pInputMgr->KeyIsPressed(KEY_P))
     {
         GUIManager::GetSingleton()->PrintUI();
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_G))
+    {
+        s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->EnablePhysics();
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -217,28 +225,42 @@ int main(int argc, char* argv[])
                 // Register it to the physics manager
                 PhysicsManager::GetSingleton()->AddObstacle(pPlane);*/
 
+                /*s_ptr<PlaneObstacle> pPlane = new PlaneObstacle(2.0f, 2.0f);
+                PhysicsManager::GetSingleton()->AddObstacle(pPlane);
+                pPlane->SetDirection(Vector(0.0f, 1.0f, -1.0f));
+                pPlane->SetPosition(Vector(0.0f, -1.0f, 0.0f));*/
+
+                /*s_array<MeshObstacle::Triangle> lTriangleList;
+                MeshObstacle::Triangle mTri;
+                mTri.mP[0] = Vector(-1.0f, -1.0f, -1.0f);
+                mTri.mP[1] = Vector( 1.0f, -1.0f, -1.0f);
+                mTri.mP[2] = Vector( 0.0f, -1.0f,  1.0f);
+                lTriangleList.PushBack(mTri);
+                s_ptr<MeshObstacle> pMesh = new MeshObstacle(lTriangleList);
+                PhysicsManager::GetSingleton()->AddObstacle(pMesh);*/
 
                 // Create Units
                 s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
+                pChar->Teleport(Vector(0, 1, 0));
+                //pChar->Teleport(Vector(22, 1, 0));
+                pChar->RotateModel(0.25f, 0.0f);
+                //pChar->GetPhysicsHandler()->SetSpeed(Vector(0, -2, 0));
                 //pChar->EnablePhysics();
-                //pChar->ForceOnGround();
 
                 pChar->SetClass("MAGE");
                 pChar->SetLevel(51);
                 pChar->SetStat("SPIRIT", s_int(50));
                 pChar->SetStat("INTELLECT", s_int(50));
 
-
-                s_ptr<Character> pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", GENDER_MALE);
-                //pChar2->EnablePhysics();
-                pChar2->Teleport(Vector(0, 0, -5));
-                //pChar2->ForceOnGround();
+                /*s_ptr<Character> pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", GENDER_MALE);
+                pChar2->EnablePhysics();
+                pChar2->Teleport(Vector(0, 1, -5));
                 pChar2->LookAtUnit(pChar);
 
                 pChar2->SetClass("MAGE");
                 pChar2->SetLevel(51);
                 pChar2->SetStat("SPIRIT", s_int(50));
-                pChar2->SetStat("INTELLECT", s_int(50));
+                pChar2->SetStat("INTELLECT", s_int(50));*/
 
 
                 // Some light
@@ -248,7 +270,7 @@ int main(int argc, char* argv[])
                 pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
                 pLight1->SetRange(50.0f);*/
 
-                LightManager::GetSingleton()->SetSunDirection(Vector(-1, -1, 0));
+                LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
                 LightManager::GetSingleton()->SetSunColor(Color(255, 255, 255));
             }
 

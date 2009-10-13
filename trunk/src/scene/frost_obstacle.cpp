@@ -6,27 +6,54 @@
 /*                                        */
 
 #include "scene/frost_obstacle.h"
+#include "scene/frost_physicsmanager.h"
+
+#include <OgreSceneNode.h>
 
 using namespace std;
 
 namespace Frost
 {
     const s_str Obstacle::CLASS_NAME = "Obstacle";
+    const s_str MovableObstacle::CLASS_NAME = "MovableObstacle";
 
-    Obstacle::Obstacle( const s_uint& uiID ) :
-        uiID_(uiID)
+    Obstacle::Obstacle()
     {
     }
 
     Obstacle::~Obstacle()
     {
+        PhysicsManager::GetSingleton()->RemoveObstacle(this);
     }
 
-    const s_uint& Obstacle::GetID() const
+    void Obstacle::SetActive( const s_bool& bIsActive )
     {
-        return uiID_;
+        bIsActive_ = bIsActive;
+    }
+
+    const s_bool& Obstacle::IsActive() const
+    {
+        return bIsActive_;
+    }
+
+    void Obstacle::Update( const s_float& fDelta )
+    {
+    }
+
+    MovableObstacle::MovableObstacle()
+    {
+    }
+
+    MovableObstacle::~MovableObstacle()
+    {
+    }
+
+    void MovableObstacle::ForceUpdate()
+    {
+    }
+
+    void MovableObstacle::Update( const s_float& fDelta )
+    {
+        MovableObject::Update(fDelta);
     }
 }
-
-
-

@@ -13,48 +13,33 @@
 #include "unit/frost_powertype.h"
 #include "camera/frost_camera.h"
 #include "scene/frost_physicsmanager.h"
-#include "scene/frost_physicshandler.h"
+#include "unit/frost_movableunithandler.h"
 
 using namespace std;
-
-#define GRAVITY 9.81f
 
 namespace Frost
 {
     MovableUnit::MovableUnit( const s_uint& uiID, const s_str& sName ) : Unit(uiID, sName),
-        bTurn_(true), fJumpDuration_(0.9f),
-        fForwardRunSpeed_(6.5f), fForwardWalkSpeed_(2.5f),
+        bTurn_(true), bFalling_(false), fForwardRunSpeed_(6.5f), fForwardWalkSpeed_(2.5f),
         fBackwardRunSpeed_(4.5f), fBackwardWalkSpeed_(2.5f), fTurnRate_(0.385f)
     {
-        pHandler_ = PhysicsManager::GetSingleton()->CreateHandler(pNode_);
+        pHandler_ = new MovableUnitHandler(this);
+        PhysicsManager::GetSingleton()->RegisterHandler(pHandler_);
     }
 
     MovableUnit::~MovableUnit()
     {
-        PhysicsManager::GetSingleton()->DeleteHandler(pHandler_);
+        PhysicsManager::GetSingleton()->RemoveHandler(pHandler_);
+        pHandler_.Delete();
     }
 
     void MovableUnit::Jump()
     {
-        if (!bJumping_)
+        if (!bFalling_)
         {
-            bJumping_ = true;
+            bFalling_ = true;
 
-            // Initial jump speed
-            //fJumpVSpeed_ = GRAVITY*fJumpDuration_/2.0f;
-
-            // Cumulated jump height (reaches zero when the unit has touched the ground again)
-            // Note : This variable is needed because there is no collision detection for now.
-            // Later, it'll be useless.
-            //fCumuledJumpHeight_ = 0.0f;
-
-            // The maximum jump height is :
-            // fMaxJumpHeight = GRAVITY*(fJumpDuration_^2)/8.0f;
-            // ... (that is 0.99m with the default parameters)
-            // and is reached at t=fJumpDuration_/2.0f
-
-            EnablePhysics();
-            pHandler_->SetSpeed(Vector(0, 4.4145f, 0));
+            pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 4.4145f, 0));
 
             pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_START);
             pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
@@ -65,28 +50,28 @@ namespace Frost
     {
         pNode_->UnlockTracking();
 
-        mMovementDirection_.ZR() += (bMove ? -1.0f : +1.0f);
+        mMovementDirection_.Z() += (bMove ? -1.0f : +1.0f);
     }
 
     void MovableUnit::SetMoveBackward( const s_bool& bMove )
     {
         pNode_->UnlockTracking();
 
-        mMovementDirection_.ZR() += (bMove ? +1.0f : -1.0f);
+        mMovementDirection_.Z() += (bMove ? +1.0f : -1.0f);
     }
 
     void MovableUnit::SetMoveLeft( const s_bool& bMove )
     {
         pNode_->UnlockTracking();
 
-        mMovementDirection_.XR() += (bMove ? -1.0f : +1.0f);
+        mMovementDirection_.X() += (bMove ? -1.0f : +1.0f);
     }
 
     void MovableUnit::SetMoveRight( const s_bool& bMove )
     {
         pNode_->UnlockTracking();
 
-        mMovementDirection_.XR() += (bMove ? +1.0f : -1.0f);
+        mMovementDirection_.X() += (bMove ? +1.0f : -1.0f);
     }
 
     void MovableUnit::ToggleTurning()
@@ -102,6 +87,11 @@ namespace Frost
     void MovableUnit::StopMovement()
     {
         mMovementDirection_ = Vector::ZERO;
+    }
+
+    const Vector& MovableUnit::GetMovementSpeed() const
+    {
+        return mMovementSpeed_;
     }
 
     void MovableUnit::ToggleWalking()
@@ -129,6 +119,54 @@ namespace Frost
 
         if (pBodyModel_)
             pBodyModel_->Update(fDelta);
+
+        bNextFalling_ = true;
+    }
+
+    void MovableUnit::OnEvent( const Event& mEvent )
+    {
+        Unit::OnEvent(mEvent);
+
+        if (mEvent.GetName() == "PHYSICS_COLLISION")
+        {
+            bFalling_ = false;
+
+            if (!bWalk_)
+            {
+                if (mMovementDirection_.Z().IsNull() && mMovementDirection_.X().IsNull())
+                    pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_END);
+                else if (mMovementDirection_.Z() < 0.0f || !mMovementDirection_.X().IsNull())
+                    pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_LAND_RUN);
+            }
+
+            if (mMovementDirection_.Z().IsNull())
+                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+            else
+            {
+                if (mMovementDirection_.Z() < 0.0f)
+                {
+                    if (bWalk_)
+                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
+                    else
+                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
+                }
+                else
+                {
+                    if (bWalk_)
+                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
+                    else
+                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
+                            fBackwardRunSpeed_/fBackwardWalkSpeed_
+                        );
+                }
+            }
+        }
+
+        if (mEvent.GetName() == "PHYSICS_START_FREE_FALL")
+        {
+            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
+            bFalling_ = true;
+        }
     }
 
     void MovableUnit::SetYaw_( const s_float& fNewYaw )
@@ -142,100 +180,89 @@ namespace Frost
 
     void MovableUnit::UpdateMovement_( const s_float& fDelta )
     {
-        pNode_->Update(fDelta);
-
-        Vector mDir = mMovementDirection_;
-        Vector mMovement;
-
-        if (!mDir.IsNull())
+        if (pHandler_->IsEnabled())
         {
-            mDir.Normalize();
+            pNode_->Update(fDelta);
 
-            s_float fMovementSpeed;
-            s_float fNewYaw;
-            if (mDir.Z() > 0.0f)
+            Vector mDir = mMovementDirection_;
+            mMovementSpeed_ = Vector::ZERO;
+
+            if (!mDir.IsNull())
             {
-                // Moving backward
-                mMovement.ZR() = 1.0f;
-                if (bWalk_)
+                mDir.Normalize();
+
+                s_float fMovementSpeed;
+                if (bFalling_)
+                    fMovementSpeed = 0.5f;
+                else
+                    fMovementSpeed = 1.0f;
+
+                s_float fNewYaw;
+                if (mDir.Z() > 0.0f)
                 {
-                    if (!bJumping_)
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
-                    fMovementSpeed = fBackwardWalkSpeed_;
+                    // Moving backward
+                    mMovementSpeed_.Z() = 1.0f;
+                    if (bWalk_)
+                    {
+                        if (!bFalling_)
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
+                        fMovementSpeed *= fBackwardWalkSpeed_;
+                    }
+                    else
+                    {
+                        if (!bFalling_)
+                            pBodyModel_->GetAnimMgr()->SetAnim(
+                                ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
+                                fBackwardRunSpeed_/fBackwardWalkSpeed_
+                            );
+                        fMovementSpeed *= fBackwardRunSpeed_;
+                    }
+                    fNewYaw = atan2(-mDir.X(), -mDir.Z()) - 0.5f;
                 }
                 else
                 {
-                    if (!bJumping_)
-                        pBodyModel_->GetAnimMgr()->SetAnim(
-                            ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
-                            fBackwardRunSpeed_/fBackwardWalkSpeed_
-                        );
-                    fMovementSpeed = fBackwardRunSpeed_;
+                    // Moving forward
+                    mMovementSpeed_.Z() = -1.0f;
+                    if (bWalk_)
+                    {
+                        if (!bFalling_)
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
+                        fMovementSpeed *= fForwardWalkSpeed_;
+                    }
+                    else
+                    {
+                        if (!bFalling_)
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
+                        fMovementSpeed *= fForwardRunSpeed_;
+                    }
+                    fNewYaw = atan2(-mDir.X(), -mDir.Z());
                 }
-                fNewYaw = atan2(-mDir.X(), -mDir.Z()) - 0.5f;
+
+                SetYaw_(fNewYaw);
+                mMovementSpeed_.Z() *= fMovementSpeed;
             }
             else
             {
-                // Moving forward
-                mMovement.ZR() = -1.0f;
-                if (bWalk_)
-                {
-                    if (!bJumping_)
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
-                    fMovementSpeed = fForwardWalkSpeed_;
-                }
-                else
-                {
-                    if (!bJumping_)
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
-                    fMovementSpeed = fForwardRunSpeed_;
-                }
-                fNewYaw = atan2(-mDir.X(), -mDir.Z());
+                if (!bFalling_)
+                    pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+
+                SetYaw_(0.0f);
             }
 
-            SetYaw_(fNewYaw);
-            mMovement.ZR() *= fMovementSpeed*fDelta;
-        }
-        else
-        {
-            if (!bJumping_)
-                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
-
-            SetYaw_(0);
-        }
-
-        /*if (bJumping_)
-        {
-            // y(t+dt) = y(t) + speed(t)*dt + (acceleration(t)*dt^2)/2.0f
-            // dy = y(t+dt) - y(t)
-            s_float fDY = fJumpVSpeed_*fDelta - GRAVITY*fDelta*fDelta/2.0f;
-            fCumuledJumpHeight_ += fDY;
-
-            // speed(t+dt) = speed(t) + acceleration*dt
-            fJumpVSpeed_ -= GRAVITY*fDelta;
-
-            if (fCumuledJumpHeight_ < 0.0f)
+            s_bool bMovement;
+            if (bFalling_)
             {
-                mMovement.Y(fDY - fCumuledJumpHeight_);
-                bJumping_ = false;
-
-                if (!bWalk_)
-                {
-                    if (mMovement.Z() < 0.0f)
-                    {
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_LAND_RUN);
-                    }
-                    else if (mMovement.Z().IsNull())
-                    {
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_END);
-                    }
-                }
+                mMovementSpeed_ = Vector::ZERO;
             }
             else
-                mMovement.Y(fDY);
-        }*/
-
-        pNode_->Translate(mMovement, true);
+            {
+                if (!mMovementSpeed_.IsNull())
+                {
+                    mMovementSpeed_ = pNode_->Transform(mMovementSpeed_);
+                    bMovement = true;
+                }
+            }
+        }
     }
 
     void MovableUnit::EnablePhysics()
@@ -258,7 +285,7 @@ namespace Frost
 
     }
 
-    s_ptr<PhysicsHandler> MovableUnit::GetPhysicsHandler()
+    s_ptr<MovableUnitHandler> MovableUnit::GetPhysicsHandler()
     {
         return pHandler_;
     }

@@ -17,43 +17,30 @@ namespace Frost
 {
     const s_str PhysicsManager::CLASS_NAME = "PhysicsManager";
 
-    PhysicsManager::PhysicsManager() : mGravity_(0, -9.81f, 0)
+    PhysicsManager::PhysicsManager() :
+        mGravity_(0, -9.81f, 0), uiMaxCollisionRecursion_(5u),
+        fMinSlidingAngle_(0.125f), fMaxClimbingAngle_(0.125f)
     {
     }
 
     PhysicsManager::~PhysicsManager()
     {
         Log("Closing "+CLASS_NAME+"...");
-        s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> >::iterator iterHandler;
-        foreach (iterHandler, lHandlerList_)
-        {
-            iterHandler->second.Delete();
-        }
-
-        s_map< s_uint, s_ptr<Obstacle> >::iterator iterObstacle;
-        foreach (iterObstacle, lObstacleList_)
-        {
-            iterObstacle->second.Delete();
-        }
     }
 
-    s_ptr<PhysicsHandler> PhysicsManager::CreateHandler( s_ptr<MovableObject> pObj )
+    s_bool PhysicsManager::ReadConfig()
     {
-        s_ptr<PhysicsHandler> pHandler;
+        s_ptr<Engine> pEngine = Engine::GetSingleton();
+        if (pEngine->IsConstantDefined("MaxCollisionRecursion"))
+            uiMaxCollisionRecursion_ = pEngine->GetUIntConstant("MaxCollisionRecursion");
 
-        s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> >::iterator iterHandler;
-        iterHandler = lHandlerList_.Get(pObj);
-        if (iterHandler == lHandlerList_.End())
-        {
-            pHandler = new PhysicsHandler(pObj);
-            lHandlerList_[pObj] = pHandler;
-        }
-        else
-        {
-            pHandler = lHandlerList_[pObj];
-        }
+        if (pEngine->IsConstantDefined("MinSlidingAngle"))
+            fMinSlidingAngle_ = pEngine->GetFloatConstant("MinSlidingAngle");
 
-        return pHandler;
+        if (pEngine->IsConstantDefined("MaxClimbingAngle"))
+            fMaxClimbingAngle_ = pEngine->GetFloatConstant("MaxClimbingAngle");
+
+        return true;
     }
 
     void PhysicsManager::RegisterHandler( s_ptr<PhysicsHandler> pHandler )
@@ -63,12 +50,12 @@ namespace Frost
         else
         {
             Warning(CLASS_NAME,
-                "Trying to register a PhysicsHandler with no parent"
+                "Trying to register a PhysicsHandler with no parent."
             );
         }
     }
 
-    void PhysicsManager::DeleteHandler( s_ptr<PhysicsHandler> pHandler )
+    void PhysicsManager::RemoveHandler( s_ptr<PhysicsHandler> pHandler )
     {
         if (pHandler && pHandler->GetParent())
         {
@@ -76,17 +63,7 @@ namespace Frost
             iterHandler = lHandlerList_.Get(pHandler->GetParent());
 
             if (iterHandler != lHandlerList_.End())
-            {
-                iterHandler->second.Delete();
                 lHandlerList_.Erase(iterHandler);
-
-                return;
-            }
-
-            Warning(CLASS_NAME,
-                "Trying to call DeleteHandler on a Handler that has not been created "
-                "by (or registered to) PhysicsManager (parent ID:"+pHandler->GetParent()->GetID()+")."
-            );
         }
     }
 
@@ -100,72 +77,91 @@ namespace Frost
         return mGravity_;
     }
 
-    s_ptr<Obstacle> PhysicsManager::AddObstacle( s_ptr<Plane> pPlane )
+    void PhysicsManager::SetMinSlidingAngle( const s_float& fMinSlidingAngle )
     {
-        return NULL;
+        fMinSlidingAngle_ = fMinSlidingAngle;
     }
 
-    s_ptr<Obstacle> PhysicsManager::AddObstacle( s_ptr<Model> pModel )
+    const s_float& PhysicsManager::GetMinSlidingAngle() const
     {
-        return NULL;
+        return fMinSlidingAngle_;
+    }
+
+    void PhysicsManager::SetMaxClimbingAngle( const s_float& fMaxClimbingAngle )
+    {
+        fMaxClimbingAngle_ = fMaxClimbingAngle;
+    }
+
+    const s_float& PhysicsManager::GetMaxClimbingAngle() const
+    {
+        return fMaxClimbingAngle_;
+    }
+
+    const s_uint& PhysicsManager::GetMaxCollisionRecursion() const
+    {
+        return uiMaxCollisionRecursion_;
+    }
+
+    void PhysicsManager::AddObstacle( s_ptr<Obstacle> pObstacle )
+    {
+        if (pObstacle)
+        {
+            if (!lObstacleList_.Find(pObstacle))
+            {
+                lObstacleList_.PushBack(pObstacle);
+                pObstacle->SetActive(true);
+            }
+            else
+            {
+                Warning(CLASS_NAME,
+                    "Trying to add an obstacle that is already in the scene"
+                );
+            }
+        }
     }
 
     void PhysicsManager::RemoveObstacle( s_ptr<Obstacle> pObstacle )
     {
         if (pObstacle)
         {
-            s_map< s_uint, s_ptr<Obstacle> >::iterator iterObstacle;
-            iterObstacle = lObstacleList_.Get(pObstacle->GetID());
+            s_ctnr< s_ptr<Obstacle> >::iterator iterObstacle;
+            iterObstacle = lObstacleList_.Get(pObstacle);
 
             if (iterObstacle != lObstacleList_.End())
             {
-                if (iterObstacle->second->GetID() == pObstacle->GetID())
-                {
-                    // Everything went fine, delete, erase from map and return
-                    iterObstacle->second.Delete();
-                    lObstacleList_.Erase(iterObstacle);
-
-                    return;
-                }
+                pObstacle->SetActive(false);
+                lObstacleList_.Erase(iterObstacle);
             }
-
-            Warning(CLASS_NAME,
-                "Trying to call RemoveObstacle on an Obstacle that has not been created "
-                "by PhysicsManager (ID:"+pObstacle->GetID()+")."
-            );
         }
     }
 
     void PhysicsManager::ClearObstacles()
     {
-        s_map< s_uint, s_ptr<Obstacle> >::iterator iterObstacle;
+        s_ctnr< s_ptr<Obstacle> >::iterator iterObstacle;
         foreach (iterObstacle, lObstacleList_)
         {
-            iterObstacle->second.Delete();
+            (*iterObstacle)->SetActive(false);
         }
         lObstacleList_.Clear();
     }
 
-    void PhysicsManager::UpdateHandlers( const s_float& fDelta )
+    const s_ctnr< s_ptr<Obstacle> >& PhysicsManager::GetObstacleList() const
     {
+        return lObstacleList_;
+    }
+
+    void PhysicsManager::Update( const s_float& fDelta )
+    {
+        s_ctnr< s_ptr<Obstacle> >::iterator iterObstacle;
+        foreach (iterObstacle, lObstacleList_)
+        {
+            (*iterObstacle)->Update(fDelta);
+        }
+
         s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> >::iterator iterHandler;
         foreach (iterHandler, lHandlerList_)
         {
-            if (iterHandler->second->IsEnabled())
-            {
-                // Acceleration is "constant"
-                const Vector& mAcceleration = mGravity_;
-
-                // Update speed
-                iterHandler->second->AddSpeed(mAcceleration*fDelta);
-
-                // Translate
-                Vector mMovement = iterHandler->second->GetSpeed()*fDelta +
-                                   mAcceleration*fDelta*fDelta/2.0f;
-                iterHandler->first->Translate(mMovement, true);
-
-                // TODO : Check collisions
-            }
+            iterHandler->second->Update(fDelta);
         }
     }
 }

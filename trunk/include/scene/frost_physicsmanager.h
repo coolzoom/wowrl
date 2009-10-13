@@ -20,11 +20,10 @@ namespace Frost
     friend class Manager<PhysicsManager>;
     public :
 
-        /// Creates a handler to control a MovableObject.
-        /** \param pObj The MovableObject to control
-        *   \return The associated handler (creates it if necessary)
+        /// Reads configuration.
+        /** \return 'false' if something went wrong
         */
-        s_ptr<PhysicsHandler> CreateHandler(s_ptr<MovableObject> pObj);
+        s_bool                ReadConfig();
 
         /// Registers a pre-created handler.
         /** \param pHandler The handler
@@ -39,7 +38,7 @@ namespace Frost
         /// Removes a handler.
         /** \param pHandler The handler to remove
         */
-        void                  DeleteHandler(s_ptr<PhysicsHandler> pHandler);
+        void                  RemoveHandler(s_ptr<PhysicsHandler> pHandler);
 
         /// Sets the direction and intensity of the gravity field.
         /** \param mGravity The gravity force
@@ -52,31 +51,75 @@ namespace Frost
         */
         const Vector&         GetGravity() const;
 
-        /// Adds a plane to the obstacle list.
-        /** \param pPlane The plane to add
-        *   \return The new obstacle
+        /// Sets the minimum sliding angle.
+        /** \param fMinSlidingAngle The new minimum sliding angle
+        *   \note See GetMinSlidingAngle() for more information.
+        *   \note Only functionnal when sliding is enabled (gravity).
         */
-        s_ptr<Obstacle>       AddObstacle(s_ptr<Plane> pPlane);
+        void                  SetMinSlidingAngle(const s_float& fMinSlidingAngle);
 
-        /// Adds a model to the obstacle list.
-        /** \param pModel The model to add
-        *   \return The new obstacle
+        /// Returns the minimum sliding angle.
+        /** \return The minimum sliding angle (non dimensional angle)
+        *   \note Whenever there is a collision, you calculate the absolute angle
+        *         between the motion vector and the collision plane's normal.
+        *         If this angle is greater than the value returned by this
+        *         function, then the object can slide along this plane.
+        *   \note Only functionnal when sliding is enabled (gravity).
         */
-        s_ptr<Obstacle>       AddObstacle(s_ptr<Model> pModel);
+        const s_float&        GetMinSlidingAngle() const;
+
+        /// Sets the maximum climbing angle.
+        /** \param fMaxClimbingAngle The new maximum climbing angle
+        *   \note See GetMaxClimbingAngle() for more information.
+        *   \note Only functionnal when climbing is enabled (unit movement).
+        */
+        void                  SetMaxClimbingAngle(const s_float& fMaxClimbingAngle);
+
+        /// Returns the maximum climbing angle.
+        /** \return The maximum climbing angle (non dimensional angle)
+        *   \note Whenever there is a collision, you calculate the absolute angle
+        *         between the motion vector and the collision plane's normal.
+        *         If this angle is smaller than the value returned by this
+        *         function, then the object can climb along this plane.
+        *   \note Only functionnal when climbing is enabled (unit movement).
+        */
+        const s_float&        GetMaxClimbingAngle() const;
+
+        /// Returns the maximum number of collision recursion per frame and object.
+        /** \return The maximum number of collision recursion per frame and object
+        */
+        const s_uint&         GetMaxCollisionRecursion() const;
+
+        /// Adds a new obstacle to the scene.
+        /** \param pObstacle The obstacle to add
+        *   \note Automatically enables the obstacle.<br>
+        *         Note that you are responsible for deleting this
+        *         Obstacle yourself whenever it is no longer necessary.
+        *         The obstacle will take care of notifying this manager
+        *         of its destruction if you forget to do so.
+        */
+        void                  AddObstacle(s_ptr<Obstacle> pObstacle);
 
         /// Removes an obstacle from the scene.
         /** \param pObstacle The obstacle to remove
+        *   \note It is still your responsability to destroy the obstacle
+        *         yourself.
         */
         void                  RemoveObstacle(s_ptr<Obstacle> pObstacle);
 
         /// Removes all obstacles from the scene.
         void                  ClearObstacles();
 
-        /// Updates all handlers.
+        /// Returns the list of all active obstacles.
+        /** \return The list of all active obstacles
+        */
+        const s_ctnr< s_ptr<Obstacle> >& GetObstacleList() const;
+
+        /// Updates handlers and obstacles.
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by Engine.
         */
-        void                  UpdateHandlers(const s_float& fDelta);
+        void                  Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 
@@ -112,10 +155,12 @@ namespace Frost
     private :
 
         s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> > lHandlerList_;
-        s_map< s_uint, s_ptr<Obstacle> >                     lObstacleList_;
-        s_uint                                               uiObstacleCounter_;
+        s_ctnr< s_ptr<Obstacle> >                            lObstacleList_;
 
-        Vector mGravity_;
+        Vector  mGravity_;
+        s_uint  uiMaxCollisionRecursion_;
+        s_float fMinSlidingAngle_;
+        s_float fMaxClimbingAngle_;
 
     };
 }

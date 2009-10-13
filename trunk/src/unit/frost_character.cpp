@@ -15,6 +15,9 @@
 #include "material/frost_material.h"
 #include "camera/frost_camera.h"
 #include "unit/frost_unitmanager.h"
+#include "unit/frost_movableunithandler.h"
+
+#include <OgreMesh.h>
 
 using namespace std;
 
@@ -46,7 +49,7 @@ namespace Frost
             pCharModelInfo->sModel,
             sName
         );
-        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
         pBodyModel_->GetAnimMgr()->Play();
 
         // Apply a texture to the body
@@ -95,6 +98,21 @@ namespace Frost
 
         pBodyModel_->Attach(pNode_);
         pBodyModel_->SetUserObject(&mInterface_);
+
+        const Ogre::AxisAlignedBox& mBox = pBodyModel_->GetMesh()->getBounds();
+        const Ogre::Vector3& mMin = mBox.getMinimum();
+        const Ogre::Vector3& mMax = mBox.getMaximum();
+
+        // Supposing :
+        //  - the model is centered for its X and Z axis
+        //  - the model's feet are on (0, 0, 0)
+        //  - the model is approximately as large in X and Z.
+        pHandler_->SetEllipsoidRadius(Vector(
+            (mMax.z - mMin.z)/2.0f,
+            mMax.y/2.0f,
+            (mMax.z - mMin.z)/2.0f
+        ));
+        pHandler_->SetHotSpot(Vector(0.0f, -mMax.y/2.0f, 0.0f));
     }
 
     Character::~Character()

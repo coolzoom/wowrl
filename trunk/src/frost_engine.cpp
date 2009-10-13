@@ -237,6 +237,9 @@ namespace Frost
         if (!pGameplayMgr_->ParseData())
             return false;
 
+        if (!pPhysicsMgr_->ReadConfig())
+            return false;
+
         // Initialize the input manager
         pInputMgr_->Initialize(pRenderWindow_);
         if (!pInputMgr_->ReadConfig())
@@ -260,14 +263,13 @@ namespace Frost
         // Initialize the zone manager
         pZoneMgr_->Initialize();
 
-        if (!this->ReadGameConfig_())
-            return false;
-
         return true;
     }
 
     void Engine::Loop()
     {
+        pGameplayMgr_->SetCurrentGameplay(GetStringConstant("DefaultGameplay"));
+
         if (!pCameraMgr_->CheckSettings())
             return;
 
@@ -316,11 +318,11 @@ namespace Frost
             // Update lights' animations
             pLightMgr_->UpdateLights(fDelta);
 
+            // Update physics controled objects
+            pPhysicsMgr_->Update(fDelta);
+
             // Update units' state, actions, movement, ...
             pUnitMgr_->UpdateUnits(fDelta);
-
-            // Update physics controled objects
-            pPhysicsMgr_->UpdateHandlers(fDelta);
 
             // Update the GUI
             pGUIMgr_->Update(fDelta);
@@ -344,13 +346,13 @@ namespace Frost
                 pParam->setNamedConstant("mPrevViewProj", mPrevViewProj);
                 mPrevViewProj = mViewProj;
 
-                pParam->setNamedConstant("mFPS", 1/fDelta.Get());
+                pParam->setNamedConstant("mFPS", 1.0f/fDelta.Get());
 
                 if (bFirstIteration)
                 {
                     pParam->setNamedConstant("mMaxUV", Ogre::Vector4(
-                        (s_float(pSceneRenderTarget_->GetWidth()-1)/s_float(pSceneRenderTarget_->GetRealWidth())).Get(),
-                        (s_float(pSceneRenderTarget_->GetHeight()-1)/s_float(pSceneRenderTarget_->GetRealHeight())).Get(),
+                        (s_float(pSceneRenderTarget_->GetWidth()-1.0f)/s_float(pSceneRenderTarget_->GetRealWidth())).Get(),
+                        (s_float(pSceneRenderTarget_->GetHeight()-1.0f)/s_float(pSceneRenderTarget_->GetRealHeight())).Get(),
                         0.0f, 0.0f
                     ));
                 }
@@ -444,13 +446,6 @@ namespace Frost
                 UtilsManager::Delete();
             }
         }
-    }
-
-    s_bool Engine::ReadGameConfig_()
-    {
-        pGameplayMgr_->SetCurrentGameplay(GetStringConstant("DefaultGameplay"));
-
-        return true;
     }
 
     s_bool Engine::ReadGraphicsConfig_()
