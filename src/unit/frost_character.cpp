@@ -30,7 +30,7 @@ namespace Frost
     const s_str Race::CLASS_NAME = "Race";
     const s_str CharacterModelInfo::CLASS_NAME = "CharacterModelInfo";
 
-    Character::Character( const s_uint& uiID, const s_str& sName, const Race& mRace, CharGender mGender ) :
+    Character::Character( const s_uint& uiID, const s_str& sName, const Race& mRace, Gender mGender ) :
        MovableUnit(uiID, sName), mInterface_(this), mGender_(mGender), mRace_(mRace)
     {
         // Get the gender

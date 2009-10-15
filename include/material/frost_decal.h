@@ -6,11 +6,6 @@
 
 namespace Frost
 {
-    enum DecalProjection
-    {
-        DECAL_PROJECTION_PERSP,
-        DECAL_PROJECTION_ORTHO
-    };
 
     /// A movable texture projection.
     /** This class can be used to display a selection
@@ -20,6 +15,12 @@ namespace Frost
     class Decal : public MovableObject
     {
     public :
+
+        enum Projection
+        {
+            PROJ_PERSPECTIVE,
+            PROJ_ORTHOGRAPHIC
+        };
 
         /// Default constructor.
         /** \param sTextureFile The file containing the texture to draw
@@ -86,12 +87,12 @@ namespace Frost
         /// Set the Decal's projection mode.
         /** \param mProjection The new projection mode
         */
-        void                    SetProjection(const DecalProjection& mProjection);
+        void                    SetProjection(const Projection& mProjection);
 
         /// Returns the Decal's projection mode.
         /** \return The Decal's projection mode
         */
-        const DecalProjection&  GetProjection() const;
+        const Projection&       GetProjection() const;
 
         /// Returns this Decal's ID.
         /** \return This Decal's ID
@@ -130,7 +131,7 @@ namespace Frost
         s_float                       fScale_;
         s_str                         sTextureFile_;
         s_bool                        bShown_;
-        DecalProjection               mProjection_;
+        Projection                    mProjection_;
         Color                         mDiffuse_;
         Color                         mSelfIllum_;
         Color                         mAmbient_;

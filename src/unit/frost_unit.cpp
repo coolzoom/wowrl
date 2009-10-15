@@ -45,7 +45,7 @@ namespace Frost
         pSelectionDecal_->Attach(pNode_, false, true);
         pSelectionDecal_->SetPosition(Vector(0, 5, 0));
         pSelectionDecal_->SetDirection(Vector(0, -1, 0));
-        pSelectionDecal_->SetProjection(DECAL_PROJECTION_ORTHO);
+        pSelectionDecal_->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
         pSelectionDecal_->SetScale(1.5f);
         pSelectionDecal_->SetDiffuse(Color(0, 255, 0));
         pSelectionDecal_->SetAmbient(Color(0, 255, 0));
@@ -54,7 +54,7 @@ namespace Frost
         pShadowDecal->Attach(pNode_, false, true);
         pShadowDecal->SetPosition(Vector(0, 5, 0));
         pShadowDecal->SetDirection(Vector(0, -1, 0));
-        pShadowDecal->SetProjection(DECAL_PROJECTION_ORTHO);
+        pShadowDecal->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
         pShadowDecal->SetScale(1.8f);
         pShadowDecal->SetDiffuse(Color(128, 255, 255, 255));
 

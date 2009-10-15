@@ -60,7 +60,7 @@ namespace Frost
         return mSunColor_;
     }
 
-    s_ptr<Light> LightManager::CreateLight( LightType mType )
+    s_ptr<Light> LightManager::CreateLight( Light::Type mType )
     {
         s_ptr<Light> pLight = new Light(mType);
         lLightList_[pLight->GetID()] = pLight;

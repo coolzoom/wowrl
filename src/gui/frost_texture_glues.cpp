@@ -26,16 +26,16 @@ int LuaTexture::_GetBlendMode( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:GetBlendMode", pLua, 1);
 
-    TextureBlendMode mBlend = pTextureParent_->GetBlendMode();
+    Texture::BlendMode mBlend = pTextureParent_->GetBlendMode();
 
     s_str sBlend;
     switch (mBlend)
     {
-        case BLEND_NONE : sBlend = "NONE"; break;
-        case BLEND_BLEND : sBlend = "BLEND"; break;
-        case BLEND_KEY : sBlend = "KEY"; break;
-        case BLEND_ADD : sBlend = "ADD"; break;
-        case BLEND_MOD : sBlend = "MOD"; break;
+        case Texture::BLEND_NONE : sBlend = "NONE"; break;
+        case Texture::BLEND_BLEND : sBlend = "BLEND"; break;
+        case Texture::BLEND_KEY : sBlend = "KEY"; break;
+        case Texture::BLEND_ADD : sBlend = "ADD"; break;
+        case Texture::BLEND_MOD : sBlend = "MOD"; break;
     }
 
     mFunc.Push(sBlend);
@@ -103,17 +103,17 @@ int LuaTexture::_SetBlendMode( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sBlend = mFunc.Get(0)->GetString();
-        TextureBlendMode mBlend;
+        Texture::BlendMode mBlend;
         if (sBlend == "NONE")
-            mBlend = BLEND_NONE;
+            mBlend = Texture::BLEND_NONE;
         else if (sBlend == "BLEND")
-            mBlend = BLEND_BLEND;
+            mBlend = Texture::BLEND_BLEND;
         else if (sBlend == "KEY")
-            mBlend = BLEND_KEY;
+            mBlend = Texture::BLEND_KEY;
         else if (sBlend == "ADD")
-            mBlend = BLEND_ADD;
+            mBlend = Texture::BLEND_ADD;
         else if (sBlend == "MOD")
-            mBlend = BLEND_MOD;
+            mBlend = Texture::BLEND_MOD;
         else
         {
             Error(mFunc.GetName(),
@@ -155,11 +155,11 @@ int LuaTexture::_SetGradient( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sOrientation = mFunc.Get(0)->GetString();
-        GradientOrientation mOrientation;
+        Gradient::Orientation mOrientation;
         if (sOrientation == "HORIZONTAL")
-            mOrientation = ORIENTATION_HORIZONTAL;
+            mOrientation = Gradient::HORIZONTAL;
         else if (sOrientation == "VERTICAL")
-            mOrientation = ORIENTATION_VERTICAL;
+            mOrientation = Gradient::VERTICAL;
         else
         {
             Error(mFunc.GetName(),
@@ -201,11 +201,11 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sOrientation = mFunc.Get(0)->GetString();
-        GradientOrientation mOrientation;
+        Gradient::Orientation mOrientation;
         if (sOrientation == "HORIZONTAL")
-            mOrientation = ORIENTATION_HORIZONTAL;
+            mOrientation = Gradient::HORIZONTAL;
         else if (sOrientation == "VERTICAL")
-            mOrientation = ORIENTATION_VERTICAL;
+            mOrientation = Gradient::VERTICAL;
         else
         {
             Error(mFunc.GetName(),

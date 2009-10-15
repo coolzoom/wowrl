@@ -54,8 +54,8 @@ s_str Texture::Serialize( const s_str& sTab ) const
         sStr << sTab << "  |   # orientation : ";
         switch (mGradient_.GetOrientation())
         {
-            case ORIENTATION_HORIZONTAL : sStr << "HORIZONTAL\n"; break;
-            case ORIENTATION_VERTICAL : sStr << "VERTICAL\n"; break;
+            case Gradient::HORIZONTAL : sStr << "HORIZONTAL\n"; break;
+            case Gradient::VERTICAL :   sStr << "VERTICAL\n"; break;
             default : sStr << "<error>\n"; break;
         }
         sStr << sTab << "  #-###\n";
@@ -143,7 +143,7 @@ void Texture::CopyFrom( s_ptr<UIObject> pObj )
     }
 }
 
-TextureBlendMode Texture::GetBlendMode() const
+Texture::BlendMode Texture::GetBlendMode() const
 {
     return mBlendMode_;
 }
@@ -191,7 +191,7 @@ const s_bool& Texture::IsDesaturated() const
     return bIsDesaturated_;
 }
 
-void Texture::SetBlendMode( TextureBlendMode mBlendMode )
+void Texture::SetBlendMode( BlendMode mBlendMode )
 {
     mBlendMode_ = mBlendMode;
 }
@@ -246,7 +246,7 @@ void Texture::SetGradient( const Gradient& mGradient )
     s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
     pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
 
-    if (mGradient_.GetOrientation() == ORIENTATION_HORIZONTAL)
+    if (mGradient_.GetOrientation() == Gradient::HORIZONTAL)
     {
         pSprite_->SetColor(mGradient_.GetMinColor(), 0);
         pSprite_->SetColor(mGradient_.GetMinColor(), 3);

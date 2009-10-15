@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
                 s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
                 //pZone->ShowAllChunks();
 
-                s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+                s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(Light::POINT);
                 pLight1->SetPosition(Vector(0, 10, 0));
                 pLight1->SetColor(Color(255, 255, 255));
                 pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
                 PhysicsManager::GetSingleton()->AddObstacle(pMesh);*/
 
                 // Create Units
-                s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", GENDER_MALE);
+                s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", Character::GENDER_MALE);
                 pChar->Teleport(Vector(0, 1, 0));
                 //pChar->Teleport(Vector(22, 1, 0));
                 pChar->RotateModel(0.25f, 0.0f);
@@ -252,7 +252,7 @@ int main(int argc, char* argv[])
                 pChar->SetStat("SPIRIT", s_int(50));
                 pChar->SetStat("INTELLECT", s_int(50));
 
-                /*s_ptr<Character> pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", GENDER_MALE);
+                /*s_ptr<Character> pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", Character::GENDER_MALE);
                 pChar2->EnablePhysics();
                 pChar2->Teleport(Vector(0, 1, -5));
                 pChar2->LookAtUnit(pChar);

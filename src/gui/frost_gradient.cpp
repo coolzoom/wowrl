@@ -18,7 +18,7 @@ Gradient::Gradient() : bIsEmpty_(true)
 }
 
 
-Gradient::Gradient( GradientOrientation mOrientation, const Color& mMinColor, const Color& mMaxColor ) :
+Gradient::Gradient( Orientation mOrientation, const Color& mMinColor, const Color& mMaxColor ) :
     mOrientation_(mOrientation), mMinColor_(mMinColor), mMaxColor_(mMaxColor)
 {
 }
@@ -33,7 +33,7 @@ const Color& Gradient::GetMaxColor() const
     return mMaxColor_;
 }
 
-GradientOrientation Gradient::GetOrientation() const
+Gradient::Orientation Gradient::GetOrientation() const
 {
     return mOrientation_;
 }

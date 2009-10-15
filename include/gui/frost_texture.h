@@ -18,14 +18,6 @@ namespace Frost
 {
     namespace GUI
     {
-        enum TextureBlendMode
-        {
-            BLEND_NONE,
-            BLEND_BLEND,
-            BLEND_KEY,
-            BLEND_ADD,
-            BLEND_MOD
-        };
 
         /// The base of the GUI's appearence
         /** This object contains either a texture taken from a file,
@@ -34,6 +26,15 @@ namespace Frost
         class Texture : public LayeredRegion
         {
         public :
+
+            enum BlendMode
+            {
+                BLEND_NONE,
+                BLEND_BLEND,
+                BLEND_KEY,
+                BLEND_ADD,
+                BLEND_MOD
+            };
 
             /// Constructor.
             Texture();
@@ -58,7 +59,7 @@ namespace Frost
             /// Returns this Texture's blending mode.
             /** \return This Texture's blending mode
             */
-            TextureBlendMode          GetBlendMode() const;
+            BlendMode                 GetBlendMode() const;
 
             /// Returns this Texture's color.
             /** \return This Texture's color (Color::NaN if none)
@@ -109,7 +110,7 @@ namespace Frost
             /// Sets this Texture's blending mode.
             /** \param mBlendMode The new blending mode
             */
-            void                      SetBlendMode(TextureBlendMode mBlendMode);
+            void                      SetBlendMode(BlendMode mBlendMode);
 
             /// Sets this Texture's blending mode.
             /** \param sBlendMode The new blending mode
@@ -185,16 +186,14 @@ namespace Frost
 
         protected :
 
-            s_refptr<Sprite>   pSprite_;
+            s_refptr<Sprite> pSprite_;
+            s_str            sTextureFile_;
 
-            TextureBlendMode   mBlendMode_;
-            s_bool             bIsDesaturated_;
+            BlendMode mBlendMode_;
+            s_bool    bIsDesaturated_;
+            Gradient  mGradient_;
+            Color     mColor_;
 
-            Gradient           mGradient_;
-
-            Color              mColor_;
-
-            s_str              sTextureFile_;
             s_array<s_float,8> lTexCoord_;
             s_bool             bTexCoordModifiesRect_;
 

@@ -22,7 +22,7 @@ namespace Frost
         pOgreFrustum_ = s_refptr<Ogre::Frustum>(new Ogre::Frustum());
         pOgreFrustum_->setAspectRatio(1.0f);
         pNode_->attachObject(pOgreFrustum_.Get());
-        mProjection_ = DECAL_PROJECTION_PERSP;
+        mProjection_ = PROJ_PERSPECTIVE;
         fScale_ = 1.0f;
         mDiffuse_ = Color::WHITE;
         mSelfIllum_ = Color::BLACK;
@@ -39,7 +39,7 @@ namespace Frost
         pOgreFrustum_ = s_refptr<Ogre::Frustum>(new Ogre::Frustum());
         pOgreFrustum_->setAspectRatio(1.0f);
         pNode_->attachObject(pOgreFrustum_.Get());
-        mProjection_ = DECAL_PROJECTION_PERSP;
+        mProjection_ = PROJ_PERSPECTIVE;
         fScale_ = 1.0f;
         SetDiffuse(mDecal.mDiffuse_);
         SetSelfIllumination(mDecal.mSelfIllum_);
@@ -60,12 +60,12 @@ namespace Frost
         fScale_ = fScale;
         switch (mProjection_)
         {
-            case DECAL_PROJECTION_PERSP :
+            case PROJ_PERSPECTIVE :
             {
                 pOgreFrustum_->setFOVy(Ogre::Degree(45/fScale_.Get()));
                 break;
             }
-            case DECAL_PROJECTION_ORTHO :
+            case PROJ_ORTHOGRAPHIC :
             {
                 pOgreFrustum_->setOrthoWindow(fScale_.Get(), fScale_.Get());
                 break;
@@ -123,18 +123,18 @@ namespace Frost
         }
     }
 
-    void Decal::SetProjection( const DecalProjection& mProjection )
+    void Decal::SetProjection( const Projection& mProjection )
     {
         mProjection_ = mProjection;
         switch (mProjection_)
         {
-            case DECAL_PROJECTION_PERSP :
+            case PROJ_PERSPECTIVE :
             {
                 pOgreFrustum_->setProjectionType(Ogre::PT_PERSPECTIVE);
                 pOgreFrustum_->setFOVy(Ogre::Degree(45/fScale_.Get()));
                 break;
             }
-            case DECAL_PROJECTION_ORTHO :
+            case PROJ_ORTHOGRAPHIC :
             {
                 pOgreFrustum_->setProjectionType(Ogre::PT_ORTHOGRAPHIC);
                 pOgreFrustum_->setOrthoWindow(fScale_.Get(), fScale_.Get());
@@ -143,7 +143,7 @@ namespace Frost
         }
     }
 
-    const DecalProjection& Decal::GetProjection() const
+    const Decal::Projection& Decal::GetProjection() const
     {
         return mProjection_;
     }
