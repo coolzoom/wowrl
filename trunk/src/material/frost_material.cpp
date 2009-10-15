@@ -22,7 +22,7 @@ namespace Frost
 {
     const s_str Material::CLASS_NAME = "Material";
 
-    Material::Material( const s_uint& uiID, MaterialType mType, s_ptr<Ogre::Material> pOgreMat )
+    Material::Material( const s_uint& uiID, Type mType, s_ptr<Ogre::Material> pOgreMat )
     {
         uiID_ = uiID;
         mType_ = mType;
@@ -31,7 +31,7 @@ namespace Frost
 
         pDefaultPass_ = pOgreMat->getTechnique(0)->getPass(0);
 
-        if ((mType != MATERIAL_2D_PLAIN) && (mType != MATERIAL_3D_PLAIN))
+        if ((mType != TYPE_2D_PLAIN) && (mType != TYPE_3D_PLAIN))
         {
             s_ptr<Ogre::Technique> pTech = pOgreMat->getTechnique(0);
             if (pTech)
@@ -66,7 +66,7 @@ namespace Frost
             iterDecal->second.Delete();
         }
 
-        if (mType_ != MATERIAL_UNKNOWN)
+        if (mType_ != TYPE_UNKNOWN)
         {
             Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
         }
@@ -269,11 +269,11 @@ namespace Frost
 
     s_bool Material::IsRenderTarget() const
     {
-        return (mType_ == MATERIAL_2D_RT);
+        return (mType_ == TYPE_2D_RT);
     }
 
     s_bool Material::IsPlain() const
     {
-        return (mType_ == MATERIAL_3D_PLAIN) || (mType_ == MATERIAL_2D_PLAIN);
+        return (mType_ == TYPE_3D_PLAIN) || (mType_ == TYPE_2D_PLAIN);
     }
 }

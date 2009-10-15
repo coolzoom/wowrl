@@ -23,7 +23,7 @@ namespace Frost
     {
     public :
 
-        enum IntegerType
+        enum Type
         {
             INTEGER,
             INTEGER_INF_PLUS,
@@ -43,7 +43,7 @@ namespace Frost
             iValue_ = iValue;
         }
 
-        explicit s_int_t(const IntegerType& mType)
+        explicit s_int_t(const Type& mType)
         {
             mType_ = mType;
             iValue_ = 0;
@@ -64,7 +64,7 @@ namespace Frost
         template<class N>
         explicit s_int_t(const s_int_t<N>& iValue)
         {
-            mType_ = static_cast<IntegerType>(iValue.GetType());
+            mType_ = static_cast<Type>(iValue.GetType());
             iValue_ = static_cast<T>(iValue.Get());
         }
 
@@ -188,7 +188,7 @@ namespace Frost
         /// Returns the type of this int.
         /** \return The type of this int (infinite, NaN, ...)
         */
-        IntegerType GetType() const
+        Type GetType() const
         {
             return mType_;
         }
@@ -793,7 +793,7 @@ namespace Frost
 
         T iValue_;
 
-        IntegerType mType_;
+        Type mType_;
     };
 
     template<class T>

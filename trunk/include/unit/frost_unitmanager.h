@@ -26,7 +26,7 @@ namespace Frost
         void                      Initialize();
 
         /// Creates a new Character.
-        s_ptr<Character>          CreateCharacter(const s_str& sName, const s_str& sRace, CharGender mGender);
+        s_ptr<Character>          CreateCharacter(const s_str& sName, const s_str& sRace, Character::Gender mGender);
 
         /// Creates a new Creature.
         s_ptr<Creature>           CreateCreature(const s_str& sName);

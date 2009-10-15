@@ -16,7 +16,7 @@ namespace Frost
 {
     const s_str Light::CLASS_NAME = "Light";
 
-    Light::Light(LightType mType) : mType_(mType)
+    Light::Light(Type mType) : mType_(mType)
     {
         pOgreLight_ = Engine::GetSingleton()->GetOgreSceneManager()->createLight(
             ("Light_"+uiID_).Get()
@@ -26,17 +26,17 @@ namespace Frost
 
         switch (mType_)
         {
-            case LIGHT_POINT :
+            case POINT :
             {
                 pOgreLight_->setType(Ogre::Light::LT_POINT);
                 break;
             }
-            case LIGHT_DIRECTIONAL :
+            case DIRECTIONAL :
             {
                 pOgreLight_->setType(Ogre::Light::LT_DIRECTIONAL);
                 break;
             }
-            case LIGHT_SPOT :
+            case SPOT :
             {
                 pOgreLight_->setType(Ogre::Light::LT_SPOTLIGHT);
                 break;
@@ -78,7 +78,7 @@ namespace Frost
 
     void Light::SetDirection( const Vector& mDir )
     {
-        if (mType_ == LIGHT_SPOT || mType_ == LIGHT_DIRECTIONAL)
+        if (mType_ == SPOT || mType_ == DIRECTIONAL)
         {
             pOgreLight_->setDirection(Vector::FrostToOgre(mDir));
         }
@@ -86,7 +86,7 @@ namespace Frost
 
     void Light::SetSpotDimensions( const s_float& fInAngle, const s_float& fOutAngle )
     {
-        if (mType_ == LIGHT_SPOT)
+        if (mType_ == SPOT)
         {
             fInAngle_ = fInAngle;
             fOutAngle_ = fOutAngle;
@@ -97,7 +97,7 @@ namespace Frost
 
     void Light::SetSpotFalloff( const s_float& fFalloff )
     {
-        if (mType_ == LIGHT_SPOT)
+        if (mType_ == SPOT)
         {
             fFalloff_ = fFalloff;
             pOgreLight_->setSpotlightFalloff(fFalloff.Get());

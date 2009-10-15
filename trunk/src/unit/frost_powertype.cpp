@@ -18,7 +18,11 @@ namespace Frost
     {
         pParent_ = UnitManager::GetSingleton()->GetPowerTypeByName(sPowerName);
         if (pParent_->mRegenType == POWER_REGEN_TICK)
-            pTimer_ = s_refptr<PeriodicTimer>(new PeriodicTimer(s_double(pParent_->fRegenTickDuration), TIMER_START_FIRST, false));
+        {
+            pTimer_ = s_refptr<PeriodicTimer>(new PeriodicTimer(
+                s_double(pParent_->fRegenTickDuration), PeriodicTimer::START_FIRST_TICK, false
+            ));
+        }
     }
 
     const s_str& PowerTypeInstance::GetPowerTypeName() const

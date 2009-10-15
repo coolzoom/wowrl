@@ -37,13 +37,6 @@ namespace Frost
         MODELPART_CAPES
     };
 
-    enum CharGender
-    {
-        GENDER_NONE,
-        GENDER_MALE,
-        GENDER_FEMALE
-    };
-
     /// Holds informations about the model used by a character.
     struct CharacterModelInfo
     {
@@ -97,6 +90,13 @@ namespace Frost
     {
     public :
 
+        enum Gender
+        {
+            GENDER_NONE,
+            GENDER_MALE,
+            GENDER_FEMALE
+        };
+
         /// Constructor.
         /** \param uiID    This Character's unique ID
         *   \param sName   This Character's name
@@ -105,7 +105,7 @@ namespace Frost
         *   \note You shouldn't have to call this. Use the
         *         UnitManager instead.
         */
-        Character(const s_uint& uiID, const s_str& sName, const Race& mRace, CharGender mGender);
+        Character(const s_uint& uiID, const s_str& sName, const Race& mRace, Gender mGender);
 
         /// Destructor.
         ~Character();
@@ -146,8 +146,8 @@ namespace Frost
 
         CharacterOgreInterface mInterface_;
 
-        CharGender mGender_;
-        Race       mRace_;
+        Gender mGender_;
+        Race   mRace_;
     };
 
     /** \cond NOT_REMOVE_FROM_DOC

@@ -59,7 +59,7 @@ namespace Frost
         Lua::RegisterGlobalFuncs(pLua_);
     }
 
-    s_ptr<Character> UnitManager::CreateCharacter( const s_str& sName, const s_str& sRace, CharGender mGender )
+    s_ptr<Character> UnitManager::CreateCharacter( const s_str& sName, const s_str& sRace, Character::Gender mGender )
     {
         s_ptr<Character> pCharacter;
 

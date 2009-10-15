@@ -753,11 +753,11 @@ namespace Frost
         if (pGradientBlock)
         {
             s_str sOrientation = pGradientBlock->GetAttribute("orientation");
-            GUI::GradientOrientation mOrient;
+            GUI::Gradient::Orientation mOrient;
             if (sOrientation == "HORIZONTAL")
-                mOrient = GUI::ORIENTATION_HORIZONTAL;
+                mOrient = GUI::Gradient::HORIZONTAL;
             else if (sOrientation == "VERTICAL")
-                mOrient = GUI::ORIENTATION_VERTICAL;
+                mOrient = GUI::Gradient::VERTICAL;
             else
             {
                 Error(pGradientBlock->GetFile()+":"+pGradientBlock->GetLineNbr(),

@@ -1,20 +1,6 @@
 // Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
-    enum IntegerConversionType
-    {
-        CONV_DECIMAL,
-        CONV_HEXA,
-        CONV_BIN
-    };
-
-    enum BoolConversionType
-    {
-        CONV_TRUE_FALSE,
-        CONV_1_0,
-        CONV_YES_NO
-    };
-
     /// Base type : string
     /** Frost's base types are made to allow simpler
     *   manipulation of numbers, booleans and strings.
@@ -47,8 +33,6 @@ namespace Frost
         s_str_t()
         {
             sValue_ = "";
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
         /// Constructor.
@@ -57,8 +41,6 @@ namespace Frost
         s_str_t(const string_object& sValue)
         {
             sValue_ = sValue;
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
         /// Constructor.
@@ -67,8 +49,6 @@ namespace Frost
         s_str_t(const string_element* sValue)
         {
             sValue_ = sValue;
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
         /// Constructor.
@@ -79,8 +59,6 @@ namespace Frost
         {
             sValue_ = sValue;
             sValue_.resize(uiSize.Get());
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
         /// s_int_t conversion constructor.
@@ -89,8 +67,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(const s_int_t<N>& iValue)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(iValue);
         }
@@ -103,8 +79,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(const s_int_t<N>& iValue, const s_uint& uiCharNbr)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(iValue);
 
@@ -118,8 +92,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(const s_uint_t<N>& uiValue)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(uiValue);
         }
@@ -132,8 +104,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(const s_uint_t<N>& uiValue, const s_uint& uiCharNbr)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(uiValue);
 
@@ -147,8 +117,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(const s_float_t<N>& fValue)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(fValue);
         }
@@ -161,8 +129,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(const s_float_t<N>& fValue, const s_uint& uiCharNbr)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(fValue);
 
@@ -176,8 +142,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(const s_bool_t<N>& bValue)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(bValue);
         }
@@ -188,8 +152,6 @@ namespace Frost
         template<class N>
         explicit s_str_t(s_ptr<N> pValue)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator<<(pValue);
         }
@@ -199,8 +161,6 @@ namespace Frost
         */
         explicit s_str_t(const string_element& cValue)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator+=(cValue);
         }
@@ -210,8 +170,6 @@ namespace Frost
         */
         explicit s_str_t(const s_char& cValue)
         {
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
             sValue_ = "";
             this->operator+=(cValue);
         }
@@ -227,8 +185,6 @@ namespace Frost
                 sValue_ = string_object(uiCharNbr.Get(), cValue);
             else
                 sValue_ = "";
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
         /// s_char conversion constructor.
@@ -242,8 +198,6 @@ namespace Frost
                 sValue_ = string_object(uiCharNbr.Get(), cValue.Get());
             else
                 sValue_ = "";
-            mIntConvType_ = CONV_DECIMAL;
-            mBoolConvType_ = CONV_TRUE_FALSE;
         }
 
         /// Changes the case of the first character.
@@ -372,7 +326,7 @@ namespace Frost
         void EraseFromEnd(const s_uint& uiNbr)
         {
             if (uiNbr.IsValid())
-                sValue_.erase((GetLength()-uiNbr).Get(), uiNbr.Get());
+                sValue_.erase((GetLength() - uiNbr).Get(), uiNbr.Get());
             else
                 sValue_.clear();
         }
@@ -546,7 +500,18 @@ namespace Frost
         /// Returns a const reference to the string.
         /** \return A const reference to the string
         */
-        inline const string_object& Get() const { return sValue_; }
+        inline const string_object& Get() const
+        {
+            return sValue_;
+        }
+
+        /// Returns a reference to the string.
+        /** \return A reference to the string
+        */
+        inline string_object& Get()
+        {
+            return sValue_;
+        }
 
         /// Returns the string converted to ASCII.
         /** \return The string converted to ASCII
@@ -570,14 +535,6 @@ namespace Frost
         inline const string_element* c_str() const
         {
             return sValue_.c_str();
-        }
-
-        /// Returns a reference to the string.
-        /** \return A reference to the string
-        */
-        inline string_object& GetR()
-        {
-            return sValue_;
         }
 
         /// Returns this string converted to a uint
@@ -643,17 +600,9 @@ namespace Frost
         */
         s_bool IsBoolean() const
         {
-            switch (mBoolConvType_)
-            {
-                case CONV_TRUE_FALSE :
-                    return ((sValue_ == "false") || (sValue_ == "true"));
-                case CONV_1_0 :
-                    return ((sValue_ == "0")     || (sValue_ == "1"));
-                case CONV_YES_NO :
-                    return ((sValue_ == "no")    || (sValue_ == "yes"));
-                default :
-                    return false;
-            }
+            return (sValue_ == "false") || (sValue_ == "true") ||
+                   (sValue_ == "0")     || (sValue_ == "1")    ||
+                   (sValue_ == "no")    || (sValue_ == "yes");
         }
 
         /// Returns the number of character in the string.
@@ -1028,28 +977,8 @@ namespace Frost
             if (iValue.IsValid())
             {
                 string_stream sStream;
-                switch (mIntConvType_)
-                {
-                    case CONV_DECIMAL :
-                    {
-                        sStream << iValue.Get();
-                        break;
-                    }
-                    case CONV_HEXA :
-                    {
-                        sStream << std::hex << iValue.Get();
-                        break;
-                    }
-                    case CONV_BIN :
-                    {
-                        // TODO : Implementer la conversion en binaire, si necessaire
-                        break;
-                    }
-                }
-
-                string_object sValue;
-                sStream >> sValue;
-                sValue_ += sValue;
+                sStream << iValue.Get();
+                sValue_ += sStream.str();
 
                 return *this;
             }
@@ -1072,25 +1001,7 @@ namespace Frost
             if (uiValue.IsValid())
             {
                 string_stream sStream;
-                switch (mIntConvType_)
-                {
-                    case CONV_DECIMAL :
-                    {
-                        sStream << uiValue.Get();
-                        break;
-                    }
-                    case CONV_HEXA :
-                    {
-                        sStream << std::hex << uiValue.Get();
-                        break;
-                    }
-                    case CONV_BIN :
-                    {
-                        // TODO : Implementer la conversion en binaire, si necessaire
-                        break;
-                    }
-                }
-
+                sStream << uiValue.Get();
                 sValue_ += sStream.str();
 
                 return *this;
@@ -1133,21 +1044,11 @@ namespace Frost
         template <class N>
         s_str_t& operator << (const s_bool_t<N>& bValue)
         {
-            string_object sChoice[2] = { "", "" };
-            switch (mBoolConvType_)
-            {
-                case CONV_TRUE_FALSE :
-                    sChoice[0] = "false"; sChoice[1] = "true";
-                    break;
-                case CONV_1_0 :
-                    sChoice[0] = "0";     sChoice[1] = "1";
-                    break;
-                case CONV_YES_NO :
-                    sChoice[0] = "no";    sChoice[1] = "yes";
-                    break;
-            }
+            if (bValue)
+                sValue_ += "true";
+            else
+                sValue_ += "false";
 
-            sValue_ += sChoice[bValue ? 1 : 0];
             return *this;
         }
 
@@ -1177,18 +1078,6 @@ namespace Frost
                     operator << (lValue[i]) << ", ";
             }
             operator << (")");
-            return *this;
-        }
-
-        s_str_t& operator << (const IntegerConversionType& mIntConvType)
-        {
-            mIntConvType_ = mIntConvType;
-            return *this;
-        }
-
-        s_str_t& operator << (const BoolConversionType& mBoolConvType)
-        {
-            mBoolConvType_ = mBoolConvType;
             return *this;
         }
 
@@ -1277,8 +1166,6 @@ namespace Frost
     private :
 
         string_object         sValue_;
-        IntegerConversionType mIntConvType_;
-        BoolConversionType    mBoolConvType_;
 
     };
 

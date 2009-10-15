@@ -16,13 +16,6 @@ namespace Frost
 {
     namespace GUI
     {
-        enum ButtonState
-        {
-            BUTTON_UP,
-            BUTTON_DOWN,
-            BUTTON_DISABLED
-        };
-
         /// A simple button.
         /** This class can handle three different states :
         *   "normal", "pushed" and "disabled". You can provide a
@@ -39,6 +32,14 @@ namespace Frost
         {
         public :
 
+            enum State
+            {
+                STATE_UP,
+                STATE_DOWN,
+                STATE_DISABLED
+            };
+
+            /// Constructor.
             Button();
 
             /// Creates the associated Lua glue.
@@ -220,7 +221,7 @@ namespace Frost
             /// Returns this Button's state.
             /** \return This Button's state (see ButtonState)
             */
-            ButtonState       GetButtonState() const;
+            State             GetButtonState() const;
 
             /// Locks this Button's highlighting.
             /** \note The button will always be highlighted
@@ -245,7 +246,7 @@ namespace Frost
 
         protected :
 
-            ButtonState mState_;
+            State       mState_;
             s_bool      bHighlighted_;
             s_bool      bLockHighlight_;
 

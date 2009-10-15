@@ -14,15 +14,7 @@
 
 namespace Frost
 {
-    enum TimerType
-    {
-        /// The timer will start if you call Start()
-        TIMER_START_NO,
-        /// The timer starts immediatly after it is created
-        TIMER_START_NOW,
-        /// The timer will start when you first call Ticks()
-        TIMER_START_FIRST
-    };
+
 
     /// A... periodic timer
     /** This timer is meant to tick periodicaly,
@@ -33,12 +25,22 @@ namespace Frost
     {
     public :
 
+        enum StartType
+        {
+            /// The timer will start if you call Start()
+            START_PAUSED,
+            /// The timer starts immediatly after it is created
+            START_NOW,
+            /// The timer will start when you first call Ticks()
+            START_FIRST_TICK
+        };
+
         /// Default constructor
         /** \param dDuration The time interval between each tick
         *   \param mType     See TimerType
         *   \param bTicks    The timer ticks immediately
         */
-        PeriodicTimer(const s_double& dDuration, TimerType mType, const s_bool& bTicks);
+        PeriodicTimer(const s_double& dDuration, StartType mType, const s_bool& bTicks);
 
         /// Returns the time elapsed since the last tick.
         /** \return The time elapsed since last tick
@@ -82,7 +84,7 @@ namespace Frost
         s_bool   bPaused_;
         s_bool   bFirstTick_;
 
-        TimerType mType_;
+        StartType mType_;
     };
 
 

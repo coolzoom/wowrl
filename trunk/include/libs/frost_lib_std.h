@@ -13,7 +13,7 @@
 #ifndef FROST_STD_H
 #define FROST_STD_H
 
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <map>
 #include <tr1/unordered_map>

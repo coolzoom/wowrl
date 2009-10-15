@@ -57,9 +57,9 @@ int LuaButton::_GetButtonState( lua_State* pLua )
 
     switch (pButtonParent_->GetButtonState())
     {
-        case BUTTON_UP : mFunc.Push(s_str("NORMAL")); break;
-        case BUTTON_DOWN : mFunc.Push(s_str("PUSHED")); break;
-        case BUTTON_DISABLED : mFunc.Push(s_str("DISABLED")); break;
+        case Button::STATE_UP :       mFunc.Push(s_str("NORMAL"));   break;
+        case Button::STATE_DOWN :     mFunc.Push(s_str("PUSHED"));   break;
+        case Button::STATE_DISABLED : mFunc.Push(s_str("DISABLED")); break;
         default : mFunc.PushNil(); break;
     }
 

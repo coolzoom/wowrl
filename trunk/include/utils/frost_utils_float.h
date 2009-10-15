@@ -25,7 +25,7 @@ namespace Frost
     {
     public :
 
-        enum FloatType
+        enum Type
         {
             FLOAT,
             FLOAT_INF_PLUS,
@@ -43,7 +43,7 @@ namespace Frost
             fValue_ = fValue;
         }
 
-        explicit s_float_t(const FloatType& mType)
+        explicit s_float_t(const Type& mType)
         {
             switch (mType)
             {
@@ -210,7 +210,7 @@ namespace Frost
         /// Returns the type of this float.
         /** \return The type of this float (infinite, NaN, ...)
         */
-        FloatType GetType() const
+        Type GetType() const
         {
             if (std::isnan(fValue_))
                 return FLOAT_NAN;

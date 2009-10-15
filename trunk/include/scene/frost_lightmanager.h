@@ -48,7 +48,7 @@ namespace Frost
         /** \param mType The type of this light
         *   \return The new light
         */
-        s_ptr<Light> CreateLight(LightType mType);
+        s_ptr<Light> CreateLight(Light::Type mType);
 
         /// Deletes a light.
         /** \param pLight The light to delete

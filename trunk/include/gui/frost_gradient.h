@@ -15,16 +15,16 @@ namespace Frost
 {
     namespace GUI
     {
-        enum GradientOrientation
-        {
-            ORIENTATION_HORIZONTAL,
-            ORIENTATION_VERTICAL
-        };
-
         /// An helper to make gradients
         class Gradient
         {
         public :
+
+            enum Orientation
+            {
+                HORIZONTAL,
+                VERTICAL
+            };
 
             /// Default constructor.
             /** \note Makes an empty Gradient.
@@ -36,7 +36,7 @@ namespace Frost
             *   \param mMinColor    This Gradient's min color
             *   \param mMaxColor    This Gradient's max color
             */
-            Gradient(GradientOrientation mOrientation, const Color& mMinColor, const Color& mMaxColor);
+            Gradient(Orientation mOrientation, const Color& mMinColor, const Color& mMaxColor);
 
             /// Returns the Gradient's min colors.
             /** \return The Gradient's min colors
@@ -55,7 +55,7 @@ namespace Frost
             /// Returns the Gradient's orientation.
             /** \return The Gradient's orientation
             */
-            GradientOrientation GetOrientation() const;
+            Orientation GetOrientation() const;
 
             /// Checks if this Gradient is an empty one.
             /** \return 'true' if this Gradient is an empty one
@@ -66,9 +66,9 @@ namespace Frost
 
         private :
 
-            s_bool              bIsEmpty_;
-            GradientOrientation mOrientation_;
-            Color               mMinColor_, mMaxColor_;
+            s_bool      bIsEmpty_;
+            Orientation mOrientation_;
+            Color       mMinColor_, mMaxColor_;
 
         };
     }

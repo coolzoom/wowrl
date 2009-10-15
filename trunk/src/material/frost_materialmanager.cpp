@@ -41,7 +41,7 @@ namespace Frost
 
     s_refptr<Material> MaterialManager::CreateMaterial( s_ptr<Ogre::Material> pOgreMat )
     {
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_UNKNOWN, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_UNKNOWN, pOgreMat));
         uiCounter_++;
 
         return pMat;
@@ -49,7 +49,7 @@ namespace Frost
 
     s_refptr<Material> MaterialManager::CreateMaterial2D(s_ptr<Ogre::Material> pOgreMat)
     {
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_UNKNOWN, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_UNKNOWN, pOgreMat));
         uiCounter_++;
 
         if (pOgreMat->getTechnique(0)->getNumPasses() == 1)
@@ -110,7 +110,7 @@ namespace Frost
         pOgreMat->setDepthCheckEnabled(false);
         pOgreMat->setCullingMode(Ogre::CULL_NONE);
 
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_2D_PLAIN, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D_PLAIN, pOgreMat));
         uiCounter_++;
 
         return pMat;
@@ -150,7 +150,7 @@ namespace Frost
         pOgreMat->setDepthCheckEnabled(false);
         pOgreMat->setCullingMode(Ogre::CULL_NONE);
 
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_2D, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D, pOgreMat));
         uiCounter_++;
 
         return pMat;
@@ -176,7 +176,7 @@ namespace Frost
         pOgreMat->setDepthCheckEnabled(false);
         pOgreMat->setCullingMode(Ogre::CULL_NONE);
 
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_2D_RT, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D_RT, pOgreMat));
         uiCounter_++;
 
         return pMat;
@@ -203,7 +203,7 @@ namespace Frost
         pOgreMat->setDepthCheckEnabled(false);
         pOgreMat->setCullingMode(Ogre::CULL_NONE);
 
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_2D_RT, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D_RT, pOgreMat));
         uiCounter_++;
 
         return pMat;
@@ -224,7 +224,7 @@ namespace Frost
             Ogre::ColourValue(ucR.Get()/255.0f, ucG.Get()/255.0f, ucB.Get()/255.0f)
         );
 
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_3D_PLAIN, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D_PLAIN, pOgreMat));
         uiCounter_++;
 
         return pMat;
@@ -244,7 +244,7 @@ namespace Frost
 
         pOgreMat->load();
 
-        s_refptr<Material> pMat(new Material(uiCounter_, MATERIAL_3D, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D, pOgreMat));
         uiCounter_++;
 
         return pMat;

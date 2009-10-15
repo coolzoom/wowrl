@@ -16,7 +16,7 @@ using namespace Frost::GUI;
 
 const s_str Button::CLASS_NAME = "GUI::Button";
 
-Button::Button() : Frame(), mState_(BUTTON_UP)
+Button::Button() : Frame(), mState_(STATE_UP)
 {
     mObjectType_ = OJBECT_TYPE_BUTTON;
     lType_.PushBack("Button");
@@ -433,7 +433,7 @@ void Button::Disable()
 {
     if (IsEnabled())
     {
-        mState_ = BUTTON_DISABLED;
+        mState_ = STATE_DISABLED;
         if (pDisabledTexture_)
         {
             if (pNormalTexture_)
@@ -473,7 +473,7 @@ void Button::Enable()
 {
     if (!IsEnabled())
     {
-        mState_ = BUTTON_UP;
+        mState_ = STATE_UP;
         if (pDisabledTexture_)
         {
             if (pNormalTexture_)
@@ -503,7 +503,7 @@ void Button::Enable()
 
 s_bool Button::IsEnabled() const
 {
-    return (mState_ != BUTTON_DISABLED);
+    return (mState_ != STATE_DISABLED);
 }
 
 void Button::Push()
@@ -565,9 +565,9 @@ void Button::Unlight()
 
             switch (mState_)
             {
-                case BUTTON_UP       : pCurrentFontString_ = pNormalText_; break;
-                case BUTTON_DOWN     : pCurrentFontString_ = pNormalText_; break;
-                case BUTTON_DISABLED : pCurrentFontString_ = pDisabledText_; break;
+                case STATE_UP       : pCurrentFontString_ = pNormalText_; break;
+                case STATE_DOWN     : pCurrentFontString_ = pNormalText_; break;
+                case STATE_DISABLED : pCurrentFontString_ = pDisabledText_; break;
             }
 
             if (pCurrentFontString_)
@@ -579,7 +579,7 @@ void Button::Unlight()
     }
 }
 
-ButtonState Button::GetButtonState() const
+Button::State Button::GetButtonState() const
 {
     return mState_;
 }

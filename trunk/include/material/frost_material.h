@@ -13,23 +13,23 @@
 
 namespace Frost
 {
-    enum MaterialType
-    {
-        MATERIAL_2D,
-        MATERIAL_2D_PLAIN,
-        MATERIAL_2D_RT,
-        MATERIAL_3D,
-        MATERIAL_3D_PLAIN,
-        MATERIAL_UNKNOWN
-    };
-
     /// A wrapper around Ogre's material
     class Material
     {
     public :
 
+        enum Type
+        {
+            TYPE_2D,
+            TYPE_2D_PLAIN,
+            TYPE_2D_RT,
+            TYPE_3D,
+            TYPE_3D_PLAIN,
+            TYPE_UNKNOWN
+        };
+
         /// Constructor.
-        Material(const s_uint& uiID, MaterialType mType, s_ptr<Ogre::Material> pOgreMat);
+        Material(const s_uint& uiID, Type mType, s_ptr<Ogre::Material> pOgreMat);
 
         /// Destructor.
         ~Material();
@@ -198,17 +198,18 @@ namespace Frost
 
         s_ptr<Ogre::Pass> CreateDecalPass_();
 
-        s_uint                 uiID_;
-        MaterialType           mType_;
-        s_ptr<Ogre::Material>  pOgreMat_;
-        s_ptr<Ogre::Pass>      pDefaultPass_;
-        s_str                  sName_;
-        s_float                fWidth_;
-        s_float                fHeight_;
+        s_uint  uiID_;
+        Type    mType_;
+        s_str   sName_;
+        s_float fWidth_;
+        s_float fHeight_;
 
-        s_bool                 bAlphaReject_;
-        s_bool                 bHardwareSkinning_;
-        s_bool                 bIsDesaturated_;
+        s_ptr<Ogre::Material> pOgreMat_;
+        s_ptr<Ogre::Pass>     pDefaultPass_;
+
+        s_bool bAlphaReject_;
+        s_bool bHardwareSkinning_;
+        s_bool bIsDesaturated_;
 
         s_map< s_uint, s_ptr<Decal> > lDecalList_;
     };

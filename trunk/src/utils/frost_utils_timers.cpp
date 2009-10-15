@@ -15,7 +15,7 @@ namespace Frost
     const s_str PeriodicTimer::CLASS_NAME = "PeriodicTimer";
     const s_str Timer::CLASS_NAME = "Timer";
 
-    PeriodicTimer::PeriodicTimer( const s_double& dDuration, TimerType mType, const s_bool& bTickFirst )
+    PeriodicTimer::PeriodicTimer( const s_double& dDuration, StartType mType, const s_bool& bTickFirst )
     {
         dDuration_ = dDuration;
         if (bTickFirst) dElapsed_ = dDuration;
@@ -23,7 +23,7 @@ namespace Frost
         mType_ = mType;
         bPaused_ = true;
         bFirstTick_ = true;
-        if (mType == TIMER_START_NOW) Start();
+        if (mType == START_NOW) Start();
     }
 
     s_double PeriodicTimer::GetElapsed()
@@ -46,7 +46,7 @@ namespace Frost
 
     s_bool PeriodicTimer::Ticks()
     {
-        if ( (mType_ == TIMER_START_FIRST) && bFirstTick_ )
+        if ( (mType_ == START_FIRST_TICK) && bFirstTick_ )
         {
             Start();
             bFirstTick_ = false;

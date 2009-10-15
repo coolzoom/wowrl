@@ -14,20 +14,21 @@
 
 namespace Frost
 {
-    enum LightType
-    {
-        LIGHT_POINT,
-        LIGHT_DIRECTIONAL,
-        LIGHT_SPOT
-    };
 
     /// A wrapper around Ogre's Light
     class Light : public MovableObject
     {
     public:
 
+        enum Type
+        {
+            POINT,
+            DIRECTIONAL,
+            SPOT
+        };
+
         /// Constructor.
-        Light(LightType mType);
+        Light(Type mType);
 
         /// Destructor.
         ~Light();
@@ -110,16 +111,18 @@ namespace Frost
 
     private:
 
-        s_uint              uiID_;
-        LightType           mType_;
-        s_ptr<Ogre::Light> pOgreLight_;
+        s_uint  uiID_;
+        Type    mType_;
+        Color   mDiffuse_;
+        Color   mSpecular_;
+        s_float fFalloff_;
+        s_float fInAngle_;
+        s_float fOutAngle_;
+
         s_array<s_float, 4> lAttenFactors_;
         s_bool              bChangeFactors_;
-        Color               mDiffuse_;
-        Color               mSpecular_;
-        s_float             fFalloff_;
-        s_float             fInAngle_;
-        s_float             fOutAngle_;
+
+        s_ptr<Ogre::Light> pOgreLight_;
     };
 }
 
