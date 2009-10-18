@@ -190,13 +190,6 @@ namespace Frost
         /// Updates input (keyboard and mouse).
         void            Update();
 
-        /// Returns the typed character.
-        /** \param bFormated 'true' to filter non printable chars
-        *   \param bForce    'true' to bypass focus (see SetFocus())
-        *   \return The typed character (null if none)
-        */
-        s_char          GetChar(s_bool bFormated, s_bool bForce = false) const;
-
         /// Checks if a key has been pressed.
         /** \param bForce 'true' to bypass focus (see SetFocus())
         *   \return 'true' if a key has been pressed
@@ -246,21 +239,15 @@ namespace Frost
         */
         s_str           GetKeyString(KeyCode mKey) const;
 
-        /// Returns the next key that has been released in this frame.
-        /** \return The next key that has been released in this frame
-        *   \note Pops it from the stack.<br>
-        *         When there is no key in the stack, this function returns
-        *         s_uint::NaN.
+        /// Returns the list of keys that have been released during this frame.
+        /** \return The list of keys that have been released during this frame.
         */
-        s_uint          GetNextUp();
+        const s_ctnr<s_uint>& GetReleasedList() const;
 
-        /// Returns the next key that has been pressed in this frame.
-        /** \return The next key that has been pressed in this frame
-        *   \note Pops it from the stack.<br>
-        *         When there is no key in the stack, this function returns
-        *         s_uint::NaN.
+        /// Returns the list of keys that have been pressed during this frame.
+        /** \return The list of keys that have been pressed during this frame.
         */
-        s_uint          GetNextDown();
+        const s_ctnr<s_uint>& GetPressedList() const;
 
         /// Checks if Alt is beeing pressed.
         /** \return 'true' if Alt is beeing pressed

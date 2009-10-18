@@ -101,9 +101,10 @@ namespace Frost
         dStart_ = TimeManager::GetSingleton()->GetTime();
     }
 
-    Timer::Timer()
+    Timer::Timer(const StartType& mType)
     {
-        bPaused_ = true;
+        if (mType == START_PAUSED)
+            bPaused_ = true;
     }
 
     void Timer::AddTime( const s_double& dAdditionnalTime )

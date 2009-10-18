@@ -6,10 +6,10 @@
 
 #include "frost_inputmanager.h"
 
+#define OIS_DYNAMIC_LIB
+#include <OIS/OIS.h>
+
 #include <OgreRenderWindow.h>
-#include <OIS/OISInputManager.h>
-#include <OIS/OISMouse.h>
-#include <OIS/OISKeyboard.h>
 
 #define INPUT_LONGPRESS_DELAY 0.7f
 
@@ -22,7 +22,7 @@ namespace Frost
     InputManager::InputManager()
     {
         dDoubleClickTime_ = 0.25;
-        dMouseHistoryMaxLength_ = 0.1;
+        dMouseHistoryMaxLength_ = 0.03;
         fMouseSensibility_ = 1.0f;
     }
 
@@ -39,7 +39,7 @@ namespace Frost
 
     s_bool InputManager::Initialize( s_ptr<Ogre::RenderWindow> pWindow )
     {
-        std::multimap<string, string> mPL;
+        multimap<string, string> mPL;
 
         size_t iWindowHnd = 0;
         ostringstream mWindowHnd;
@@ -98,25 +98,6 @@ namespace Frost
         return true;
     }
 
-    s_char InputManager::GetChar( s_bool bFormated, s_bool bForce ) const
-    {
-        if (!bForce && bFocus_)
-            return s_char::NaN;
-        else if (bFormated)
-        {
-            // Filter non printable characters and special keys
-            if ((cChar_ == 8)  || // Backspace
-                (cChar_ == 9)  || // Tab
-                (cChar_ == 13) || // Enter
-                (cChar_ == 27))   // Escape
-                return s_char::NaN;
-            else
-                return cChar_;
-        }
-        else
-            return cChar_;
-    }
-
     s_bool InputManager::GetKey( s_bool bForce ) const
     {
         if (!bForce && bFocus_)
@@ -130,28 +111,14 @@ namespace Frost
         return pKeyboard_->getAsString((OIS::KeyCode)mKey);
     }
 
-    s_uint InputManager::GetNextDown()
+    const s_ctnr<s_uint>& InputManager::GetPressedList() const
     {
-        if (!lDownStack_.IsEmpty())
-        {
-            s_uint uiID = lDownStack_.Back();
-            lDownStack_.PopBack();
-            return uiID;
-        }
-        else
-            return s_uint::NaN;
+        return lDownStack_;
     }
 
-    s_uint InputManager::GetNextUp()
+    const s_ctnr<s_uint>& InputManager::GetReleasedList() const
     {
-        if (!lUpStack_.IsEmpty())
-        {
-            s_uint uiID = lUpStack_.Back();
-            lUpStack_.PopBack();
-            return uiID;
-        }
-        else
-            return s_uint::NaN;
+        return lUpStack_;
     }
 
     s_bool InputManager::KeyIsDown( KeyCode mKey, s_bool bForce ) const
@@ -503,23 +470,29 @@ namespace Frost
             while (dHistoryLength > dMouseHistoryMaxLength_ && (lMouseHistory_.GetSize() > 1))
             {
                 lMouseHistory_.PopBack();
-                dHistoryLength = lMouseHistory_.Back().First() - lMouseHistory_.Front().First();
+                dHistoryLength = lMouseHistory_.Front().First() - lMouseHistory_.Back().First();
             }
 
             fSmoothDMX_ = fSmoothDMY_ = fSmoothMWheel_ = 0.0f;
+            s_float fHistoryWeight = 0.0f;
+            s_float fWeight = 1.0f;
             s_ctnr< s_pair< s_double, s_array<s_float,3> > >::iterator iterHistory;
             foreach (iterHistory, lMouseHistory_)
             {
-                fSmoothDMX_    += iterHistory->Second()[0];
-                fSmoothDMY_    += iterHistory->Second()[1];
-                fSmoothMWheel_ += iterHistory->Second()[2];
+                fSmoothDMX_    += iterHistory->Second()[0]*fWeight;
+                fSmoothDMY_    += iterHistory->Second()[1]*fWeight;
+                fSmoothMWheel_ += iterHistory->Second()[2]*fWeight;
+
+                fHistoryWeight += fWeight;
+                fWeight -= 1.0f/s_float(lMouseHistory_.GetSize());
             }
 
-            s_float fHistorySize = s_float(lMouseHistory_.GetSize());
-            fSmoothDMX_    /= fHistorySize;
-            fSmoothDMY_    /= fHistorySize;
-            fSmoothMWheel_ /= fHistorySize;
+            fSmoothDMX_    /= fHistoryWeight;
+            fSmoothDMY_    /= fHistoryWeight;
+            fSmoothMWheel_ /= fHistoryWeight;
         }
+
+        Log(""+TimeManager::GetSingleton()->GetTime()+", "+fRawDMX_+", "+fSmoothDMX_);
 
         // Send movement event
         if ( (!fDMX_.IsNull()) || (!fDMY_.IsNull()) )

@@ -274,7 +274,7 @@ namespace Frost
             */
             void                DefineScript(const s_str& sScriptName, const s_str& sContent);
 
-            /// Tells this Frame it can call a script.
+            /// Tells this Frame that a script has been defined.
             /** \param sScriptName The name of the script
             */
             void                NotifyScriptDefined(const s_str& sScriptName);

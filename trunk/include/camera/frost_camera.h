@@ -28,17 +28,17 @@ namespace Frost
         Camera();
 
         /// Destructor.
-        virtual ~Camera();
+        ~Camera();
 
-        /// Checks if a point is visible in this Camera.
+        /// Checks if a point is visible by this Camera.
         /** \param mPoint The point to check
-        *   \return 'true' if the point is visible in this Camera
+        *   \return 'true' if the point is visible by this Camera
         */
         s_bool IsVisible(const Vector& mPoint) const;
 
-        /// Checks if a box is visible in this Camera.
+        /// Checks if a box is visible by this Camera.
         /** \param mBox The box to check
-        *   \return 'true' if the box is visible in this Camera
+        *   \return 'true' if the box is visible by this Camera
         */
         s_bool IsVisible(const AxisAlignedBox& mBox) const;
 
@@ -51,7 +51,7 @@ namespace Frost
         /** \param bMainCamera 'true' if its the new main camera
         *   \note You shouldn't call this. Use CameraManager::SetMainCamera().
         */
-        virtual void NotifyMainCamera(const s_bool& bMainCamera);
+        void NotifyMainCamera(const s_bool& bMainCamera);
 
         /// Returns the associated Ogre::Camera.
         /** \return The associated Ogre::Camera
