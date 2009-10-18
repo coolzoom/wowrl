@@ -30,4 +30,9 @@ GameOptions = {
     ["DefaultFont"] = "Fonts/Vera.ttf",
     ["DefaultGameplay"] = "FirstPerson",
     
+    -- Input
+    ["DoubleClickTime"] = 0.25,
+    ["MouseBufferLength"] = 0.05,
+    ["MouseSensibility"] = 1.0,
+    
 };
