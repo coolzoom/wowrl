@@ -492,8 +492,6 @@ namespace Frost
             fSmoothMWheel_ /= fHistoryWeight;
         }
 
-        Log(""+TimeManager::GetSingleton()->GetTime()+", "+fRawDMX_+", "+fSmoothDMX_);
-
         // Send movement event
         if ( (!fDMX_.IsNull()) || (!fDMY_.IsNull()) )
         {
