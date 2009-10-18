@@ -124,12 +124,12 @@ namespace Frost
         pLua->CallFunction(sName_+":OnEvent");
     }
 
-    void Gameplay::SetFriendlySelection( const s_str& sFlag )
+    void Gameplay::SetFriendlySelection( const SelectionType& mSelection )
     {
         // NOTE : Not yet implemented (Gameplay::SetFriendlySelection).
     }
 
-    void Gameplay::SetHostileSelection( const s_str& sFlag )
+    void Gameplay::SetHostileSelection( const SelectionType& mSelection )
     {
         // NOTE : Not yet implemented (Gameplay::SetHostileSelection).
     }

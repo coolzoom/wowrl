@@ -281,9 +281,6 @@ int main(int argc, char* argv[])
         {
             std::cerr << "An error has occured while loading.\nSee Frost.log." << std::endl;
         }
-
-        // Close the engine
-        Engine::Delete();
     }
     catch (Ogre::Exception e)
     {
@@ -293,6 +290,9 @@ int main(int argc, char* argv[])
     {
         std::cerr << e.what() << std::endl;
     }
+
+    // Close the engine
+    Engine::Delete();
 
     return 0;
 }

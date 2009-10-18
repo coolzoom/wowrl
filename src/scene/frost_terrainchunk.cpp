@@ -198,10 +198,6 @@ namespace Frost
                 pNode_->attachObject(pEntity_.Get());
 
                 pObstacle_ = new PlaneObstacle(fXSize_, fZSize_);
-                float angle = 0.10f;
-                s_ptr<PlaneObstacle>::DynamicCast(pObstacle_)->Roll(angle);
-                pNode_->roll(Ogre::Degree(angle*360));
-                PhysicsManager::GetSingleton()->AddObstacle(pObstacle_);
             }
             else
             {
@@ -411,7 +407,6 @@ namespace Frost
                 }
 
                 pObstacle_ = new TerrainObstacle(lTriangleArray, this);
-                PhysicsManager::GetSingleton()->AddObstacle(pObstacle_);
             }
 
             bLoaded_ = true;
@@ -446,7 +441,7 @@ namespace Frost
             if (pEntity_)
                 pEntity_->setVisible(true);
 
-            //PhysicsManager::GetSingleton()->AddObstacle(pObstacle_);
+            PhysicsManager::GetSingleton()->AddObstacle(pObstacle_);
             bShown_ = true;
         }
     }
@@ -458,7 +453,7 @@ namespace Frost
             if (pEntity_)
                 pEntity_->setVisible(false);
 
-            //PhysicsManager::GetSingleton()->RemoveObstacle(pObstacle_);
+            PhysicsManager::GetSingleton()->RemoveObstacle(pObstacle_);
             bShown_ = false;
         }
     }

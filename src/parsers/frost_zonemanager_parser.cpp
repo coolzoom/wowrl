@@ -71,7 +71,7 @@ namespace Frost
                 ));
             }
 
-            // Bouding Box
+            // Bounding Box
             s_ptr<XML::Block> pBoundingBoxBlock = pChunkBlock->GetBlock("BoundingBox");
             pChunk->SetAlwaysVisible(s_bool(pBoundingBoxBlock->GetAttribute("alwaysVisible")));
             s_ptr<XML::Block> pSizeBlock = pBoundingBoxBlock->GetBlock("Size");

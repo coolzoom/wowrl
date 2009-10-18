@@ -14,8 +14,6 @@
 
 namespace Frost
 {
-
-
     /// A... periodic timer
     /** This timer is meant to tick periodicaly,
     *   so you can use it for any periodic event
@@ -93,8 +91,16 @@ namespace Frost
     {
     public :
 
+        enum StartType
+        {
+            /// The timer will start if you call Start()
+            START_PAUSED,
+            /// The timer starts immediatly after it is created
+            START_NOW,
+        };
+
         /// Constructor.
-        Timer();
+        Timer(const StartType& mType = START_PAUSED);
 
         /// Adds time to this Timer.
         /** \param dAdditionnalTime The time to add (can be negative)

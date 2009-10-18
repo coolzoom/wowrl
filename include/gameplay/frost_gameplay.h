@@ -17,6 +17,13 @@ namespace Frost
     {
     public :
 
+        enum SelectionType
+        {
+            SELECTION_NONE,
+            SELECTION_SINGLE,
+            SELECTION_MULTIPLE
+        }
+
         /// Constructor.
         Gameplay(const s_str& sName);
 
@@ -42,7 +49,7 @@ namespace Frost
         */
         void NotifyCurrentGameplay(const s_bool& bIsCurrentGameplay);
 
-        /// Tells this Frame it can call a script.
+        /// Tells this Gameplay that a script has been defined.
         /** \param sScriptName The name of the script
         */
         void NotifyScriptDefined(const s_str& sScriptName);
@@ -57,15 +64,15 @@ namespace Frost
         */
         void OnEvent(const Event& mEvent);
 
-        /// Sets whether single selection is allowed.
-        /** \param sFlag "NONE", "SINGLE" or "MULTIPLE"
+        /// Sets what kind of selection is allowed for friendly units.
+        /** \param mSelection The selection type
         */
-        void SetFriendlySelection(const s_str& sFlag);
+        void SetFriendlySelection(const SelectionType& mSelection);
 
-        /// Sets whether mutliple selection is allowed.
-        /** \param sFlag "NONE", "SINGLE" or "MULTIPLE"
+        /// Sets what kind of selection is allowed for hostile units.
+        /** \param mSelection The selection type
         */
-        void SetHostileSelection(const s_str& sFlag);
+        void SetHostileSelection(const SelectionType& mSelection);
 
         /// Tells this Gameplay to react to a certain event.
         /** \param sEventName The name of the event
