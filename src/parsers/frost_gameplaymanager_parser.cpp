@@ -46,8 +46,38 @@ namespace Frost
             s_ptr<XML::Block> pSelectionBlock = pGameplayBlock->GetBlock("Selection");
             if (pSelectionBlock)
             {
-                pGameplay->SetFriendlySelection(pSelectionBlock->GetAttribute("friendly"));
-                pGameplay->SetHostileSelection(pSelectionBlock->GetAttribute("hostile"));
+                s_str sSelection = pSelectionBlock->GetAttribute("friendly");
+                Gameplay::SelectionType mType;
+                if (sSelection == "NONE")
+                    mType = Gameplay::SELECTION_NONE;
+                else if (sSelection == "SINGLE")
+                    mType = Gameplay::SELECTION_SINGLE;
+                else if (sSelection == "MULTIPLE")
+                    mType = Gameplay::SELECTION_MULTIPLE;
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "Unknown selection type : \""+sSelection+"\". Using \"NONE\"."
+                    );
+                    mType = Gameplay::SELECTION_NONE;
+                }
+                pGameplay->SetFriendlySelection(mType);
+
+                sSelection = pSelectionBlock->GetAttribute("hostile");
+                if (sSelection == "NONE")
+                    mType = Gameplay::SELECTION_NONE;
+                else if (sSelection == "SINGLE")
+                    mType = Gameplay::SELECTION_SINGLE;
+                else if (sSelection == "MULTIPLE")
+                    mType = Gameplay::SELECTION_MULTIPLE;
+                else
+                {
+                    Warning(CLASS_NAME,
+                        "Unknown selection type : \""+sSelection+"\". Using \"NONE\"."
+                    );
+                    mType = Gameplay::SELECTION_NONE;
+                }
+                pGameplay->SetHostileSelection(mType);
             }
 
             s_ptr<XML::Block> pScriptsBlock = pGameplayBlock->GetBlock("Scripts");

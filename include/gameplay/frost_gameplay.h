@@ -22,7 +22,7 @@ namespace Frost
             SELECTION_NONE,
             SELECTION_SINGLE,
             SELECTION_MULTIPLE
-        }
+        };
 
         /// Constructor.
         Gameplay(const s_str& sName);
