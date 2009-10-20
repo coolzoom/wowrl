@@ -451,28 +451,46 @@ namespace Frost
     s_bool Engine::ReadGraphicsConfig_()
     {
         s_str sRenderSystem = GetStringConstant("RenderSystem");
+        Ogre::RenderSystem* pRS;
+
         if (sRenderSystem == "OpenGL")
         {
-            sRenderSystem = "OpenGL Rendering Subsystem";
             #ifdef _DEBUG
                 pRoot_->loadPlugin("RenderSystem_GL_d");
             #else
                 pRoot_->loadPlugin("RenderSystem_GL");
             #endif
+
+            pRS = pRoot_->getRenderSystemByName("OpenGL Rendering Subsystem");
+            if (!pRS)
+            {
+                Error(CLASS_NAME,
+                    "Can't load the "+sRenderSystem+" renderer, maybe a problem with the DLL."
+                );
+                return false;
+            }
         }
         else if (sRenderSystem == "DirectX")
         {
-            sRenderSystem = "Direct3D9 Rendering Subsystem";
             #ifdef _DEBUG
                 pRoot_->loadPlugin("RenderSystem_Direct3D9_d");
             #else
                 pRoot_->loadPlugin("RenderSystem_Direct3D9");
             #endif
+
+            pRS = pRoot_->getRenderSystemByName("Direct3D9 Rendering Subsystem");
+            if (!pRS)
+            {
+                Error(CLASS_NAME,
+                    "Can't load the "+sRenderSystem+" renderer, maybe a problem with the DLL."
+                );
+                return false;
+            }
+
+            // Lua needs this to work properly :
+            pRS->setConfigOption("Floating-point mode", "Consistent");
         }
-
-        Ogre::RenderSystem* pRS = pRoot_->getRenderSystemByName(sRenderSystem.Get());
-
-        if (!pRS)
+        else
         {
             Error(CLASS_NAME,
                 "Unsupported render system : \""+sRenderSystem+"\"."

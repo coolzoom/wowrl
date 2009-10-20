@@ -55,13 +55,13 @@
                     local maxWidth = 0;
                     local totalHeight = 0;
                     
-                    for name, child in pairs(children) do
+                    for k, child in pairs(children) do
                         maxWidth = math.max(child:GetWidth(), maxWidth);
                         totalHeight = totalHeight + child:GetHeight();
                     end
                   
                     if (maxWidth > 100) then
-                        for name, child in pairs(children) do
+                        for k, child in pairs(children) do
                             child:SetWidth(maxWidth);
                         end
                         
