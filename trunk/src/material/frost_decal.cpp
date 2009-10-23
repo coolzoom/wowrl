@@ -53,6 +53,11 @@ namespace Frost
             this->Hide();
             pOgreMat_->getTechnique(0)->removePass(pOgrePass_->getIndex());
         }
+
+        if (pOgreFrustum_)
+        {
+            pNode_->detachObject(pOgreFrustum_.Get());
+        }
     }
 
     void Decal::SetScale( const s_float& fScale )
