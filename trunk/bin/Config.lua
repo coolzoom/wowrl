@@ -13,8 +13,8 @@ GameOptions = {
     ["ScreenHeight"] = 1024,
     
     -- Renderer
-    --["RenderSystem"] = "OpenGL",
-    ["RenderSystem"] = "DirectX",
+    ["RenderSystem"] = "OpenGL",
+    --["RenderSystem"] = "DirectX",
     
     -- Advanced graphics options
     ["TerrainTextureFiltering"] = "ANISOTROPIC";

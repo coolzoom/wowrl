@@ -640,12 +640,12 @@ namespace Frost
         s_uint Trim(const string_element& cPattern)
         {
             s_uint uiCount;
-            while ((*this)[0] == cPattern)
+            while (!IsEmpty() && (*this)[0] == cPattern)
             {
                 EraseFromStart(1);
                 ++uiCount;
             }
-            while ((*this)[GetLength().Get()-1] == cPattern)
+            while (!IsEmpty() && (*this)[GetLength().Get()-1] == cPattern)
             {
                 EraseFromEnd(1);
                 ++uiCount;

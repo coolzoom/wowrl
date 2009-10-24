@@ -326,7 +326,7 @@ int LuaButton::_SetDisabledFontObject( lua_State* pLua )
         s_ptr<LuaFontString> pLuaFontString = mFunc.GetState()->Get<LuaFontString>();
         if (pLuaFontString)
         {
-            s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pFontString->GetParent());
+            s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pLuaFontString->GetParent());
             pButtonParent_->SetDisabledText(pFontString);
         }
     }
@@ -378,7 +378,7 @@ int LuaButton::_SetDisabledTexture( lua_State* pLua )
         s_ptr<LuaTexture> pLuaTexture = mFunc.GetState()->Get<LuaTexture>();
         if (pLuaTexture)
         {
-            s_ptr<Texture> pTexture = s_ptr<Texture>::DynamicCast(pTexture->GetParent());
+            s_ptr<Texture> pTexture = s_ptr<Texture>::DynamicCast(pLuaTexture->GetParent());
             pButtonParent_->SetDisabledTexture(pTexture);
         }
     }
@@ -395,7 +395,7 @@ int LuaButton::_SetHighlightFontObject( lua_State* pLua )
         s_ptr<LuaFontString> pLuaFontString = mFunc.GetState()->Get<LuaFontString>();
         if (pLuaFontString)
         {
-            s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pFontString->GetParent());
+            s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pLuaFontString->GetParent());
             pButtonParent_->SetHighlightText(pFontString);
         }
     }
@@ -447,7 +447,7 @@ int LuaButton::_SetHighlightTexture( lua_State* pLua )
         s_ptr<LuaTexture> pLuaTexture = mFunc.GetState()->Get<LuaTexture>();
         if (pLuaTexture)
         {
-            s_ptr<Texture> pTexture = s_ptr<Texture>::DynamicCast(pTexture->GetParent());
+            s_ptr<Texture> pTexture = s_ptr<Texture>::DynamicCast(pLuaTexture->GetParent());
             pButtonParent_->SetHighlightTexture(pTexture);
         }
     }
@@ -465,7 +465,7 @@ int LuaButton::_SetNormalFontObject( lua_State* pLua )
         s_ptr<LuaFontString> pLuaFontString = mFunc.GetState()->Get<LuaFontString>();
         if (pLuaFontString)
         {
-            s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pFontString->GetParent());
+            s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pLuaFontString->GetParent());
             pButtonParent_->SetNormalText(pFontString);
         }
     }
@@ -517,7 +517,7 @@ int LuaButton::_SetNormalTexture( lua_State* pLua )
         s_ptr<LuaTexture> pLuaTexture = mFunc.GetState()->Get<LuaTexture>();
         if (pLuaTexture)
         {
-            s_ptr<Texture> pTexture = s_ptr<Texture>::DynamicCast(pTexture->GetParent());
+            s_ptr<Texture> pTexture = s_ptr<Texture>::DynamicCast(pLuaTexture->GetParent());
             pButtonParent_->SetNormalTexture(pTexture);
         }
     }
