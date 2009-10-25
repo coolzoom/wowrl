@@ -36,6 +36,16 @@ namespace Frost
         */
         const Color& GetAmbientColor() const;
 
+        /// Sets this Zone's default sun color.
+        /** \param mColor The sun color
+        */
+        void SetSunColor(const Color& mColor);
+
+        /// Returns this Zone's default sun color.
+        /** \return This Zone's default sun color
+        */
+        const Color& GetSunColor() const;
+
         /// Adds a new chunk to this Zone.
         /** \param pChunk The new chunk
         *   \return The ID of the chunk
@@ -60,6 +70,7 @@ namespace Frost
 
         s_str sName_;
         Color mAmbientColor_;
+        Color mSunColor_;
 
         s_map< s_str, s_ptr<Light> >         lLightList_;
         s_map< s_uint, s_ptr<TerrainChunk> > lChunkList_;

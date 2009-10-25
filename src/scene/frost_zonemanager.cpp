@@ -42,6 +42,7 @@ namespace Frost
         ParseXMLFile_("Zones/"+sZoneName+"/"+sZoneName+".xml", pCurrentZone_);
 
         LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
+        LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());
 
         return pCurrentZone_;
     }

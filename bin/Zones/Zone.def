@@ -87,21 +87,24 @@
     <-- AmbientColor : the ambient light to add to all objects in the scene -->
     <n[.,1]:AmbientColor n:r="0.0" n:g="0.0" n:b="0.0"/>
     
+    <-- SunColor : the sun's color -->
+    <n[.,1]:SunColor n:r="1.0" n:g="1.0" n:b="1.0"/>
+    
     <-- Fog : colors pixels depending on their distance -->
-    <n[1,1]:Fog>
+    <n[1]:Fog>
         <-- Color : the color to apply -->
-        <n[1,1]:Color n:r="0.0" n:g="0.0" n:b="0.0"/>
+        <n[1]:Color n:r="0.0" n:g="0.0" n:b="0.0"/>
         <-- Distance : the range into which pixels are affected -->
         <n[.,1]:Distance n:min="100.0" n:max="120.0"/>
     </Fog>
     
     <-- Lights : lists all lights in the scene -->
-    <n[.,1]:Lights>
+    <n[1]:Lights>
     
         <-- Point : a point light -->
         <Point name b:hidden="false">
             <-- Position : coordinates (in world units) -->
-            <n[1,1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
+            <n[1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
             <-- Diffuse : the diffuse color -->
             <n[.,1]:Diffuse n:r="0.0" n:g="0.0" n:b="0.0"/>
             <-- Specular : the specular color -->
@@ -113,7 +116,7 @@
         <-- Directional : a directional light -->
         <Directional name b:hidden="false">
             <-- Direction : vector(x, y, z) -->
-            <n[1,1]:Direction n:x="1.0" n:y="0.0" n:z="0.0"/>
+            <n[1]:Direction n:x="1.0" n:y="0.0" n:z="0.0"/>
             <-- Diffuse : the diffuse color -->
             <n[.,1]:Diffuse n:r="0.0" n:g="0.0" n:b="0.0"/>
             <-- Specular : the specular color -->
@@ -123,11 +126,11 @@
         <-- Spot : a spot light -->
         <Spot name b:hidden="false">
             <-- Position : coordinates (in world units) -->
-            <n[1,1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
+            <n[1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
             <-- Direction : vector(x, y, z) -->
-            <n[1,1]:Direction n:x="1.0" n:y="0.0" n:z="0.0"/>
+            <n[1]:Direction n:x="1.0" n:y="0.0" n:z="0.0"/>
             <-- Dimensions : inner and outer angles (defines the cone) -->
-            <n[1,1]:Dimensions n:inAngle="0.1" n:outAngle="0.125"/>
+            <n[1]:Dimensions n:inAngle="0.1" n:outAngle="0.125"/>
             <-- Fallof : transition type (1 is linear) -->
             <n[.,1]:Fallof n:val="1.0"/>
             <-- Diffuse : the diffuse color -->
