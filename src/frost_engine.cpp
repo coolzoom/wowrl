@@ -134,7 +134,7 @@ namespace Frost
             Engine::GetSingleton()->GetLog()->WriteLine(sNewMessage);
             Engine::GetSingleton()->GetLog()->Flush();
             #ifdef _DEBUG
-                printf("%s\n", sNewMessage.c_str());
+                cout << sNewMessage.Get() << endl;
             #endif
         }
         else
@@ -144,13 +144,10 @@ namespace Frost
             Engine::GetSingleton()->GetLog()->WriteLine(sNewMessage);
             Engine::GetSingleton()->GetLog()->Flush();
             #ifdef _DEBUG
-                printf("%s\n", sMessage.c_str());
+                cout << sNewMessage.Get() << endl;
             #endif
         }
     }
-
-    s_ptr<RenderTarget> pMotionBlurMask_;
-    Ogre::MultiRenderTarget* mrtTex;
 
     s_bool Engine::Initialize()
     {
@@ -487,7 +484,7 @@ namespace Frost
                 return false;
             }
 
-            // Lua needs this to work properly :
+            // NOTE : Lua needs this to work properly
             pRS->setConfigOption("Floating-point mode", "Consistent");
         }
         else
@@ -564,7 +561,7 @@ namespace Frost
             {
                 lGameOptionList_["EnablePostProcessing"] = s_bool(false);
                 lGameOptionList_["EnableMotionBlur"] = s_bool(false);
-                Warning(CLASS_NAME, "Your graphic card doesn't support Multiple Render Targets (MRTs).\n"
+                Warning(CLASS_NAME, "Your graphics card doesn't support Multiple Render Targets (MRTs).\n"
                     "Frost needs at least 2 for motion blur to be enabled."
                 );
             }
@@ -608,7 +605,7 @@ namespace Frost
     {
         s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
         if (iter == lGameOptionList_.End())
-            iter->second =  s_var();
+            return s_var();
         return iter->second;
     }
 
@@ -621,7 +618,7 @@ namespace Frost
     {
         s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
         if (iter == lGameOptionList_.End())
-            iter->second = s_str();
+            return s_str();
         return iter->second.Get<s_str>();
     }
 
@@ -629,7 +626,7 @@ namespace Frost
     {
         s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
         if (iter == lGameOptionList_.End())
-            iter->second = s_float();
+            return s_float();
         return iter->second.Get<s_float>();
     }
 
@@ -637,7 +634,7 @@ namespace Frost
     {
         s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
         if (iter == lGameOptionList_.End())
-            iter->second = s_float();
+            return s_uint();
         return s_uint(iter->second.Get<s_float>());
     }
 
@@ -645,7 +642,7 @@ namespace Frost
     {
         s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
         if (iter == lGameOptionList_.End())
-            iter->second = s_bool();
+            return s_bool();
         return iter->second.Get<s_bool>();
     }
 
