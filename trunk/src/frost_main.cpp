@@ -142,7 +142,7 @@ s_bool EditorRenderFunc()
     // Render in the main target
     pSpriteMgr->Begin();
 
-        pSpriteMgr->Clear(Color::VOID);
+        Engine::GetSingleton()->RenderScene();
 
         GUIManager::GetSingleton()->RenderUI();
 
