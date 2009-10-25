@@ -39,6 +39,14 @@ namespace Frost
                         s_uchar(s_float(pElemBlock->GetAttribute("b"))*255)
                     ));
                 }
+                else if (pElemBlock->GetName() == "SunColor")
+                {
+                    pCurrentZone->SetSunColor(Color(
+                        s_uchar(s_float(pElemBlock->GetAttribute("r"))*255),
+                        s_uchar(s_float(pElemBlock->GetAttribute("g"))*255),
+                        s_uchar(s_float(pElemBlock->GetAttribute("b"))*255)
+                    ));
+                }
                 else if (pElemBlock->GetName() == "Script")
                 {
                     pLua_->DoFile(pElemBlock->GetAttribute("file"));

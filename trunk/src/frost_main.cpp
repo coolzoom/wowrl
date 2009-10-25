@@ -271,7 +271,6 @@ int main(int argc, char* argv[])
                 pLight1->SetRange(50.0f);*/
 
                 LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
-                LightManager::GetSingleton()->SetSunColor(Color(255, 255, 255));
             }
 
             // Enter the main loop

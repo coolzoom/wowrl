@@ -199,10 +199,18 @@ namespace Frost
                         vValue.Get<Ogre::Vector4>()
                     );
                 else if (vValue.IsOfType<Color>())
+                {
+                    Color mColor = vValue.Get<Color>();
                     pParam->setNamedConstant(
                         sName.Get(),
-                        Color::FrostToOgre(vValue.Get<Color>())
+                        Ogre::Vector4(
+                            mColor.GetR().Get()/255.0f,
+                            mColor.GetG().Get()/255.0f,
+                            mColor.GetB().Get()/255.0f,
+                            mColor.GetA().Get()/255.0f
+                        )
                     );
+                }
                 else if (vValue.IsOfType<Ogre::ColourValue>())
                     pParam->setNamedConstant(
                         sName.Get(),

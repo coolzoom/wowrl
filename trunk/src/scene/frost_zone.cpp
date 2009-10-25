@@ -17,7 +17,6 @@ namespace Frost
     Zone::Zone( const s_str& sName ) :
         sName_(sName)
     {
-
     }
 
     Zone::~Zone()
@@ -37,6 +36,16 @@ namespace Frost
     const Color& Zone::GetAmbientColor() const
     {
         return mAmbientColor_;
+    }
+
+    void Zone::SetSunColor( const Color& mColor )
+    {
+        mSunColor_ = mColor;
+    }
+
+    const Color& Zone::GetSunColor() const
+    {
+        return mSunColor_;
     }
 
     s_uint Zone::AddChunk( s_ptr<TerrainChunk> pChunk )
