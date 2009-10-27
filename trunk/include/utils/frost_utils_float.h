@@ -190,7 +190,7 @@ namespace Frost
             return fValue_;
         }
 
-        /// Returns the power of two just above the actual value (or equal).
+        /// Returns the power of two just above the value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
         s_uint_t<uint> GetNearestPowerOfTwo() const

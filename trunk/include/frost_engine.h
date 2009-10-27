@@ -67,8 +67,8 @@ namespace Frost
         */
         void                SetState(GameState mState);
 
-        /// Returns the actual game state.
-        /** \return The actual game state
+        /// Returns the current game state.
+        /** \return The current game state
         */
         GameState           GetState() const;
 

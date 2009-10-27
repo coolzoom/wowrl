@@ -99,7 +99,7 @@ namespace Frost
         */
         void         End();
 
-        /// Fills the actual render target with the provided color.
+        /// Fills the current render target with the provided color.
         /** \param mColor The color to use
         *   \note Must be called between Begin() and End().
         */

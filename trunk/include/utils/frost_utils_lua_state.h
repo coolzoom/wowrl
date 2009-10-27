@@ -121,7 +121,7 @@ namespace Frost
 
             /// Prints an error string in the log file with the Lua tag.
             /** \param sError The error string to output
-            *   \note This function will print out the actual file and line
+            *   \note This function will print out the current file and line
             */
             void    PrintError(const s_str& sError);
 

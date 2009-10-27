@@ -124,7 +124,7 @@ namespace Frost
         */
         void          SetProfiling(const s_bool& bProfiling);
 
-        /// Checks if the manager is actually profiling.
+        /// Checks if the manager is currently profiling.
         /** \return 'true' if it is profiling
         */
         s_bool        IsProfiling() const;

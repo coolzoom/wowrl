@@ -28,7 +28,7 @@ namespace Frost
         bEnded_ = mPath.bEnded_;
         bReversed_ = mPath.bReversed_;
         bPaused_ = mPath.bPaused_;
-        mActualPoint_ = mPath.mActualPoint_;
+        mCurrentPoint_ = mPath.mCurrentPoint_;
 
         bStarted_ = mPath.bStarted_;
         lPointPath_ = mPath.lPointPath_;
@@ -51,18 +51,18 @@ namespace Frost
             if (lPointPath_.GetSize() == 1)
             {
                 mPreviousPoint_ = lPointPath_.begin();
-                mActualPoint_ = mPreviousPoint_->mPosition;
+                mCurrentPoint_ = mPreviousPoint_->mPosition;
             }
             else if (lPointPath_.GetSize() == 2)
             {
                 mNextPoint_ = mPreviousPoint_;
-                mNextPoint_++;
+                ++mNextPoint_;
             }
 
             if (bEnded_ && !bReversed_)
             {
                 mNextPoint_ = mPreviousPoint_;
-                mNextPoint_++;
+                ++mNextPoint_;
                 bEnded_ = false;
             }
         }
@@ -92,9 +92,9 @@ namespace Frost
             bEnded_ = false;
             mPreviousPoint_ = lPointPath_.begin();
             mNextPoint_ = mPreviousPoint_;
-            mNextPoint_++;
+            ++mNextPoint_;
 
-            mActualPoint_ = mPreviousPoint_->mPosition;
+            mCurrentPoint_ = mPreviousPoint_->mPosition;
         }
     }
 
@@ -114,7 +114,7 @@ namespace Frost
 
             if (!bReversed_)
             {
-                mDir = mNextPoint_->mPosition - mActualPoint_;
+                mDir = mNextPoint_->mPosition - mCurrentPoint_;
                 fTranslation = fSpeed_*fDelta;
                 fDistance = mDir.GetNorm();
 
@@ -122,8 +122,8 @@ namespace Frost
                 while (fDistance < fTranslation)
                 {
                     // We have reached the next point.
-                    mPreviousPoint_++;
-                    mNextPoint_++;
+                    ++mPreviousPoint_;
+                    ++mNextPoint_;
 
                     if (mNextPoint_ == lPointPath_.end())
                     {
@@ -141,7 +141,7 @@ namespace Frost
                                 // Restart the path at its beginning
                                 mPreviousPoint_ = lPointPath_.begin();
                                 mNextPoint_ = mPreviousPoint_;
-                                mNextPoint_++;
+                                ++mNextPoint_;
                             }
                         }
                         else
@@ -162,13 +162,13 @@ namespace Frost
                     fTranslation -= fDistance;
                     fDistance = mDir.GetNorm();
 
-                    mActualPoint_ = mPreviousPoint_->mPosition;
+                    mCurrentPoint_ = mPreviousPoint_->mPosition;
                 }
             }
             else
             {
                 // We're travelling the path in reverse order
-                mDir = mPreviousPoint_->mPosition - mActualPoint_;
+                mDir = mPreviousPoint_->mPosition - mCurrentPoint_;
                 fTranslation = fSpeed_*fDelta;
                 fDistance = mDir.GetNorm();
 
@@ -185,16 +185,16 @@ namespace Frost
                             {
                                 // Interpolate between end point and start point
                                 mPreviousPoint_ = lPointPath_.end();
-                                mPreviousPoint_--;
+                                --mPreviousPoint_;
                                 mNextPoint_ = lPointPath_.begin();
                             }
                             else
                             {
                                 // Restart the path at its beginning
                                 mNextPoint_ = lPointPath_.end();
-                                mNextPoint_--;
+                                --mNextPoint_;
                                 mPreviousPoint_ = mNextPoint_;
-                                mPreviousPoint_--;
+                                --mPreviousPoint_;
                             }
                         }
                         else
@@ -208,14 +208,14 @@ namespace Frost
                     else if (mNextPoint_ == lPointPath_.begin())
                     {
                         mNextPoint_ = lPointPath_.end();
-                        mNextPoint_--;
-                        mPreviousPoint_--;
+                        --mNextPoint_;
+                        --mPreviousPoint_;
                     }
                     else
                     {
                         // We have reached the next point.
-                        mPreviousPoint_--;
-                        mNextPoint_--;
+                        --mPreviousPoint_;
+                        --mNextPoint_;
                     }
 
                     mDir = mPreviousPoint_->mPosition - mNextPoint_->mPosition;
@@ -223,12 +223,12 @@ namespace Frost
                     fTranslation -= fDistance;
                     fDistance = mDir.GetNorm();
 
-                    mActualPoint_ = mNextPoint_->mPosition;
+                    mCurrentPoint_ = mNextPoint_->mPosition;
                 }
             }
 
             // Move toward the next point
-            mActualPoint_ += mDir.GetUnit()*fTranslation;
+            mCurrentPoint_ += mDir.GetUnit()*fTranslation;
         }
     }
 
@@ -237,8 +237,8 @@ namespace Frost
         if ( (iIndex < s_int(lPointPath_.GetSize())) && (iIndex >= 0) )
         {
             s_ctnr<DirectPathPoint>::const_iterator iterPoint = lPointPath_.Begin();
-            for (s_int i = 0; i < iIndex; i++)
-                iterPoint++;
+            for (s_int i = 0; i < iIndex; ++i)
+                ++iterPoint;
 
             return (*iterPoint);
         }
@@ -252,8 +252,8 @@ namespace Frost
                 iNewIndex += s_int(lPointPath_.GetSize());
 
             s_ctnr<DirectPathPoint>::const_iterator iterPoint = lPointPath_.Begin();
-            for (s_int i = 0; i < iNewIndex; i++)
-                iterPoint++;
+            for (s_int i = 0; i < iNewIndex; ++i)
+                ++iterPoint;
 
             return (*iterPoint);
         }

@@ -28,7 +28,7 @@ namespace Frost
         bEnded_ = mPath.bEnded_;
         bReversed_ = mPath.bReversed_;
         bPaused_ = mPath.bPaused_;
-        mActualPoint_ = mPath.mActualPoint_;
+        mCurrentPoint_ = mPath.mCurrentPoint_;
 
 
     }

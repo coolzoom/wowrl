@@ -316,12 +316,12 @@ namespace Frost
 
         /// Returns the animation with the provided ID.
         /** \return The animation with the provided ID
-        *   \note If no parameter is provided, returns the actual animation.
+        *   \note If no parameter is provided, returns the current animation.
         */
         s_ptr<Animation> GetAnim(AnimID mID = ANIM_NONE);
 
-        /// Returns the actual animation's ID.
-        /** \return The actual animation's ID
+        /// Returns the current animation's ID.
+        /** \return The current animation's ID
         */
         s_uint           GetAnimID() const;
 
@@ -355,17 +355,17 @@ namespace Frost
             const s_bool& bQueued = false
         );
 
-        /// Plays the actual animation.
+        /// Plays the current animation.
         /** \note If it's already being played, the timer is reset and
         *         the animation starts over at its beginnging.
         */
         void             Play();
 
-        /// Pauses the actual animation.
+        /// Pauses the current animation.
         void             Pause();
 
-        /// Checks if the actual animation is paused.
-        /** \return 'true' if the  actual animation is paused
+        /// Checks if the current animation is paused.
+        /** \return 'true' if the current animation is paused
         */
         const s_bool&    IsPaused() const;
 
@@ -382,7 +382,7 @@ namespace Frost
         */
         const s_float&   GetSpeed() const;
 
-        /// Updates the actual animation.
+        /// Updates the current animation.
         /** \note Automatically called by ModelManager.
         */
         void             Update(const s_float& fDelta);
