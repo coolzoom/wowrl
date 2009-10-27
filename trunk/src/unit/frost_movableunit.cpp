@@ -178,6 +178,12 @@ namespace Frost
         }
     }
 
+    void MovableUnit::Yaw_( const s_float& fYaw )
+    {
+        pNode_->Yaw(fYaw);
+        fCumuledYaw_ += fYaw;
+    }
+
     void MovableUnit::UpdateMovement_( const s_float& fDelta )
     {
         if (pHandler_->IsEnabled())
@@ -189,9 +195,10 @@ namespace Frost
                 Vector mDir = mMovementDirection_;
                 mMovementSpeed_ = Vector::ZERO;
 
-                if (!mDir.IsNull())
+                if ( (bTurn_ && !mDir.Z().IsNull()) || (!bTurn_ && !mDir.IsNull()) )
                 {
-                    mDir.Normalize();
+                    if (!bTurn_)
+                        mDir.Normalize();
 
                     s_float fMovementSpeed;
                     if (bFalling_)
@@ -219,7 +226,9 @@ namespace Frost
                                 );
                             fMovementSpeed *= fBackwardRunSpeed_;
                         }
-                        fNewYaw = atan2(-mDir.X(), -mDir.Z()) - 0.5f;
+
+                        if (!bTurn_)
+                            fNewYaw = atan2(-mDir.X(), -mDir.Z()) - 0.5f;
                     }
                     else
                     {
@@ -237,18 +246,35 @@ namespace Frost
                                 pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
                             fMovementSpeed *= fForwardRunSpeed_;
                         }
-                        fNewYaw = atan2(-mDir.X(), -mDir.Z());
+                        if (!bTurn_)
+                            fNewYaw = atan2(-mDir.X(), -mDir.Z());
                     }
 
-                    SetYaw_(fNewYaw);
+                    if (bTurn_)
+                        RotateModel(-mDir.X()*fTurnRate_*fDelta, 0.0f);
+                    else
+                        SetYaw_(fNewYaw);
+
                     mMovementSpeed_.Z() *= fMovementSpeed;
                 }
                 else
                 {
-                    if (!bFalling_)
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+                    if (bTurn_ && !mDir.X().IsNull())
+                    {
+                        Yaw_(-mDir.X()*fTurnRate_*fDelta);
+                        pBodyModel_->GetAnimMgr()->SetAnim(
+                            mDir.X() < 0.0f ? ANIM_SHUFFLE_LEFT : ANIM_SHUFFLE_RIGHT,
+                            ANIM_PRIORITY_BACKGROUND
+                        );
+                    }
+                    else
+                    {
+                        if (!bTurn_)
+                            SetYaw_(0.0f);
 
-                    SetYaw_(0.0f);
+                        if (!bFalling_)
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+                    }
                 }
 
                 s_bool bMovement;
@@ -291,6 +317,22 @@ namespace Frost
     s_ptr<MovableUnitHandler> MovableUnit::GetPhysicsHandler()
     {
         return pHandler_;
+    }
+
+    void MovableUnit::RotateModel( const s_float& fYaw, const s_float& fPitch )
+    {
+        if (bCameraMovedAlone_)
+        {
+            Vector mDirection = pCamera_->GetDirection(false);
+            mDirection.Y() = 0.0f;
+            pNode_->SetDirection(mDirection);
+            bCameraMovedAlone_ = false;
+            fCumuledYaw_ = 0.0f;
+        }
+
+        pNode_->Yaw(fYaw);
+        pCamera_->Yaw(fYaw);
+        pCamera_->Pitch(fPitch);
     }
 
     void MovableUnit::CreateGlue( s_ptr<Lua::State> pLua )

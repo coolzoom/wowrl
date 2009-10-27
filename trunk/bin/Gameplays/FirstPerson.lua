@@ -6,9 +6,14 @@ FirstPersonGameplay = {
     ["unit"] = nil,                  -- The followed unit
     ["ready"] = false,               -- 'true' if this gameplay can be used
     
+    ["key"] = {
+        ["mouseForwardPressed"] = false, -- 'true' if the "move forward" key is pressed
+    },
+    
     ["mouse"] = {
         ["leftPressed"] = false,     -- 'true' if the mouse left button is pressed
         ["rightPressed"] = false,    -- 'true' if the mouse right button is pressed
+        ["bothPressed"] = false,     -- 'true' if both mouse button are pressed
     },
 };
 
@@ -93,7 +98,10 @@ function FirstPersonGameplay.OnEvent()
     if (FirstPersonGameplay.ready) then
         if (event == "KEY_PRESSED") then
             if (arg1 == KEY_W) then
-                FirstPersonGameplay.unit:SetMoveForward(true);
+                if (not FirstPersonGameplay.mouse.bothPressed) then
+                    FirstPersonGameplay.unit:SetMoveForward(true);
+                end
+                FirstPersonGameplay.key.mouseForwardPressed = true;
             elseif (arg1 == KEY_S) then
                 FirstPersonGameplay.unit:SetMoveBackward(true);
             elseif (arg1 == KEY_A) then
@@ -107,7 +115,10 @@ function FirstPersonGameplay.OnEvent()
             end
         elseif (event == "KEY_RELEASED") then
             if (arg1 == KEY_W) then
-                FirstPersonGameplay.unit:SetMoveForward(false);
+                if (not FirstPersonGameplay.mouse.bothPressed) then
+                    FirstPersonGameplay.unit:SetMoveForward(false);
+                end
+                FirstPersonGameplay.key.mouseForwardPressed = false;
             elseif (arg1 == KEY_S) then
                 FirstPersonGameplay.unit:SetMoveBackward(false);
             elseif (arg1 == KEY_A) then
@@ -116,20 +127,32 @@ function FirstPersonGameplay.OnEvent()
                 FirstPersonGameplay.unit:SetMoveRight(false);
             end
         elseif (event == "MOUSE_MOVED_SMOOTH") then
-            if (FirstPersonGameplay.mouse.leftPressed) then
-                FirstPersonGameplay.unit:RotateCamera(-arg3, -arg4);
-            elseif (FirstPersonGameplay.mouse.rightPressed) then
+            if (FirstPersonGameplay.mouse.rightPressed) then
                 FirstPersonGameplay.unit:RotateModel(-arg3, -arg4);
+            elseif (FirstPersonGameplay.mouse.leftPressed) then
+                FirstPersonGameplay.unit:RotateCamera(-arg3, -arg4);
             end
         elseif (event == "MOUSE_PRESSED") then
             if (arg1 == MOUSE_RIGHT) then
                 FirstPersonGameplay.unit:ToggleTurning();
                 FirstPersonGameplay.unit:RotateModel(0, 0);
                 FirstPersonGameplay.mouse.rightPressed = true;
+                if (FirstPersonGameplay.mouse.leftPressed and not FirstPersonGameplay.key.mouseForwardPressed) then
+                    FirstPersonGameplay.mouse.bothPressed = true;
+                    FirstPersonGameplay.unit:SetMoveForward(true);
+                end
             elseif (arg1 == MOUSE_LEFT) then
                 FirstPersonGameplay.mouse.leftPressed = true;
+                if (FirstPersonGameplay.mouse.rightPressed and not FirstPersonGameplay.key.mouseForwardPressed) then
+                    FirstPersonGameplay.mouse.bothPressed = true;
+                    FirstPersonGameplay.unit:SetMoveForward(true);
+                end
             end
         elseif (event == "MOUSE_RELEASED") then
+            if (FirstPersonGameplay.mouse.bothPressed and not FirstPersonGameplay.key.mouseForwardPressed) then
+                FirstPersonGameplay.unit:SetMoveForward(false);
+            end
+            FirstPersonGameplay.mouse.bothPressed = false;
             if (arg1 == MOUSE_RIGHT) then
                 FirstPersonGameplay.unit:ToggleTurning();
                 FirstPersonGameplay.mouse.rightPressed = false;

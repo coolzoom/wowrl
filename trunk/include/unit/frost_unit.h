@@ -218,14 +218,14 @@ namespace Frost
         /** \param fYaw   Angle to rotate horizontaly
         *   \param fPitch Angle to rotate verticaly
         */
-        void             RotateCamera(const s_float& fYaw, const s_float& fPitch);
+        virtual void     RotateCamera(const s_float& fYaw, const s_float& fPitch);
 
         /// Rotates this Unit's Model.
         /** \param fYaw   Angle to rotate horizontaly
         *   \param fPitch Angle to rotate verticaly
         *   \note Also rotates the Camera like RotateCamera().
         */
-        void             RotateModel(const s_float& fYaw, const s_float& fPitch);
+        virtual void     RotateModel(const s_float& fYaw, const s_float& fPitch);
 
         /// Returns the position of this Unit in the world.
         /** \return The position of this Unit in the world

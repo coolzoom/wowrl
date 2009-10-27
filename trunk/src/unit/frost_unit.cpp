@@ -357,7 +357,6 @@ namespace Frost
         pNode_->Yaw(fYaw);
         pCamera_->Yaw(fYaw);
         pCamera_->Pitch(fPitch);
-
     }
 
     void Unit::RotateCamera( const s_float& fYaw, const s_float& fPitch )
