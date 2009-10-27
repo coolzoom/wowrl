@@ -28,7 +28,7 @@ namespace Frost
         bEnded_ = mPath.bEnded_;
         bReversed_ = mPath.bReversed_;
         bPaused_ = mPath.bPaused_;
-        mActualPoint_ = mPath.mActualPoint_;
+        mCurrentPoint_ = mPath.mCurrentPoint_;
 
         bStarted_ = mPath.bStarted_;
         fDistance_ = mPath.fDistance_;
@@ -199,7 +199,7 @@ namespace Frost
             }
 
             mSegment_ = lSegmentList_.begin();
-            mActualPoint_ = mSegment_->GetPoint(1).mPosition;
+            mCurrentPoint_ = mSegment_->GetPoint(1).mPosition;
         }
     }
 
@@ -228,7 +228,7 @@ namespace Frost
             bEnded_ = false;
 
             mSegment_ = lSegmentList_.begin();
-            mActualPoint_ = mSegment_->GetPoint(1).mPosition;
+            mCurrentPoint_ = mSegment_->GetPoint(1).mPosition;
         }
     }
 
@@ -251,7 +251,7 @@ namespace Frost
                 while (fRemaining < fTranslation)
                 {
                     // We have reached the next point.
-                    mSegment_++;
+                    ++mSegment_;
                     if (mSegment_ == lSegmentList_.end())
                     {
                         // We have reached the end of the path...
@@ -266,8 +266,8 @@ namespace Frost
                             // Looping is disabled : the path has done
                             // its job, there's no need to continue.
                             bEnded_ = true;
-                            mSegment_--;
-                            mActualPoint_ = mSegment_->GetPoint(2).mPosition;
+                            --mSegment_;
+                            mCurrentPoint_ = mSegment_->GetPoint(2).mPosition;
                             return;
                         }
                     }
@@ -279,7 +279,7 @@ namespace Frost
 
                 fDistance_ += fTranslation;
 
-                mActualPoint_ = mSegment_->CalcPoint(fDistance_);
+                mCurrentPoint_ = mSegment_->CalcPoint(fDistance_);
             }
             else
             {
@@ -297,20 +297,20 @@ namespace Frost
                             // Looping is enabled : restart the path at
                             // its end.
                             mSegment_ = lSegmentList_.end();
-                            mSegment_--;
+                            --mSegment_;
                         }
                         else
                         {
                             // Looping is disabled : the path has done
                             // its job, there's no need to continue.
                             bEnded_ = true;
-                            mActualPoint_ = mSegment_->GetPoint(1).mPosition;
+                            mCurrentPoint_ = mSegment_->GetPoint(1).mPosition;
                             return;
                         }
                     }
                     else
                     {
-                        mSegment_--;
+                        --mSegment_;
                     }
 
                     fTranslation -= fDistance_;
@@ -319,7 +319,7 @@ namespace Frost
 
                 fDistance_ -= fTranslation;
 
-                mActualPoint_ = mSegment_->CalcPoint(fDistance_);
+                mCurrentPoint_ = mSegment_->CalcPoint(fDistance_);
             }
         }
     }
@@ -329,7 +329,7 @@ namespace Frost
         if ( (iIndex < s_int(lPointPath_.GetSize())) && (iIndex >= 0) )
         {
             s_ctnr<SmoothPathPoint>::const_iterator iterPoint = lPointPath_.Begin();
-            for (s_int i = 0; i < iIndex; i++)
+            for (s_int i = 0; i < iIndex; ++i)
                 ++iterPoint;
 
             return (*iterPoint);

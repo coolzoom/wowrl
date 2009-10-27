@@ -58,9 +58,9 @@ namespace Frost
         bPaused_ = false;
     }
 
-    const Vector& Path::GetActualPoint() const
+    const Vector& Path::GetCurrentPoint() const
     {
-        return mActualPoint_;
+        return mCurrentPoint_;
     }
 
     const s_uint& Path::GetID() const

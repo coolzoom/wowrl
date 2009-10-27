@@ -409,7 +409,7 @@ namespace Frost
         {
             pPath_->Update(fDelta);
 
-            pNode_->setPosition(Vector::FrostToOgre(pPath_->GetActualPoint()));
+            pNode_->setPosition(Vector::FrostToOgre(pPath_->GetCurrentPoint()));
         }
 
         if (bTracks_)

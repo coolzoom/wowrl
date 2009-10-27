@@ -76,7 +76,7 @@ namespace Frost
         s_str       GetLine();
 
         /// Returns the reading position in the file.
-        /** \return The position of the actual read character
+        /** \return The position of the currently read character
         *   in the file
         */
         s_uint      GetReadPos();
@@ -87,7 +87,7 @@ namespace Frost
         void        SetReadPos(const s_uint& uiPos);
 
         /// Returns the writing position in the file.
-        /** \return The position of the actual written character
+        /** \return The position of the currently written character
         *   in the file
         */
         s_uint      GetWritePos();

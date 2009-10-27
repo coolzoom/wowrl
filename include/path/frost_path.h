@@ -83,10 +83,10 @@ namespace Frost
         */
         virtual void     Update(const s_float& fDelta) = 0;
 
-        /// Returns the actual point.
-        /** \return The actual point
+        /// Returns the current point.
+        /** \return The current point
         */
-        const Vector&    GetActualPoint() const;
+        const Vector&    GetCurrentPoint() const;
 
         /// Returns this path's unique ID.
         /** \return This path's unique ID
@@ -127,7 +127,7 @@ namespace Frost
         s_bool                 bEnded_;
         s_bool                 bReversed_;
         s_bool                 bPaused_;
-        Vector                 mActualPoint_;
+        Vector                 mCurrentPoint_;
 
     };
 }
