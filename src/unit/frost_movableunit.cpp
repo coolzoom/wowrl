@@ -184,82 +184,85 @@ namespace Frost
         {
             pNode_->Update(fDelta);
 
-            Vector mDir = mMovementDirection_;
-            mMovementSpeed_ = Vector::ZERO;
-
-            if (!mDir.IsNull())
+            if (pBodyModel_->GetAnimMgr()->GetAnimID() != ANIM_JUMP_END)
             {
-                mDir.Normalize();
-
-                s_float fMovementSpeed;
-                if (bFalling_)
-                    fMovementSpeed = 0.5f;
-                else
-                    fMovementSpeed = 1.0f;
-
-                s_float fNewYaw;
-                if (mDir.Z() > 0.0f)
-                {
-                    // Moving backward
-                    mMovementSpeed_.Z() = 1.0f;
-                    if (bWalk_)
-                    {
-                        if (!bFalling_)
-                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
-                        fMovementSpeed *= fBackwardWalkSpeed_;
-                    }
-                    else
-                    {
-                        if (!bFalling_)
-                            pBodyModel_->GetAnimMgr()->SetAnim(
-                                ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
-                                fBackwardRunSpeed_/fBackwardWalkSpeed_
-                            );
-                        fMovementSpeed *= fBackwardRunSpeed_;
-                    }
-                    fNewYaw = atan2(-mDir.X(), -mDir.Z()) - 0.5f;
-                }
-                else
-                {
-                    // Moving forward
-                    mMovementSpeed_.Z() = -1.0f;
-                    if (bWalk_)
-                    {
-                        if (!bFalling_)
-                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
-                        fMovementSpeed *= fForwardWalkSpeed_;
-                    }
-                    else
-                    {
-                        if (!bFalling_)
-                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
-                        fMovementSpeed *= fForwardRunSpeed_;
-                    }
-                    fNewYaw = atan2(-mDir.X(), -mDir.Z());
-                }
-
-                SetYaw_(fNewYaw);
-                mMovementSpeed_.Z() *= fMovementSpeed;
-            }
-            else
-            {
-                if (!bFalling_)
-                    pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
-
-                SetYaw_(0.0f);
-            }
-
-            s_bool bMovement;
-            if (bFalling_)
-            {
+                Vector mDir = mMovementDirection_;
                 mMovementSpeed_ = Vector::ZERO;
-            }
-            else
-            {
-                if (!mMovementSpeed_.IsNull())
+
+                if (!mDir.IsNull())
                 {
-                    mMovementSpeed_ = pNode_->Transform(mMovementSpeed_);
-                    bMovement = true;
+                    mDir.Normalize();
+
+                    s_float fMovementSpeed;
+                    if (bFalling_)
+                        fMovementSpeed = 0.5f;
+                    else
+                        fMovementSpeed = 1.0f;
+
+                    s_float fNewYaw;
+                    if (mDir.Z() > 0.0f)
+                    {
+                        // Moving backward
+                        mMovementSpeed_.Z() = 1.0f;
+                        if (bWalk_)
+                        {
+                            if (!bFalling_)
+                                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
+                            fMovementSpeed *= fBackwardWalkSpeed_;
+                        }
+                        else
+                        {
+                            if (!bFalling_)
+                                pBodyModel_->GetAnimMgr()->SetAnim(
+                                    ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
+                                    fBackwardRunSpeed_/fBackwardWalkSpeed_
+                                );
+                            fMovementSpeed *= fBackwardRunSpeed_;
+                        }
+                        fNewYaw = atan2(-mDir.X(), -mDir.Z()) - 0.5f;
+                    }
+                    else
+                    {
+                        // Moving forward
+                        mMovementSpeed_.Z() = -1.0f;
+                        if (bWalk_)
+                        {
+                            if (!bFalling_)
+                                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
+                            fMovementSpeed *= fForwardWalkSpeed_;
+                        }
+                        else
+                        {
+                            if (!bFalling_)
+                                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
+                            fMovementSpeed *= fForwardRunSpeed_;
+                        }
+                        fNewYaw = atan2(-mDir.X(), -mDir.Z());
+                    }
+
+                    SetYaw_(fNewYaw);
+                    mMovementSpeed_.Z() *= fMovementSpeed;
+                }
+                else
+                {
+                    if (!bFalling_)
+                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+
+                    SetYaw_(0.0f);
+                }
+
+                s_bool bMovement;
+                if (bFalling_)
+                {
+                    mMovementSpeed_ = Vector::ZERO;
+                }
+                else
+                {
+                    if (!mMovementSpeed_.IsNull())
+                    {
+                        mMovementSpeed_ = pNode_->Transform(mMovementSpeed_);
+                        bMovement = true;
+                    }
                 }
             }
         }
