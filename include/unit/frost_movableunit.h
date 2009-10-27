@@ -102,6 +102,13 @@ namespace Frost
         */
         s_ptr<MovableUnitHandler> GetPhysicsHandler();
 
+        /// Rotates this Unit's Model.
+        /** \param fYaw   Angle to rotate horizontaly
+        *   \param fPitch Angle to rotate verticaly
+        *   \note Also rotates the Camera like RotateCamera().
+        */
+        void         RotateModel(const s_float& fYaw, const s_float& fPitch);
+
         /// Creates the associated Lua glue.
         /** \param pLua The Lua::State on which to create the glue
         */
@@ -122,6 +129,7 @@ namespace Frost
 
         void UpdateMovement_(const s_float& fDelta);
         void SetYaw_(const s_float& fNewYaw);
+        void Yaw_(const s_float& fYaw);
 
         Vector  mMovementDirection_;
         Vector  mMovementSpeed_;
