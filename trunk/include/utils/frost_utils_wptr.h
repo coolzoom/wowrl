@@ -102,11 +102,26 @@ namespace Frost
 
         /// Creates a s_refptr pointing to the object (if any).
         /** \returns A s_refptr pointing to the object (if any)
-        *   \note This is the only way to manipulate the pointed object.
         *   \note If this pointer is invalid, this function returns an empty
         *         s_refptr.
         */
         s_refptr<T> Lock() const
+        {
+            if (IsValid())
+                return s_refptr<T>(pValue_, pCounter_, pWCounter_);
+            else
+                return s_refptr<T>();
+        }
+
+        /// Dereferences the pointer.
+        /** \return The contained pointer
+        *   \note Actually returns a s_refptr for code safety. You can't
+        *         access the raw pointer directly from weak_ptr.
+        *   \note You should test for the pointer's validity before using
+        *         this operator, unless you're sure the object is still
+        *         alive.
+        */
+        s_refptr<T> operator -> () const
         {
             if (IsValid())
                 return s_refptr<T>(pValue_, pCounter_, pWCounter_);

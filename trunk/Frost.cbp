@@ -261,10 +261,7 @@
 		<Unit filename="src\path\frost_directpath.cpp" />
 		<Unit filename="src\path\frost_manualpath.cpp" />
 		<Unit filename="src\path\frost_path.cpp" />
-		<Unit filename="src\path\frost_smoothpath.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="src\path\frost_smoothpath.cpp" />
 		<Unit filename="src\scene\frost_axisalignedobstacle.cpp" />
 		<Unit filename="src\scene\frost_boxobstacle.cpp" />
 		<Unit filename="src\scene\frost_cylinderobstacle.cpp" />
