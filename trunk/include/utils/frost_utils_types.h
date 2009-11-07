@@ -15,20 +15,21 @@
 
 namespace Frost
 {
-    template<class T> class s_str_t;
-    template<class T> class s_bool_t;
-    template<class T> class s_int_t;
-    template<class T> class s_uint_t;
-    template<class T> class s_float_t;
-    template<class T, class C> class s_ctnr_t;
-    template<class T> class s_ctnr;
-    template<class T, uint N> class s_array;
-    template<class T, class N> class s_pair;
-    template<class T> class s_range;
+    template<class T>               class s_str_t;
+    template<class T>               class s_bool_t;
+    template<class T>               class s_int_t;
+    template<class T>               class s_uint_t;
+    template<class T>               class s_float_t;
+    template<class T, class C>      class s_ctnr_t;
+    template<class T>               class s_ctnr;
+    template<class T, uint N>       class s_array;
+    template<class T, class N>      class s_pair;
+    template<class T>               class s_range;
     template<class Key, class Data> class s_map;
     template<class Key, class Data> class s_multimap;
-    template<class T> class s_ptr;
-    template<class T> class s_refptr;
+    template<class T>               class s_ptr;
+    template<class T>               class s_refptr;
+    template<class T>               class s_wptr;
 
     /// Binds POD types to their corresponding Frost's types
     template<class T>
@@ -57,5 +58,6 @@ namespace Frost
 #include "frost_utils_multimap.h"
 #include "frost_utils_ptr.h"
 #include "frost_utils_refptr.h"
+#include "frost_utils_wptr.h"
 
 #endif

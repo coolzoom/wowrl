@@ -54,11 +54,6 @@ State::State()
 
     OpenLibs(pLua_);
 
-    //lua_atpanic(pLua_, l_Log);
-
-    NewTable();
-    SetGlobal("Functions");
-
     Register("Log", l_Log);
     Register("Error", l_ThrowError);
     Register("RandomInt", l_RandomInt);
