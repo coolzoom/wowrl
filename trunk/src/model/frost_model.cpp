@@ -124,7 +124,7 @@ namespace Frost
         pEntity_->setVisible(false);
     }
 
-    s_refptr<AnimManager> Model::GetAnimMgr()
+    s_wptr<AnimManager> Model::GetAnimMgr()
     {
         return pAnimMgr_;
     }

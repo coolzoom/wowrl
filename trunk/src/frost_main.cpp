@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
             // Populate the world !
             ZoneManager::GetSingleton()->LoadZone("Test");
 
-            s_refptr<SmoothPath> pPath = s_refptr<SmoothPath>(new SmoothPath());
+            s_refptr<SmoothPath> pPath(new SmoothPath());
             pPath->AddPoint(SmoothPath::Point( 2, 1, 2));
             pPath->AddPoint(SmoothPath::Point( 2, 1,-2));
             pPath->AddPoint(SmoothPath::Point(-2, 1,-2));

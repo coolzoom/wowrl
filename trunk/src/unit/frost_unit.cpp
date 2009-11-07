@@ -50,7 +50,7 @@ namespace Frost
         pSelectionDecal_->SetDiffuse(Color(0, 255, 0));
         pSelectionDecal_->SetAmbient(Color(0, 255, 0));
 
-        s_refptr<Decal> pShadowDecal = s_refptr<Decal>(new Decal("Textures/UnitShadow.png"));
+        s_refptr<Decal> pShadowDecal(new Decal("Textures/UnitShadow.png"));
         pShadowDecal->Attach(pNode_, false, true);
         pShadowDecal->SetPosition(Vector(0, 5, 0));
         pShadowDecal->SetDirection(Vector(0, -1, 0));
