@@ -54,8 +54,7 @@ namespace Frost
             }
             else
             {
-                Error(CLASS_NAME, "\""+sName+"_VS\" is a pixel shader !");
-                return NULL;
+                throw Exception(CLASS_NAME, "GetVertexShader() : dynamic cast failed !");
             }
         }
         else
@@ -77,8 +76,7 @@ namespace Frost
             }
             else
             {
-                Error(CLASS_NAME, "\""+sName+"_PS\" is a vertex shader !");
-                return NULL;
+                throw Exception(CLASS_NAME, "GetPixelShader() : dynamic cast failed !");
             }
         }
         else
@@ -88,7 +86,7 @@ namespace Frost
         }
     }
 
-    s_bool ShaderManager::LoadShaders()
+    void ShaderManager::LoadShaders()
     {
         Directory mDir("Shaders");
 
@@ -98,8 +96,6 @@ namespace Frost
         {
             ParseXMLFile_(*iterFile);
         }
-
-        return true;
     }
 
     void ShaderManager::UpdateShaders()

@@ -8,7 +8,6 @@
 #include "scene/frost_movableobject.h"
 #include "scene/frost_scenemanager.h"
 #include "frost_engine.h"
-#include "path/frost_pathmanager.h"
 #include "path/frost_path.h"
 
 #include <OgreSceneManager.h>
@@ -54,9 +53,9 @@ namespace Frost
         if (bOrbits_)
             CreateOrbitNode_();
 
-        if (mObject.pPath_)
+        if (mObject.pPathIterator_)
         {
-            pPath_ = PathManager::GetSingleton()->CopyPath(mObject.pPath_);
+            pPathIterator_ = Path::CreateIterator(mObject.pPathIterator_->GetPath());
         }
     }
 
@@ -161,7 +160,7 @@ namespace Frost
         );
     }
 
-    void MovableObject::LookAt( const Vector &mTrackedPoint, const s_bool& bTrackedPointRelative )
+    void MovableObject::LookAt( const Vector& mTrackedPoint, const s_bool& bTrackedPointRelative )
     {
         UnlockOrbiting();
 
@@ -208,7 +207,7 @@ namespace Frost
         }
     }
 
-    void MovableObject::OrbitAround( const Vector &mOrbitCenter )
+    void MovableObject::OrbitAround( const Vector& mOrbitCenter )
     {
         UnlockOrbiting();
         UnlockTracking();
@@ -219,7 +218,7 @@ namespace Frost
         CreateOrbitNode_();
     }
 
-    void MovableObject::SetDirection( const Vector &mDirection )
+    void MovableObject::SetDirection( const Vector& mDirection )
     {
         if (!mDirection.IsNull())
         {
@@ -238,7 +237,7 @@ namespace Frost
         mInitialDirection_ = mInitialDirection;
     }
 
-    void MovableObject::SetPosition( const Vector &mPosition )
+    void MovableObject::SetPosition( const Vector& mPosition )
     {
         RemovePath();
         UnlockOrbiting();
@@ -246,21 +245,21 @@ namespace Frost
         pNode_->setPosition(Vector::FrostToOgre(mPosition));
     }
 
-    void MovableObject::SetPath( s_refptr<Path> pPath )
+    s_wptr<Path::Iterator> MovableObject::SetPath( s_wptr<Path> pPath )
     {
-        if (pPath.IsValid())
-        {
+        pPathIterator_ = Path::CreateIterator(pPath);
+        if (pPathIterator_)
             UnlockOrbiting();
-            pPath_ = PathManager::GetSingleton()->CopyPath(pPath);
-        }
+
+        return pPathIterator_;
     }
 
     void MovableObject::RemovePath()
     {
-        pPath_.SetNull();
+        pPathIterator_.SetNull();
     }
 
-    void MovableObject::Translate( const Vector &mTranslation, const s_bool &bLocalSpace )
+    void MovableObject::Translate( const Vector& mTranslation, const s_bool& bLocalSpace )
     {
         RemovePath();
 
@@ -277,7 +276,7 @@ namespace Frost
         }
     }
 
-    void MovableObject::Yaw( const s_float &fValue )
+    void MovableObject::Yaw( const s_float& fValue )
     {
         if (bOrbits_)
         {
@@ -293,7 +292,7 @@ namespace Frost
         }
     }
 
-    void MovableObject::Pitch( const s_float &fValue )
+    void MovableObject::Pitch( const s_float& fValue )
     {
         if (bOrbits_)
         {
@@ -309,7 +308,7 @@ namespace Frost
         }
     }
 
-    void MovableObject::Roll( const s_float &fValue )
+    void MovableObject::Roll( const s_float& fValue )
     {
         if (!fValue.IsNull())
         {
@@ -378,9 +377,14 @@ namespace Frost
         return mInitialDirection_;
     }
 
-    s_refptr<Path> MovableObject::GetPath()
+    s_wptr<Path> MovableObject::GetPath()
     {
-        return pPath_;
+        return pPathIterator_->GetPath();
+    }
+
+    s_wptr<Path::Iterator> MovableObject::GetPathIterator()
+    {
+        return pPathIterator_;
     }
 
     const Vector& MovableObject::GetTrackedPoint() const
@@ -405,11 +409,10 @@ namespace Frost
 
     void MovableObject::Update( const s_float& fDelta )
     {
-        if (pPath_ != NULL)
+        if (pPathIterator_.IsValid())
         {
-            pPath_->Update(fDelta);
-
-            pNode_->setPosition(Vector::FrostToOgre(pPath_->GetCurrentPoint()));
+            pPathIterator_->Update(fDelta);
+            pNode_->setPosition(Vector::FrostToOgre(pPathIterator_->GetPosition()));
         }
 
         if (bTracks_)

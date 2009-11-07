@@ -273,27 +273,14 @@ namespace Frost
         }
     }
 
-    s_bool UnitManager::ParseData()
+    void UnitManager::ParseData()
     {
-        if (!ParseSpellSchools_())
-            return false;
-
-        if (!ParseCharacterModels_())
-            return false;
-
-        if (!ParseRaces_())
-            return false;
-
-        if (!ParseClasses_())
-            return false;
-
-        if (!ParseHealthTypes_())
-            return false;
-
-        if (!ParsePowerTypes_())
-            return false;
-
-        return true;
+        ParseSpellSchools_();
+        ParseCharacterModels_();
+        ParseRaces_();
+        ParseClasses_();
+        ParseHealthTypes_();
+        ParsePowerTypes_();
     }
 
     s_ptr<Lua::State> UnitManager::GetLua()

@@ -205,10 +205,9 @@ namespace Frost
 
                 if (!mFile.IsOpen())
                 {
-                    Error(CLASS_NAME,
+                    throw Exception(CLASS_NAME,
                         "\""+sTerrainFile_+"\" doesn't exist."
                     );
-                    return;
                 }
 
                 TerrainHeader mHeader;
@@ -216,19 +215,17 @@ namespace Frost
 
                 if (s_str(mHeader.sID, 4) != "FTER")
                 {
-                    Error(CLASS_NAME,
+                    throw Exception(CLASS_NAME,
                         "\""+sTerrainFile_+"\" is not a terrain file."
                     );
-                    return;
                 }
 
                 if (s_str(mHeader.sVersion, 4) > "0001")
                 {
-                    Error(CLASS_NAME,
+                    throw Exception(CLASS_NAME,
                         "\""+sTerrainFile_+"\" uses a too high file version ("+
                         s_str(mHeader.sVersion, 4)+" > 0001)."
                     );
-                    return;
                 }
 
                 uint uiNX = mHeader.uiNumXPoint;
@@ -540,6 +537,11 @@ namespace Frost
                 return s_float::NaN;
             }
         }
+    }
+
+    s_refptr<Material> TerrainChunk::GetMaterial()
+    {
+        return pMat_;
     }
 
     const s_uint& TerrainChunk::GetID() const

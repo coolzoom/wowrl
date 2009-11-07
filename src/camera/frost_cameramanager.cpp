@@ -51,17 +51,15 @@ namespace Frost
         return pCam;
     }
 
-    s_bool CameraManager::CheckSettings()
+    void CameraManager::CheckSettings()
     {
         if (pMainCamera_ == NULL)
         {
-            Error(CLASS_NAME, "No main camera defined.");
-            return false;
+            throw Exception(CLASS_NAME, "No main camera defined.");
         }
         if (pMainViewport_ == NULL)
         {
-            Error(CLASS_NAME, "Viewport not created.");
-            return false;
+            throw Exception(CLASS_NAME, "Viewport not created.");
         }
 
         if (bNewViewport_)
@@ -76,8 +74,6 @@ namespace Frost
             }
             bNewViewport_ = false;
         }
-
-        return true;
     }
 
     void CameraManager::SetMainCamera( s_ptr<Camera> pCamera )

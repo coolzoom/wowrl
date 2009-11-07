@@ -18,6 +18,6 @@ LuaScrollingMessageFrame::LuaScrollingMessageFrame(lua_State* pLua) : LuaFrame(p
     pSMFParent_ = s_ptr<ScrollingMessageFrame>::DynamicCast(pParent_);
     if (pParent_ && !pSMFParent_)
     {
-        Error(CLASS_NAME, "Dynamic cast failed !");
+        throw Exception(CLASS_NAME, "Dynamic cast failed !");
     }
 }

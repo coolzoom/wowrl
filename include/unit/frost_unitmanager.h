@@ -59,9 +59,7 @@ namespace Frost
         void                      ClearSelection();
 
         /// Reads all xml files related to Units.
-        /** \return 'true' if everything went fine
-        */
-        s_bool                    ParseData();
+        void                      ParseData();
 
         /// Returns the complete list of spell school.
         /** \return The complete list of spell school

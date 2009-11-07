@@ -60,12 +60,6 @@ namespace Frost
 
     Material::~Material()
     {
-        s_map< s_uint, s_ptr<Decal> >::iterator iterDecal;
-        foreach (iterDecal, lDecalList_)
-        {
-            iterDecal->second.Delete();
-        }
-
         if (mType_ != TYPE_UNKNOWN)
         {
             Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
@@ -132,24 +126,24 @@ namespace Frost
             pDefaultPass_->setPolygonMode(Ogre::PM_SOLID);
     }
 
-    s_ptr<Decal> Material::AddDecal( s_ptr<Decal> pDecal )
+    s_wptr<Decal> Material::AddDecal( s_wptr<Decal> pDecal )
     {
-        s_ptr<Decal> pNewDecal = new Decal(*pDecal, pOgreMat_);
-        lDecalList_[pNewDecal->GetID()] = pNewDecal;
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            s_refptr<Decal> pNewDecal = s_refptr<Decal>(new Decal(*pLocked, pOgreMat_));
+            lDecalList_[pNewDecal->GetID()] = pNewDecal;
 
-        pNewDecal->Show();
+            pNewDecal->Show();
 
-        return pNewDecal;
+            return pNewDecal;
+        }
+        else
+            return s_wptr<Decal>();
     }
 
-    s_ptr<Decal> Material::AddDecal( s_refptr<Decal> pDecal )
+    s_wptr<Decal> Material::AddDecal( const s_str& sTextureFile )
     {
-        return this->AddDecal(pDecal.Get());
-    }
-
-    s_ptr<Decal> Material::AddDecal( const s_str& sTextureFile )
-    {
-        s_ptr<Decal> pDecal = new Decal(sTextureFile, pOgreMat_);
+        s_refptr<Decal> pDecal = s_refptr<Decal>(new Decal(sTextureFile, pOgreMat_));
         lDecalList_[pDecal->GetID()] = pDecal;
 
         pDecal->Show();
@@ -157,24 +151,25 @@ namespace Frost
         return pDecal;
     }
 
-    void Material::RemoveDecal( s_ptr<Decal> pDecal )
+    void Material::RemoveDecal( s_wptr<Decal> pDecal )
     {
-        const s_uint& uiID = pDecal->GetID();
-        s_map< s_uint, s_ptr<Decal> >::iterator iterDecal = lDecalList_.Get(uiID);
-        if (iterDecal != lDecalList_.End())
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
         {
-            s_ptr<Decal> pListedDecal = lDecalList_[uiID];
-            if (pListedDecal == pDecal)
+            s_map< s_uint, s_refptr<Decal> >::iterator iterDecal = lDecalList_.Get(pLocked->GetID());
+            if (iterDecal != lDecalList_.End())
             {
-                pDecal.Delete();
-                lDecalList_.Erase(iterDecal);
+                if (iterDecal->second == pLocked)
+                {
+                    lDecalList_.Erase(iterDecal);
+                    return;
+                }
             }
-        }
 
-        Warning(CLASS_NAME,
-            "Trying to remove a Decal that doesn't belong to this Material "
-            "("+sName_+")."
-        );
+            Warning(CLASS_NAME,
+                "Trying to remove a Decal that doesn't belong to this Material "
+                "("+sName_+")."
+            );
+        }
     }
 
     const s_float& Material::GetWidth() const

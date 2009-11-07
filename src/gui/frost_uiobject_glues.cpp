@@ -25,7 +25,7 @@ LuaUIObject::LuaUIObject( lua_State* pLua )
     pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sName);
     if (!pParent_)
     {
-        Error(CLASS_NAME, "Glue missing its parent !");
+        throw Exception(CLASS_NAME, "Glue missing its parent !");
     }
 }
 
@@ -271,7 +271,7 @@ int LuaUIObject::_SetAllPoints( lua_State* pLua )
             if (pArg->GetType() == Lua::TYPE_STRING)
                 pFrame = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
             else
-                pFrame = Lunar<LuaUIObject>::check(pLua, pArg->GetIndex().Get())->GetParent();
+                pFrame = mFunc.GetState()->Get<LuaUIObject>(pArg->GetIndex())->GetParent();
             pParent_->SetAllPoints(pFrame);
         }
         else
@@ -309,7 +309,7 @@ int LuaUIObject::_SetParent( lua_State* pLua )
             if (pArg->GetType() == Lua::TYPE_STRING)
                 pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
             else
-                pParent = Lunar<LuaUIObject>::check(pLua, pArg->GetIndex().Get())->GetParent();
+                pParent = mFunc.GetState()->Get<LuaUIObject>(pArg->GetIndex())->GetParent();
             pParent_->SetParent(pParent);
         }
         else
@@ -341,13 +341,9 @@ int LuaUIObject::_SetPoint( lua_State* pLua )
         if (pArg->IsProvided())
         {
             if (pArg->GetType() == Lua::TYPE_STRING)
-            {
                 pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
-            }
             else
-            {
-                pParent = Lunar<LuaUIObject>::check(pLua, pArg->GetIndex().Get())->GetParent();
-            }
+                pParent = mFunc.GetState()->Get<LuaUIObject>(pArg->GetIndex())->GetParent();
         }
 
         // relativePoint

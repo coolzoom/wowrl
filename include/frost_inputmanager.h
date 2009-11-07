@@ -180,12 +180,12 @@ namespace Frost
         /** \param pWindow The Ogre::RenderWindow
         *   \return 'true' if everything went fine
         */
-        s_bool          Initialize(s_ptr<Ogre::RenderWindow> pWindow);
+        void            Initialize(s_ptr<Ogre::RenderWindow> pWindow);
 
         /// Reads configuration.
         /** \return 'false' if something went wrong
         */
-        s_bool          ReadConfig();
+        void            ReadConfig();
 
         /// Updates input (keyboard and mouse).
         void            Update();

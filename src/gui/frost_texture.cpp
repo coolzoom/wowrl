@@ -330,7 +330,6 @@ void Texture::SetColor( const Color& mColor )
 {
     mGradient_ = Gradient();
     sTextureFile_ = "";
-    pSprite_.SetNull(); // Deletes the old sprite and its material
 
     s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", mColor);
     pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));

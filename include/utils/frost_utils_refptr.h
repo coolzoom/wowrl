@@ -116,7 +116,7 @@ namespace Frost
         }
 
         /// Creates a s_wptr pointing at the same object.
-        s_wptr<T> CreateWeak()
+        s_wptr<T> CreateWeak() const
         {
             return s_wptr<T>(*this);
         }

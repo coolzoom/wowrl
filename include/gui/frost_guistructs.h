@@ -182,7 +182,7 @@ namespace Frost
     */
     struct Quad
     {
-        Vertex             lVertexArray[4];
+        s_array<Vertex,4>  lVertexArray;
         s_refptr<Material> pMat;
 
         Quad();

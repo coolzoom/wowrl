@@ -18,6 +18,6 @@ LuaStatusBar::LuaStatusBar(lua_State* pLua) : LuaFrame(pLua)
     pStatusBarParent_ = s_ptr<StatusBar>::DynamicCast(pParent_);
     if (pParent_ && !pStatusBarParent_)
     {
-        Error(CLASS_NAME, "Dynamic cast failed !");
+        throw Exception(CLASS_NAME, "Dynamic cast failed !");
     }
 }

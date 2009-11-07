@@ -79,14 +79,7 @@ namespace Frost
         *   \return The new Decal, copied from the provided one.
         *   \note The created Decal is automatically shown.
         */
-        s_ptr<Decal>    AddDecal(s_ptr<Decal> pDecal);
-
-        /// Adds a new Decal to this Material.
-        /** \param pDecal The new decal
-        *   \return The new Decal, copied from the provided one.
-        *   \note The created Decal is automatically shown.
-        */
-        s_ptr<Decal>    AddDecal(s_refptr<Decal> pDecal);
+        s_wptr<Decal>   AddDecal(s_wptr<Decal> pDecal);
 
         /// Creates a new Decal and adds it to this Material.
         /** \param sTextureFile The file containing the texture to draw
@@ -95,12 +88,12 @@ namespace Frost
         *         AddDecal().<br>
         *         The created Decal is automatically shown.
         */
-        s_ptr<Decal>    AddDecal(const s_str& sTextureFile);
+        s_wptr<Decal>   AddDecal(const s_str& sTextureFile);
 
         /// Removes a previously created Decal from this Material.
         /** \param pDecal The Decal to remove
         */
-        void            RemoveDecal(s_ptr<Decal> pDecal);
+        void            RemoveDecal(s_wptr<Decal> pDecal);
 
         /// Returns this Material's width.
         /** \return This Material's width
@@ -211,7 +204,7 @@ namespace Frost
         s_bool bHardwareSkinning_;
         s_bool bIsDesaturated_;
 
-        s_map< s_uint, s_ptr<Decal> > lDecalList_;
+        s_map< s_uint, s_refptr<Decal> > lDecalList_;
     };
 }
 

@@ -71,7 +71,7 @@ namespace Frost
         else
         {
             Warning(CLASS_NAME,
-                "No Gameplay with the name \""+sGameplay+"\" found."
+                "Gameplay \""+sGameplay+"\" doesn't exist."
             );
         }
     }
@@ -82,7 +82,7 @@ namespace Frost
             pCurrentGameplay_->On("Update");
     }
 
-    s_bool GameplayManager::ParseData()
+    void GameplayManager::ParseData()
     {
         Directory mDir("Gameplays");
         s_ctnr<s_str> lXMLFileList = mDir.GetFileList(true, "xml");
@@ -91,8 +91,6 @@ namespace Frost
         {
             ParseXMLFile_(*iter);
         }
-
-        return true;
     }
 
     s_ptr<Lua::State> GameplayManager::GetLua()

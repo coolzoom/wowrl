@@ -150,20 +150,14 @@ namespace Frost
     // path/frost_path.h
     class  Path;
 
-    // path/frost_path_directpath.h
-    struct DirectPathPoint;
+    // path/frost_directpath.h
     class  DirectPath;
 
-    // path/frost_path_manualpath.h
-    struct ManualPathPoint;
+    // path/frost_manualpath.h
     class  ManualPath;
 
-    // path/frost_path_smoothpath.h
-    struct SmoothPathPoint;
+    // path/frost_smoothpath.h
     class  SmoothPath;
-
-    // path/frost_pathmanager.h
-    class  PathManager;
 
     /* SCENE *********************************************/
     // scene/frost_axisalignedobstacle.h

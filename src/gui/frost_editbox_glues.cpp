@@ -18,6 +18,6 @@ LuaEditBox::LuaEditBox(lua_State* pLua) : LuaFrame(pLua)
     pEditBoxParent_ = s_ptr<EditBox>::DynamicCast(pParent_);
     if (pParent_ && !pEditBoxParent_)
     {
-        Error(CLASS_NAME, "Dynamic cast failed !");
+        throw Exception(CLASS_NAME, "Dynamic cast failed !");
     }
 }

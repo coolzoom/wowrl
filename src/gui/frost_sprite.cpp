@@ -54,13 +54,18 @@ namespace Frost
             }
             else
             {
-                Error(CLASS_NAME, "Can't create a Sprite if no texture unit has been assigned to the material.");
+                throw Exception(CLASS_NAME,
+                    "Can't call the Sprite(Material) constructor "
+                    "if no texture unit has been assigned to the Material."
+                );
             }
         }
         else
         {
-            pQuad_->pMat = MaterialManager::GetSingleton()->GetDefault2D();
-            Error(CLASS_NAME, "Can't create a Sprite with no material and dimension.");
+            throw Exception(CLASS_NAME,
+                "Can't call the Sprite(Material) constructor with "
+                "a NULL Material."
+            );
         }
     }
 
@@ -261,7 +266,7 @@ namespace Frost
         }
         else if (uiIndex < 4)
         {
-            pQuad_->lVertexArray[uiIndex.Get()].mColor = mColor;
+            pQuad_->lVertexArray[uiIndex].mColor = mColor;
         }
         else
             Warning(CLASS_NAME, "Second parameter of SetColor mustn't be greater than 3.");

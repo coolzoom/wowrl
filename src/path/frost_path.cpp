@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*               XXX source               */
+/*              Path source               */
 /*                                        */
 /*                                        */
 
@@ -11,28 +11,25 @@ using namespace std;
 
 namespace Frost
 {
-    const s_str Path::CLASS_NAME = "Path";
+    const s_str Path::CLASS_NAME           = "Path";
+    const s_str Path::Iterator::CLASS_NAME = "Path::Iterator";
 
-    Path::Path( const s_uint& uiID, PathType mType ) :
-        uiID_(uiID), mType_(mType)
+    Path::Iterator::Iterator() : bPaused_(true)
     {
-        fSpeed_ = 20.0f;
-        bPaused_ = true;
     }
 
-    Path::~Path()
+    Path::Iterator::~Iterator()
     {
 
     }
 
-    void Path::SetLoop( const s_bool& bLoop, const s_bool& bLinkEndToStart )
+    void Path::Iterator::SetLoop( const s_bool& bLoop, const s_bool& bLinkEndToStart )
     {
         bLoop_ = bLoop;
-        if (bLoop_)
-            bLinkEndToStart_ = bLinkEndToStart;
+        bLinkEndToStart_ = bLinkEndToStart;
     }
 
-    void Path::SetSpeed( const s_float& fSpeed )
+    void Path::Iterator::SetSpeed( const s_float& fSpeed )
     {
         fSpeed_ = fabs(fSpeed);
 
@@ -43,47 +40,45 @@ namespace Frost
         }
     }
 
-    void Path::Reverse()
+    void Path::Iterator::Reverse()
     {
         bReversed_ = !bReversed_;
     }
 
-    void Path::Pause()
+    void Path::Iterator::Pause()
     {
         bPaused_ = true;
     }
 
-    void Path::Play()
+    void Path::Iterator::Play()
     {
         bPaused_ = false;
     }
 
-    const Vector& Path::GetCurrentPoint() const
+    const Vector& Path::Iterator::GetPosition() const
     {
-        return mCurrentPoint_;
+        return mPosition_;
     }
 
-    const s_uint& Path::GetID() const
-    {
-        return uiID_;
-    }
-
-    PathType Path::GetType() const
-    {
-        return mType_;
-    }
-
-    const s_bool& Path::IsEnded() const
+    const s_bool& Path::Iterator::IsEnded() const
     {
         return bEnded_;
     }
 
-    const s_bool& Path::IsPaused() const
+    const s_bool& Path::Iterator::IsPaused() const
     {
         return bPaused_;
     }
 
-    void Path::Update(const s_float& fDelta)
+    s_refptr<Path::Iterator> Path::CreateIterator( s_wptr<Path> pPath )
     {
+        if (s_refptr<Path> pLocked = pPath.Lock())
+        {
+            s_refptr<Path::Iterator> pIterator = pLocked->CreateIterator();
+            pIterator->SetPath(pLocked);
+            return pIterator;
+        }
+        else
+            return s_refptr<Path::Iterator>();
     }
 }

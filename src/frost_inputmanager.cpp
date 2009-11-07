@@ -37,7 +37,7 @@ namespace Frost
         }
     }
 
-    s_bool InputManager::Initialize( s_ptr<Ogre::RenderWindow> pWindow )
+    void InputManager::Initialize( s_ptr<Ogre::RenderWindow> pWindow )
     {
         multimap<string, string> mPL;
 
@@ -72,17 +72,14 @@ namespace Frost
             const OIS::MouseState& mState = pMouse_->getMouseState();
             mState.width = pWindow->getWidth();
             mState.height = pWindow->getHeight();
-
-            return true;
         }
         else
         {
-            Error(CLASS_NAME, "Couldn't create OIS input system.");
-            return false;
+            throw Exception(CLASS_NAME, "Couldn't create OIS input system.");
         }
     }
 
-    s_bool InputManager::ReadConfig()
+    void InputManager::ReadConfig()
     {
         s_ptr<Engine> pEngine = Engine::GetSingleton();
 
@@ -94,8 +91,6 @@ namespace Frost
 
         if (pEngine->IsConstantDefined("MouseSensibility"))
             fMouseSensibility_ = pEngine->GetFloatConstant("MouseSensibility");
-
-        return true;
     }
 
     s_bool InputManager::GetKey( s_bool bForce ) const

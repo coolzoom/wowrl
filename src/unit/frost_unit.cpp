@@ -27,9 +27,9 @@ namespace Frost
 {
     const s_str Unit::CLASS_NAME = "Unit";
 
-    // TODO : Unit : Implémenter les sorts
-    // TODO : Unit : Implémenter le mouvement (+pathfinding)
-    // TODO : Unit : Implémenter les buffs
+    // TODO : Unit : ImplÃ©menter les sorts
+    // TODO : Unit : ImplÃ©menter le mouvement (+pathfinding)
+    // TODO : Unit : ImplÃ©menter les buffs
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
         uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN),
@@ -58,7 +58,7 @@ namespace Frost
         pShadowDecal->SetScale(1.8f);
         pShadowDecal->SetDiffuse(Color(128, 255, 255, 255));
 
-        uiShadowDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pShadowDecal.Get());
+        uiShadowDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pShadowDecal);
     }
 
     Unit::~Unit()
@@ -244,9 +244,9 @@ namespace Frost
         else
         {
             Error(CLASS_NAME,
-                "Unkown stat : \""+sStatName+"\" for "+sName_+"."
+                "Unkown stat : \""+sStatName+"\" for "+sName_+". Returning zero."
             );
-            return (void*)NULL;
+            return s_int(0);
         }
     }
 
@@ -288,7 +288,7 @@ namespace Frost
             bSelected_ = bSelected;
             if (bSelected_)
             {
-                uiSelectionDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pSelectionDecal_.Get());
+                uiSelectionDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pSelectionDecal_);
             }
             else
             {

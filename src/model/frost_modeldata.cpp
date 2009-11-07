@@ -163,8 +163,7 @@ namespace Frost
         if (uiLength < sizeof(ModelHeader))
         {
             mFile.Close();
-            Error(CLASS_NAME, "File \""+sFile+"\" must be corrupted (incorrect size).");
-            return;
+            throw Exception(CLASS_NAME, "File \""+sFile+"\" must be corrupted (incorrect size).");
         }
 
         char* sBuffer = new char[uiLength.Get()];
@@ -178,14 +177,12 @@ namespace Frost
         // Error check
         if (mHeader.id[0] != 'M' && mHeader.id[1] != 'D' && mHeader.id[2] != '2' && mHeader.id[3] != '0')
         {
-            Error(CLASS_NAME, "\""+sFile+"\" has wrong model type (MD20 expected).");
-            return;
+            throw Exception(CLASS_NAME, "\""+sFile+"\" has wrong model type (MD20 expected).");
         }
 
         if (mHeader.version[0] != 4 || mHeader.version[1] != 1 || mHeader.version[2] != 0 || mHeader.version[3] != 0)
         {
-            Error(CLASS_NAME, "\""+sFile+"\" has wrong model version (4100 expected).");
-            return;
+            throw Exception(CLASS_NAME, "\""+sFile+"\" has wrong model version (4100 expected).");
         }
 
         // We first load animation data

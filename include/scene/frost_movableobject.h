@@ -11,6 +11,8 @@
 
 #include "frost.h"
 
+#include "path/frost_path.h"
+
 namespace Frost
 {
     /// A class storing position, orientation and scale
@@ -98,7 +100,7 @@ namespace Frost
         /** \param pPath The path to follow
         *   \note Disables orbiting, enables path following.
         */
-        virtual void          SetPath(s_refptr<Path> pPath);
+        virtual s_wptr<Path::Iterator> SetPath(s_wptr<Path> pPath);
 
         /// Removes the path this object follows.
         virtual void          RemovePath();
@@ -190,7 +192,12 @@ namespace Frost
         /// Returns the Path used by this object.
         /** \return The Path used by this object
         */
-        s_refptr<Path>        GetPath();
+        s_wptr<Path>          GetPath();
+
+        /// Returns the Path::Iterator used by this object.
+        /** \return The Path::Iterator used by this object
+        */
+        s_wptr<Path::Iterator> GetPathIterator();
 
         /// Returns the controlled node.
         /** \return The controlled node
@@ -230,10 +237,11 @@ namespace Frost
         void  CreateOrbitNode_();
         void  RemoveOrbitNode_();
 
-        s_uint                  uiID_;
+        s_uint uiID_;
 
-        s_ptr<MovableObject>    pParent_;
-        s_ptr<MovableObject>    pLookAtObject_;
+        s_ptr<MovableObject> pParent_;
+        s_bool               bInherits_;
+        s_ptr<MovableObject> pLookAtObject_;
 
         Vector mInitialDirection_;
 
@@ -241,14 +249,15 @@ namespace Frost
 
         s_ptr<Ogre::SceneNode>  pNode_;
         s_ptr<Ogre::SceneNode>  pTargetNode_;
-        Vector                  mOrbitCenter_;
-        Vector                  mTrackedPoint_;
-        s_bool                  bOrbits_;
-        s_bool                  bOrbitCenterRelative_;
-        s_bool                  bTracks_;
-        s_bool                  bTrackedPointRelative_;
-        s_bool                  bInherits_;
-        s_refptr<Path>          pPath_;
+
+        Vector mOrbitCenter_;
+        Vector mTrackedPoint_;
+        s_bool bOrbits_;
+        s_bool bOrbitCenterRelative_;
+        s_bool bTracks_;
+        s_bool bTrackedPointRelative_;
+
+        s_refptr<Path::Iterator> pPathIterator_;
 
         s_ctnr< s_ptr<LuaMovableObject> > lGlueList_;
     };

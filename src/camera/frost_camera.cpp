@@ -7,8 +7,6 @@
 
 #include "camera/frost_camera.h"
 #include "frost_engine.h"
-#include "path/frost_pathmanager.h"
-#include "path/frost_path.h"
 
 #include <OgreAxisAlignedBox.h>
 #include <OgreSceneManager.h>
