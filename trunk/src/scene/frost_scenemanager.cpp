@@ -47,7 +47,7 @@ namespace Frost
         );
     }
 
-    s_uint SceneManager::AddDecalOnGround( s_ptr<Decal> pDecal )
+    s_uint SceneManager::AddDecalOnGround( s_wptr<Decal> pDecal )
     {
         return 0;
     }

@@ -18,7 +18,7 @@ LuaTexture::LuaTexture(lua_State* pLua) : LuaLayeredRegion(pLua)
     pTextureParent_ = s_ptr<Texture>::DynamicCast(pParent_);
     if (pParent_ && !pTextureParent_)
     {
-        Error(CLASS_NAME, "Dynamic cast failed !");
+        throw Exception(CLASS_NAME, "Dynamic cast failed !");
     }
 }
 
@@ -116,7 +116,7 @@ int LuaTexture::_SetBlendMode( lua_State* pLua )
             mBlend = Texture::BLEND_MOD;
         else
         {
-            Error(mFunc.GetName(),
+            Warning(mFunc.GetName(),
                 "Unknown blending mode : \""+sBlend+"\"."
             );
             return mFunc.Return();
@@ -162,7 +162,7 @@ int LuaTexture::_SetGradient( lua_State* pLua )
             mOrientation = Gradient::VERTICAL;
         else
         {
-            Error(mFunc.GetName(),
+            Warning(mFunc.GetName(),
                 "Unknown gradient orientation : \""+sOrientation+"\"."
             );
             return mFunc.Return();
@@ -208,7 +208,7 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
             mOrientation = Gradient::VERTICAL;
         else
         {
-            Error(mFunc.GetName(),
+            Warning(mFunc.GetName(),
                 "Unknown gradient orientation : \""+sOrientation+"\"."
             );
             return mFunc.Return();

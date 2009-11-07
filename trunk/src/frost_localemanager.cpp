@@ -49,18 +49,18 @@ namespace Frost
         return sLocale_;
     }
 
-    s_bool LocaleManager::ReadConfig()
+    void LocaleManager::ReadConfig()
     {
         sLocale_ = Engine::GetSingleton()->GetStringConstant("GameLocale");
         if (sLocale_ == "")
         {
-            Error(CLASS_NAME, "No locale specified.");
-            return false;
+            throw Exception(CLASS_NAME, "No locale specified.");
         }
-        return ReadLocale();
+
+        ReadLocale();
     }
 
-    s_bool LocaleManager::ReadLocale()
+    void LocaleManager::ReadLocale()
     {
         Directory mDir("Locale/"+sLocale_);
         s_ctnr<s_str> lFileList = mDir.GetFileList(true, "lua");
@@ -69,7 +69,5 @@ namespace Frost
         {
             pLua_->DoFile(*iter);
         }
-
-        return true;
     }
 }

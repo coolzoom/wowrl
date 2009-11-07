@@ -15,6 +15,7 @@
 
 #include "utils/frost_utils.h"
 #include "utils/frost_utils_types.h"
+#include "utils/frost_utils_exception.h"
 #include "utils/frost_utils_var.h"
 
 #include "utils/frost_utils_math.h"

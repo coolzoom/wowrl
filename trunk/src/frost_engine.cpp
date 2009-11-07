@@ -12,7 +12,6 @@
 #include "gui/frost_spritemanager.h"
 #include "gui/frost_guistructs.h"
 #include "gui/frost_sprite.h"
-#include "path/frost_pathmanager.h"
 #include "model/frost_modelmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "scene/frost_scenemanager.h"
@@ -88,7 +87,6 @@ namespace Frost
         pFontMgr_     = FontManager::GetSingleton();
         pPhysicsMgr_  = PhysicsManager::GetSingleton();
         pSceneMgr_    = SceneManager::GetSingleton();
-        pPathMgr_     = PathManager::GetSingleton();
 
         pLightMgr_    = LightManager::GetSingleton();
         pCameraMgr_   = CameraManager::GetSingleton();
@@ -110,7 +108,7 @@ namespace Frost
 
     Engine::~Engine()
     {
-        ShutDown();
+        ShutDown(true);
     }
 
     void PrintInLog( const s_str& sMessage, const s_bool& bTimeStamps, const s_uint& uiOffset )
@@ -149,7 +147,7 @@ namespace Frost
         }
     }
 
-    s_bool Engine::Initialize()
+    void Engine::Initialize()
     {
         pUtilsMgr_->Initialize();
 
@@ -160,7 +158,7 @@ namespace Frost
 
         // Load configuration
         if (!pLua_->DoFile("Config.lua"))
-            return false;
+            throw Exception(CLASS_NAME, "Error reading Config.lua.");
 
         pLua_->PushGlobal("GameOptions");
         pLua_->PushNil();
@@ -180,15 +178,12 @@ namespace Frost
         Log(sLine);
         Log(s_str('#', sLine.GetLength())+"\n");
 
-        if (!this->ReadGraphicsConfig_())
-            return false;
+        ReadGraphicsConfig_();
 
-        if (!pFontMgr_->ReadConfig())
-            return false;
+        pFontMgr_->ReadConfig();
 
         pLocaleMgr_->Initialize();
-        if (!pLocaleMgr_->ReadConfig())
-            return false;
+        pLocaleMgr_->ReadConfig();
 
         // Create the root path
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./", "FileSystem", "Frost");
@@ -200,8 +195,7 @@ namespace Frost
             pOgreSceneMgr_->addSpecialCaseRenderQueue(Ogre::RENDER_QUEUE_OVERLAY);
 
         // Load shaders
-        if (!pShaderMgr_->LoadShaders())
-            return false;
+        pShaderMgr_->LoadShaders();
 
         if (GetBoolConstant("EnablePostProcessing"))
         {
@@ -228,19 +222,15 @@ namespace Frost
 
         pUnitMgr_->Initialize();
 
-        if (!pUnitMgr_->ParseData())
-            return false;
+        pUnitMgr_->ParseData();
 
-        if (!pGameplayMgr_->ParseData())
-            return false;
+        pGameplayMgr_->ParseData();
 
-        if (!pPhysicsMgr_->ReadConfig())
-            return false;
+        pPhysicsMgr_->ReadConfig();
 
         // Initialize the input manager
         pInputMgr_->Initialize(pRenderWindow_);
-        if (!pInputMgr_->ReadConfig())
-            return false;
+        pInputMgr_->ReadConfig();
 
         // Initialize the material manager
         pMaterialMgr_->Initialize();
@@ -259,16 +249,13 @@ namespace Frost
 
         // Initialize the zone manager
         pZoneMgr_->Initialize();
-
-        return true;
     }
 
     void Engine::Loop()
     {
         pGameplayMgr_->SetCurrentGameplay(GetStringConstant("DefaultGameplay"));
 
-        if (!pCameraMgr_->CheckSettings())
-            return;
+        pCameraMgr_->CheckSettings();
 
         pRoot_->getRenderSystem()->_initRenderTargets();
         pTimeMgr_->Initialize();
@@ -298,10 +285,10 @@ namespace Frost
             }
 
             // Check there is a camera ready for rendering
-            if (!pCameraMgr_->CheckSettings())
-                break;
+            pCameraMgr_->CheckSettings();
 
             s_float fDelta = s_float(pTimeMgr_->GetDelta());
+            if (fDelta > 0.5f) fDelta = 0.5f;
 
             // Update current gameplay
             pGameplayMgr_->Update(fDelta);
@@ -373,11 +360,11 @@ namespace Frost
         bRun_ = false;
     }
 
-    void Engine::ShutDown()
+    void Engine::ShutDown( const s_bool& bForceShutDown )
     {
         if (!bShutDown_)
         {
-            if (bRun_)
+            if (bRun_ && !bForceShutDown)
                 bRun_ = false;
             else
             {
@@ -405,7 +392,6 @@ namespace Frost
                 CameraManager::Delete();
                 LightManager::Delete();
 
-                PathManager::Delete();
                 SceneManager::Delete();
                 PhysicsManager::Delete();
                 FontManager::Delete();
@@ -445,7 +431,7 @@ namespace Frost
         }
     }
 
-    s_bool Engine::ReadGraphicsConfig_()
+    void Engine::ReadGraphicsConfig_()
     {
         s_str sRenderSystem = GetStringConstant("RenderSystem");
         Ogre::RenderSystem* pRS;
@@ -461,10 +447,9 @@ namespace Frost
             pRS = pRoot_->getRenderSystemByName("OpenGL Rendering Subsystem");
             if (!pRS)
             {
-                Error(CLASS_NAME,
+                throw Exception(CLASS_NAME,
                     "Can't load the "+sRenderSystem+" renderer, maybe a problem with the DLL."
                 );
-                return false;
             }
         }
         else if (sRenderSystem == "DirectX")
@@ -478,10 +463,9 @@ namespace Frost
             pRS = pRoot_->getRenderSystemByName("Direct3D9 Rendering Subsystem");
             if (!pRS)
             {
-                Error(CLASS_NAME,
+                throw Exception(CLASS_NAME,
                     "Can't load the "+sRenderSystem+" renderer, maybe a problem with the DLL."
                 );
-                return false;
             }
 
             // NOTE : Lua needs this to work properly
@@ -489,10 +473,9 @@ namespace Frost
         }
         else
         {
-            Error(CLASS_NAME,
+            throw Exception(CLASS_NAME,
                 "Unsupported render system : \""+sRenderSystem+"\"."
             );
-            return false;
         }
 
         pRoot_->setRenderSystem(pRS);
@@ -528,18 +511,16 @@ namespace Frost
         );
         if (!pRenderWindow_)
         {
-            Error(CLASS_NAME, "Couldn't create render window.");
-            return false;
+            throw Exception(CLASS_NAME, "Couldn't create render window.");
         }
 
         if (sRenderSystem == "OpenGL")
         {
             if (!pRS->getCapabilities()->isShaderProfileSupported("glsl"))
             {
-                Error(CLASS_NAME,
-                    "Frost requires a GLSL compatible card. Try with DirectX."
+                throw Exception(CLASS_NAME,
+                    "Frost requires a GLSL compatible card."
                 );
-                return false;
             }
         }
         else if (sRenderSystem == "DirectX")
@@ -548,10 +529,9 @@ namespace Frost
                 !pRS->getCapabilities()->isShaderProfileSupported("ps_2_0") ||
                 !pRS->getCapabilities()->isShaderProfileSupported("vs_2_0"))
             {
-                Error(CLASS_NAME,
-                    "Frost requires a HLSL (VS and PS 2.0) compatible card. Try with OpenGL."
+                throw Exception(CLASS_NAME,
+                    "Frost requires a HLSL (VS and PS 2.0) compatible card."
                 );
-                return false;
             }
         }
 
@@ -597,8 +577,6 @@ namespace Frost
                 (Ogre::RenderTexture*)pMotionBlurMask_->GetOgreRenderTarget().Get()
             );
         }
-
-        return true;
     }
 
     s_var Engine::GetConstant( const s_str& sConstantName )

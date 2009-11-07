@@ -18,7 +18,7 @@ LuaFontString::LuaFontString(lua_State* pLua) : LuaLayeredRegion(pLua)
     pFontStringParent_ = s_ptr<FontString>::DynamicCast(pParent_);
     if (pParent_ && !pFontStringParent_)
     {
-        Error(CLASS_NAME, "Dynamic cast failed !");
+        throw Exception(CLASS_NAME, "Dynamic cast failed !");
     }
 }
 
@@ -146,7 +146,7 @@ int LuaFontString::_SetJustifyH( lua_State* pLua )
             pFontStringParent_->SetJustifyH(Text::ALIGN_CENTER);
         else
         {
-            Error(mFunc.GetName(),
+            Warning(mFunc.GetName(),
                 "Unknown justify behavior : \""+sJustifyH+"\"."
             );
         }

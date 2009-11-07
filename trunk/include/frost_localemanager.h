@@ -41,16 +41,13 @@ namespace Frost
         void         SetLocale(const s_str& sLocale);
 
         /// Reads the default locale from Config.lua.
-        /** \return 'true' if everything went fine
-        */
-        s_bool       ReadConfig();
+        void         ReadConfig();
 
         /// Reads localization files.
-        /** \return 'true' if everything went fine
-        *   \note ReadConfig() or SetLocale() must have been called
+        /** \note ReadConfig() or SetLocale() must have been called
         *         before this function.
         */
-        s_bool       ReadLocale();
+        void         ReadLocale();
 
         static const s_str CLASS_NAME;
 

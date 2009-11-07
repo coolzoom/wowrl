@@ -1196,7 +1196,7 @@ void Frame::SetParent( s_ptr<UIObject> pParent )
             pParentFrame_->RemoveChild(this);
 
         pParent_ = pParent;
-        pParentFrame_ = (Frame*)pParent.Get();
+        pParentFrame_ = s_ptr<Frame>::DynamicCast(pParent);
 
         FireUpdateDimensions();
     }

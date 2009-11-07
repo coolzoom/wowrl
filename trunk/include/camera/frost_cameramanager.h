@@ -32,9 +32,7 @@ namespace Frost
         s_ptr<Camera>   CreateCamera();
 
         /// Checks if all settings are good for rendering.
-        /** \return 'true' if everything is fine
-        */
-        s_bool          CheckSettings();
+        void            CheckSettings();
 
         /// Sets the new camera to use to render the scene.
         /** \param pCamera The new camera
@@ -46,7 +44,7 @@ namespace Frost
         *   \note This is the camera that is used to render
         *         the scene.
         */
-        s_ptr<Camera>  GetMainCamera();
+        s_ptr<Camera>   GetMainCamera();
 
         /// Returns the main viewport.
         /** \return The main viewport

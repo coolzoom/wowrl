@@ -11,9 +11,8 @@
 #include "frost_inputmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
-#include "path/frost_path_directpath.h"
-#include "path/frost_path_smoothpath.h"
-#include "path/frost_pathmanager.h"
+#include "path/frost_directpath.h"
+#include "path/frost_smoothpath.h"
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
 #include "scene/frost_scenemanager.h"
@@ -66,7 +65,36 @@ s_bool GameFrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_G))
     {
-        s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->EnablePhysics();
+        //s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->EnablePhysics();
+        s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->Play();
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_R))
+    {
+        s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->Reverse();
+    }
+
+
+    static bool loop = true;
+    static bool lendtstart = true;
+
+    if (pInputMgr->KeyIsPressed(KEY_L))
+    {
+        if (pInputMgr->ShiftPressed())
+        {
+            lendtstart = !lendtstart;
+            s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->SetLoop(loop, lendtstart);
+        }
+        else
+        {
+            loop = !loop;
+            s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->SetLoop(loop, lendtstart);
+        }
+    }
+
+    if (pInputMgr->KeyIsPressed(KEY_I))
+    {
+        s_refptr<DirectPath>::DynamicCast(s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPath().Lock())->AddPoint(DirectPath::Point(0, 1, 4));
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -173,121 +201,100 @@ int main(int argc, char* argv[])
         s_ptr<Engine> pFrost = Engine::GetSingleton();
 
         // Initialize base parameters
-        if (pFrost->Initialize())
+        pFrost->Initialize();
+
+        if (bEditor)
         {
-            if (bEditor)
-            {
-                Log("Entering Editor mode...");
+            Log("Entering Editor mode...");
 
-                pFrost->SetFrameFunction(&EditorFrameFunc);
-                SpriteManager::GetSingleton()->SetRenderFunction(&EditorRenderFunc);
+            pFrost->SetFrameFunction(&EditorFrameFunc);
+            SpriteManager::GetSingleton()->SetRenderFunction(&EditorRenderFunc);
 
-                GameplayManager::GetSingleton()->SetCurrentGameplay("Editor");
+            GameplayManager::GetSingleton()->SetCurrentGameplay("Editor");
 
-                GUIManager::GetSingleton()->AddAddOnFolder("Interface/BaseUI");
-                GUIManager::GetSingleton()->AddAddOnFolder("Interface/Editor");
-                GUIManager::GetSingleton()->LoadUI();
+            GUIManager::GetSingleton()->AddAddOnFolder("Interface/BaseUI");
+            GUIManager::GetSingleton()->AddAddOnFolder("Interface/Editor");
+            GUIManager::GetSingleton()->LoadUI();
 
-                s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
-                //pZone->ShowAllChunks();
+            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
+            //pZone->ShowAllChunks();
 
-                s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(Light::POINT);
-                pLight1->SetPosition(Vector(0, 10, 0));
-                pLight1->SetColor(Color(255, 255, 255));
-                pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
-                pLight1->SetRange(50.0f);
-            }
-            else
-            {
-                // Set render and frame functions
-                pFrost->SetFrameFunction(&GameFrameFunc);
-                SpriteManager::GetSingleton()->SetRenderFunction(&GameRenderFunc);
-
-                // Load GUI
-                GUIManager::GetSingleton()->AddAddOnFolder("Interface/BaseUI");
-                GUIManager::GetSingleton()->AddAddOnFolder("Interface/AddOns");
-                GUIManager::GetSingleton()->LoadUI();
-
-                // Populate the world !
-                ZoneManager::GetSingleton()->LoadZone("Test");
-
-                /*LightManager::GetSingleton()->SetAmbient(Color(150, 150, 150));
-
-                // Create the ground
-                s_refptr<Material> pGroundMat = MaterialManager::GetSingleton()->CreateMaterial3D(
-                    "Textures/Tileset/Aerie Peaks/AeriePeaksTrollTile.png"
-                );
-                pGroundMat->SetTilling(0.01f, 0.01f);
-
-                pPlane = SceneManager::GetSingleton()->CreatePlane();
-                pPlane->SetMaterial(pGroundMat);
-
-                // Register it to the physics manager
-                PhysicsManager::GetSingleton()->AddObstacle(pPlane);*/
-
-                /*s_ptr<PlaneObstacle> pPlane = new PlaneObstacle(2.0f, 2.0f);
-                PhysicsManager::GetSingleton()->AddObstacle(pPlane);
-                pPlane->SetDirection(Vector(0.0f, 1.0f, -1.0f));
-                pPlane->SetPosition(Vector(0.0f, -1.0f, 0.0f));*/
-
-                /*s_array<MeshObstacle::Triangle> lTriangleList;
-                MeshObstacle::Triangle mTri;
-                mTri.mP[0] = Vector(-1.0f, -1.0f, -1.0f);
-                mTri.mP[1] = Vector( 1.0f, -1.0f, -1.0f);
-                mTri.mP[2] = Vector( 0.0f, -1.0f,  1.0f);
-                lTriangleList.PushBack(mTri);
-                s_ptr<MeshObstacle> pMesh = new MeshObstacle(lTriangleList);
-                PhysicsManager::GetSingleton()->AddObstacle(pMesh);*/
-
-                // Create Units
-                s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", Character::GENDER_MALE);
-                pChar->Teleport(Vector(0, 1, 0));
-                //pChar->Teleport(Vector(22, 1, 0));
-                pChar->RotateModel(0.25f, 0.0f);
-                //pChar->GetPhysicsHandler()->SetSpeed(Vector(0, -2, 0));
-                //pChar->EnablePhysics();
-
-                pChar->SetClass("MAGE");
-                pChar->SetLevel(51);
-                pChar->SetStat("SPIRIT", s_int(50));
-                pChar->SetStat("INTELLECT", s_int(50));
-
-                /*s_ptr<Character> pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", Character::GENDER_MALE);
-                pChar2->EnablePhysics();
-                pChar2->Teleport(Vector(0, 1, -5));
-                pChar2->LookAtUnit(pChar);
-
-                pChar2->SetClass("MAGE");
-                pChar2->SetLevel(51);
-                pChar2->SetStat("SPIRIT", s_int(50));
-                pChar2->SetStat("INTELLECT", s_int(50));*/
-
-
-                // Some light
-                /*s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
-                pLight1->SetPosition(Vector(0, 5, 0));
-                pLight1->SetColor(Color(255, 255, 255));
-                pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
-                pLight1->SetRange(50.0f);*/
-
-                LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
-            }
-
-            // Enter the main loop
-            pFrost->Loop();
+            s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(Light::POINT);
+            pLight1->SetPosition(Vector(0, 10, 0));
+            pLight1->SetColor(Color(255, 255, 255));
+            pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
+            pLight1->SetRange(50.0f);
         }
         else
         {
-            std::cerr << "An error has occured while loading.\nSee Frost.log." << std::endl;
+            // Set render and frame functions
+            pFrost->SetFrameFunction(&GameFrameFunc);
+            SpriteManager::GetSingleton()->SetRenderFunction(&GameRenderFunc);
+
+            // Load GUI
+            GUIManager::GetSingleton()->AddAddOnFolder("Interface/BaseUI");
+            GUIManager::GetSingleton()->AddAddOnFolder("Interface/AddOns");
+            GUIManager::GetSingleton()->LoadUI();
+
+            // Populate the world !
+            ZoneManager::GetSingleton()->LoadZone("Test");
+
+            s_refptr<SmoothPath> pPath = s_refptr<SmoothPath>(new SmoothPath());
+            pPath->AddPoint(SmoothPath::Point( 2, 1, 2));
+            pPath->AddPoint(SmoothPath::Point( 2, 1,-2));
+            pPath->AddPoint(SmoothPath::Point(-2, 1,-2));
+            pPath->AddPoint(SmoothPath::Point(-2, 1, 2));
+
+            // Create Units
+            s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", Character::GENDER_MALE);
+            //pChar->Teleport(Vector(0, 1, 0));
+            s_wptr<Path::Iterator> pIter = pChar->GetNode()->SetPath(pPath);
+            if (s_refptr<Path::Iterator> pLocked = pIter.Lock())
+            {
+                pLocked->SetLoop(true);
+                pLocked->SetSpeed(2.0f);
+            }
+
+            pChar->SetClass("MAGE");
+            pChar->SetLevel(51);
+            pChar->SetStat("SPIRIT", s_int(50));
+            pChar->SetStat("INTELLECT", s_int(50));
+
+            /*s_ptr<Character> pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", Character::GENDER_MALE);
+            pChar2->EnablePhysics();
+            pChar2->Teleport(Vector(0, 1, -5));
+            pChar2->LookAtUnit(pChar);
+
+            pChar2->SetClass("MAGE");
+            pChar2->SetLevel(51);
+            pChar2->SetStat("SPIRIT", s_int(50));
+            pChar2->SetStat("INTELLECT", s_int(50));*/
+
+
+            // Some light
+            /*s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+            pLight1->SetPosition(Vector(0, 5, 0));
+            pLight1->SetColor(Color(255, 255, 255));
+            pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
+            pLight1->SetRange(50.0f);*/
+
+            LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
         }
+
+        // Enter the main loop
+        pFrost->Loop();
     }
-    catch (Ogre::Exception e)
+    catch (Ogre::Exception  e)
     {
-        std::cerr << e.getFullDescription() << std::endl;
+        Log("Fatal exception : "+e.getFullDescription());
     }
-    catch (std::exception e)
+    catch (std::exception   e)
     {
-        std::cerr << e.what() << std::endl;
+        Log("Fatal exception : "+s_str(e.what()));
+    }
+    catch (Frost::Exception e)
+    {
+        Log("Fatal exception : "+e.GetDescription());
     }
 
     // Close the engine

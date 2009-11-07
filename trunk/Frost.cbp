@@ -164,11 +164,10 @@
 		<Unit filename="include\model\frost_modeldata.h" />
 		<Unit filename="include\model\frost_modelmanager.h" />
 		<Unit filename="include\model\frost_modelstructs.h" />
+		<Unit filename="include\path\frost_directpath.h" />
+		<Unit filename="include\path\frost_manualpath.h" />
 		<Unit filename="include\path\frost_path.h" />
-		<Unit filename="include\path\frost_path_directpath.h" />
-		<Unit filename="include\path\frost_path_manualpath.h" />
-		<Unit filename="include\path\frost_path_smoothpath.h" />
-		<Unit filename="include\path\frost_pathmanager.h" />
+		<Unit filename="include\path\frost_smoothpath.h" />
 		<Unit filename="include\scene\frost_axisalignedobstacle.h" />
 		<Unit filename="include\scene\frost_boxobstacle.h" />
 		<Unit filename="include\scene\frost_cylinderobstacle.h" />
@@ -259,11 +258,13 @@
 		<Unit filename="src\parsers\frost_shadermanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_unitmanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_zonemanager_parser.cpp" />
+		<Unit filename="src\path\frost_directpath.cpp" />
+		<Unit filename="src\path\frost_manualpath.cpp" />
 		<Unit filename="src\path\frost_path.cpp" />
-		<Unit filename="src\path\frost_path_directpath.cpp" />
-		<Unit filename="src\path\frost_path_manualpath.cpp" />
-		<Unit filename="src\path\frost_path_smoothpath.cpp" />
-		<Unit filename="src\path\frost_pathmanager.cpp" />
+		<Unit filename="src\path\frost_smoothpath.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="src\scene\frost_axisalignedobstacle.cpp" />
 		<Unit filename="src\scene\frost_boxobstacle.cpp" />
 		<Unit filename="src\scene\frost_cylinderobstacle.cpp" />

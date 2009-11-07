@@ -114,7 +114,7 @@ namespace Frost
             else
             {
                 Warning(CLASS_NAME,
-                    "Trying to add an obstacle that is already in the scene"
+                    "Trying to add an obstacle that is already in the scene."
                 );
             }
         }

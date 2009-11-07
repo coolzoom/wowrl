@@ -36,9 +36,7 @@ namespace Frost
         void            SetCurrentGameplay(const s_str& sGameplay);
 
         /// Reads all Gameplays.
-        /** \return 'true' if everything went fine
-        */
-        s_bool          ParseData();
+        void            ParseData();
 
         /// Updates the current gameplay.
         /** \param fDelta The elapsed time since last call

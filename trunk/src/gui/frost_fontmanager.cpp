@@ -65,14 +65,12 @@ namespace Frost
         return sDefaultFont_;
     }
 
-    s_bool FontManager::ReadConfig()
+    void FontManager::ReadConfig()
     {
         sDefaultFont_ = Engine::GetSingleton()->GetStringConstant("DefaultFont");
         if (sDefaultFont_ == "")
         {
-            Error(CLASS_NAME, "No default font specified.");
-            return false;
+            throw Exception(CLASS_NAME, "No default font specified.");
         }
-        return true;
     }
 }

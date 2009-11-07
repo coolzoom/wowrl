@@ -102,6 +102,11 @@ namespace Frost
         */
         s_float       GetPointHeight(const s_float& fX, const s_float& fZ) const;
 
+        /// Returns this chunk's Material.
+        /** \return This chunk's Material
+        */
+        s_refptr<Material> GetMaterial();
+
         /// Returns this chunk's unique ID.
         /** \return This chunk's unique ID
         */

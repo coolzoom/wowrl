@@ -46,7 +46,7 @@ namespace Frost
         *   \note Actually, this function initializes all the libraries,
         *         Frost's managers, and crucial elements (main camera, ...).
         */
-        s_bool              Initialize();
+        void                Initialize();
 
         /// Enters the main loop.
         /** \note You can only exit the main loop by returning 'false' in
@@ -57,10 +57,12 @@ namespace Frost
         void                Loop();
 
         /// Frees all the allocated resources.
-        /** \note This function only deletes what the Engine has created for
+        /** \param bForceShutDown 'true' to delete everything now,
+        *                         'false' to let it end the current frame
+        *   \note This function only deletes what the Engine has created for
         *         you. You still have to "delete" what you "new".
         */
-        void                ShutDown();
+        void                ShutDown(const s_bool& bForceShutDown = false);
 
         /// Changes the game state.
         /** \param mState The new state (see GameState)
@@ -221,7 +223,7 @@ namespace Frost
 
     private :
 
-        s_bool ReadGraphicsConfig_();
+        void ReadGraphicsConfig_();
 
         s_bool bShutDown_;
         s_bool bRun_;
@@ -248,7 +250,6 @@ namespace Frost
         s_ptr<SpriteManager>   pSpriteMgr_;
         s_ptr<ModelManager>    pModelMgr_;
         s_ptr<CameraManager>   pCameraMgr_;
-        s_ptr<PathManager>     pPathMgr_;
         s_ptr<SceneManager>    pSceneMgr_;
         s_ptr<ShaderManager>   pShaderMgr_;
         s_ptr<MaterialManager> pMaterialMgr_;

@@ -14,47 +14,40 @@
 
 namespace Frost
 {
-    /// An element of ManualPath
-    struct ManualPathPoint
-    {
-        ManualPathPoint() {}
-
-        ManualPathPoint(const s_float& fX, const s_float& fY, const s_float& fZ) :
-            mPosition(fX, fY, fZ)
-        {}
-
-        Vector mPosition;
-    };
-
-    /// A smoothed path with custom tangents [!NYI!]
+    /// A smoothed path with custom tangents
     /** Not Yet Implemented...
     */
     class ManualPath : public Path
     {
     public :
 
+        /// An element of ManualPath
+        struct Point
+        {
+            Point() {}
+
+            Point(const s_float& fX, const s_float& fY, const s_float& fZ) :
+                mPosition(fX, fY, fZ)
+            {}
+
+            Vector mPosition;
+        };
+
         /// Default constructor.
-        /** \param uiID The unique ID to give to that path
-        *   \note You shouldn't have to call this. Use the
+        /** \note You shouldn't have to call this. Use the
         *         PathManager instead.
         */
-        ManualPath(const s_uint& uiID);
+        ManualPath();
 
         /// Copy constructor.
-        /** \param uiID  The unique ID to give to that path
-        *   \param mPath The path to copy
+        /** \param mPath The path to copy
         *   \note You shouldn't have to call this. Use the
         *         PathManager instead.
         */
-        ManualPath(const s_uint& uiID, const ManualPath& mPath);
+        ManualPath(const ManualPath& mPath);
 
         /// Destructor.
         ~ManualPath();
-
-        /// Updates this path.
-        /** \param fDelta The time elapsed since the last call
-        */
-        virtual void Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 

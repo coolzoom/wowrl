@@ -35,9 +35,7 @@ namespace Frost
         const s_str&      GetDefaultFont() const;
 
         /// Reads the configuration files.
-        /** \return 'true' if everything went fine
-        */
-        s_bool            ReadConfig();
+        void              ReadConfig();
 
         static const s_str CLASS_NAME;
 

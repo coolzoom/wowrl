@@ -118,10 +118,9 @@ namespace Frost
             }
             else
             {
-                Error(CLASS_NAME,
+                throw Exception(CLASS_NAME,
                     "No animation in the sequence for anim "+uiID+"."
                 );
-                return;
             }
 
             pActualAnim_->pOgreAnim->setEnabled(true);

@@ -186,9 +186,10 @@ namespace Frost
 
     void MovableUnit::UpdateMovement_( const s_float& fDelta )
     {
+        pNode_->Update(fDelta);
+
         if (pHandler_->IsEnabled())
         {
-            pNode_->Update(fDelta);
 
             if (pBodyModel_->GetAnimMgr()->GetAnimID() != ANIM_JUMP_END)
             {
