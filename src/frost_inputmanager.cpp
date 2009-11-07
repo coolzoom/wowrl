@@ -433,11 +433,16 @@ namespace Frost
             bLastDragged_ = false;
 
         // Update mouse position
+        fRawDMX_ = fDMX_ = mMouseState.X.abs - fMX_;
+        fRawDMY_ = fDMY_ = mMouseState.Y.abs - fMY_;
+
         fMX_ = mMouseState.X.abs;
         fMY_ = mMouseState.Y.abs;
 
-        fRawDMX_ = fDMX_ = mMouseState.X.rel;
-        fRawDMY_ = fDMY_ = mMouseState.Y.rel;
+        // Note : relative input seems bugged (1.333 times larger
+        // values than absolute input...)
+        /*fRawDMX_ = fDMX_ = mMouseState.X.rel;
+        fRawDMY_ = fDMY_ = mMouseState.Y.rel;*/
 
         fDMX_ *= fMouseSensibility_;
         fDMY_ *= fMouseSensibility_;
