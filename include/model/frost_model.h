@@ -30,7 +30,7 @@ namespace Frost
         s_refptr<Material> GetMaterial();
         void               SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
-        void             AddSubEntity(const s_uint& uiID);
+        void               AddSubEntity(const s_uint& uiID);
 
         static const s_str CLASS_NAME;
 
@@ -53,7 +53,7 @@ namespace Frost
         /// Destructor.
         ~Model();
 
-        s_refptr<AnimManager> GetAnimMgr();
+        s_wptr<AnimManager> GetAnimMgr();
         const s_str&        GetModelName() const;
         const s_str&        GetEntityName() const;
         s_ptr<ModelPart>    GetModelPart(const s_uint& uiID);

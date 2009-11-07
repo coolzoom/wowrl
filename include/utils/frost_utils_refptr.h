@@ -41,8 +41,6 @@ namespace Frost
 
         /// Copy constructor.
         /** \param mValue the s_refptr to copy
-        *   \note Can cause deletion of the contained
-        *         pointer.
         */
         s_refptr(const s_refptr& mValue)
         {
