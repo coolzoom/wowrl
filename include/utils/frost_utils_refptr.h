@@ -4,6 +4,7 @@ namespace Frost
     /// Reference counting pointer
     /** This is a pointer that automatically deletes
     *   its content when not used anymore.<br>
+    *   Can be used in conjunction with s_wptr.
     *   Uses reference counting.
     */
     template<class T>
@@ -11,13 +12,17 @@ namespace Frost
     {
     public :
 
+        template<class> friend class s_refptr;
+        template<class> friend class s_wptr;
+
         /// Default constructor.
         /** \note Initializes the pointer to NULL.
         */
         s_refptr()
         {
-            pValue_ = NULL;
-            pCounter_ = NULL;
+            pValue_    = NULL;
+            pCounter_  = NULL;
+            pWCounter_ = NULL;
         }
 
         /// Constructor.
@@ -27,23 +32,9 @@ namespace Frost
         */
         explicit s_refptr(T* pValue)
         {
-            pValue_ = pValue;
-            pCounter_ = new uint(0);
-
-            Increment_();
-        }
-
-        /// Constructor.
-        /** \param pValue   The pointer to assign
-        *   \param pCounter The counter to use
-        *   \note This function should not be called
-        *         by anyone else than itself (and other
-        *         template specializations).
-        */
-        explicit s_refptr(T* pValue, uint* pCounter)
-        {
-            pValue_ = pValue;
-            pCounter_ = pCounter;
+            pValue_    = pValue;
+            pCounter_  = new uint(0);
+            pWCounter_ = new uint(0);
 
             Increment_();
         }
@@ -55,8 +46,9 @@ namespace Frost
         */
         s_refptr(const s_refptr& mValue)
         {
-            pValue_ = mValue.pValue_;
-            pCounter_ = mValue.pCounter_;
+            pValue_    = mValue.pValue_;
+            pCounter_  = mValue.pCounter_;
+            pWCounter_ = mValue.pWCounter_;
 
             Increment_();
         }
@@ -86,6 +78,30 @@ namespace Frost
             return (pValue_ != NULL);
         }
 
+        /// Returns the number of s_refptr pointing to the object.
+        /** \return The number of s_refptr pointing to the object
+        *   \note This function returns 0 if the pointer is NULL.
+        */
+        s_uint GetCount() const
+        {
+            if (pCounter_)
+                return *pCounter_;
+            else
+                return 0u;
+        }
+
+        /// Returns the number of s_wptr pointing to the object.
+        /** \return The number of s_wptr pointing to the object
+        *   \note This function returns 0 if the pointer is NULL.
+        */
+        s_uint GetWeakCount() const
+        {
+            if (pWCounter_)
+                return *pWCounter_;
+            else
+                return 0u;
+        }
+
         /// Sets this pointer to NULL.
         /** \note Can cause deletion of the contained
         *         pointer.
@@ -93,8 +109,16 @@ namespace Frost
         void SetNull()
         {
             Decrement_();
-            pValue_ = NULL;
-            pCounter_ = NULL;
+
+            pValue_    = NULL;
+            pCounter_  = NULL;
+            pWCounter_ = NULL;
+        }
+
+        /// Creates a s_wptr pointing at the same object.
+        s_wptr<T> CreateWeak()
+        {
+            return s_wptr<T>(*this);
         }
 
         /// Returns a reference to the contained value.
@@ -124,8 +148,9 @@ namespace Frost
             {
                 Decrement_();
 
-                pValue_ = mValue.pValue_;
-                pCounter_ = mValue.pCounter_;
+                pValue_    = mValue.pValue_;
+                pCounter_  = mValue.pCounter_;
+                pWCounter_ = mValue.pWCounter_;
 
                 Increment_();
             }
@@ -136,17 +161,15 @@ namespace Frost
         /// Checks if this pointer equals another
         /** \param pValue The pointer to test
         */
-        template<class N>
-        s_bool operator == (s_refptr<N> pValue)
+        s_bool operator == (s_refptr pValue)
         {
-            return (pValue_ == pValue.Get());
+            return (pValue_ == pValue.pValue_);
         }
 
         /// Checks if this pointer equals another
         /** \param pValue The pointer to test
         */
-        template<class N>
-        s_bool operator == (N* pValue) const
+        s_bool operator == (T* pValue) const
         {
             return (pValue_ == pValue);
         }
@@ -154,17 +177,15 @@ namespace Frost
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
         */
-        template<class N>
-        s_bool operator != (s_refptr<N> pValue)
+        s_bool operator != (s_refptr pValue)
         {
-            return (pValue_ != pValue.Get());
+            return (pValue_ != pValue.pValue_);
         }
 
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
         */
-        template<class N>
-        s_bool operator != (N* pValue) const
+        s_bool operator != (T* pValue) const
         {
             return (pValue_ != pValue);
         }
@@ -187,9 +208,9 @@ namespace Frost
 
         /// Allows limited implicit inheritance conversion.
         template<class N>
-        operator s_refptr<N>()
+        operator s_refptr<N>() const
         {
-            return s_refptr<N>(pValue_, pCounter_);
+            return s_refptr<N>(pValue_, pCounter_, pWCounter_);
         }
 
         s_ctnr< s_refptr<T> > operator , ( s_refptr<T> pValue ) const
@@ -198,6 +219,51 @@ namespace Frost
             mContainer.PushBack(*this);
             mContainer.PushBack(pValue);
             return mContainer;
+        }
+
+        /// Casts the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        */
+        template<class N>
+        static s_refptr<T> StaticCast(s_refptr<N> pValue)
+        {
+            return s_refptr<T>(static_cast<T*>(pValue.pValue_), pValue.pCounter_, pValue.pWCounter_);
+        }
+
+        /// Tries to dynamic cast the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        *   \note Dynamic cast can fail, and in this case, will result in
+        *         a NULL pointer.
+        */
+        template<class N>
+        static s_refptr<T> DynamicCast(s_refptr<N> pValue)
+        {
+            T* pTemp = dynamic_cast<T*>(pValue.pValue_);
+            if (pTemp)
+                return s_refptr<T>(pTemp, pValue.pCounter_, pValue.pWCounter_);
+            else
+                return s_refptr<T>();
+        }
+
+    protected :
+
+        /// Constructor.
+        /** \param pValue   The pointer to assign
+        *   \param pCounter The counter to use
+        *   \param pWCounter The weak ptr counter to use
+        *   \note This function should not be called
+        *         by anyone else than itself (and other
+        *         template specializations).
+        */
+        explicit s_refptr(T* pValue, uint* pCounter, uint* pWCounter)
+        {
+            pValue_    = pValue;
+            pCounter_  = pCounter;
+            pWCounter_ = pWCounter;
+
+            Increment_();
         }
 
     private :
@@ -216,15 +282,22 @@ namespace Frost
                 if (*pCounter_ == 0u)
                 {
                     delete pValue_;
-                    delete pCounter_;
                     pValue_ = NULL;
-                    pCounter_ = NULL;
+
+                    if (*pWCounter_ == 0u)
+                    {
+                        delete pCounter_;
+                        pCounter_ = NULL;
+                        delete pWCounter_;
+                        pWCounter_ = NULL;
+                    }
                 }
             }
         }
 
         T*    pValue_;
         uint* pCounter_;
+        uint* pWCounter_;
     };
 
     template<class T>

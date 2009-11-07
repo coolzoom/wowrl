@@ -93,6 +93,7 @@
 		<Unit filename="include\utils\frost_utils_event.h" />
 		<Unit filename="include\utils\frost_utils_eventmanager.h" />
 		<Unit filename="include\utils\frost_utils_eventreceiver.h" />
+		<Unit filename="include\utils\frost_utils_exception.h" />
 		<Unit filename="include\utils\frost_utils_file.h" />
 		<Unit filename="include\utils\frost_utils_float.h" />
 		<Unit filename="include\utils\frost_utils_int.h" />
@@ -119,6 +120,7 @@
 		<Unit filename="include\utils\frost_utils_uint.h" />
 		<Unit filename="include\utils\frost_utils_var.h" />
 		<Unit filename="include\utils\frost_utils_vector.h" />
+		<Unit filename="include\utils\frost_utils_wptr.h" />
 		<Unit filename="include\utils\frost_utilsmanager.h" />
 		<Unit filename="src\utils\frost_utils_axisalignedbox.cpp" />
 		<Unit filename="src\utils\frost_utils_color.cpp" />
@@ -126,6 +128,7 @@
 		<Unit filename="src\utils\frost_utils_event.cpp" />
 		<Unit filename="src\utils\frost_utils_eventmanager.cpp" />
 		<Unit filename="src\utils\frost_utils_eventreceiver.cpp" />
+		<Unit filename="src\utils\frost_utils_exception.cpp" />
 		<Unit filename="src\utils\frost_utils_file.cpp" />
 		<Unit filename="src\utils\frost_utils_float.cpp" />
 		<Unit filename="src\utils\frost_utils_log.cpp" />

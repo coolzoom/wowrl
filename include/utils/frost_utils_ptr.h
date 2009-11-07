@@ -12,6 +12,8 @@ namespace Frost
     {
     public :
 
+        template<class> friend class s_ptr;
+
         /// Default constructor.
         /** \note Initializes the pointer to NULL.
         */
@@ -253,7 +255,7 @@ namespace Frost
         template<class N>
         static s_ptr<T> StaticCast(s_ptr<N> pValue)
         {
-            return static_cast<T*>(pValue.Get());
+            return static_cast<T*>(pValue.pValue_);
         }
 
         /// Tries to dynamic cast the provided pointer to this one's type.
@@ -265,7 +267,7 @@ namespace Frost
         template<class N>
         static s_ptr<T> DynamicCast(s_ptr<N> pValue)
         {
-            return dynamic_cast<T*>(pValue.Get());
+            return dynamic_cast<T*>(pValue.pValue_);
         }
 
         static const s_str CLASS_NAME;
