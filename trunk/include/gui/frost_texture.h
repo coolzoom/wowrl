@@ -18,7 +18,6 @@ namespace Frost
 {
     namespace GUI
     {
-
         /// The base of the GUI's appearence
         /** This object contains either a texture taken from a file,
         *   or a plain color.
@@ -182,9 +181,19 @@ namespace Frost
             /// Creates the associated Lua glue.
             void                      CreateGlue();
 
+            /// Parses data from an XML::Block.
+            /** \param pBlock The Texture's XML::Block
+            */
+            void                      ParseBlock(s_ptr<XML::Block> pBlock);
+
             static const s_str CLASS_NAME;
 
-        protected :
+        private :
+
+            void ParseAttributes_(s_ptr<XML::Block> pBlock);
+            void ParseTexCoordsBlock_(s_ptr<XML::Block> pBlock);
+            void ParseColorBlock_(s_ptr<XML::Block> pBlock);
+            void ParseGradientBlock_(s_ptr<XML::Block> pBlock);
 
             s_refptr<Sprite> pSprite_;
             s_str            sTextureFile_;

@@ -22,6 +22,10 @@ EditBox::EditBox() : Frame()
     lType_.PushBack("EditBox");
 }
 
+EditBox::~EditBox()
+{
+}
+
 void EditBox::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();

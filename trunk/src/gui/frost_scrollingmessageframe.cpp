@@ -22,6 +22,10 @@ ScrollingMessageFrame::ScrollingMessageFrame() : Frame()
     lType_.PushBack("ScrollingMessageFrame");
 }
 
+ScrollingMessageFrame::~ScrollingMessageFrame()
+{
+}
+
 void ScrollingMessageFrame::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();

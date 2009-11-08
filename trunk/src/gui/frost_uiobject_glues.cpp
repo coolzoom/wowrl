@@ -303,19 +303,17 @@ int LuaUIObject::_SetParent( lua_State* pLua )
     if (mFunc.Check())
     {
         s_ptr<Lua::Argument> pArg = mFunc.Get(0);
+        s_ptr<UIObject> pParent;
+
         if (pArg->IsProvided())
         {
-            s_ptr<UIObject> pParent;
             if (pArg->GetType() == Lua::TYPE_STRING)
                 pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
             else
                 pParent = mFunc.GetState()->Get<LuaUIObject>(pArg->GetIndex())->GetParent();
-            pParent_->SetParent(pParent);
         }
-        else
-        {
-            pParent_->SetParent(NULL);
-        }
+
+        pParent_->SetParent(pParent);
     }
 
     return mFunc.Return();

@@ -11,12 +11,18 @@
 
 #include "gui/frost_guimanager.h"
 
-#include "gui/frost_uiobject.h"
 #include "gui/frost_anchor.h"
+#include "gui/frost_uiobject.h"
+#include "gui/frost_button.h"
+#include "gui/frost_editbox.h"
 #include "gui/frost_frame.h"
+#include "gui/frost_scrollingmessageframe.h"
+#include "gui/frost_slider.h"
+#include "gui/frost_statusbar.h"
 #include "lua/frost_lua.h"
 
 #include "frost_inputmanager.h"
+#include "xml/frost_xml_document.h"
 
 using namespace std;
 
@@ -112,7 +118,7 @@ namespace Frost
             }
             else
             {
-                Error(CLASS_NAME,
+                Warning(CLASS_NAME,
                     "A "+s_str(pObj->IsVirtual() ? "virtual" : "")+" widget with the name \""
                     +pObj->GetName()+"\" already exists."
                 );
@@ -136,7 +142,6 @@ namespace Frost
             }
             else
             {
-                Warning(CLASS_NAME, "No virtual UIObject with the name \""+sName+"\".");
                 return NULL;
             }
         }
@@ -148,7 +153,6 @@ namespace Frost
             }
             else
             {
-                Warning(CLASS_NAME, "No UIObject with the name \""+sName+"\".");
                 return NULL;
             }
         }
@@ -602,6 +606,60 @@ namespace Frost
     s_int GUIManager::GetMovementY() const
     {
         return s_int(fMouseMovementY_);
+    }
+
+    void GUIManager::ParseXMLFile_( const s_str& sFile, s_ptr<AddOn> pAddOn )
+    {
+        XML::Document mDoc(sFile, "Interface/UI.def");
+        if (mDoc.Check())
+        {
+            s_ptr<XML::Block> pElemBlock;
+            foreach_block (pElemBlock, mDoc.GetMainBlock())
+            {
+                if (pElemBlock->GetName() == "Script")
+                {
+                    pLua_->DoFile(pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"));
+                }
+                else if (pElemBlock->GetName() == "Include")
+                {
+                    this->ParseXMLFile_(pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"), pAddOn);
+                }
+                else
+                {
+                    s_ptr<GUI::UIObject> pUIObject;
+
+                    if (pElemBlock->GetName() == "Frame")
+                        pUIObject = new GUI::Frame();
+                    else if (pElemBlock->GetName() == "Button")
+                        pUIObject = new GUI::Button();
+                    else if (pElemBlock->GetName() == "EditBox")
+                        pUIObject = new GUI::EditBox();
+                    else if (pElemBlock->GetName() == "ScrollingMessageFrame")
+                        pUIObject = new GUI::ScrollingMessageFrame();
+                    else if (pElemBlock->GetName() == "Slider")
+                        pUIObject = new GUI::Slider();
+                    else if (pElemBlock->GetName() == "StatusBar")
+                        pUIObject = new GUI::StatusBar();
+
+                    // TODO : allow virtual regions to be created at root
+
+                    try
+                    {
+                        pUIObject->ParseBlock(pElemBlock);
+                    }
+                    catch (const GUIException& e)
+                    {
+                        pUIObject.Delete();
+                        Error("", e.GetDescription());
+                    }
+                    catch (...)
+                    {
+                        pUIObject.Delete();
+                        throw;
+                    }
+                }
+            }
+        }
     }
 
     void GUIManager::PrintUI()

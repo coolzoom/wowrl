@@ -20,10 +20,19 @@ namespace Frost
         {
         public :
 
+            /// Constructor.
             ScrollingMessageFrame();
 
+            /// Destructor.
+            virtual ~ScrollingMessageFrame();
+
             /// Returns this widget's Lua glue.
-            void CreateGlue();
+            virtual void CreateGlue();
+
+            /// Parses data from an XML::Block.
+            /** \param pBlock The ScrollingMessageFrame's XML::Block
+            */
+            virtual void ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 

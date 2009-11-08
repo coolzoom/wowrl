@@ -23,6 +23,10 @@ LayeredRegion::LayeredRegion() : UIObject()
     lType_.PushBack("LayeredRegion");
 }
 
+LayeredRegion::~LayeredRegion()
+{
+}
+
 void LayeredRegion::Render()
 {
 }

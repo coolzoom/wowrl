@@ -22,6 +22,10 @@ Slider::Slider() : Frame()
     lType_.PushBack("Slider");
 }
 
+Slider::~Slider()
+{
+}
+
 void Slider::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();

@@ -203,11 +203,20 @@ namespace Frost
             /// Creates the associated Lua glue.
             void             CreateGlue();
 
+            /// Parses data from an XML::Block.
+            /** \param pBlock The FontString's XML::Block
+            */
+            void             ParseBlock(s_ptr<XML::Block> pBlock);
+
             static const s_str CLASS_NAME;
 
-        protected :
+        private :
 
-            virtual void UpdateBorders_();
+            void ParseAttributes_(s_ptr<XML::Block> pBlock);
+            void ParseColorBlock_(s_ptr<XML::Block> pBlock);
+            void ParseShadowBlock_(s_ptr<XML::Block> pBlock);
+
+            void UpdateBorders_();
 
             s_refptr<Text>  pText_;
             s_str           sText_;

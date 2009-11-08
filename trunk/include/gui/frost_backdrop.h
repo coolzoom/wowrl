@@ -44,7 +44,7 @@ namespace Frost
             /// Copies a Backdrop's parameters into this one (inheritance).
             /** \param pBackdrop The Backdrop to copy
             */
-            void CopyFrom(s_ptr<Backdrop> pBackdrop);
+            void CopyFrom(const Backdrop& mBackdrop);
 
             /// Sets the background texture.
             /** \param sBackgroundFile The background texture

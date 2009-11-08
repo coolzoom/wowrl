@@ -169,7 +169,7 @@ namespace Frost
             /// Returns this Frame's backdrop.
             /** \return This Frame's backdrop
             */
-            s_ptr<Backdrop>     GetBackdrop() const;
+            s_wptr<Backdrop>    GetBackdrop() const;
 
             /// Returns this Frame's type.
             /** \return This Frame's type (Frame, Slider, ...)
@@ -214,7 +214,7 @@ namespace Frost
             const s_float&      GetScale() const;
 
             /// Returns this Frame's title region.
-            s_ptr<LayeredRegion> GetTitleRegion() const;
+            s_ptr<TitleRegion>  GetTitleRegion() const;
 
             /// Checks if this Frame is clamped to screen.
             /** \return 'true' if this Frame is clamed to screen
@@ -322,7 +322,7 @@ namespace Frost
             /// Sets this Frames' backdrop.
             /** \param pBackdrop The new backdrop
             */
-            void                SetBackdrop(s_ptr<Backdrop> pBackdrop);
+            void                SetBackdrop(s_refptr<Backdrop> pBackdrop);
 
             /// Sets this Frame's absolute hit rect insets.
             /** \param iLeft   Offset from the left border
@@ -438,9 +438,24 @@ namespace Frost
             /// Creates the associated Lua glue.
             virtual void        CreateGlue();
 
+            /// Parses data from an XML::Block.
+            /** \param pBlock The Frame's XML::Block
+            */
+            virtual void        ParseBlock(s_ptr<XML::Block> pBlock);
+
             static const s_str CLASS_NAME;
 
         protected :
+
+            // XML parsing
+            virtual void ParseAttributes_(s_ptr<XML::Block> pBlock);
+            virtual void ParseResizeBoundsBlock_(s_ptr<XML::Block> pBlock);
+            virtual void ParseTitleRegionBlock_(s_ptr<XML::Block> pBlock);
+            virtual void ParseBackdropBlock_(s_ptr<XML::Block> pBlock);
+            virtual void ParseHitRectInsetsBlock_(s_ptr<XML::Block> pBlock);
+            virtual void ParseLayersBlock_(s_ptr<XML::Block> pBlock);
+            virtual void ParseFramesBlock_(s_ptr<XML::Block> pBlock);
+            virtual void ParseScriptsBlock_(s_ptr<XML::Block> pBlock);
 
             void FireBuildStrataList_();
             void FireBuildLayerList_();
@@ -460,7 +475,7 @@ namespace Frost
             s_bool      bIsTopStrata_;
             s_bool      bIsTopLevel_;
 
-            s_ptr<Backdrop> pBackdrop_;
+            s_refptr<Backdrop> pBackdrop_;
 
             s_bool bHasAllEventsRegistred_;
 
@@ -495,7 +510,7 @@ namespace Frost
             s_bool bResizeHeight_;
             s_bool bResizeFromBottom_;
 
-            s_ptr<LayeredRegion> pTitleRegion_;
+            s_ptr<TitleRegion> pTitleRegion_;
 
             s_ptr<Frame> pParentFrame_;
 

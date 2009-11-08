@@ -42,67 +42,37 @@ namespace Frost
             /// Constructor.
             Button();
 
+            /// Destructor.
+            virtual ~Button();
+
             /// Creates the associated Lua glue.
-            void              CreateGlue();
+            virtual void      CreateGlue();
 
             /// Calls a script.
             /** \param sScriptName The name of the script
             *   \param pEvent      Stores scripts arguments
             */
-            void              On(const s_str& sScriptName, s_ptr<Event> pEvent = NULL);
+            virtual void      On(const s_str& sScriptName, s_ptr<Event> pEvent = NULL);
 
             /// Calls the OnEvent script.
             /** \param mEvent The Event that occured
             */
-            void              OnEvent(const Event& mEvent);
+            virtual void      OnEvent(const Event& mEvent);
 
             /// Copies an UIObject's parameters into this Button (inheritance).
             /** \param pObj The UIObject to copy
             */
-            void              CopyFrom(s_ptr<UIObject> pObj);
+            virtual void      CopyFrom(s_ptr<UIObject> pObj);
 
             /// Sets this Button's text.
             /** \param sText The new text
             */
-            void              SetText(const s_str& sText);
+            virtual void      SetText(const s_str& sText);
 
             /// Returns this Button's text.
             /** \return This Button's text
             */
             const s_str&      GetText() const;
-
-            /// Creates this Button's normal texture.
-            /** \note The normal texture is displayed when the button is
-            *         neither pushed nor disabled.
-            */
-            void              CreateNormalTexture();
-
-            /// Creates this Button's pushed texture.
-            void              CreatePushedTexture();
-
-            /// Creates this Button's disabled texture.
-            void              CreateDisabledTexture();
-
-            /// Creates this Button's highlight texture.
-            /** \note The highlight texture is displayed when the mouse
-            *         is over the Button frame.
-            */
-            void              CreateHighlightTexture();
-
-            /// Creates this Button's normal text.
-            /** \note The normal text is displayed when the button is
-            *         not disabled.
-            */
-            void              CreateNormalText();
-
-            /// Creates this Button's highlight text.
-            /** \note The highlight text is displayed when the mouse is
-            *         over the Button frame.
-            */
-            void              CreateHighlightText();
-
-            /// Creates this Button's disabled text.
-            void              CreateDisabledText();
 
             /// Returns this Button's normal texture.
             /** \return This Button's normal texture
@@ -182,10 +152,10 @@ namespace Frost
             /// Disables this Button.
             /** \note A disabled button doesn't receive any input.
             */
-            void              Disable();
+            virtual void      Disable();
 
             /// Enables this Button.
-            void              Enable();
+            virtual void      Enable();
 
             /// Checks if this Button is enabled.
             /** \return 'true' if this Button is enabled
@@ -196,27 +166,27 @@ namespace Frost
             /** \note This function only has a visual impact :
             *         the OnClick() handler is not called.
             */
-            void              Push();
+            virtual void      Push();
 
             /// Releases this Button.
             /** \note This function only has a visual impact :
             *         the OnClick() handler is not called.
             */
-            void              Release();
+            virtual void      Release();
 
             /// Highlights this Button.
             /** \note The Button will be highlighted even if the
             *         mouse is not over it. It will stop when the
             *         mouse leaves it.
             */
-            void              Highlight();
+            virtual void      Highlight();
 
             /// Unlights this Button.
             /** \note The Button will be unlighted even if the
             *         mouse is over it. It will highlight again
             *         when the mouse leaves then enters its region.
             */
-            void              Unlight();
+            virtual void      Unlight();
 
             /// Returns this Button's state.
             /** \return This Button's state (see ButtonState)
@@ -235,16 +205,29 @@ namespace Frost
             /// Sets this Button's pushed text offset.
             /** \param lOffset The pused text offset
             */
-            void              SetPushedTextOffset(const s_array<s_int,2>& lOffset);
+            virtual void      SetPushedTextOffset(const s_array<s_int,2>& lOffset);
 
             /// Returns this Button's pushed text offset.
             /** \return This Button's pushed text offset
             */
             const s_array<s_int,2>& GetPushedTextOffset() const;
 
+            /// Parses data from an XML::Block.
+            /** \param pBlock The Button's XML::Block
+            */
+            virtual void        ParseBlock(s_ptr<XML::Block> pBlock);
+
             static const s_str CLASS_NAME;
 
         protected :
+
+            s_ptr<Texture>    CreateNormalTexture_();
+            s_ptr<Texture>    CreatePushedTexture_();
+            s_ptr<Texture>    CreateDisabledTexture_();
+            s_ptr<Texture>    CreateHighlightTexture_();
+            s_ptr<FontString> CreateNormalText_();
+            s_ptr<FontString> CreateHighlightText_();
+            s_ptr<FontString> CreateDisabledText_();
 
             State       mState_;
             s_bool      bHighlighted_;
