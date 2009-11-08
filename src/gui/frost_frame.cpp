@@ -7,6 +7,7 @@
 
 #include "gui/frost_layeredregion.h"
 #include "gui/frost_uiobject.h"
+#include "gui/frost_titleregion.h"
 #include "gui/frost_button.h"
 #include "gui/frost_editbox.h"
 #include "gui/frost_scrollingmessageframe.h"
@@ -56,7 +57,6 @@ Frame::~Frame()
         iterChild->second.Delete();
     }
 
-    pBackdrop_.Delete();
     pTitleRegion_.Delete();
 }
 
@@ -65,7 +65,9 @@ void Frame::Render()
     if (IsVisible())
     {
         if (pBackdrop_)
+        {
             pBackdrop_->Render();
+        }
 
         // Render child regions
         s_map<LayerType, Layer>::iterator iterLayer;
@@ -326,8 +328,8 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
 
         if (pFrame->pBackdrop_)
         {
-            pBackdrop_ = new Backdrop(this);
-            pBackdrop_->CopyFrom(pFrame->pBackdrop_);
+            pBackdrop_ = s_refptr<Backdrop>(new Backdrop(this));
+            pBackdrop_->CopyFrom(*pFrame->pBackdrop_);
         }
 
         if (pFrame->pTitleRegion_)
@@ -397,7 +399,7 @@ void Frame::CreateTitleRegion()
 {
     if (!pTitleRegion_)
     {
-        pTitleRegion_ = new LayeredRegion();
+        pTitleRegion_ = new TitleRegion();
         if (this->IsVirtual())
             pTitleRegion_->SetVirtual();
         pTitleRegion_->SetSpecial();
@@ -406,7 +408,7 @@ void Frame::CreateTitleRegion()
 
         if (!GUIManager::GetSingleton()->AddUIObject(pTitleRegion_))
         {
-            Error(lType_.Back(),
+            Warning(lType_.Back(),
                 "Couldn't create \""+sName_+"\"'s title region because another UIObject "
                 "already took its name : \""+pTitleRegion_->GetName()+"\"."
             );
@@ -775,7 +777,7 @@ FrameStrata Frame::GetFrameStrata() const
     return mStrata_;
 }
 
-s_ptr<Backdrop> Frame::GetBackdrop() const
+s_wptr<Backdrop> Frame::GetBackdrop() const
 {
     return pBackdrop_;
 }
@@ -820,7 +822,7 @@ const s_float& Frame::GetScale() const
     return fScale_;
 }
 
-s_ptr<LayeredRegion> Frame::GetTitleRegion() const
+s_ptr<TitleRegion> Frame::GetTitleRegion() const
 {
     return pTitleRegion_;
 }
@@ -1139,9 +1141,8 @@ void Frame::SetFrameStrata( const s_str& sStrata )
     SetFrameStrata(mStrata);
 }
 
-void Frame::SetBackdrop( s_ptr<Backdrop> pBackdrop )
+void Frame::SetBackdrop( s_refptr<Backdrop> pBackdrop )
 {
-    pBackdrop_.Delete();
     pBackdrop_ = pBackdrop;
 }
 

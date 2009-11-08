@@ -5,7 +5,7 @@
 
 #include "gui/frost_frame.h"
 #include "gui/frost_backdrop.h"
-#include "gui/frost_layeredregion.h"
+#include "gui/frost_titleregion.h"
 
 using namespace std;
 using namespace Frost;
@@ -135,8 +135,7 @@ int LuaFrame::_GetBackdrop(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:GetBackdrop", pLua, 1);
 
-    s_ptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop();
-    if (pBackdrop)
+    if (s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock())
     {
         s_ptr<Lua::State> pState = mFunc.GetState();
 
@@ -547,11 +546,11 @@ int LuaFrame::_SetBackdrop(lua_State* pLua)
     {
         if (mFunc.Get(0)->GetType() == Lua::TYPE_NIL)
         {
-            pFrameParent_->SetBackdrop(NULL);
+            pFrameParent_->SetBackdrop(s_refptr<Backdrop>(NULL));
         }
         else
         {
-            s_ptr<Backdrop> pBackdrop = new Backdrop(pFrameParent_);
+            s_refptr<Backdrop> pBackdrop(new Backdrop(pFrameParent_));
 
             s_ptr<Lua::State> pState = mFunc.GetState();
 
@@ -593,30 +592,31 @@ int LuaFrame::_SetBackdropBorderColor(lua_State* pLua)
     mFunc.Add(1, "green", Lua::TYPE_NUMBER);
     mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
     mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
-
-    s_ptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop();
-    if (pBackdrop && mFunc.Check())
+    if (mFunc.Check())
     {
-        Color mColor;
-        if (mFunc.IsProvided(3))
+        if (s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock())
         {
-            mColor = Color(
-                s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
-            );
-        }
-        else
-        {
-            mColor = Color(
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
-            );
-        }
+            Color mColor;
+            if (mFunc.IsProvided(3))
+            {
+                mColor = Color(
+                    s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                );
+            }
+            else
+            {
+                mColor = Color(
+                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                );
+            }
 
-        pBackdrop->SetEdgeColor(mColor);
+            pBackdrop->SetEdgeColor(mColor);
+        }
     }
 
     return mFunc.Return();
@@ -629,30 +629,31 @@ int LuaFrame::_SetBackdropColor(lua_State* pLua)
     mFunc.Add(1, "green", Lua::TYPE_NUMBER);
     mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
     mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
-
-    s_ptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop();
-    if (pBackdrop && mFunc.Check())
+    if (mFunc.Check())
     {
-        Color mColor;
-        if (mFunc.IsProvided(3))
+        if (s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock())
         {
-            mColor = Color(
-                s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
-            );
-        }
-        else
-        {
-            mColor = Color(
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
-            );
-        }
+            Color mColor;
+            if (mFunc.IsProvided(3))
+            {
+                mColor = Color(
+                    s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                );
+            }
+            else
+            {
+                mColor = Color(
+                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                );
+            }
 
-        pBackdrop->SetBackgroundColor(mColor);
+            pBackdrop->SetBackgroundColor(mColor);
+        }
     }
 
     return mFunc.Return();

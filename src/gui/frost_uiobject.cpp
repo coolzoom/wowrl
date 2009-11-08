@@ -89,6 +89,8 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 
 void UIObject::CopyFrom( s_ptr<UIObject> pObj )
 {
+    bInherits_ = true;
+
     this->SetAlpha(pObj->GetAlpha());
     this->SetShown(pObj->IsShown());
     if (pObj->IsWidthAbsolute())

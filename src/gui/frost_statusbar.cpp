@@ -22,6 +22,10 @@ StatusBar::StatusBar() : Frame()
     lType_.PushBack("StatusBar");
 }
 
+StatusBar::~StatusBar()
+{
+}
+
 void StatusBar::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();

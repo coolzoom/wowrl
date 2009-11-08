@@ -14,6 +14,25 @@
 
 namespace Frost
 {
+    /// Exception to be thrown by GUI code.
+    /** \note These exceptions should always be handled.<br>
+    *         The GUI is not a critical part of the Engine, so
+    *         whatever happens there <b>musn't</b> close the
+    *         program.
+    */
+    class GUIException : public Exception
+    {
+    public :
+
+        GUIException(const s_str& sMessage) : Exception(sMessage)
+        {
+        }
+
+        GUIException(const s_str& sClassName, const s_str& sMessage) : Exception(sClassName, sMessage)
+        {
+        }
+    };
+
     /// A piece of the user interface
     struct AddOn
     {

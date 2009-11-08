@@ -250,6 +250,8 @@ s_bool Document::ParseArguments_( s_ptr<Block> pActual, const s_ctnr<s_str>& lAt
     return true;
 }
 
+
+
 s_bool Document::LoadDefinition_()
 {
     if (bValid_)
@@ -302,9 +304,10 @@ s_bool Document::LoadDefinition_()
 
                             if (!mFile.IsValid())
                             {
-                                Error(sFileName_+":"+uiStartLineNbr,
+                                // TODO : reduce this function's size (crashes GCC !)
+                                /*Error(sFileName_+":"+uiStartLineNbr,
                                     "Multi-line comment not ended."
-                                );
+                                );*/
                                 bValid_ = false;
                                 break;
                             }

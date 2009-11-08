@@ -20,10 +20,19 @@ namespace Frost
         {
         public :
 
+            /// Constructor.
             Slider();
 
+            /// Destructor.
+            virtual ~Slider();
+
             /// Returns this widget's Lua glue.
-            void CreateGlue();
+            virtual void CreateGlue();
+
+            /// Parses data from an XML::Block.
+            /** \param pBlock The Slider's XML::Block
+            */
+            virtual void ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 

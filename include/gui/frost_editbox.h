@@ -20,10 +20,19 @@ namespace Frost
         {
         public :
 
+            /// Constructor.
             EditBox();
 
+            /// Destructor.
+            virtual ~EditBox();
+
             /// Returns this widget's Lua glue.
-            virtual void        CreateGlue();
+            virtual void CreateGlue();
+
+            /// Parses data from an XML::Block.
+            /** \param pBlock The EditBox's XML::Block
+            */
+            virtual void ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 

@@ -401,9 +401,18 @@ namespace Frost
             */
             virtual void    PushOnLua(s_ptr<Lua::State> pLua) const;
 
+            /// Parses data from an XML::Block.
+            /** \param pBlock The UIObject's XML::Block
+            */
+            virtual void    ParseBlock(s_ptr<XML::Block> pBlock) = 0;
+
             static const s_str CLASS_NAME;
 
         protected :
+
+            // XML parsing
+            virtual void ParseSizeBlock_(s_ptr<XML::Block> pBlock);
+            virtual void ParseAnchorsBlock_(s_ptr<XML::Block> pBlock);
 
             void         MakeBorders_(s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize);
             virtual void UpdateBorders_();
@@ -415,6 +424,7 @@ namespace Frost
             ObjectType      mObjectType_;
             s_ptr<UIObject> pParent_;
             s_bool          bSpecial_;
+            s_bool          bInherits_;
 
             s_bool          bVirtual_;
             s_bool          bReady_;

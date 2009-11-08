@@ -21,8 +21,7 @@ namespace Frost
         *         from instancing a LayeredRegion in your code.<br>
         *         Actually, it is the simplest derivate of
         *         UIObject, so if you just need a widget that has a
-        *         position and a size (like Frame's title region), then
-        *         this is the best choice.
+        *         position and a size then this is the best choice.
         */
         class LayeredRegion : public UIObject
         {
@@ -31,45 +30,55 @@ namespace Frost
             /// Constructor.
             LayeredRegion();
 
+            /// Destructor.
+            virtual ~LayeredRegion();
+
             /// Prints all relevant information about this widget in a string.
             /** \param sTab The offset to give to all lines
             *   \return All relevant information about this widget
             */
-            s_str Serialize(const s_str& sTab) const;
+            virtual s_str  Serialize(const s_str& sTab) const;
 
             /// Renders this LayeredRegion.
-            /** \note Does nothing.
+            /** \note Does nothing if not reimplemented.
             */
-            void Render();
+            virtual void   Render();
 
             /// Creates the associated Lua glue.
-            void CreateGlue();
+            virtual void   CreateGlue();
 
             /// Checks if the provided coordinates are inside this region.
             /** \param iX The horizontal coordinate
             *   \param iY The vertical coordinate
             *   \return 'true' if the provided coordinates are inside this region
             */
-            s_bool IsInRegion(const s_int& iX, const s_int& iY);
+            virtual s_bool IsInRegion(const s_int& iX, const s_int& iY);
 
             /// Returns this LayeredRegion's draw layer.
             /** \return this LayeredRegion's draw layer
             */
-            LayerType GetDrawLayer();
+            LayerType      GetDrawLayer();
 
             /// Sets this LayeredRegion's draw layer.
             /** \param mLayer The new layer
             */
-            void SetDrawLayer(LayerType mLayer);
+            virtual void   SetDrawLayer(LayerType mLayer);
 
             /// Sets this LayeredRegion's draw layer.
             /** \param sLayer The new layer
             */
-            void SetDrawLayer(const s_str& sLayer);
+            virtual void   SetDrawLayer(const s_str& sLayer);
+
+            /// Parses data from an XML::Block.
+            /** \param pBlock The Frame's XML::Block
+            */
+            virtual void   ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 
         protected :
+
+            virtual void ParseAttributes_(s_ptr<XML::Block> pBlock);
 
             LayerType mLayer_;
 

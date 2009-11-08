@@ -27,18 +27,18 @@ Backdrop::~Backdrop()
 {
 }
 
-void Backdrop::CopyFrom( s_ptr<Backdrop> pBackdrop )
+void Backdrop::CopyFrom( const Backdrop& mBackdrop )
 {
-    this->SetBackground(pBackdrop->GetBackgroundFile());
-    this->SetEdge(pBackdrop->GetEdgeFile());
-    this->SetBackgroundTilling(pBackdrop->IsBackgroundTilling());
-    this->SetTileSize(pBackdrop->GetTileSize());
+    this->SetBackground(mBackdrop.GetBackgroundFile());
+    this->SetEdge(mBackdrop.GetEdgeFile());
+    this->SetBackgroundTilling(mBackdrop.IsBackgroundTilling());
+    this->SetTileSize(mBackdrop.GetTileSize());
 
-    this->SetBackgroundColor(pBackdrop->GetBackgroundColor());
-    this->SetBackgroundInsets(pBackdrop->GetBackgroundInsets());
+    this->SetBackgroundColor(mBackdrop.GetBackgroundColor());
+    this->SetBackgroundInsets(mBackdrop.GetBackgroundInsets());
 
-    this->SetEdgeColor(pBackdrop->GetEdgeColor());
-    this->SetEdgeSize(pBackdrop->GetEdgeSize());
+    this->SetEdgeColor(mBackdrop.GetEdgeColor());
+    this->SetEdgeSize(mBackdrop.GetEdgeSize());
 }
 
 void Backdrop::SetBackground( const s_str& sBackgroundFile )

@@ -14,7 +14,6 @@
 
 namespace Frost
 {
-
     /// A smoothed path
     /** Uses Catmull-Rom method.<br>
     *   The advantages of using this path type is that

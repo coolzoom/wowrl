@@ -20,10 +20,19 @@ namespace Frost
         {
         public :
 
+            /// Constructor.
             StatusBar();
 
+            /// Destructor.
+            virtual ~StatusBar();
+
             /// Returns this widget's Lua glue.
-            void CreateGlue();
+            virtual void CreateGlue();
+
+            /// Parses data from an XML::Block.
+            /** \param pBlock The StatusBar's XML::Block
+            */
+            virtual void ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 
