@@ -425,8 +425,6 @@ void Document::ReadTags_( s_str& sLine )
     }
 }
 
-// TODO : manque plus que reecrire les predef maintenant...
-
 s_bool Document::Check( const s_str& sPreProcCommands )
 {
     if (!bValid_)
