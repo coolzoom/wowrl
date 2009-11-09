@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*               XXX header               */
+/*            XML::Block header           */
 /*                                        */
 /*                                        */
 
@@ -15,13 +15,14 @@
 // Iterates through an XML::Block sub-blocks
 #define foreach_block(block, parent) for ((block) = (parent)->First(); (block); (block) = (parent)->Next())
 
-#include "frost.h"
+#include <frost_utils_types.h>
 
 namespace Frost
 {
 namespace XML
 {
     class Document;
+    class Block;
 
     enum AttrType
     {

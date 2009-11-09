@@ -1,12 +1,17 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*            Document source             */
+/*          XML::Document source          */
 /*                                        */
 /*                                        */
 
-#include "xml/frost_xml_document.h"
-#include "xml/frost_xml_block.h"
+#include "frost_xml_document.h"
+#include "frost_xml_block.h"
+
+#include <frost_utils_file.h>
+#include <frost_utils_exception.h>
+#include <frost_utils_log.h>
+#include <frost_utils_stdhelper.h>
 
 using namespace std;
 using namespace Frost;

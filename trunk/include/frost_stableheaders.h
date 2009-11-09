@@ -13,11 +13,31 @@
 #ifndef FROST_STABLEHEADERS_H
 #define FROST_STABLEHEADERS_H
 
+// Ogre
 #include <OgrePrerequisites.h>
-#include <OIS/OISPrereqs.h>
 
-#include "libs/frost_lib_std.h"
-#include "libs/frost_lib_utils.h"
+// OIS
+#include <OISPrereqs.h>
+
+// S(T)L
+#include <cmath>
+#include <string>
+#include <map>
+#include <tr1/unordered_map>
+#include <vector>
+#include <deque>
+#include <list>
+#include <sstream>
+#include <fstream>
+#include <ios>
+
+// Utils
+#include <frost_utils.h>
+
+// XML
+#include <frost_xml.h>
+
+// Frost
 #include "frost_macros.h"
 #include "frost_engine.h"
 

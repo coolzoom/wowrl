@@ -5,30 +5,45 @@
 /*                                        */
 /*                                        */
 
-// Base types
-typedef unsigned int   uint;
-typedef unsigned char  uchar;
-typedef unsigned short ushort;
-typedef unsigned long  ulong;
-typedef unsigned long long ullong;
+/* This is the file you should include if you
+*  want to use the Utils library.
+*/
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
-    #define CPP_0X
+#ifndef FROST_UTILS_H
+#define FROST_UTILS_H
+
+#include "frost_utils_config.h"
+#include "frost_utils_types.h"
+#include "frost_utils_exception.h"
+#include "frost_utils_var.h"
+
+#include "frost_utils_math.h"
+
+#include "frost_utilsmanager.h"
+#include "frost_utils_log.h"
+
+#include "frost_utils_color.h"
+#include "frost_utils_vector.h"
+#include "frost_utils_axisalignedbox.h"
+#include "frost_utils_directory.h"
+#include "frost_utils_file.h"
+#include "frost_utils_point.h"
+
+#include "frost_utils_event.h"
+#include "frost_utils_eventreceiver.h"
+#include "frost_utils_eventmanager.h"
+
+#include "frost_utils_lua_state.h"
+#include "frost_utils_lua_function.h"
+#include "frost_utils_luamanager.h"
+#include "frost_utils_lua_glues.h"
+
+#include "frost_utils_timers.h"
+#include "frost_utils_profiler.h"
+#include "frost_utils_timemanager.h"
+
+#include "frost_utils_stdhelper.h"
+
+#include "frost_utils_manager.h"
+
 #endif
-
-#ifdef CPP_0X
-    #undef __STRICT_ANSI__
-    #include <initializer_list>
-#endif
-
-#include <string>
-#include <vector>
-#include <deque>
-#include <fstream>
-#include <sstream>
-#include <map>
-#include <cstdlib>
-#include <cstdio>
-#include <algorithm>
-#include <typeinfo>
-

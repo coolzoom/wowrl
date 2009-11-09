@@ -7,7 +7,7 @@
 #include "frost_inputmanager.h"
 
 #define OIS_DYNAMIC_LIB
-#include <OIS/OIS.h>
+#include <OIS.h>
 
 #include <OgreRenderWindow.h>
 

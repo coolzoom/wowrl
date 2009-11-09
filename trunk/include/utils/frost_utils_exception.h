@@ -8,7 +8,7 @@
 #ifndef FROST_EXCEPTION_H
 #define FROST_EXCEPTION_H
 
-#include "frost_utils.h"
+#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
 namespace Frost
