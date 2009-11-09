@@ -20,7 +20,7 @@ GameOptions = {
     ["TerrainTextureFiltering"] = "ANISOTROPIC";
     --["TerrainTextureFiltering"] = "BILINEAR";
     ["AntiAliasingLevel"] = 0,
-    ["EnableVSync"] = true,
+    ["EnableVSync"] = false,
     ["EnableSpecular"] = true,
     
     ["EnablePostProcessing"] = true,
@@ -28,7 +28,7 @@ GameOptions = {
     
     -- Defaults
     ["DefaultFont"] = "Fonts/Vera.ttf",
-    ["DefaultGameplay"] = "FirstPerson",
+    ["DefaultGameplay"] = "Free",
     
     -- Input
     ["DoubleClickTime"] = 0.25,
