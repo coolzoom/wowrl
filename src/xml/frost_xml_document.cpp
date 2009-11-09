@@ -15,16 +15,24 @@ using namespace Frost::XML;
 const s_str Document::CLASS_NAME = "XML::Document";
 
 Document::Document( const s_str& sFileName, const s_str& sDefFileName ) :
-    sFileName_(sFileName), sDefFileName_(sDefFileName)
+    sFileName_(sFileName), sDefFileName_(sDefFileName), mXMLState_(this), mDefState_(this)
 {
     if (File::Exists(sFileName_))
     {
         if (File::Exists(sDefFileName_))
         {
             mMainBlock_.SetDocument(this);
-            uiLineNbr_ = 1u;
             bValid_ = true;
-            bValid_ = LoadDefinition_();
+
+            try
+            {
+                LoadDefinition_();
+            }
+            catch (const Exception& e)
+            {
+                Error("", e.GetDescription());
+                bValid_ = false;
+            }
         }
         else
         {
@@ -48,34 +56,625 @@ s_ptr<Block> Document::GetMainBlock()
     return &mMainBlock_;
 }
 
-const s_str& Document::GetFileName() const
+const s_str& Document::GetCurrentFileName() const
 {
-    return sActualFileName_;
+    return sCurrentFileName_;
 }
 
-const s_uint& Document::GetLineNbr() const
+const s_uint& Document::GetCurrentLineNbr() const
 {
-    return uiLineNbr_;
+    return uiCurrentLineNbr_;
 }
 
-s_bool Document::CheckLineSynthax_( s_str& sLine )
+s_str Document::GetCurrentLocation() const
 {
-    s_uint uiPos = sLine.FindPos("<");
-    if (uiPos.IsValid())
+    return sCurrentFileName_+":"+uiCurrentLineNbr_;
+}
+
+void Document::LoadDefinition_()
+{
+    // Open de def file
+    File mFile(sDefFileName_, File::I);
+    sCurrentFileName_ = sDefFileName_;
+    uiCurrentLineNbr_ = 0u;
+    s_str sLine;
+    pState_ = &mDefState_;
+
+    // Start parsing line by line
+    while (mFile.IsValid() && bValid_)
     {
-        sLine.EraseFromStart(uiPos);
-        uiPos = sLine.FindPos(">");
-        if (uiPos.IsValid())
+        sLine += mFile.GetLine();
+        ++uiCurrentLineNbr_;
+
+        if (!sLine.IsEmpty(true))
         {
-            sLine.EraseFromEnd(sLine.GetSize()-uiPos-1);
-            return true;
+            // Read all tags on this line
+            ReadTags_(sLine);
+        }
+    }
+}
+
+s_ctnr<s_str> ReadPreProcessorCommands( const s_str& sCommands )
+{
+    s_ctnr<s_str> lPreProcessorCommands;
+    if (sCommands != "")
+    {
+        lPreProcessorCommands = sCommands.Cut(",");
+        s_ctnr<s_str>::iterator iter;
+        foreach (iter, lPreProcessorCommands)
+        {
+            iter->Trim(' ');
+        }
+    }
+    return lPreProcessorCommands;
+}
+
+void Document::ReadOpeningTag_( s_str& sTagContent )
+{
+    if (sTagContent.StartsWith("#")) // Preprocessor
+    {
+        ++uiPreProcessorCount_;
+        if (!bPreProcessor_)
+        {
+            // Extract the required identifiers
+            s_uint uiStart = sTagContent.FindPos("[");
+            s_uint uiEnd   = sTagContent.FindPos("]");
+            if (uiStart.IsValid() && uiEnd.IsValid() && (uiStart < uiEnd) && (uiEnd-uiStart > 1))
+            {
+                s_ctnr<s_str> lIDList = sTagContent.ExtractRange(uiStart+1, uiEnd).Cut(",");
+                s_ctnr<s_str>::iterator iterID;
+                foreach (iterID, lIDList)
+                {
+                    iterID->Trim(' ');
+                    // Compare with the preprocessor commands given by the user
+                    if (lPreProcessorCommands_.Find(*iterID) == iterID->StartsWith("!"))
+                    {
+                        // Skip all the following code until the proper ending tag is found
+                        bPreProcessor_ = true;
+                        uiSkippedPreProcessorCount_ = 1u;
+                    }
+                }
+            }
+            else
+            {
+                Warning(sCurrentFileName_+":"+uiCurrentLineNbr_,
+                    "PreProcessor command with no argument is always 'true' "
+                    "(expected \"<#[some parameter]>\")."
+                );
+            }
+        }
+        else
+        {
+            ++uiSkippedPreProcessorCount_;
+        }
+    }
+    else if (!bPreProcessor_)
+    {
+        if (sTagContent.StartsWith("!")) // Smart comment
+        {
+            if (!bMultilineComment_ && !bSmartComment_)
+            {
+                bSmartComment_ = true;
+                // Remove the exclamation mark
+                sTagContent.EraseFromStart(1);
+                // Extract the commented tag's name
+                sSmartCommentTag_ = sTagContent.Cut(" ", 1).Front();
+                uiSmartCommentCount_ = 1u;
+            }
+        }
+        else // Regular opening tag
+        {
+            s_str sName = pState_->ReadTagName(sTagContent);
+            if (bSmartComment_)
+            {
+                if (sName == sSmartCommentTag_)
+                    ++uiSmartCommentCount_;
+            }
+            else
+            {
+                try
+                {
+                    pState_->ReadOpeningTag(sTagContent);
+                }
+                catch (const Exception& e)
+                {
+                    if (pState_->GetID() == State::STATE_DEF)
+                    {
+                        // The definition stage throws exceptions
+                        // that are catched in the constructor.
+                        throw;
+                    }
+                    else
+                    {
+                        // The loading stage just prints things in
+                        // the log file.
+                        Error("", e.GetDescription());
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Document::ReadSingleTag_( s_str& sTagContent )
+{
+    // Remove the trailling slash
+    sTagContent.EraseFromEnd(1);
+
+    if (sTagContent.StartsWith("#")) // PreProcessor
+    {
+        Warning(sCurrentFileName_+":"+uiCurrentLineNbr_,
+            "Single block PreProcessor tag is useless. Skipped."
+        );
+    }
+    else if (!bPreProcessor_)
+    {
+        if (sTagContent.StartsWith("!")) // Smart comment
+        {
+            // Smart comment on a single tag, just ignore the tag
+        }
+        else if (!bSmartComment_) // Regular single tag
+        {
+            try
+            {
+                pState_->ReadSingleTag(sTagContent);
+            }
+            catch (const Exception& e)
+            {
+                if (pState_->GetID() == State::STATE_DEF)
+                {
+                    // The definition stage throws exceptions
+                    // that are catched in the constructor.
+                    throw;
+                }
+                else
+                {
+                    // The loading stage just prints things in
+                    // the log file.
+                    Error("", e.GetDescription());
+                }
+            }
+        }
+    }
+}
+
+void Document::ReadEndingTag_( s_str& sTagContent )
+{
+    // Remove the starting slash
+    sTagContent.EraseFromStart(1);
+
+    if (sTagContent.StartsWith("#")) // PreProcessor
+    {
+        if (uiPreProcessorCount_ != 0)
+        {
+            --uiPreProcessorCount_;
+            if (bPreProcessor_)
+            {
+                --uiSkippedPreProcessorCount_;
+                if (uiSkippedPreProcessorCount_ == 0)
+                {
+                    // End of the skiped code
+                    bPreProcessor_ = false;
+                }
+            }
+        }
+        else
+        {
+            Warning(sCurrentFileName_+":"+uiCurrentLineNbr_,
+                "PreProcessor end tag in excess. Skipped."
+            );
+        }
+    }
+    else if (!bPreProcessor_) // Regular end tag
+    {
+        s_str sName = pState_->ReadTagName(sTagContent);
+        if (bSmartComment_)
+        {
+            if (sName == sSmartCommentTag_)
+            {
+                // It has the same name as the current "smart
+                // commented" block
+                --uiSmartCommentCount_;
+                if (uiSmartCommentCount_ == 0)
+                    bSmartComment_ = false;
+            }
+        }
+        else
+        {
+            try
+            {
+                pState_->ReadEndingTag(sTagContent);
+            }
+            catch (const Exception& e)
+            {
+                if (pState_->GetID() == State::STATE_DEF)
+                {
+                    // The definition stage throws exceptions
+                    // that are catched in the constructor.
+                    throw;
+                }
+                else
+                {
+                    // The loading stage just prints things in
+                    // the log file.
+                    Error("", e.GetDescription());
+                }
+            }
+        }
+    }
+}
+
+void Document::ReadTags_( s_str& sLine )
+{
+    if (!bMultilineComment_)
+    {
+        // Search for multiline comments
+        s_uint uiFirst = sLine.FindPos("<--");
+        s_uint uiSecond = sLine.FindPos("-->");
+        if (uiSecond < uiFirst)
+        {
+            // Check there are no misplaced comment end token
+            Warning(sCurrentFileName_+":"+uiCurrentLineNbr_,
+                "Multiline comment end token in excess (\"-->\"). Ignored."
+            );
+            s_str sTemp = sLine.ExtractRange(0, uiFirst);
+            sLine.EraseRange(0, uiFirst);
+            sTemp.Replace("-->", "");
+            sLine = sTemp + sLine;
+            uiFirst = sLine.FindPos("<--");
+            uiSecond = sLine.FindPos("-->");
+        }
+
+        while (uiFirst.IsValid())
+        {
+            // Multiline comment started
+            uiSecond = sLine.FindPos("-->", uiFirst);
+            if (uiSecond.IsValid())
+            {
+                // It ends on the same line
+                sLine.EraseRange(uiFirst, uiSecond+3);
+            }
+            else
+            {
+                // It ends later (hopefuly)
+                bMultilineComment_ = true;
+                break;
+            }
+
+            uiFirst = sLine.FindPos("<--");
+        }
+
+        if (!bMultilineComment_)
+        {
+            // Check there are no misplaced comment end token
+            if (sLine.Find("-->"))
+            {
+                Warning(sCurrentFileName_+":"+uiCurrentLineNbr_,
+                    "Multiline comment end token in excess (\"-->\"). Ignored."
+                );
+                sLine.Replace("-->", "");
+            }
+
+            // Parse the tag as usual
+            uiFirst = sLine.FindPos("<");
+            uiSecond = sLine.FindPos(">", uiFirst);
+            while (uiFirst.IsValid() && uiSecond.IsValid() && bValid_)
+            {
+                pState_->AddContent(sLine.ExtractRange(0, uiFirst));
+                s_str sTagContent = sLine.ExtractRange(uiFirst+1, uiSecond);
+
+                if (sTagContent.StartsWith("/"))    // Ending tag
+                {
+                    ReadEndingTag_(sTagContent);
+                    pState_->ResetContent();
+                }
+                else if (sTagContent.EndsWith("/")) // Single tag
+                {
+                    ReadSingleTag_(sTagContent);
+                }
+                else                                // Opening tag
+                {
+                    ReadOpeningTag_(sTagContent);
+                }
+
+                sLine.EraseFromStart(uiSecond+1);
+                uiFirst = sLine.FindPos("<");
+                uiSecond = sLine.FindPos(">", uiFirst);
+            }
+        }
+        else
+        {
+            uiMultilineCommentCount_ = sLine.CountOccurences("<--")+1;
+        }
+    }
+    else
+    {
+        // Search the line for an ending token
+        s_uint uiFirst = sLine.FindPos("<--");
+        s_uint uiSecond = sLine.FindPos("-->");
+
+        while (uiSecond.IsValid())
+        {
+            if ( uiFirst.IsValid() && (uiFirst < uiSecond) )
+            {
+                uiMultilineCommentCount_ += sLine.ExtractRange(uiFirst, uiSecond).CountOccurences("<--");
+            }
+            sLine.EraseFromStart(uiSecond+3);
+
+            --uiMultilineCommentCount_;
+            if (uiMultilineCommentCount_ == 0)
+            {
+                bMultilineComment_ = false;
+                ReadTags_(sLine);
+                break;
+            }
+
+            uiFirst = sLine.FindPos("<--");
+            uiSecond = sLine.FindPos("-->");
+        }
+
+        if (!uiSecond.IsValid())
+        {
+            uiMultilineCommentCount_ += sLine.CountOccurences("<--");
+        }
+    }
+}
+
+// TODO : manque plus que reecrire les predef maintenant...
+
+s_bool Document::Check( const s_str& sPreProcCommands )
+{
+    if (!bValid_)
+        return false;
+
+    // Parse preprocessor commands given by the user
+    lPreProcessorCommands_ = ReadPreProcessorCommands(sPreProcCommands);
+
+    // Open the XML file
+    File mFile(sFileName_, File::I);
+    sCurrentFileName_ = sFileName_;
+    uiCurrentLineNbr_ = 0u;
+    s_str sLine;
+    pState_ = &mXMLState_;
+    pState_->SetCurrentBlock(&mMainBlock_);
+
+    // Start parsing line by line
+    while (mFile.IsValid() && bValid_)
+    {
+        sLine += mFile.GetLine();
+        ++uiCurrentLineNbr_;
+
+        if (!sLine.IsEmpty(true))
+        {
+            // Read all tags on this line
+            ReadTags_(sLine);
         }
     }
 
-    return false;
+    return bValid_;
 }
 
-s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline, s_ptr<Block> pParent )
+void Document::CreatePredefinedBlock( const s_str& sName, const s_str& sInheritance )
+{
+    if (sInheritance.IsEmpty())
+        lPredefinedBlockList_[sName] = Block();
+    else
+        lPredefinedBlockList_[sName] = lPredefinedBlockList_[sInheritance];
+}
+
+s_ptr<Block> Document::GetPredefinedBlock( const s_str& sName )
+{
+    s_map<s_str, Block>::iterator iter = lPredefinedBlockList_.Get(sName);
+    if (iter != lPredefinedBlockList_.End())
+    {
+        return &iter->second;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void Document::SetInvalid()
+{
+    bValid_ = false;
+}
+
+Document::State::State(s_ptr<Document> pDoc) : pDoc_(pDoc)
+{
+}
+
+Document::State::~State()
+{
+}
+
+
+void Document::State::SetCurrentBlock( s_ptr<Block> pBlock )
+{
+    pCurrentBlock_ = pBlock;
+}
+
+void Document::State::SetCurrentParentBlock( s_ptr<Block> pParentBlock )
+{
+    pCurrentParentBlock_ = pParentBlock;
+}
+
+void Document::State::AddContent( const s_str& sContent )
+{
+    sBlockContent_ += sContent;
+}
+
+void Document::State::ResetContent()
+{
+    sBlockContent_ = "";
+}
+
+const Document::State::ID& Document::State::GetID() const
+{
+    return mID_;
+}
+
+Document::XMLState::XMLState(s_ptr<Document> pDoc) : State(pDoc)
+{
+    mID_ = STATE_XML;
+}
+
+s_str Document::XMLState::ReadTagName( const s_str& sTagContent ) const
+{
+    return sTagContent.Cut(" ", 1).Front();
+}
+
+void Document::XMLState::ReadSingleTag( const s_str& sTagContent )
+{
+    s_ctnr<s_str> lWords = sTagContent.Cut(" ", 1);
+    s_str sName = lWords.Front();
+
+    s_str sAttributes;
+    if (lWords.GetSize() > 1)
+    {
+        sAttributes = lWords.Back();
+        sAttributes.Replace(" =", "=");
+        sAttributes.Replace("= ", "=");
+    }
+
+    if (pCurrentParentBlock_)
+    {
+        if (pCurrentParentBlock_->HasBlock(sName))
+        {
+            pCurrentBlock_ = pCurrentParentBlock_->CreateBlock(sName);
+            if (!pCurrentBlock_->CheckAttributes(sAttributes))
+                pDoc_->SetInvalid();
+            if (!pCurrentBlock_->CheckBlocks())
+                pDoc_->SetInvalid();
+            pCurrentBlock_ = pCurrentParentBlock_;
+            pCurrentParentBlock_->AddBlock();
+        }
+        else
+        {
+            pDoc_->SetInvalid();
+            throw Exception(pDoc_->GetCurrentLocation(), "Unexpected content : \"<"+sName+">\".");
+        }
+    }
+    else
+    {
+        // This is the main block
+        if (sName == pDoc_->GetMainBlock()->GetName())
+        {
+            if (!pDoc_->GetMainBlock()->CheckAttributes(sAttributes))
+                pDoc_->SetInvalid();
+            if (!pDoc_->GetMainBlock()->CheckBlocks())
+                pDoc_->SetInvalid();
+        }
+        else
+        {
+            pDoc_->SetInvalid();
+            throw Exception(pDoc_->GetCurrentLocation(),
+                "Wrong main block : \"<"+sName+">\". Expected : \"<"+pDoc_->GetMainBlock()->GetName()+">\"."
+            );
+        }
+    }
+}
+
+void Document::XMLState::ReadEndingTag( const s_str& sTagContent )
+{
+    s_ctnr<s_str> lWords = sTagContent.Cut(" ", 1);
+    s_str sName = lWords.Front();
+
+    if (lWords.GetSize() > 1)
+    {
+        Warning(pDoc_->GetCurrentLocation(),
+            "An end tag should only contain the closed block's name."
+        );
+    }
+
+    if (sName == pCurrentBlock_->GetName())
+    {
+        // This is the expected end tag
+        pCurrentBlock_->SetValue(sBlockContent_);
+        pCurrentParentBlock_ = pCurrentBlock_->GetParent();
+        if (pCurrentParentBlock_)
+        {
+            // It's a regular block's end tag
+            if (!pCurrentBlock_->CheckBlocks())
+                pDoc_->SetInvalid();
+            pCurrentParentBlock_->AddBlock();
+            pCurrentBlock_ = pCurrentParentBlock_;
+        }
+        else
+        {
+            // It's the main block's end tag
+            if (!pCurrentBlock_->CheckBlocks())
+                pDoc_->SetInvalid();
+        }
+    }
+    else
+    {
+        pDoc_->SetInvalid();
+        throw Exception(pDoc_->GetCurrentLocation(),
+            "Wrong end tag : \"</"+sName+">\". Expected : \"</"+
+            pCurrentBlock_->GetName()+">\"."
+        );
+    }
+}
+
+void Document::XMLState::ReadOpeningTag( const s_str& sTagContent )
+{
+    s_ctnr<s_str> lWords = sTagContent.Cut(" ", 1);
+    s_str sName = lWords.Front();
+
+    s_str sAttributes;
+    if (lWords.GetSize() > 1)
+    {
+        sAttributes = lWords.Back();
+        sAttributes.Replace(" =", "=");
+        sAttributes.Replace("= ", "=");
+    }
+
+    if (pCurrentParentBlock_)
+    {
+        if (pCurrentParentBlock_->HasBlock(sName))
+        {
+            pCurrentBlock_ = pCurrentParentBlock_->CreateBlock(sName);
+            if (!pCurrentBlock_->CheckAttributes(sAttributes))
+                pDoc_->SetInvalid();
+            pCurrentParentBlock_ = pCurrentBlock_;
+        }
+        else
+        {
+            pDoc_->SetInvalid();
+            throw Exception(pDoc_->GetCurrentLocation(), "Unexpected content : \"<"+sName+">\".");
+        }
+    }
+    else
+    {
+        // This is the main block
+        if (sName == pDoc_->GetMainBlock()->GetName())
+        {
+            if (!pDoc_->GetMainBlock()->CheckAttributes(sAttributes))
+                pDoc_->SetInvalid();
+            pCurrentParentBlock_ = pDoc_->GetMainBlock();
+        }
+        else
+        {
+            pDoc_->SetInvalid();
+            throw Exception(pDoc_->GetCurrentLocation(),
+                "Wrong main block : \"<"+sName+">\". Expected : \"<"+pDoc_->GetMainBlock()->GetName()+">\"."
+            );
+        }
+    }
+}
+
+Document::DefState::DefState(s_ptr<Document> pDoc) : State(pDoc)
+{
+    mID_ = STATE_DEF;
+}
+
+s_str Document::DefState::ReadTagName( const s_str& sTagContent ) const
+{
+    return sTagContent.Cut(" ", 1).Front().Cut(":").Back();
+}
+
+void Document::DefState::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline )
 {
     s_ctnr<s_str> lCommands = sName.Cut(":");
     sName = lCommands.Back();
@@ -90,12 +689,11 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
                 bCopy = true;
 
             // Pre-definintion
-            if ( pParent && (sLetterCode == 'd') )
+            if ( pCurrentParentBlock_ && (sLetterCode == 'd') )
             {
-                Error(sDefFileName_+":"+uiLineNbr_,
+                throw Exception(pDoc_->GetCurrentLocation(),
                     "Can't pre-define a block outside root level (nested \'d\' command forbidden)."
                 );
-                return false;
             }
             else
             {
@@ -115,19 +713,17 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
             // Load pre-definition
             if (bMultiline)
             {
-                Error(sDefFileName_+":"+uiLineNbr_,
+                throw Exception(pDoc_->GetCurrentLocation(),
                     "Can't load a pre-defined block using a multiline block (\'l\' command forbidden)."
                 );
-                return false;
             }
             else
             {
-                if (!pParent)
+                if (!pCurrentParentBlock_)
                 {
-                    Error(sDefFileName_+":"+uiLineNbr_,
+                    throw Exception(pDoc_->GetCurrentLocation(),
                         "Can't load a pre-defined block at root level (\'l\' command forbidden)."
                     );
-                    return false;
                 }
                 else
                 {
@@ -165,7 +761,7 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
                     }
                     else
                     {
-                        Warning(sDefFileName_+":"+uiLineNbr_,
+                        Warning(pDoc_->GetCurrentLocation(),
                             "Unknown param : \""+sParams+"\" for \'n\' command. Skipped."
                         );
                     }
@@ -173,966 +769,354 @@ s_bool Document::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMi
             }
             else
             {
-                Warning(sDefFileName_+":"+uiLineNbr_,
+                Warning(pDoc_->GetCurrentLocation(),
                     "\'n\' command requires some parameters. Correct synthax is : \"n[params]\". Skipped."
                 );
             }
         }
         else
         {
-            Warning(sDefFileName_+":"+uiLineNbr_,
+            Warning(pDoc_->GetCurrentLocation(),
                 "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
             );
         }
     }
-
-    return true;
 }
 
-s_bool Document::ParseArguments_( s_ptr<Block> pActual, const s_ctnr<s_str>& lAttribs )
+void Document::DefState::ReadSingleTag( const s_str& sTagContent )
 {
-    s_ctnr<s_str>::const_iterator iterAttr;
-    foreach (iterAttr, lAttribs)
-    {
-        s_str sAttr = *iterAttr;
-        s_str sDefault;
-        s_bool bOptional = false;
-        if (sAttr.Find("="))
-        {
-            bOptional = true;
-            s_ctnr<s_str> lCut = sAttr.Cut("=");
-            sAttr = lCut.Front();
-            sDefault = lCut.Back();
-            sDefault.Trim('"');
-        }
+    s_ctnr<s_str> lWords = sTagContent.Cut(" ", 1);
+    s_str sName = lWords.Front();
 
-        AttrType mType = ATTR_TYPE_STRING;
-        s_ctnr<s_str> lCommands = sAttr.Cut(":");
-        sAttr = lCommands.Back();
-        lCommands.PopBack();
-        s_ctnr<s_str>::iterator iterCommand;
-        s_bool bAdd = true;
-        foreach (iterCommand, lCommands)
+    s_uint uiMin = 0u;
+    s_uint uiMax = s_uint::INF;
+    s_bool bPreDefining = false;
+    s_bool bCopy = false;
+    s_bool bRadio = false;
+    s_bool bLoad = false;
+    s_str sParent;
+
+    // Read commands
+    ReadPreDefCommands_(
+        sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, bRadio, false
+    );
+
+    // Prepare attributes
+    s_ctnr<s_str> lAttributes;
+    if (lWords.GetSize() > 1)
+    {
+        s_str sAttributes = lWords.Back();
+        sAttributes.Replace(" =", "=");
+        sAttributes.Replace("= ", "=");
+
+        s_str::iterator iterStr;
+        s_str sAttr;
+        s_bool bString = false;
+        foreach (iterStr, sAttributes)
         {
-            s_str sLetterCode = s_str((*iterCommand)[0]);
-            if (sLetterCode == "s")
+            if (*iterStr == '"')
             {
-                mType = ATTR_TYPE_STRING;
+                sAttr += *iterStr;
+                bString = !bString;
             }
-            else if (sLetterCode == "n")
+            else if (*iterStr == ' ')
             {
-                mType = ATTR_TYPE_NUMBER;
-            }
-            else if (sLetterCode == "b")
-            {
-                mType = ATTR_TYPE_BOOL;
-            }
-            else if (sLetterCode == "-")
-            {
-                pActual->RemoveAttribute(sAttr);
-                bAdd = false;
+                if (!bString)
+                {
+                    if (!sAttr.IsEmpty())
+                        lAttributes.PushBack(sAttr);
+                    sAttr = "";
+                }
+                else
+                    sAttr += *iterStr;
             }
             else
             {
-                Warning(sDefFileName_+":"+uiLineNbr_,
-                    "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
-                );
+                sAttr += *iterStr;
             }
         }
 
-        if (bAdd)
-        {
-            if (!pActual->Add(Attribute(sAttr, bOptional, sDefault, mType)))
-                return false;
-        }
+        if (!sAttr.IsEmpty())
+            lAttributes.PushBack(sAttr);
     }
 
-    return true;
-}
-
-
-
-s_bool Document::LoadDefinition_()
-{
-    if (bValid_)
+    if (pCurrentParentBlock_)
     {
-        sActualFileName_ = sDefFileName_;
-        File mFile(sDefFileName_, File::I);
-
-        s_ptr<Block> pActual;
-        s_ptr<Block> pParent;
-        s_bool bComment;
-        s_str sCommentTag;
-        s_uint uiCommentTagCount;
-
-        while (mFile.IsValid())
+        if (bLoad)
         {
-            s_str sLine = mFile.GetLine();
-
-            if (!sLine.IsEmpty(true))
+            if (pDoc_->GetPredefinedBlock(sName))
             {
-                if (CheckLineSynthax_(sLine))
+                s_ptr<PredefinedBlock> pAdded;
+                if (bRadio)
+                    pAdded = pCurrentParentBlock_->AddPredefinedRadioBlock(pDoc_->GetPredefinedBlock(sName));
+                else
+                    pAdded = pCurrentParentBlock_->AddPredefinedBlock(pDoc_->GetPredefinedBlock(sName), uiMin, uiMax);
+
+                if (lAttributes.GetSize() != 0)
                 {
-                    // It's a tag
+                    Warning(pDoc_->GetCurrentLocation(),
+                        "Can't add attributes to a loaded pre-defined block."
+                    );
+                }
+            }
+            else
+            {
+                throw Exception(pDoc_->GetCurrentLocation(),
+                    "\""+sName+"\" has not (yet?) been pre-defined."
+                );
+            }
+        }
+        else if (bCopy)
+        {
+            if (bRadio)
+                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+            else
+                pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
 
-                    if (sLine.Find("<!"))
-                    {
-                        // Comment
-                        if (!sLine.Find("/>"))
-                        {
-                            bComment = true;
-                            uiCommentTagCount = 1;
-                            sLine.EraseFromStart(2);
-                            sCommentTag = sLine.Cut(">", 1).Front();
-                            sCommentTag = sCommentTag.Cut(" ", 1).Front();
-                        }
-                    }
-                    else if (sLine.Find("<--"))
-                    {
-                        // Multi-line comment
-                        s_uint uiStartLineNbr = uiLineNbr_;
-                        if (!sLine.Find("-->"))
-                        {
-                            while (mFile.IsValid())
-                            {
-                                sLine = mFile.GetLine();
-                                if (sLine.Find("-->"))
-                                    break;
-
-                                uiLineNbr_++;
-                            }
-
-                            if (!mFile.IsValid())
-                            {
-                                // TODO : reduce this function's size (crashes GCC !)
-                                /*Error(sFileName_+":"+uiStartLineNbr,
-                                    "Multi-line comment not ended."
-                                );*/
-                                bValid_ = false;
-                                break;
-                            }
-                        }
-                    }
-                    else if (sLine.Find("/>") && !bComment)
-                    {
-                        // Monoline block
-                        sLine.EraseFromStart(1);
-                        sLine = sLine.Cut("/>").Front();
-                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.Front();
-                        s_uint uiMin = 0u;
-                        s_uint uiMax = s_uint::INF;
-                        s_bool bPreDefining = false;
-                        s_bool bCopy = false;
-                        s_bool bRadio = false;
-                        s_bool bLoad = false;
-                        s_str sParent;
-
-                        // Read commands
-                        ReadPreDefCommands_(
-                            sName, sParent,
-                            uiMin, uiMax,
-                            bCopy,
-                            bPreDefining,
-                            bLoad, bRadio,
-                            false, pParent
-                        );
-
-                        // Prepare attributes
-                        s_ctnr<s_str> lAttribs;
-                        if (lWords.GetSize() > 1)
-                        {
-                            s_str sAttribs = lWords.Back();
-                            sAttribs.Replace(" =", "=");
-                            sAttribs.Replace("= ", "=");
-
-                            s_str::iterator iterStr;
-                            s_str sAttr;
-                            s_bool bString = false;
-                            foreach (iterStr, sAttribs)
-                            {
-                                if (*iterStr == '"')
-                                {
-                                    sAttr += *iterStr;
-                                    bString = !bString;
-                                }
-                                else if (*iterStr == ' ')
-                                {
-                                    if (!bString)
-                                    {
-                                        if (!sAttr.IsEmpty())
-                                            lAttribs.PushBack(sAttr);
-                                        sAttr = "";
-                                    }
-                                    else
-                                        sAttr += *iterStr;
-                                }
-                                else
-                                {
-                                    sAttr += *iterStr;
-                                }
-                            }
-
-                            if (!sAttr.IsEmpty())
-                                lAttribs.PushBack(sAttr);
-                        }
-
-                        if (pParent)
-                        {
-                            if (bLoad)
-                            {
-                                if (lPredefinedBlockList_.Find(sName))
-                                {
-                                    s_ptr<PredefinedBlock> pAdded;
-                                    if (bRadio)
-                                        pAdded = pParent->AddPredefinedRadioBlock(&lPredefinedBlockList_[sName]);
-                                    else
-                                        pAdded = pParent->AddPredefinedBlock(&lPredefinedBlockList_[sName], uiMin, uiMax);
-
-                                    if (!pAdded)
-                                        return false;
-
-                                    if (lAttribs.GetSize() != 0)
-                                    {
-                                        Warning(sDefFileName_+":"+uiLineNbr_,
-                                            "Can't add attributes to a loaded pre-defined block."
-                                        );
-                                    }
-                                }
-                                else
-                                {
-                                    Error(sDefFileName_+":"+uiLineNbr_,
-                                        "\""+sName+"\" has not (yet?) been pre-defined."
-                                    );
-                                    return false;
-                                }
-                            }
-                            else if (bCopy)
-                            {
-                                if (bRadio)
-                                    pActual = pParent->CreateRadioDefBlock(sName);
-                                else
-                                    pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
-
-                                if (!pActual)
-                                    return false;
-
-                                // Pre-definition
-                                if (!sParent.IsEmpty())
-                                {
-                                    // Inheritance
-                                    if (lPredefinedBlockList_.Find(sParent))
-                                    {
-                                        pActual->Copy(&lPredefinedBlockList_[sParent]);
-                                    }
-                                    else
-                                    {
-                                        Error(sDefFileName_+":"+uiLineNbr_,
-                                            "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
-                                            "copied."
-                                        );
-                                    }
-                                }
-
-                                if (!ParseArguments_(pActual, lAttribs))
-                                    return false;
-
-                                pActual = pParent;
-                            }
-                            else
-                            {
-                                if (!lPredefinedBlockList_.Find(sName))
-                                {
-                                    if (bRadio)
-                                        pActual = pParent->CreateRadioDefBlock(sName);
-                                    else
-                                        pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
-
-                                    if (!pActual)
-                                        return false;
-
-                                    if (!ParseArguments_(pActual, lAttribs))
-                                        return false;
-
-                                    pActual = pParent;
-                                }
-                                else
-                                {
-                                    Error(sDefFileName_+":"+uiLineNbr_,
-                                        "Defining a new block named \""+sName+"\", which is the name "
-                                        "of a pre-defined block (use the 'l' command to load it)."
-                                    );
-                                    return false;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (bPreDefining)
-                            {
-                                // Pre-definition
-                                if (!sParent.IsEmpty())
-                                {
-                                    // Inheritance
-                                    if (lPredefinedBlockList_.Find(sParent))
-                                    {
-                                        lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
-                                        if (!bCopy)
-                                            lPredefinedBlockList_[sParent].AddDerivated(sName);
-                                    }
-                                    else
-                                    {
-                                        Error(sDefFileName_+":"+uiLineNbr_,
-                                            "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
-                                            (bCopy ? s_str("copied.") : s_str("inherited."))
-                                        );
-                                    }
-                                }
-                                pActual = &lPredefinedBlockList_[sName];
-                                pActual->SetDocument(this);
-                                pActual->SetName(sName);
-
-                                if (!ParseArguments_(pActual, lAttribs))
-                                    return false;
-                            }
-                            else
-                            {
-                                // Main block
-                                if (!lPredefinedBlockList_.Find(sName))
-                                {
-                                    pActual = &mMainBlock_;
-                                    pActual->SetName(sName);
-
-                                    if (!ParseArguments_(pActual, lAttribs))
-                                        return false;
-                                }
-                                else
-                                {
-                                    Error(sDefFileName_+":"+uiLineNbr_,
-                                        "Defining a new block named \""+sName+"\", which is the name "
-                                        "of a pre-defined block (use the 'l' command to load it)."
-                                    );
-                                    return false;
-                                }
-
-                                return true;
-                            }
-                        }
-                    }
-                    else if (sLine.Find("</"))
-                    {
-                        // End tag
-                        if (bComment)
-                        {
-                            sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").Front();
-                            sLine.Trim(' ');
-                            if (sLine == sCommentTag)
-                            {
-                                uiCommentTagCount--;
-                                if (uiCommentTagCount == 0)
-                                    bComment = false;
-                            }
-                        }
-                        else
-                        {
-                            sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").Front();
-                            sLine.Trim(' ');
-
-                            if (sLine == pActual->GetName())
-                            {
-                                pParent = pActual->GetParent();
-                                if (pParent)
-                                {
-                                    pActual = pParent;
-                                }
-                                else
-                                {
-                                    if (pActual == &mMainBlock_)
-                                    {
-                                        // It's the main block's end tag
-                                        return true;
-                                    }
-                                    else
-                                    {
-                                        // It's the end tag of a pre-defined block
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                Error(sDefFileName_+":"+uiLineNbr_,
-                                    "Wrong end tag : \"</"+sLine+">\". Expected : \"</"+pActual->GetName()+">\"."
-                                );
-                                return false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Multiline block
-                        sLine.EraseFromStart(1);
-                        sLine = sLine.Cut(">").Front();
-                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.Front();
-
-                        if (bComment)
-                        {
-                            if (sName == sCommentTag)
-                                uiCommentTagCount++;
-                        }
-                        else
-                        {
-                            s_uint uiMin = 0;
-                            s_uint uiMax = s_uint::INF;
-                            s_bool bPreDefining = false;
-                            s_bool bCopy = false;
-                            s_bool bRadio = false;
-                            s_bool bLoad = false;
-                            s_str sParent;
-
-                            ReadPreDefCommands_(
-                                sName, sParent,
-                                uiMin, uiMax,
-                                bCopy,
-                                bPreDefining,
-                                bLoad, bRadio,
-                                true, pParent
-                            );
-
-                            s_ctnr<s_str> lAttribs;
-                            if (lWords.GetSize() > 1)
-                            {
-                                s_str sAttribs = lWords.Back();
-                                sAttribs.Replace(" =", "=");
-                                sAttribs.Replace("= ", "=");
-                                lAttribs = sAttribs.Cut(" ");
-                            }
-
-                            if (pParent)
-                            {
-                                if (bCopy)
-                                {
-                                    if (bRadio)
-                                        pActual = pParent->CreateRadioDefBlock(sName);
-                                    else
-                                        pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
-
-                                    if (!pActual)
-                                        return false;
-
-                                    // Copy
-                                    if (!sParent.IsEmpty())
-                                    {
-                                        // Inheritance
-                                        if (lPredefinedBlockList_.Find(sParent))
-                                        {
-                                            pActual->Copy(&lPredefinedBlockList_[sParent]);
-                                        }
-                                        else
-                                        {
-                                            Error(sDefFileName_+":"+uiLineNbr_,
-                                                "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "
-                                                "copied."
-                                            );
-                                        }
-                                    }
-
-                                    pParent = pActual;
-                                }
-                                else if (!lPredefinedBlockList_.Find(sName))
-                                {
-                                    if (bRadio)
-                                        pActual = pParent->CreateRadioDefBlock(sName);
-                                    else
-                                        pActual = pParent->CreateDefBlock(sName, uiMin, uiMax);
-
-                                    if (!pActual)
-                                        return false;
-
-                                    if (!ParseArguments_(pActual, lAttribs))
-                                        return false;
-
-                                    pParent = pActual;
-                                }
-                                else
-                                {
-                                    Error(sDefFileName_+":"+uiLineNbr_,
-                                        "Defining a new block named \""+sName+"\", which is the name "
-                                        "of a pre-defined block."
-                                    );
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                if (bPreDefining)
-                                {
-                                    // Pre-definition
-                                    if (!sParent.IsEmpty())
-                                    {
-                                        // Inheritance
-                                        if (lPredefinedBlockList_.Find(sParent))
-                                        {
-                                            lPredefinedBlockList_[sName] = lPredefinedBlockList_[sParent];
-                                            if (!bCopy)
-                                                lPredefinedBlockList_[sParent].AddDerivated(sName);
-                                        }
-                                        else
-                                        {
-                                            Error(sDefFileName_+":"+uiLineNbr_,
-                                                "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
-                                                (bCopy ? s_str("copied.") : s_str("inherited."))
-                                            );
-                                        }
-                                    }
-                                    pActual = &lPredefinedBlockList_[sName];
-                                    pActual->SetDocument(this);
-                                }
-                                else
-                                {
-                                    // Main block
-                                    pActual = &mMainBlock_;
-                                }
-
-                                pActual->SetName(sName);
-
-                                if (!ParseArguments_(pActual, lAttribs))
-                                    return false;
-
-                                pParent = pActual;
-                            }
-                        }
-                    }
+            // Pre-definition
+            if (!sParent.IsEmpty())
+            {
+                // Inheritance
+                if (pDoc_->GetPredefinedBlock(sParent))
+                {
+                    pCurrentBlock_->Copy(pDoc_->GetPredefinedBlock(sParent));
                 }
                 else
                 {
-                    Error(sDefFileName_+":"+uiLineNbr_,
-                        "Invalid line :\n    "+sLine
+                    Error(pDoc_->GetCurrentLocation(),
+                        "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
+                        "copied."
                     );
-                    return false;
                 }
             }
-            uiLineNbr_++;
-        }
 
-        if (pParent)
+            pCurrentBlock_->CheckAttributesDef(lAttributes);
+            pCurrentBlock_ = pCurrentParentBlock_;
+        }
+        else
         {
-            while (pParent)
+            if (!pDoc_->GetPredefinedBlock(sName))
             {
-                Error(sDefFileName_,
-                    "<"+pParent->GetName()+"> block has not been closed !"
-                );
-                pParent = pParent->GetParent();
+                if (bRadio)
+                    pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+                else
+                    pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
+
+                pCurrentBlock_->CheckAttributesDef(lAttributes);
+                pCurrentBlock_ = pCurrentParentBlock_;
             }
-            return false;
+            else
+            {
+                throw Exception(pDoc_->GetCurrentLocation(),
+                    "Defining a new block named \""+sName+"\", which is the name "
+                    "of a pre-defined block (use the 'l' command to load it)."
+                );
+            }
         }
     }
     else
-        return false;
+    {
+        if (bPreDefining)
+        {
+            // Pre-definition
+            if (!sParent.IsEmpty())
+            {
+                // Inheritance
+                if (pDoc_->GetPredefinedBlock(sParent))
+                {
+                    pDoc_->CreatePredefinedBlock(sName, sParent);
+                    if (!bCopy)
+                        pDoc_->GetPredefinedBlock(sParent)->AddDerivated(sName);
+                }
+                else
+                {
+                    throw Exception(pDoc_->GetCurrentLocation(),
+                        "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
+                        (bCopy ? s_str("copied.") : s_str("inherited."))
+                    );
+                }
+            }
+            else
+                pDoc_->CreatePredefinedBlock(sName);
+            pCurrentBlock_ = pDoc_->GetPredefinedBlock(sName);
+            pCurrentBlock_->SetDocument(pDoc_);
+            pCurrentBlock_->SetName(sName);
 
-    return true;
+            pCurrentBlock_->CheckAttributesDef(lAttributes);
+        }
+        else
+        {
+            // Main block
+            if (!pDoc_->GetPredefinedBlock(sName))
+            {
+                pCurrentBlock_ = pDoc_->GetMainBlock();
+                pCurrentBlock_->SetName(sName);
+
+                pCurrentBlock_->CheckAttributesDef(lAttributes);
+            }
+            else
+            {
+                throw Exception(pDoc_->GetCurrentLocation(),
+                    "Defining a new block named \""+sName+"\", which is the name "
+                    "of a pre-defined block (use the 'l' command to load it)."
+                );
+            }
+        }
+    }
 }
 
-s_bool Document::Check( const s_str& sPreProcCommands )
+void Document::DefState::ReadEndingTag( const s_str& sTagContent )
 {
-    if (bValid_)
+    s_ctnr<s_str> lWords = sTagContent.Cut(" ", 1);
+    s_str sName = lWords.Front();
+
+    if (lWords.GetSize() > 1)
     {
-        s_ctnr<s_str> lPreProcessorCommands;
-        if (sPreProcCommands != "")
+        Warning(pDoc_->GetCurrentLocation(),
+            "An end tag should only contain the closed block's name."
+        );
+    }
+
+    if (sName == pCurrentBlock_->GetName())
+    {
+        // It's the expected end tag
+        if (!sBlockContent_.IsEmpty(true))
         {
-            lPreProcessorCommands = sPreProcCommands.Cut(",");
-            s_ctnr<s_str>::iterator iter;
-            foreach (iter, lPreProcessorCommands)
-            {
-                iter->Trim(' ');
-            }
+            Warning(pDoc_->GetCurrentLocation(),
+                "In a definition file, blocks cannot contain any data. Ignored."
+            );
         }
 
-        sActualFileName_ = sFileName_;
-        File mFile(sFileName_, File::I);
-        uiLineNbr_ = 1u;
-
-        s_ptr<Block> pActual = &mMainBlock_;
-        s_ptr<Block> pParent;
-        s_bool       bOpened;
-        s_bool       bValue;
-        s_bool       bComment;
-        s_str        sCommentTag;
-        s_uint       uiCommentTagCount;
-        s_uint       uiSkipUntil = s_uint::NaN;
-        s_uint       uiPreProcessorCount;
-
-        while (mFile.IsValid())
+        pCurrentParentBlock_ = pCurrentBlock_->GetParent();
+        if (pCurrentParentBlock_)
         {
-            s_str sLine = mFile.GetLine();
+            pCurrentBlock_ = pCurrentParentBlock_;
+        }
+        else
+        {
+            // It's either the main block's end tag or a
+            // pre-defined block's end tag.
+            // Anyway, there is nothing to do.
+        }
+    }
+    else
+    {
+        throw Exception(pDoc_->GetCurrentLocation(),
+            "Wrong end tag : \"</"+sName+">\". Expected : \"</"+pCurrentBlock_->GetName()+">\"."
+        );
+    }
+}
 
-            if (!sLine.IsEmpty(true))
+void Document::DefState::ReadOpeningTag( const s_str& sTagContent )
+{
+    s_ctnr<s_str> lWords = sTagContent.Cut(" ", 1);
+    s_str sName = lWords.Front();
+
+    s_uint uiMin = 0;
+    s_uint uiMax = s_uint::INF;
+    s_bool bPreDefining = false;
+    s_bool bCopy = false;
+    s_bool bRadio = false;
+    s_bool bLoad = false;
+    s_str sParent;
+
+    ReadPreDefCommands_(
+        sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, bRadio, true
+    );
+
+    s_ctnr<s_str> lAttributes;
+    if (lWords.GetSize() > 1)
+    {
+        s_str sAttributes = lWords.Back();
+        sAttributes.Replace(" =", "=");
+        sAttributes.Replace("= ", "=");
+        lAttributes = sAttributes.Cut(" ");
+    }
+
+    if (pCurrentParentBlock_)
+    {
+        if (bCopy)
+        {
+            if (bRadio)
+                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+            else
+                pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
+
+            // Copy
+            if (!sParent.IsEmpty())
             {
-                if (CheckLineSynthax_(sLine))
+                // Inheritance
+                if (pDoc_->GetPredefinedBlock(sParent))
                 {
-                    // It's a tag
-
-                    if (sLine.Find("<#"))
-                    {
-                        // Preprocessor
-                        if (uiSkipUntil.IsValid())
-                            ++uiPreProcessorCount;
-                        else
-                        {
-                            if (!sLine.Find("/>"))
-                            {
-                                sLine.EraseFromStart(2);
-                                s_str sParams = sLine.Cut(">", 1).Front();
-                                s_uint i = sParams.FindPos("[");
-                                s_uint j = sParams.FindPos("]");
-                                if (i.IsValid() && j.IsValid() && (i < j) && (j-i > 1))
-                                {
-                                    ++uiPreProcessorCount;
-                                    sParams = sParams.ExtractRange(i+1, j);
-                                    s_ctnr<s_str> lParamList = sParams.Cut(",");
-                                    s_ctnr<s_str>::iterator iterParam;
-                                    foreach (iterParam, lParamList)
-                                    {
-                                        iterParam->Trim(' ');
-                                        s_bool bState;
-                                        if ((*iterParam)[0] == '!')
-                                        {
-                                            iterParam->EraseFromStart(1);
-                                            bState = false;
-                                        }
-                                        else
-                                        {
-                                            bState = true;
-                                        }
-
-                                        if (lPreProcessorCommands.Find(*iterParam) != bState)
-                                        {
-                                            uiSkipUntil = uiPreProcessorCount;
-                                            break;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    Error(sFileName_+":"+uiLineNbr_,
-                                        "PreProcessor command with no argument (expected \"[some parameter]\")."
-                                    );
-                                    bValid_ = false;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                Warning(sFileName_+":"+uiLineNbr_,
-                                    "PreProcessor block has no effect."
-                                );
-                            }
-                        }
-                    }
-                    else if (sLine.Find("</#"))
-                    {
-                        // End of preprocessor
-                        if (uiPreProcessorCount > 0)
-                        {
-                            if (uiSkipUntil == uiPreProcessorCount)
-                            {
-                                uiSkipUntil = s_uint::NaN;
-                            }
-                            --uiPreProcessorCount;
-                        }
-                        else
-                        {
-                            Error(sFileName_+":"+uiLineNbr_,
-                                "Unexpected preprocessor closing block."
-                            );
-                            bValid_ = false;
-                            break;
-                        }
-                    }
-                    else if (sLine.Find("<!") && !uiSkipUntil.IsValid())
-                    {
-                        // Comment
-                        if (!bComment)
-                        {
-                            if (!sLine.Find("/>") && !uiSkipUntil.IsValid())
-                            {
-                                bComment = true;
-                                uiCommentTagCount = 1;
-                                sLine.EraseFromStart(2);
-                                sCommentTag = sLine.Cut(">", 1).Front();
-                                sCommentTag = sCommentTag.Cut(" ", 1).Front();
-                            }
-                        }
-                    }
-                    else if (sLine.Find("<--") && !uiSkipUntil.IsValid())
-                    {
-                        // Multi-line comment
-                        s_uint uiStartLineNbr = uiLineNbr_;
-                        if (!sLine.Find("-->"))
-                        {
-                            while (mFile.IsValid())
-                            {
-                                sLine = mFile.GetLine();
-                                if (sLine.Find("-->"))
-                                    break;
-
-                                uiLineNbr_++;
-                            }
-
-                            if (!mFile.IsValid())
-                            {
-                                Error(sFileName_+":"+uiStartLineNbr,
-                                    "Multi-line comment not ended."
-                                );
-                                bValid_ = false;
-                                break;
-                            }
-                        }
-                    }
-                    else if (sLine.Find("/>") && !uiSkipUntil.IsValid() && !bValue && !bComment)
-                    {
-                        // Monoline block
-                        bOpened = false;
-                        sLine.EraseFromStart(1);
-                        sLine = sLine.Cut("/>").Front();
-                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.Front();
-                        s_str sAttribs;
-                        if (lWords.GetSize() > 1)
-                        {
-                            sAttribs = lWords.Back();
-                            sAttribs.Replace(" =", "=");
-                            sAttribs.Replace("= ", "=");
-                        }
-
-                        if (pParent)
-                        {
-                            if (pParent->HasBlock(sName))
-                            {
-                                pActual = pParent->CreateBlock(sName);
-                                if (!pActual->CheckAttributes(sAttribs))
-                                {
-                                    bValid_ = false;
-                                    break;
-                                }
-                                if (!pActual->CheckBlocks())
-                                {
-                                    bValid_ = false;
-                                    break;
-                                }
-                                pActual = pParent;
-                                pParent->AddBlock();
-                            }
-                            else
-                            {
-                                Error(sFileName_+":"+uiLineNbr_, "Unexpected content : \"<"+sName+">\".");
-                                bValid_ = false;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            // Main block
-                            if (sName == pActual->GetName())
-                            {
-                                if (!pActual->CheckAttributes(sAttribs))
-                                {
-                                    bValid_ = false;
-                                }
-                                if (!pActual->CheckBlocks())
-                                {
-                                    bValid_ = false;
-                                }
-                                break;
-                            }
-                            else
-                            {
-                                Error(sFileName_+":"+uiLineNbr_,
-                                    "Wrong content : \"<"+sName+">\". Expected : \"<"+pActual->GetName()+">\"."
-                                );
-                                bValid_ = false;
-                                break;
-                            }
-                        }
-                    }
-                    else if (sLine.Find("</") && !uiSkipUntil.IsValid())
-                    {
-                        // End tag
-                        if (bComment)
-                        {
-                            sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").Front();
-                            sLine.Trim(' ');
-                            if (sLine == sCommentTag)
-                            {
-                                uiCommentTagCount--;
-                                if (uiCommentTagCount == 0)
-                                    bComment = false;
-                            }
-                        }
-                        else
-                        {
-                            bOpened = false;
-                            bValue = false;
-                            sLine.EraseFromStart(2);
-                            sLine = sLine.Cut(">").Front();
-                            sLine.Trim(' ');
-                            if (sLine == pActual->GetName())
-                            {
-                                pParent = pActual->GetParent();
-                                if (pParent)
-                                {
-                                    if (!pActual->CheckBlocks())
-                                    {
-                                        bValid_ = false;
-                                        break;
-                                    }
-                                    pParent->AddBlock();
-                                    pActual = pParent;
-                                }
-                                else
-                                {
-                                    // It's the main block's end tag
-                                    if (!pActual->CheckBlocks())
-                                    {
-                                        bValid_ = false;
-                                        break;
-                                    }
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                Error(sFileName_+":"+uiLineNbr_,
-                                    "Wrong end tag : \"</"+sLine+">\". Expected : \"</"+pActual->GetName()+">\"."
-                                );
-                                bValid_ = false;
-                                break;
-                            }
-                        }
-                    }
-                    else if (!uiSkipUntil.IsValid() && !bValue)
-                    {
-                        // Multiline block
-                        bOpened = true;
-                        sLine.EraseFromStart(1);
-                        sLine = sLine.Cut(">").Front();
-                        s_ctnr<s_str> lWords = sLine.Cut(" ", 1);
-                        s_str sName = lWords.Front();
-
-                        if (bComment)
-                        {
-                            if (sName == sCommentTag)
-                                uiCommentTagCount++;
-                        }
-                        else
-                        {
-                            s_str sAttribs;
-                            if (lWords.GetSize() > 1)
-                            {
-                                sAttribs = lWords.Back();
-                                sAttribs.Replace(" =", "=");
-                                sAttribs.Replace("= ", "=");
-                            }
-
-                            if (pParent)
-                            {
-                                if (pParent->HasBlock(sName))
-                                {
-                                    pActual = pParent->CreateBlock(sName);
-                                    if (!pActual->CheckAttributes(sAttribs))
-                                    {
-                                        bValid_ = false;
-                                        break;
-                                    }
-                                    pParent = pActual;
-                                }
-                                else
-                                {
-                                    Error(sFileName_+":"+uiLineNbr_, "Unexpected content : \"<"+sName+">\".");
-                                    bValid_ = false;
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                // Main block
-                                if (sName == pActual->GetName())
-                                {
-                                    if (!pActual->CheckAttributes(sAttribs))
-                                    {
-                                        bValid_ = false;
-                                        break;
-                                    }
-                                    pParent = pActual;
-                                }
-                                else
-                                {
-                                    Error(sFileName_+":"+uiLineNbr_,
-                                        "Wrong content : \"<"+sName+">\". Expected : \"<"+pActual->GetName()+">\"."
-                                    );
-                                    bValid_ = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    else if (!uiSkipUntil.IsValid() && !bComment)
-                    {
-                        Error(sFileName_+":"+uiLineNbr_, "Invalid line.");
-                        bValid_ = false;
-                        break;
-                    }
+                    pCurrentBlock_->Copy(pDoc_->GetPredefinedBlock(sParent));
                 }
-                else if (bOpened && !bComment)
+                else
                 {
-                    pActual->SetValue(pActual->GetValue() + "\n" + sLine);
-                    bValue = true;
-                }
-                else if (!bComment)
-                {
-                    Error(sFileName_+":"+uiLineNbr_, "Invalid line.");
-                    bValid_ = false;
-                    break;
+                    throw Exception(pDoc_->GetCurrentLocation(),
+                        "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "
+                        "copied."
+                    );
                 }
             }
 
-            uiLineNbr_++;
+            pCurrentParentBlock_ = pCurrentBlock_;
         }
-
-        if (pParent && bValid_)
+        else if (!pDoc_->GetPredefinedBlock(sName))
         {
-            while (pParent)
-            {
-                Error(sFileName_,
-                    "<"+pParent->GetName()+"> block has not been closed !"
-                );
-                pParent = pParent->GetParent();
-            }
-            bValid_ = false;
+            if (bRadio)
+                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+            else
+                pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
+
+            pCurrentBlock_->CheckAttributesDef(lAttributes);
+            pCurrentParentBlock_ = pCurrentBlock_;
         }
-
-        if (uiPreProcessorCount > 0)
+        else
         {
-            Warning(sFileName_,
-                "Some preprocessor commands have not been closed."
+            throw Exception(pDoc_->GetCurrentLocation(),
+                "Defining a new block named \""+sName+"\", which is the name "
+                "of a pre-defined block."
             );
         }
     }
-
-    return bValid_;
-}
-
-s_ptr<Block> Document::GetPredefinedBlock( const s_str& sName )
-{
-    if (lPredefinedBlockList_.Find(sName))
-    {
-        return &lPredefinedBlockList_[sName];
-    }
     else
     {
-        return NULL;
+        if (bPreDefining)
+        {
+            // Pre-definition
+            if (!sParent.IsEmpty())
+            {
+                // Inheritance
+                if (pDoc_->GetPredefinedBlock(sParent))
+                {
+                    pDoc_->CreatePredefinedBlock(sName, sParent);
+                    if (!bCopy)
+                        pDoc_->GetPredefinedBlock(sParent)->AddDerivated(sName);
+                }
+                else
+                {
+                    throw Exception(pDoc_->GetCurrentLocation(),
+                        "\""+sParent+"\" has not (yet?) been pre-defined and cannot be "+
+                        (bCopy ? s_str("copied.") : s_str("inherited."))
+                    );
+                }
+            }
+            else
+                pDoc_->CreatePredefinedBlock(sName);
+
+            pCurrentBlock_ = pDoc_->GetPredefinedBlock(sName);
+            pCurrentBlock_->SetDocument(pDoc_);
+        }
+        else
+        {
+            // Main block
+            pCurrentBlock_ = pDoc_->GetMainBlock();
+        }
+
+        pCurrentBlock_->SetName(sName);
+
+        pCurrentBlock_->CheckAttributesDef(lAttributes);
+
+        pCurrentParentBlock_ = pCurrentBlock_;
     }
 }

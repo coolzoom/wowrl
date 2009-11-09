@@ -22,6 +22,7 @@ namespace XML
     */
     class Document
     {
+    friend class XML::Block;
     public :
 
         /// Default constructor.
@@ -43,7 +44,7 @@ namespace XML
         /** \return This file's name
         *   \note Only used internaly.
         */
-        const s_str&  GetFileName() const;
+        const s_str&  GetCurrentFileName() const;
 
         /// Returns the line that is being parsed.
         /** \return The line that is being parsed
@@ -53,7 +54,13 @@ namespace XML
         *         After, it will return the total number of
         *         line in the XML file.
         */
-        const s_uint& GetLineNbr() const;
+        const s_uint& GetCurrentLineNbr() const;
+
+        /// Returns the current parsing location.
+        /** \return The current parsing location
+        *   \note Format : <filename>:<line>
+        */
+        s_str         GetCurrentLocation() const;
 
         /// Parses and validates the XML file.
         /** \param sPreProcCommands Preprocessor commands to use when parsing
@@ -67,27 +74,130 @@ namespace XML
         */
         s_bool        Check(const s_str& sPreProcCommands = "");
 
+        static const s_str CLASS_NAME;
+
+    protected :
+
+        /// Creates a new predefined Block with inheritance.
+        /** \param sName        The name of the new predefined Block
+        *   \param sInheritance The name of the inherited Block
+        */
+        void         CreatePredefinedBlock(const s_str& sName, const s_str& sInheritance = "");
+
         /// Returns a predefined Block.
         /** \param sName The name of the predefined Block you want
         *   \note Only used in loading stage.
         */
-        s_ptr<Block>  GetPredefinedBlock(const s_str& sName);
+        s_ptr<Block> GetPredefinedBlock(const s_str& sName);
 
-        static const s_str CLASS_NAME;
+        /// Flags this Document as invalid.
+        void         SetInvalid();
 
     private :
 
-        s_bool CheckLineSynthax_(s_str& sLine);
-        s_bool LoadDefinition_();
-        s_bool ReadPreDefCommands_(s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline, s_ptr<Block> pParent);
-        s_bool ParseArguments_(s_ptr<Block> pActual, const s_ctnr<s_str>& lAttribs);
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+        class State
+        {
+        public :
+
+            enum ID
+            {
+                STATE_DEF,
+                STATE_XML
+            };
+
+            State(s_ptr<Document> pDoc);
+
+            virtual ~State();
+
+            virtual s_str ReadTagName(const s_str& sTagContent) const = 0;
+            virtual void  ReadOpeningTag(const s_str& sTagContent) = 0;
+            virtual void  ReadSingleTag(const s_str& sTagContent) = 0;
+            virtual void  ReadEndingTag(const s_str& sTagContent) = 0;
+
+            void          SetCurrentBlock(s_ptr<Block> pBlock);
+            void          SetCurrentParentBlock(s_ptr<Block> pParentBlock);
+            void          AddContent(const s_str& sContent);
+            void          ResetContent();
+            const ID&     GetID() const;
+
+        protected :
+
+            s_ptr<Document> pDoc_;
+            ID mID_;
+
+            s_ptr<Block> pCurrentBlock_;
+            s_ptr<Block> pCurrentParentBlock_;
+            s_str        sBlockContent_;
+        };
+        friend class State;
+
+        class XMLState : public State
+        {
+        public :
+
+            XMLState(s_ptr<Document> pDoc);
+
+            s_str ReadTagName(const s_str& sTagContent) const;
+            void  ReadOpeningTag(const s_str& sTagContent);
+            void  ReadSingleTag(const s_str& sTagContent);
+            void  ReadEndingTag(const s_str& sTagContent);
+        };
+        friend class XMLState;
+
+        class DefState : public State
+        {
+        public :
+
+            DefState(s_ptr<Document> pDoc);
+
+            s_str ReadTagName(const s_str& sTagContent) const;
+            void  ReadOpeningTag(const s_str& sTagContent);
+            void  ReadSingleTag(const s_str& sTagContent);
+            void  ReadEndingTag(const s_str& sTagContent);
+
+        private :
+
+            void ReadPreDefCommands_(
+                s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax,
+                s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio,
+                const s_bool& bMultiline
+            );
+        };
+        friend class DefState;
+        /** \endcond
+        */
+
+        void LoadDefinition_();
+
+        void ReadTags_(s_str& sLine);
+        void ReadOpeningTag_(s_str& sTagContent);
+        void ReadSingleTag_(s_str& sTagContent);
+        void ReadEndingTag_(s_str& sTagContent);
 
         s_str  sFileName_;
         s_str  sDefFileName_;
-        s_str  sActualFileName_;
-        s_uint uiLineNbr_;
+        s_str  sCurrentFileName_;
+        s_uint uiCurrentLineNbr_;
         s_bool bValid_;
-        Block  mMainBlock_;
+
+        XMLState     mXMLState_;
+        DefState     mDefState_;
+        s_ptr<State> pState_;
+
+        // Load state
+        s_ctnr<s_str> lPreProcessorCommands_;
+        s_bool        bSmartComment_;
+        s_str         sSmartCommentTag_;
+        s_uint        uiSmartCommentCount_;
+        s_bool        bMultilineComment_;
+        s_uint        uiMultilineCommentCount_;
+        s_bool        bPreProcessor_;
+        s_uint        uiPreProcessorCount_;
+        s_uint        uiSkippedPreProcessorCount_;
+
+        Block mMainBlock_;
 
         s_map<s_str, Block> lPredefinedBlockList_;
     };

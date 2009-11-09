@@ -108,6 +108,62 @@ void Block::RemoveAttribute( const s_str& sAttributeName )
     lAttributeList_.Erase(sAttributeName);
 }
 
+void Block::CheckAttributesDef( const s_ctnr<s_str>& lAttribs )
+{
+    s_ctnr<s_str>::const_iterator iterAttr;
+    foreach (iterAttr, lAttribs)
+    {
+        s_str sAttr = *iterAttr;
+        s_str sDefault;
+        s_bool bOptional = false;
+        if (sAttr.Find("="))
+        {
+            bOptional = true;
+            s_ctnr<s_str> lCut = sAttr.Cut("=");
+            sAttr = lCut.Front();
+            sDefault = lCut.Back();
+            sDefault.Trim('"');
+        }
+
+        AttrType mType = ATTR_TYPE_STRING;
+        s_ctnr<s_str> lCommands = sAttr.Cut(":");
+        sAttr = lCommands.Back();
+        lCommands.PopBack();
+        s_ctnr<s_str>::iterator iterCommand;
+        s_bool bAdd = true;
+        foreach (iterCommand, lCommands)
+        {
+            s_str sLetterCode = s_str((*iterCommand)[0]);
+            if (sLetterCode == "s")
+            {
+                mType = ATTR_TYPE_STRING;
+            }
+            else if (sLetterCode == "n")
+            {
+                mType = ATTR_TYPE_NUMBER;
+            }
+            else if (sLetterCode == "b")
+            {
+                mType = ATTR_TYPE_BOOL;
+            }
+            else if (sLetterCode == "-")
+            {
+                RemoveAttribute(sAttr);
+                bAdd = false;
+            }
+            else
+            {
+                Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
+                    "Unknown command : \'"+(*iterCommand)+"\'. Skipped."
+                );
+            }
+        }
+
+        if (bAdd)
+            Add(Attribute(sAttr, bOptional, sDefault, mType));
+    }
+}
+
 s_bool Block::CheckAttributes( const s_str& sAttributes )
 {
     if (!sAttributes.IsEmpty())
@@ -162,7 +218,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
                     {
                         if (!sAttrValue.IsBoolean())
                         {
-                            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                            Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                                 "Attribute \""+sAttrName+"\" has wrong type (boolean expected)."
                             );
                             return false;
@@ -172,7 +228,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
                     {
                         if (!sAttrValue.IsNumber())
                         {
-                            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                            Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                                 "Attribute \""+sAttrName+"\" has wrong type (number expected)."
                             );
                             return false;
@@ -184,7 +240,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
                 }
                 else
                 {
-                    Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                    Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                         "Unknown attribute : \""+sAttrName+"\"."
                     );
                     Log("Listing available possibilities :");
@@ -196,7 +252,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
             }
             else
             {
-                Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                     "Wrong synthax for attributes (missing '=')."
                 );
                 return false;
@@ -216,7 +272,7 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
             }
             else
             {
-                Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+                Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                     "Missing \""+iterAttr2->second.sName+"\" attribute."
                 );
                 bGood = false;
@@ -231,14 +287,14 @@ s_bool Block::CheckBlocks()
 {
     if ( bRadioChilds_ && (lFoundBlockList_.GetSize() == 0) )
     {
-        Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+        Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
             "This block is meant to contain one radio child, but doesn't contain any."
         );
         return false;
     }
     if ( bRadioChilds_ && (lFoundBlockList_.GetSize() > 1) )
     {
-        Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+        Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
             "This block is meant to contain one radio child, but contains several ones."
         );
         return false;
@@ -250,14 +306,14 @@ s_bool Block::CheckBlocks()
         s_uint uiCount = lFoundBlockList_.Count(iterDefBlock->first);
         if (uiCount < iterDefBlock->second.GetMinCount())
         {
-            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                 "Too few \"<"+iterDefBlock->first+">\" blocks (expected : at least "+iterDefBlock->second.GetMinCount()+")."
             );
             return false;
         }
         else if (uiCount > iterDefBlock->second.GetMaxCount())
         {
-            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                 "Too many \"<"+iterDefBlock->first+">\" blocks (expected : at most "+iterDefBlock->second.GetMaxCount()+")."
             );
             return false;
@@ -270,14 +326,14 @@ s_bool Block::CheckBlocks()
         s_uint uiCount = lFoundBlockList_.Count(iterPreDefBlock->first);
         if (uiCount < iterPreDefBlock->second.uiMin)
         {
-            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                 "Too few \"<"+iterPreDefBlock->first+">\" blocks (expected : at least "+iterPreDefBlock->second.uiMin+")."
             );
             return false;
         }
         else if (uiCount > iterPreDefBlock->second.uiMax)
         {
-            Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                 "Too many \"<"+iterPreDefBlock->first+">\" blocks (expected : at most "+iterPreDefBlock->second.uiMax+")."
             );
             return false;
@@ -322,7 +378,7 @@ void Block::AddDerivated( const s_str& sName )
     lDerivatedList_.PushBack(sName);
 }
 
-s_bool Block::HasDerivated( const s_str& sName )
+s_bool Block::HasDerivated( const s_str& sName ) const
 {
     if (lDerivatedList_.Find(sName))
     {
@@ -330,7 +386,7 @@ s_bool Block::HasDerivated( const s_str& sName )
     }
     else
     {
-        s_ctnr<s_str>::iterator iter;
+        s_ctnr<s_str>::const_iterator iter;
         foreach (iter, lDerivatedList_)
         {
             if (pDoc_->GetPredefinedBlock(*iter)->HasDerivated(sName))
@@ -492,7 +548,7 @@ s_bool Block::HasBlock( const s_str& sName )
     }
     else
     {
-        s_ptr<XML::Block> pGlobal;
+        s_ptr<const XML::Block> pGlobal;
         s_map<s_str, PredefinedBlock>::iterator iterBlock;
         foreach (iterBlock, lPreDefBlockList_)
         {
@@ -554,14 +610,14 @@ s_ptr<Block> Block::CreateDefBlock( const s_str& sName, const s_uint& uiMinNbr, 
 {
     if (bRadioChilds_)
     {
-        Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+        Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
             "A neighbour has been declared as a radio block, but \""+sName+"\" isn't. "
             "I'll be marked as radio block as well."
         );
-        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetFileName(), pDoc_->GetLineNbr(), true);
+        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr(), true);
     }
     else
-        lDefBlockList_[sName] = Block(sName, uiMinNbr, uiMaxNbr, pDoc_->GetFileName(), pDoc_->GetLineNbr());
+        lDefBlockList_[sName] = Block(sName, uiMinNbr, uiMaxNbr, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr());
     s_ptr<Block> pBlock = &lDefBlockList_[sName];
     pBlock->SetParent(this);
     pBlock->SetDocument(pDoc_);
@@ -574,7 +630,7 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
     {
         if ( !bRadioChilds_ && (GetDefChildNumber() != 0) )
         {
-            Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                 "\""+sName+"\" has been declared as a radio block, but the previous ones weren't. "
                 "All previously defined childs will be marked as radio blocks."
             );
@@ -595,7 +651,7 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
         }
 
         bRadioChilds_ = true;
-        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetFileName(), pDoc_->GetLineNbr(), true);
+        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr(), true);
         s_ptr<Block> pBlock = &lDefBlockList_[sName];
         pBlock->SetParent(this);
         pBlock->SetDocument(pDoc_);
@@ -603,11 +659,9 @@ s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
     }
     else
     {
-        Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+        throw Exception(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
             "There is already a \""+sName+"\" block defined."
         );
-
-        return NULL;
     }
 }
 
@@ -617,7 +671,7 @@ s_ptr<PredefinedBlock> Block::AddPredefinedBlock( s_ptr<Block> pBlock, const s_u
     {
         if (bRadioChilds_)
         {
-            Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                 "A neighbour has been declared as a radio block, but \""+pBlock->GetName()+"\" isn't. "
                 "I'll be marked as radio block as well."
             );
@@ -630,11 +684,9 @@ s_ptr<PredefinedBlock> Block::AddPredefinedBlock( s_ptr<Block> pBlock, const s_u
     }
     else
     {
-        Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+        throw Exception(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
             "There is already a \""+pBlock->GetName()+"\" block defined."
         );
-
-        return NULL;
     }
 }
 
@@ -644,7 +696,7 @@ s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock )
     {
         if ( !bRadioChilds_ && (GetDefChildNumber() != 0) )
         {
-            Warning(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+            Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                 "\""+pBlock->GetName()+"\" has been declared as a radio block, but the previous ones weren't. "
                 "All previously defined childs will be marked as radio blocks."
             );
@@ -671,11 +723,9 @@ s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock )
     }
     else
     {
-        Error(pDoc_->GetFileName()+":"+pDoc_->GetLineNbr()+" : "+sName_,
+        throw Exception(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
             "There is already a \""+pBlock->GetName()+"\" block defined."
         );
-
-        return NULL;
     }
 }
 
