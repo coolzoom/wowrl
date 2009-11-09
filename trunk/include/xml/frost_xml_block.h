@@ -208,6 +208,12 @@ namespace XML
         */
         void          RemoveAttribute(const s_str& sAttributeName);
 
+        /// Parses attributes definitions.
+        /** \param lAttribs The attribute list
+        *   \note Only used in the definition stage.
+        */
+        void          CheckAttributesDef(const s_ctnr<s_str>& lAttribs);
+
         /// Retrieves attributes from a string.
         /** \param sAttributes The string containing attributes
         *   \return 'false' if an attribute is missing or the synthax
@@ -248,7 +254,7 @@ namespace XML
         *   \note Only works for pre-defined blocks.<br>
         *         Only used in the loading stage.
         */
-        s_bool        HasDerivated(const s_str& sName);
+        s_bool        HasDerivated(const s_str& sName) const;
 
         /// Sets this Block's parent.
         /** \param pParent The new parent
