@@ -7,7 +7,7 @@
 #ifndef FROST_UTILS_POINT_H
 #define FROST_UTILS_POINT_H
 
-#include "frost_utils.h"
+#include "frost_utils_config.h"
 
 namespace Frost
 {

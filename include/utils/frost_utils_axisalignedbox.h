@@ -9,7 +9,7 @@
 #ifndef FROST_AXISALIGNEDBOX_H
 #define FROST_AXISALIGNEDBOX_H
 
-#include "frost_utils.h"
+#include "frost_utils_config.h"
 #include "frost_utils_vector.h"
 
 namespace Ogre

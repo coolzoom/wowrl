@@ -9,7 +9,7 @@
 #ifndef FROST_EVENTRECEIVER_H
 #define FROST_EVENTRECEIVER_H
 
-#include "frost_utils.h"
+#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
 namespace Frost

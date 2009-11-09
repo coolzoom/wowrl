@@ -8,7 +8,7 @@
 #ifndef FROST_UTILS_TYPES_H
 #define FROST_UTILS_TYPES_H
 
-#include "frost_utils.h"
+#include "frost_utils_config.h"
 
 #include <cmath>
 #include <cfloat>

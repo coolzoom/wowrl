@@ -269,18 +269,6 @@ namespace Frost
     class  UnitManager;
     class  LuaUnitManager;
 
-    /* XML ***********************************************/
-    namespace XML
-    {
-        // xml/frost_xml_block.h
-        class  Block;
-        struct Attribute;
-        struct PredefinedBlock;
-
-        // xml/frost_xml_document.h
-        class  Document;
-    }
-
     /* ***************************************************/
     // frost_engine.h
     class  Engine;

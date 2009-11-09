@@ -7,7 +7,7 @@
 #ifndef FROST_UTILS_VECTOR3_H
 #define FROST_UTILS_VECTOR3_H
 
-#include "frost_utils.h"
+#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
 namespace Ogre

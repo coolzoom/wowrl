@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*               XXX header               */
+/*          XML::Document header          */
 /*                                        */
 /*                                        */
 
@@ -9,7 +9,7 @@
 #ifndef FROST_XML_DOCUMENT_H
 #define FROST_XML_DOCUMENT_H
 
-#include "frost.h"
+#include <frost_utils_types.h>
 #include "frost_xml_block.h"
 
 namespace Frost

@@ -9,7 +9,7 @@
 #ifndef FROST_EVENTMANAGER_H
 #define FROST_EVENTMANAGER_H
 
-#include "frost_utils.h"
+#include "frost_utils_config.h"
 #include "frost_utils_manager.h"
 
 namespace Frost
