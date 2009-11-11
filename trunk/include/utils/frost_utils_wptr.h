@@ -23,6 +23,16 @@ namespace Frost
             pWCounter_ = NULL;
         }
 
+        /// Copy constructor.
+        s_wptr(const s_wptr& pPtr)
+        {
+            pValue_ = pPtr.pValue_;
+            pCounter_ = pPtr.pCounter_;
+            pWCounter_ = pPtr.pWCounter_;
+
+            Increment_();
+        }
+
         /// Destructor.
         /** \note This function will <b>never</b> delete the pointed object (if any).
         */
@@ -148,7 +158,22 @@ namespace Frost
         */
         s_wptr& operator = (const s_wptr& pPtr)
         {
-            pValue_ = pPtr.Lock().pValue_;
+            pValue_ = pPtr.pValue_;
+            pCounter_ = pPtr.pCounter_;
+            pWCounter_ = pPtr.pWCounter_;
+
+            Increment_();
+
+            return *this;
+        }
+
+        template<class N>
+        /// Copy operator.
+        /** \param pPtr The value to copy
+        */
+        s_wptr& operator = (const s_wptr<N>& pPtr)
+        {
+            pValue_ = pPtr.pValue_;
             pCounter_ = pPtr.pCounter_;
             pWCounter_ = pPtr.pWCounter_;
 
