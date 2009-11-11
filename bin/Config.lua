@@ -20,7 +20,8 @@ GameOptions = {
     ["TerrainTextureFiltering"] = "ANISOTROPIC";
     --["TerrainTextureFiltering"] = "BILINEAR";
     ["AntiAliasingLevel"] = 0,
-    ["EnableVSync"] = false,
+    ["DummyHOQFrameQueue"] = 0,
+    ["EnableVSync"] = true,
     ["EnableSpecular"] = true,
     
     ["EnablePostProcessing"] = true,

@@ -65,36 +65,7 @@ s_bool GameFrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_G))
     {
-        //s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->EnablePhysics();
-        s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->Play();
-    }
-
-    if (pInputMgr->KeyIsPressed(KEY_R))
-    {
-        s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->Reverse();
-    }
-
-
-    static bool loop = true;
-    static bool lendtstart = true;
-
-    if (pInputMgr->KeyIsPressed(KEY_L))
-    {
-        if (pInputMgr->ShiftPressed())
-        {
-            lendtstart = !lendtstart;
-            s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->SetLoop(loop, lendtstart);
-        }
-        else
-        {
-            loop = !loop;
-            s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPathIterator().Lock()->SetLoop(loop, lendtstart);
-        }
-    }
-
-    if (pInputMgr->KeyIsPressed(KEY_I))
-    {
-        s_refptr<DirectPath>::DynamicCast(s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->GetNode()->GetPath().Lock())->AddPoint(DirectPath::Point(0, 1, 4));
+        s_ptr<Character>::DynamicCast(UnitManager::GetSingleton()->GetUnitByID(0))->EnablePhysics();
     }
 
     if (pInputMgr->KeyIsPressed(KEY_F1))
@@ -239,21 +210,9 @@ int main(int argc, char* argv[])
             // Populate the world !
             ZoneManager::GetSingleton()->LoadZone("Test");
 
-            s_refptr<SmoothPath> pPath(new SmoothPath());
-            pPath->AddPoint(SmoothPath::Point( 2, 1, 2));
-            pPath->AddPoint(SmoothPath::Point( 2, 1,-2));
-            pPath->AddPoint(SmoothPath::Point(-2, 1,-2));
-            pPath->AddPoint(SmoothPath::Point(-2, 1, 2));
-
             // Create Units
             s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", Character::GENDER_MALE);
-            //pChar->Teleport(Vector(0, 1, 0));
-            s_wptr<Path::Iterator> pIter = pChar->GetNode()->SetPath(pPath);
-            if (s_refptr<Path::Iterator> pLocked = pIter.Lock())
-            {
-                pLocked->SetLoop(true);
-                pLocked->SetSpeed(2.0f);
-            }
+            pChar->Teleport(Vector(0, 1, 0));
 
             pChar->SetClass("MAGE");
             pChar->SetLevel(51);

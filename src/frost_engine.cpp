@@ -32,6 +32,7 @@
 #include <OgreWindowEventUtilities.h>
 #include <OgreRenderTargetListener.h>
 #include <OgrePass.h>
+#include <OgreGpuCommandBufferFlush.h>
 
 #undef VOID
 
@@ -260,6 +261,12 @@ namespace Frost
         pRoot_->getRenderSystem()->_initRenderTargets();
         pTimeMgr_->Initialize();
 
+        // Dummy hardware occlusion query, to avoid frame stuttering
+        Ogre::GpuCommandBufferFlush mBufferFlush;
+        s_uint uiDummyHOQFrameQueue = GetUIntConstant("DummyHOQFrameQueue");
+        if (uiDummyHOQFrameQueue != 0)
+            mBufferFlush.start(uiDummyHOQFrameQueue.Get());
+
         bRun_ = true;
 
         s_bool bFirstIteration = true;
@@ -271,23 +278,24 @@ namespace Frost
 
             // Check if the window has been closed
             if (pRenderWindow_->isClosed())
-                break;
+                bRun_ = false;
 
             // Notify ogre a new frame has started
             if (!pRoot_->_fireFrameStarted())
-                break;
+                bRun_ = false;
 
             // Call the frame function
             if (pFrameFunc_)
             {
                 if (!(*pFrameFunc_)())
-                    break;
+                    bRun_ = false;
             }
 
             // Check there is a camera ready for rendering
             pCameraMgr_->CheckSettings();
 
             s_float fDelta = s_float(pTimeMgr_->GetDelta());
+            Log(s_str(s_uint(1.0f/fDelta)));
             if (fDelta > 0.5f) fDelta = 0.5f;
 
             // Update current gameplay
@@ -316,7 +324,7 @@ namespace Frost
 
             // Update our own render targets
             if (!pSpriteMgr_->RenderTargets())
-                break;
+                bRun_ = false;
 
             if (GetBoolConstant("EnableMotionBlur"))
             {
@@ -350,7 +358,7 @@ namespace Frost
             pInputMgr_->Update();
 
             if (!pRoot_->_fireFrameEnded())
-                break;
+                bRun_ = false;
 
             pEventMgr_->FrameEnded();
 
