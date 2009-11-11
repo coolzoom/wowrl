@@ -90,7 +90,7 @@ namespace Frost
         /** \param pValue The new pointer
         */
         template<class N>
-        s_ptr<T>& operator = (s_ptr<N> pValue)
+        s_ptr<T>& operator = (const s_ptr<N>& pValue)
         {
             pValue_ = pValue.pValue_;
             return *this;
@@ -109,7 +109,7 @@ namespace Frost
         /** \param pValue The pointer to test
         */
         template<class N>
-        s_bool operator == (s_ptr<N> pValue) const
+        s_bool operator == (const s_ptr<N>& pValue) const
         {
             return (pValue_ == pValue.pValue_);
         }
@@ -128,7 +128,7 @@ namespace Frost
         *   \return 'true' if this pointer is different from another
         */
         template<class N>
-        s_bool operator != (s_ptr<N> pValue) const
+        s_bool operator != (const s_ptr<N>& pValue) const
         {
             return (pValue_ != pValue.pValue_);
         }
@@ -148,7 +148,7 @@ namespace Frost
         *   \return 'true' if this pointer's value is lower than the other
         */
         template<class N>
-        s_bool operator < (s_ptr<N> pValue) const
+        s_bool operator < (const s_ptr<N>& pValue) const
         {
             return (pValue_ < pValue.pValue_);
         }
@@ -168,7 +168,7 @@ namespace Frost
         *   \return 'true' if this pointer's value is lower or equal than the other
         */
         template<class N>
-        s_bool operator <= (s_ptr<N> pValue) const
+        s_bool operator <= (const s_ptr<N>& pValue) const
         {
             return (pValue_ <= pValue.pValue_);
         }
@@ -188,7 +188,7 @@ namespace Frost
         *   \return 'true' if this pointer's value is greater than the other
         */
         template<class N>
-        s_bool operator > (s_ptr<N> pValue) const
+        s_bool operator > (const s_ptr<N>& pValue) const
         {
             return (pValue_ > pValue.pValue_);
         }
@@ -208,7 +208,7 @@ namespace Frost
         *   \return 'true' if this pointer's value is greater or equal than the other
         */
         template<class N>
-        s_bool operator >= (s_ptr<N> pValue) const
+        s_bool operator >= (const s_ptr<N>& pValue) const
         {
             return (pValue_ >= pValue.pValue_);
         }
@@ -246,7 +246,7 @@ namespace Frost
             return s_ptr<N>(pValue_);
         }
 
-        s_ctnr< s_ptr<T> > operator , ( s_ptr<T> pValue ) const
+        s_ctnr< s_ptr<T> > operator , (const s_ptr<T>& pValue) const
         {
             s_ctnr< s_ptr<T> > mContainer;
             mContainer.PushBack(*this);
@@ -259,7 +259,7 @@ namespace Frost
         *   \return The new casted pointer
         */
         template<class N>
-        static s_ptr<T> StaticCast(s_ptr<N> pValue)
+        static s_ptr<T> StaticCast(const s_ptr<N>& pValue)
         {
             return static_cast<T*>(pValue.pValue_);
         }
@@ -271,7 +271,7 @@ namespace Frost
         *         a NULL pointer.
         */
         template<class N>
-        static s_ptr<T> DynamicCast(s_ptr<N> pValue)
+        static s_ptr<T> DynamicCast(const s_ptr<N>& pValue)
         {
             return dynamic_cast<T*>(pValue.pValue_);
         }
@@ -293,19 +293,19 @@ namespace Frost
     */
 
     template<class T>
-    s_str operator+ ( const s_str& sLeft, s_ptr<T> pRight )
+    s_str operator+ (const s_str& sLeft, const s_ptr<T>& pRight)
     {
         return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
-    s_str& operator<< ( s_str& sLeft, s_ptr<T> pRight )
+    s_str& operator<< (s_str& sLeft, const s_ptr<T>& pRight)
     {
         return sLeft << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
-    s_str operator+ ( const char* sLeft, s_ptr<T> pRight )
+    s_str operator+ (const char* sLeft, const s_ptr<T>& pRight)
     {
         return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }

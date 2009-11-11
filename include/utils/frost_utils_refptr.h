@@ -248,7 +248,7 @@ namespace Frost
             return s_refptr<N>(pValue_, pCounter_, pWCounter_);
         }
 
-        s_ctnr< s_refptr<T> > operator , ( s_refptr<T> pValue ) const
+        s_ctnr< s_refptr<T> > operator , (const s_refptr<T>& pValue) const
         {
             s_ctnr< s_refptr<T> > mContainer;
             mContainer.PushBack(*this);
@@ -261,7 +261,7 @@ namespace Frost
         *   \return The new casted pointer
         */
         template<class N>
-        static s_refptr<T> StaticCast(s_refptr<N> pValue)
+        static s_refptr<T> StaticCast(const s_refptr<N>& pValue)
         {
             return s_refptr<T>(static_cast<T*>(pValue.pValue_), pValue.pCounter_, pValue.pWCounter_);
         }
@@ -273,7 +273,7 @@ namespace Frost
         *         a NULL pointer.
         */
         template<class N>
-        static s_refptr<T> DynamicCast(s_refptr<N> pValue)
+        static s_refptr<T> DynamicCast(const s_refptr<N>& pValue)
         {
             T* pTemp = dynamic_cast<T*>(pValue.pValue_);
             if (pTemp)
@@ -336,19 +336,19 @@ namespace Frost
     };
 
     template<class T>
-    s_str operator+ ( const s_str& sLeft, s_refptr<T> pRight )
+    s_str operator+ (const s_str& sLeft, const s_refptr<T>& pRight)
     {
         return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
-    s_str& operator<< ( s_str& sLeft, s_refptr<T> pRight )
+    s_str& operator<< (s_str& sLeft, const s_refptr<T>& pRight)
     {
         return sLeft << static_cast<void*>(pRight.Get());
     }
 
     template<class T>
-    s_str operator+ ( const char* sLeft, s_refptr<T> pRight )
+    s_str operator+ (const char* sLeft, const s_refptr<T>& pRight)
     {
         return s_str(sLeft) << static_cast<void*>(pRight.Get());
     }
