@@ -198,7 +198,7 @@ namespace Frost
                 return NULL;
         }
 
-        s_ctnr< s_wptr<T> > operator , ( s_wptr<T> pValue ) const
+        s_ctnr< s_wptr<T> > operator , (const s_wptr<T>& pValue) const
         {
             s_ctnr< s_wptr<T> > mContainer;
             mContainer.PushBack(*this);
@@ -237,19 +237,19 @@ namespace Frost
     };
 
     template<class T>
-    s_str operator+ ( const s_str& sLeft, s_wptr<T> pRight )
+    s_str operator+ (const s_str& sLeft, const s_wptr<T>& pRight)
     {
         return s_str(sLeft) << pRight.Lock();
     }
 
     template<class T>
-    s_str& operator<< ( s_str& sLeft, s_wptr<T> pRight )
+    s_str& operator<< (s_str& sLeft, const s_wptr<T>& pRight)
     {
         return sLeft << pRight.Lock();
     }
 
     template<class T>
-    s_str operator+ ( const char* sLeft, s_wptr<T> pRight )
+    s_str operator+ (const char* sLeft, const s_wptr<T>& pRight)
     {
         return s_str(sLeft) << pRight.Lock();
     }

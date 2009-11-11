@@ -137,6 +137,34 @@ struct AnimData
 /** \endcond
 */
 
+/// Linear interpolation in an std::map
+template<class Elem>
+Elem MapLERP(const std::map<uint, Elem>& lMap, uint uiValue)
+{
+    typename std::map<uint, Elem>::const_iterator iterFirst, iterSecond;
+    iterSecond = lMap.lower_bound(uiValue);
+    if (iterSecond == lMap.end())
+    {
+        --iterSecond;
+        return iterSecond->second;
+    }
+    else if (iterSecond == lMap.begin())
+    {
+        return iterSecond->second;
+    }
+    else
+    {
+        iterFirst = iterSecond;
+        --iterFirst;
+
+        double dCoef = (uiValue - iterFirst->first);
+        dCoef /= (iterSecond->first - iterFirst->first);
+
+        return iterFirst->second +
+               dCoef*(iterSecond->second - iterFirst->second);
+    }
+}
+
 namespace Frost
 {
     const s_str ModelData::CLASS_NAME = "ModelData";
@@ -327,7 +355,7 @@ namespace Frost
                             }
                             else if (!lTranslation.empty())
                             {
-                                pKeyFrame->setTranslate(MapLERP_I<uint, Ogre::Vector3>(&lTranslation, ulTime));
+                                pKeyFrame->setTranslate(MapLERP(lTranslation, ulTime));
                             }
 
                             if (iterAnim->second.bScaling)
@@ -336,7 +364,7 @@ namespace Frost
                             }
                             else if (!lScaling.empty())
                             {
-                                pKeyFrame->setScale(MapLERP_I<uint, Ogre::Vector3>(&lScaling, ulTime));
+                                pKeyFrame->setScale(MapLERP(lScaling, ulTime));
                             }
 
                             if (iterAnim->second.bRotation)
@@ -345,7 +373,7 @@ namespace Frost
                             }
                             else if (!lRotation.empty())
                             {
-                                pKeyFrame->setRotation(MapLERP_I<uint, Ogre::Quaternion>(&lRotation, ulTime));
+                                pKeyFrame->setRotation(MapLERP(lRotation, ulTime));
                             }
                         }
                         else
@@ -446,14 +474,16 @@ namespace Frost
             map<uint, uint> lLocalVertices;
             map<uint, uint> lIndexMap;
             map<uint, uint> lReversedIndexMap;
+            map<uint, uint>::iterator iter;
 
             // Build a temporary index list
             for (uint j = 0; j < uiIndexNbr; j++)
             {
                 uint uiInd = lSubIndices[j] = lGIndices[lSubMesh[i].ofsTris+j];
 
-                if (!MAPFIND(uiInd, lLocalVertices))
-                    lLocalVertices[uiInd] = uiInd;
+                iter = lLocalVertices.find(uiInd);
+                if (iter == lLocalVertices.end())
+                    lLocalVertices.insert(make_pair(uiInd, uiInd));
             }
 
             uint uiVertexNbr = lLocalVertices.size();
