@@ -28,11 +28,17 @@ namespace Frost
             pValue_ = pValue;
         }
 
-        /// Constructor.
+        /// Copy constructor.
+        s_ptr(const s_ptr& mPointer)
+        {
+            pValue_ = mPointer.pValue_;
+        }
+
+        /// Conversion constructor.
         template<class N>
         explicit s_ptr(const s_ptr<N>& mPointer)
         {
-            pValue_ = mPointer.Get();
+            pValue_ = mPointer.pValue_;
         }
 
         /// Returns the contained pointer.
@@ -86,7 +92,7 @@ namespace Frost
         template<class N>
         s_ptr<T>& operator = (s_ptr<N> pValue)
         {
-            pValue_ = pValue.Get();
+            pValue_ = pValue.pValue_;
             return *this;
         }
 
@@ -105,7 +111,7 @@ namespace Frost
         template<class N>
         s_bool operator == (s_ptr<N> pValue) const
         {
-            return (pValue_ == pValue.Get());
+            return (pValue_ == pValue.pValue_);
         }
 
         /// Checks if this pointer equals another
@@ -124,7 +130,7 @@ namespace Frost
         template<class N>
         s_bool operator != (s_ptr<N> pValue) const
         {
-            return (pValue_ != pValue.Get());
+            return (pValue_ != pValue.pValue_);
         }
 
         /// Checks if this pointer is different from another
@@ -144,7 +150,7 @@ namespace Frost
         template<class N>
         s_bool operator < (s_ptr<N> pValue) const
         {
-            return (pValue_ < pValue.Get());
+            return (pValue_ < pValue.pValue_);
         }
 
         /// Checks if this pointer's value is lower than the other
@@ -164,7 +170,7 @@ namespace Frost
         template<class N>
         s_bool operator <= (s_ptr<N> pValue) const
         {
-            return (pValue_ <= pValue.Get());
+            return (pValue_ <= pValue.pValue_);
         }
 
         /// Checks if this pointer's value is lower or equal than the other
@@ -184,7 +190,7 @@ namespace Frost
         template<class N>
         s_bool operator > (s_ptr<N> pValue) const
         {
-            return (pValue_ > pValue.Get());
+            return (pValue_ > pValue.pValue_);
         }
 
         /// Checks if this pointer's value is greater than the other
@@ -204,7 +210,7 @@ namespace Frost
         template<class N>
         s_bool operator >= (s_ptr<N> pValue) const
         {
-            return (pValue_ >= pValue.Get());
+            return (pValue_ >= pValue.pValue_);
         }
 
         /// Checks if this pointer's value is greater or equal than the other

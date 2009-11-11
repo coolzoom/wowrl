@@ -51,6 +51,19 @@ namespace Frost
             Increment_();
         }
 
+        template<class N>
+        /// Conversion constructor.
+        /** \param mValue the s_refptr to copy
+        */
+        explicit s_refptr(const s_refptr<N>& mValue)
+        {
+            pValue_    = mValue.pValue_;
+            pCounter_  = mValue.pCounter_;
+            pWCounter_ = mValue.pWCounter_;
+
+            Increment_();
+        }
+
         /// Destructor.
         /** \note Can cause deletion of the contained
         *         pointer.
@@ -156,12 +169,35 @@ namespace Frost
             return *this;
         }
 
+        template<class N>
+        /// Copy operator.
+        /** \param mValue The value to copy
+        *   \note Can cause deletion of the contained
+        *         pointer.
+        */
+        s_refptr& operator = (const s_refptr<N>& mValue)
+        {
+            if (&mValue != this)
+            {
+                Decrement_();
+
+                pValue_    = mValue.pValue_;
+                pCounter_  = mValue.pCounter_;
+                pWCounter_ = mValue.pWCounter_;
+
+                Increment_();
+            }
+
+            return *this;
+        }
+
+        template<class N>
         /// Checks if this pointer equals another
         /** \param pValue The pointer to test
         */
-        s_bool operator == (s_refptr pValue)
+        s_bool operator == (const s_refptr<N>& mValue)
         {
-            return (pValue_ == pValue.pValue_);
+            return (pValue_ == mValue.pValue_);
         }
 
         /// Checks if this pointer equals another
@@ -172,12 +208,13 @@ namespace Frost
             return (pValue_ == pValue);
         }
 
+        template<class N>
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
         */
-        s_bool operator != (s_refptr pValue)
+        s_bool operator != (const s_refptr<N>& mValue)
         {
-            return (pValue_ != pValue.pValue_);
+            return (pValue_ != mValue.pValue_);
         }
 
         /// Checks if this pointer is different from another
