@@ -124,7 +124,6 @@
 			<Add directory="dependencies\lua" />
 		</Compiler>
 		<Linker>
-			<Add directory="..\ogre\lib" />
 			<Add directory="lib" />
 			<Add directory="bin" />
 		</Linker>
