@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Workspace Name="Frost" Database=".\Frost.tags">
+  <Project Name="Frost" Path="Frost.project" Active="Yes"/>
+  <Project Name="Frost_Utils" Path="Frost_Utils.project" Active="No"/>
+  <Project Name="Frost_XML" Path="Frost_XML.project" Active="No"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="no">
+      <Project Name="Frost" ConfigName="Debug"/>
+      <Project Name="Frost_Utils" ConfigName="Debug"/>
+      <Project Name="Frost_XML" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="Frost" ConfigName="Release"/>
+      <Project Name="Frost_Utils" ConfigName="Release"/>
+      <Project Name="Frost_XML" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

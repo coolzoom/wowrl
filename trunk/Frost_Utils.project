@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="Frost_Utils" InternalType="Console">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
+    </Plugin>
+  </Plugins>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="src">
+    <File Name="src\utils\frost_utilsmanager.cpp"/>
+    <File Name="src\utils\frost_utils_axisalignedbox.cpp"/>
+    <File Name="src\utils\frost_utils_color.cpp"/>
+    <File Name="src\utils\frost_utils_directory.cpp"/>
+    <File Name="src\utils\frost_utils_event.cpp"/>
+    <File Name="src\utils\frost_utils_eventmanager.cpp"/>
+    <File Name="src\utils\frost_utils_eventreceiver.cpp"/>
+    <File Name="src\utils\frost_utils_exception.cpp"/>
+    <File Name="src\utils\frost_utils_file.cpp"/>
+    <File Name="src\utils\frost_utils_float.cpp"/>
+    <File Name="src\utils\frost_utils_log.cpp"/>
+    <File Name="src\utils\frost_utils_lua_argument.cpp"/>
+    <File Name="src\utils\frost_utils_lua_data.cpp"/>
+    <File Name="src\utils\frost_utils_lua_function.cpp"/>
+    <File Name="src\utils\frost_utils_lua_glues.cpp"/>
+    <File Name="src\utils\frost_utils_lua_state.cpp"/>
+    <File Name="src\utils\frost_utils_luamanager.cpp"/>
+    <File Name="src\utils\frost_utils_math.cpp"/>
+    <File Name="src\utils\frost_utils_profiler.cpp"/>
+    <File Name="src\utils\frost_utils_timemanager.cpp"/>
+    <File Name="src\utils\frost_utils_timers.cpp"/>
+    <File Name="src\utils\frost_utils_var.cpp"/>
+    <File Name="src\utils\frost_utils_vector.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+    <File Name="include\utils\frost_utilsmanager.h"/>
+    <File Name="include\utils\frost_utils.h"/>
+    <File Name="include\utils\frost_utils_array.h"/>
+    <File Name="include\utils\frost_utils_axisalignedbox.h"/>
+    <File Name="include\utils\frost_utils_bool.h"/>
+    <File Name="include\utils\frost_utils_color.h"/>
+    <File Name="include\utils\frost_utils_config.h"/>
+    <File Name="include\utils\frost_utils_ctnr.h"/>
+    <File Name="include\utils\frost_utils_directory.h"/>
+    <File Name="include\utils\frost_utils_event.h"/>
+    <File Name="include\utils\frost_utils_eventmanager.h"/>
+    <File Name="include\utils\frost_utils_eventreceiver.h"/>
+    <File Name="include\utils\frost_utils_exception.h"/>
+    <File Name="include\utils\frost_utils_file.h"/>
+    <File Name="include\utils\frost_utils_float.h"/>
+    <File Name="include\utils\frost_utils_int.h"/>
+    <File Name="include\utils\frost_utils_log.h"/>
+    <File Name="include\utils\frost_utils_lua_function.h"/>
+    <File Name="include\utils\frost_utils_lua_glues.h"/>
+    <File Name="include\utils\frost_utils_lua_state.h"/>
+    <File Name="include\utils\frost_utils_luamanager.h"/>
+    <File Name="include\utils\frost_utils_manager.h"/>
+    <File Name="include\utils\frost_utils_map.h"/>
+    <File Name="include\utils\frost_utils_math.h"/>
+    <File Name="include\utils\frost_utils_multimap.h"/>
+    <File Name="include\utils\frost_utils_pair.h"/>
+    <File Name="include\utils\frost_utils_point.h"/>
+    <File Name="include\utils\frost_utils_profiler.h"/>
+    <File Name="include\utils\frost_utils_ptr.h"/>
+    <File Name="include\utils\frost_utils_range.h"/>
+    <File Name="include\utils\frost_utils_refptr.h"/>
+    <File Name="include\utils\frost_utils_stdhelper.h"/>
+    <File Name="include\utils\frost_utils_str.h"/>
+    <File Name="include\utils\frost_utils_timemanager.h"/>
+    <File Name="include\utils\frost_utils_timers.h"/>
+    <File Name="include\utils\frost_utils_types.h"/>
+    <File Name="include\utils\frost_utils_uint.h"/>
+    <File Name="include\utils\frost_utils_var.h"/>
+    <File Name="include\utils\frost_utils_vector.h"/>
+    <File Name="include\utils\frost_utils_wptr.h"/>
+  </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Settings Type="Static Library">
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-Wall" Required="yes"/>
+      <Linker Options="/DEBUG" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="lib/libutils_d.a" IntermediateDirectory="obj_Utils/Debug_CL_Win32" Command="" CommandArguments="" WorkingDirectory="lib" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands></PostConnectCommands>
+        <StartupCommands></StartupCommands>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <PreprocessFileCommand></PreprocessFileCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild>
+
+</CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-O3;-Wall" Required="yes"/>
+      <Linker Options="-s" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="lib/libutils.a" IntermediateDirectory="obj_Utils/Release_CL_Win32" Command="" CommandArguments="" WorkingDirectory="lib" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands></PostConnectCommands>
+        <StartupCommands></StartupCommands>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <PreprocessFileCommand></PreprocessFileCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild>
+
+</CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="include/utils"/>
+        <IncludePath Value="dependencies/lua"/>
+        <IncludePath Value="../ogre/OgreMain/include"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="lib"/>
+        <LibraryPath Value="bin"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+  <Dependencies Name="Release"/>
+</CodeLite_Project>
