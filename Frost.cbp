@@ -31,7 +31,7 @@
 					<Add option="-Wl,--add-stdcall-alias" />
 					<Add option="-Wl,--allow-multiple-definition" />
 					<Add library="OgreMain" />
-					<Add library="OIS" />
+					<Add library="libOIS.a" />
 					<Add library="libutils.a" />
 					<Add library="liblua5.1.a" />
 					<Add library="libxml.a" />
@@ -39,7 +39,7 @@
 			</Target>
 			<Target title="Debug_Win32">
 				<Option platforms="Windows;" />
-				<Option output="bin\FrostD" prefix_auto="1" extension_auto="1" />
+				<Option output="bin\Frost_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="bin\" />
 				<Option object_output="obj_Frost\Debug_Win32\" />
 				<Option type="1" />
@@ -61,7 +61,7 @@
 					<Add option="-Wl,--add-stdcall-alias" />
 					<Add option="-Wl,--allow-multiple-definition" />
 					<Add library="OgreMain_d" />
-					<Add library="OIS_d" />
+					<Add library="libOIS_d.a" />
 					<Add library="libutils_d.a" />
 					<Add library="liblua5.1_d.a" />
 					<Add library="libxml_d.a" />
@@ -120,7 +120,7 @@
 			<Add directory="include" />
 			<Add directory="include\utils" />
 			<Add directory="include\xml" />
-			<Add directory="..\ogre\Dependencies\include\OIS" />
+			<Add directory="dependencies\OIS" />
 			<Add directory="dependencies\lua" />
 		</Compiler>
 		<Linker>
