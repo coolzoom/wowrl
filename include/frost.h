@@ -8,7 +8,9 @@
 #define GAME_VERSION 0.045
 
 #ifndef NULL
-    #define NULL ((void*)0)
+    #if !MSVC
+        #define NULL ((void*)0)
+    #endif
 #endif
 
 #include "frost_stableheaders.h"

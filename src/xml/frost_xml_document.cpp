@@ -20,8 +20,10 @@ using namespace Frost::XML;
 const s_str Document::CLASS_NAME = "XML::Document";
 
 Document::Document( const s_str& sFileName, const s_str& sDefFileName ) :
-    sFileName_(sFileName), sDefFileName_(sDefFileName), mXMLState_(this), mDefState_(this)
+    sFileName_(sFileName), sDefFileName_(sDefFileName)
 {
+    mXMLState_.SetDocument(this);
+    mDefState_.SetDocument(this);
     if (File::Exists(sFileName_))
     {
         if (File::Exists(sDefFileName_))
@@ -483,7 +485,7 @@ void Document::SetInvalid()
     bValid_ = false;
 }
 
-Document::State::State(s_ptr<Document> pDoc) : pDoc_(pDoc)
+Document::State::State()
 {
 }
 
@@ -491,6 +493,10 @@ Document::State::~State()
 {
 }
 
+void Document::State::SetDocument( s_ptr<Document> pDoc )
+{
+    pDoc_ = pDoc;
+}
 
 void Document::State::SetCurrentBlock( s_ptr<Block> pBlock )
 {
@@ -517,7 +523,7 @@ const Document::State::ID& Document::State::GetID() const
     return mID_;
 }
 
-Document::XMLState::XMLState(s_ptr<Document> pDoc) : State(pDoc)
+Document::XMLState::XMLState() : State()
 {
     mID_ = STATE_XML;
 }
@@ -667,7 +673,7 @@ void Document::XMLState::ReadOpeningTag( const s_str& sTagContent )
     }
 }
 
-Document::DefState::DefState(s_ptr<Document> pDoc) : State(pDoc)
+Document::DefState::DefState() : State()
 {
     mID_ = STATE_DEF;
 }

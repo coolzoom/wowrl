@@ -1064,6 +1064,7 @@ namespace Frost
                     operator << (lValue[i]) << ", ";
             }
             operator << (")");
+            return *this;
         }
 
         template <class N>

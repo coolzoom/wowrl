@@ -32,7 +32,7 @@ namespace Frost
         /// Iterates through sub-directories.
         /** \return The next sub-directory, 'NULL' if none
         */
-        s_ptr<Directory> GetNextSubDirectory();
+        s_wptr<Directory> GetNextSubDirectory();
 
         /// Returns the list of the contained files.
         /** \param bWithPath       'true' to include this Directory's relative path
@@ -76,9 +76,9 @@ namespace Frost
     private :
 
         /// The sub-directory list
-        s_ctnr<Directory> lSubDirectoryList_;
+        s_ctnr< s_refptr<Directory> > lSubDirectoryList_;
         /// The contained file list
-        s_ctnr<s_str>     lFileList_;
+        s_ctnr<s_str>                 lFileList_;
         /// The sub-directory iterator
         s_uint uiIter_;
         /// This directory name

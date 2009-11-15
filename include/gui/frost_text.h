@@ -9,6 +9,7 @@
 #define FROST_TEXT_H
 
 #include "frost.h"
+#include "gui/frost_guistructs.h"
 
 namespace Frost
 {

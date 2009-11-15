@@ -22,7 +22,12 @@ namespace Frost
     public :
 
         /// Constructor.
-        CreatureOgreInterface(s_ptr<Creature> pModel);
+        CreatureOgreInterface();
+
+        /// Sets the associated Creature.
+        /** \param pCreature The associated Creature
+        */
+        void SetCreature(s_ptr<Creature> pCreature);
 
         /// Inherited from UserDefinedObject.
         virtual const Ogre::String& getTypeName() const;

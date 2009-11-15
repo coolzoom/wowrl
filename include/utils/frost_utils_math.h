@@ -21,7 +21,7 @@ namespace Frost
     s_float atan2(const s_int& iY, const s_int& iX);
     s_int   fabs(const s_int& iValue);
     s_float pow(const s_int& iValue, const s_float& fValue);
-    s_float pow(const s_int& iValue, const s_double& dValue);
+    s_double pow(const s_int& iValue, const s_double& dValue);
     s_float sqrt(const s_int& iValue);
     s_float exp(const s_int& iValue);
 
@@ -34,7 +34,7 @@ namespace Frost
     s_float atan(const s_uint& uiValue);
     s_float atan2(const s_uint& uiY, const s_uint& uiX);
     s_float pow(const s_uint& uiValue, const s_float& fValue);
-    s_float pow(const s_uint& uiValue, const s_double& dValue);
+    s_double pow(const s_uint& uiValue, const s_double& dValue);
     s_float sqrt(const s_uint& uiValue);
     s_float exp(const s_uint& uiValue);
 
@@ -48,7 +48,7 @@ namespace Frost
     s_float atan2(const s_float& fY, const s_float& fX);
     s_float fabs(const s_float& fValue);
     s_float pow(const s_float& fValue1, const s_float& fValue2);
-    s_float pow(const s_float& fValue, const s_double& dValue);
+    s_double pow(const s_float& fValue, const s_double& dValue);
     s_float sqrt(const s_float& fValue);
     s_float exp(const s_float& fValue);
 

@@ -22,7 +22,12 @@ namespace Frost
     public :
 
         /// Constructor.
-        PlaneOgreInterface(s_ptr<Plane> pModel);
+        PlaneOgreInterface();
+
+        /// Sets the associated Plane.
+        /** \param pPlane The associated Plane
+        */
+        void SetPlane(s_ptr<Plane> pPlane);
 
         /// Inherited from UserDefinedObject.
         virtual const Ogre::String& getTypeName() const;

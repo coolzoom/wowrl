@@ -105,7 +105,7 @@ s_str State::ConcTable( const s_str& sTable )
     return sComString;
 }
 
-void State::CopyTable( s_ptr<State::State> pLua, const s_str& sSrcName, const s_str& sDestName )
+void State::CopyTable( s_ptr<State> pLua, const s_str& sSrcName, const s_str& sDestName )
 {
     s_str sNewName;
     if (sDestName == "") sNewName = sSrcName;
@@ -538,17 +538,17 @@ void State::NewTable()
 
 void State::Pop( const s_uint& uiNumber )
 {
-    lua_pop(pLua_, uiNumber.Get());
+    lua_pop(pLua_, static_cast<int>(uiNumber.Get()));
 }
 
 s_float State::GetNumber( const s_int& iIndex )
 {
-    return lua_tonumber(pLua_, iIndex.Get());
+    return static_cast<float>(lua_tonumber(pLua_, iIndex.Get()));
 }
 
 s_bool State::GetBool( const s_int& iIndex )
 {
-    return lua_toboolean(pLua_, iIndex.Get());
+    return lua_toboolean(pLua_, iIndex.Get()) != 0;
 }
 
 s_str State::GetString( const s_int& iIndex )
@@ -710,7 +710,7 @@ s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, cons
     }
     else
     {
-        f = lua_tonumber(pLua_, -1);
+        f = static_cast<float>(lua_tonumber(pLua_, -1));
         lua_pop(pLua_, 1);
     }
     return f;
@@ -768,7 +768,7 @@ s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const 
     }
     else
     {
-        b = lua_toboolean(pLua_, -1);
+        b = (lua_toboolean(pLua_, -1) != 0);
         lua_pop(pLua_, 1);
     }
     return b;
@@ -835,7 +835,7 @@ s_float State::GetFieldFloat( const s_str& sName, const s_bool& bCritical, const
     }
     else
     {
-        f = lua_tonumber(pLua_, -1);
+        f = static_cast<float>(lua_tonumber(pLua_, -1));
         lua_pop(pLua_, 1);
 
     }
@@ -898,7 +898,7 @@ s_bool State::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s
     }
     else
     {
-        b = lua_toboolean(pLua_, -1);
+        b = (lua_toboolean(pLua_, -1) != 0);
         lua_pop(pLua_, 1);
     }
     return b;
