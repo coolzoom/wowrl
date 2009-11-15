@@ -295,7 +295,6 @@ namespace Frost
             pCameraMgr_->CheckSettings();
 
             s_float fDelta = s_float(pTimeMgr_->GetDelta());
-            Log(s_str(s_uint(1.0f/fDelta)));
             if (fDelta > 0.5f) fDelta = 0.5f;
 
             // Update current gameplay

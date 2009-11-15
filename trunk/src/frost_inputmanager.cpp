@@ -6,7 +6,6 @@
 
 #include "frost_inputmanager.h"
 
-#define OIS_DYNAMIC_LIB
 #include <OIS.h>
 
 #include <OgreRenderWindow.h>
@@ -253,7 +252,7 @@ namespace Frost
             }
 
             // Update state
-            lKeyBuf_[i] = lTempBuff[i];
+            lKeyBuf_[i] = (lTempBuff[i] != 0);
 
             if (lKeyBuf_[i])
             {
@@ -475,7 +474,7 @@ namespace Frost
 
             fSmoothDMX_ = fSmoothDMY_ = fSmoothMWheel_ = 0.0f;
             s_float fHistoryWeight = 0.0f;
-            s_float fWeight = 1.0f;
+            s_float fWeight = 1.0f/s_float(lMouseHistory_.GetSize());
             s_ctnr< s_pair< s_double, s_array<s_float,3> > >::iterator iterHistory;
             foreach (iterHistory, lMouseHistory_)
             {
@@ -484,7 +483,7 @@ namespace Frost
                 fSmoothMWheel_ += iterHistory->Second()[2]*fWeight;
 
                 fHistoryWeight += fWeight;
-                fWeight -= 1.0f/s_float(lMouseHistory_.GetSize());
+                //fWeight -= 1.0f/s_float(lMouseHistory_.GetSize());
             }
 
             fSmoothDMX_    /= fHistoryWeight;
