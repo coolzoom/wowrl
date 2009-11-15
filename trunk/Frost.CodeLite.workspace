@@ -4,15 +4,25 @@
   <Project Name="Frost_Utils" Path="Frost_Utils.project" Active="No"/>
   <Project Name="Frost_XML" Path="Frost_XML.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
-      <Project Name="Frost" ConfigName="Debug"/>
-      <Project Name="Frost_Utils" ConfigName="Debug"/>
-      <Project Name="Frost_XML" ConfigName="Debug"/>
+    <WorkspaceConfiguration Name="Debug_Win32" Selected="no">
+      <Project Name="Frost_XML" ConfigName="Debug_Win32"/>
+      <Project Name="Frost_Utils" ConfigName="Debug_Win32"/>
+      <Project Name="Frost" ConfigName="Debug_Win32"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
-      <Project Name="Frost" ConfigName="Release"/>
-      <Project Name="Frost_Utils" ConfigName="Release"/>
-      <Project Name="Frost_XML" ConfigName="Release"/>
+    <WorkspaceConfiguration Name="Release_Win32" Selected="yes">
+      <Project Name="Frost_XML" ConfigName="Release_Win32"/>
+      <Project Name="Frost_Utils" ConfigName="Release_Win32"/>
+      <Project Name="Frost" ConfigName="Release_Win32"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Debug_Linux" Selected="no">
+      <Project Name="Frost_XML" ConfigName="Debug_Linux"/>
+      <Project Name="Frost_Utils" ConfigName="Debug_Linux"/>
+      <Project Name="Frost" ConfigName="Debug_Linux"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release_Linux" Selected="no">
+      <Project Name="Frost_XML" ConfigName="Release_Linux"/>
+      <Project Name="Frost_Utils" ConfigName="Release_Linux"/>
+      <Project Name="Frost" ConfigName="Release_Linux"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

@@ -2,7 +2,8 @@
 <CodeLite_Project Name="Frost_XML" InternalType="Console">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000
+    ]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -17,8 +18,24 @@
     <File Name="include\xml\frost_xml_block.h"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
+  <Dependencies Name="Release">
+    <Project Name="Frost_Utils"/>
+  </Dependencies>
   <Settings Type="Static Library">
-    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+        <IncludePath Value="include/xml"/>
+        <IncludePath Value="include/utils"/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="lib"/>
+        <LibraryPath Value="bin"/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Debug_Linux" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-Wall" Required="yes"/>
       <Linker Options="/DEBUG" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
@@ -40,12 +57,35 @@
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild>
-
-</CustomPreBuild>
+        <CustomPreBuild></CustomPreBuild>
       </AdditionalRules>
     </Configuration>
-    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug_Win32" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-Wall" Required="yes"/>
+      <Linker Options="/DEBUG" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="lib/libxml_d.a" IntermediateDirectory="obj_XML/Debug_CL_Win32" Command="" CommandArguments="" WorkingDirectory="lib" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands></PostConnectCommands>
+        <StartupCommands></StartupCommands>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <PreprocessFileCommand></PreprocessFileCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release_Linux" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-O3;-Wall" Required="yes"/>
       <Linker Options="-s" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
@@ -67,24 +107,34 @@
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild></CustomPostBuild>
-        <CustomPreBuild>
-
-</CustomPreBuild>
+        <CustomPreBuild></CustomPreBuild>
       </AdditionalRules>
     </Configuration>
-    <GlobalSettings>
-      <Compiler Options="">
-        <IncludePath Value="."/>
-        <IncludePath Value="include/xml"/>
-        <IncludePath Value="include/utils"/>
-      </Compiler>
-      <Linker Options="">
-        <LibraryPath Value="."/>
-        <LibraryPath Value="lib"/>
-        <LibraryPath Value="bin"/>
-      </Linker>
-      <ResourceCompiler Options=""/>
-    </GlobalSettings>
+    <Configuration Name="Release_Win32" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-O3;-Wall" Required="yes"/>
+      <Linker Options="-s" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="lib/libxml.a" IntermediateDirectory="obj_XML/Release_CL_Win32" Command="" CommandArguments="" WorkingDirectory="lib" PauseExecWhenProcTerminates="yes"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands></PostConnectCommands>
+        <StartupCommands></StartupCommands>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <PreprocessFileCommand></PreprocessFileCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
   </Settings>
-  <Dependencies Name="Release"/>
+  <Dependencies Name="Release_Win32"/>
 </CodeLite_Project>
