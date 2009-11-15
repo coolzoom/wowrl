@@ -97,12 +97,12 @@ namespace Frost
         Vector mNAxis = fSin*mAxis;
 
         Vector uv, uuv;
-		uv = mNAxis ^ (*this);
-		uuv = mNAxis ^ uv;
-		uv *= 2.0f*w;
-		uuv *= 2.0f;
+        uv = mNAxis ^ (*this);
+        uuv = mNAxis ^ uv;
+        uv *= 2.0f*w;
+        uuv *= 2.0f;
 
-		(*this) += uv + uuv;
+        (*this) += uv + uuv;
     }
 
     void Vector::ScaleUp( const Vector& mScale )
