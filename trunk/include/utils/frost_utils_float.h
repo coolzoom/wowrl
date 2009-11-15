@@ -1,4 +1,9 @@
 // Warning : If you need to use this file, include frost_utils_types.h
+#ifdef MSVC
+    #include <cfloat>
+#endif
+#include <limits>
+
 namespace Frost
 {
     /// Base type : float
@@ -212,11 +217,11 @@ namespace Frost
         */
         Type GetType() const
         {
-            if (std::isnan(fValue_))
+            if (IsNaN())
                 return FLOAT_NAN;
             else
             {
-                if (std::isfinite(fValue_))
+                if (IsValid())
                     return FLOAT;
                 else
                 {
@@ -233,7 +238,7 @@ namespace Frost
         */
         s_bool IsInfiniteMinus() const
         {
-            return (!std::isfinite(fValue_) && (fValue_ < 0.0));
+            return (!IsValid() && (fValue_ < 0.0));
         }
 
         /// Checks if this float is infinite and positive
@@ -241,7 +246,7 @@ namespace Frost
         */
         s_bool IsInfinitePlus() const
         {
-            return (!std::isfinite(fValue_) && (fValue_ > 0.0));
+            return (!IsValid() && (fValue_ > 0.0));
         }
 
         /// Checks if this float is contained into the provided range.
@@ -255,7 +260,11 @@ namespace Frost
         */
         s_bool IsNaN() const
         {
-            return std::isnan(fValue_);
+            #ifdef MSVC
+                return _isnan(fValue_) != 0;
+            #else
+                return std::isnan(fValue_);
+            #endif
         }
 
         /// Checks if this float equals zero.
@@ -271,7 +280,11 @@ namespace Frost
         */
         s_bool IsValid() const
         {
-            return std::isfinite(fValue_);
+            #ifdef MSVC
+                return _finite(fValue_) != 0;
+            #else
+                return std::isfinite(fValue_);
+            #endif
         }
 
         /// Elevates this float to a certain power (this^n).
@@ -674,25 +687,25 @@ namespace Frost
     template <class T>
     s_float_t<T> operator + (const int& fLeft, const s_float_t<T>& fRight)
     {
-        return s_float_t<T>(fLeft) + fRight;
+        return s_float_t<T>(static_cast<float>(fLeft)) + fRight;
     }
 
     template <class T>
     s_float_t<T> operator - (const int& fLeft, const s_float_t<T>& fRight)
     {
-        return s_float_t<T>(fLeft) - fRight;
+        return s_float_t<T>(static_cast<float>(fLeft)) - fRight;
     }
 
     template <class T>
     s_float_t<T> operator * (const int& fLeft, const s_float_t<T>& fRight)
     {
-        return s_float_t<T>(fLeft) * fRight;
+        return s_float_t<T>(static_cast<float>(fLeft)) * fRight;
     }
 
     template <class T>
     s_float_t<T> operator / (const int& fLeft, const s_float_t<T>& fRight)
     {
-        return s_float_t<T>(fLeft) / fRight;
+        return s_float_t<T>(static_cast<float>(fLeft)) / fRight;
     }
 
     template <class T, class N>
@@ -701,32 +714,26 @@ namespace Frost
         return s_str_t<N>(sLeft) << fRight;
     }
 
-    typedef s_float_t<float> s_float;
-    template<> const float   s_float::EPS;
-    template<> const s_float s_float::PI;
-    template<> const uint    s_float::DIGIT;
-    /** \cond NOT_REMOVE_FROM_DOC
-    */
-    template<> class TypeTraits<float> { public : typedef s_float  Type; };
-    /** \endcond
-    */
-
-    typedef s_float_t<double> s_double;
-    template<> const double   s_double::EPS;
-    template<> const s_double s_double::PI;
-    template<> const uint     s_double::DIGIT;
-    /** \cond NOT_REMOVE_FROM_DOC
-    */
-    template<> class TypeTraits<double> { public : typedef s_double Type; };
-    /** \endcond
-    */
-
+    typedef s_float_t<float>       s_float;
+    typedef s_float_t<double>      s_double;
     typedef s_float_t<long double> s_ldouble;
-    template<> const long double   s_ldouble::EPS;
-    template<> const s_ldouble     s_ldouble::PI;
-    template<> const uint          s_ldouble::DIGIT;
+
+    template<> const float s_float::EPS  = std::numeric_limits<float>::epsilon();
+    template<> const s_float s_float::PI = 3.141592f;
+    template<> const uint s_float::DIGIT = std::numeric_limits<float>::digits10;
+
+    template<> const double s_double::EPS  = std::numeric_limits<double>::epsilon();
+    template<> const s_double s_double::PI = 3.141592653589793;
+    template<> const uint s_double::DIGIT  = std::numeric_limits<double>::digits10;
+
+    template<> const long double s_ldouble::EPS = std::numeric_limits<long double>::epsilon();
+    template<> const s_ldouble s_ldouble::PI    = 3.141592653589793238;
+    template<> const uint s_ldouble::DIGIT      = std::numeric_limits<long double>::digits10;
+
     /** \cond NOT_REMOVE_FROM_DOC
     */
+    template<> class TypeTraits<float>       { public : typedef s_float   Type; };
+    template<> class TypeTraits<double>      { public : typedef s_double  Type; };
     template<> class TypeTraits<long double> { public : typedef s_ldouble Type; };
     /** \endcond
     */

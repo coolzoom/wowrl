@@ -228,7 +228,7 @@ namespace Frost
             {
                 MeshAnimation mMA;
                 mMA.uiID = lAnims[i].animID;
-                mMA.bLoop = !((bool)lAnims[i].loopType);
+                mMA.bLoop = (lAnims[i].loopType == 0);
                 mMA.uiStart = lAnims[i].timeStart;
                 mMA.uiEnd = lAnims[i].timeEnd;
 
@@ -334,7 +334,7 @@ namespace Frost
                 // Create track
                 uint  ulTime;
                 float fKeyTime;
-                multimap<s_uint, MeshAnimation>::iterator iterAnim;
+                s_map<s_uint, MeshAnimation>::iterator iterAnim;
                 foreach (iterAnim, lAnimList_)
                 {
                     MeshAnimation* pMA = &iterAnim->second;

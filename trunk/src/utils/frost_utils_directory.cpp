@@ -32,7 +32,7 @@ namespace Frost
                 Ogre::StringVector::iterator iter;
                 foreach (iter, *pSV)
                 {
-                    lSubDirectoryList_.PushBack(Directory(sRelPath_ + "/" + s_str(*iter)));
+                    lSubDirectoryList_.PushBack(s_refptr<Directory>(new Directory(sRelPath_ + "/" + s_str(*iter))));
                 }
 
                 pSV = pArchive->list(false, false);
@@ -50,12 +50,12 @@ namespace Frost
         }
     }
 
-    s_ptr<Directory> Directory::GetNextSubDirectory()
+    s_wptr<Directory> Directory::GetNextSubDirectory()
     {
-        s_ptr<Directory> pSub;
+        s_wptr<Directory> pSub;
         if (uiIter_ < lSubDirectoryList_.GetSize())
         {
-            pSub = &lSubDirectoryList_[uiIter_];
+            pSub = lSubDirectoryList_[uiIter_];
             ++uiIter_;
         }
         else
@@ -121,10 +121,10 @@ namespace Frost
     {
         s_ctnr<s_str> lFileList = GetFileList(bWithPath, sExtensionFilter);
 
-        s_ctnr<Directory>::const_iterator iterSubDir;
+        s_ctnr< s_refptr<Directory> >::const_iterator iterSubDir;
         foreach (iterSubDir, lSubDirectoryList_)
         {
-            lFileList.PushBack(iterSubDir->GetRecursiveFileList(bWithPath, sExtensionFilter));
+            lFileList.PushBack((*iterSubDir)->GetRecursiveFileList(bWithPath, sExtensionFilter));
         }
 
         return lFileList;

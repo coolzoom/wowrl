@@ -1,4 +1,10 @@
 // Warning : If you need to use this file, include frost_utils_types.h
+#ifdef MSVC
+    // Note : Microsoft's Visual C++ doesn't include the round function.
+    // Definition of this function is in frost_utils_math.cpp.
+    long round( double x );
+#endif
+
 namespace Frost
 {
     /// Base type : integer

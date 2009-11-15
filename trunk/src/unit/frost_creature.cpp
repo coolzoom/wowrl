@@ -23,8 +23,9 @@ namespace Frost
     const s_str Creature::CLASS_NAME = "Creature";
 
     Creature::Creature( const s_uint& uiID, const s_str& sName ) :
-        MovableUnit(uiID, sName), mInterface_(this)
+        MovableUnit(uiID, sName)
     {
+        mInterface_.SetCreature(this);
     }
 
     Creature::~Creature()
@@ -67,8 +68,13 @@ namespace Frost
         MovableUnit::Update(fDelta);
     }
 
-    CreatureOgreInterface::CreatureOgreInterface( s_ptr<Creature> pCreature ) : pCreature_(pCreature)
+    CreatureOgreInterface::CreatureOgreInterface()
     {
+    }
+
+    void CreatureOgreInterface::SetCreature( s_ptr<Creature> pCreature )
+    {
+         pCreature_ = pCreature;
     }
 
     const Ogre::String& CreatureOgreInterface::getTypeName() const

@@ -184,6 +184,12 @@ namespace Frost
         {
         public :
 
+            #ifdef MSVC
+                // Note : Disable a false warning from Microsoft's Visual C++ :
+                // "the inline specifier cannot be used when a friend declaration
+                // refers to a specialization of a function template"
+                #pragma warning( disable : 4396 )
+            #endif
             friend T s_var::Get<>() const;
 
             value(const T& mT) : mT_(mT) {}

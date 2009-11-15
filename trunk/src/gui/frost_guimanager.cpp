@@ -274,7 +274,7 @@ namespace Frost
     void GUIManager::LoadAddOnDirectory_( const s_str& sDirectory )
     {
         Directory mDir(sDirectory);
-        s_ptr<Directory> pSubDir;
+        s_wptr<Directory> pSubDir;
 
         foreach_dir (pSubDir, mDir)
         {

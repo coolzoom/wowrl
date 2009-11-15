@@ -394,7 +394,7 @@ namespace Frost
                 pNode_->attachObject(pEntity_.Get());
 
                 s_array<s_float> lCollisionData;
-                lCollisionData.Reserve(uiNX*uiNZ);
+                lCollisionData.Resize(uiNX*uiNZ);
                 for (uint i = 0; i < uiNX*uiNZ; ++i)
                 {
                     if (lPointList[i].ucFlags == 1)

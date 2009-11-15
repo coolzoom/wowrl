@@ -64,7 +64,12 @@ namespace Frost
     public :
 
         /// Constructor.
-        CharacterOgreInterface(s_ptr<Character> pModel);
+        CharacterOgreInterface();
+        
+        /// Sets the associated Character.
+        /** \param pCharacter The associated Character
+        */
+        void SetCharacter(s_ptr<Character> pCharacter);
 
         /// Inherited from UserDefinedObject.
         virtual const Ogre::String& getTypeName() const;

@@ -23,7 +23,11 @@
 #include <cmath>
 #include <string>
 #include <map>
-#include <tr1/unordered_map>
+#ifdef MSVC
+    #include <unordered_map>
+#else
+    #include <tr1/unordered_map>
+#endif
 #include <vector>
 #include <deque>
 #include <list>

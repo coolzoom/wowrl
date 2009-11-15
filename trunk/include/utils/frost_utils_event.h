@@ -11,11 +11,10 @@
 
 #include "frost_utils_config.h"
 #include "frost_utils_types.h"
+#include "frost_utils_var.h"
 
 namespace Frost
 {
-    class s_var;
-
     /// Contains an event informations
     class Event
     {

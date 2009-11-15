@@ -107,7 +107,7 @@ namespace XML
                 STATE_XML
             };
 
-            State(s_ptr<Document> pDoc);
+            State();
 
             virtual ~State();
 
@@ -116,6 +116,7 @@ namespace XML
             virtual void  ReadSingleTag(const s_str& sTagContent) = 0;
             virtual void  ReadEndingTag(const s_str& sTagContent) = 0;
 
+            void          SetDocument(s_ptr<Document> pDoc);
             void          SetCurrentBlock(s_ptr<Block> pBlock);
             void          SetCurrentParentBlock(s_ptr<Block> pParentBlock);
             void          AddContent(const s_str& sContent);
@@ -137,7 +138,7 @@ namespace XML
         {
         public :
 
-            XMLState(s_ptr<Document> pDoc);
+            XMLState();
 
             s_str ReadTagName(const s_str& sTagContent) const;
             void  ReadOpeningTag(const s_str& sTagContent);
@@ -150,7 +151,7 @@ namespace XML
         {
         public :
 
-            DefState(s_ptr<Document> pDoc);
+            DefState();
 
             s_str ReadTagName(const s_str& sTagContent) const;
             void  ReadOpeningTag(const s_str& sTagContent);

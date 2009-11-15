@@ -31,8 +31,10 @@ namespace Frost
     const s_str CharacterModelInfo::CLASS_NAME = "CharacterModelInfo";
 
     Character::Character( const s_uint& uiID, const s_str& sName, const Race& mRace, Gender mGender ) :
-       MovableUnit(uiID, sName), mInterface_(this), mGender_(mGender), mRace_(mRace)
+       MovableUnit(uiID, sName), mGender_(mGender), mRace_(mRace)
     {
+        mInterface_.SetCharacter(this);
+
         // Get the gender
         s_ptr<CharacterModelInfo> pCharModelInfo;
         if (mGender == GENDER_MALE)
@@ -162,8 +164,13 @@ namespace Frost
         MovableUnit::Update(fDelta);
     }
 
-    CharacterOgreInterface::CharacterOgreInterface( s_ptr<Character> pCharacter ) : pCharacter_(pCharacter)
+    CharacterOgreInterface::CharacterOgreInterface()
     {
+    }
+
+    void CharacterOgreInterface::SetCharacter( s_ptr<Character> pCharacter )
+    {
+        pCharacter_ = pCharacter;
     }
 
     const Ogre::String& CharacterOgreInterface::getTypeName() const

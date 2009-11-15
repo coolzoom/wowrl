@@ -10,10 +10,12 @@ namespace Frost
     {
     public :
 
-        typedef typename C::iterator             iterator;
-        typedef typename C::const_iterator       const_iterator;
-        typedef          s_range<iterator>       range;
-        typedef          s_range<const_iterator> const_range;
+        typedef T                          ValueType;
+        typedef C                          ContainerType;
+        typedef typename C::iterator       iterator;
+        typedef typename C::const_iterator const_iterator;
+        typedef s_range<iterator>          range;
+        typedef s_range<const_iterator>    const_range;
 
         /// Default constructor.
         s_ctnr_t()
@@ -31,7 +33,7 @@ namespace Frost
         *         s_ctnr_t by enclosing a series of values by parenthesis (if these
         *         values have implemented the ',' operator).
         */
-        s_ctnr_t(T mElem)
+        s_ctnr_t(const ValueType& mElem)
         {
             mContainer_.push_back(mElem);
         }
@@ -42,9 +44,9 @@ namespace Frost
             *   \note This constructor uses a C++0x feature.<br>
             *         It allows : s_ctnr_t<s_int> v = {1, 2, 3, 4};
             */
-            s_ctnr_t(std::initializer_list<T> mList)
+            s_ctnr_t(std::initializer_list<ValueType> mList)
             {
-                for (const T* p = mList.begin(); p != mList.end(); ++p)
+                for (const ValueType* p = mList.begin(); p != mList.end(); ++p)
                     mContainer_.push_back(*p);
             }
         #endif
@@ -55,7 +57,7 @@ namespace Frost
         *   \note Takes every elements contained by the s_array and puts them
         *         inside this s_ctnr_t.
         */
-        s_ctnr_t(const s_array<T,N>& lElemArray)
+        s_ctnr_t(const s_array<ValueType,N>& lElemArray)
         {
             for (uint i = 0; i < N; ++i)
                 mContainer_.push_back(lElemArray[i]);
@@ -66,7 +68,7 @@ namespace Frost
         *   \note You should check this container is not empty
         *         before calling this function.
         */
-        T& Back()
+        ValueType& Back()
         {
             return mContainer_.back();
         }
@@ -76,7 +78,7 @@ namespace Frost
         *   \note You should check this container is not empty
         *         before calling this function.
         */
-        const T& Back() const
+        const ValueType& Back() const
         {
             return mContainer_.back();
         }
@@ -84,7 +86,7 @@ namespace Frost
         /// Adds a value at the end of the container.
         /** \param mElem The value to add
         */
-        void PushBack(const T& mElem)
+        void PushBack(const ValueType& mElem)
         {
             mContainer_.push_back(mElem);
         }
@@ -125,7 +127,7 @@ namespace Frost
         *   \note You should check this container is not empty
         *         before calling this function.
         */
-        T& Front()
+        ValueType& Front()
         {
             return mContainer_.front();
         }
@@ -135,7 +137,7 @@ namespace Frost
         *   \note You should check this container is not empty
         *         before calling this function.
         */
-        const T& Front() const
+        const ValueType& Front() const
         {
             return mContainer_.front();
         }
@@ -143,7 +145,7 @@ namespace Frost
         /// Adds a value at the beginning of the container.
         /** \param mElem The value to add
         */
-        void PushFront(const T& mElem)
+        void PushFront(const ValueType& mElem)
         {
             mContainer_.push_front(mElem);
         }
@@ -196,7 +198,7 @@ namespace Frost
         *         mElem is appended as many time as neccessary to fit the
         *         new size. Else, elements are erased.
         */
-        void Resize(const s_uint& uiSize, const T& mElem = T())
+        void Resize(const s_uint& uiSize, const ValueType& mElem = ValueType())
         {
             mContainer_.resize(uiSize.Get(), mElem);
         }
@@ -206,7 +208,7 @@ namespace Frost
         *   \param uiStart The position from which to start searching
         *   \return 'true' if the element has been found
         */
-        s_bool Find(const T& mElem, const s_uint& uiStart = 0u) const
+        s_bool Find(const ValueType& mElem, const s_uint& uiStart = 0u) const
         {
             return (std::find(mContainer_.begin() + uiStart.Get(), mContainer_.end(), mElem) != mContainer_.end());
         }
@@ -218,7 +220,7 @@ namespace Frost
         *   \note If the element is not present in the container, this function
         *         returns s_uint::NaN.
         */
-        s_uint FindPos(const T& mElem, const s_uint& uiStart = 0u) const
+        s_uint FindPos(const ValueType& mElem, const s_uint& uiStart = 0u) const
         {
             const_iterator iterPos = std::find(mContainer_.begin() + uiStart.Get(), mContainer_.end(), mElem);
             if (iterPos == mContainer_.end())
@@ -234,7 +236,7 @@ namespace Frost
         *   \note If the element is not present in the container, this function
         *         returns End().
         */
-        iterator Get(const T& mElem, const s_uint& uiStart = 0u)
+        iterator Get(const ValueType& mElem, const s_uint& uiStart = 0u)
         {
             iterator iterStart = mContainer_.begin() + uiStart.Get();
             return std::find(iterStart, mContainer_.end(), mElem);
@@ -247,7 +249,7 @@ namespace Frost
         *   \note If the element is not present in the container, this function
         *         returns End().
         */
-        const_iterator Get(const T& mElem, const s_uint& uiStart = 0u) const
+        const_iterator Get(const ValueType& mElem, const s_uint& uiStart = 0u) const
         {
             const_iterator iterStart = mContainer_.begin() + uiStart.Get();
             return std::find(iterStart, mContainer_.end(), mElem);
@@ -295,35 +297,37 @@ namespace Frost
             std::reverse(mContainer_.begin(), mContainer_.end());
         }
 
-        s_ctnr_t& operator, (const T& mElem)
+        s_ctnr_t& operator, (const ValueType& mElem)
         {
             mContainer_.push_back(mElem);
             return (*this);
         }
 
-        s_ctnr_t<s_ctnr_t, C> operator, (const s_ctnr_t& lValue)
+        s_ctnr_t<s_ctnr_t, ContainerType> operator, (const s_ctnr_t& lValue)
         {
-            s_ctnr_t<s_ctnr_t, C> mContainer;
+            s_ctnr_t<s_ctnr_t, ContainerType> mContainer;
             mContainer.PushBack(*this);
             mContainer.PushBack(lValue);
             return mContainer;
         }
 
         template<uint N>
-        s_ctnr_t& operator = (const s_array<T,N>& lElemArray)
+        s_ctnr_t& operator = (const s_array<ValueType,N>& lElemArray)
         {
             mContainer_.clear();
 
             for (uint i = 0; i < N; ++i)
                 mContainer_.push_back(lElemArray[i]);
+
+            return *this;
         }
 
-        T& operator[] (const s_uint& uiIndex)
+        ValueType& operator[] (const s_uint& uiIndex)
         {
             return mContainer_[uiIndex.Get()];
         }
 
-        const T& operator[] (const s_uint& uiIndex) const
+        const ValueType& operator[] (const s_uint& uiIndex) const
         {
             return mContainer_[uiIndex.Get()];
         }
@@ -370,7 +374,7 @@ namespace Frost
 
     protected :
 
-        C mContainer_;
+        ContainerType mContainer_;
     };
 
     /// Simple container.
@@ -383,16 +387,19 @@ namespace Frost
     {
     public :
 
-        s_ctnr() : s_ctnr_t< T, std::deque<T> >() {}
+        typedef T                            ValueType;
+        typedef s_ctnr_t< T, std::deque<T> > ParentContainerType;
 
-        s_ctnr(T mElem) : s_ctnr_t< T, std::deque<T> >(mElem) {}
+        s_ctnr() : ParentContainerType() {}
+
+        s_ctnr(const ValueType& mElem) : ParentContainerType(mElem) {}
 
         #ifdef CPP_0X
-            s_ctnr(std::initializer_list<T> mList) : s_ctnr_t< T, std::deque<T> >(mList) {}
+            s_ctnr(std::initializer_list<ValueType> mList) : ParentContainerType(mList) {}
         #endif
 
         template<uint N>
-        s_ctnr(const s_array<T,N>& lElemArray) : s_ctnr_t< T, std::deque<T> >(lElemArray) {}
+        s_ctnr(const s_array<ValueType,N>& lElemArray) : ParentContainerType(lElemArray) {}
     };
 
     /// Dynamic array.
@@ -409,23 +416,27 @@ namespace Frost
     class s_array<T,0> : public s_ctnr_t< T, std::vector<T> >
     {
     public :
-        s_array() : s_ctnr_t< T, std::vector<T> >() {}
 
-        s_array(T mElem) : s_ctnr_t< T, std::vector<T> >(mElem) {}
+        typedef T                             ValueType;
+        typedef s_ctnr_t< T, std::vector<T> > ParentContainerType;
+        using ParentContainerType::mContainer_;
+
+        s_array() : ParentContainerType() {}
+
+        s_array(const ValueType& mElem) : ParentContainerType(mElem) {}
 
         #ifdef CPP_0X
-            s_array(std::initializer_list<T> mList) : s_ctnr_t< T, std::vector<T> >(mList) {}
+            s_array(std::initializer_list<ValueType> mList) : ParentContainerType(mList) {}
         #endif
 
         template<uint N>
-        s_array(const s_array<T,N>& lElemArray) : s_ctnr_t< T, std::vector<T> >(lElemArray) {}
+        s_array(const s_array<ValueType,N>& lElemArray) : ParentContainerType(lElemArray) {}
 
-        using s_ctnr_t< T, std::vector<T> >::mContainer_;
 
         /// Returns the underlying C array.
         /** \return The underlying C array
         */
-        T* GetClassicArray()
+        ValueType* GetClassicArray()
         {
             return &mContainer_[0];
         }
