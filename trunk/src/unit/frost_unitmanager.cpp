@@ -128,7 +128,7 @@ namespace Frost
             Warning(CLASS_NAME,
                 "No unit found with the ID : "+uiID+"."
             );
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -237,7 +237,7 @@ namespace Frost
             Warning(CLASS_NAME,
                 "No Class found with the name \""+sClassName+"\"."
             );
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -253,7 +253,7 @@ namespace Frost
             Warning(CLASS_NAME,
                 "No HealthType found with the name \""+sHealthTypeName+"\"."
             );
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -269,7 +269,7 @@ namespace Frost
             Warning(CLASS_NAME,
                 "No PowerType found with the name \""+sPowerTypeName+"\"."
             );
-            return NULL;
+            return nullptr;
         }
     }
 

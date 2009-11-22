@@ -416,13 +416,13 @@ namespace Frost
         {
             pEntity_->detatchFromParent();
             Engine::GetSingleton()->GetOgreSceneManager()->destroyEntity(pEntity_.Get());
-            pEntity_ = NULL;
+            pEntity_ = nullptr;
 
             Ogre::MeshManager::getSingletonPtr()->remove(("ChunkMesh_"+uiID_).Get());
-            pMesh_ = NULL;
+            pMesh_ = nullptr;
 
             Engine::GetSingleton()->GetOgreSceneManager()->destroySceneNode(pNode_.Get());
-            pNode_ = NULL;
+            pNode_ = nullptr;
 
             pObstacle_.Delete();
 

@@ -58,7 +58,7 @@ namespace Frost
             return iter->second;
         }
         else
-            return NULL;
+            return nullptr;
     }
 
     s_ptr<Lua::State> LuaManager::GetDefaultLua() const

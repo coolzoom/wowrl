@@ -46,7 +46,7 @@ const s_str State::CLASS_NAME = "Lua::State";
 State::State()
 {
     pLua_ = lua_open();
-    if (pLua_ == NULL)
+    if (!pLua_)
     {
         Error("Lua", "Error while initializing Lua.");
         return;
@@ -564,7 +564,7 @@ s_var State::GetValue( const s_int& iIndex )
         case LUA_TBOOLEAN : return GetBool(iIndex);
         case LUA_TNUMBER : return GetNumber(iIndex);
         case LUA_TSTRING : return GetString(iIndex);
-        default : return static_cast<void*>(NULL);
+        default : return static_cast<void*>(nullptr);
     }
 }
 

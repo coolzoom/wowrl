@@ -86,7 +86,7 @@ namespace Frost
             Warning(CLASS_NAME,
                 "ModelPart "+s_str(uiID, 4)+" doesn't seem to exist for \""+sModelName_+"\"."
             );
-            return NULL;
+            return nullptr;
         }
     }
 

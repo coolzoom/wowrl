@@ -80,7 +80,7 @@ namespace Frost
     };
 
     template<class T>
-    s_ptr<T> Manager<T>::pMgr_ = NULL;
+    s_ptr<T> Manager<T>::pMgr_ = nullptr;
 }
 
 #endif

@@ -25,6 +25,26 @@ namespace Frost
             pWCounter_ = NULL;
         }
 
+        /// Copy constructor.
+        /** \param mValue the s_refptr to copy
+        */
+        s_refptr(const s_refptr& mValue)
+        {
+            pValue_    = mValue.pValue_;
+            pCounter_  = mValue.pCounter_;
+            pWCounter_ = mValue.pWCounter_;
+
+            Increment_();
+        }
+
+        /// Conversion from nullptr.
+        s_refptr(const s_nullptr& pNull)
+        {
+            pValue_ = NULL;
+            pCounter_  = NULL;
+            pWCounter_ = NULL;
+        }
+
         /// Constructor.
         /** \param pValue The pointer to assign
         *   \note This is the only way to assign a classic
@@ -35,18 +55,6 @@ namespace Frost
             pValue_    = pValue;
             pCounter_  = new uint(0);
             pWCounter_ = new uint(0);
-
-            Increment_();
-        }
-
-        /// Copy constructor.
-        /** \param mValue the s_refptr to copy
-        */
-        s_refptr(const s_refptr& mValue)
-        {
-            pValue_    = mValue.pValue_;
-            pCounter_  = mValue.pCounter_;
-            pWCounter_ = mValue.pWCounter_;
 
             Increment_();
         }

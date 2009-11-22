@@ -122,7 +122,7 @@ namespace Frost
 
         /// Sets the vertex shader to use for the default pass.
         /** \param pVS The vertex shader
-        *   \note Use NULL to remove the vertex shader
+        *   \note Use nullptr to remove the vertex shader
         */
         void            SetVertexShader(s_ptr<VertexShader> pVS);
 
@@ -137,7 +137,7 @@ namespace Frost
 
         /// Sets the pixel shader to use for the default pass.
         /** \param pPS The pixel shader
-        *   \note Use NULL to remove the pixel shader
+        *   \note Use nullptr to remove the pixel shader
         */
         void            SetPixelShader(s_ptr<PixelShader> pPS);
 

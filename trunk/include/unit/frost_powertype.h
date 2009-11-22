@@ -49,7 +49,7 @@ namespace Frost
         /** \param sScriptName The name of the script
         *   \param pEvent      Stores scripts arguments
         */
-        void         On(const s_str& sScriptName, s_ptr<Event> pEvent = NULL);
+        void         On(const s_str& sScriptName, s_ptr<Event> pEvent = nullptr);
 
         /// Updates this PowerType's attributes.
         /** \param fDelta The time elapsed since the last call

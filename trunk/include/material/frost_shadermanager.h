@@ -45,14 +45,14 @@ namespace Frost
         /// Returns a vertex shader.
         /** \param sName The name of the vertex shader
         *   \return The associated vertex shader
-        *   \note Returns NULL if it doesn't exist.
+        *   \note Returns nullptr if it doesn't exist.
         */
         s_ptr<VertexShader> GetVertexShader(const s_str& sName) const;
 
         /// Returns a pixel shader.
         /** \param sName The name of the pixel shader
         *   \return The associated pixel shader
-        *   \note Returns NULL if it doesn't exist.
+        *   \note Returns nullptr if it doesn't exist.
         */
         s_ptr<PixelShader>  GetPixelShader(const s_str& sName) const;
 

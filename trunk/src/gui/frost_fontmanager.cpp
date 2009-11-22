@@ -55,7 +55,7 @@ namespace Frost
             else
             {
                 Error(CLASS_NAME, "Unknown font file : \""+sFontFile+"\"");
-                return NULL;
+                return nullptr;
             }
         }
     }

@@ -39,7 +39,7 @@ namespace Frost
 
         /// Returns the Lua state wrapper associated with a raw Lua state.
         /** \param pLua The raw Lua state
-        *   \return The associated wrapper (NULL if none)
+        *   \return The associated wrapper (nullptr if none)
         */
         s_ptr<Lua::State> GetState(lua_State* pLua);
 

@@ -60,7 +60,7 @@ namespace Frost
                 pParent_->SetCamera(pCam);
             }
             else
-                pParent_->SetCamera(NULL);
+                pParent_->SetCamera(nullptr);
         }
 
         return mFunc.Return();

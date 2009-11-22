@@ -126,7 +126,7 @@ namespace Frost
                 Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->addChild(pNode_.Get());
             }
 
-            pParent_ = NULL;
+            pParent_ = nullptr;
         }
 
         bInherits_ = false;
@@ -331,7 +331,7 @@ namespace Frost
         if (pLookAtObject_)
         {
             pLookAtObject_->NotifyLookedAt(this, false);
-            pLookAtObject_ = NULL;
+            pLookAtObject_ = nullptr;
         }
     }
 

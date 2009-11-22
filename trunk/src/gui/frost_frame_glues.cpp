@@ -546,7 +546,7 @@ int LuaFrame::_SetBackdrop(lua_State* pLua)
     {
         if (mFunc.Get(0)->GetType() == Lua::TYPE_NIL)
         {
-            pFrameParent_->SetBackdrop(s_refptr<Backdrop>(NULL));
+            pFrameParent_->SetBackdrop(nullptr);
         }
         else
         {

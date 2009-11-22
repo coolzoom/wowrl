@@ -462,7 +462,7 @@ s_ptr<Block> Block::First( const s_str& sName )
         }
         else
         {
-            return NULL;
+            return nullptr;
         }
     }
     else
@@ -475,7 +475,7 @@ s_ptr<Block> Block::First( const s_str& sName )
         }
         else
         {
-            return NULL;
+            return nullptr;
         }
     }
 }
@@ -486,12 +486,12 @@ s_ptr<Block> Block::Next()
     {
         mCurrIter_++;
         if (mCurrIter_ == mEndIter_)
-            return NULL;
+            return nullptr;
         else
             return (*mCurrIter_)->second;
     }
     else
-        return NULL;
+        return nullptr;
 }
 
 s_str Block::GetAttribute( const s_str& sName )
@@ -532,7 +532,7 @@ s_ptr<Block> Block::GetBlock( const s_str& sName )
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -541,7 +541,7 @@ s_ptr<Block> Block::GetRadioBlock()
     if (bRadioChilds_)
         return lFoundBlockList_.Begin()->second;
     else
-        return NULL;
+        return nullptr;
 }
 
 s_bool Block::HasBlock( const s_str& sName )
@@ -587,7 +587,7 @@ s_ptr<Block> Block::CreateBlock( const s_str& sName )
     else
     {
         Error(CLASS_NAME, "Already creating a block.");
-        return NULL;
+        return nullptr;
     }
 }
 

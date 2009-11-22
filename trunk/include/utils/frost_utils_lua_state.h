@@ -165,7 +165,7 @@ namespace Frost
             */
             void    PushValue(const s_int& iIndex);
 
-            /// Puts "nil" (NULL) on the stack.
+            /// Puts "nil" (null) on the stack.
             /** \param uiNumber The number of "nil" to push
             */
             void    PushNil(const s_uint& uiNumber = 1);

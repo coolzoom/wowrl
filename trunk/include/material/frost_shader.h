@@ -124,7 +124,7 @@ namespace Frost
         *   \param pPass  The pass for which to set the parameter
         *   \note If pPass is ommited, the value is assigned in all binded passes.
         */
-        void SetParameter(const s_str& sName, const s_var& vValue, s_ptr<Ogre::Pass> pPass = NULL);
+        void SetParameter(const s_str& sName, const s_var& vValue, s_ptr<Ogre::Pass> pPass = nullptr);
 
         /// Checks if this shader has loaded fine.
         /** \return 'true' if everything went fine

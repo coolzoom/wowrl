@@ -156,7 +156,7 @@ int LuaUIObject::_GetParent( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetParent", pLua, 1);
 
-    if (pParent_->GetParent() != NULL)
+    if (pParent_->GetParent())
     {
         pParent_->GetParent()->PushOnLua(mFunc.GetState());
         mFunc.NotifyPushed();
@@ -174,10 +174,10 @@ int LuaUIObject::_GetPoint( lua_State* pLua )
     if (mFunc.Check())
     {
         s_ptr<Anchor> pAnchor = pParent_->GetPoint(s_uint(mFunc.Get(0)->GetNumber()));
-        if (pAnchor != NULL)
+        if (pAnchor)
         {
             mFunc.Push(Anchor::GetStringPoint(pAnchor->GetPoint()));
-            if (pAnchor->GetParent() != NULL)
+            if (pAnchor->GetParent())
             {
                 pAnchor->GetParent()->PushOnLua(mFunc.GetState());
                 mFunc.NotifyPushed();
@@ -276,7 +276,7 @@ int LuaUIObject::_SetAllPoints( lua_State* pLua )
         }
         else
         {
-            pParent_->SetAllPoints(NULL);
+            pParent_->SetAllPoints(nullptr);
         }
     }
 
