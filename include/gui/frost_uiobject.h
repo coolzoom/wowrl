@@ -123,7 +123,7 @@ namespace Frost
 
             /// Changes this widget's parent.
             /** \param pParent The new parent
-            *   \note Default is NULL.
+            *   \note Default is nullptr.
             */
             virtual void    SetParent(s_ptr<UIObject> pParent);
 
@@ -347,7 +347,7 @@ namespace Frost
 
             /// Gets an anchor by its ID.
             /** \param uiPoint The anchor ID
-            *   \return A pointer to the anchor, NULL if none
+            *   \return A pointer to the anchor, nullptr if none
             */
             s_ptr<Anchor>   GetPoint(const s_uint& uiPoint);
 

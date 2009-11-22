@@ -70,7 +70,7 @@ namespace Frost
 
     SpriteManager::SpriteManager()
     {
-        pRenderFunc_ = NULL;
+        pRenderFunc_ = nullptr;
         mAxisType_ = AXIS_DOWN;
     }
 
@@ -431,7 +431,7 @@ namespace Frost
             // Draw everything on the render target
             RenderBuffers_(true);
 
-            pRenderTarget_ = NULL;
+            pRenderTarget_ = nullptr;
             bFrameStarted_ = false;
         }
         else
@@ -515,7 +515,7 @@ namespace Frost
     void SpriteManager::DestroyHardwareBuffers_()
     {
         delete mRenderOp_.vertexData;
-        mRenderOp_.vertexData = NULL;
+        mRenderOp_.vertexData = nullptr;
         mHardwareBuffer_.setNull();
     }
 

@@ -107,6 +107,7 @@
 		<Unit filename="include\utils\frost_utils_map.h" />
 		<Unit filename="include\utils\frost_utils_math.h" />
 		<Unit filename="include\utils\frost_utils_multimap.h" />
+		<Unit filename="include\utils\frost_utils_nullptr.h" />
 		<Unit filename="include\utils\frost_utils_pair.h" />
 		<Unit filename="include\utils\frost_utils_point.h" />
 		<Unit filename="include\utils\frost_utils_profiler.h" />

@@ -105,6 +105,14 @@ namespace Frost
             }
         }
 
+        void Set(const s_nullptr& pPtr)
+        {
+            for (uint i = 0; i < N; ++i)
+            {
+                lArray_[i] = pPtr;
+            }
+        }
+
         s_uint GetSize() const
         {
             return N;

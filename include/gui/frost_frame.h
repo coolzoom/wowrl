@@ -283,7 +283,7 @@ namespace Frost
             /** \param sScriptName The name of the script
             *   \param pEvent      Stores scripts arguments
             */
-            virtual void        On(const s_str& sScriptName, s_ptr<Event> pEvent = NULL);
+            virtual void        On(const s_str& sScriptName, s_ptr<Event> pEvent = nullptr);
 
             /// Calls the OnEvent script.
             /** \param mEvent The Event that occured
@@ -366,7 +366,7 @@ namespace Frost
 
             /// Changes this widget's parent.
             /** \param pParent The new parent
-            *   \note Default is NULL.<br>
+            *   \note Default is nullptr.<br>
             *         Overrides UIObject's implementation.
             */
             void                SetParent(s_ptr<UIObject> pParent);

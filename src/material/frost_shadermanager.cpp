@@ -60,7 +60,7 @@ namespace Frost
         else
         {
             Warning(CLASS_NAME, "No shader found with the name \""+sName+"_VS\".");
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -82,7 +82,7 @@ namespace Frost
         else
         {
             Warning(CLASS_NAME, "No shader found with the name \""+sName+"_PS\".");
-            return NULL;
+            return nullptr;
         }
     }
 

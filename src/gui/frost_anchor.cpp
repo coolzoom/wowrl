@@ -47,7 +47,7 @@ void Anchor::UpdateParent_()
                 sParent_.Replace("$parent", "");
 
             if (sParent_.IsEmpty())
-                pParent_ = NULL;
+                pParent_ = nullptr;
             else
                 pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sParent_);
         }
@@ -58,12 +58,12 @@ void Anchor::UpdateParent_()
 
 const s_int& Anchor::GetAbsX()
 {
-    if (pObj_ != NULL)
+    if (pObj_)
     {
         this->UpdateParent_();
 
         s_int iParentX;
-        if (pParent_ != NULL)
+        if (pParent_)
             iParentX = pParent_->GetLeft();
 
         s_int iParentOffset;
@@ -73,14 +73,14 @@ const s_int& Anchor::GetAbsX()
         }
         else if ((mParentPoint_ == ANCHOR_TOP) || (mParentPoint_ == ANCHOR_CENTER) || (mParentPoint_ == ANCHOR_BOTTOM))
         {
-            if (pParent_ != NULL)
+            if (pParent_)
                 iParentOffset = s_int(pParent_->GetAppearentWidth())/2;
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenWidth())/2;
         }
         else if ((mParentPoint_ == ANCHOR_TOPRIGHT) || (mParentPoint_ == ANCHOR_RIGHT) || (mParentPoint_ == ANCHOR_BOTTOMRIGHT))
         {
-            if (pParent_ != NULL)
+            if (pParent_)
                 iParentOffset = s_int(pParent_->GetAppearentWidth());
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenWidth());
@@ -94,12 +94,12 @@ const s_int& Anchor::GetAbsX()
 
 const s_int& Anchor::GetAbsY()
 {
-    if (pObj_ != NULL)
+    if (pObj_)
     {
         this->UpdateParent_();
 
         s_int iParentY;
-        if (pParent_ != NULL)
+        if (pParent_)
             iParentY = pParent_->GetTop();
 
         s_int iParentOffset;
@@ -109,14 +109,14 @@ const s_int& Anchor::GetAbsY()
         }
         else if ((mParentPoint_ == ANCHOR_LEFT) || (mParentPoint_ == ANCHOR_CENTER) || (mParentPoint_ == ANCHOR_RIGHT))
         {
-            if (pParent_ != NULL)
+            if (pParent_)
                 iParentOffset = s_int(pParent_->GetAppearentHeight())/2;
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenHeight())/2;
         }
         else if ((mParentPoint_ == ANCHOR_BOTTOMLEFT) || (mParentPoint_ == ANCHOR_BOTTOM) || (mParentPoint_ == ANCHOR_BOTTOMRIGHT))
         {
-            if (pParent_ != NULL)
+            if (pParent_)
                 iParentOffset = s_int(pParent_->GetAppearentHeight());
             else
                 iParentOffset = s_int(Engine::GetSingleton()->GetScreenHeight());

@@ -91,7 +91,7 @@ namespace Frost
         *         into the main render target, which is then rendered
         *         on the screen.
         */
-        void         Begin(s_ptr<RenderTarget> pRenderTarget = NULL);
+        void         Begin(s_ptr<RenderTarget> pRenderTarget = nullptr);
 
         /// Ends rendering into the render target.
         /** \note Must be called after Begin().<br>

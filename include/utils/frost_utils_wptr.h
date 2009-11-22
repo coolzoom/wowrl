@@ -33,6 +33,14 @@ namespace Frost
             Increment_();
         }
 
+        /// Conversion from nullptr.
+        s_wptr(const s_nullptr& pNull)
+        {
+            pValue_ = NULL;
+            pCounter_  = NULL;
+            pWCounter_ = NULL;
+        }
+
         /// Destructor.
         /** \note This function will <b>never</b> delete the pointed object (if any).
         */
@@ -137,6 +145,18 @@ namespace Frost
                 return s_refptr<T>(pValue_, pCounter_, pWCounter_);
             else
                 return s_refptr<T>();
+        }
+
+        /// nullptr assignation operator.
+        /** \param pPtr The value to copy
+        */
+        s_wptr& operator = (const s_nullptr& pPtr)
+        {
+            pValue_ = NULL;
+            pCounter_ = NULL;
+            pWCounter_ = NULL;
+
+            return *this;
         }
 
         /// s_refptr assignation operator.

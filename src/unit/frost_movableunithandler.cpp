@@ -15,7 +15,7 @@ using namespace std;
 namespace Frost
 {
     MovableUnitHandler::MovableUnitHandler( s_ptr<MovableUnit> pMovableUnit ) :
-        PhysicsHandler(pMovableUnit ? pMovableUnit->GetNode() : NULL),
+        PhysicsHandler(pMovableUnit ? pMovableUnit->GetNode() : nullptr),
         pMovableUnit_(pMovableUnit), bFirstUpdate_(true), mState_(STATE_FREEFALL),
         mPreviousState_(STATE_FREEFALL), mRadius_(Vector::UNIT)
     {
@@ -197,7 +197,7 @@ namespace Frost
                                 mMovement_ = Vector::ZERO;
 
                                 mState_ = STATE_FREEFALL;
-                                pBindedObstacle_ = NULL;
+                                pBindedObstacle_ = nullptr;
                             }
                             else
                             {
@@ -222,7 +222,7 @@ namespace Frost
                             mSpeed_ -= (mData_.mPlaneNormal*mSpeed_)*mData_.mPlaneNormal;
 
                             mState_ = STATE_FREEFALL;
-                            pBindedObstacle_ = NULL;
+                            pBindedObstacle_ = nullptr;
                         }
                         else
                         {
@@ -241,7 +241,7 @@ namespace Frost
             else
             {
                 mState_ = STATE_FREEFALL;
-                pBindedObstacle_ = NULL;
+                pBindedObstacle_ = nullptr;
             }
         }
     }

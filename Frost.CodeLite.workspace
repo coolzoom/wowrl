@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CodeLite_Workspace Name="Frost" Database=".\Frost.tags">
-  <Project Name="Frost" Path="Frost.project" Active="Yes"/>
-  <Project Name="Frost_Utils" Path="Frost_Utils.project" Active="No"/>
+  <Project Name="Frost" Path="Frost.project" Active="No"/>
+  <Project Name="Frost_Utils" Path="Frost_Utils.project" Active="Yes"/>
   <Project Name="Frost_XML" Path="Frost_XML.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug_Win32" Selected="no">

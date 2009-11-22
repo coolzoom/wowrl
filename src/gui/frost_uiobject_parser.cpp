@@ -63,7 +63,7 @@ void UIObject::ParseAnchorsBlock_( s_ptr<XML::Block> pBlock )
                 GUI::Anchor mAnchor(
                     this,
                     GUI::Anchor::GetAnchorPoint(sPoint),
-                    NULL,
+                    nullptr,
                     GUI::Anchor::GetAnchorPoint(sRelativePoint)
                 );
 

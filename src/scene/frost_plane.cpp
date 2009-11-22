@@ -72,7 +72,7 @@ namespace Frost
     void Plane::SetMaterial( s_refptr<Material> pMat )
     {
         pMaterial_ = pMat;
-        if (pMat != NULL)
+        if (pMat)
             pEntity_->setMaterialName(pMat->GetOgreMaterialName().Get());
         else
             pEntity_->setMaterialName("Default3D");

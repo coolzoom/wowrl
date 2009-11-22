@@ -88,7 +88,7 @@ namespace Frost
             lNamedList = &lNamedObjectList_;
         }
 
-        if (pObj != NULL)
+        if (pObj)
         {
             s_map< s_str, s_ptr<GUI::UIObject> >::iterator iterNamedObj = lNamedList->Get(pObj->GetName());
             if (iterNamedObj == lNamedList->end())
@@ -127,7 +127,7 @@ namespace Frost
         }
         else
         {
-            Warning(CLASS_NAME, "Adding a NULL widget.");
+            Warning(CLASS_NAME, "Adding a null widget.");
             return false;
         }
     }
@@ -142,7 +142,7 @@ namespace Frost
             }
             else
             {
-                return NULL;
+                return nullptr;
             }
         }
         else
@@ -153,7 +153,7 @@ namespace Frost
             }
             else
             {
-                return NULL;
+                return nullptr;
             }
         }
     }
@@ -562,7 +562,7 @@ namespace Frost
 
     void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj )
     {
-        pSizedObject_ = NULL;
+        pSizedObject_ = nullptr;
         pMovedObject_ = pObj;
         fMouseMovementX_ = 0.0f;
         fMouseMovementY_ = 0.0f;
@@ -571,7 +571,7 @@ namespace Frost
     void GUIManager::StopMoving( s_ptr<GUI::UIObject> pObj )
     {
         if (pMovedObject_ == pObj)
-            pMovedObject_ = NULL;
+            pMovedObject_ = nullptr;
     }
 
     s_bool GUIManager::IsMoving( s_ptr<GUI::UIObject> pObj ) const
@@ -581,7 +581,7 @@ namespace Frost
 
     void GUIManager::StartSizing( s_ptr<GUI::UIObject> pObj )
     {
-        pMovedObject_  = NULL;
+        pMovedObject_  = nullptr;
         pSizedObject_ = pObj;
         fMouseMovementX_ = 0.0f;
         fMouseMovementY_ = 0.0f;
@@ -590,7 +590,7 @@ namespace Frost
     void GUIManager::StopSizing( s_ptr<GUI::UIObject> pObj )
     {
         if (pSizedObject_ == pObj)
-            pSizedObject_ = NULL;
+            pSizedObject_ = nullptr;
     }
 
     s_bool GUIManager::IsSizing( s_ptr<GUI::UIObject> pObj ) const

@@ -97,7 +97,7 @@ namespace Frost
 
         /// Returns this Unit's MovableUnitHandler.
         /** \return This Unit's MovableUnitHandler
-        *   \note Returns NULL if none (i.e if IsPhysicsEnabled()
+        *   \note Returns nullptr if none (i.e if IsPhysicsEnabled()
         *         returns 'false').
         */
         s_ptr<MovableUnitHandler> GetPhysicsHandler();

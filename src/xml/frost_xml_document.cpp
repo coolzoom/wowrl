@@ -476,7 +476,7 @@ s_ptr<Block> Document::GetPredefinedBlock( const s_str& sName )
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 

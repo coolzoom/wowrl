@@ -85,7 +85,7 @@ namespace Frost
 
     s_uint AnimManager::GetAnimID() const
     {
-        if (pActualAnim_ != NULL)
+        if (pActualAnim_)
             return pActualAnim_->uiID;
         else
             return 0;
@@ -128,7 +128,7 @@ namespace Frost
 
             if (pOldAnim_ != pActualAnim_)
             {
-                if (pOldAnim_ != NULL)
+                if (pOldAnim_)
                 {
                     pOldAnim_->pOgreAnim->setEnabled(true);
                     pOldAnim_->pOgreAnim->setWeight(1.0f);
@@ -143,7 +143,7 @@ namespace Frost
             }
         }
         else
-            pActualAnim_ = NULL;
+            pActualAnim_ = nullptr;
 
         // TODO : Model : Calculer la bounding box animée
     }
@@ -157,7 +157,7 @@ namespace Frost
             {
                 uiBackgroundAnimID_.SetNaN();
                 if (mActualPriority_ == ANIM_PRIORITY_BACKGROUND)
-                    pActualAnim_ = NULL;
+                    pActualAnim_ = nullptr;
             }
             else
             {
@@ -178,7 +178,7 @@ namespace Frost
         else if ( (bQueued) && (mActualPriority_ >= mPriority) )
         {
             if (mID == ANIM_NONE)
-                lQueueList_[mPriority].PushBack(AnimationParameters(NULL));
+                lQueueList_[mPriority].PushBack(AnimationParameters(nullptr));
             else
             {
                 lQueueList_[mPriority].PushBack(AnimationParameters(GetAnim(mID), fSpeed));
@@ -190,10 +190,10 @@ namespace Frost
 
             if (mID == ANIM_NONE)
             {
-                if (pActualAnim_ != NULL)
+                if (pActualAnim_)
                     pActualAnim_->pOgreAnim->setEnabled(false);
-                pActualAnim_ = NULL;
-                pOldAnim_ = NULL;
+                pActualAnim_ = nullptr;
+                pOldAnim_ = nullptr;
             }
             else
             {
@@ -209,7 +209,7 @@ namespace Frost
         if (bPaused_)
             bPaused_ = false;
 
-        else if (pActualAnim_ != NULL)
+        else if (pActualAnim_)
         {
             pActualAnim_->pOgreAnim->setTimePosition(0.0f);
         }
@@ -251,7 +251,7 @@ namespace Frost
         {
             if (!bTransition_)
             {
-                if (pActualAnim_ != NULL)
+                if (pActualAnim_)
                 {
                     if (!bReversed_)
                     {
@@ -279,7 +279,7 @@ namespace Frost
                                     }
                                     else
                                     {
-                                        pActualAnim_ = NULL;
+                                        pActualAnim_ = nullptr;
                                     }
 
                                     mActualPriority_ = iterQueue->first;
@@ -328,7 +328,7 @@ namespace Frost
                                     }
                                     else
                                     {
-                                        pActualAnim_ = NULL;
+                                        pActualAnim_ = nullptr;
                                     }
 
                                     mActualPriority_ = iterQueue->first;
@@ -352,13 +352,13 @@ namespace Frost
             }
             else
             {
-                if (pActualAnim_ != NULL)
+                if (pActualAnim_)
                 {
                     if (fBlend_ <= ANIMATION_BLEND_DURATION)
                     {
                         float fCoef = fBlend_.Get()/ANIMATION_BLEND_DURATION;
                         pActualAnim_->pOgreAnim->setWeight(fCoef);
-                        if (pOldAnim_ != NULL)
+                        if (pOldAnim_)
                             pOldAnim_->pOgreAnim->setWeight(1-fCoef);
 
                         if (!bReversed_)
@@ -376,10 +376,10 @@ namespace Frost
                     {
                         bTransition_ = false;
                         pActualAnim_->pOgreAnim->setWeight(1.0f);
-                        if (pOldAnim_ != NULL)
+                        if (pOldAnim_)
                         {
                             pOldAnim_->pOgreAnim->setEnabled(false);
-                            pOldAnim_ = NULL;
+                            pOldAnim_ = nullptr;
                         }
                     }
                 }

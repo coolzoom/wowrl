@@ -36,7 +36,7 @@ namespace Frost
 
         /// Returns the Unit associated to the provided ID.
         /** \param uiID The Unit's ID
-        *   \return The Unit associated to the provided ID (NULL if none)
+        *   \return The Unit associated to the provided ID (nullptr if none)
         */
         s_ptr<Unit>               GetUnitByID(const s_uint& uiID) const;
 

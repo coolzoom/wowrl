@@ -152,7 +152,7 @@ void Backdrop::SetEdge( const s_str& sEdgeFile )
             }
             else
             {
-                lEdgeList_.Set(s_refptr<Sprite>(NULL));
+                lEdgeList_.Set(nullptr);
                 sEdgeFile_ = "";
 
                 Error(CLASS_NAME,
@@ -163,7 +163,7 @@ void Backdrop::SetEdge( const s_str& sEdgeFile )
         }
         else
         {
-            lEdgeList_.Set(s_refptr<Sprite>(NULL));
+            lEdgeList_.Set(nullptr);
             sEdgeFile_ = "";
 
             Warning(CLASS_NAME,

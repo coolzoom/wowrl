@@ -30,7 +30,7 @@ namespace Frost
         Directory(const s_str& sRelPath);
 
         /// Iterates through sub-directories.
-        /** \return The next sub-directory, 'NULL' if none
+        /** \return The next sub-directory, 'nullptr' if none
         */
         s_wptr<Directory> GetNextSubDirectory();
 

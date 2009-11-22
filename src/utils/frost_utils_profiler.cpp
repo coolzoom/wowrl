@@ -107,7 +107,7 @@ namespace Frost
 
     Chrono::~Chrono()
     {
-        if ( (pParent_ != NULL) && (!bStopped_) )
+        if ( pParent_ && (!bStopped_) )
         {
             s_double dTime = TimeManager::GetSingleton()->GetTime() - dStart_;
             dTotal_ += dTime;
@@ -119,7 +119,7 @@ namespace Frost
     {
         if (bStopped_)
         {
-            if (pParent_ != NULL)
+            if (pParent_)
             {
                 dStart_ = TimeManager::GetSingleton()->GetTime();
             }
@@ -131,7 +131,7 @@ namespace Frost
     {
         if (!bStopped_)
         {
-            if (pParent_ != NULL)
+            if (pParent_)
             {
                 s_double dTime = TimeManager::GetSingleton()->GetTime() - dStart_;
                 dTotal_ += dTime;

@@ -456,7 +456,7 @@ namespace Frost
         {
             if (!lModelPartList_.Find(lSubMesh[i].id))
             {
-                ModelPart* pMP = new ModelPart(NULL, lSubMesh[i].id);
+                ModelPart* pMP = new ModelPart(nullptr, lSubMesh[i].id);
                 lModelPartList_[lSubMesh[i].id] = pMP;
             }
         }

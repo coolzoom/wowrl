@@ -80,7 +80,7 @@ namespace Frost
         if (iterMovable != lObjectList_.End())
             return iterMovable->second;
         else
-            return NULL;
+            return nullptr;
     }
 
     void SceneManager::DeletePlane( s_ptr<Plane> pPlane )

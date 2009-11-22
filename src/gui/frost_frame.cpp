@@ -434,7 +434,7 @@ s_ptr<Frame> Frame::GetChild( const s_str& sName ) const
     if (pObj && lChildList_.Find(pObj->GetID()))
         return lChildList_.Get(pObj->GetID())->second;
     else
-        return NULL;
+        return nullptr;
 }
 
 s_ptr<LayeredRegion> Frame::GetRegion( const s_str& sName ) const
@@ -444,7 +444,7 @@ s_ptr<LayeredRegion> Frame::GetRegion( const s_str& sName ) const
     if (pObj && lRegionList_.Find(pObj->GetID()))
         return lRegionList_.Get(pObj->GetID())->second;
     else
-        return NULL;
+        return nullptr;
 }
 
 void Frame::CheckPosition()
@@ -745,7 +745,7 @@ s_ctnr< s_ptr<Frame> > Frame::GetChildren()
 
 s_float Frame::GetEffectiveAlpha() const
 {
-    if (pParent_ != NULL)
+    if (pParent_)
     {
         return fAlpha_ * pParentFrame_->GetEffectiveAlpha();
     }
@@ -757,7 +757,7 @@ s_float Frame::GetEffectiveAlpha() const
 
 s_float Frame::GetEffectiveScale() const
 {
-    if (pParent_ != NULL)
+    if (pParent_)
     {
         return fScale_ * pParentFrame_->GetEffectiveScale();
     }
@@ -1024,7 +1024,7 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             (sScriptName == "KeyUp"))
         {
             // Set key name
-            if (pEvent != NULL)
+            if (pEvent)
             {
                 pLua->PushString(pEvent->Get(0)->Get<s_str>());
                 pLua->SetGlobal("arg1");
@@ -1219,7 +1219,7 @@ void Frame::SetScale( const s_float& fScale )
 
 void Frame::SetTopLevel( const s_bool& bIsTopLevel )
 {
-    if ( (pParent_ != NULL) && (bIsTopLevel_ != bIsTopLevel) )
+    if ( pParent_ && (bIsTopLevel_ != bIsTopLevel) )
     {
         GUIManager::GetSingleton()->FireBuildStrataList();
         if (bIsTopLevel)
@@ -1235,13 +1235,13 @@ void Frame::SetTopLevel( const s_bool& bIsTopLevel )
 
 void Frame::SetTopStrata( const s_bool& bIsTopStrata )
 {
-    if ( (pParent_ != NULL) && (bIsTopStrata_ != bIsTopStrata) )
+    if ( pParent_ && (bIsTopStrata_ != bIsTopStrata) )
     {
         GUIManager::GetSingleton()->FireBuildStrataList();
         if (bIsTopStrata)
         {
             s_ptr<Frame> pTopStrata = GUIManager::GetSingleton()->GetTopStrata(mStrata_);
-            if (pTopStrata != NULL)
+            if (pTopStrata)
                 pTopStrata->SetTopStrata(false);
         }
     }
@@ -1261,7 +1261,7 @@ void Frame::StartMoving()
         if (lAnchorList_.GetSize() > 1)
         {
             lAnchorList_.Clear();
-            Anchor mAnchor(this, ANCHOR_TOPLEFT, NULL, ANCHOR_TOPLEFT);
+            Anchor mAnchor(this, ANCHOR_TOPLEFT, nullptr, ANCHOR_TOPLEFT);
             mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
             lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
 
@@ -1329,7 +1329,7 @@ void Frame::StartSizing( const AnchorPoint& mPoint )
         }
 
         lAnchorList_.Clear();
-        Anchor mAnchor(this, mOppositePoint, NULL, ANCHOR_TOPLEFT);
+        Anchor mAnchor(this, mOppositePoint, nullptr, ANCHOR_TOPLEFT);
         mAnchor.SetAbsOffset(iOffX, iOffY);
         lAnchorList_[mOppositePoint] = mAnchor;
 

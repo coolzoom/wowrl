@@ -71,7 +71,7 @@ namespace Frost
 
         lGameOptionList_["GameVersion"] = s_str("0.045");
 
-        pFrameFunc_ = NULL;
+        pFrameFunc_ = nullptr;
 
         // Initialize OGRE
         pRoot_ = new Ogre::Root("", "");
@@ -384,7 +384,7 @@ namespace Frost
                 // ...
                 pSceneSprite_.Delete();
                 pSpriteMgr_->DeleteRenderTarget(pSceneRenderTarget_);
-                pSceneRenderTarget_ = NULL;
+                pSceneRenderTarget_ = nullptr;
 
                 // Print out profiling info
                 pTimeMgr_->Print();
@@ -417,13 +417,13 @@ namespace Frost
                     if (pOgreSceneMgr_)
                     {
                         pRoot_->destroySceneManager(pOgreSceneMgr_.Get());
-                        pOgreSceneMgr_ = NULL;
+                        pOgreSceneMgr_ = nullptr;
                     }
                 }
                 if (pRenderWindow_)
                 {
                     pRenderWindow_->destroy();
-                    pRenderWindow_ = NULL;
+                    pRenderWindow_ = nullptr;
                 }
 
                 pRoot_.Delete();

@@ -161,7 +161,7 @@ namespace Frost
             return &lProfilerList_[sName];
         }
         else
-            return NULL;
+            return nullptr;
     }
 
     void TimeManager::SetProfiling( const s_bool& bProfiling )
@@ -203,43 +203,43 @@ namespace Frost
 
     s_uint TimeManager::GetYear() const
     {
-        time_t iTimestamp = time(NULL);
+        time_t iTimestamp = time(nullptr);
         return localtime(&iTimestamp)->tm_year + 1900;
     }
 
     s_uint TimeManager::GetMonth() const
     {
-        time_t iTimestamp = time(NULL);
+        time_t iTimestamp = time(nullptr);
         return localtime(&iTimestamp)->tm_mon + 1;
     }
 
     s_uint TimeManager::GetDayName() const
     {
-        time_t iTimestamp = time(NULL);
+        time_t iTimestamp = time(nullptr);
         return localtime(&iTimestamp)->tm_wday + 1;
     }
 
     s_uint TimeManager::GetDay() const
     {
-        time_t iTimestamp = time(NULL);
+        time_t iTimestamp = time(nullptr);
         return localtime(&iTimestamp)->tm_mday;
     }
 
     s_uint TimeManager::GetHour() const
     {
-        time_t iTimestamp = time(NULL);
+        time_t iTimestamp = time(nullptr);
         return localtime(&iTimestamp)->tm_hour;
     }
 
     s_uint TimeManager::GetMinutes() const
     {
-        time_t iTimestamp = time(NULL);
+        time_t iTimestamp = time(nullptr);
         return localtime(&iTimestamp)->tm_min;
     }
 
     s_uint TimeManager::GetSeconds() const
     {
-        time_t iTimestamp = time(NULL);
+        time_t iTimestamp = time(nullptr);
         return localtime(&iTimestamp)->tm_sec;
     }
 
@@ -251,7 +251,7 @@ namespace Frost
         return (uint)tb.millitm*1000;
     #else
         timeval tv;
-        gettimeofday(&tv, NULL);
+        gettimeofday(&tv, nullptr);
         return tv.tv_usec;
     #endif
     }

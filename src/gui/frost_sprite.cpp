@@ -34,7 +34,7 @@ namespace Frost
         for (uint i = 0; i < 4; i++)
             pQuad_->lVertexArray[i].mColor = mColor_;
 
-        if (pMat != NULL)
+        if (pMat)
         {
             pQuad_->pMat = pMat;
 
@@ -64,7 +64,7 @@ namespace Frost
         {
             throw Exception(CLASS_NAME,
                 "Can't call the Sprite(Material) constructor with "
-                "a NULL Material."
+                "a null Material."
             );
         }
     }
@@ -83,7 +83,7 @@ namespace Frost
         fX3_ = fWidth_ = fWidth;
         fY3_ = fHeight_ = fHeight;
 
-        if (pMat != NULL)
+        if (pMat)
         {
             pQuad_->pMat = pMat;
 
@@ -126,7 +126,7 @@ namespace Frost
         fX3_ = fU + fWidth_;
         fY3_ = fV + fHeight_;
 
-        if (pMat != NULL)
+        if (pMat)
         {
             pQuad_->pMat = pMat;
 

@@ -14,7 +14,7 @@ namespace Frost
 
     UtilsManager::UtilsManager()
     {
-        pLogFunction_ = NULL;
+        pLogFunction_ = nullptr;
     }
 
     UtilsManager::~UtilsManager()
@@ -23,7 +23,7 @@ namespace Frost
 
     void UtilsManager::Initialize()
     {
-        // Calling srand(time(NULL)) can result in similar results
+        // Calling srand(time(nullptr)) can result in similar results
         // because time()'s resolution is too low. Here we use a
         // high precision timer.
         srand(TimeManager::GetSingleton()->GetMicroseconds().Get());

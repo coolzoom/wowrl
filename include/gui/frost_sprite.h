@@ -277,7 +277,7 @@ namespace Frost
 
         /// Returns this Sprite's Material.
         /** \return This Sprite's Material
-        *   \note NULL is returned if no Material is used.
+        *   \note nullptr is returned if no Material is used.
         */
         s_refptr<Material> GetMaterial();
 

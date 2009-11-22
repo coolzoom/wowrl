@@ -29,7 +29,7 @@ namespace Frost
         *         own decals. If you want to create a temporary decal, only use the first
         *         parameter.
         */
-        Decal(const s_str& sTextureFile, s_ptr<Ogre::Material> pOgreMat = NULL);
+        Decal(const s_str& sTextureFile, s_ptr<Ogre::Material> pOgreMat = nullptr);
 
         /// Copy constructor.
         /** \param mDecal   The base decal to copy
@@ -103,7 +103,7 @@ namespace Frost
 
         /// Returns the associated Material.
         /** \return The associated Material
-        *   \note If none, NULL is returned.
+        *   \note If none, nullptr is returned.
         */
         s_ptr<Ogre::Pass>       GetOgrePass();
 

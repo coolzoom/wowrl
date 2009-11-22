@@ -38,7 +38,7 @@ namespace Frost
         if (iter != lGameplayList_.End())
             return iter->second;
         else
-            return NULL;
+            return nullptr;
     }
 
     void GameplayManager::SetCurrentGameplay( s_ptr<Gameplay> pGameplay )

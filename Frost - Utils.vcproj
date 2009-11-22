@@ -345,6 +345,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\utils\frost_utils_nullptr.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\utils\frost_utils_pair.h"
 				>
 			</File>

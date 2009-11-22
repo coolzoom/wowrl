@@ -90,7 +90,7 @@ s_ptr<Argument> Function::Get( const s_uint& uiIndex )
         return pArgList_->lOptional_[uiIndex];
     }
 
-    return NULL;
+    return nullptr;
 }
 
 s_bool Function::IsProvided( const s_uint& uiIndex ) const

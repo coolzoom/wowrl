@@ -107,7 +107,7 @@ void UIObject::CopyFrom( s_ptr<UIObject> pObj )
         s_ptr<Anchor> pAnchor = pObj->GetPoint(i);
         if (pAnchor)
         {
-            Anchor mAnchor(this, pAnchor->GetPoint(), NULL, pAnchor->GetParentPoint());
+            Anchor mAnchor(this, pAnchor->GetPoint(), nullptr, pAnchor->GetParentPoint());
             mAnchor.SetAbsOffset(pAnchor->GetAbsOffsetX(), pAnchor->GetAbsOffsetY());
             mAnchor.SetParentRawName(pAnchor->GetParentRawName());
             this->SetPoint(mAnchor);
@@ -190,7 +190,7 @@ const s_bool& UIObject::IsShown() const
 
 s_bool UIObject::IsVisible() const
 {
-    if (pParent_ != NULL)
+    if (pParent_)
     {
         if (!IsShown())
             return false;
@@ -551,7 +551,7 @@ void UIObject::SetID( const s_uint& uiID )
 
 void UIObject::UpdateDimensions_()
 {
-    if (pParent_ != NULL)
+    if (pParent_)
     {
         if (bIsHeightAbs_)
             fRelHeight_ = s_float(uiAbsHeight_)/s_float(pParent_->GetAppearentHeight());

@@ -27,6 +27,7 @@ namespace Frost
     template<class T>               class s_range;
     template<class Key, class Data> class s_map;
     template<class Key, class Data> class s_multimap;
+                                    class s_nullptr;
     template<class T>               class s_ptr;
     template<class T>               class s_refptr;
     template<class T>               class s_wptr;
@@ -56,6 +57,7 @@ namespace Frost
 #include "frost_utils_range.h"
 #include "frost_utils_map.h"
 #include "frost_utils_multimap.h"
+#include "frost_utils_nullptr.h"
 #include "frost_utils_ptr.h"
 #include "frost_utils_refptr.h"
 #include "frost_utils_wptr.h"

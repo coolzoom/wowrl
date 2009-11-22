@@ -13,7 +13,7 @@ using namespace Frost::Lua;
 
 const s_str Data::CLASS_NAME = "Lua::Data";
 
-Data::Data() : sName_(""), mLuaType_(Lua::TYPE_NIL), pParent_(NULL)
+Data::Data() : sName_(""), mLuaType_(Lua::TYPE_NIL), pParent_(nullptr)
 {
 }
 
@@ -37,7 +37,7 @@ void Data::Set( s_ptr<Lua::State> pLua, const s_int& iIndex )
     else if (mLuaType_ == Lua::TYPE_USERDATA)
         mValue_ = iIndex;
     else if (mLuaType_ == Lua::TYPE_NIL)
-        mValue_ = static_cast<void*>(NULL);
+        mValue_ = static_cast<void*>(nullptr);
 
     pParent_->SetData(this);
 }

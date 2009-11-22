@@ -53,11 +53,11 @@ namespace Frost
 
     void CameraManager::CheckSettings()
     {
-        if (pMainCamera_ == NULL)
+        if (!pMainCamera_)
         {
             throw Exception(CLASS_NAME, "No main camera defined.");
         }
-        if (pMainViewport_ == NULL)
+        if (!pMainViewport_)
         {
             throw Exception(CLASS_NAME, "Viewport not created.");
         }
@@ -78,7 +78,7 @@ namespace Frost
 
     void CameraManager::SetMainCamera( s_ptr<Camera> pCamera )
     {
-        if (pCamera != NULL)
+        if (pCamera)
         {
             if (pMainCamera_ != pCamera)
             {
@@ -89,7 +89,7 @@ namespace Frost
 
                 if (Engine::GetSingleton()->GetBoolConstant("EnablePostProcessing"))
                 {
-                    if (pMainViewport_ == NULL)
+                    if (!pMainViewport_)
                     {
                         pDefaultCamera_ = CreateCamera();
                         pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
@@ -122,7 +122,7 @@ namespace Frost
                 }
                 else
                 {
-                    if (pMainViewport_ == NULL)
+                    if (!pMainViewport_)
                     {
                         pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
                             pMainCamera_->GetOgreCamera().Get()

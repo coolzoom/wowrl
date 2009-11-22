@@ -131,7 +131,7 @@ namespace Frost
         *   \note If the other Unit is ommited, then this function will
         *         check if this Unit is hostile toward the player.
         */
-        s_bool           IsHostile(s_ptr<Unit> pReference = NULL) const;
+        s_bool           IsHostile(s_ptr<Unit> pReference = nullptr) const;
 
         /// Sets one of this Unit's stat.
         /** \param sStatName The code name of this stat
@@ -191,14 +191,14 @@ namespace Frost
         /// Orient this Unit so it looks at the other.
         /** \param pUnit The Unit to look at
         *   \note This Unit will keep on looking at the other
-        *         until you call LookAt(NULL).
+        *         until you call LookAt(nullptr).
         */
         void             LookAtUnit(s_ptr<Unit> pUnit);
 
         /// Orient this Unit so it looks at an object.
         /** \param pObject The Object to look at
         *   \note This Unit will keep on looking at the object
-        *         until you call LookAt(NULL).
+        *         until you call LookAt(nullptr).
         */
         void             LookAtObject(s_ptr<MovableObject> pObject);
 

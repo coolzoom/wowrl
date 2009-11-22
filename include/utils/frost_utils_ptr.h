@@ -4,7 +4,7 @@ namespace Frost
     /// Smart pointer
     /** This is very basic pointer.<br>
     *   Its only advantage is that it is initialized
-    *   to NULL automatically.<br>
+    *   to nullptr automatically.<br>
     *   There is <b>no</b> automatic deletion.
     */
     template<class T>
@@ -26,6 +26,12 @@ namespace Frost
         s_ptr(T* pValue)
         {
             pValue_ = pValue;
+        }
+
+        /// Conversion from nullptr.
+        s_ptr(const s_nullptr& pNull)
+        {
+            pValue_ = NULL;
         }
 
         /// Copy constructor.
@@ -84,6 +90,15 @@ namespace Frost
         T* operator -> () const
         {
             return pValue_;
+        }
+
+        /// nullptr assignation operator.
+        /** \param pPtr The value to copy
+        */
+        s_ptr<T>& operator = (const s_nullptr& pPtr)
+        {
+            pValue_ = NULL;
+            return *this;
         }
 
         /// Assign a new pointer to this smart pointer.
