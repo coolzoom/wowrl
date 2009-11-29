@@ -150,6 +150,7 @@
 		<Unit filename="include\gui\frost_guimanager.h" />
 		<Unit filename="include\gui\frost_guistructs.h" />
 		<Unit filename="include\gui\frost_layeredregion.h" />
+		<Unit filename="include\gui\frost_rendertarget.h" />
 		<Unit filename="include\gui\frost_scrollingmessageframe.h" />
 		<Unit filename="include\gui\frost_slider.h" />
 		<Unit filename="include\gui\frost_sprite.h" />
@@ -237,6 +238,7 @@
 		<Unit filename="src\gui\frost_layeredregion_glues.cpp" />
 		<Unit filename="src\gui\frost_layeredregion_parser.cpp" />
 		<Unit filename="src\gui\frost_lunar.cpp" />
+		<Unit filename="src\gui\frost_rendertarget.cpp" />
 		<Unit filename="src\gui\frost_scrollingmessageframe.cpp" />
 		<Unit filename="src\gui\frost_scrollingmessageframe_glues.cpp" />
 		<Unit filename="src\gui\frost_scrollingmessageframe_parser.cpp" />

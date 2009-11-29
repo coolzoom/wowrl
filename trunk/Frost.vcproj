@@ -314,6 +314,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\gui\frost_rendertarget.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\gui\frost_scrollingmessageframe.cpp"
 					>
 				</File>
@@ -745,6 +749,10 @@
 				</File>
 				<File
 					RelativePath=".\include\gui\frost_layeredregion.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\frost_rendertarget.h"
 					>
 				</File>
 				<File

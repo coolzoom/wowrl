@@ -101,6 +101,8 @@ namespace Frost
     // gui/frost_guistructs.h
     struct Quad;
     struct Vertex;
+
+    // gui/frost_rendertarget.h
     class  RenderTarget;
 
     // gui/frost_sprite.h

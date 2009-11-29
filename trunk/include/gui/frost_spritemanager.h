@@ -42,6 +42,7 @@
 #define FROST_SPRITEMANAGER_H
 
 #include "frost.h"
+#include "gui/frost_rendertarget.h"
 #include "gui/frost_guistructs.h"
 
 #include <OgreRenderOperation.h>
@@ -69,9 +70,9 @@ namespace Frost
     public :
 
         /// Called by Ogre, for being a render queue listener
-        virtual void renderQueueStarted(Ogre::uint8 uiQueueGroupId, const Ogre::String &sInvocation, bool &bSkip);
+        virtual void renderQueueStarted(Ogre::uint8 uiQueueGroupId, const Ogre::String& sInvocation, bool& bSkip);
         /// Called by Ogre, for being a render queue listener
-        virtual void renderQueueEnded(Ogre::uint8 uiQueueGroupId, const Ogre::String &sInvocation, bool &bRepeat);
+        virtual void renderQueueEnded(Ogre::uint8 uiQueueGroupId, const Ogre::String& sInvocation, bool& bRepeat);
 
         /// Initializes this manager.
         /** \note Automatically called by Engine.
