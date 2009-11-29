@@ -292,9 +292,8 @@
 
 <d[Frame]:StatusBar n:minValue="0" n:maxValue="1" n:defaultValue="1" drawLayer="ARTWORK">
 
-    <n[.,1]:c[Texture]:BarTexture name="$parentBarTexture" b:setAllPoints="true"/>
-
-    <n[.,1]:BarColor n:a="1" n:r="0.0" n:g="0.0" n:b="0.0"/>
+    <n[*]:c[Texture]:BarTexture name="$parentBarTexture" b:setAllPoints="true"/>
+    <n[*]:BarColor n:a="1" n:r="0.0" n:g="0.0" n:b="0.0"/>
 
     <n[.,1]:Scripts>
         <n[.,1]:OnDragStart/>

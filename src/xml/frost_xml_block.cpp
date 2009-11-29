@@ -28,59 +28,28 @@ Attribute::Attribute(const s_str& name, const s_bool& optional, const s_str& def
 {
 }
 
-PredefinedBlock::PredefinedBlock()
+PredefinedBlock::PredefinedBlock() : uiRadioGroup(s_uint::NaN)
 {
 }
 
-PredefinedBlock::PredefinedBlock(s_ptr<Block> block, const s_uint& min, const s_uint& max, const s_bool& radio) :
-    pBlock(block), uiMin(min), uiMax(max), bRadio(radio)
+PredefinedBlock::PredefinedBlock(s_ptr<Block> block, const s_uint& min, const s_uint& max, const s_uint& radio_group) :
+    pBlock(block), uiMin(min), uiMax(max), uiRadioGroup(radio_group)
 {
 }
 
-Block::Block()
+Block::Block() : uiRadioGroup_(s_uint::NaN)
 {
 }
 
-Block::Block( const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_str& sFile, const s_uint& uiLineNbr, const s_bool& bRadio ) :
-    sName_(sName), uiMaxNumber_(uiMaxNbr), uiMinNumber_(uiMinNbr), bRadio_(bRadio), sFile_(sFile), uiLineNbr_(uiLineNbr)
+Block::Block( const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_str& sFile, const s_uint& uiLineNbr, const s_uint& uiRadioGroup ) :
+    sName_(sName), uiMaxNumber_(uiMaxNbr), uiMinNumber_(uiMinNbr), uiRadioGroup_(uiRadioGroup), sFile_(sFile), uiLineNbr_(uiLineNbr)
 {
-}
-
-Block::Block( const Block& mValue )
-{
-    sName_ = mValue.sName_;
-    uiMaxNumber_ = mValue.uiMaxNumber_;
-    uiMinNumber_ = mValue.uiMinNumber_;
-    bRadio_ = mValue.bRadio_;
-    bRadioChilds_ = mValue.bRadioChilds_;
-    sValue_ = mValue.sValue_;
-    pDoc_ = mValue.pDoc_;
-    pParent_ = mValue.pParent_;
-    bCreating_ = mValue.bCreating_;
-
-    sFile_ = mValue.sFile_;
-    uiLineNbr_ = mValue.uiLineNbr_;
-
-    lDerivatedList_ = mValue.lDerivatedList_;
-
-    lAttributeList_ = mValue.lAttributeList_;
-    lDefBlockList_ = mValue.lDefBlockList_;
-    lPreDefBlockList_ = mValue.lPreDefBlockList_;
-
-    s_multimap< s_str, s_ptr<Block> >::const_iterator iterBlock;
-    s_multimap< s_str, s_ptr<Block> >::iterator       iterAdded;
-    foreach (iterBlock, mValue.lFoundBlockList_)
-    {
-        iterAdded = lFoundBlockList_.Insert(
-            iterBlock->first, s_ptr<Block>(new Block(*(iterBlock->second)))
-        );
-        lFoundBlockStack_.PushBack(iterAdded);
-        lFoundBlockSortedStacks_[iterBlock->first].PushBack(iterAdded);
-    }
 }
 
 Block::~Block()
 {
+    pNewBlock_.Delete();
+
     s_multimap< s_str, s_ptr<Block> >::iterator iterBlock;
     foreach (iterBlock, lFoundBlockList_)
     {
@@ -94,6 +63,8 @@ void Block::Copy( s_ptr<Block> pBlock )
     {
         bRadioChilds_ = pBlock->bRadioChilds_;
         sValue_ = pBlock->sValue_;
+
+        lRadioBlockList_ = pBlock->lRadioBlockList_;
 
         lAttributeList_ = pBlock->lAttributeList_;
         lDefBlockList_ = pBlock->lDefBlockList_;
@@ -289,19 +260,85 @@ s_bool Block::CheckAttributes( const s_str& sAttributes )
 
 s_bool Block::CheckBlocks()
 {
-    if ( bRadioChilds_ && (lFoundBlockList_.GetSize() == 0) )
+    if (bRadioChilds_)
     {
-        Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
-            "This block is meant to contain one radio child, but doesn't contain any."
-        );
-        return false;
-    }
-    if ( bRadioChilds_ && (lFoundBlockList_.GetSize() > 1) )
-    {
-        Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
-            "This block is meant to contain one radio child, but contains several ones."
-        );
-        return false;
+        s_map<s_str, Block>::iterator iterDefBlock;
+        foreach (iterDefBlock, lDefBlockList_)
+        {
+            s_uint uiCount = lFoundBlockList_.Count(iterDefBlock->first);
+            s_uint uiGroup = iterDefBlock->second.GetRadioGroup();
+            if (uiGroup.IsValid())
+            {
+                if (uiCount == 1)
+                {
+                    if (!lRadioBlockList_[uiGroup])
+                    {
+                        lRadioBlockList_[uiGroup] = lFoundBlockList_.Get(iterDefBlock->first)->second;
+                    }
+                    else
+                    {
+                        Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
+                            "\"<"+iterDefBlock->first+">\" is part of a radio group with "
+                            "\"<"+lRadioBlockList_[uiGroup]->GetName()+">\", which has been found first."
+                        );
+                        return false;
+                    }
+                }
+                else if (uiCount > 1)
+                {
+                    Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
+                        "\"<"+iterDefBlock->first+">\" is part of a radio group but has been found "
+                        "several times."
+                    );
+                    return false;
+                }
+            }
+        }
+
+        s_map<s_str, PredefinedBlock>::iterator iterPreDefBlock;
+        foreach (iterPreDefBlock, lPreDefBlockList_)
+        {
+            s_uint uiCount = lFoundBlockList_.Count(iterPreDefBlock->first);
+            s_uint uiGroup = iterPreDefBlock->second.uiRadioGroup;
+            if (uiGroup.IsValid())
+            {
+                if (uiCount == 1)
+                {
+                    if (!lRadioBlockList_[uiGroup])
+                    {
+                        lRadioBlockList_[uiGroup] = lFoundBlockList_.Get(iterPreDefBlock->first)->second;
+                    }
+                    else
+                    {
+                        Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
+                            "\"<"+iterPreDefBlock->first+">\" is part of a radio group with "
+                            "\"<"+lRadioBlockList_[uiGroup]->GetName()+">\", which has been found first."
+                        );
+                        return false;
+                    }
+                }
+                else
+                {
+                    Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
+                        "\"<"+iterPreDefBlock->first+">\" is part of a radio group but has been found "
+                        "several times."
+                    );
+                    return false;
+                }
+            }
+        }
+
+        s_map< s_uint, s_ptr<Block> >::iterator iterRadio;
+        foreach (iterRadio, lRadioBlockList_)
+        {
+            if (!iterRadio->second)
+            {
+                Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
+                    "No block found for radio group "+iterRadio->first+"."
+                );
+                return false;
+            }
+        }
     }
 
     s_map<s_str, Block>::iterator iterDefBlock;
@@ -418,16 +455,14 @@ const s_uint& Block::GetMaxCount() const
     return uiMaxNumber_;
 }
 
-void Block::SetRadio()
+s_bool Block::IsRadio() const
 {
-    uiMinNumber_ = 0;
-    uiMaxNumber_ = 1;
-    bRadio_ = true;
+    return uiRadioGroup_.IsValid();
 }
 
-const s_bool& Block::IsRadio() const
+const s_uint& Block::GetRadioGroup() const
 {
-    return bRadio_;
+    return uiRadioGroup_;
 }
 
 const s_bool& Block::HasRadioChilds() const
@@ -536,10 +571,20 @@ s_ptr<Block> Block::GetBlock( const s_str& sName )
     }
 }
 
-s_ptr<Block> Block::GetRadioBlock()
+s_ptr<Block> Block::GetRadioBlock( const s_uint& uiGroup )
 {
     if (bRadioChilds_)
-        return lFoundBlockList_.Begin()->second;
+    {
+        if (lRadioBlockList_.Find(uiGroup))
+        {
+            return lRadioBlockList_[uiGroup];
+        }
+        else
+        {
+            Warning(sFile_+":"+uiLineNbr_+":"+sName_, "No block in radio group "+uiGroup+".");
+            return nullptr;
+        }
+    }
     else
         return nullptr;
 }
@@ -573,16 +618,19 @@ s_ptr<Block> Block::CreateBlock( const s_str& sName )
     {
         if (lDefBlockList_.Find(sName))
         {
-            pNewBlock_ = s_refptr<Block>(new Block(lDefBlockList_[sName]));
+            pNewBlock_ = new Block(lDefBlockList_[sName]);
         }
         else
         {
-            pNewBlock_ = s_refptr<Block>(new Block(*pDoc_->GetPredefinedBlock(sName)));
+            pNewBlock_ = new Block(*pDoc_->GetPredefinedBlock(sName));
         }
+
+        pNewBlock_->SetFile(pDoc_->GetCurrentFileName());
+        pNewBlock_->SetLineNbr(pDoc_->GetCurrentLineNbr());
         pNewBlock_->SetParent(this);
         pNewBlock_->SetDocument(pDoc_);
         bCreating_ = true;
-        return s_ptr<Block>(pNewBlock_.Get());
+        return pNewBlock_;
     }
     else
     {
@@ -598,64 +646,34 @@ void Block::AddBlock()
         s_multimap< s_str, s_ptr<Block> >::iterator iterAdded;
         // Store the new block
         iterAdded = lFoundBlockList_.Insert(
-            pNewBlock_->GetName(), s_ptr<Block>(new Block(*pNewBlock_))
+            pNewBlock_->GetName(), pNewBlock_
         );
         // Position it on the global stack
         lFoundBlockStack_.PushBack(iterAdded);
         // Position it on the sorted stack
         lFoundBlockSortedStacks_[pNewBlock_->GetName()].PushBack(iterAdded);
 
-        pNewBlock_.SetNull();
+        pNewBlock_ = nullptr;
         bCreating_ = false;
     }
 }
 
 s_ptr<Block> Block::CreateDefBlock( const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr )
 {
-    if (bRadioChilds_)
-    {
-        Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
-            "A neighbour has been declared as a radio block, but \""+sName+"\" isn't. "
-            "I'll be marked as radio block as well."
-        );
-        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr(), true);
-    }
-    else
-        lDefBlockList_[sName] = Block(sName, uiMinNbr, uiMaxNbr, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr());
+    lDefBlockList_[sName] = Block(sName, uiMinNbr, uiMaxNbr, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr());
     s_ptr<Block> pBlock = &lDefBlockList_[sName];
     pBlock->SetParent(this);
     pBlock->SetDocument(pDoc_);
     return pBlock;
 }
 
-s_ptr<Block> Block::CreateRadioDefBlock(const s_str& sName)
+s_ptr<Block> Block::CreateRadioDefBlock( const s_str& sName, const s_uint& uiRadioGroup )
 {
     if (!HasBlock(sName))
     {
-        if ( !bRadioChilds_ && (GetDefChildNumber() != 0) )
-        {
-            Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
-                "\""+sName+"\" has been declared as a radio block, but the previous ones weren't. "
-                "All previously defined childs will be marked as radio blocks."
-            );
-
-            s_map<s_str, PredefinedBlock>::iterator iterPreDef;
-            foreach (iterPreDef, lPreDefBlockList_)
-            {
-                iterPreDef->second.bRadio = true;
-                iterPreDef->second.uiMin = 0;
-                iterPreDef->second.uiMax = 1;
-            }
-
-            s_map<s_str, Block>::iterator iterDef;
-            foreach (iterDef, lDefBlockList_)
-            {
-                iterDef->second.SetRadio();
-            }
-        }
-
         bRadioChilds_ = true;
-        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr(), true);
+        lRadioBlockList_[uiRadioGroup] = nullptr;
+        lDefBlockList_[sName] = Block(sName, 0, 1, pDoc_->GetCurrentFileName(), pDoc_->GetCurrentLineNbr(), uiRadioGroup);
         s_ptr<Block> pBlock = &lDefBlockList_[sName];
         pBlock->SetParent(this);
         pBlock->SetDocument(pDoc_);
@@ -673,16 +691,7 @@ s_ptr<PredefinedBlock> Block::AddPredefinedBlock( s_ptr<Block> pBlock, const s_u
 {
     if (!HasBlock(pBlock->GetName()))
     {
-        if (bRadioChilds_)
-        {
-            Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
-                "A neighbour has been declared as a radio block, but \""+pBlock->GetName()+"\" isn't. "
-                "I'll be marked as radio block as well."
-            );
-            lPreDefBlockList_[pBlock->GetName()] = PredefinedBlock(pBlock, 0, 1, true);
-        }
-        else
-            lPreDefBlockList_[pBlock->GetName()] = PredefinedBlock(pBlock, uiMinNbr, uiMaxNbr);
+        lPreDefBlockList_[pBlock->GetName()] = PredefinedBlock(pBlock, uiMinNbr, uiMaxNbr);
 
         return &lPreDefBlockList_[pBlock->GetName()];
     }
@@ -694,34 +703,13 @@ s_ptr<PredefinedBlock> Block::AddPredefinedBlock( s_ptr<Block> pBlock, const s_u
     }
 }
 
-s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock )
+s_ptr<PredefinedBlock> Block::AddPredefinedRadioBlock( s_ptr<Block> pBlock, const s_uint& uiRadioGroup )
 {
     if (!HasBlock(pBlock->GetName()))
     {
-        if ( !bRadioChilds_ && (GetDefChildNumber() != 0) )
-        {
-            Warning(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
-                "\""+pBlock->GetName()+"\" has been declared as a radio block, but the previous ones weren't. "
-                "All previously defined childs will be marked as radio blocks."
-            );
-
-            s_map<s_str, PredefinedBlock>::iterator iterPreDef;
-            foreach (iterPreDef, lPreDefBlockList_)
-            {
-                iterPreDef->second.bRadio = true;
-                iterPreDef->second.uiMin = 0;
-                iterPreDef->second.uiMax = 1;
-            }
-
-            s_map<s_str, Block>::iterator iterDef;
-            foreach (iterDef, lDefBlockList_)
-            {
-                iterDef->second.SetRadio();
-            }
-        }
-
         bRadioChilds_ = true;
-        lPreDefBlockList_[pBlock->GetName()] = PredefinedBlock(pBlock, 0, 1, true);
+        lRadioBlockList_[uiRadioGroup] = nullptr;
+        lPreDefBlockList_[pBlock->GetName()] = PredefinedBlock(pBlock, 0, 1, uiRadioGroup);
 
         return &lPreDefBlockList_[pBlock->GetName()];
     }
@@ -741,4 +729,14 @@ const s_str& Block::GetFile() const
 const s_uint& Block::GetLineNbr() const
 {
     return uiLineNbr_;
+}
+
+void Block::SetFile( const s_str& sFile )
+{
+    sFile_ = sFile;
+}
+
+void Block::SetLineNbr( const s_uint& uiLineNbr )
+{
+    uiLineNbr_ = uiLineNbr;
 }
