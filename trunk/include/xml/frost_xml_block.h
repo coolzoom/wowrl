@@ -51,12 +51,12 @@ namespace XML
     struct PredefinedBlock
     {
         PredefinedBlock();
-        PredefinedBlock(s_ptr<Block> block, const s_uint& min, const s_uint& max, const s_bool& radio = false);
+        PredefinedBlock(s_ptr<Block> block, const s_uint& min, const s_uint& max, const s_uint& radio_group = s_uint::NaN);
 
         s_ptr<Block> pBlock;
         s_uint       uiMin;
         s_uint       uiMax;
-        s_bool       bRadio;
+        s_uint       uiRadioGroup;
     };
 
     /// An element in an XML file
@@ -69,19 +69,14 @@ namespace XML
         Block();
 
         /// Definition constructor.
-        /** \param sName     The name of this block
-        *   \param uiMinNbr  The minimum number of occurences
-        *   \param uiMaxNbr  The maximum number of occurences
-        *   \param sFile     The file in which this block is defined
-        *   \param uiLineNbr The line at which this block is defined
-        *   \param bRadio    'true' if only one Block can be present on this level
+        /** \param sName         The name of this block
+        *   \param uiMinNbr      The minimum number of occurences
+        *   \param uiMaxNbr      The maximum number of occurences
+        *   \param sFile         The file in which this block is defined
+        *   \param uiLineNbr     The line at which this block is defined
+        *   \param uiRadioGroup  The radio group this Block belongs to
         */
-        Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_str& sFile, const s_uint& uiLineNbr, const s_bool& bRadio = false);
-
-        /// Copy constructor.
-        /** \param mValue The Block to copy
-        */
-        Block(const Block& mValue);
+        Block(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr, const s_str& sFile, const s_uint& uiLineNbr, const s_uint& uiRadioGroup = s_uint::NaN);
 
         /// Destructor.
         ~Block();
@@ -113,13 +108,18 @@ namespace XML
         */
         const s_uint& GetMaxCount() const;
 
-        /// Checks if this Block can only be present if it's alone on its level.
-        /** \return 'true' if this Block can only be present if it's alone on its level
+        /// Checks if this Block is a radio block.
+        /** \return 'true' if this Block is a radio block
         */
-        const s_bool& IsRadio() const;
+        s_bool        IsRadio() const;
 
-        /// Checks if this Block can only contain one child.
-        /** \return 'true' if this Block can only contain one child
+        /// Returns the radio group this Block belongs to.
+        /** \return The radio group this Block belongs to
+        */
+        const s_uint& GetRadioGroup() const;
+
+        /// Checks if this Block has radio childs.
+        /** \return 'true' if this Block has radio childs
         */
         const s_bool& HasRadioChilds() const;
 
@@ -172,11 +172,12 @@ namespace XML
         */
         s_ptr<Block>  GetBlock(const s_str& sName);
 
-        /// Returns the only sub-block available.
-        /** \return The only sub-block available
+        /// Returns a radio block.
+        /** \param uiGroup The radio block group
+        *   \return A radio block
         *   \note Only works if this Block has radio childs.
         */
-        s_ptr<Block>  GetRadioBlock();
+        s_ptr<Block>  GetRadioBlock(const s_uint& uiGroup = 0u);
 
         /// Returns the file into which this Block has been found.
         /** \return The file into which this Block has been found
@@ -187,6 +188,16 @@ namespace XML
         /** \return The line at which this Block has been found
         */
         const s_uint& GetLineNbr() const;
+
+        /// Sets the file into which this Block has been found.
+        /** \param sFile The file into which this Block has been found
+        */
+        void          SetFile(const s_str& sFile);
+
+        /// Sets the line at which this Block has been found.
+        /** \param uiLineNbr The line at which this Block has been found
+        */
+        void          SetLineNbr(const s_uint& uiLineNbr);
 
         static const s_str CLASS_NAME;
 
@@ -269,11 +280,6 @@ namespace XML
         */
         void          SetDocument(s_ptr<Document> pDoc);
 
-        /// Makes this Block a "radio" Block.
-        /** \note Only used in the definition stage.
-        */
-        void          SetRadio();
-
         /// Returns the number of sub-blocks defined for this Block.
         /** \return the number of sub-blocks defined for this Block
         *   \note Only used in definition stage.
@@ -316,13 +322,15 @@ namespace XML
         s_ptr<Block>  CreateDefBlock(const s_str& sName, const s_uint& uiMinNbr, const s_uint& uiMaxNbr);
 
         /// Creates a new Block (used for definition).
-        /** \param sName The name of the block
+        /** \param sName        The name of the block
+        *   \param uiRadioGroup The radio group it belongs to
         *   \return The new Block
         *   \note Only used in the definition stage.<br>
         *         Creates a "radio" Block : it can only be present
-        *         if none of its defined neighbours are.
+        *         if none of the other radio blocks of the same
+        *         group are present.
         */
-        s_ptr<Block>  CreateRadioDefBlock(const s_str& sName);
+        s_ptr<Block>  CreateRadioDefBlock(const s_str& sName, const s_uint& uiRadioGroup);
 
         /// Adds a pre-defined Block to the list.
         /** \param pBlock   The pre-defined Block
@@ -334,25 +342,27 @@ namespace XML
         s_ptr<PredefinedBlock> AddPredefinedBlock(s_ptr<Block> pBlock, const s_uint& uiMinNbr, const s_uint& uiMaxNbr);
 
         /// Adds a pre-defined Block to the list.
-        /** \param pBlock   The pre-defined Block
+        /** \param pBlock       The pre-defined Block
+        *   \param uiRadioGroup The radio group it belongs to
         *   \return The new Block reference
         *   \note Only used in the definition stage.<br>
         *         Adds a "radio" Block : it can only be present
-        *         if none of its defined neighbours are.
+        *         if none of the other radio blocks of the same
+        *         group are present.
         */
-        s_ptr<PredefinedBlock> AddPredefinedRadioBlock(s_ptr<Block> pBlock);
+        s_ptr<PredefinedBlock> AddPredefinedRadioBlock(s_ptr<Block> pBlock, const s_uint& uiRadioGroup);
 
     private :
 
         s_str           sName_;
         s_uint          uiMaxNumber_;
         s_uint          uiMinNumber_;
-        s_bool          bRadio_;
+        s_uint          uiRadioGroup_;
         s_bool          bRadioChilds_;
         s_str           sValue_;
         s_ptr<Document> pDoc_;
         s_ptr<Block>    pParent_;
-        s_refptr<Block> pNewBlock_;
+        s_ptr<Block>    pNewBlock_;
         s_bool          bCreating_;
 
         s_str  sFile_;
@@ -366,6 +376,8 @@ namespace XML
         s_map<s_str, Attribute>       lAttributeList_;
         s_map<s_str, Block>           lDefBlockList_;
         s_map<s_str, PredefinedBlock> lPreDefBlockList_;
+
+        s_map< s_uint, s_ptr<Block> > lRadioBlockList_;
 
         s_multimap< s_str, s_ptr<Block> >                                   lFoundBlockList_;
         s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator>                 lFoundBlockStack_;

@@ -683,7 +683,7 @@ s_str Document::DefState::ReadTagName( const s_str& sTagContent ) const
     return sTagContent.Cut(" ", 1).Front().Cut(":").Back();
 }
 
-void Document::DefState::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio, const s_bool& bMultiline )
+void Document::DefState::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax, s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_uint& uiRadioGroup, const s_bool& bMultiline )
 {
     s_ctnr<s_str> lCommands = sName.Cut(":");
     sName = lCommands.Back();
@@ -753,16 +753,23 @@ void Document::DefState::ReadPreDefCommands_( s_str& sName, s_str& sParent, s_ui
                     s_ctnr<s_str> lMinMax = sParams.Cut(",");
                     s_str sMin = lMinMax.Front();
                     s_str sMax = lMinMax.Back();
-                    if (sMin != ".")
-                        uiMin = s_uint(sMin);
-                    if (sMax != ".")
-                        uiMax = s_uint(sMax);
+                    if (sMin == "*")
+                    {
+                        uiRadioGroup = s_uint(sMax);
+                    }
+                    else
+                    {
+                        if (sMin != ".")
+                            uiMin = s_uint(sMin);
+                        if (sMax != ".")
+                            uiMax = s_uint(sMax);
+                    }
                 }
                 else
                 {
                     if (sParams == "*")
                     {
-                        bRadio = true;
+                        uiRadioGroup = 0;
                     }
                     else if (sParams.IsNumber())
                     {
@@ -801,13 +808,13 @@ void Document::DefState::ReadSingleTag( const s_str& sTagContent )
     s_uint uiMax = s_uint::INF;
     s_bool bPreDefining = false;
     s_bool bCopy = false;
-    s_bool bRadio = false;
+    s_uint uiRadioGroup = s_uint::NaN;
     s_bool bLoad = false;
     s_str sParent;
 
     // Read commands
     ReadPreDefCommands_(
-        sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, bRadio, false
+        sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, uiRadioGroup, false
     );
 
     // Prepare attributes
@@ -856,8 +863,8 @@ void Document::DefState::ReadSingleTag( const s_str& sTagContent )
             if (pDoc_->GetPredefinedBlock(sName))
             {
                 s_ptr<PredefinedBlock> pAdded;
-                if (bRadio)
-                    pAdded = pCurrentParentBlock_->AddPredefinedRadioBlock(pDoc_->GetPredefinedBlock(sName));
+                if (uiRadioGroup.IsValid())
+                    pAdded = pCurrentParentBlock_->AddPredefinedRadioBlock(pDoc_->GetPredefinedBlock(sName), uiRadioGroup);
                 else
                     pAdded = pCurrentParentBlock_->AddPredefinedBlock(pDoc_->GetPredefinedBlock(sName), uiMin, uiMax);
 
@@ -877,8 +884,8 @@ void Document::DefState::ReadSingleTag( const s_str& sTagContent )
         }
         else if (bCopy)
         {
-            if (bRadio)
-                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+            if (uiRadioGroup.IsValid())
+                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName, uiRadioGroup);
             else
                 pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
 
@@ -906,8 +913,8 @@ void Document::DefState::ReadSingleTag( const s_str& sTagContent )
         {
             if (!pDoc_->GetPredefinedBlock(sName))
             {
-                if (bRadio)
-                    pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+                if (uiRadioGroup.IsValid())
+                    pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName, uiRadioGroup);
                 else
                     pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
 
@@ -1025,12 +1032,12 @@ void Document::DefState::ReadOpeningTag( const s_str& sTagContent )
     s_uint uiMax = s_uint::INF;
     s_bool bPreDefining = false;
     s_bool bCopy = false;
-    s_bool bRadio = false;
+    s_uint uiRadioGroup = s_uint::NaN;
     s_bool bLoad = false;
     s_str sParent;
 
     ReadPreDefCommands_(
-        sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, bRadio, true
+        sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, uiRadioGroup, true
     );
 
     s_ctnr<s_str> lAttributes;
@@ -1046,8 +1053,8 @@ void Document::DefState::ReadOpeningTag( const s_str& sTagContent )
     {
         if (bCopy)
         {
-            if (bRadio)
-                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+            if (uiRadioGroup.IsValid())
+                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName, uiRadioGroup);
             else
                 pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
 
@@ -1072,8 +1079,8 @@ void Document::DefState::ReadOpeningTag( const s_str& sTagContent )
         }
         else if (!pDoc_->GetPredefinedBlock(sName))
         {
-            if (bRadio)
-                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName);
+            if (uiRadioGroup.IsValid())
+                pCurrentBlock_ = pCurrentParentBlock_->CreateRadioDefBlock(sName, uiRadioGroup);
             else
                 pCurrentBlock_ = pCurrentParentBlock_->CreateDefBlock(sName, uiMin, uiMax);
 

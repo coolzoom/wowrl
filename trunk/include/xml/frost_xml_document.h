@@ -162,7 +162,7 @@ namespace XML
 
             void ReadPreDefCommands_(
                 s_str& sName, s_str& sParent, s_uint& uiMin, s_uint& uiMax,
-                s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_bool& bRadio,
+                s_bool& bCopy, s_bool& bPreDefining, s_bool& bLoad, s_uint& uiRadioGroup,
                 const s_bool& bMultiline
             );
         };
