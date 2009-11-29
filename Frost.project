@@ -2,7 +2,9 @@
 <CodeLite_Project Name="Frost" InternalType="Console">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00060001N0005Debug0000000000000001N0011Debug_Linux0000000000000001N0011Debug_Win320000000000000001N0007Release0000000000000001N0013Release_Linux0000000000000001N0013Release_Win32000000000000]]>
+      <![CDATA[00060001N0005Debug0000000000000001N0011Debug_Linux0000000000000001N0011Debug_Win320000000000000001N0007Release0000000000000001N0013Release_Linux0000000000000001N0013Release_Win32000000000000
+    
+    ]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -60,6 +62,7 @@
       <File Name="src\gui\frost_titleregion_parser.cpp"/>
       <File Name="src\gui\frost_uiobject.cpp"/>
       <File Name="src\gui\frost_uiobject_glues.cpp"/>
+      <File Name="src\gui\frost_rendertarget.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="lua">
       <File Name="src\lua\frost_lua_glues.cpp"/>
@@ -173,6 +176,7 @@
       <File Name="include\gui\frost_text.h"/>
       <File Name="include\gui\frost_texture.h"/>
       <File Name="include\gui\frost_titleregion.h"/>
+      <File Name="include\gui\frost_rendertarget.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="lua">
       <File Name="include\lua\frost_lua.h"/>
@@ -256,22 +260,22 @@
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="bin/Frost_d.exe" IntermediateDirectory="obj_Frost/Debug_CL_Win32" Command="Frost_d.exe" CommandArguments="" WorkingDirectory="bin" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
+        <CustomPostBuild/>
         <CustomPreBuild>obj_Frost/Release_CL_Win32/ressources.res
 obj_Frost/Release_CL_Win32/ressources.res : ressources.rc
 	windres ressources.rc -J rc -o obj_Frost/Release_CL_Win32/ressources.res -O coff
@@ -294,22 +298,22 @@ obj_Frost/Release_CL_Win32/ressources.res : ressources.rc
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="bin/Frost_d.exe" IntermediateDirectory="obj_Frost/Debug_CL_Win32" Command="Frost_d.exe" CommandArguments="" WorkingDirectory="bin" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
+        <CustomPostBuild/>
         <CustomPreBuild>obj_Frost/Release_CL_Win32/ressources.res
 obj_Frost/Release_CL_Win32/ressources.res : ressources.rc
 	windres ressources.rc -J rc -o obj_Frost/Release_CL_Win32/ressources.res -O coff
@@ -331,22 +335,22 @@ obj_Frost/Release_CL_Win32/ressources.res : ressources.rc
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="bin/Frost.exe" IntermediateDirectory="obj_Frost/Release_CL_Win32" Command="Frost.exe" CommandArguments="" WorkingDirectory="bin" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
+        <CustomPostBuild/>
         <CustomPreBuild>obj_Frost/Release_CL_Win32/ressources.res
 obj_Frost/Release_CL_Win32/ressources.res : ressources.rc
 	windres ressources.rc -J rc -o obj_Frost/Release_CL_Win32/ressources.res -O coff
@@ -371,22 +375,22 @@ obj_Frost/Release_CL_Win32/ressources.res : ressources.rc
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="bin/Frost.exe" IntermediateDirectory="obj_Frost/Release_CL_Win32" Command="Frost.exe" CommandArguments="" WorkingDirectory="bin" PauseExecWhenProcTerminates="yes"/>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
-        <PostConnectCommands></PostConnectCommands>
-        <StartupCommands></StartupCommands>
+        <PostConnectCommands/>
+        <StartupCommands/>
       </Debugger>
       <PreBuild/>
       <PostBuild/>
       <CustomBuild Enabled="no">
-        <CleanCommand></CleanCommand>
-        <BuildCommand></BuildCommand>
-        <PreprocessFileCommand></PreprocessFileCommand>
-        <SingleFileCommand></SingleFileCommand>
-        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory></WorkingDirectory>
+        <WorkingDirectory/>
       </CustomBuild>
       <AdditionalRules>
-        <CustomPostBuild></CustomPostBuild>
+        <CustomPostBuild/>
         <CustomPreBuild>obj_Frost/Release_CL_Win32/ressources.res
 obj_Frost/Release_CL_Win32/ressources.res : ressources.rc
 	windres ressources.rc -J rc -o obj_Frost/Release_CL_Win32/ressources.res -O coff

@@ -7,7 +7,7 @@
 
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
-#include "gui/frost_guistructs.h"
+#include "gui/frost_rendertarget.h"
 
 #include <OgreMaterialManager.h>
 #include <OgreTextureManager.h>

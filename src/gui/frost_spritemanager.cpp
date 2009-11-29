@@ -87,11 +87,11 @@ namespace Frost
             DestroyHardwareBuffers_();
     }
 
-    void SpriteManager::renderQueueStarted( Ogre::uint8 uiQueueGroupId, const Ogre::String &sInvocation, bool &bSkip )
+    void SpriteManager::renderQueueStarted( Ogre::uint8 uiQueueGroupId, const Ogre::String& sInvocation, bool& bSkip )
     {
     }
 
-    void SpriteManager::renderQueueEnded( Ogre::uint8 uiQueueGroupId, const Ogre::String &sInvocation, bool &bRepeat )
+    void SpriteManager::renderQueueEnded( Ogre::uint8 uiQueueGroupId, const Ogre::String& sInvocation, bool& bRepeat )
     {
         if (uiQueueGroupId == Ogre::RENDER_QUEUE_OVERLAY && !bAutoRenderingDisabled_)
         {
