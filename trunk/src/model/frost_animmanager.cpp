@@ -145,7 +145,7 @@ namespace Frost
         else
             pActualAnim_ = nullptr;
 
-        // TODO : Model : Calculer la bounding box animée
+        // TODO : Model : Update the bounding box with animations
     }
 
     void AnimManager::SetAnim( AnimID mID, AnimPriority mPriority, const s_float& fSpeed, const s_bool& bQueued )

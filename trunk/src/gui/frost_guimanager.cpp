@@ -641,7 +641,7 @@ namespace Frost
                     else if (pElemBlock->GetName() == "StatusBar")
                         pUIObject = new GUI::StatusBar();
 
-                    // TODO : allow virtual regions to be created at root
+                    // TODO : Allow virtual regions to be created at root
 
                     try
                     {

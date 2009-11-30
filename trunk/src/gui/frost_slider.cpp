@@ -14,7 +14,7 @@ using namespace Frost::GUI;
 
 const s_str Slider::CLASS_NAME = "GUI::Slider";
 
-// TODO : Implementer Slider
+// TODO : Implement Slider
 
 Slider::Slider() : Frame()
 {

@@ -27,8 +27,7 @@ namespace Frost
 
     s_bool MeshObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
     {
-        // TODO : transformer les coordonnees
-        // TODO : rewrite this code : not precise enough...
+        // TODO : Rewrite this code : not precise and not working
         Vector mDirection = *pNextPos - mPreviousPos;
         s_float fMaxDistance = mDirection.GetNorm();
         mDirection /= fMaxDistance;

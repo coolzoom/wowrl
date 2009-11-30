@@ -286,6 +286,7 @@ int LuaButton::_RegisterForClicks( lua_State* pLua )
     Lua::Function mFunc("Button:RegisterForClicks", pLua);
 
     // TODO : Implement Button:RegisterForClicks
+    Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
 
     return mFunc.Return();
 }
