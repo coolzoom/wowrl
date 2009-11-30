@@ -58,28 +58,35 @@ void StatusBar::SetBarDrawLayer( LayerType mBarLayer )
 
 void StatusBar::SetBarDrawLayer( const s_str& sBarLayer )
 {
-    if (sBarLayer == "ARTWORK")
-        mBarLayer_ = LAYER_ARTWORK;
-    else if (sBarLayer == "BACKGROUND")
-        mBarLayer_ = LAYER_BACKGROUND;
-    else if (sBarLayer == "BORDER")
-        mBarLayer_ = LAYER_BORDER;
-    else if (sBarLayer == "HIGHLIGHT")
-        mBarLayer_ = LAYER_HIGHLIGHT;
-    else if (sBarLayer == "OVERLAY")
-        mBarLayer_ = LAYER_OVERLAY;
-    else
+    if (pBarTexture_)
     {
-        Warning(lType_.Back(),
-            "Uknown layer type : \""+sBarLayer+"\". Using \"ARTWORK\"."
-        );
-        mBarLayer_ = LAYER_ARTWORK;
+        if (sBarLayer == "ARTWORK")
+            mBarLayer_ = LAYER_ARTWORK;
+        else if (sBarLayer == "BACKGROUND")
+            mBarLayer_ = LAYER_BACKGROUND;
+        else if (sBarLayer == "BORDER")
+            mBarLayer_ = LAYER_BORDER;
+        else if (sBarLayer == "HIGHLIGHT")
+            mBarLayer_ = LAYER_HIGHLIGHT;
+        else if (sBarLayer == "OVERLAY")
+            mBarLayer_ = LAYER_OVERLAY;
+        else
+        {
+            Warning(lType_.Back(),
+                "Uknown layer type : \""+sBarLayer+"\". Using \"ARTWORK\"."
+            );
+            mBarLayer_ = LAYER_ARTWORK;
+        }
+        pBarTexture_->SetDrawLayer(mBarLayer_);
     }
 }
 
 void StatusBar::SetBarTexture( s_ptr<Texture> pBarTexture )
 {
     pBarTexture_ = pBarTexture;
+    pBarTexture_->ClearAllPoints();
+    pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_TOPLEFT, this, ANCHOR_TOPLEFT));
+    FireUpdateBarTexture_();
 }
 
 void StatusBar::SetBarColor( const Color& mBarColor )
