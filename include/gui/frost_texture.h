@@ -170,7 +170,7 @@ namespace Frost
             */
             void                      SetColor(const Color& mColor);
 
-            /// Sets this Textures's vertex color.
+            /// Sets this Texture's vertex color.
             /** \param mColor This Textures's new vertex color
             *   \note This color is used to filter the Texture's colors :
             *         for each pixel, the original color is multiplied

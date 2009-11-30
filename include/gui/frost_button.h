@@ -215,7 +215,7 @@ namespace Frost
             /// Parses data from an XML::Block.
             /** \param pBlock The Button's XML::Block
             */
-            virtual void        ParseBlock(s_ptr<XML::Block> pBlock);
+            virtual void      ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 
