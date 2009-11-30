@@ -23,8 +23,8 @@ using namespace std;
 
 namespace Frost
 {
-    // TODO : Character : Implémenter l'équipement
-    // TODO : Character : Implémenter l'inventaire
+    // TODO : Character : Implement equipment
+    // TODO : Character : Implement inventory
 
     const s_str Character::CLASS_NAME = "Character";
     const s_str Race::CLASS_NAME = "Race";

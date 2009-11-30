@@ -35,8 +35,8 @@ int LuaStatusBar::_GetOrientation( lua_State* pLua )
 {
     Lua::Function mFunc("StatusBar:GetOrientation", pLua, 1);
 
-    // TODO : Implement StatusBar::GetOrientation
-    Warning(CLASS_NAME, "StatusBar:GetOrientation is not yet implemented !");
+    // NOTE : Not yet implemented (StatusBar:GetOrientation).
+    Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
 
     mFunc.PushNil();
 
@@ -102,8 +102,8 @@ int LuaStatusBar::_SetOrientation( lua_State* pLua )
 {
     Lua::Function mFunc("StatusBar:SetOrientation", pLua);
 
-    // TODO : Implement StatusBar::SetOrientation
-    Warning(CLASS_NAME, "StatusBar:SetOrientation is not yet implemented !");
+    // NOTE : Not yet implemented (StatusBar:SetOrientation).
+    Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
 
     mFunc.PushNil();
 
