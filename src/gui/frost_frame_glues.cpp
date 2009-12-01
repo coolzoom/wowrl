@@ -58,6 +58,10 @@ int LuaFrame::_DisableDrawLayer(lua_State* pLua)
         {
             pFrameParent_->DisableDrawLayer(LAYER_HIGHLIGHT);
         }
+        else
+        {
+            Warning(mFunc.GetName(), "Unknown layer : \""+sLayer+"\".");
+        }
     }
 
     return mFunc.Return();
@@ -89,6 +93,10 @@ int LuaFrame::_EnableDrawLayer(lua_State* pLua)
         else if (sLayer == "HIGHLIGHT")
         {
             pFrameParent_->EnableDrawLayer(LAYER_HIGHLIGHT);
+        }
+        else
+        {
+            Warning(mFunc.GetName(), "Unknown layer : \""+sLayer+"\".");
         }
     }
 
@@ -799,9 +807,11 @@ int LuaFrame::_SetScript(lua_State* pLua)
             }
         }
         else
+        {
             Error(pFrameParent_->GetFrameType(),
                 "\""+pFrameParent_->GetName()+"\" can't use script \""+sScriptName+"\"."
             );
+        }
     }
 
     return mFunc.Return();

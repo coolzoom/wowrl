@@ -48,9 +48,11 @@ namespace Frost
                 else if (*iterWord == "HOSTILE")
                     bHostile = true;
                 else
+                {
                     Warning(mFunc.GetName(),
                         "Unknown flag : \""+*iterWord+"\". Ignored."
                     );
+                }
             }
 
             s_ptr<Unit> pUnit;

@@ -16,9 +16,23 @@ namespace Frost
 {
     namespace GUI
     {
+        /// A variable length bar
+        /** This is a very simple widget : you give it three
+        *   values : a minimum and a maximum, and a value
+        *   between those two. It then renders a bar that will
+        *   be full, empty, or anything in between depending on
+        *   the value.<br>
+        *   Can be used to display health or cast bars.
+        */
         class StatusBar : public Frame
         {
         public :
+
+            enum Orientation
+            {
+                ORIENT_HORIZONTAL,
+                ORIENT_VERTICAL
+            };
 
             /// Constructor.
             StatusBar();
@@ -67,6 +81,11 @@ namespace Frost
             */
             void           SetBarColor(const Color& mBarColor);
 
+            /// Sets this StatusBar's orientation.
+            /** \param mOrient The orientation
+            */
+            void           SetOrientation(const Orientation& mOrient);
+
             /// Returns this StatusBar's minimum value.
             /** \return This StatusBar's minimum value
             */
@@ -97,6 +116,11 @@ namespace Frost
             */
             const Color&   GetBarColor() const;
 
+            /// Returns this StatusBar's orientation.
+            /** \return This StatusBar's orientation
+            */
+            Orientation    GetOrientation() const;
+
             /// Returns this widget's Lua glue.
             void           CreateGlue();
 
@@ -116,6 +140,8 @@ namespace Frost
             void           FireUpdateBarTexture_();
 
             s_bool bUpdateBarTexture_;
+
+            Orientation mOrientation_;
 
             s_float fValue_;
             s_float fMinValue_;

@@ -309,7 +309,7 @@ void Texture::SetTexture( const s_str& sFile )
     sTextureFile_ = sFile;
     s_refptr<Material> pMat;
 
-    pSprite_.SetNull(); // Deletes the old sprite and its material
+    pSprite_ = nullptr; // Deletes the old sprite and its material
 
     if (File::Exists(sTextureFile_))
     {
@@ -331,8 +331,11 @@ void Texture::SetColor( const Color& mColor )
     mGradient_ = Gradient();
     sTextureFile_ = "";
 
-    s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", mColor);
+    pSprite_ = nullptr; // Deletes the old sprite and its material
+
+    s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
     pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
+    pSprite_->SetColor(mColor);
     mColor_ = mColor;
 }
 

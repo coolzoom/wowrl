@@ -313,6 +313,10 @@ int LuaButton::_SetButtonState( lua_State* pLua )
             pButtonParent_->Disable();
             pButtonParent_->Release();
         }
+        else
+        {
+            Warning(mFunc.GetName(), "Unkown button state : \""+sState+"\".");
+        }
     }
 
     return mFunc.Return();
