@@ -15,7 +15,7 @@ using namespace Frost::GUI;
 
 const s_str StatusBar::CLASS_NAME = "GUI::StatusBar";
 
-StatusBar::StatusBar() : Frame(), mBarLayer_(LAYER_ARTWORK)
+StatusBar::StatusBar() : Frame(), mOrientation_(ORIENT_HORIZONTAL), mBarLayer_(LAYER_ARTWORK)
 {
     mObjectType_ = OJBECT_TYPE_STATUSBAR;
     lType_.PushBack("StatusBar");
@@ -27,33 +27,49 @@ StatusBar::~StatusBar()
 
 void StatusBar::SetMinValue( const s_float& fMin )
 {
-    fMinValue_ = fMin;
-    FireUpdateBarTexture_();
+    if (fMin != fMinValue_)
+    {
+        fMinValue_ = fMin;
+        fValue_.Clamp(fMinValue_, fMaxValue_);
+        FireUpdateBarTexture_();
+    }
 }
 
 void StatusBar::SetMaxValue( const s_float& fMax )
 {
-    fMaxValue_ = fMax;
-    FireUpdateBarTexture_();
+    if (fMax != fMaxValue_)
+    {
+        fMaxValue_ = fMax;
+        fValue_.Clamp(fMinValue_, fMaxValue_);
+        FireUpdateBarTexture_();
+    }
 }
 
 void StatusBar::SetMinMaxValues( const s_float& fMin, const s_float& fMax )
 {
-    fMinValue_ = fMin;
-    fMaxValue_ = fMax;
-    FireUpdateBarTexture_();
+    if (fMin != fMinValue_ || fMax != fMaxValue_)
+    {
+        fMinValue_ = fMin;
+        fMaxValue_ = fMax;
+        fValue_.Clamp(fMinValue_, fMaxValue_);
+        FireUpdateBarTexture_();
+    }
 }
 
 void StatusBar::SetValue( const s_float& fValue )
 {
-    fValue_ = fValue;
-    fValue_.Clamp(fMinValue_, fMaxValue_);
-    FireUpdateBarTexture_();
+    if (fValue != fValue_)
+    {
+        fValue_ = fValue;
+        fValue_.Clamp(fMinValue_, fMaxValue_);
+        FireUpdateBarTexture_();
+    }
 }
 
 void StatusBar::SetBarDrawLayer( LayerType mBarLayer )
 {
     mBarLayer_ = mBarLayer;
+    pBarTexture_->SetDrawLayer(mBarLayer_);
 }
 
 void StatusBar::SetBarDrawLayer( const s_str& sBarLayer )
@@ -85,7 +101,7 @@ void StatusBar::SetBarTexture( s_ptr<Texture> pBarTexture )
 {
     pBarTexture_ = pBarTexture;
     pBarTexture_->ClearAllPoints();
-    pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_TOPLEFT, this, ANCHOR_TOPLEFT));
+    pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, this, ANCHOR_BOTTOMLEFT));
     FireUpdateBarTexture_();
 }
 
@@ -95,6 +111,15 @@ void StatusBar::SetBarColor( const Color& mBarColor )
     {
         mBarColor_ = mBarColor;
         pBarTexture_->SetColor(mBarColor_);
+    }
+}
+
+void StatusBar::SetOrientation( const Orientation& mOrient )
+{
+    if (mOrient != mOrientation_)
+    {
+        mOrientation_ = mOrient;
+        FireUpdateBarTexture_();
     }
 }
 
@@ -128,6 +153,11 @@ const Color& StatusBar::GetBarColor() const
     return mBarColor_;
 }
 
+StatusBar::Orientation StatusBar::GetOrientation() const
+{
+    return mOrientation_;
+}
+
 s_ptr<Texture> StatusBar::CreateBarTexture_()
 {
     if (!pBarTexture_)
@@ -159,8 +189,16 @@ void StatusBar::Update()
     {
         s_float fCoef = (fValue_ - fMinValue_)/(fMaxValue_ - fMinValue_);
 
-        pBarTexture_->SetRelWidth(fCoef);
-        pBarTexture_->SetRelHeight(1.0f);
+        if (mOrientation_ == ORIENT_HORIZONTAL)
+        {
+            pBarTexture_->SetRelWidth(fCoef);
+            pBarTexture_->SetRelHeight(1.0f);
+        }
+        else
+        {
+            pBarTexture_->SetRelWidth(1.0f);
+            pBarTexture_->SetRelHeight(fCoef);
+        }
 
         bUpdateBarTexture_ = false;
     }

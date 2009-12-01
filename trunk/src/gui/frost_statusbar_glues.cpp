@@ -35,10 +35,11 @@ int LuaStatusBar::_GetOrientation( lua_State* pLua )
 {
     Lua::Function mFunc("StatusBar:GetOrientation", pLua, 1);
 
-    // NOTE : Not yet implemented (StatusBar:GetOrientation).
-    Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
-
-    mFunc.PushNil();
+    switch (pStatusBarParent_->GetOrientation())
+    {
+        case StatusBar::ORIENT_HORIZONTAL : mFunc.Push(s_str("HORIZONTAL"));
+        case StatusBar::ORIENT_VERTICAL   : mFunc.Push(s_str("VERTICAL"));
+    }
 
     return mFunc.Return();
 }
@@ -101,11 +102,20 @@ int LuaStatusBar::_SetMinMaxValues( lua_State* pLua )
 int LuaStatusBar::_SetOrientation( lua_State* pLua )
 {
     Lua::Function mFunc("StatusBar:SetOrientation", pLua);
+    mFunc.Add(0, "orientation", Lua::TYPE_STRING);
 
-    // NOTE : Not yet implemented (StatusBar:SetOrientation).
-    Log("Lua : not implemented : \""+mFunc.GetName()+"\".");
-
-    mFunc.PushNil();
+    if (mFunc.Check())
+    {
+        s_str sOrient = mFunc.Get(0)->GetString();
+        if (sOrient == "HORIZONTAL")
+            pStatusBarParent_->SetOrientation(StatusBar::ORIENT_HORIZONTAL);
+        else if (sOrient == "VERTICAL")
+            pStatusBarParent_->SetOrientation(StatusBar::ORIENT_VERTICAL);
+        else
+        {
+            Warning(mFunc.GetName(), "Unkonwn status bar orientation : \""+sOrient+"\".");
+        }
+    }
 
     return mFunc.Return();
 }
