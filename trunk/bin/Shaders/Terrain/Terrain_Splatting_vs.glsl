@@ -66,6 +66,7 @@ void main()
     }
     
     vColor += mSunColor.rgb * max(dot(mSunDir.xyz, tNormal), 0.0);
+    vColor = clamp(vColor, 0.0, 1.0);
     #ifdef SPECULAR
         tReflected = 2.0*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
         vSpecColor += mSunColor.rgb * max(dot(tReflected, tEyeDir), 0.0);
