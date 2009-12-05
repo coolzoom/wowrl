@@ -64,6 +64,7 @@ void main_vs(
     }
     
     oColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
+    oColor = saturate(oColor);
     #ifdef SPECULAR
         tReflected = 2.0*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
         oSpecColor += mSunColor.rgb * saturate(dot(tReflected, tEyeDir));

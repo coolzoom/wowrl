@@ -48,6 +48,7 @@ void main_ps(
     }
     
     tLightColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, iNormal));
+    tLightColor = saturate(tLightColor);
 
     #ifdef MOTION_BLUR
         oColor0 = tex2D(mTexture, iTexture);

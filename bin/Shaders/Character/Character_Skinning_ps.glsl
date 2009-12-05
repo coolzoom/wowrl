@@ -35,6 +35,7 @@ void main()
     }
     
     tLightColor += mSunColor.rgb * max(dot(mSunDir.xyz, vBlendedNormal), 0.0);
+    tLightColor = clamp(tLightColor, 0.0, 1.0);
 
     #ifdef MOTION_BLUR
         gl_FragData[0] = texture2D(mTexture, gl_TexCoord[0].st);
