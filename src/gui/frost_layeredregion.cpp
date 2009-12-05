@@ -17,7 +17,7 @@ using namespace Frost::GUI;
 
 const s_str LayeredRegion::CLASS_NAME = "GUI::LayeredRegion";
 
-LayeredRegion::LayeredRegion() : UIObject()
+LayeredRegion::LayeredRegion() : Region()
 {
     mObjectType_ = OJBECT_TYPE_LAYEREDREGION;
     lType_.PushBack("LayeredRegion");
@@ -27,13 +27,9 @@ LayeredRegion::~LayeredRegion()
 {
 }
 
-void LayeredRegion::Render()
-{
-}
-
 s_str LayeredRegion::Serialize( const s_str& sTab ) const
 {
-    s_str sStr = UIObject::Serialize(sTab);
+    s_str sStr = Region::Serialize(sTab);
 
     sStr << sTab << "  # Layer       : ";
     switch (mLayer_)
@@ -58,12 +54,6 @@ void LayeredRegion::CreateGlue()
         pLua->Push<LuaLayeredRegion>(new LuaLayeredRegion(pLua->GetState()))
     );
     pLua->SetGlobal(sName_);
-}
-
-s_bool LayeredRegion::IsInRegion( const s_int& iX, const s_int& iY )
-{
-    return (iX.IsInRange(lBorderList_[BORDER_LEFT],lBorderList_[BORDER_RIGHT]-1) &&
-            iY.IsInRange(lBorderList_[BORDER_TOP], lBorderList_[BORDER_BOTTOM]-1));
 }
 
 LayerType LayeredRegion::GetDrawLayer()

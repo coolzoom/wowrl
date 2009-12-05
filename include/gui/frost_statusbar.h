@@ -164,12 +164,12 @@ namespace Frost
 
             // Glues
             int _GetMinMaxValues(lua_State*);
-            /**/ int _GetOrientation(lua_State*);
+            int _GetOrientation(lua_State*);
             int _GetStatusBarColor(lua_State*);
             int _GetStatusBarTexture(lua_State*);
             int _GetValue(lua_State*);
             int _SetMinMaxValues(lua_State*);
-            /**/ int _SetOrientation(lua_State*);
+            int _SetOrientation(lua_State*);
             int _SetStatusBarColor(lua_State*);
             int _SetStatusBarTexture(lua_State*);
             int _SetValue(lua_State*);

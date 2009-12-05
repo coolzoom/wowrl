@@ -84,8 +84,8 @@ namespace Frost
         class  FontString;
         class  LuaFontString;
 
-        // gui/frost_titleregion.h
-        class  TitleRegion;
+        // gui/frost_region.h
+        class  Region;
 
         // gui/frost_texture.h
         class  Texture;

@@ -314,6 +314,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\gui\frost_region.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_region_parser.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\gui\frost_rendertarget.cpp"
 					>
 				</File>
@@ -375,14 +383,6 @@
 				</File>
 				<File
 					RelativePath=".\src\gui\frost_texture_parser.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\gui\frost_titleregion.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\gui\frost_titleregion_parser.cpp"
 					>
 				</File>
 				<File
@@ -752,6 +752,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\gui\frost_region.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\gui\frost_rendertarget.h"
 					>
 				</File>
@@ -781,10 +785,6 @@
 				</File>
 				<File
 					RelativePath=".\include\gui\frost_texture.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\gui\frost_titleregion.h"
 					>
 				</File>
 				<File

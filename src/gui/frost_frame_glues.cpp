@@ -5,7 +5,7 @@
 
 #include "gui/frost_frame.h"
 #include "gui/frost_backdrop.h"
-#include "gui/frost_titleregion.h"
+#include "gui/frost_region.h"
 
 using namespace std;
 using namespace Frost;

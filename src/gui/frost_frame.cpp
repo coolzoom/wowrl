@@ -7,7 +7,7 @@
 
 #include "gui/frost_layeredregion.h"
 #include "gui/frost_uiobject.h"
-#include "gui/frost_titleregion.h"
+#include "gui/frost_region.h"
 #include "gui/frost_button.h"
 #include "gui/frost_editbox.h"
 #include "gui/frost_scrollingmessageframe.h"
@@ -26,7 +26,7 @@ using namespace Frost::GUI;
 const s_str Frame::CLASS_NAME  = "GUI::Frame";
 const s_str Layer::CLASS_NAME  = "GUI::Layer";
 
-Frame::Frame() : UIObject(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
+Frame::Frame() : Region(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
 {
     mObjectType_ = OJBECT_TYPE_FRAME;
     lType_.PushBack("Frame");
@@ -100,7 +100,7 @@ void Frame::CreateGlue()
 
 s_str Frame::Serialize( const s_str& sTab ) const
 {
-    s_str sStr = UIObject::Serialize(sTab);
+    s_str sStr = Region::Serialize(sTab);
     sStr << sTab << "  # Level       : " << uiLevel_ << "\n";
     if (!bIsMouseEnabled_ && !bIsKeyboardEnabled_ && !bIsMouseWheelEnabled_)
         sStr << sTab << "  # Inputs      : none\n";
@@ -399,7 +399,7 @@ void Frame::CreateTitleRegion()
 {
     if (!pTitleRegion_)
     {
-        pTitleRegion_ = new TitleRegion();
+        pTitleRegion_ = new Region();
         if (this->IsVirtual())
             pTitleRegion_->SetVirtual();
         pTitleRegion_->SetSpecial();
@@ -822,7 +822,7 @@ const s_float& Frame::GetScale() const
     return fScale_;
 }
 
-s_ptr<TitleRegion> Frame::GetTitleRegion() const
+s_ptr<Region> Frame::GetTitleRegion() const
 {
     return pTitleRegion_;
 }
@@ -1164,7 +1164,7 @@ void Frame::SetLevel( const s_uint& uiLevel )
     }
     else
     {
-        Warning(lType_.Back(), sName_+"->SetLevel() can't be called more than once.");
+        Warning(lType_.Back(), "SetLevel() can't be called more than once.");
     }
 }
 

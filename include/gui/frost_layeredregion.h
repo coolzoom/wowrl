@@ -10,20 +10,17 @@
 #define FROST_GUI_LAYEREDREGION_H
 
 #include "frost.h"
-#include "gui/frost_uiobject.h"
+#include "gui/frost_region.h"
 
 namespace Frost
 {
     namespace GUI
     {
         /// Abstract GUI renderable.
-        /** \note I say "abstract", but nothing prevents you
-        *         from instancing a LayeredRegion in your code.<br>
-        *         Actually, it is the simplest derivate of
-        *         UIObject, so if you just need a widget that has a
-        *         position and a size then this is the best choice.
+        /** \note Layered regions are contained inside Frames.<br>
+        *         They are sorted by layers, hence their name.
         */
-        class LayeredRegion : public UIObject
+        class LayeredRegion : public Region
         {
         public :
 
@@ -39,20 +36,8 @@ namespace Frost
             */
             virtual s_str  Serialize(const s_str& sTab) const;
 
-            /// Renders this LayeredRegion.
-            /** \note Does nothing if not reimplemented.
-            */
-            virtual void   Render();
-
             /// Creates the associated Lua glue.
             virtual void   CreateGlue();
-
-            /// Checks if the provided coordinates are inside this region.
-            /** \param iX The horizontal coordinate
-            *   \param iY The vertical coordinate
-            *   \return 'true' if the provided coordinates are inside this region
-            */
-            virtual s_bool IsInRegion(const s_int& iX, const s_int& iY);
 
             /// Returns this LayeredRegion's draw layer.
             /** \return this LayeredRegion's draw layer
