@@ -28,12 +28,21 @@ Button::~Button()
 
 void Button::CreateGlue()
 {
-    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-    pLua->PushString(sName_);
-    lGlueList_.PushBack(
-        pLua->Push<LuaButton>(new LuaButton(pLua->GetState()))
-    );
-    pLua->SetGlobal(sName_);
+    if (bVirtual_)
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->NewTable();
+        pLua->SetGlobal(sLuaName_);
+    }
+    else
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->PushString(sName_);
+        lGlueList_.PushBack(
+            pLua->Push<LuaButton>(new LuaButton(pLua->GetState()))
+        );
+        pLua->SetGlobal(sLuaName_);
+    }
 }
 
 void Button::On( const s_str& sScriptName, s_ptr<Event> pEvent )

@@ -108,6 +108,11 @@ namespace Frost
             */
             const s_str&    GetName() const;
 
+            /// Returns this widget's Lua name.
+            /** \return This widget's Lua name
+            */
+            const s_str&    GetLuaName() const;
+
             /// Returns this widget's raw name.
             /** \return This widget's raw name
             *   \note This is the name of the widget before "$parent"
@@ -420,9 +425,11 @@ namespace Frost
 
             s_str           sName_;
             s_str           sRawName_;
+            s_str           sLuaName_;
             s_uint          uiID_;
             ObjectType      mObjectType_;
             s_ptr<UIObject> pParent_;
+            s_ptr<UIObject> pInheritance_;
             s_bool          bSpecial_;
             s_bool          bInherits_;
 

@@ -53,6 +53,8 @@ s_str UIObject::Serialize( const s_str& sTab ) const
     s_str sStr;
 
     sStr << sTab << "  # Name        : " << sName_ << " ("+s_str(bReady_ ? "ready" : "not ready")+s_str(bSpecial_ ? ", special)\n" : ")\n");
+    sStr << sTab << "  # Raw name    : " << sRawName_ << "\n";
+    sStr << sTab << "  # Lua name    : " << sLuaName_ << "\n";
     sStr << sTab << "  # ID          : " << uiID_ << "\n";
     sStr << sTab << "  # Type        : " << lType_.Back() << "\n";
     if (pParent_)
@@ -90,6 +92,7 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 void UIObject::CopyFrom( s_ptr<UIObject> pObj )
 {
     bInherits_ = true;
+    pInheritance_ = pObj;
 
     this->SetAlpha(pObj->GetAlpha());
     this->SetShown(pObj->IsShown());
@@ -102,7 +105,7 @@ void UIObject::CopyFrom( s_ptr<UIObject> pObj )
     else
         this->SetRelHeight(pObj->GetRelHeight());
 
-    for (s_uint i = 1; i <= pObj->GetNumPoint(); i++)
+    for (s_uint i = 1; i <= pObj->GetNumPoint(); ++i)
     {
         s_ptr<Anchor> pAnchor = pObj->GetPoint(i);
         if (pAnchor)
@@ -120,6 +123,11 @@ const s_str& UIObject::GetName() const
     return sName_;
 }
 
+const s_str& UIObject::GetLuaName() const
+{
+    return sLuaName_;
+}
+
 const s_str& UIObject::GetRawName() const
 {
     return sRawName_;
@@ -129,11 +137,12 @@ void UIObject::SetName( const s_str& sName )
 {
     if (sName_.IsEmpty())
     {
-        sName_ = sRawName_ = sName;
-        if (pParent_ && !bVirtual_)
-        {
-            sName_.Replace("$parent", pParent_->GetName());
-        }
+        sName_ = sLuaName_ = sRawName_ = sName;
+        if (pParent_ && sName_.StartsWith("$parent"))
+            sLuaName_.Replace("$parent", pParent_->GetName());
+
+        if (!bVirtual_)
+            sName_ = sLuaName_;
     }
     else
     {
@@ -747,14 +756,14 @@ void UIObject::UpdateMaterial( const s_bool& bForceUpdate )
 
 void UIObject::PushOnLua( s_ptr<Lua::State> pLua ) const
 {
-    pLua->PushGlobal(sName_);
+    pLua->PushGlobal(sLuaName_);
 }
 
 void UIObject::RemoveGlue() const
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushNil();
-    pLua->SetGlobal(sName_);
+    pLua->SetGlobal(sLuaName_);
 }
 
 void UIObject::SetSpecial()

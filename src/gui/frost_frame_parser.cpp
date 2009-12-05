@@ -104,8 +104,7 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
 
     GUIManager::GetSingleton()->AddUIObject(this);
 
-    if (!bVirtual_)
-        CreateGlue();
+    CreateGlue();
 
     if (pParentFrame_)
     {
