@@ -460,6 +460,9 @@ namespace Frost
             void FireBuildStrataList_();
             void FireBuildLayerList_();
 
+            void NotifyVisible_();
+            void NotifyInvisible_();
+
             s_map< s_uint, s_ptr<Frame> >         lChildList_;
             s_map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
             s_map<LayerType, Layer>               lLayerList_;

@@ -1363,20 +1363,50 @@ void Frame::StopSizing()
     GUIManager::GetSingleton()->StopSizing(this);
 }
 
+void Frame::NotifyVisible_()
+{
+    if (bIsShown_)
+    {
+        lQueuedEventList_.PushBack("Show");
+        s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
+        foreach (iterChild, lChildList_)
+        {
+            iterChild->second->NotifyVisible_();
+        }
+    }
+}
+
+void Frame::NotifyInvisible_()
+{
+    if (bIsShown_)
+    {
+        lQueuedEventList_.PushBack("Hide");
+        s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
+        foreach (iterChild, lChildList_)
+        {
+            iterChild->second->NotifyInvisible_();
+        }
+    }
+}
+
 void Frame::Show()
 {
-    if (!bIsShown_)
-        lQueuedEventList_.PushBack("Show");
+    s_bool bWasShown = bIsShown_;
 
     UIObject::Show();
+
+    if (IsVisible() && !bWasShown)
+        NotifyVisible_();
 }
 
 void Frame::Hide()
 {
-    if (bIsShown_)
-        lQueuedEventList_.PushBack("Hide");
+    s_bool bWasVisible = IsVisible();
 
     UIObject::Hide();
+
+    if (bWasVisible)
+        NotifyInvisible_();
 }
 
 void Frame::UnregisterAllEvents()
