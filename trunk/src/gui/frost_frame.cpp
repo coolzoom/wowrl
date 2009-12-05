@@ -90,12 +90,21 @@ void Frame::Render()
 
 void Frame::CreateGlue()
 {
-    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-    pLua->PushString(sName_);
-    lGlueList_.PushBack(
-        pLua->Push<LuaFrame>(new LuaFrame(pLua->GetState()))
-    );
-    pLua->SetGlobal(sName_);
+    if (bVirtual_)
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->NewTable();
+        pLua->SetGlobal(sLuaName_);
+    }
+    else
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->PushString(sName_);
+        lGlueList_.PushBack(
+            pLua->Push<LuaFrame>(new LuaFrame(pLua->GetState()))
+        );
+        pLua->SetGlobal(sLuaName_);
+    }
 }
 
 s_str Frame::Serialize( const s_str& sTab ) const
@@ -308,7 +317,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewChild->SetParent(this);
                     if (this->IsVirtual())
                         pNewChild->SetVirtual();
-                    pNewChild->SetName(pChild->GetName());
+                    pNewChild->SetName(pChild->GetRawName());
                     if (!GUIManager::GetSingleton()->AddUIObject(pNewChild))
                     {
                         Warning(lType_.Back(),
@@ -318,8 +327,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                         pNewChild.Delete();
                         continue;
                     }
-                    if (!pNewChild->IsVirtual())
-                        pNewChild->CreateGlue();
+                    pNewChild->CreateGlue();
                     this->AddChild(pNewChild);
                     pNewChild->CopyFrom(pChild);
                 }
@@ -362,7 +370,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewArt->SetParent(this);
                     if (this->IsVirtual())
                         pNewArt->SetVirtual();
-                    pNewArt->SetName(pArt->GetName());
+                    pNewArt->SetName(pArt->GetRawName());
                     if (!GUIManager::GetSingleton()->AddUIObject(pNewArt))
                     {
                         Warning(lType_.Back(),
@@ -892,14 +900,11 @@ void Frame::DefineScript( const s_str& sScriptName, const s_str& sContent )
     sCutScriptName.EraseFromStart(2);
     lDefinedScriptList_[sCutScriptName] = sContent;
 
-    if (!bVirtual_)
-    {
-        s_str sStr;
-        sStr += "function " + sName_ + ":" + sScriptName + "()\n";
-        sStr += sContent + "\n";
-        sStr += "end";
-        GUIManager::GetSingleton()->GetLua()->DoString(sStr);
-    }
+    s_str sStr;
+    sStr += "function " + sLuaName_ + ":" + sScriptName + "()\n";
+    sStr += sContent + "\n";
+    sStr += "end";
+    GUIManager::GetSingleton()->GetLua()->DoString(sStr);
 }
 
 void Frame::NotifyScriptDefined( const s_str& sScriptName )
@@ -1017,8 +1022,19 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
 
-        pLua->PushGlobal(sName_);
+        this->PushOnLua(pLua);
         pLua->SetGlobal("this");
+
+        if (pInheritance_)
+        {
+            pInheritance_->PushOnLua(pLua);
+            pLua->SetGlobal("base");
+        }
+        else
+        {
+            pLua->PushNil();
+            pLua->SetGlobal("base");
+        }
 
         if ((sScriptName == "KeyDown") ||
             (sScriptName == "KeyUp"))

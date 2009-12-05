@@ -175,12 +175,21 @@ s_ptr<Texture> StatusBar::CreateBarTexture_()
 
 void StatusBar::CreateGlue()
 {
-    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-    pLua->PushString(sName_);
-    lGlueList_.PushBack(
-        pLua->Push<LuaStatusBar>(new LuaStatusBar(pLua->GetState()))
-    );
-    pLua->SetGlobal(sName_);
+    if (bVirtual_)
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->NewTable();
+        pLua->SetGlobal(sLuaName_);
+    }
+    else
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->PushString(sName_);
+        lGlueList_.PushBack(
+            pLua->Push<LuaStatusBar>(new LuaStatusBar(pLua->GetState()))
+        );
+        pLua->SetGlobal(sLuaName_);
+    }
 }
 
 void StatusBar::Update()

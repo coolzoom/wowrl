@@ -99,7 +99,7 @@ void Texture::CreateGlue()
     lGlueList_.PushBack(
         pLua->Push<LuaTexture>(new LuaTexture(pLua->GetState()))
     );
-    pLua->SetGlobal(sName_);
+    pLua->SetGlobal(sLuaName_);
 }
 
 void Texture::CopyFrom( s_ptr<UIObject> pObj )
