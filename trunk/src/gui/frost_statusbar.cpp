@@ -30,6 +30,7 @@ void StatusBar::SetMinValue( const s_float& fMin )
     if (fMin != fMinValue_)
     {
         fMinValue_ = fMin;
+        if (fMinValue_ > fMaxValue_) fMinValue_ = fMaxValue_;
         fValue_.Clamp(fMinValue_, fMaxValue_);
         FireUpdateBarTexture_();
     }
@@ -40,6 +41,7 @@ void StatusBar::SetMaxValue( const s_float& fMax )
     if (fMax != fMaxValue_)
     {
         fMaxValue_ = fMax;
+        if (fMaxValue_ < fMaxValue_) fMaxValue_ = fMinValue_;
         fValue_.Clamp(fMinValue_, fMaxValue_);
         FireUpdateBarTexture_();
     }
@@ -49,8 +51,8 @@ void StatusBar::SetMinMaxValues( const s_float& fMin, const s_float& fMax )
 {
     if (fMin != fMinValue_ || fMax != fMaxValue_)
     {
-        fMinValue_ = fMin;
-        fMaxValue_ = fMax;
+        fMinValue_ = s_float::Min(fMin, fMax);
+        fMaxValue_ = s_float::Max(fMin, fMax);
         fValue_.Clamp(fMinValue_, fMaxValue_);
         FireUpdateBarTexture_();
     }

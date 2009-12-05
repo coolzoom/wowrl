@@ -7,7 +7,7 @@
 
 #include "gui/frost_guimanager.h"
 #include "gui/frost_backdrop.h"
-#include "gui/frost_titleregion.h"
+#include "gui/frost_region.h"
 #include "gui/frost_button.h"
 #include "gui/frost_statusbar.h"
 #include "gui/frost_slider.h"
@@ -233,13 +233,9 @@ void Frame::ParseTitleRegionBlock_( s_ptr<XML::Block> pBlock )
     if (pTitleRegionBlock)
     {
         CreateTitleRegion();
-        if (pTitleRegion_)
-        {
-            if (pTitleRegionBlock->GetAttribute("setAllPoints") == "true")
-                pTitleRegion_->SetAllPoints(this);
 
+        if (pTitleRegion_)
             pTitleRegion_->ParseBlock(pTitleRegionBlock);
-        }
     }
 }
 

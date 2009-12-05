@@ -6,8 +6,8 @@
 /*                                        */
 
 
-#ifndef FROST_GUI_TITLEREGION_H
-#define FROST_GUI_TITLEREGION_H
+#ifndef FROST_GUI_REGION_H
+#define FROST_GUI_REGION_H
 
 #include "frost.h"
 #include "gui/frost_uiobject.h"
@@ -16,41 +16,41 @@ namespace Frost
 {
     namespace GUI
     {
-        /// Abstract GUI renderable.
+        /// Simple GUI region (not renderable).
         /** \note It is the simplest derivate of UIObject, so if you
         *         just need a widget that has a position and a size
         *         (like Frame's title region), then this is the best
         *         choice.
         */
-        class TitleRegion : public UIObject
+        class Region : public UIObject
         {
         public :
 
             /// Constructor.
-            TitleRegion();
+            Region();
 
             /// Destructor.
-            ~TitleRegion();
+            virtual ~Region();
 
             /// Renders this widget on the current render target.
             /** \note Does nothing.
             */
-            void   Render();
+            virtual void   Render();
 
             /// Checks if the provided coordinates are inside this region.
             /** \param iX The horizontal coordinate
             *   \param iY The vertical coordinate
             *   \return 'true' if the provided coordinates are inside this region
             */
-            s_bool IsInRegion(const s_int& iX, const s_int& iY);
+            virtual s_bool IsInRegion(const s_int& iX, const s_int& iY);
 
             /// Creates the associated Lua glue.
-            void   CreateGlue();
+            virtual void   CreateGlue();
 
             /// Parses data from an XML::Block.
             /** \param pBlock The Frame's XML::Block
             */
-            void   ParseBlock(s_ptr<XML::Block> pBlock);
+            virtual void   ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 

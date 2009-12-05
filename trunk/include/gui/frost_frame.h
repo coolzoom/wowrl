@@ -10,7 +10,7 @@
 #define FROST_GUI_FRAME_H
 
 #include "frost.h"
-#include "gui/frost_uiobject.h"
+#include "gui/frost_region.h"
 
 namespace Frost
 {
@@ -29,7 +29,7 @@ namespace Frost
         /** Can contain other Frames, or LayeredRegions
         *   (text, images, ...).
         */
-        class Frame : public EventReceiver, public UIObject
+        class Frame : public EventReceiver, public Region
         {
         public :
 
@@ -214,7 +214,7 @@ namespace Frost
             const s_float&      GetScale() const;
 
             /// Returns this Frame's title region.
-            s_ptr<TitleRegion>  GetTitleRegion() const;
+            s_ptr<Region>       GetTitleRegion() const;
 
             /// Checks if this Frame is clamped to screen.
             /** \return 'true' if this Frame is clamed to screen
@@ -510,7 +510,7 @@ namespace Frost
             s_bool bResizeHeight_;
             s_bool bResizeFromBottom_;
 
-            s_ptr<TitleRegion> pTitleRegion_;
+            s_ptr<Region> pTitleRegion_;
 
             s_ptr<Frame> pParentFrame_;
 
