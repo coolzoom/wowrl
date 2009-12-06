@@ -63,8 +63,16 @@ const s_str& Backdrop::GetBackgroundFile() const
 
 void Backdrop::SetBackgroundColor( const Color& mColor )
 {
-    if (pBackground_)
-        pBackground_->SetColor(mColor);
+    if (!pBackground_)
+    {
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->GetDefault2D();
+
+        uiTileSize_ = uiOriginalTileSize_ = 256;
+
+        pBackground_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
+    }
+
+    pBackground_->SetColor(mColor);
 }
 
 const Color& Backdrop::GetBackgroundColor() const
@@ -157,7 +165,7 @@ void Backdrop::SetEdge( const s_str& sEdgeFile )
 
                 Error(CLASS_NAME,
                     "An edge file's width must be exactly 8 times greater than its height "
-                    "(in "+sEdgeFile+"). No edge will be drawn for "+pParent_->GetName()+"'s backdrop."
+                    "(in "+sEdgeFile+").\nNo edge will be drawn for "+pParent_->GetName()+"'s backdrop."
                 );
             }
         }
@@ -167,7 +175,7 @@ void Backdrop::SetEdge( const s_str& sEdgeFile )
             sEdgeFile_ = "";
 
             Warning(CLASS_NAME,
-                "Couldn't find file : \""+sEdgeFile+"\" for "+pParent_->GetName()+"'s backdrop edge. "
+                "Couldn't find file : \""+sEdgeFile+"\" for "+pParent_->GetName()+"'s backdrop edge.\n"
                 "No edge will be drawn."
             );
         }

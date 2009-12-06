@@ -270,6 +270,17 @@ void Frame::ParseBackdropBlock_( s_ptr<XML::Block> pBlock )
             }
         }
 
+        s_ptr<XML::Block> pColorBlock = pBackdropBlock->GetBlock("BackgroundColor");
+        if (pColorBlock)
+        {
+            pBackdrop->SetBackgroundColor(Color(
+                s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
+                s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+            ));
+        }
+
         s_ptr<XML::Block> pEdgeSizeBlock = pBackdropBlock->GetBlock("EdgeSize");
         if (pEdgeSizeBlock)
         {

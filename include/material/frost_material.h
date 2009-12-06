@@ -200,6 +200,9 @@ namespace Frost
         s_ptr<Ogre::Material> pOgreMat_;
         s_ptr<Ogre::Pass>     pDefaultPass_;
 
+        s_ptr<VertexShader> pVS_;
+        s_ptr<PixelShader>  pPS_;
+
         s_bool bAlphaReject_;
         s_bool bHardwareSkinning_;
         s_bool bIsDesaturated_;

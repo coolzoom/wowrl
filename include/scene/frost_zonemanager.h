@@ -30,6 +30,19 @@ namespace Frost
         */
         s_ptr<Zone> LoadZone(const s_str& sZoneName);
 
+        /// Loads a new zone.
+        /** \param sZoneFile The XML file containing the zone data
+        *   \return A pointer to the new zone
+        *   \note Unloads the previous zone (if any).
+        */
+        s_ptr<Zone> LoadZoneFile(const s_str& sZoneFile);
+
+        /// Unloads the current zone.
+        /** \note This is automatically called by LoadZone() and
+        *         LoadZoneFile().
+        */
+        void        UnloadZone();
+
         /// Returns the Lua state used by zones.
         /** \return The Lua state used by zones
         */

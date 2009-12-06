@@ -20,17 +20,17 @@ void UIObject::ParseSizeBlock_( s_ptr<XML::Block> pBlock )
         s_ptr<XML::Block> pDimBlock = pSizeBlock->GetRadioBlock();
         if (pDimBlock->GetName() == "AbsDimension")
         {
-            s_int iX = s_int(pDimBlock->GetAttribute("x"));
-            s_int iY = s_int(pDimBlock->GetAttribute("y"));
-            if (iX >= 0)
-                SetAbsWidth(s_uint(iX));
-            if (iY >= 0)
-                SetAbsHeight(s_uint(iY));
+            if (pDimBlock->IsProvided("x"))
+                SetAbsWidth(s_uint(pDimBlock->GetAttribute("x")));
+            if (pDimBlock->IsProvided("y"))
+                SetAbsHeight(s_uint(pDimBlock->GetAttribute("y")));
         }
         else if (pDimBlock->GetName() == "RelDimension")
         {
-            SetRelWidth(s_float(pDimBlock->GetAttribute("x")));
-            SetRelHeight(s_float(pDimBlock->GetAttribute("y")));
+            if (pDimBlock->IsProvided("x"))
+                SetRelWidth(s_float(pDimBlock->GetAttribute("x")));
+            if (pDimBlock->IsProvided("y"))
+                SetRelHeight(s_float(pDimBlock->GetAttribute("y")));
         }
     }
 }

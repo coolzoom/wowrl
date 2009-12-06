@@ -62,6 +62,8 @@ namespace Frost
     {
         if (mType_ != TYPE_UNKNOWN)
         {
+            RemoveVertexShader();
+            RemovePixelShader();
             Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
         }
     }
@@ -189,28 +191,56 @@ namespace Frost
 
     void Material::SetVertexShader( s_ptr<VertexShader> pVS )
     {
-        if (pVS)
+        if (pVS_)
+            pVS_->UnBind(pDefaultPass_);
+
+        if (pVS && pVS->IsValid())
+        {
             pVS->BindTo(pDefaultPass_);
+            pVS_ = pVS;
+        }
         else
+        {
             pDefaultPass_->setVertexProgram("");
+            pVS_ = nullptr;
+        }
     }
 
     void Material::RemoveVertexShader()
     {
+        if (pVS_)
+            pVS_->UnBind(pDefaultPass_);
+
         pDefaultPass_->setVertexProgram("");
+
+        pVS_ = nullptr;
     }
 
     void Material::SetPixelShader( s_ptr<PixelShader> pPS )
     {
-        if (pPS)
+        if (pPS_)
+            pPS_->UnBind(pDefaultPass_);
+
+        if (pPS && pPS->IsValid())
+        {
             pPS->BindTo(pDefaultPass_);
+            pPS_ = pPS;
+        }
         else
+        {
             pDefaultPass_->setFragmentProgram("");
+            pPS_ = nullptr;
+        }
     }
 
     void Material::RemovePixelShader()
     {
+        if (pPS_)
+            pPS_->UnBind(pDefaultPass_);
+
         pDefaultPass_->setFragmentProgram("");
+
+        pPS_ = nullptr;
     }
 
     void Material::SetShaders( const s_str& sSName )
@@ -222,19 +252,13 @@ namespace Frost
     void Material::SetVertexShader( const s_str& sVSName )
     {
         s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader(sVSName);
-        if (pVS && pVS->IsValid())
-            pVS->BindTo(pDefaultPass_);
-        else
-            pDefaultPass_->setVertexProgram("");
+        SetVertexShader(pVS);
     }
 
     void Material::SetPixelShader( const s_str& sPSName )
     {
         s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader(sPSName);
-        if (pPS && pPS->IsValid())
-            pPS->BindTo(pDefaultPass_);
-        else
-            pDefaultPass_->setFragmentProgram("");
+        SetPixelShader(pPS);
     }
 
     void Material::SetDefaultPass( const s_uint& uiIndex )

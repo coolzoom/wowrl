@@ -22,8 +22,11 @@ namespace Frost
 
         LuaEngine(lua_State* luaVM);
 
+        int _LoadZone(lua_State*);
+        int _LoadZoneFile(lua_State*);
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);
+        int _UnloadZone(lua_State*);
 
         // Lunar function
         int GetDataTable(lua_State *L);

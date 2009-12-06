@@ -374,7 +374,7 @@ namespace Frost
                 pSubMesh->setMaterialName(pMat_->GetOgreMaterial()->getName());
 
                 pMesh_->_setBounds(Ogre::AxisAlignedBox(
-                    -fXSize/2.0f, -5.0f, -fZSize/2.0f,
+                   -fXSize/2.0f, -5.0f, -fZSize/2.0f,
                     fXSize/2.0f,  5.0f,  fZSize/2.0f
                 ));
 
