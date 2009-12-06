@@ -1,0 +1,241 @@
+<Ui>
+    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true">
+        <ResizeBounds>
+            <Min>
+                <AbsDimension x="64" y="64"/>
+            </Min>
+        </ResizeBounds>
+        <Backdrop edgeFile="Interface/Editor/Templates/DialogBorder.png">
+            <BackgroundInsets>
+                <AbsInset left="4" right="4" top="4" bottom="4"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <HitRectInsets>
+            <AbsInset left="5" right="5" top="5" bottom="5"/>
+        </HitRectInsets>
+        <TitleRegion>
+            <Size>
+                <AbsDimension y="16"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOP" relativePoint="TOP"/>
+                <Anchor point="LEFT" relativePoint="LEFT"/>
+                <Anchor point="RIGHT" relativePoint="RIGHT"/>
+            </Anchors>
+        </TitleRegion>
+        <Scripts>
+            <OnLoad>
+                this:SetBackdropColor(
+                    Templates.Dialog.Config.mainColor.r,
+                    Templates.Dialog.Config.mainColor.g,
+                    Templates.Dialog.Config.mainColor.b,
+                    Templates.Dialog.Config.mainColor.a
+                );
+            </OnLoad>
+        </Scripts>
+        <Frames>
+            <Frame name="$parentResizeZoneTL" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentResizeZoneTR" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentResizeZoneBR" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("BOTTOMRIGHT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneBL" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("BOTTOMLEFT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneL" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentResizeZoneTL" relativePoint="BOTTOM"/>
+                    <Anchor point="BOTTOM" relativeTo="$parentResizeZoneBL" relativePoint="TOP"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("LEFT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneR" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentResizeZoneTR" relativePoint="BOTTOM"/>
+                    <Anchor point="BOTTOM" relativeTo="$parentResizeZoneBR" relativePoint="TOP"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("RIGHT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneB" enableMouse="true">
+                <Size>
+                    <AbsDimension y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentResizeZoneBL" relativePoint="RIGHT"/>
+                    <Anchor point="RIGHT" relativeTo="$parentResizeZoneBR" relativePoint="LEFT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("BOTTOM");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentTitle">
+                <Size>
+                    <AbsDimension y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="TOP">
+                        <Offset>
+                            <AbsDimension y="6"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="LEFT" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="6"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-6"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:SetBackdrop({});
+                        this:SetBackdropColor(
+                            Templates.Dialog.Config.mainColor.r,
+                            Templates.Dialog.Config.mainColor.g,
+                            Templates.Dialog.Config.mainColor.b,
+                            Templates.Dialog.Config.mainColor.a
+                        );
+                    </OnLoad>
+                </Scripts>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="CENTER" text="">
+                            <Size>
+                                <AbsDimension x="140" y="32"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                            <Color r="0" g="0" b="0"/>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button name="$parentCloseButton" text="X">
+                        <Size>
+                            <AbsDimension x="16" y="16"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="RIGHT">
+                                <Offset>
+                                    <AbsDimension y="1"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                            <Color r="0.0" g="0.0" b="0.0"/>
+                        </NormalText>
+                        <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
+                        <Scripts>
+                            <OnClick>
+                                this:GetParent():GetParent():Hide();
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

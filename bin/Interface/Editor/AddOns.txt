@@ -1,5 +1,6 @@
 #Core
 Editor:1
+Templates:1
 MenuBar:1
 #Others
 FPSCounter:1
