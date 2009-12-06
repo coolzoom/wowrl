@@ -97,8 +97,8 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
     if (GUIManager::GetSingleton()->GetUIObjectByName(sName_))
     {
         throw GUIException(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
-            s_str(bVirtual ? "A virtual" : "An")+" object with the name "+
-            sName_+" already exists. Skipped."
+            s_str(bVirtual ? "A virtual" : "An")+" object with the name \""+
+            sName_+"\" already exists. Skipped."
         );
     }
 
@@ -132,7 +132,7 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
                 {
                     Warning(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
                         "\""+sName_+"\" ("+lType_.Back()+") cannot inherit "
-                        "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Inheritance skipped."
+                        "from \""+(*iter)+"\" ("+pObj->GetObjectType()+"). Inheritance skipped."
                     );
                 }
             }
@@ -151,7 +151,7 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
 
     if ((pBlock->IsProvided("setAllPoints") || !bInherits_) &&
         (s_bool(pBlock->GetAttribute("setAllPoints"))))
-        SetAllPoints(pParentFrame_);
+        SetAllPoints("$parent");
 
     if (pBlock->IsProvided("alpha") || !bInherits_)
         SetAlpha(s_float(pBlock->GetAttribute("alpha")));

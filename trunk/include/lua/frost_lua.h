@@ -20,6 +20,11 @@ namespace Frost
         */
         void RegisterGlobalFuncs(s_ptr<Lua::State> pLua);
 
+        /// Allows a Lua::State to use Frost's Engine class
+        /** \param pLua The Lua state to use
+        */
+        void RegisterEngineClass(s_ptr<Lua::State> pLua);
+
         /// Allows a Lua::State to use Frost's GUI classes
         /** \param pLua The Lua state to use
         */
@@ -59,6 +64,7 @@ namespace Frost
     int l_GetTimeOfTheDay(lua_State* pLua);
     int l_GetMousePos(lua_State* pLua);
     int l_Exit(lua_State* pLua);
+    int l_CreateFrame(lua_State* pLua);
 }
 
 #endif

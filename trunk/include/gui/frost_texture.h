@@ -235,6 +235,7 @@ namespace Frost
             int _SetTexture(lua_State*);
 
             static const char className[];
+            static const char* classList[];
             static Lunar<LuaTexture>::RegType methods[];
             static const s_str CLASS_NAME;
         protected :

@@ -33,7 +33,8 @@ namespace Frost
         return mFunc.Return();
     }
 
-    const char LuaCharacter::className[] = "Character";
+    const char  LuaCharacter::className[] = "Character";
+    const char* LuaCharacter::classList[] = {"Character", 0};
     Lunar<LuaCharacter>::RegType LuaCharacter::methods[] = {
         {"dt", &LuaCharacter::GetDataTable},
 

@@ -21,11 +21,11 @@ Anchor::Anchor()
     mType_ = ANCHOR_ABS;
 }
 
-Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, s_ptr<UIObject> pParent, AnchorPoint mParentPoint )
+Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, const s_str& sParent, AnchorPoint mParentPoint )
 {
     pObj_ = pObj;
     mPoint_ = mPoint;
-    pParent_ = pParent;
+    sParent_ = sParent;
     mParentPoint_ = mParentPoint;
     mType_ = ANCHOR_ABS;
 }
@@ -34,11 +34,7 @@ void Anchor::UpdateParent_()
 {
     if (!bParentUpdated_)
     {
-        if (sParent_.IsEmpty())
-        {
-            pParent_ = pObj_->GetParent();
-        }
-        else
+        if (!sParent_.IsEmpty())
         {
             s_ptr<UIObject> pObjParent = pObj_->GetParent();
             if (pObjParent)
@@ -176,16 +172,6 @@ const s_float& Anchor::GetRelOffsetY() const
 void Anchor::SetObject( s_ptr<UIObject> pObj )
 {
     pObj_ = pObj;
-}
-
-void Anchor::SetParent( s_ptr<UIObject> pParent )
-{
-    pParent_ = pParent;
-    if (pParent_)
-        sParent_ = pParent_->GetName();
-    else
-        sParent_.Clear();
-    bParentUpdated_ = true;
 }
 
 void Anchor::SetParentRawName( const s_str& sName )

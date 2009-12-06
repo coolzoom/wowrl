@@ -23,5 +23,5 @@ void Region::ParseAttributes_( s_ptr<XML::Block> pBlock )
 {
     if ((pBlock->IsProvided("setAllPoints") || !bInherits_) &&
         (s_bool(pBlock->GetAttribute("setAllPoints"))))
-        SetAllPoints(pParent_);
+        SetAllPoints("$parent");
 }

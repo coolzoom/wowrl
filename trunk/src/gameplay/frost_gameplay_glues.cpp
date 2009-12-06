@@ -55,7 +55,7 @@ namespace Frost
             if (mFunc.Get(0)->GetType() == Lua::TYPE_USERDATA)
             {
                 s_ptr<Camera> pCam = s_ptr<Camera>::DynamicCast(
-                    Lunar<LuaMovableObject>::check(pLua, mFunc.Get(0)->GetIndex().Get())->GetObject()
+                    mFunc.Get(0)->Get<LuaMovableObject>()->GetObject()
                 );
                 pParent_->SetCamera(pCam);
             }
@@ -111,7 +111,8 @@ namespace Frost
         return mFunc.Return();
     }
 
-    const char LuaGameplay::className[] = "Gameplay";
+    const char  LuaGameplay::className[] = "Gameplay";
+    const char* LuaGameplay::classList[] = {"Gampeplay", 0};
     Lunar<LuaGameplay>::RegType LuaGameplay::methods[] = {
         {"dt", &LuaGameplay::GetDataTable},
 

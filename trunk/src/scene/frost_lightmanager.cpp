@@ -106,13 +106,42 @@ namespace Frost
     void LightManager::SetAmbient( const Color& mAmbient )
     {
         mAmbient_ = mAmbient;
-        Engine::GetSingleton()->GetOgreSceneManager()->setAmbientLight(
-            Color::FrostToOgre(mAmbient_)
-        );
+        if (!bAmbientLocked_)
+        {
+            Engine::GetSingleton()->GetOgreSceneManager()->setAmbientLight(
+                Color::FrostToOgre(mAmbient_)
+            );
+        }
     }
 
     const Color& LightManager::GetAmbient() const
     {
-        return mAmbient_;
+        if (bAmbientLocked_)
+            return mLockedAmbient_;
+        else
+            return mAmbient_;
+    }
+
+    const s_bool& LightManager::IsAmbientLocked() const
+    {
+        return bAmbientLocked_;
+    }
+
+    void LightManager::LockAmbient(const Color& mLockedAmbient)
+    {
+        bAmbientLocked_ = true;
+        mLockedAmbient_ = mLockedAmbient;
+        Engine::GetSingleton()->GetOgreSceneManager()->setAmbientLight(
+            Color::FrostToOgre(mLockedAmbient_)
+        );
+    }
+
+    void LightManager::UnlockAmbient()
+    {
+        bAmbientLocked_ = false;
+        mLockedAmbient_ = Color::VOID;
+        Engine::GetSingleton()->GetOgreSceneManager()->setAmbientLight(
+            Color::FrostToOgre(mAmbient_)
+        );
     }
 }

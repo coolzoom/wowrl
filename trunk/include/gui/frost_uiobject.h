@@ -314,6 +314,14 @@ namespace Frost
             */
             void            SetAllPoints(s_ptr<UIObject> pObj);
 
+            /// Adjusts this widgets anchors to fit the provided widget.
+            /** \param sObjName The name of the object to fit to
+            *   \note Removes all anchors and defines two new ones.<br>
+            *         This version is to be used by virtual widgets to
+            *         preserve the anchor hierarchy.
+            */
+            void            SetAllPoints(const s_str& sObjName);
+
             /// Creates/modifies an anchor.
             /** \param mPoint         The anchor point for this object
             *   \param pObj           The anchor parent
@@ -509,6 +517,7 @@ namespace Frost
             int GetDataTable(lua_State *L);
 
             static const char className[];
+            static const char* classList[];
             static Lunar<LuaUIObject>::RegType methods[];
             static const s_str CLASS_NAME;
 

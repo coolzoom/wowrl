@@ -38,7 +38,7 @@ void StatusBar::ParseBlock( s_ptr<XML::Block> pBlock )
 
     CreateBarTexture_();
 
-    Anchor mAnchor(pBarTexture_, ANCHOR_BOTTOMLEFT, this, ANCHOR_BOTTOMLEFT);
+    Anchor mAnchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT);
 
     s_ptr<XML::Block> pBarBlock = pBlock->GetRadioBlock();
     if (pBarBlock->GetName() == "BarTexture")

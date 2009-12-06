@@ -46,7 +46,7 @@ namespace Frost
             Anchor(
                 s_ptr<UIObject> pObj,
                 AnchorPoint     mPoint,
-                s_ptr<UIObject> pParent,
+                const s_str&    pParent,
                 AnchorPoint     mParentPoint
             );
 
@@ -109,11 +109,6 @@ namespace Frost
             /** \param pObj The new base widget
             */
             void               SetObject(s_ptr<UIObject> pObj);
-
-            /// Sets this Anchor's parent widget.
-            /** \param pParent The new parent widget
-            */
-            void               SetParent(s_ptr<UIObject> pParent);
 
             /// Sets this Anchor's parent's raw name.
             /** \param sName The parent's raw name

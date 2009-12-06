@@ -277,6 +277,9 @@ namespace Frost
     // frost_engine.h
     class  Engine;
 
+    // frost_engine_glues.h
+    class  LuaEngine;
+
     // frost_inputmanager.h
     class  InputManager;
 

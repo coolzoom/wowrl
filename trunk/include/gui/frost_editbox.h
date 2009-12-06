@@ -84,6 +84,7 @@ namespace Frost
             /**/ int _ToggleInputLanguage(lua_State*) { return 0; }
 
             static const char className[];
+            static const char* classList[];
             static Lunar<LuaEditBox>::RegType methods[];
             static const s_str CLASS_NAME;
 

@@ -21,7 +21,8 @@ namespace Frost
         pParentCreature_ = s_ptr<Creature>::DynamicCast(pParent_);
     }
 
-    const char LuaCreature::className[] = "Creature";
+    const char  LuaCreature::className[] = "Creature";
+    const char* LuaCreature::classList[] = {"Creature", 0};
     Lunar<LuaCreature>::RegType LuaCreature::methods[] = {
         {"dt", &LuaCreature::GetDataTable},
 

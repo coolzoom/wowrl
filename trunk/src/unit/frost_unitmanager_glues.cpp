@@ -105,7 +105,8 @@ namespace Frost
         return 1;
     }
 
-    const char LuaUnitManager::className[] = "Unit";
+    const char  LuaUnitManager::className[] = "UnitManager";
+    const char* LuaUnitManager::classList[] = {"UnitManager", 0};
     Lunar<LuaUnitManager>::RegType LuaUnitManager::methods[] = {
         {"dt", &LuaUnitManager::GetDataTable},
 

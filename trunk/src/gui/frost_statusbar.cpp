@@ -25,6 +25,30 @@ StatusBar::~StatusBar()
 {
 }
 
+s_bool StatusBar::CanUseScript( const s_str& sScriptName ) const
+{
+    if ((sScriptName == "OnValueChanged") ||
+        (sScriptName == "OnDragStart") ||
+        (sScriptName == "OnDragStop") ||
+        (sScriptName == "OnEnter") ||
+        (sScriptName == "OnEvent") ||
+        (sScriptName == "OnHide") ||
+        (sScriptName == "OnKeyDown") ||
+        (sScriptName == "OnKeyUp") ||
+        (sScriptName == "OnLeave") ||
+        (sScriptName == "OnLoad") ||
+        (sScriptName == "OnMouseDown") ||
+        (sScriptName == "OnMouseUp") ||
+        (sScriptName == "OnMouseWheel") ||
+        (sScriptName == "OnReceiveDrag") ||
+        (sScriptName == "OnShow") ||
+        (sScriptName == "OnSizeChanged") ||
+        (sScriptName == "OnUpdate"))
+        return true;
+    else
+        return false;
+}
+
 void StatusBar::SetMinValue( const s_float& fMin )
 {
     if (fMin != fMinValue_)
@@ -103,7 +127,7 @@ void StatusBar::SetBarTexture( s_ptr<Texture> pBarTexture )
 {
     pBarTexture_ = pBarTexture;
     pBarTexture_->ClearAllPoints();
-    pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, this, ANCHOR_BOTTOMLEFT));
+    pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, sName_, ANCHOR_BOTTOMLEFT));
     FireUpdateBarTexture_();
 }
 

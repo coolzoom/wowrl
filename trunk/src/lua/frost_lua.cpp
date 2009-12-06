@@ -23,6 +23,7 @@
 #include "unit/frost_creature.h"
 #include "scene/frost_movableobject.h"
 #include "gameplay/frost_gameplay.h"
+#include "frost_engine_glues.h"
 
 using namespace std;
 using namespace Frost;
@@ -37,6 +38,11 @@ void Lua::RegisterGlobalFuncs( s_ptr<Lua::State> pLua )
     pLua->Register("Exit", l_Exit);
 }
 
+void Lua::RegisterEngineClass( s_ptr<Lua::State> pLua )
+{
+    pLua->Register<LuaEngine>();
+}
+
 void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
 {
     pLua->Register<GUI::LuaUIObject>();
@@ -49,6 +55,8 @@ void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
     pLua->Register<GUI::LuaLayeredRegion>();
     pLua->Register<GUI::LuaTexture>();
     pLua->Register<GUI::LuaFontString>();
+
+    pLua->Register("CreateFrame", l_CreateFrame);
 }
 
 void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )

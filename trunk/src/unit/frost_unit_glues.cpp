@@ -359,7 +359,10 @@ namespace Frost
         return 1;
     }
 
-    const char LuaUnit::className[] = "Unit";
+    const char  LuaUnit::className[] = "Unit";
+    const char* LuaUnit::classList[] = {"Unit",
+        "MovableUnit", "Character", "Creature", 0
+    };
     Lunar<LuaUnit>::RegType LuaUnit::methods[] = {
         {"dt", &LuaUnit::GetDataTable},
 

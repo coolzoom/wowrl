@@ -63,11 +63,9 @@ void UIObject::ParseAnchorsBlock_( s_ptr<XML::Block> pBlock )
                 GUI::Anchor mAnchor(
                     this,
                     GUI::Anchor::GetAnchorPoint(sPoint),
-                    nullptr,
+                    sParent.IsEmpty(true) && !pAnchorBlock->IsProvided("relativeTo") ? "$parent" : sParent,
                     GUI::Anchor::GetAnchorPoint(sRelativePoint)
                 );
-
-                mAnchor.SetParentRawName(sParent);
 
                 s_ptr<XML::Block> pOffsetBlock = pAnchorBlock->GetBlock("Offset");
                 if (pOffsetBlock)

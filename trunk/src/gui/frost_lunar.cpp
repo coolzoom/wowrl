@@ -31,6 +31,10 @@ namespace Frost
 namespace GUI
 {
     const char LuaUIObject::className[] = "UIObject";
+    const char* LuaUIObject::classList[] = {"UIObject",
+        "Frame", "Button", "EditBox", "ScrollingMessageFrame", "Slider", "StatusBar",
+        "LayeredRegion", "Texture", "FontString", 0
+    };
     Lunar<LuaUIObject>::RegType LuaUIObject::methods[] = {
         {"dt", &LuaUIObject::GetDataTable},
 
@@ -67,7 +71,10 @@ namespace GUI
         {0,0}
     };
 
-    const char LuaFrame::className[] = "Frame";
+    const char  LuaFrame::className[] = "Frame";
+    const char* LuaFrame::classList[] = {"Frame",
+        "Button", "EditBox", "ScrollingMessageFrame", "Slider", "StatusBar", 0
+    };
     Lunar<LuaFrame>::RegType LuaFrame::methods[] = {
         {"dt", &LuaFrame::GetDataTable},
 
@@ -168,7 +175,8 @@ namespace GUI
         {0,0}
     };
 
-    const char LuaStatusBar::className[] = "StatusBar";
+    const char  LuaStatusBar::className[] = "StatusBar";
+    const char* LuaStatusBar::classList[] = {"StatusBar", 0};
     Lunar<LuaStatusBar>::RegType LuaStatusBar::methods[] = {
         {"dt", &LuaStatusBar::GetDataTable},
 
@@ -281,19 +289,22 @@ namespace GUI
         {0,0}
     };
 
-    const char LuaEditBox::className[] = "EditBox";
+    const char  LuaEditBox::className[] = "EditBox";
+    const char* LuaEditBox::classList[] = {"EditBox", 0};
     Lunar<LuaEditBox>::RegType LuaEditBox::methods[] = {
         {"dt", &LuaEditBox::GetDataTable},
         {0,0}
     };
 
-    const char LuaScrollingMessageFrame::className[] = "ScrollingMessageFrame";
+    const char  LuaScrollingMessageFrame::className[] = "ScrollingMessageFrame";
+    const char* LuaScrollingMessageFrame::classList[] = {"ScrollingMessageFrame", 0};
     Lunar<LuaScrollingMessageFrame>::RegType LuaScrollingMessageFrame::methods[] = {
         {"dt", &LuaScrollingMessageFrame::GetDataTable},
         {0,0}
     };
 
-    const char LuaButton::className[] = "Button";
+    const char  LuaButton::className[] = "Button";
+    const char* LuaButton::classList[] = {"Button", 0};
     Lunar<LuaButton>::RegType LuaButton::methods[] = {
         {"dt", &LuaButton::GetDataTable},
 
@@ -435,19 +446,24 @@ namespace GUI
         {0,0}
     };
 
-    const char LuaSlider::className[] = "Slider";
+    const char  LuaSlider::className[] = "Slider";
+    const char* LuaSlider::classList[] = {"Slider", 0};
     Lunar<LuaSlider>::RegType LuaSlider::methods[] = {
         {"dt", &LuaSlider::GetDataTable},
         {0,0}
     };
 
-    const char LuaLayeredRegion::className[] = "LayeredRegion";
+    const char  LuaLayeredRegion::className[] = "LayeredRegion";
+    const char* LuaLayeredRegion::classList[] = {"LayeredRegion",
+        "Texture", "FontString", 0
+    };
     Lunar<LuaLayeredRegion>::RegType LuaLayeredRegion::methods[] = {
         {"dt", &LuaLayeredRegion::GetDataTable},
         {0,0}
     };
 
-    const char LuaTexture::className[] = "Texture";
+    const char  LuaTexture::className[] = "Texture";
+    const char* LuaTexture::classList[] = {"Texture", 0};
     Lunar<LuaTexture>::RegType LuaTexture::methods[] = {
         {"dt", &LuaTexture::GetDataTable},
 
@@ -503,7 +519,8 @@ namespace GUI
         {0,0}
     };
 
-    const char LuaFontString::className[] = "FontString";
+    const char  LuaFontString::className[] = "FontString";
+    const char* LuaFontString::classList[] = {"FontString", 0};
     Lunar<LuaFontString>::RegType LuaFontString::methods[] = {
         {"dt", &LuaFontString::GetDataTable},
 
