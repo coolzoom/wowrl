@@ -319,7 +319,7 @@ void Texture::SetTexture( const s_str& sFile )
     else
     {
         Error(lType_.Back(),
-            "Cannot find file \""+sFile+"\". Using white texture instead."
+            "Cannot find file \""+sFile+"\" for \""+sName_+"\".\nUsing white texture instead."
         );
         pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
         pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));

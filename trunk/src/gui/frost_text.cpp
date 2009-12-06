@@ -247,7 +247,8 @@ namespace Frost
 
     s_float Text::GetCharacterKerning( const s_uint& uiChar1, const s_uint& uiChar2 ) const
     {
-        return pFontMat_->GetWidth()*pOgreFont_->getGlyphInfo(uiChar1.Get()).kerningTable.find(uiChar2.Get())->second.x;
+        return pFontMat_->GetWidth()*pOgreFont_->getGlyphInfo(uiChar1.Get()).
+               kerningTable.find(uiChar2.Get())->second.x;
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )

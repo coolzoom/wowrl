@@ -140,7 +140,7 @@ void UIObject::SetName( const s_str& sName )
         if (sName_.StartsWith("$parent"))
         {
             if (pParent_)
-                sLuaName_.Replace("$parent", pParent_->GetName());
+                sLuaName_.Replace("$parent", pParent_->GetLuaName());
             else
                 sLuaName_.Replace("$parent", "");
         }

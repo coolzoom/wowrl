@@ -7,6 +7,7 @@
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "scene/frost_lightmanager.h"
+#include "scene/frost_zonemanager.h"
 
 #include <OgreCamera.h>
 
@@ -25,6 +26,32 @@ namespace Frost
         lua_newtable(pLua);
         iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);
         pLua_ = pLua;
+    }
+
+    int LuaEngine::_LoadZone( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:LoadZone", pLua);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            ZoneManager::GetSingleton()->LoadZone(mFunc.Get(0)->GetString());
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_LoadZoneFile( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:LoadZoneFile", pLua);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            ZoneManager::GetSingleton()->LoadZoneFile(mFunc.Get(0)->GetString());
+        }
+
+        return mFunc.Return();
     }
 
     int LuaEngine::_ToggleWireframeView( lua_State* pLua )
@@ -52,6 +79,15 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEngine::_UnloadZone( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:UnloadZone", pLua);
+
+        ZoneManager::GetSingleton()->UnloadZone();
+
+        return mFunc.Return();
+    }
+
     int LuaEngine::GetDataTable( lua_State * pLua )
     {
         lua_getref(pLua, iRef_);
@@ -63,8 +99,11 @@ namespace Frost
     Lunar<LuaEngine>::RegType LuaEngine::methods[] = {
         {"dt", &LuaEngine::GetDataTable},
 
+        method(Engine, LoadZone),
+        method(Engine, LoadZoneFile),
         method(Engine, ToggleWireframeView),
         method(Engine, ToggleShading),
+        method(Engine, UnloadZone),
         {0,0}
     };
 }
