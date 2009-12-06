@@ -172,6 +172,7 @@ namespace Frost
 
         int    GetDataTable(lua_State*);
         static const char className[];
+        static const char* classList[];
         static Lunar<LuaUnitManager>::RegType methods[];
         static const s_str CLASS_NAME;
 

@@ -6,6 +6,8 @@
 #include "gui/frost_frame.h"
 #include "gui/frost_backdrop.h"
 #include "gui/frost_region.h"
+#include "gui/frost_fontstring.h"
+#include "gui/frost_texture.h"
 
 using namespace std;
 using namespace Frost;
@@ -20,6 +22,163 @@ LuaFrame::LuaFrame(lua_State* pLua) : LuaUIObject(pLua)
     {
         throw Exception(CLASS_NAME, "Dynamic cast failed !");
     }
+}
+
+int LuaFrame::_CreateFontString(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame::CreateFontString", pLua, 1);
+    mFunc.Add(0, "name", Lua::TYPE_STRING);
+    mFunc.Add(1, "layer", Lua::TYPE_STRING, true);
+    mFunc.Add(1, "layer", Lua::TYPE_NIL, true);
+    mFunc.Add(2, "inherits", Lua::TYPE_STRING, true);
+    mFunc.Add(2, "inherits", Lua::TYPE_NIL, true);
+
+    if (mFunc.Check())
+    {
+        s_ptr<FontString> pFont = new FontString();
+        pFont->SetParent(pFrameParent_);
+
+        if (mFunc.IsProvided(1) && mFunc.Get(1)->GetType() == Lua::TYPE_STRING)
+            pFont->SetDrawLayer(mFunc.Get(1)->GetString());
+        else
+            pFont->SetDrawLayer(LAYER_ARTWORK);
+
+        pFont->SetName(mFunc.Get(0)->GetString());
+
+        if (GUIManager::GetSingleton()->GetUIObjectByName(pFont->GetName()))
+        {
+            Error(mFunc.GetName(),
+                "An object with the name "+pFont->GetName()+" already exists."
+            );
+            pFont.Delete();
+            return mFunc.Return();
+        }
+
+        GUIManager::GetSingleton()->AddUIObject(pFont);
+        pFont->CreateGlue();
+
+        pFrameParent_->AddRegion(pFont);
+
+        if (mFunc.IsProvided(2) && mFunc.Get(2)->GetType() == Lua::TYPE_STRING)
+        {
+            s_str sInheritance = mFunc.Get(2)->GetString();
+            if (!sInheritance.IsEmpty(true))
+            {
+                s_ctnr<s_str> lObjects = sInheritance.Cut(",");
+                s_ctnr<s_str>::iterator iter;
+                foreach (iter, lObjects)
+                {
+                    iter->Trim(' ');
+                    s_ptr<UIObject> pObj = GUIManager::GetSingleton()->GetUIObjectByName(*iter, true);
+                    if (pObj)
+                    {
+                        if (pFont->IsObjectType(pObj->GetObjectType()))
+                        {
+                            // Inherit from the other Region
+                            pFont->CopyFrom(pObj);
+                        }
+                        else
+                        {
+                            Warning(mFunc.GetName(),
+                                "\""+pFont->GetName()+"\" ("+pFont->GetObjectType()+") cannot inherit "
+                                "from \""+(*iter)+"\" ("+pObj->GetObjectType()+"). Inheritance skipped."
+                            );
+                        }
+                    }
+                    else
+                    {
+                        Warning(mFunc.GetName(),
+                            "Couldn't find inherited object \""+(*iter)+"\". Inheritance skipped."
+                        );
+                    }
+                }
+            }
+        }
+
+        pFont->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_CreateTexture(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame::CreateTexture", pLua, 1);
+    mFunc.Add(0, "name", Lua::TYPE_STRING);
+    mFunc.Add(1, "layer", Lua::TYPE_STRING, true);
+    mFunc.Add(1, "layer", Lua::TYPE_NIL, true);
+    mFunc.Add(2, "inherits", Lua::TYPE_STRING, true);
+    mFunc.Add(2, "inherits", Lua::TYPE_NIL, true);
+
+    if (mFunc.Check())
+    {
+        s_ptr<Texture> pTexture = new Texture();
+        pTexture->SetParent(pFrameParent_);
+
+        if (mFunc.IsProvided(1) && mFunc.Get(1)->GetType() == Lua::TYPE_STRING)
+            pTexture->SetDrawLayer(mFunc.Get(1)->GetString());
+        else
+            pTexture->SetDrawLayer(LAYER_ARTWORK);
+
+        pTexture->SetName(mFunc.Get(0)->GetString());
+
+        if (GUIManager::GetSingleton()->GetUIObjectByName(pTexture->GetName()))
+        {
+            Error(mFunc.GetName(),
+                "An object with the name "+pTexture->GetName()+" already exists."
+            );
+            pTexture.Delete();
+            return mFunc.Return();
+        }
+
+        GUIManager::GetSingleton()->AddUIObject(pTexture);
+        pTexture->CreateGlue();
+
+        pFrameParent_->AddRegion(pTexture);
+
+        if (mFunc.IsProvided(2) && mFunc.Get(2)->GetType() == Lua::TYPE_STRING)
+        {
+            s_str sInheritance = mFunc.Get(2)->GetString();
+            if (!sInheritance.IsEmpty(true))
+            {
+                s_ctnr<s_str> lObjects = sInheritance.Cut(",");
+                s_ctnr<s_str>::iterator iter;
+                foreach (iter, lObjects)
+                {
+                    iter->Trim(' ');
+                    s_ptr<UIObject> pObj = GUIManager::GetSingleton()->GetUIObjectByName(*iter, true);
+                    if (pObj)
+                    {
+                        if (pTexture->IsObjectType(pObj->GetObjectType()))
+                        {
+                            // Inherit from the other Region
+                            pTexture->CopyFrom(pObj);
+                        }
+                        else
+                        {
+                            Warning(mFunc.GetName(),
+                                "\""+pTexture->GetName()+"\" ("+pTexture->GetObjectType()+") cannot inherit "
+                                "from \""+(*iter)+"\" ("+pObj->GetObjectType()+"). Inheritance skipped."
+                            );
+                        }
+                    }
+                    else
+                    {
+                        Warning(mFunc.GetName(),
+                            "Couldn't find inherited object \""+(*iter)+"\". Inheritance skipped."
+                        );
+                    }
+                }
+            }
+        }
+
+        pTexture->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+
+
+    return mFunc.Return();
 }
 
 int LuaFrame::_CreateTitleRegion(lua_State* pLua)

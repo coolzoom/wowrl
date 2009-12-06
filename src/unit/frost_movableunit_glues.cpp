@@ -99,7 +99,10 @@ namespace Frost
         return mFunc.Return();
     }
 
-    const char LuaMovableUnit::className[] = "MovableUnit";
+    const char  LuaMovableUnit::className[] = "MovableUnit";
+    const char* LuaMovableUnit::classList[] = {"MovableUnit",
+        "Character", "Creature", 0
+    };
     Lunar<LuaMovableUnit>::RegType LuaMovableUnit::methods[] = {
         {"dt", &LuaMovableUnit::GetDataTable},
 

@@ -272,6 +272,7 @@ namespace Frost
             /**/ int _SetTextHeight(lua_State*) { return 0; }
 
             static const char className[];
+            static const char* classList[];
             static Lunar<LuaFontString>::RegType methods[];
             static const s_str CLASS_NAME;
 

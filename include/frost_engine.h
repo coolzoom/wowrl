@@ -17,14 +17,6 @@
 
 namespace Frost
 {
-    enum GameState
-    {
-        GAMESTATE_GAME,
-        GAMESTATE_LOADING
-    };
-
-    class SceneDepthTargetListener;
-
     /// Game manager
     /** A typical application using Frost :
     *   - create a new Engine by calling Engine::GetSingleton()
@@ -40,6 +32,13 @@ namespace Frost
     {
     friend class Manager<Engine>;
     public :
+
+        enum State
+        {
+            STATE_NONE,
+            STATE_GAME,
+            STATE_EDITOR
+        };
 
         /// Initializes everything.
         /** \return 'true' if everything went fine
@@ -64,15 +63,15 @@ namespace Frost
         */
         void                ShutDown(const s_bool& bForceShutDown = false);
 
-        /// Changes the game state.
-        /** \param mState The new state (see GameState)
+        /// Changes the engine's state.
+        /** \param mState The new state (see State)
         */
-        void                SetState(GameState mState);
+        void                SetState(State mState);
 
-        /// Returns the current game state.
-        /** \return The current game state
+        /// Returns the current engine's state.
+        /** \return The current engine's state
         */
-        GameState           GetState() const;
+        State               GetState() const;
 
         /// Sets whether the game should be paused or not.
         /** \param bPause 'true' if you want to pause the game
@@ -134,6 +133,11 @@ namespace Frost
         /** \return The Lua state used by the engine
         */
         s_ptr<Lua::State>   GetLua();
+
+        /// Creates a lua glue on the provided Lua state.
+        /** \param pLua The lua state
+        */
+        void                CreateGlue(s_ptr<Lua::State> pLua);
 
         /// Returns the render window's width.
         /** \return The render window's width
@@ -229,7 +233,7 @@ namespace Frost
         s_bool bRun_;
 
         // Game state
-        s_int  iGameState_;
+        State  mState_;
         s_bool bGamePaused_;
 
         // Game constants
@@ -260,7 +264,8 @@ namespace Frost
         s_ptr<ZoneManager>     pZoneMgr_;
 
         // Lua
-        s_ptr<Lua::State> pLua_;
+        s_ptr<Lua::State>          pLua_;
+        s_ctnr< s_ptr<LuaEngine> > lGlueList_;
 
         // Render targets
         s_ptr<Ogre::MultiRenderTarget> pSceneMRT_;

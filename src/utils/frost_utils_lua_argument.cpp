@@ -19,6 +19,7 @@ Argument::Argument( const s_str& sName, Lua::Type mLuaType, s_ptr<Function> pPar
     lData_.PushBack(Data(sName, mLuaType, this));
     pData_ = &lData_[0];
     pParent_ = pParent;
+    pLua_ = pParent_->GetState();
 }
 
 void Argument::Add( const s_str& sName, Lua::Type mLuaType )
@@ -71,15 +72,9 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
             if (bPrintError && !bSeveralChoices)
             {
                 pLua->PrintError(
-                    "Argument " +
-                    s_str(iIndex) +
-                    " of \"" +
-                    pParent_->GetName() +
-                    "\" must be a " +
-                    s_str(pLua->GetTypeName(iterData->GetType())) +
-                    " (" +
-                    iterData->GetName() +
-                    "), got a " + s_str(pLua->GetTypeName(mType)) + "."
+                    "Argument "+s_str(iIndex)+" of \""+pParent_->GetName()+"\" "
+                    "must be a "+s_str(pLua->GetTypeName(iterData->GetType()))+" "
+                    "("+iterData->GetName()+") (got a "+s_str(pLua->GetTypeName(mType))+")."
                 );
             }
         }
@@ -98,27 +93,23 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
             s_uint i = 0;
             foreach (iterData, lData_)
             {
-                if (i != lData_.GetSize()-2)
-                {
-                    if (iterData != lData_.Begin())
-                        sEnum += ", ";
+                if (i == 0)
                     sEnum += "a ";
-                }
                 else
-                    sEnum += " or a ";
+                {
+                    if (i == lData_.GetSize()-1)
+                        sEnum += ", or a ";
+                    else
+                        sEnum += ", a ";
+                }
 
-                sEnum += s_str(pLua->GetTypeName(iterData->GetType())) +
-                    " (" + iterData->GetName() + ")";
+                sEnum += s_str(pLua->GetTypeName(iterData->GetType()))+
+                    " ("+iterData->GetName()+")";
                 ++i;
             }
             pLua->PrintError(
-                "Argument " +
-                s_str(iIndex) +
-                " of \"" +
-                pParent_->GetName() +
-                "\" must be " +
-                sEnum +
-                ", got a " + s_str(pLua->GetTypeName(mType)) + "."
+                "Argument "+s_str(iIndex)+" of \""+pParent_->GetName()+"\" "
+                "must be "+sEnum+" (got a "+s_str(pLua->GetTypeName(mType))+")."
             );
         }
     }

@@ -210,7 +210,7 @@ s_bool Function::Check( const s_bool& bPrintError )
                 foreach (iterArgList, lArgListStack_)
                 {
                     s_str sArguments = "\n  - ["+iterArgList->lArg_.GetSize()+"] : ";
-                    map< s_uint, s_ptr<Argument> >::iterator iterArg;
+                    s_map< s_uint, s_ptr<Argument> >::iterator iterArg;
                     foreach (iterArg, iterArgList->lArg_)
                     {
                         if (iterArg != iterArgList->lArg_.Begin())

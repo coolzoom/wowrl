@@ -65,7 +65,7 @@ namespace Frost
 
         /// Constructor.
         CharacterOgreInterface();
-        
+
         /// Sets the associated Character.
         /** \param pCharacter The associated Character
         */
@@ -167,6 +167,7 @@ namespace Frost
         int _GetRace(lua_State*);
 
         static const char className[];
+        static const char* classList[];
         static Lunar<LuaCharacter>::RegType methods[];
         static const s_str CLASS_NAME;
 

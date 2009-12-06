@@ -40,6 +40,12 @@ namespace Frost
             /// Destructor.
             ~StatusBar();
 
+            /// Returns 'true' if this StatusBar can use a script.
+            /** \param sScriptName The name of the script
+            *   \note This method can be overriden if needed.
+            */
+            virtual s_bool CanUseScript(const s_str& sScriptName) const;
+
             /// Sets this StatusBar's minimum value.
             /** \param fMin The minimum value
             */
@@ -175,6 +181,7 @@ namespace Frost
             int _SetValue(lua_State*);
 
             static const char className[];
+            static const char* classList[];
             static Lunar<LuaStatusBar>::RegType methods[];
             static const s_str CLASS_NAME;
 

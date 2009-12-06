@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\frost_engine_glues.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\frost_inputmanager.cpp"
 				>
 			</File>
@@ -662,6 +666,10 @@
 			</File>
 			<File
 				RelativePath=".\include\frost_engine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\frost_engine_glues.h"
 				>
 			</File>
 			<File

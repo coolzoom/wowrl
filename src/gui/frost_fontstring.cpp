@@ -26,6 +26,9 @@ FontString::FontString() : LayeredRegion()
 
     mTextColor_   = Color::WHITE;
     mShadowColor_ = Color::BLACK;
+
+    mJustifyH_ = Text::ALIGN_CENTER;
+    mJustifyV_ = Text::ALIGN_MIDDLE;
 }
 
 FontString::~FontString()

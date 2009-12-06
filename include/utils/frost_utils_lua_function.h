@@ -115,6 +115,15 @@ namespace Frost
             */
             s_str         GetString() const;
 
+            /// Returns the value as userdata.
+            /** \return The value as userdata
+            */
+            template<class T>
+            s_ptr<T>      Get() const
+            {
+                return pLua_->Get<T>(pData_->GetValue().Get<s_int>());
+            }
+
             /// Returns the value and converts it to an int.
             /** \return The value and converts it to an int
             */
@@ -152,6 +161,7 @@ namespace Frost
             s_ptr<Data>     pData_;
             s_ctnr<Data>    lData_;
             s_ptr<Function> pParent_;
+            s_ptr<State>    pLua_;
         };
 
         /// Holds all possible arguments of a Lua function's argument set.

@@ -48,6 +48,12 @@ namespace Frost
             /// Creates the associated Lua glue.
             virtual void      CreateGlue();
 
+            /// Returns 'true' if this Button can use a script.
+            /** \param sScriptName The name of the script
+            *   \note This method can be overriden if needed.
+            */
+            virtual s_bool    CanUseScript(const s_str& sScriptName) const;
+
             /// Calls a script.
             /** \param sScriptName The name of the script
             *   \param pEvent      Stores scripts arguments
@@ -301,6 +307,7 @@ namespace Frost
             int _UnlockHighlight(lua_State*);
 
             static const char className[];
+            static const char* classList[];
             static Lunar<LuaButton>::RegType methods[];
             static const s_str CLASS_NAME;
 

@@ -266,7 +266,8 @@ namespace Frost
         return pParent_;
     }
 
-    const char LuaMovableObject::className[] = "MovableObject";
+    const char  LuaMovableObject::className[] = "MovableObject";
+    const char* LuaMovableObject::classList[] = {"MovableObject", 0};
     Lunar<LuaMovableObject>::RegType LuaMovableObject::methods[] = {
         {"dt", &LuaMovableObject::GetDataTable},
 

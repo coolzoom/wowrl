@@ -1277,7 +1277,7 @@ void Frame::StartMoving()
         if (lAnchorList_.GetSize() > 1)
         {
             lAnchorList_.Clear();
-            Anchor mAnchor(this, ANCHOR_TOPLEFT, nullptr, ANCHOR_TOPLEFT);
+            Anchor mAnchor(this, ANCHOR_TOPLEFT, "", ANCHOR_TOPLEFT);
             mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
             lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
 
@@ -1345,7 +1345,7 @@ void Frame::StartSizing( const AnchorPoint& mPoint )
         }
 
         lAnchorList_.Clear();
-        Anchor mAnchor(this, mOppositePoint, nullptr, ANCHOR_TOPLEFT);
+        Anchor mAnchor(this, mOppositePoint, "", ANCHOR_TOPLEFT);
         mAnchor.SetAbsOffset(iOffX, iOffY);
         lAnchorList_[mOppositePoint] = mAnchor;
 

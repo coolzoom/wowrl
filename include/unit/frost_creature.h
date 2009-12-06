@@ -105,6 +105,7 @@ namespace Frost
 
 
         static const char className[];
+        static const char* classList[];
         static Lunar<LuaCreature>::RegType methods[];
         static const s_str CLASS_NAME;
 

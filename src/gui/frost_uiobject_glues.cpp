@@ -271,7 +271,11 @@ int LuaUIObject::_SetAllPoints( lua_State* pLua )
             if (pArg->GetType() == Lua::TYPE_STRING)
                 pFrame = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
             else
-                pFrame = mFunc.GetState()->Get<LuaUIObject>(pArg->GetIndex())->GetParent();
+            {
+                s_ptr<LuaUIObject> pObj = pArg->Get<LuaUIObject>();
+                if (pObj)
+                    pFrame = pObj->GetParent();
+            }
             pParent_->SetAllPoints(pFrame);
         }
         else
@@ -310,7 +314,11 @@ int LuaUIObject::_SetParent( lua_State* pLua )
             if (pArg->GetType() == Lua::TYPE_STRING)
                 pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
             else
-                pParent = mFunc.GetState()->Get<LuaUIObject>(pArg->GetIndex())->GetParent();
+            {
+                s_ptr<LuaUIObject> pObj = pArg->Get<LuaUIObject>();
+                if (pObj)
+                    pParent = pObj->GetParent();
+            }
         }
 
         pParent_->SetParent(pParent);
@@ -339,13 +347,23 @@ int LuaUIObject::_SetPoint( lua_State* pLua )
         if (pArg->IsProvided())
         {
             if (pArg->GetType() == Lua::TYPE_STRING)
-                pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
+            {
+                s_str sParent = pArg->GetString();
+                if (!sParent.IsEmpty(true))
+                    pParent = GUIManager::GetSingleton()->GetUIObjectByName(sParent);
+            }
             else
-                pParent = mFunc.GetState()->Get<LuaUIObject>(pArg->GetIndex())->GetParent();
+            {
+                s_ptr<LuaUIObject> pLuaObj = pArg->Get<LuaUIObject>();
+                if (pLuaObj)
+                    pParent = pLuaObj->GetParent();
+            }
         }
+        else
+            pParent = pParent_->GetParent();
 
         // relativePoint
-        AnchorPoint mParentPoint = ANCHOR_TOPLEFT;
+        AnchorPoint mParentPoint = mPoint;
         if (mFunc.IsProvided(2))
             mParentPoint = Anchor::GetAnchorPoint(mFunc.Get(2)->GetString());
 

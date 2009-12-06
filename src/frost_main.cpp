@@ -28,6 +28,7 @@
 #include "scene/frost_meshobstacle.h"
 #include "scene/frost_planeobstacle.h"
 #include "scene/frost_physicshandler.h"
+#include "lua/frost_lua.h"
 
 #include <OgreException.h>
 
@@ -176,6 +177,7 @@ int main(int argc, char* argv[])
 
         if (bEditor)
         {
+            pFrost->SetState(Engine::STATE_EDITOR);
             Log("Entering Editor mode...");
 
             pFrost->SetFrameFunction(&EditorFrameFunc);
@@ -188,16 +190,13 @@ int main(int argc, char* argv[])
             GUIManager::GetSingleton()->LoadUI();
 
             s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
-            //pZone->ShowAllChunks();
 
-            s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(Light::POINT);
-            pLight1->SetPosition(Vector(0, 10, 0));
-            pLight1->SetColor(Color(255, 255, 255));
-            pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
-            pLight1->SetRange(50.0f);
+            LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
         }
         else
         {
+            pFrost->SetState(Engine::STATE_GAME);
+
             // Set render and frame functions
             pFrost->SetFrameFunction(&GameFrameFunc);
             SpriteManager::GetSingleton()->SetRenderFunction(&GameRenderFunc);

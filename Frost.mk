@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFulePath        :=
 CurrentFileFullPath    :=
 User                   :=Administrateur
-Date                   :=12/05/09
+Date                   :=12/06/09
 CodeLitePath           :="C:\Programmation\CodeLite"
 LinkerName             :=g++
 ArchiveTool            :=ar rcus
@@ -52,7 +52,7 @@ Objects=$(IntermediateDirectory)/frost_cameramanager$(ObjectSuffix) $(Intermedia
 	$(IntermediateDirectory)/frost_boxobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_cylinderobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_light$(ObjectSuffix) $(IntermediateDirectory)/frost_lightmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_meshobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_movableobject$(ObjectSuffix) $(IntermediateDirectory)/frost_movableobject_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_node$(ObjectSuffix) $(IntermediateDirectory)/frost_obstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_physicshandler$(ObjectSuffix) \
 	$(IntermediateDirectory)/frost_physicsmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_plane$(ObjectSuffix) $(IntermediateDirectory)/frost_planeobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_scenemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_sphereobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_terrainchunk$(ObjectSuffix) $(IntermediateDirectory)/frost_terrainobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_zone$(ObjectSuffix) $(IntermediateDirectory)/frost_spell$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager_glues$(ObjectSuffix) \
 	$(IntermediateDirectory)/frost_character$(ObjectSuffix) $(IntermediateDirectory)/frost_character_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_creature$(ObjectSuffix) $(IntermediateDirectory)/frost_creature_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_healthtype$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunit$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunit_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunithandler$(ObjectSuffix) $(IntermediateDirectory)/frost_powertype$(ObjectSuffix) $(IntermediateDirectory)/frost_stats$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_unit$(ObjectSuffix) $(IntermediateDirectory)/frost_unit_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_main$(ObjectSuffix) $(IntermediateDirectory)/frost_engine$(ObjectSuffix) $(IntermediateDirectory)/frost_inputmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_localemanager$(ObjectSuffix) 
+	$(IntermediateDirectory)/frost_unit$(ObjectSuffix) $(IntermediateDirectory)/frost_unit_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_main$(ObjectSuffix) $(IntermediateDirectory)/frost_engine$(ObjectSuffix) $(IntermediateDirectory)/frost_inputmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_localemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_engine_glues$(ObjectSuffix) 
 
 ##
 ## Main Build Tragets 
@@ -825,6 +825,13 @@ $(IntermediateDirectory)/frost_localemanager$(DependSuffix): src/frost_localeman
 	@makedir "obj_Frost/Release_CL_Win32"
 	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_localemanager$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_localemanager$(DependSuffix) -MM "C:/Programmation2/Frost/src/frost_localemanager.cpp"
 
+$(IntermediateDirectory)/frost_engine_glues$(ObjectSuffix): src/frost_engine_glues.cpp $(IntermediateDirectory)/frost_engine_glues$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/frost_engine_glues.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_engine_glues$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_engine_glues$(DependSuffix): src/frost_engine_glues.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_engine_glues$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_engine_glues$(DependSuffix) -MM "C:/Programmation2/Frost/src/frost_engine_glues.cpp"
+
 ##
 ## Clean
 ##
@@ -1150,6 +1157,9 @@ clean:
 	$(RM) $(IntermediateDirectory)/frost_localemanager$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/frost_localemanager$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/frost_localemanager$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_engine_glues$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_engine_glues$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_engine_glues$(PreprocessSuffix)
 	$(RM) $(OutputFile)
 	$(RM) $(OutputFile).exe
 

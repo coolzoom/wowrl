@@ -532,8 +532,8 @@ namespace Frost
             /// Constructor.
             LuaFrame(lua_State* pLua);
 
-            /**/ int _CreateFontString(lua_State*) { return 0; }
-            /**/ int _CreateTexture(lua_State*) { return 0; }
+            int _CreateFontString(lua_State*);
+            int _CreateTexture(lua_State*);
             int _CreateTitleRegion(lua_State*);
             int _DisableDrawLayer(lua_State*);
             int _EnableDrawLayer(lua_State*);
@@ -597,6 +597,7 @@ namespace Frost
             int _UnregisterEvent(lua_State*);
 
             static const char className[];
+            static const char* classList[];
             static Lunar<LuaFrame>::RegType methods[];
             static const s_str CLASS_NAME;
 

@@ -1,0 +1,136 @@
+<Ui>
+    <Button name="ButtonTemplate_Menu" virtual="true">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+            <Color r="0.0" g="0.0" b="0.0"/>
+        </NormalText>
+        <HighlightTexture file="Interface/Editor/MenuBar/MenuBarButtonHighlight.png"/>
+        <Scripts>
+            <OnLoad>
+                this:SetWidth(math.max(this:GetTextWidth()+6, 16));
+            </OnLoad>
+            <OnClick>
+                if (UIParent.activeDropdown) then
+                    UIParent.activeDropdown:Hide();
+                    if (UIParent.activeDropdown ~= this.Dropdown) then
+                        this.Dropdown:Show();
+                        UIParent.activeDropdown = this.Dropdown;
+                    else
+                        UIParent.activeDropdown = nil;
+                    end
+                else
+                    this.Dropdown:Show();
+                    UIParent.activeDropdown = this.Dropdown;
+                end
+            </OnClick>
+        </Scripts>
+    </Button>
+    
+    <Button name="ButtonTemplate_MenuItem" virtual="true">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" setAllPoints="false">
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="16"/>
+                    </Offset>
+                </Anchor>
+                <Anchor point="BOTTOMRIGHT"/>
+            </Anchors>
+            <Color r="0.0" g="0.0" b="0.0"/>
+        </NormalText>
+        <HighlightTexture file="Interface/Editor/MenuBar/MenuBarButtonHighlight.png"/>
+    </Button>
+    
+    <Button name="ButtonTemplate_MenuCheckItem" inherits="ButtonTemplate_MenuItem" virtual="true">
+        <Layers>
+            <Layer>
+                <Texture name="$parentChecked" file="Interface/Editor/MenuBar/CheckButtonChecked.png">
+                    <Size>
+                        <AbsDimension x="8" y="8"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="4" y="3"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+                <Texture name="$parentUnChecked" file="Interface/Editor/MenuBar/CheckButtonUnChecked.png">
+                    <Size>
+                        <AbsDimension x="8" y="8"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="4" y="3"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad>
+                this.enabled = true;
+            </OnLoad>
+            <OnShow>
+                if (this.enabled) then
+                    this.Checked:Show();
+                    this.UnChecked:Hide();
+                else
+                    this.Checked:Hide();
+                    this.UnChecked:Show();
+                end
+            </OnShow>
+            <OnClick>
+                this.enabled = not this.enabled;
+                if (this.enabled) then
+                    this.Checked:Show();
+                    this.UnChecked:Hide();
+                else
+                    this.Checked:Hide();
+                    this.UnChecked:Show();
+                end
+            </OnClick>
+        </Scripts>
+    </Button>
+    
+    <Frame name="FrameTemplate_Dropdown" virtual="true" hidden="true">    
+        <Size>
+            <AbsDimension x="116" y="16"/>
+        </Size>
+        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+        <Scripts>
+            <OnLoad>
+                this.updated = false;
+            </OnLoad>
+            <OnShow>
+                if (not this.updated) then
+                    local children = { this:GetChildren() };
+                    local maxWidth = 0;
+                    local totalHeight = 0;
+                    
+                    for k, child in pairs(children) do
+                        maxWidth = math.max(child:GetWidth(), maxWidth);
+                        totalHeight = totalHeight + child:GetHeight();
+                    end
+                    
+                    if (maxWidth > 100) then
+                        for k, child in pairs(children) do
+                            child:SetWidth(maxWidth);
+                        end
+                        
+                        this:SetWidth(maxWidth);
+                    end
+                    
+                    this:SetHeight(math.max(totalHeight, 16));
+                    
+                    this.updated = true;
+                end
+            </OnShow>
+        </Scripts>
+    </Frame>
+</Ui>

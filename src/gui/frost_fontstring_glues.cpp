@@ -143,7 +143,7 @@ int LuaFontString::_SetJustifyH( lua_State* pLua )
         else if (sJustifyH == "CENTER")
             pFontStringParent_->SetJustifyH(Text::ALIGN_CENTER);
         else if (sJustifyH == "RIGHT")
-            pFontStringParent_->SetJustifyH(Text::ALIGN_CENTER);
+            pFontStringParent_->SetJustifyH(Text::ALIGN_RIGHT);
         else
         {
             Warning(mFunc.GetName(),

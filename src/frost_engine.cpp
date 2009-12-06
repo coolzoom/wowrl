@@ -5,6 +5,7 @@
 
 #include "frost_engine.h"
 
+#include "frost_engine_glues.h"
 #include "frost_inputmanager.h"
 #include "gui/frost_fontmanager.h"
 #include "gui/frost_guimanager.h"
@@ -65,7 +66,7 @@ namespace Frost
 
     Engine::Engine() : mLog_("Frost.log", File::O)
     {
-        iGameState_ = 0;
+        mState_ = STATE_NONE;
         bGamePaused_ = false;
         bShutDown_ = false;
 
@@ -101,8 +102,6 @@ namespace Frost
 
         pLua_ = pLuaMgr_->CreateLua();
         pLuaMgr_->SetDefaultLua(pLua_);
-
-        Lua::RegisterGlobalFuncs(pLua_);
 
         //mTimeMgr_->SetProfiling(true);
     }
@@ -160,6 +159,10 @@ namespace Frost
         // Load configuration
         if (!pLua_->DoFile("Config.lua"))
             throw Exception(CLASS_NAME, "Error reading Config.lua.");
+
+        Lua::RegisterGlobalFuncs(pLua_);
+        Lua::RegisterEngineClass(pLua_);
+        CreateGlue(pLua_);
 
         pLua_->PushGlobal("GameOptions");
         pLua_->PushNil();
@@ -700,5 +703,23 @@ namespace Frost
             pSceneSprite_->Render(0, 0);
         else
             pSpriteMgr_->Clear(Color::VOID);
+    }
+
+    void Engine::CreateGlue( s_ptr<Lua::State> pLua )
+    {
+        lGlueList_.PushBack(
+            pLua->Push<LuaEngine>(new LuaEngine(pLua->GetState()))
+        );
+        pLua->SetGlobal("Frost");
+    }
+
+    void Engine::SetState( State mState )
+    {
+        mState_ = mState;
+    }
+
+    Engine::State Engine::GetState() const
+    {
+        return mState_;
     }
 }

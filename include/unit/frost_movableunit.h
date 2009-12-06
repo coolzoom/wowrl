@@ -169,6 +169,7 @@ namespace Frost
         int _ToggleWalking(lua_State*);
 
         static const char className[];
+        static const char* classList[];
         static Lunar<LuaMovableUnit>::RegType methods[];
         static const s_str CLASS_NAME;
 

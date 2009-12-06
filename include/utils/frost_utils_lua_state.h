@@ -231,7 +231,7 @@ namespace Frost
             template<class T>
             s_ptr<T> Get(const s_int& iIndex = -1)
             {
-                return Lunar<T>::check(pLua_, iIndex.Get());
+                return Lunar<T>::widecheck(pLua_, iIndex.Get());
             }
 
             /// Returns the number of value on the stack.

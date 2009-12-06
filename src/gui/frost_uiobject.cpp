@@ -110,9 +110,8 @@ void UIObject::CopyFrom( s_ptr<UIObject> pObj )
         s_ptr<Anchor> pAnchor = pObj->GetPoint(i);
         if (pAnchor)
         {
-            Anchor mAnchor(this, pAnchor->GetPoint(), nullptr, pAnchor->GetParentPoint());
+            Anchor mAnchor(this, pAnchor->GetPoint(), pAnchor->GetParentRawName(), pAnchor->GetParentPoint());
             mAnchor.SetAbsOffset(pAnchor->GetAbsOffsetX(), pAnchor->GetAbsOffsetY());
-            mAnchor.SetParentRawName(pAnchor->GetParentRawName());
             this->SetPoint(mAnchor);
         }
     }
@@ -138,8 +137,13 @@ void UIObject::SetName( const s_str& sName )
     if (sName_.IsEmpty())
     {
         sName_ = sLuaName_ = sRawName_ = sName;
-        if (pParent_ && sName_.StartsWith("$parent"))
-            sLuaName_.Replace("$parent", pParent_->GetName());
+        if (sName_.StartsWith("$parent"))
+        {
+            if (pParent_)
+                sLuaName_.Replace("$parent", pParent_->GetName());
+            else
+                sLuaName_.Replace("$parent", "");
+        }
 
         if (!bVirtual_)
             sName_ = sLuaName_;
@@ -341,16 +345,41 @@ void UIObject::ClearAllPoints()
     lDefinedBorderList_[BORDER_BOTTOM] = false;
 }
 
+void UIObject::SetAllPoints( const s_str& sObjName )
+{
+    if (sObjName != sName_)
+    {
+        ClearAllPoints();
+        Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, sObjName, ANCHOR_TOPLEFT);
+        lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
+
+        mAnchor = Anchor(this, ANCHOR_BOTTOMRIGHT, sObjName, ANCHOR_BOTTOMRIGHT);
+        lAnchorList_[ANCHOR_BOTTOMRIGHT] = mAnchor;
+
+        lDefinedBorderList_[BORDER_LEFT]   =
+        lDefinedBorderList_[BORDER_TOP]    =
+        lDefinedBorderList_[BORDER_RIGHT]  =
+        lDefinedBorderList_[BORDER_BOTTOM] = true;
+
+        FireUpdateBorders();
+    }
+    else
+    {
+        Error(lType_.Back(),
+            "Can't call SetAllPoints(this)."
+        );
+    }
+}
+
 void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 {
     if (pObj != this)
     {
         ClearAllPoints();
-
-        Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, pObj, ANCHOR_TOPLEFT);
+        Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, pObj ? pObj->GetName() : "", ANCHOR_TOPLEFT);
         lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
 
-        mAnchor = Anchor(this, ANCHOR_BOTTOMRIGHT, pObj, ANCHOR_BOTTOMRIGHT);
+        mAnchor = Anchor(this, ANCHOR_BOTTOMRIGHT, pObj ? pObj->GetName() : "", ANCHOR_BOTTOMRIGHT);
         lAnchorList_[ANCHOR_BOTTOMRIGHT] = mAnchor;
 
         lDefinedBorderList_[BORDER_LEFT]   =
@@ -373,14 +402,14 @@ void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
-        Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
+        Anchor mAnchor = Anchor(this, mPoint, pObj ? pObj->GetName() : "", mRelativePoint);
         mAnchor.SetAbsOffset(iX, iY);
         lAnchorList_[mPoint] = mAnchor;
     }
     else
     {
         s_ptr<Anchor> pAnchor = &iterAnchor->second;
-        pAnchor->SetParent(pObj);
+        pAnchor->SetParentRawName(pObj ? pObj->GetName() : "");
         pAnchor->SetParentPoint(mRelativePoint);
         pAnchor->SetAbsOffset(iX, iY);
     }
@@ -426,14 +455,14 @@ void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
-        Anchor mAnchor = Anchor(this, mPoint, pObj, mRelativePoint);
+        Anchor mAnchor = Anchor(this, mPoint, pObj ? pObj->GetName() : "", mRelativePoint);
         mAnchor.SetRelOffset(fX, fY);
         lAnchorList_[mPoint] = mAnchor;
     }
     else
     {
         s_ptr<Anchor> pAnchor = &iterAnchor->second;
-        pAnchor->SetParent(pObj);
+        pAnchor->SetParentRawName(pObj ? pObj->GetName() : "");
         pAnchor->SetParentPoint(mRelativePoint);
         pAnchor->SetRelOffset(fX, fY);
     }

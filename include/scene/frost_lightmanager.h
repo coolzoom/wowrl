@@ -48,30 +48,46 @@ namespace Frost
         /** \param mType The type of this light
         *   \return The new light
         */
-        s_ptr<Light> CreateLight(Light::Type mType);
+        s_ptr<Light>   CreateLight(Light::Type mType);
 
         /// Deletes a light.
         /** \param pLight The light to delete
         *   \note All light are automatically deleted
         *         when this manager is deleted.
         */
-        void         DeleteLight(s_ptr<Light> pLight);
+        void           DeleteLight(s_ptr<Light> pLight);
 
         /// Updates all lights.
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by Engine.
         */
-        void         UpdateLights(const s_float& fDelta);
+        void           UpdateLights(const s_float& fDelta);
 
         /// Sets the ambient light color.
         /** \param mAmbient The new ambient light color
         */
-        void         SetAmbient(const Color& mAmbient);
+        void           SetAmbient(const Color& mAmbient);
 
         /// Returns the ambient light color.
         /** \return The ambient light color
         */
-        const Color& GetAmbient() const;
+        const Color&   GetAmbient() const;
+
+        /// Checks if the ambient color is locked.
+        /** \return 'true' if the ambient color is locked
+        */
+        const s_bool&  IsAmbientLocked() const;
+
+        /// Forces the ambient color.
+        /** \param mLockedAmbient The new ambient color
+        *   \note If the ambient color is locked, calling
+        *         SetAmbient() will have no effect. You'll
+        *         have to call UnlockAmbient() before.
+        */
+        void           LockAmbient(const Color& mLockedAmbient);
+
+        /// Unlocks the ambient color.
+        void           UnlockAmbient();
 
         static const s_str CLASS_NAME;
 
@@ -109,6 +125,9 @@ namespace Frost
         s_map<s_uint, s_ptr<Light> > lLightList_;
 
         Color  mAmbient_;
+        Color  mLockedAmbient_;
+        s_bool bAmbientLocked_;
+
         Vector mSunDir_;
         Color  mSunColor_;
     };

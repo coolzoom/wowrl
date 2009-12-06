@@ -11,10 +11,17 @@ if (GetLocale() == "frFR") then
         ["EditRedo"] = "Retablir",
         ["EditCopy"] = "Copier",
         ["EditPaste"] = "Coller",
+        ["Add"] = "Ajouter",
+        ["AddDoodad"] = "... objet",
+        ["AddLight"] = "... lumiere",
+        ["AddUnit"] = "... unite",
         ["View"] = "Affichage",
+        ["ViewWireframe"] = "Activer/desactiver le mode fil de fer",
+        ["ViewShading"] = "Activer/desactiver l'eclairage",
+        ["ViewBGColor"] = "Couleur d'arriere plan...",
         ["Settings"] = "Parametres",
         ["Help"] = "Aide",
-        ["HelpShowHelp"] = "Montrer l'aide",
+        ["HelpShow"] = "Montrer l'aide",
         ["HelpAbout"] = "A propos"
     };
 else
@@ -30,10 +37,17 @@ else
         ["EditRedo"] = "Redo",
         ["EditCopy"] = "Copy",
         ["EditPaste"] = "Paste",
+        ["Add"] = "Add",
+        ["AddDoodad"] = "... doodad",
+        ["AddLight"] = "... light",
+        ["AddUnit"] = "... unit",
         ["View"] = "View",
+        ["ViewWireframe"] = "Toggle wireframe",
+        ["ViewShading"] = "Toggle shading",
+        ["ViewBGColor"] = "Background color...",
         ["Settings"] = "Settings",
         ["Help"] = "Help",
-        ["HelpShowHelp"] = "Show help",
+        ["HelpShow"] = "Show help",
         ["HelpAbout"] = "About"
     };
 end

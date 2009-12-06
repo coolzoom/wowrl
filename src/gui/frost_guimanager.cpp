@@ -70,7 +70,7 @@ namespace Frost
                 s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.Get(i);
                 while (iterObj != lObjectList_.end())
                 {
-                    i++;
+                    ++i;
                     iterObj = lObjectList_.Get(i);
                 }
                 lObjectList_[i] = pObj;
@@ -97,7 +97,7 @@ namespace Frost
                 s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj = lObjectList_.Get(i);
                 while (iterObj != lObjectList_.End())
                 {
-                    i++;
+                    ++i;
                     iterObj = lObjectList_.Get(i);
                 }
                 lObjectList_[i] = pObj;
@@ -348,6 +348,11 @@ namespace Frost
             pLua_ = LuaManager::GetSingleton()->CreateLua();
             Lua::RegisterGUIClasses(pLua_);
             Lua::RegisterGlobalFuncs(pLua_);
+            if (Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR)
+            {
+                Lua::RegisterEngineClass(pLua_);
+                Engine::GetSingleton()->CreateGlue(pLua_);
+            }
 
             s_ctnr<s_str>::iterator iterFolder;
             foreach (iterFolder, lGUIFolderList_)

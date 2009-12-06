@@ -75,14 +75,14 @@ void LayeredRegion::ParseAttributes_( s_ptr<XML::Block> pBlock )
                 {
                     Warning(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
                         "\""+sName_+"\" ("+lType_.Back()+") cannot inherit "
-                        "from \""+sInheritance+"\" ("+pObj->GetObjectType()+"). Inheritance skipped."
+                        "from \""+(*iter)+"\" ("+pObj->GetObjectType()+"). Inheritance skipped."
                     );
                 }
             }
             else
             {
                 Warning(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
-                    "Couldn't find inherited object \""+*iter+"\". Inheritance skipped."
+                    "Couldn't find inherited object \""+(*iter)+"\". Inheritance skipped."
                 );
             }
         }
@@ -94,5 +94,5 @@ void LayeredRegion::ParseAttributes_( s_ptr<XML::Block> pBlock )
 
     if ((pBlock->IsProvided("setAllPoints") || !bInherits_) &&
         (s_bool(pBlock->GetAttribute("setAllPoints"))))
-        SetAllPoints(pFrameParent);
+        SetAllPoints("$parent");
 }

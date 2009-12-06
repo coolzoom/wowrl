@@ -131,6 +131,7 @@
 		<Unit filename="include\camera\frost_cameramanager.h" />
 		<Unit filename="include\frost.h" />
 		<Unit filename="include\frost_engine.h" />
+		<Unit filename="include\frost_engine_glues.h" />
 		<Unit filename="include\frost_inputmanager.h" />
 		<Unit filename="include\frost_localemanager.h" />
 		<Unit filename="include\frost_macros.h" />
@@ -210,6 +211,7 @@
 		<Unit filename="src\camera\frost_camera.cpp" />
 		<Unit filename="src\camera\frost_cameramanager.cpp" />
 		<Unit filename="src\frost_engine.cpp" />
+		<Unit filename="src\frost_engine_glues.cpp" />
 		<Unit filename="src\frost_inputmanager.cpp" />
 		<Unit filename="src\frost_localemanager.cpp" />
 		<Unit filename="src\frost_main.cpp" />
