@@ -1,5 +1,6 @@
 MenuBar.Config = {
-    ["barHeight"] = 16
+    ["barHeight"] = 16,
+    ["barColor"] = {["a"] = 0.8, ["r"] = 0.75, ["g"] = 0.75, ["b"] = 0.75},
 }
 
 MenuBar.lastMenu = nil;
@@ -13,9 +14,9 @@ function MenuBar:AddMenu(caption)
        
         menu:SetHeight(MenuBar.Config.barHeight);
         if (MenuBar.lastMenu) then
-            menu:SetPoint("TOPLEFT", MenuBar.lastMenu, "TOPRIGHT");
+            menu:SetPoint("TOPLEFT", MenuBar.lastMenu, "TOPRIGHT", 4);
         else
-            menu:SetPoint("TOPLEFT");
+            menu:SetPoint("TOPLEFT", MenuBar, "TOPLEFT", 0, 1);
         end
         
         menu:SetScript("OnLoad",
@@ -36,7 +37,8 @@ function MenuBar:CreateMenuDropdown(caption)
     if (menu) then
         local dropdown = CreateFrame("Frame", "$parentDropdown", menu, "FrameTemplate_Dropdown");
         if (dropdown) then
-            dropdown:SetPoint("TOPLEFT", menu, "BOTTOMLEFT");
+            dropdown:SetPoint("TOPLEFT", menu, "BOTTOMLEFT", -4, -5);
+            dropdown:SetBackdropColor(MenuBar.Config.barColor.r, MenuBar.Config.barColor.g, MenuBar.Config.barColor.b, MenuBar.Config.barColor.a);
         end
     end
 end
@@ -57,7 +59,7 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
                 if (menu.lastItem) then
                     item:SetPoint("TOPLEFT", menu.lastItem, "BOTTOMLEFT");
                 else
-                    item:SetPoint("TOPLEFT");
+                    item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 8);
                 end
                 
                 item:SetScript("OnLoad",
@@ -73,8 +75,7 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
                         key:SetFont("Fonts/Vera.ttf", 8);
                         key:SetJustifyH("RIGHT");
                         key:SetText(keycode);
-                        key:SetPoint("RIGHT", item, "RIGHT", -16, 0);
-                        key:SetTextColor(0.5, 0.5, 0.5);
+                        key:SetPoint("RIGHT", item, "RIGHT", -8, 0);
                     end
                 end
                 
@@ -101,7 +102,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                 if (menu.lastItem) then
                     item:SetPoint("TOPLEFT", menu.lastItem, "BOTTOMLEFT");
                 else
-                    item:SetPoint("TOPLEFT");
+                    item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 8);
                 end
                 
                 if (defaultState) then
@@ -128,8 +129,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                         key:SetFont("Fonts/Vera.ttf", 8);
                         key:SetJustifyH("RIGHT");
                         key:SetText(keycode);
-                        key:SetPoint("RIGHT", item, "RIGHT", -16, 0);
-                        key:SetTextColor(0.5, 0.5, 0.5);
+                        key:SetPoint("RIGHT", item, "RIGHT", -8, 0);
                     end
                 end
                 

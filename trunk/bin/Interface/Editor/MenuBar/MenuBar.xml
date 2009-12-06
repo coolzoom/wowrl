@@ -7,10 +7,11 @@
 			<Anchor point="TOPLEFT"/>
             <Anchor point="TOPRIGHT"/>
 		</Anchors>
-        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
         <Scripts>
             <OnLoad>
                 this.activeDropDown = nil;
+                this:SetBackdrop({});
+                this:SetBackdropColor(MenuBar.Config.barColor.r, MenuBar.Config.barColor.g, MenuBar.Config.barColor.b, MenuBar.Config.barColor.a);
             </OnLoad>
         </Scripts>
         <Frames>
@@ -19,7 +20,11 @@
                     <AbsDimension x="16" y="16"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOPRIGHT"/>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension y="1"/>
+                        </Offset>
+                    </Anchor>
                 </Anchors>
                 <Scripts>
                     <OnClick>

@@ -6,7 +6,7 @@
             </Anchors>
             <Color r="0.0" g="0.0" b="0.0"/>
         </NormalText>
-        <HighlightTexture file="Interface/Editor/MenuBar/MenuBarButtonHighlight.png"/>
+        <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
         <Scripts>
             <OnLoad>
                 this:SetWidth(math.max(this:GetTextWidth()+6, 16));
@@ -40,13 +40,13 @@
             </Anchors>
             <Color r="0.0" g="0.0" b="0.0"/>
         </NormalText>
-        <HighlightTexture file="Interface/Editor/MenuBar/MenuBarButtonHighlight.png"/>
+        <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
     </Button>
     
     <Button name="ButtonTemplate_MenuCheckItem" inherits="ButtonTemplate_MenuItem" virtual="true">
         <Layers>
             <Layer>
-                <Texture name="$parentChecked" file="Interface/Editor/MenuBar/CheckButtonChecked.png">
+                <Texture name="$parentChecked" file="Interface/Editor/Templates/CheckButtonChecked.png">
                     <Size>
                         <AbsDimension x="8" y="8"/>
                     </Size>
@@ -58,7 +58,7 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-                <Texture name="$parentUnChecked" file="Interface/Editor/MenuBar/CheckButtonUnChecked.png">
+                <Texture name="$parentUnChecked" file="Interface/Editor/Templates/CheckButtonUnChecked.png">
                     <Size>
                         <AbsDimension x="8" y="8"/>
                     </Size>
@@ -102,7 +102,11 @@
         <Size>
             <AbsDimension x="116" y="16"/>
         </Size>
-        <Backdrop bgFile="Interface/Editor/MenuBar/MenuBarBackground.png"/>
+        <Backdrop edgeFile="Interface/Editor/Templates/DialogBorder.png">
+            <BackgroundInsets>
+                <AbsInset left="4" right="4" top="4" bottom="4"/>
+            </BackgroundInsets>
+        </Backdrop>
         <Scripts>
             <OnLoad>
                 this.updated = false;
@@ -123,10 +127,10 @@
                             child:SetWidth(maxWidth);
                         end
                         
-                        this:SetWidth(maxWidth);
+                        this:SetWidth(maxWidth+16);
                     end
                     
-                    this:SetHeight(math.max(totalHeight, 16));
+                    this:SetHeight(math.max(totalHeight, 16)+16);
                     
                     this.updated = true;
                 end
