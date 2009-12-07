@@ -259,10 +259,10 @@ namespace Frost
         s_str_t<M> sTemp = "(";
         for (uint i = 0; i < N; ++i)
         {
-            if (i == N-1)
-                sTemp << mRight[i];
+            if (i != 0)
+                sTemp << ", " << mRight[i];
             else
-                sTemp << mRight[i] << ", ";
+                sTemp << mRight[i];
         }
         sTemp << ")";
 

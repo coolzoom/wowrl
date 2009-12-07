@@ -456,12 +456,13 @@ namespace Frost
     s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_ctnr_t<T,C>& mRight)
     {
         s_str_t<N> sTemp = "(";
-        for (s_uint i = 0; i < mRight.GetSize(); ++i)
+        typename s_ctnr_t<T,C>::const_iterator iter;
+        for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
         {
-            if (i == mRight.GetSize()-1)
-                sTemp << mRight[i];
+            if (iter != mRight.Begin())
+                sTemp << ", " << *iter;
             else
-                sTemp << mRight[i] << ", ";
+                sTemp << *iter;
         }
         sTemp << ")";
 
