@@ -1,0 +1,11 @@
+## Interface: 0045
+## Title: PanelBar
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+PanelBarTemplates.xml
+PanelBar.xml
+PanelBar.lua
+Localization.lua
+Panels.lua

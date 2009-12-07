@@ -216,6 +216,7 @@ s_bool UIObject::IsVisible() const
 
 void UIObject::SetAbsWidth( const s_uint& uiAbsWidth )
 {
+    GUIManager::GetSingleton()->NotifyObjectMoved();
     bIsWidthAbs_ = true;
     uiAbsWidth_ = uiAbsWidth;
     FireUpdateDimensions();
@@ -223,6 +224,7 @@ void UIObject::SetAbsWidth( const s_uint& uiAbsWidth )
 
 void UIObject::SetAbsHeight( const s_uint& uiAbsHeight )
 {
+    GUIManager::GetSingleton()->NotifyObjectMoved();
     bIsHeightAbs_ = true;
     uiAbsHeight_ = uiAbsHeight;
     FireUpdateDimensions();
@@ -240,6 +242,7 @@ const s_bool& UIObject::IsHeightAbsolute() const
 
 void UIObject::SetRelWidth( const s_float& fRelWidth )
 {
+    GUIManager::GetSingleton()->NotifyObjectMoved();
     bIsWidthAbs_ = false;
     fRelWidth_ = fRelWidth;
     FireUpdateDimensions();
@@ -247,6 +250,7 @@ void UIObject::SetRelWidth( const s_float& fRelWidth )
 
 void UIObject::SetRelHeight( const s_float& fRelHeight )
 {
+    GUIManager::GetSingleton()->NotifyObjectMoved();
     bIsHeightAbs_ = false;
     fRelHeight_ = fRelHeight;
     FireUpdateDimensions();
@@ -349,6 +353,7 @@ void UIObject::SetAllPoints( const s_str& sObjName )
 {
     if (sObjName != sName_)
     {
+        GUIManager::GetSingleton()->NotifyObjectMoved();
         ClearAllPoints();
         Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, sObjName, ANCHOR_TOPLEFT);
         lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
@@ -361,6 +366,7 @@ void UIObject::SetAllPoints( const s_str& sObjName )
         lDefinedBorderList_[BORDER_RIGHT]  =
         lDefinedBorderList_[BORDER_BOTTOM] = true;
 
+        bUpdateAnchors_ = true;
         FireUpdateBorders();
     }
     else
@@ -375,6 +381,7 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 {
     if (pObj != this)
     {
+        GUIManager::GetSingleton()->NotifyObjectMoved();
         ClearAllPoints();
         Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, pObj ? pObj->GetName() : "", ANCHOR_TOPLEFT);
         lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
@@ -387,6 +394,7 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
         lDefinedBorderList_[BORDER_RIGHT]  =
         lDefinedBorderList_[BORDER_BOTTOM] = true;
 
+        bUpdateAnchors_ = true;
         FireUpdateBorders();
     }
     else
@@ -399,6 +407,7 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 
 void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_int& iX, const s_int& iY )
 {
+    GUIManager::GetSingleton()->NotifyObjectMoved();
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
@@ -447,11 +456,13 @@ void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
         default : break;
     }
 
+    bUpdateAnchors_ = true;
     FireUpdateBorders();
 }
 
 void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_float& fX, const s_float& fY )
 {
+    GUIManager::GetSingleton()->NotifyObjectMoved();
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
@@ -500,11 +511,13 @@ void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
         default : break;
     }
 
+    bUpdateAnchors_ = true;
     FireUpdateBorders();
 }
 
 void UIObject::SetPoint( const Anchor& mAnchor )
 {
+    GUIManager::GetSingleton()->NotifyObjectMoved();
     lAnchorList_[mAnchor.GetPoint()] = mAnchor;
     switch (mAnchor.GetPoint())
     {
@@ -539,7 +552,27 @@ void UIObject::SetPoint( const Anchor& mAnchor )
         default : break;
     }
 
+    bUpdateAnchors_ = true;
     FireUpdateBorders();
+}
+
+s_bool UIObject::DependsOn( s_ptr<UIObject> pObj ) const
+{
+    if (pObj)
+    {
+        s_map<AnchorPoint, Anchor>::const_iterator iterAnchor;
+        foreach (iterAnchor, lAnchorList_)
+        {
+            s_ptr<UIObject> pParent = iterAnchor->second.GetParent();
+            if (pParent == pObj)
+                return true;
+
+            if (pParent)
+                return pParent->DependsOn(pObj);
+        }
+    }
+
+    return false;
 }
 
 s_uint UIObject::GetNumPoint() const
@@ -671,6 +704,9 @@ void UIObject::MakeBorders_( s_int& iMin, s_int& iMax, const s_int& iCenter, con
 
 void UIObject::UpdateBorders_()
 {
+    if (!bUpdateBorders_)
+        return;
+
     bReady_ = true;
 
     if (bUpdateDimensions_)
@@ -692,6 +728,11 @@ void UIObject::UpdateBorders_()
         s_map<AnchorPoint, Anchor>::iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
+            // Make sure the anchored object has its borders updated
+            s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
+            if (pObj && pObj->bUpdateBorders_)
+                pObj->UpdateBorders_();
+
             switch (iterAnchor->second.GetPoint())
             {
                 case ANCHOR_TOPLEFT :
@@ -762,6 +803,42 @@ void UIObject::UpdateBorders_()
         bReady_ = false;
 }
 
+void UIObject::UpdateAnchors()
+{
+    if (bUpdateAnchors_)
+    {
+        s_map<AnchorPoint, Anchor>::iterator iterAnchor;
+        foreach (iterAnchor, lAnchorList_)
+        {
+            iterAnchor->second.UpdateParent();
+        }
+    }
+}
+
+void UIObject::CheckAnchors_()
+{
+    s_ctnr<s_map<AnchorPoint, Anchor>::iterator> lEraseList;
+    s_map<AnchorPoint, Anchor>::iterator iterAnchor, iterTemp;
+    foreach (iterAnchor, lAnchorList_)
+    {
+        s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
+        if (pObj && pObj->DependsOn(this))
+        {
+            Error(CLASS_NAME, "Cyclic anchor dependency ! \""+sName_+"\" and \""+pObj->GetName()+"\"\n"
+                "depends on eachothers (directly or indirectly). \""+Anchor::GetStringPoint(iterAnchor->first)+
+                "\" anchor removed."
+            );
+            lEraseList.PushBack(iterAnchor);
+        }
+    }
+
+    s_ctnr<s_map<AnchorPoint, Anchor>::iterator>::iterator iterErase;
+    foreach (iterErase, lEraseList)
+    {
+        lAnchorList_.Erase(*iterErase);
+    }
+}
+
 void UIObject::FireUpdateBorders()
 {
     bUpdateBorders_ = true;
@@ -775,8 +852,8 @@ void UIObject::FireUpdateDimensions()
 
 void UIObject::Update()
 {
-    if (bUpdateBorders_)
-        UpdateBorders_();
+    CheckAnchors_();
+    UpdateBorders_();
 }
 
 void UIObject::UpdateMaterial( const s_bool& bForceUpdate )

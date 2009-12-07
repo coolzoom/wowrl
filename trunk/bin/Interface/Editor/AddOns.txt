@@ -2,5 +2,6 @@
 Editor:1
 Templates:1
 MenuBar:1
+PanelBar:1
 #Others
 FPSCounter:1

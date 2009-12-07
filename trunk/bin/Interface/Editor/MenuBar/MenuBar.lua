@@ -59,7 +59,7 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
                 if (menu.lastItem) then
                     item:SetPoint("TOPLEFT", menu.lastItem, "BOTTOMLEFT");
                 else
-                    item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 8);
+                    item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 9);
                 end
                 
                 item:SetScript("OnLoad",
