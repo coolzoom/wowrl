@@ -7,3 +7,4 @@
 Templates.lua
 Template_Dialog.xml
 Template_Dialog.lua
+Template_Dropdown.xml

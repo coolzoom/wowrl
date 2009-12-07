@@ -2,23 +2,28 @@
     <Button name="ButtonTemplate_Menu" virtual="true">
         <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
             <Anchors>
-                <Anchor point="CENTER"/>
+                <Anchor point="CENTER">
+                    <Offset>
+                        <AbsDimension y="1"/>
+                    </Offset>
+                </Anchor>
             </Anchors>
             <Color r="0.0" g="0.0" b="0.0"/>
         </NormalText>
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
         <Scripts>
             <OnLoad>
-                this:SetWidth(math.max(this:GetTextWidth()+6, 16));
+                this:SetWidth(math.max(this:GetTextWidth(), 10)+16);
             </OnLoad>
             <OnClick>
                 if (UIParent.activeDropdown) then
-                    UIParent.activeDropdown:Hide();
                     if (UIParent.activeDropdown ~= this.Dropdown) then
-                        this.Dropdown:Show();
+                        UIParent.activeDropdown:Hide();
                         UIParent.activeDropdown = this.Dropdown;
+                        this.Dropdown:Show();
                     else
                         UIParent.activeDropdown = nil;
+                        this.Dropdown:Hide();
                     end
                 else
                     this.Dropdown:Show();
@@ -97,44 +102,4 @@
             </OnClick>
         </Scripts>
     </Button>
-    
-    <Frame name="FrameTemplate_Dropdown" virtual="true" hidden="true">    
-        <Size>
-            <AbsDimension x="116" y="16"/>
-        </Size>
-        <Backdrop edgeFile="Interface/Editor/Templates/DialogBorder.png">
-            <BackgroundInsets>
-                <AbsInset left="8" right="8" top="8" bottom="8"/>
-            </BackgroundInsets>
-        </Backdrop>
-        <Scripts>
-            <OnLoad>
-                this.updated = false;
-            </OnLoad>
-            <OnShow>
-                if (not this.updated) then
-                    local children = { this:GetChildren() };
-                    local maxWidth = 0;
-                    local totalHeight = 0;
-                    
-                    for k, child in pairs(children) do
-                        maxWidth = math.max(child:GetWidth(), maxWidth);
-                        totalHeight = totalHeight + child:GetHeight();
-                    end
-                    
-                    if (maxWidth > 100) then
-                        for k, child in pairs(children) do
-                            child:SetWidth(maxWidth);
-                        end
-                        
-                        this:SetWidth(maxWidth+16);
-                    end
-                    
-                    this:SetHeight(math.max(totalHeight, 16)+16);
-                    
-                    this.updated = true;
-                end
-            </OnShow>
-        </Scripts>
-    </Frame>
 </Ui>
