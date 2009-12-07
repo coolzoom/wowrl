@@ -327,10 +327,10 @@ namespace Frost
         typename s_multimap<Key, Value>::const_iterator iter;
         for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
         {
-            if (iter - mRight.Begin() == mRight.GetSize()-1)
-                sTemp << "[" << iter->first << "] = " << iter->second;
+            if (iter != mRight.Begin())
+                sTemp << ", [" << iter->first << "] = " << iter->second;
             else
-                sTemp << "[" << iter->first << "] = " << iter->second << ", ";
+                sTemp << "[" << iter->first << "] = " << iter->second;
         }
         sTemp << " )";
 
