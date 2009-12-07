@@ -18,7 +18,6 @@ const s_str UIObject::CLASS_NAME = "GUI::UIObject";
 
 UIObject::UIObject()
 {
-    mObjectType_ = OJBECT_TYPE_UIOBJECT;
     lType_.PushBack("UIObject");
 
     fAlpha_ = 1.0f;

@@ -3,7 +3,7 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_scrollingmessageframe.h"
+#include "gui/frost_messageframe.h"
 
 #include "gui/frost_frame.h"
 #include "gui/frost_guimanager.h"
@@ -12,25 +12,25 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
 
-const s_str ScrollingMessageFrame::CLASS_NAME = "GUI::ScrollingMessageFrame";
+const s_str MessageFrame::CLASS_NAME = "GUI::MessageFrame";
 
-// TODO : Implementer ScrollingMessageFrame
+// TODO : Implementer MessageFrame
 
-ScrollingMessageFrame::ScrollingMessageFrame() : Frame()
+MessageFrame::MessageFrame() : Frame()
 {
-    lType_.PushBack("ScrollingMessageFrame");
+    lType_.PushBack("MessageFrame");
 }
 
-ScrollingMessageFrame::~ScrollingMessageFrame()
+MessageFrame::~MessageFrame()
 {
 }
 
-void ScrollingMessageFrame::CreateGlue()
+void MessageFrame::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
     lGlueList_.PushBack(
-        pLua->Push<LuaScrollingMessageFrame>(new LuaScrollingMessageFrame(pLua->GetState()))
+        pLua->Push<LuaMessageFrame>(new LuaMessageFrame(pLua->GetState()))
     );
     pLua->SetGlobal(sName_);
 }

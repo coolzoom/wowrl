@@ -60,9 +60,29 @@ namespace Frost
         class  Button;
         class  LuaButton;
 
+        // gui/frost_checkbutton.h
+        class  CheckButton;
+        class  LuaCheckButton;
+
+        // gui/frost_colorselect.h
+        class  ColorSelect;
+        class  LuaColorSelect;
+
+        // gui/frost_cooldown.h
+        class  Cooldown;
+        class  LuaCooldown;
+
         // frost_editbox.h
         class  EditBox;
         class  LuaEditBox;
+
+        // gui/frost_messageframe.h
+        class  MessageFrame;
+        class  LuaMessageFrame;
+
+        // gui/frost_scrollframe.h
+        class  ScrollFrame;
+        class  LuaScrollFrame;
 
         // gui/frost_scrollingmessageframe.h
         class  ScrollingMessageFrame;

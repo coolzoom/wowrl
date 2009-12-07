@@ -192,6 +192,44 @@
 
 </Button>
 
+<d[Button]:CheckButton b:checked="false">
+
+    <n[.,1]:c[Texture]:CheckedTexture         name="$parentCheckedTexture" b:hidden="true"/>
+    <n[.,1]:c[Texture]:DisabledCheckedTexture name="$parentDisabledCheckedTexture"/>
+    
+</CheckButton>
+
+<d[Frame]:ColorSelect>
+
+    <n[.,1]:c[Texture]:ColorWheelTexture/>
+    <n[.,1]:c[Texture]:ColorWheelThumbTexture/>
+    <n[.,1]:c[Texture]:ColorValueTexture/>
+    <n[.,1]:c[Texture]:ColorValueThumbTexture/>
+    
+    <n[.,1]:Scripts>
+        <n[.,1]:OnColorSelect/>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnUpdate/>
+    </Scripts>
+    
+</ColorSelect>
+
+<d[Frame]:Cooldown/>
+
 <d[Frame]:EditBox n:letters="0" n:blinkSpeed="0.5" b:numeric="false" b:password="false" b:multiLine="false" n:historyLines="0" b:autoFocus="true" b:ignoreArrows="false">
 
     <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
@@ -235,7 +273,46 @@
 
 </EditBox>
 
-<d[Frame]:ScrollingMessageFrame b:fade="true" n:fadeDuration="3.0" n:displayDuration="10.0" maxLines="8">
+<d[Frame]:MessageFrame n:fadeDuration="3.0" insertMode>
+
+    <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
+    
+    <n[.,1]:TextInsets>
+        <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
+        <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>     
+    </TextInsets>
+        
+</MessageFrame>
+
+<d[Frame]:ScrollFrame>
+
+    <n[.,1]:c[Frame]:ScrollChild/>
+    
+    <n[.,1]:Scripts>
+        <n[.,1]:OnDragStart/>
+        <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnter/>
+        <n[.,1]:OnEvent/>
+        <n[.,1]:OnHide/>
+        <n[.,1]:OnHorizontalScroll/>
+        <n[.,1]:OnKeyDown/>
+        <n[.,1]:OnKeyUp/>
+        <n[.,1]:OnLeave/>
+        <n[.,1]:OnLoad/>
+        <n[.,1]:OnMouseDown/>
+        <n[.,1]:OnMouseUp/>
+        <n[.,1]:OnMouseWheel/>
+        <n[.,1]:OnReceiveDrag/>
+        <n[.,1]:OnScrollRangeChanged/>
+        <n[.,1]:OnShow/>
+        <n[.,1]:OnSizeChanged/>
+        <n[.,1]:OnUpdate/>
+        <n[.,1]:OnVerticalScroll/>
+    </Scripts>
+    
+</ScrollFrame>
+
+<d[Frame]:ScrollingMessageFrame b:fade="true" n:fadeDuration="3.0" n:displayDuration="10.0" n:maxLines="8">
 
     <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
 

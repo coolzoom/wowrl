@@ -9,7 +9,12 @@
 #include "gui/frost_uiobject.h"
 #include "gui/frost_region.h"
 #include "gui/frost_button.h"
+#include "gui/frost_checkbutton.h"
+#include "gui/frost_colorselect.h"
+#include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
+#include "gui/frost_messageframe.h"
+#include "gui/frost_scrollframe.h"
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
 #include "gui/frost_statusbar.h"
@@ -28,7 +33,6 @@ const s_str Layer::CLASS_NAME  = "GUI::Layer";
 
 Frame::Frame() : Region(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
 {
-    mObjectType_ = OJBECT_TYPE_FRAME;
     lType_.PushBack("Frame");
 
     mStrata_ = STRATA_MEDIUM;
@@ -296,8 +300,18 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewChild = new Frame();
                 else if (pChild->GetObjectType() == "Button")
                     pNewChild = new Button();
+                else if (pChild->GetObjectType() == "CheckButton")
+                    pNewChild = new CheckButton();
+                else if (pChild->GetObjectType() == "ColorSelect")
+                    pNewChild = new ColorSelect();
+                else if (pChild->GetObjectType() == "Cooldown")
+                    pNewChild = new Cooldown();
                 else if (pChild->GetObjectType() == "EditBox")
                     pNewChild = new EditBox();
+                else if (pChild->GetObjectType() == "MessageFrame")
+                    pNewChild = new MessageFrame();
+                else if (pChild->GetObjectType() == "ScrollFrame")
+                    pNewChild = new ScrollFrame();
                 else if (pChild->GetObjectType() == "ScrollingMessageFrame")
                     pNewChild = new ScrollingMessageFrame();
                 else if (pChild->GetObjectType() == "Slider")

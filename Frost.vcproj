@@ -250,6 +250,42 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\gui\frost_checkbutton.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_checkbutton_glues.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_checkbutton_parser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_colorselect.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_colorselect_glues.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_colorselect_parser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_cooldown.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_cooldown_glues.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_cooldown_parser.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\gui\frost_editbox.cpp"
 					>
 				</File>
@@ -318,6 +354,18 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\gui\frost_messageframe.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_messageframe_glues.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_messageframe_parser.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\gui\frost_region.cpp"
 					>
 				</File>
@@ -327,6 +375,18 @@
 				</File>
 				<File
 					RelativePath=".\src\gui\frost_rendertarget.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_scrollframe.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_scrollframe_glues.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\frost_scrollframe_parser.cpp"
 					>
 				</File>
 				<File
@@ -728,6 +788,18 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\gui\frost_checkbutton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\frost_colorselect.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\frost_cooldown.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\gui\frost_editbox.h"
 					>
 				</File>
@@ -760,11 +832,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\gui\frost_messageframe.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\gui\frost_region.h"
 					>
 				</File>
 				<File
 					RelativePath=".\include\gui\frost_rendertarget.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\frost_scrollframe.h"
 					>
 				</File>
 				<File

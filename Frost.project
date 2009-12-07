@@ -7,6 +7,7 @@
     
     
     
+    
     ]]>
     </Plugin>
   </Plugins>
@@ -66,6 +67,21 @@
       <File Name="src\gui\frost_rendertarget.cpp"/>
       <File Name="src\gui\frost_region_parser.cpp"/>
       <File Name="src\gui\frost_region.cpp"/>
+      <File Name="src\gui\frost_messageframe.cpp"/>
+      <File Name="src\gui\frost_messageframe_glues.cpp"/>
+      <File Name="src\gui\frost_messageframe_parser.cpp"/>
+      <File Name="src\gui\frost_scrollframe.cpp"/>
+      <File Name="src\gui\frost_scrollframe_glues.cpp"/>
+      <File Name="src\gui\frost_scrollframe_parser.cpp"/>
+      <File Name="src\gui\frost_checkbutton.cpp"/>
+      <File Name="src\gui\frost_checkbutton_glues.cpp"/>
+      <File Name="src\gui\frost_checkbutton_parser.cpp"/>
+      <File Name="src\gui\frost_colorselect.cpp"/>
+      <File Name="src\gui\frost_colorselect_glues.cpp"/>
+      <File Name="src\gui\frost_colorselect_parser.cpp"/>
+      <File Name="src\gui\frost_cooldown.cpp"/>
+      <File Name="src\gui\frost_cooldown_glues.cpp"/>
+      <File Name="src\gui\frost_cooldown_parser.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="lua">
       <File Name="src\lua\frost_lua_glues.cpp"/>
@@ -181,6 +197,11 @@
       <File Name="include\gui\frost_texture.h"/>
       <File Name="include\gui\frost_rendertarget.h"/>
       <File Name="include\gui\frost_region.h"/>
+      <File Name="include\gui\frost_messageframe.h"/>
+      <File Name="include\gui\frost_scrollframe.h"/>
+      <File Name="include\gui\frost_checkbutton.h"/>
+      <File Name="include\gui\frost_colorselect.h"/>
+      <File Name="include\gui\frost_cooldown.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="lua">
       <File Name="include\lua\frost_lua.h"/>

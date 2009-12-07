@@ -3,7 +3,7 @@
 /* ###################################### */
 /*                                        */
 
-#include "gui/frost_scrollingmessageframe.h"
+#include "gui/frost_scrollframe.h"
 
 #include "xml/frost_xml_document.h"
 
@@ -11,7 +11,7 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
 
-void ScrollingMessageFrame::ParseBlock( s_ptr<XML::Block> pBlock )
+void ScrollFrame::ParseBlock( s_ptr<XML::Block> pBlock )
 {
     Frame::ParseBlock(pBlock);
 }

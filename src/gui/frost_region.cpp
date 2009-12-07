@@ -13,7 +13,6 @@ const s_str Region::CLASS_NAME = "GUI::Region";
 
 Region::Region() : UIObject()
 {
-    mObjectType_ = OJBECT_TYPE_LAYEREDREGION;
     lType_.PushBack("Region");
 }
 

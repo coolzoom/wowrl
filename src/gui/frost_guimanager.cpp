@@ -14,7 +14,12 @@
 #include "gui/frost_anchor.h"
 #include "gui/frost_uiobject.h"
 #include "gui/frost_button.h"
+#include "gui/frost_checkbutton.h"
+#include "gui/frost_colorselect.h"
+#include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
+#include "gui/frost_messageframe.h"
+#include "gui/frost_scrollframe.h"
 #include "gui/frost_frame.h"
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
@@ -647,8 +652,18 @@ namespace Frost
                         pUIObject = new GUI::Frame();
                     else if (pElemBlock->GetName() == "Button")
                         pUIObject = new GUI::Button();
+                    else if (pElemBlock->GetName() == "CheckButton")
+                        pUIObject = new GUI::CheckButton();
+                    else if (pElemBlock->GetName() == "ColorSelect")
+                        pUIObject = new GUI::ColorSelect();
+                    else if (pElemBlock->GetName() == "Cooldown")
+                        pUIObject = new GUI::Cooldown();
                     else if (pElemBlock->GetName() == "EditBox")
                         pUIObject = new GUI::EditBox();
+                    else if (pElemBlock->GetName() == "MessageFrame")
+                        pUIObject = new GUI::MessageFrame();
+                    else if (pElemBlock->GetName() == "ScrollFrame")
+                        pUIObject = new GUI::ScrollFrame();
                     else if (pElemBlock->GetName() == "ScrollingMessageFrame")
                         pUIObject = new GUI::ScrollingMessageFrame();
                     else if (pElemBlock->GetName() == "Slider")

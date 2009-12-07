@@ -7,7 +7,12 @@
 #include "gui/frost_frame.h"
 #include "gui/frost_layeredregion.h"
 #include "gui/frost_button.h"
+#include "gui/frost_checkbutton.h"
+#include "gui/frost_colorselect.h"
+#include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
+#include "gui/frost_messageframe.h"
+#include "gui/frost_scrollframe.h"
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
 #include "gui/frost_statusbar.h"
@@ -32,8 +37,9 @@ namespace GUI
 {
     const char LuaUIObject::className[] = "UIObject";
     const char* LuaUIObject::classList[] = {"UIObject",
-        "Frame", "Button", "EditBox", "ScrollingMessageFrame", "Slider", "StatusBar",
-        "LayeredRegion", "Texture", "FontString", 0
+        "Frame", "Button", "CheckButton", "ColorSelect", "Cooldown", "EditBox", "MessageFrame",
+        "ScrollFrame", "ScrollingMessageFrame", "Slider", "StatusBar", "LayeredRegion",
+        "Texture", "FontString", 0
     };
     Lunar<LuaUIObject>::RegType LuaUIObject::methods[] = {
         {"dt", &LuaUIObject::GetDataTable},
@@ -73,7 +79,8 @@ namespace GUI
 
     const char  LuaFrame::className[] = "Frame";
     const char* LuaFrame::classList[] = {"Frame",
-        "Button", "EditBox", "ScrollingMessageFrame", "Slider", "StatusBar", 0
+        "Button", "CheckButton", "ColorSelect", "Cooldown", "EditBox", "MessageFrame",
+        "ScrollFrame", "ScrollingMessageFrame", "Slider", "StatusBar", 0
     };
     Lunar<LuaFrame>::RegType LuaFrame::methods[] = {
         {"dt", &LuaFrame::GetDataTable},
@@ -172,6 +179,27 @@ namespace GUI
         method(Frame, UnregisterAllEvents),
         method(Frame, UnregisterEvent),
 
+        {0,0}
+    };
+
+    const char  LuaCheckButton::className[] = "CheckButton";
+    const char* LuaCheckButton::classList[] = {"CheckButton", 0};
+    Lunar<LuaCheckButton>::RegType LuaCheckButton::methods[] = {
+        {"dt", &LuaCheckButton::GetDataTable},
+        {0,0}
+    };
+
+    const char  LuaColorSelect::className[] = "ColorSelect";
+    const char* LuaColorSelect::classList[] = {"ColorSelect", 0};
+    Lunar<LuaColorSelect>::RegType LuaColorSelect::methods[] = {
+        {"dt", &LuaColorSelect::GetDataTable},
+        {0,0}
+    };
+
+    const char  LuaCooldown::className[] = "Cooldown";
+    const char* LuaCooldown::classList[] = {"Cooldown", 0};
+    Lunar<LuaCooldown>::RegType LuaCooldown::methods[] = {
+        {"dt", &LuaCooldown::GetDataTable},
         {0,0}
     };
 
@@ -296,6 +324,20 @@ namespace GUI
         {0,0}
     };
 
+    const char  LuaMessageFrame::className[] = "MessageFrame";
+    const char* LuaMessageFrame::classList[] = {"MessageFrame", 0};
+    Lunar<LuaMessageFrame>::RegType LuaMessageFrame::methods[] = {
+        {"dt", &LuaMessageFrame::GetDataTable},
+        {0,0}
+    };
+
+    const char  LuaScrollFrame::className[] = "ScrollFrame";
+    const char* LuaScrollFrame::classList[] = {"ScrollFrame", 0};
+    Lunar<LuaScrollFrame>::RegType LuaScrollFrame::methods[] = {
+        {"dt", &LuaScrollFrame::GetDataTable},
+        {0,0}
+    };
+
     const char  LuaScrollingMessageFrame::className[] = "ScrollingMessageFrame";
     const char* LuaScrollingMessageFrame::classList[] = {"ScrollingMessageFrame", 0};
     Lunar<LuaScrollingMessageFrame>::RegType LuaScrollingMessageFrame::methods[] = {
@@ -304,7 +346,7 @@ namespace GUI
     };
 
     const char  LuaButton::className[] = "Button";
-    const char* LuaButton::classList[] = {"Button", 0};
+    const char* LuaButton::classList[] = {"Button", "CheckButton", 0};
     Lunar<LuaButton>::RegType LuaButton::methods[] = {
         {"dt", &LuaButton::GetDataTable},
 

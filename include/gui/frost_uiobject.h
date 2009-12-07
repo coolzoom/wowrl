@@ -17,21 +17,6 @@ namespace Frost
 {
     namespace GUI
     {
-        enum ObjectType
-        {
-            OJBECT_TYPE_UIOBJECT,
-            OJBECT_TYPE_REGION,
-            OJBECT_TYPE_LAYEREDREGION,
-            OJBECT_TYPE_FRAME,
-            OJBECT_TYPE_FONTSTRING,
-            OJBECT_TYPE_TEXTURE,
-            OJBECT_TYPE_BUTTON,
-            OJBECT_TYPE_EDITBOX,
-            OJBECT_TYPE_SCROLLINGMESSAGEFRAME,
-            OJBECT_TYPE_STATUSBAR,
-            OJBECT_TYPE_SLIDER
-        };
-
         enum BorderType
         {
             BORDER_LEFT   = 0,
@@ -447,7 +432,6 @@ namespace Frost
             s_str           sRawName_;
             s_str           sLuaName_;
             s_uint          uiID_;
-            ObjectType      mObjectType_;
             s_ptr<UIObject> pParent_;
             s_ptr<UIObject> pInheritance_;
             s_bool          bSpecial_;
