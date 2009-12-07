@@ -18,7 +18,6 @@ const s_str Slider::CLASS_NAME = "GUI::Slider";
 
 Slider::Slider() : Frame()
 {
-    mObjectType_ = OJBECT_TYPE_SLIDER;
     lType_.PushBack("Slider");
 }
 

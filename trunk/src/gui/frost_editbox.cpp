@@ -18,7 +18,6 @@ const s_str EditBox::CLASS_NAME = "GUI::EditBox";
 
 EditBox::EditBox() : Frame()
 {
-    mObjectType_ = OJBECT_TYPE_EDITBOX;
     lType_.PushBack("EditBox");
 }
 

@@ -21,7 +21,6 @@ Texture::Texture() : LayeredRegion()
 {
     lTexCoord_[0] = lTexCoord_[1] = lTexCoord_[3] = lTexCoord_[6] = 0.0f;
     lTexCoord_[2] = lTexCoord_[4] = lTexCoord_[5] = lTexCoord_[7] = 1.0f;
-    mObjectType_ = OJBECT_TYPE_TEXTURE;
     lType_.PushBack("Texture");
 }
 

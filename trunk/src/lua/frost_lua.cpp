@@ -47,11 +47,16 @@ void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
 {
     pLua->Register<GUI::LuaUIObject>();
     pLua->Register<GUI::LuaFrame>();
-    pLua->Register<GUI::LuaStatusBar>();
-    pLua->Register<GUI::LuaEditBox>();
-    pLua->Register<GUI::LuaScrollingMessageFrame>();
     pLua->Register<GUI::LuaButton>();
+    /*pLua->Register<GUI::LuaCheckButton>();
+    pLua->Register<GUI::LuaColorSelect>();
+    pLua->Register<GUI::LuaCooldown>();*/
+    pLua->Register<GUI::LuaEditBox>();
+    /*pLua->Register<GUI::LuaMessageFrame>();
+    pLua->Register<GUI::LuaScrollFrame>();*/
+    pLua->Register<GUI::LuaScrollingMessageFrame>();
     pLua->Register<GUI::LuaSlider>();
+    pLua->Register<GUI::LuaStatusBar>();
     pLua->Register<GUI::LuaLayeredRegion>();
     pLua->Register<GUI::LuaTexture>();
     pLua->Register<GUI::LuaFontString>();

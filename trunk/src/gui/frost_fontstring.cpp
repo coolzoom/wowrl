@@ -21,7 +21,6 @@ const s_str FontString::CLASS_NAME = "GUI::FontString";
 
 FontString::FontString() : LayeredRegion()
 {
-    mObjectType_ = OJBECT_TYPE_FONTSTRING;
     lType_.PushBack("FontString");
 
     mTextColor_   = Color::WHITE;

@@ -19,7 +19,6 @@ const s_str LayeredRegion::CLASS_NAME = "GUI::LayeredRegion";
 
 LayeredRegion::LayeredRegion() : Region()
 {
-    mObjectType_ = OJBECT_TYPE_LAYEREDREGION;
     lType_.PushBack("LayeredRegion");
 }
 

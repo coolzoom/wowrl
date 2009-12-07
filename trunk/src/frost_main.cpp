@@ -155,7 +155,7 @@ s_bool EditorRenderFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = false;
+    s_bool bEditor = true;
 
     // Read commands
     if (argc > 1)
@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
             GUIManager::GetSingleton()->AddAddOnFolder("Interface/Editor");
             GUIManager::GetSingleton()->LoadUI();
 
-            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
+            //s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
 
             LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
         }

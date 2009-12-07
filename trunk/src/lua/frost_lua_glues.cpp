@@ -9,8 +9,14 @@
 #include "frost_inputmanager.h"
 #include "frost_localemanager.h"
 #include "gui/frost_frame.h"
+#include "gui/frost_layeredregion.h"
 #include "gui/frost_button.h"
+#include "gui/frost_checkbutton.h"
+#include "gui/frost_colorselect.h"
+#include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
+#include "gui/frost_messageframe.h"
+#include "gui/frost_scrollframe.h"
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
 #include "gui/frost_statusbar.h"
@@ -100,8 +106,18 @@ int Frost::l_CreateFrame( lua_State* pLua )
             pNewFrame = new GUI::Frame();
         else if (sType == "Button")
             pNewFrame = new GUI::Button();
+        else if (sType == "CheckButton")
+            pNewFrame = new GUI::CheckButton();
+        else if (sType == "ColorSelect")
+            pNewFrame = new GUI::ColorSelect();
+        else if (sType == "Cooldown")
+            pNewFrame = new GUI::Cooldown();
         else if (sType == "EditBox")
             pNewFrame = new GUI::EditBox();
+        else if (sType == "MessageFrame")
+            pNewFrame = new GUI::MessageFrame();
+        else if (sType == "ScrollFrame")
+            pNewFrame = new GUI::ScrollFrame();
         else if (sType == "ScrollingMessageFrame")
             pNewFrame = new GUI::ScrollingMessageFrame();
         else if (sType == "Slider")

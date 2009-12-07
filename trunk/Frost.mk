@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFulePath        :=
 CurrentFileFullPath    :=
 User                   :=Administrateur
-Date                   :=12/06/09
+Date                   :=12/07/09
 CodeLitePath           :="C:\Programmation\CodeLite"
 LinkerName             :=g++
 ArchiveTool            :=ar rcus
@@ -46,13 +46,15 @@ Objects=$(IntermediateDirectory)/frost_cameramanager$(ObjectSuffix) $(Intermedia
 	$(IntermediateDirectory)/frost_button_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_editbox$(ObjectSuffix) $(IntermediateDirectory)/frost_editbox_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_editbox_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_fontmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_fontstring$(ObjectSuffix) $(IntermediateDirectory)/frost_fontstring_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_fontstring_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_frame$(ObjectSuffix) $(IntermediateDirectory)/frost_frame_glues$(ObjectSuffix) \
 	$(IntermediateDirectory)/frost_frame_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_gradient$(ObjectSuffix) $(IntermediateDirectory)/frost_guimanager$(ObjectSuffix) $(IntermediateDirectory)/frost_guistructs$(ObjectSuffix) $(IntermediateDirectory)/frost_layeredregion$(ObjectSuffix) $(IntermediateDirectory)/frost_layeredregion_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_layeredregion_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_lunar$(ObjectSuffix) $(IntermediateDirectory)/frost_scrollingmessageframe$(ObjectSuffix) $(IntermediateDirectory)/frost_scrollingmessageframe_glues$(ObjectSuffix) \
 	$(IntermediateDirectory)/frost_scrollingmessageframe_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_slider$(ObjectSuffix) $(IntermediateDirectory)/frost_slider_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_slider_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_sprite$(ObjectSuffix) $(IntermediateDirectory)/frost_spritemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_statusbar$(ObjectSuffix) $(IntermediateDirectory)/frost_statusbar_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_statusbar_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_text$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_texture$(ObjectSuffix) $(IntermediateDirectory)/frost_texture_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_texture_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_uiobject$(ObjectSuffix) $(IntermediateDirectory)/frost_uiobject_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_rendertarget$(ObjectSuffix) $(IntermediateDirectory)/frost_region_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_region$(ObjectSuffix) $(IntermediateDirectory)/frost_lua_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_lua$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_shadermanager$(ObjectSuffix) $(IntermediateDirectory)/frost_decal$(ObjectSuffix) $(IntermediateDirectory)/frost_material$(ObjectSuffix) $(IntermediateDirectory)/frost_materialmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_shader$(ObjectSuffix) $(IntermediateDirectory)/frost_modelpart$(ObjectSuffix) $(IntermediateDirectory)/frost_animmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_model$(ObjectSuffix) $(IntermediateDirectory)/frost_modeldata$(ObjectSuffix) $(IntermediateDirectory)/frost_modelmanager$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_zonemanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_gameplaymanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_shadermanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_smoothpath$(ObjectSuffix) $(IntermediateDirectory)/frost_directpath$(ObjectSuffix) $(IntermediateDirectory)/frost_manualpath$(ObjectSuffix) $(IntermediateDirectory)/frost_path$(ObjectSuffix) $(IntermediateDirectory)/frost_zonemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_axisalignedobstacle$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_boxobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_cylinderobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_light$(ObjectSuffix) $(IntermediateDirectory)/frost_lightmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_meshobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_movableobject$(ObjectSuffix) $(IntermediateDirectory)/frost_movableobject_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_node$(ObjectSuffix) $(IntermediateDirectory)/frost_obstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_physicshandler$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_physicsmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_plane$(ObjectSuffix) $(IntermediateDirectory)/frost_planeobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_scenemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_sphereobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_terrainchunk$(ObjectSuffix) $(IntermediateDirectory)/frost_terrainobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_zone$(ObjectSuffix) $(IntermediateDirectory)/frost_spell$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager_glues$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_character$(ObjectSuffix) $(IntermediateDirectory)/frost_character_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_creature$(ObjectSuffix) $(IntermediateDirectory)/frost_creature_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_healthtype$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunit$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunit_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunithandler$(ObjectSuffix) $(IntermediateDirectory)/frost_powertype$(ObjectSuffix) $(IntermediateDirectory)/frost_stats$(ObjectSuffix) \
-	$(IntermediateDirectory)/frost_unit$(ObjectSuffix) $(IntermediateDirectory)/frost_unit_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_main$(ObjectSuffix) $(IntermediateDirectory)/frost_engine$(ObjectSuffix) $(IntermediateDirectory)/frost_inputmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_localemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_engine_glues$(ObjectSuffix) 
+	$(IntermediateDirectory)/frost_texture$(ObjectSuffix) $(IntermediateDirectory)/frost_texture_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_texture_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_uiobject$(ObjectSuffix) $(IntermediateDirectory)/frost_uiobject_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_rendertarget$(ObjectSuffix) $(IntermediateDirectory)/frost_region_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_region$(ObjectSuffix) $(IntermediateDirectory)/frost_messageframe$(ObjectSuffix) $(IntermediateDirectory)/frost_messageframe_glues$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_messageframe_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_scrollframe$(ObjectSuffix) $(IntermediateDirectory)/frost_scrollframe_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_scrollframe_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_checkbutton$(ObjectSuffix) $(IntermediateDirectory)/frost_checkbutton_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_checkbutton_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_colorselect$(ObjectSuffix) $(IntermediateDirectory)/frost_colorselect_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_colorselect_parser$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_cooldown$(ObjectSuffix) $(IntermediateDirectory)/frost_cooldown_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_cooldown_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_lua_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_lua$(ObjectSuffix) $(IntermediateDirectory)/frost_shadermanager$(ObjectSuffix) $(IntermediateDirectory)/frost_decal$(ObjectSuffix) $(IntermediateDirectory)/frost_material$(ObjectSuffix) $(IntermediateDirectory)/frost_materialmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_shader$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_modelpart$(ObjectSuffix) $(IntermediateDirectory)/frost_animmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_model$(ObjectSuffix) $(IntermediateDirectory)/frost_modeldata$(ObjectSuffix) $(IntermediateDirectory)/frost_modelmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_zonemanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_gameplaymanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_shadermanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager_parser$(ObjectSuffix) $(IntermediateDirectory)/frost_smoothpath$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_directpath$(ObjectSuffix) $(IntermediateDirectory)/frost_manualpath$(ObjectSuffix) $(IntermediateDirectory)/frost_path$(ObjectSuffix) $(IntermediateDirectory)/frost_zonemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_axisalignedobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_boxobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_cylinderobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_light$(ObjectSuffix) $(IntermediateDirectory)/frost_lightmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_meshobstacle$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_movableobject$(ObjectSuffix) $(IntermediateDirectory)/frost_movableobject_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_node$(ObjectSuffix) $(IntermediateDirectory)/frost_obstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_physicshandler$(ObjectSuffix) $(IntermediateDirectory)/frost_physicsmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_plane$(ObjectSuffix) $(IntermediateDirectory)/frost_planeobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_scenemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_sphereobstacle$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_terrainchunk$(ObjectSuffix) $(IntermediateDirectory)/frost_terrainobstacle$(ObjectSuffix) $(IntermediateDirectory)/frost_zone$(ObjectSuffix) $(IntermediateDirectory)/frost_spell$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_character$(ObjectSuffix) $(IntermediateDirectory)/frost_character_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_creature$(ObjectSuffix) $(IntermediateDirectory)/frost_creature_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_healthtype$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_movableunit$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunit_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_movableunithandler$(ObjectSuffix) $(IntermediateDirectory)/frost_powertype$(ObjectSuffix) $(IntermediateDirectory)/frost_stats$(ObjectSuffix) $(IntermediateDirectory)/frost_unit$(ObjectSuffix) $(IntermediateDirectory)/frost_unit_glues$(ObjectSuffix) $(IntermediateDirectory)/frost_unitmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_main$(ObjectSuffix) $(IntermediateDirectory)/frost_engine$(ObjectSuffix) \
+	$(IntermediateDirectory)/frost_inputmanager$(ObjectSuffix) $(IntermediateDirectory)/frost_localemanager$(ObjectSuffix) $(IntermediateDirectory)/frost_engine_glues$(ObjectSuffix) 
 
 ##
 ## Main Build Tragets 
@@ -411,6 +413,111 @@ $(IntermediateDirectory)/frost_region$(ObjectSuffix): src/gui/frost_region.cpp $
 $(IntermediateDirectory)/frost_region$(DependSuffix): src/gui/frost_region.cpp
 	@makedir "obj_Frost/Release_CL_Win32"
 	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_region$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_region$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_region.cpp"
+
+$(IntermediateDirectory)/frost_messageframe$(ObjectSuffix): src/gui/frost_messageframe.cpp $(IntermediateDirectory)/frost_messageframe$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_messageframe.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_messageframe$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_messageframe$(DependSuffix): src/gui/frost_messageframe.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_messageframe$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_messageframe$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_messageframe.cpp"
+
+$(IntermediateDirectory)/frost_messageframe_glues$(ObjectSuffix): src/gui/frost_messageframe_glues.cpp $(IntermediateDirectory)/frost_messageframe_glues$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_messageframe_glues.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_messageframe_glues$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_messageframe_glues$(DependSuffix): src/gui/frost_messageframe_glues.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_messageframe_glues$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_messageframe_glues$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_messageframe_glues.cpp"
+
+$(IntermediateDirectory)/frost_messageframe_parser$(ObjectSuffix): src/gui/frost_messageframe_parser.cpp $(IntermediateDirectory)/frost_messageframe_parser$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_messageframe_parser.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_messageframe_parser$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_messageframe_parser$(DependSuffix): src/gui/frost_messageframe_parser.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_messageframe_parser$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_messageframe_parser$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_messageframe_parser.cpp"
+
+$(IntermediateDirectory)/frost_scrollframe$(ObjectSuffix): src/gui/frost_scrollframe.cpp $(IntermediateDirectory)/frost_scrollframe$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_scrollframe.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_scrollframe$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_scrollframe$(DependSuffix): src/gui/frost_scrollframe.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_scrollframe$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_scrollframe$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_scrollframe.cpp"
+
+$(IntermediateDirectory)/frost_scrollframe_glues$(ObjectSuffix): src/gui/frost_scrollframe_glues.cpp $(IntermediateDirectory)/frost_scrollframe_glues$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_scrollframe_glues.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_scrollframe_glues$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_scrollframe_glues$(DependSuffix): src/gui/frost_scrollframe_glues.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_scrollframe_glues$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_scrollframe_glues$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_scrollframe_glues.cpp"
+
+$(IntermediateDirectory)/frost_scrollframe_parser$(ObjectSuffix): src/gui/frost_scrollframe_parser.cpp $(IntermediateDirectory)/frost_scrollframe_parser$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_scrollframe_parser.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_scrollframe_parser$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_scrollframe_parser$(DependSuffix): src/gui/frost_scrollframe_parser.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_scrollframe_parser$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_scrollframe_parser$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_scrollframe_parser.cpp"
+
+$(IntermediateDirectory)/frost_checkbutton$(ObjectSuffix): src/gui/frost_checkbutton.cpp $(IntermediateDirectory)/frost_checkbutton$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_checkbutton.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_checkbutton$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_checkbutton$(DependSuffix): src/gui/frost_checkbutton.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_checkbutton$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_checkbutton$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_checkbutton.cpp"
+
+$(IntermediateDirectory)/frost_checkbutton_glues$(ObjectSuffix): src/gui/frost_checkbutton_glues.cpp $(IntermediateDirectory)/frost_checkbutton_glues$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_checkbutton_glues.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_checkbutton_glues$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_checkbutton_glues$(DependSuffix): src/gui/frost_checkbutton_glues.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_checkbutton_glues$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_checkbutton_glues$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_checkbutton_glues.cpp"
+
+$(IntermediateDirectory)/frost_checkbutton_parser$(ObjectSuffix): src/gui/frost_checkbutton_parser.cpp $(IntermediateDirectory)/frost_checkbutton_parser$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_checkbutton_parser.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_checkbutton_parser$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_checkbutton_parser$(DependSuffix): src/gui/frost_checkbutton_parser.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_checkbutton_parser$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_checkbutton_parser$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_checkbutton_parser.cpp"
+
+$(IntermediateDirectory)/frost_colorselect$(ObjectSuffix): src/gui/frost_colorselect.cpp $(IntermediateDirectory)/frost_colorselect$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_colorselect.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_colorselect$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_colorselect$(DependSuffix): src/gui/frost_colorselect.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_colorselect$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_colorselect$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_colorselect.cpp"
+
+$(IntermediateDirectory)/frost_colorselect_glues$(ObjectSuffix): src/gui/frost_colorselect_glues.cpp $(IntermediateDirectory)/frost_colorselect_glues$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_colorselect_glues.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_colorselect_glues$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_colorselect_glues$(DependSuffix): src/gui/frost_colorselect_glues.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_colorselect_glues$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_colorselect_glues$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_colorselect_glues.cpp"
+
+$(IntermediateDirectory)/frost_colorselect_parser$(ObjectSuffix): src/gui/frost_colorselect_parser.cpp $(IntermediateDirectory)/frost_colorselect_parser$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_colorselect_parser.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_colorselect_parser$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_colorselect_parser$(DependSuffix): src/gui/frost_colorselect_parser.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_colorselect_parser$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_colorselect_parser$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_colorselect_parser.cpp"
+
+$(IntermediateDirectory)/frost_cooldown$(ObjectSuffix): src/gui/frost_cooldown.cpp $(IntermediateDirectory)/frost_cooldown$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_cooldown.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_cooldown$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_cooldown$(DependSuffix): src/gui/frost_cooldown.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_cooldown$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_cooldown$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_cooldown.cpp"
+
+$(IntermediateDirectory)/frost_cooldown_glues$(ObjectSuffix): src/gui/frost_cooldown_glues.cpp $(IntermediateDirectory)/frost_cooldown_glues$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_cooldown_glues.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_cooldown_glues$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_cooldown_glues$(DependSuffix): src/gui/frost_cooldown_glues.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_cooldown_glues$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_cooldown_glues$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_cooldown_glues.cpp"
+
+$(IntermediateDirectory)/frost_cooldown_parser$(ObjectSuffix): src/gui/frost_cooldown_parser.cpp $(IntermediateDirectory)/frost_cooldown_parser$(DependSuffix)
+	@makedir "obj_Frost/Release_CL_Win32"
+	$(CompilerName) $(SourceSwitch) "C:/Programmation2/Frost/src/gui/frost_cooldown_parser.cpp" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/frost_cooldown_parser$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/frost_cooldown_parser$(DependSuffix): src/gui/frost_cooldown_parser.cpp
+	@makedir "obj_Frost/Release_CL_Win32"
+	@$(CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/frost_cooldown_parser$(ObjectSuffix) -MF$(IntermediateDirectory)/frost_cooldown_parser$(DependSuffix) -MM "C:/Programmation2/Frost/src/gui/frost_cooldown_parser.cpp"
 
 $(IntermediateDirectory)/frost_lua_glues$(ObjectSuffix): src/lua/frost_lua_glues.cpp $(IntermediateDirectory)/frost_lua_glues$(DependSuffix)
 	@makedir "obj_Frost/Release_CL_Win32"
@@ -980,6 +1087,51 @@ clean:
 	$(RM) $(IntermediateDirectory)/frost_region$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/frost_region$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/frost_region$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe_glues$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe_glues$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe_glues$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe_parser$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe_parser$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_messageframe_parser$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe_glues$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe_glues$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe_glues$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe_parser$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe_parser$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_scrollframe_parser$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton_glues$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton_glues$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton_glues$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton_parser$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton_parser$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_checkbutton_parser$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect_glues$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect_glues$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect_glues$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect_parser$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect_parser$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_colorselect_parser$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown_glues$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown_glues$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown_glues$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown_parser$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown_parser$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/frost_cooldown_parser$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/frost_lua_glues$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/frost_lua_glues$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/frost_lua_glues$(PreprocessSuffix)

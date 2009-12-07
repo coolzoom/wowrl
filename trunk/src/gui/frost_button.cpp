@@ -18,7 +18,6 @@ const s_str Button::CLASS_NAME = "GUI::Button";
 
 Button::Button() : Frame(), mState_(STATE_UP)
 {
-    mObjectType_ = OJBECT_TYPE_BUTTON;
     lType_.PushBack("Button");
 }
 

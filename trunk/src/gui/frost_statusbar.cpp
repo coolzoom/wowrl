@@ -17,7 +17,6 @@ const s_str StatusBar::CLASS_NAME = "GUI::StatusBar";
 
 StatusBar::StatusBar() : Frame(), mOrientation_(ORIENT_HORIZONTAL), mBarLayer_(LAYER_ARTWORK)
 {
-    mObjectType_ = OJBECT_TYPE_STATUSBAR;
     lType_.PushBack("StatusBar");
 }
 
