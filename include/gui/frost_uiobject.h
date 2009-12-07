@@ -73,6 +73,11 @@ namespace Frost
             /// Renders this widget on the current render target.
             virtual void    Render() = 0;
 
+            /// Updates this widget's anchors.
+            /** \note Must be called on *all* widgets before Update().
+            */
+            virtual void    UpdateAnchors();
+
             /// Updates this widget's logic.
             virtual void    Update();
 
@@ -353,6 +358,12 @@ namespace Frost
             */
             void            SetPoint(const Anchor& mAnchor);
 
+            /// Checks if this widget depends on another.
+            /** \param pObj The widget to test
+            *   \note Usefull to detect circular refences.
+            */
+            s_bool          DependsOn(s_ptr<UIObject> pObj) const;
+
             /// Returns the number of defined anchors.
             /** \return The number of defined anchors
             */
@@ -430,6 +441,7 @@ namespace Frost
             void         MakeBorders_(s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize);
             virtual void UpdateBorders_();
             virtual void UpdateDimensions_();
+            virtual void CheckAnchors_();
 
             s_str           sName_;
             s_str           sRawName_;
@@ -464,6 +476,7 @@ namespace Frost
             s_ptr<RenderTarget> pTarget_;
             s_refptr<Material>  pMaterial_;
 
+            s_bool bUpdateAnchors_;
             s_bool bUpdateBorders_;
             s_bool bUpdateDimensions_;
         };

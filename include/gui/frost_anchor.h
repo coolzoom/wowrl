@@ -143,6 +143,9 @@ namespace Frost
             */
             s_str              Serialize(const s_str& sTab) const;
 
+            /// Gets the anchor parent from the parent string.
+            void               UpdateParent();
+
             /// Returns the name of an anchor point.
             /** \param mPoint The anchor point
             */
@@ -153,11 +156,10 @@ namespace Frost
             */
             static AnchorPoint GetAnchorPoint(const s_str& sPoint);
 
+
             static const s_str CLASS_NAME;
 
         private :
-
-            void UpdateParent_();
 
             s_ptr<UIObject> pObj_;
             s_ptr<UIObject> pParent_;

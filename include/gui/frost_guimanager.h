@@ -210,6 +210,14 @@ namespace Frost
         */
         s_int                GetMovementY() const;
 
+        /// Tells this manager an object has moved.
+        void                 NotifyObjectMoved();
+
+        /// Returns the Frame under the mouse.
+        /** \return The Frame under the mouse (nullptr if none)
+        */
+        s_ptr<GUI::Frame>    GetOveredFrame() const;
+
         /// Updates this manager and its widgets.
         /** \param fDelta The time elapsed since the last call
         */
@@ -269,6 +277,7 @@ namespace Frost
         s_map< s_uint, s_ptr<GUI::Frame> > lFrameList_;
         s_map<FrameStrata, Strata>         lStrataList_;
         s_bool                             bBuildStrataList_;
+        s_bool                             bObjectMoved_;
         s_ptr<GUI::Frame>                  pOveredFrame_;
 
         s_ptr<GUI::UIObject> pMovedObject_;

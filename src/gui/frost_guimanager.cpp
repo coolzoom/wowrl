@@ -404,12 +404,6 @@ namespace Frost
 
     void GUIManager::RenderUI()
     {
-        /*s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
-        foreach (iterObj, lMainObjectList_)
-        {
-            iterObj->second->Render();
-        }*/
-
         s_map<FrameStrata, Strata>::iterator iterStrata;
         foreach (iterStrata, lStrataList_)
         {
@@ -462,7 +456,14 @@ namespace Frost
             fMouseMovementY_ += InputManager::GetSingleton()->GetMouseRawDY();
         }
 
+        // Update anchors for all widgets
         s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+        foreach (iterObj, lObjectList_)
+        {
+            iterObj->second->UpdateAnchors();
+        }
+
+        // ... then update logics on main widgets from parent to childs.
         foreach (iterObj, lMainObjectList_)
         {
             iterObj->second->Update();
@@ -486,10 +487,9 @@ namespace Frost
                 if (pFrame->IsTopLevel())
                     pLevel->pTopLevel = pFrame;
             }
-
         }
 
-        if ( bBuildStrataList_ ||
+        if ( bBuildStrataList_ || bObjectMoved_ ||
             (InputManager::GetSingleton()->GetMouseRawDX() != 0.0f) ||
             (InputManager::GetSingleton()->GetMouseRawDY() != 0.0f))
         {
@@ -529,7 +529,7 @@ namespace Frost
                                 s_ptr<GUI::Frame> pFrame = iterFrame->second;
                                 if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
                                 {
-                                    if (pFrame->IsInFrame(iX, iY) && pFrame->IsVisible())
+                                    if (pFrame->IsInFrame(iX, iY) && pFrame->IsVisible() && pFrame->IsMouseEnabled())
                                     {
                                         pOveredFrame = pFrame;
                                         break;
@@ -558,10 +558,10 @@ namespace Frost
                 {
                     pOveredFrame_->NotifyMouseInFrame(true);
                 }
-
             }
         }
 
+        bObjectMoved_ = false;
         bBuildStrataList_ = false;
     }
 
@@ -611,6 +611,16 @@ namespace Frost
     s_int GUIManager::GetMovementY() const
     {
         return s_int(fMouseMovementY_);
+    }
+
+    void GUIManager::NotifyObjectMoved()
+    {
+        bObjectMoved_ = true;
+    }
+
+    s_ptr<GUI::Frame> GUIManager::GetOveredFrame() const
+    {
+        return pOveredFrame_;
     }
 
     void GUIManager::ParseXMLFile_( const s_str& sFile, s_ptr<AddOn> pAddOn )

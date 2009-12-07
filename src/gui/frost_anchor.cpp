@@ -30,25 +30,20 @@ Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, const s_str& sParent, 
     mType_ = ANCHOR_ABS;
 }
 
-void Anchor::UpdateParent_()
+void Anchor::UpdateParent()
 {
-    if (!bParentUpdated_)
+    if (!sParent_.IsEmpty())
     {
-        if (!sParent_.IsEmpty())
-        {
-            s_ptr<UIObject> pObjParent = pObj_->GetParent();
-            if (pObjParent)
-                sParent_.Replace("$parent", pObjParent->GetName());
-            else
-                sParent_.Replace("$parent", "");
+        s_ptr<UIObject> pObjParent = pObj_->GetParent();
+        if (pObjParent)
+            sParent_.Replace("$parent", pObjParent->GetName());
+        else
+            sParent_.Replace("$parent", "");
 
-            if (sParent_.IsEmpty())
-                pParent_ = nullptr;
-            else
-                pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sParent_);
-        }
-
-        bParentUpdated_ = true;
+        if (sParent_.IsEmpty())
+            pParent_ = nullptr;
+        else
+            pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sParent_);
     }
 }
 
@@ -56,8 +51,6 @@ const s_int& Anchor::GetAbsX()
 {
     if (pObj_)
     {
-        this->UpdateParent_();
-
         s_int iParentX;
         if (pParent_)
             iParentX = pParent_->GetLeft();
@@ -92,8 +85,6 @@ const s_int& Anchor::GetAbsY()
 {
     if (pObj_)
     {
-        this->UpdateParent_();
-
         s_int iParentY;
         if (pParent_)
             iParentY = pParent_->GetTop();

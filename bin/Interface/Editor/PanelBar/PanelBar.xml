@@ -1,0 +1,59 @@
+<Ui>
+    <Frame name="PanelBar" parent="UIParent">
+        <Size>
+            <AbsDimension x="32"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOP" relativeTo="MenuBar" relativePoint="BOTTOM"/>
+            <Anchor point="BOTTOM"/>
+            <Anchor point="RIGHT"/>
+        </Anchors>
+        <Frames>
+            <Frame name="$parentVerticalBorderTop" hidden="true" frameStrata="HIGH">
+                <Size>
+                    <AbsDimension x="3"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="RIGHT"/>
+                    <Anchor point="TOP"/>
+                </Anchors>
+                <Backdrop>
+                    <BackgroundColor r="1" g="1" b="1"/>
+                </Backdrop>
+            </Frame>
+            <Frame name="$parentVerticalBorderBottom" frameStrata="HIGH">
+                <Size>
+                    <AbsDimension x="3"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="RIGHT"/>
+                    <Anchor point="BOTTOM"/>
+                </Anchors>
+                <Backdrop>
+                    <BackgroundColor r="1" g="1" b="1"/>
+                </Backdrop>
+                <Scripts>
+                    <OnLoad>
+                        this:SetPoint("TOP", PanelBar, "TOP");
+                    </OnLoad>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentHorizontalBorder" frameStrata="HIGH">
+                <Size>
+                    <AbsDimension y="3"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT"/>
+                </Anchors>
+                <Backdrop>
+                    <BackgroundColor r="1" g="1" b="1"/>
+                </Backdrop>
+                <Scripts>
+                    <OnLoad>
+                        this:SetWidth(PanelBar.Config.panelWidth);
+                    </OnLoad>
+                </Scripts>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

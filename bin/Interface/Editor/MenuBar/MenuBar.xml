@@ -15,6 +15,18 @@
             </OnLoad>
         </Scripts>
         <Frames>
+            <Frame name="$parentHorizontalBorder">
+                <Size>
+                    <AbsDimension y="3"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+                    <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT"/>
+                </Anchors>
+                <Backdrop>
+                    <BackgroundColor r="1" g="1" b="1"/>
+                </Backdrop>
+            </Frame>
             <Button name="$parentCloseButton" inherits="ButtonTemplate_Menu" text="X">
                 <Size>
                     <AbsDimension x="16" y="16"/>

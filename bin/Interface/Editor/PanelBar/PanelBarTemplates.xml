@@ -1,0 +1,67 @@
+<Ui>
+    <Frame name="FrameTemplate_Panel" virtual="true" hidden="true">
+        <Anchors>
+            <Anchor point="LEFT" relativePoint="RIGHT"/>
+            <Anchor point="TOP" relativePoint="TOP"/>
+            <Anchor point="BOTTOM" relativePoint="BOTTOM"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this:SetBackdrop({ ["insets"] = {["left"] = 0, ["right"] = 0, ["top"] = 3, ["bottom"] = 0} });
+                this:SetBackdropColor(PanelBar.Config.panelColor.r, PanelBar.Config.panelColor.g, PanelBar.Config.panelColor.b, PanelBar.Config.panelColor.a);
+            </OnLoad>
+        </Scripts>
+    </Frame>
+    
+    <Button name="ButtonTemplate_PanelHeader" virtual="true">
+        <Size>
+            <AbsDimension x="45" y="52"/>
+        </Size>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBackground" file="Interface/Editor/PanelBar/PanelHeaderBackground.png">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture name="$parentBorder" file="Interface/Editor/PanelBar/PanelHeaderBorder.png">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPRIGHT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnClick>
+                if (PanelBar.currentPanel) then
+                    if (PanelBar.currentPanel == this.panel) then
+                        PanelBar.currentPanel:Hide();
+                        PanelBar.currentPanel.header.Thumbnail:SetDesaturated(true);
+                        PanelBar.currentPanel = nil;
+                        PanelBar:SetPoint("RIGHT", UIParent, "RIGHT");
+                    else
+                        PanelBar.currentPanel:Hide();
+                        PanelBar.currentPanel.header.Thumbnail:SetDesaturated(true);
+                        PanelBar.currentPanel = this.panel;
+                        PanelBar.currentPanel:Show();
+                        PanelBar.currentPanel.header.Thumbnail:SetDesaturated(false);
+                    end
+                else
+                    PanelBar:SetPoint("RIGHT", UIParent, "RIGHT", -PanelBar.Config.panelWidth);
+                    PanelBar.currentPanel = this.panel;
+                    PanelBar.currentPanel:Show();
+                    PanelBar.currentPanel.header.Thumbnail:SetDesaturated(false);
+                end
+                PanelBar:UpdateVerticalBorder();
+            </OnClick>
+        </Scripts>
+    </Button>
+</Ui>
