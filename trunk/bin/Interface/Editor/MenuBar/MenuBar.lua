@@ -14,9 +14,9 @@ function MenuBar:AddMenu(caption)
        
         menu:SetHeight(MenuBar.Config.barHeight);
         if (MenuBar.lastMenu) then
-            menu:SetPoint("TOPLEFT", MenuBar.lastMenu, "TOPRIGHT", 4);
+            menu:SetPoint("TOPLEFT", MenuBar.lastMenu, "TOPRIGHT", 3);
         else
-            menu:SetPoint("TOPLEFT", MenuBar, "TOPLEFT", 0, 1);
+            menu:SetPoint("TOPLEFT", MenuBar, "TOPLEFT", 3);
         end
         
         menu:SetScript("OnLoad",
@@ -25,6 +25,16 @@ function MenuBar:AddMenu(caption)
                 base:OnLoad();
             end
         );
+        
+        local border = CreateFrame("Frame", "$parentBorder", menu);
+        if (border) then
+            border:SetPoint("TOP", MenuBar, "TOP");
+            border:SetPoint("BOTTOM", MenuBar, "BOTTOM");
+            border:SetPoint("LEFT", menu, "RIGHT");
+            border:SetWidth(3);
+            border:SetBackdrop({});
+            border:SetBackdropColor(1, 1, 1);
+        end
         
         MenuBar.lastMenu = menu;
         MenuBar.menus[caption] = menu;
@@ -37,8 +47,24 @@ function MenuBar:CreateMenuDropdown(caption)
     if (menu) then
         local dropdown = CreateFrame("Frame", "$parentDropdown", menu, "FrameTemplate_Dropdown");
         if (dropdown) then
-            dropdown:SetPoint("TOPLEFT", menu, "BOTTOMLEFT", -4, -5);
+            dropdown:SetPoint("TOPLEFT", menu, "BOTTOMLEFT", -8, -5);
+            local backdrop = dropdown:GetBackdrop();
+            backdrop.edgeFile = "Interface/Editor/MenuBar/DropdownBorder.png";
+            dropdown:SetBackdrop(backdrop);
             dropdown:SetBackdropColor(MenuBar.Config.barColor.r, MenuBar.Config.barColor.g, MenuBar.Config.barColor.b, MenuBar.Config.barColor.a);
+            
+            dropdown:SetScript("OnShow",
+                function()
+                    base:OnShow(); 
+                    MenuBar:UpdateHorizontalBorder();
+                end
+            );
+            
+            dropdown:SetScript("OnHide",
+                function()
+                    MenuBar:UpdateHorizontalBorder();
+                end
+            );
         end
     end
 end
@@ -137,5 +163,16 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                 return item;
             end
         end
+    end
+end
+
+function MenuBar:UpdateHorizontalBorder()
+    if (UIParent.activeDropdown) then
+        --MenuBar.HorizontalBorderRight:Show();
+        MenuBar.HorizontalBorderRight:SetPoint("TOPLEFT", UIParent.activeDropdown:GetParent(), "BOTTOMRIGHT");
+        MenuBar.HorizontalBorderLeft:SetPoint("TOPRIGHT", UIParent.activeDropdown:GetParent(), "BOTTOMLEFT");
+    else
+        --MenuBar.HorizontalBorderRight:Hide();
+        MenuBar.HorizontalBorderLeft:SetPoint("TOPRIGHT", MenuBar, "BOTTOMRIGHT");
     end
 end

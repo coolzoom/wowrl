@@ -10,18 +10,54 @@
         <Scripts>
             <OnLoad>
                 this.activeDropDown = nil;
-                this:SetBackdrop({});
+                this:SetBackdrop({["insets"]={["bottom"] = -3}});
                 this:SetBackdropColor(MenuBar.Config.barColor.r, MenuBar.Config.barColor.g, MenuBar.Config.barColor.b, MenuBar.Config.barColor.a);
             </OnLoad>
         </Scripts>
         <Frames>
-            <Frame name="$parentHorizontalBorder">
+            <Frame name="$parentHorizontalBorderLeft">
                 <Size>
                     <AbsDimension y="3"/>
                 </Size>
                 <Anchors>
                     <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
                     <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT"/>
+                </Anchors>
+                <Backdrop>
+                    <BackgroundColor r="1" g="1" b="1"/>
+                </Backdrop>
+            </Frame>
+            <Frame name="$parentHorizontalBorderRight">
+                <Size>
+                    <AbsDimension y="3"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT"/>
+                    <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT"/>
+                </Anchors>
+                <Backdrop>
+                    <BackgroundColor r="1" g="1" b="1"/>
+                </Backdrop>
+            </Frame>
+            <Frame name="$parentVerticalBorderLeft">
+                <Size>
+                    <AbsDimension x="3"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT"/>
+                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT"/>
+                </Anchors>
+                <Backdrop>
+                    <BackgroundColor r="1" g="1" b="1"/>
+                </Backdrop>
+            </Frame>
+            <Frame name="$parentVerticalBorderRight">
+                <Size>
+                    <AbsDimension x="3"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT"/>
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT"/>
                 </Anchors>
                 <Backdrop>
                     <BackgroundColor r="1" g="1" b="1"/>

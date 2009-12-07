@@ -17,6 +17,9 @@
         <Size>
             <AbsDimension x="45" y="52"/>
         </Size>
+        <HitRectInsets>
+            <AbsInset left="3" right="3" top="3" bottom="3"/>
+        </HitRectInsets>
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture name="$parentBackground" file="Interface/Editor/PanelBar/PanelHeaderBackground.png">
@@ -55,13 +58,24 @@
                         PanelBar.currentPanel.header.Thumbnail:SetDesaturated(false);
                     end
                 else
-                    PanelBar:SetPoint("RIGHT", UIParent, "RIGHT", -PanelBar.Config.panelWidth);
                     PanelBar.currentPanel = this.panel;
+                    PanelBar:SetPoint("RIGHT", UIParent, "RIGHT", -PanelBar.Config.panelWidth);
                     PanelBar.currentPanel:Show();
-                    PanelBar.currentPanel.header.Thumbnail:SetDesaturated(false);
                 end
                 PanelBar:UpdateVerticalBorder();
             </OnClick>
+            <OnEnter>
+                if (PanelBar.currentPanel and PanelBar.currentPanel ~= this.panel) then
+                    this.Thumbnail:SetDesaturated(false);
+                else
+                    this.Thumbnail:SetDesaturated(false);
+                end
+            </OnEnter>
+            <OnLeave>
+                if (PanelBar.currentPanel ~= this.panel) then
+                    this.Thumbnail:SetDesaturated(true);
+                end
+            </OnLeave>
         </Scripts>
     </Button>
 </Ui>
