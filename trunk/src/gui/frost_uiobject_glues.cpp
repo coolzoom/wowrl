@@ -25,7 +25,7 @@ LuaUIObject::LuaUIObject( lua_State* pLua )
     pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sName);
     if (!pParent_)
     {
-        throw Exception(CLASS_NAME, "Glue missing its parent !");
+        throw Exception(CLASS_NAME, "Glue missing its parent (\""+sName+"\") !");
     }
 }
 

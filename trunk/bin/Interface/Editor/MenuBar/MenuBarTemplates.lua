@@ -8,4 +8,4 @@ function ButtonTemplate_MenuItem.UpdateWidth()
     this:SetWidth(width);
 end
 
-ButtonTemplate_MenuCheckItem.UpdateWidth = ButtonTemplate_MenuItem.UpdateWidth;
+CheckButtonTemplate_MenuCheckItem.UpdateWidth = ButtonTemplate_MenuItem.UpdateWidth;

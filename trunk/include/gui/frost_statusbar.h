@@ -46,6 +46,11 @@ namespace Frost
             */
             virtual s_bool CanUseScript(const s_str& sScriptName) const;
 
+            /// Copies an UIObject's parameters into this StatusBar (inheritance).
+            /** \param pObj The UIObject to copy
+            */
+            virtual void   CopyFrom(s_ptr<UIObject> pObj);
+
             /// Sets this StatusBar's minimum value.
             /** \param fMin The minimum value
             */

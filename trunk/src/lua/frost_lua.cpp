@@ -11,7 +11,12 @@
 #include "gui/frost_frame.h"
 #include "gui/frost_layeredregion.h"
 #include "gui/frost_button.h"
+#include "gui/frost_checkbutton.h"
+#include "gui/frost_colorselect.h"
+#include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
+#include "gui/frost_messageframe.h"
+#include "gui/frost_scrollframe.h"
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
 #include "gui/frost_statusbar.h"
@@ -48,12 +53,12 @@ void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
     pLua->Register<GUI::LuaUIObject>();
     pLua->Register<GUI::LuaFrame>();
     pLua->Register<GUI::LuaButton>();
-    /*pLua->Register<GUI::LuaCheckButton>();
+    pLua->Register<GUI::LuaCheckButton>();
     pLua->Register<GUI::LuaColorSelect>();
-    pLua->Register<GUI::LuaCooldown>();*/
+    pLua->Register<GUI::LuaCooldown>();
     pLua->Register<GUI::LuaEditBox>();
-    /*pLua->Register<GUI::LuaMessageFrame>();
-    pLua->Register<GUI::LuaScrollFrame>();*/
+    pLua->Register<GUI::LuaMessageFrame>();
+    pLua->Register<GUI::LuaScrollFrame>();
     pLua->Register<GUI::LuaScrollingMessageFrame>();
     pLua->Register<GUI::LuaSlider>();
     pLua->Register<GUI::LuaStatusBar>();

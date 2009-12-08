@@ -119,10 +119,11 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
             MenuBar:CreateMenuDropdown(menuCaption);
         end
         if (menu.Dropdown) then
-            local item = CreateFrame("Button", menu:GetName()..itemCaption, menu.Dropdown, "ButtonTemplate_MenuCheckItem");
+            local item = CreateFrame("CheckButton", menu:GetName()..itemCaption, menu.Dropdown, "CheckButtonTemplate_MenuCheckItem");
             if (item) then
                 item.caption = menuCaption..itemCaption;
             
+                item:SetChecked(defaultState);
                 item:SetHeight(MenuBar.Config.barHeight);
                 
                 if (menu.lastItem) then
@@ -131,23 +132,12 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                     item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 8);
                 end
                 
-                if (defaultState) then
-                    item:SetScript("OnLoad",
-                        function()
-                            this:SetText(MenuBar.Locale[this.caption]);
-                            base:UpdateWidth();
-                            this.enabled = true;
-                        end
-                    );
-                else
-                    item:SetScript("OnLoad",
-                        function()
-                            this:SetText(MenuBar.Locale[this.caption]);
-                            base:UpdateWidth();
-                            this.enabled = false;
-                        end
-                    );
-                end
+                item:SetScript("OnLoad",
+                    function()
+                        this:SetText(MenuBar.Locale[this.caption]);
+                        base:UpdateWidth();
+                    end
+                );
                 
                 if (keycode) then
                     local key = item:CreateFontString("$parentKey");
@@ -168,11 +158,9 @@ end
 
 function MenuBar:UpdateHorizontalBorder()
     if (UIParent.activeDropdown) then
-        --MenuBar.HorizontalBorderRight:Show();
         MenuBar.HorizontalBorderRight:SetPoint("TOPLEFT", UIParent.activeDropdown:GetParent(), "BOTTOMRIGHT");
         MenuBar.HorizontalBorderLeft:SetPoint("TOPRIGHT", UIParent.activeDropdown:GetParent(), "BOTTOMLEFT");
     else
-        --MenuBar.HorizontalBorderRight:Hide();
         MenuBar.HorizontalBorderLeft:SetPoint("TOPRIGHT", MenuBar, "BOTTOMRIGHT");
     end
 end

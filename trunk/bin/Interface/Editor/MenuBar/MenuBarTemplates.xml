@@ -48,22 +48,22 @@
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
     </Button>
     
-    <Button name="ButtonTemplate_MenuCheckItem" inherits="ButtonTemplate_MenuItem" virtual="true">
+    <CheckButton name="CheckButtonTemplate_MenuCheckItem" inherits="ButtonTemplate_MenuItem" virtual="true">
+        <CheckedTexture file="Interface/Editor/Templates/CheckButtonChecked.png">
+            <Size>
+                <AbsDimension x="8" y="8"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="4" y="3"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </CheckedTexture>
         <Layers>
             <Layer>
-                <Texture name="$parentChecked" file="Interface/Editor/Templates/CheckButtonChecked.png">
-                    <Size>
-                        <AbsDimension x="8" y="8"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="4" y="3"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </Texture>
-                <Texture name="$parentUnChecked" file="Interface/Editor/Templates/CheckButtonUnChecked.png">
+                <Texture name="$parentBackground" file="Interface/Editor/Templates/CheckButtonBackground.png">
                     <Size>
                         <AbsDimension x="8" y="8"/>
                     </Size>
@@ -77,29 +77,5 @@
                 </Texture>
             </Layer>
         </Layers>
-        <Scripts>
-            <OnLoad>
-                this.enabled = true;
-            </OnLoad>
-            <OnShow>
-                if (this.enabled) then
-                    this.Checked:Show();
-                    this.UnChecked:Hide();
-                else
-                    this.Checked:Hide();
-                    this.UnChecked:Show();
-                end
-            </OnShow>
-            <OnClick>
-                this.enabled = not this.enabled;
-                if (this.enabled) then
-                    this.Checked:Show();
-                    this.UnChecked:Hide();
-                else
-                    this.Checked:Hide();
-                    this.UnChecked:Show();
-                end
-            </OnClick>
-        </Scripts>
-    </Button>
+    </CheckButton>
 </Ui>

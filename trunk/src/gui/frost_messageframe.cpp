@@ -25,12 +25,26 @@ MessageFrame::~MessageFrame()
 {
 }
 
+void MessageFrame::CopyFrom( s_ptr<UIObject> pObj )
+{
+    Frame::CopyFrom(pObj);
+}
+
 void MessageFrame::CreateGlue()
 {
-    s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-    pLua->PushString(sName_);
-    lGlueList_.PushBack(
-        pLua->Push<LuaMessageFrame>(new LuaMessageFrame(pLua->GetState()))
-    );
-    pLua->SetGlobal(sName_);
+    if (bVirtual_)
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->NewTable();
+        pLua->SetGlobal(sLuaName_);
+    }
+    else
+    {
+        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        pLua->PushString(sLuaName_);
+        lGlueList_.PushBack(
+            pLua->Push<LuaMessageFrame>(new LuaMessageFrame(pLua->GetState()))
+        );
+        pLua->SetGlobal(sLuaName_);
+    }
 }

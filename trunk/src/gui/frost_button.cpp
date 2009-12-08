@@ -130,8 +130,8 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             if (!GUIManager::GetSingleton()->AddUIObject(pNormalTexture_))
             {
                 Warning(lType_.Back(),
-                    "Trying to add \""+pButton->GetNormalTexture()->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                    +pNormalTexture_->GetName()+"\". Skipped."
+                    "Trying to add \""+pButton->GetNormalTexture()->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pNormalTexture_->GetName()+"\". Skipped."
                 );
                 pNormalTexture_.Delete();
             }
@@ -152,8 +152,8 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             if (!GUIManager::GetSingleton()->AddUIObject(pPushedTexture_))
             {
                 Warning(lType_.Back(),
-                    "Trying to add \""+pButton->GetPushedTexture()->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                    +pPushedTexture_->GetName()+"\". Skipped."
+                    "Trying to add \""+pButton->GetPushedTexture()->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pPushedTexture_->GetName()+"\". Skipped."
                 );
                 pPushedTexture_.Delete();
             }
@@ -174,8 +174,8 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             if (!GUIManager::GetSingleton()->AddUIObject(pHighlightTexture_))
             {
                 Warning(lType_.Back(),
-                    "Trying to add \""+pButton->GetHighlightTexture()->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                    +pHighlightTexture_->GetName()+"\". Skipped."
+                    "Trying to add \""+pButton->GetHighlightTexture()->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pHighlightTexture_->GetName()+"\". Skipped."
                 );
                 pHighlightTexture_.Delete();
             }
@@ -196,8 +196,8 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             if (!GUIManager::GetSingleton()->AddUIObject(pDisabledTexture_))
             {
                 Warning(lType_.Back(),
-                    "Trying to add \""+pButton->GetDisabledTexture()->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                    +pDisabledTexture_->GetName()+"\". Skipped."
+                    "Trying to add \""+pButton->GetDisabledTexture()->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pDisabledTexture_->GetName()+"\". Skipped."
                 );
                 pDisabledTexture_.Delete();
             }
@@ -219,8 +219,8 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             if (!GUIManager::GetSingleton()->AddUIObject(pNormalText_))
             {
                 Warning(lType_.Back(),
-                    "Trying to add \""+pButton->GetNormalText()->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                    +pNormalText_->GetName()+"\". Skipped."
+                    "Trying to add \""+pButton->GetNormalText()->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pNormalText_->GetName()+"\". Skipped."
                 );
                 pNormalText_.Delete();
             }
@@ -241,8 +241,8 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             if (!GUIManager::GetSingleton()->AddUIObject(pHighlightText_))
             {
                 Warning(lType_.Back(),
-                    "Trying to add \""+pButton->GetHighlightText()->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                    +pHighlightText_->GetName()+"\". Skipped."
+                    "Trying to add \""+pButton->GetHighlightText()->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pHighlightText_->GetName()+"\". Skipped."
                 );
                 pHighlightText_.Delete();
             }
@@ -263,8 +263,8 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             if (!GUIManager::GetSingleton()->AddUIObject(pDisabledText_))
             {
                 Warning(lType_.Back(),
-                    "Trying to add \""+pButton->GetDisabledText()->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                    +pDisabledText_->GetName()+"\". Skipped."
+                    "Trying to add \""+pButton->GetDisabledText()->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pDisabledText_->GetName()+"\". Skipped."
                 );
                 pDisabledText_.Delete();
             }
@@ -281,13 +281,6 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
 
         if (!pButton->IsEnabled())
             this->Disable();
-    }
-    else
-    {
-        Error(lType_.Back(),
-            "Trying to derive \""+sName_+"\" from \""+pObj->GetName()+"\", but they are not of the same type "
-            "(respectively "+this->GetObjectType()+" and "+pObj->GetObjectType()+")."
-        );
     }
 }
 
