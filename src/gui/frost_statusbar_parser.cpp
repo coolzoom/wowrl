@@ -14,18 +14,7 @@ using namespace Frost::GUI;
 
 void StatusBar::ParseBlock( s_ptr<XML::Block> pBlock )
 {
-    ParseAttributes_(pBlock);
-
-    ParseSizeBlock_(pBlock);
-    ParseResizeBoundsBlock_(pBlock);
-    ParseAnchorsBlock_(pBlock);
-    ParseTitleRegionBlock_(pBlock);
-    ParseBackdropBlock_(pBlock);
-    ParseHitRectInsetsBlock_(pBlock);
-
-    ParseLayersBlock_(pBlock);
-    ParseFramesBlock_(pBlock);
-    ParseScriptsBlock_(pBlock);
+    Frame::ParseBlock(pBlock);
 
     if (pBlock->IsProvided("minValue") || !bInherits_)
         SetMinValue(s_float(pBlock->GetAttribute("minValue")));

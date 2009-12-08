@@ -189,13 +189,6 @@ void FontString::CopyFrom( s_ptr<UIObject> pObj )
         this->SetTextColor(pFontString->GetTextColor());
         this->SetNonSpaceWrap(pFontString->CanNonSpaceWrap());
     }
-    else
-    {
-        Error(lType_.Back(),
-            "Trying to derive \""+sName_+"\" from \""+pObj->GetName()+"\", but they are not of the same type "
-            "(respectively "+this->GetObjectType()+" and "+pObj->GetObjectType()+")."
-        );
-    }
 }
 
 const s_str& FontString::GetFontName() const

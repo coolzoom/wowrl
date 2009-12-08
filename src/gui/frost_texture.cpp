@@ -133,13 +133,6 @@ void Texture::CopyFrom( s_ptr<UIObject> pObj )
         this->SetVertexColor(pTexture->GetVertexColor());
         this->SetDesaturated(pTexture->IsDesaturated());
     }
-    else
-    {
-        Error(lType_.Back(),
-            "Trying to derive \""+sName_+"\" from \""+pObj->GetName()+"\", but they are not of the same type "
-            "(respectively "+this->GetObjectType()+" and "+pObj->GetObjectType()+")."
-        );
-    }
 }
 
 Texture::BlendMode Texture::GetBlendMode() const

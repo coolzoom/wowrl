@@ -26,6 +26,11 @@ namespace Frost
             /// Destructor.
             virtual ~Cooldown();
 
+            /// Copies an UIObject's parameters into this Cooldown (inheritance).
+            /** \param pObj The UIObject to copy
+            */
+            virtual void CopyFrom(s_ptr<UIObject> pObj);
+
             /// Returns this widget's Lua glue.
             virtual void CreateGlue();
 

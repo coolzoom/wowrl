@@ -90,28 +90,31 @@ s_str UIObject::Serialize( const s_str& sTab ) const
 
 void UIObject::CopyFrom( s_ptr<UIObject> pObj )
 {
-    bInherits_ = true;
-    pInheritance_ = pObj;
-
-    this->SetAlpha(pObj->GetAlpha());
-    this->SetShown(pObj->IsShown());
-    if (pObj->IsWidthAbsolute())
-        this->SetAbsWidth(pObj->GetAbsWidth());
-    else
-        this->SetRelWidth(pObj->GetRelWidth());
-    if (pObj->IsHeightAbsolute())
-        this->SetAbsHeight(pObj->GetAbsHeight());
-    else
-        this->SetRelHeight(pObj->GetRelHeight());
-
-    for (s_uint i = 1; i <= pObj->GetNumPoint(); ++i)
+    if (pObj)
     {
-        s_ptr<Anchor> pAnchor = pObj->GetPoint(i);
-        if (pAnchor)
+        bInherits_ = true;
+        pInheritance_ = pObj;
+
+        this->SetAlpha(pObj->GetAlpha());
+        this->SetShown(pObj->IsShown());
+        if (pObj->IsWidthAbsolute())
+            this->SetAbsWidth(pObj->GetAbsWidth());
+        else
+            this->SetRelWidth(pObj->GetRelWidth());
+        if (pObj->IsHeightAbsolute())
+            this->SetAbsHeight(pObj->GetAbsHeight());
+        else
+            this->SetRelHeight(pObj->GetRelHeight());
+
+        for (s_uint i = 1; i <= pObj->GetNumPoint(); ++i)
         {
-            Anchor mAnchor(this, pAnchor->GetPoint(), pAnchor->GetParentRawName(), pAnchor->GetParentPoint());
-            mAnchor.SetAbsOffset(pAnchor->GetAbsOffsetX(), pAnchor->GetAbsOffsetY());
-            this->SetPoint(mAnchor);
+            s_ptr<Anchor> pAnchor = pObj->GetPoint(i);
+            if (pAnchor)
+            {
+                Anchor mAnchor(this, pAnchor->GetPoint(), pAnchor->GetParentRawName(), pAnchor->GetParentPoint());
+                mAnchor.SetAbsOffset(pAnchor->GetAbsOffsetX(), pAnchor->GetAbsOffsetY());
+                this->SetPoint(mAnchor);
+            }
         }
     }
 }

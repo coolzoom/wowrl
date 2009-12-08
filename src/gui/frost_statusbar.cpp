@@ -48,6 +48,31 @@ s_bool StatusBar::CanUseScript( const s_str& sScriptName ) const
         return false;
 }
 
+void StatusBar::CopyFrom( s_ptr<UIObject> pObj )
+{
+    Frame::CopyFrom(pObj);
+
+    s_ptr<StatusBar> pStatusBar = s_ptr<StatusBar>::DynamicCast(pObj);
+
+    if (pStatusBar)
+    {
+        this->SetMinValue(pStatusBar->GetMinValue());
+        this->SetMaxValue(pStatusBar->GetMaxValue());
+        this->SetValue(pStatusBar->GetValue());
+        this->SetBarDrawLayer(pStatusBar->GetBarDrawLayer());
+
+        CreateBarTexture_();
+
+        Anchor mAnchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT);
+
+        pBarTexture_->CopyFrom(pStatusBar->GetBarTexture());
+        pBarTexture_->ClearAllPoints();
+        pBarTexture_->SetPoint(mAnchor);
+
+        GUIManager::GetSingleton()->AddUIObject(pBarTexture_);
+    }
+}
+
 void StatusBar::SetMinValue( const s_float& fMin )
 {
     if (fMin != fMinValue_)

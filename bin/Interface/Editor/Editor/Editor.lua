@@ -1,7 +1,6 @@
 UIParent:SetFrameStrata("BACKGROUND");
 UIParent:EnableMouse(true);
 UIParent:SetScript("OnMouseUp", function ()
-    Log("1");
     if (arg1 == "LeftButton") then
         if (this.activeDropdown) then
             this.activeDropdown:Hide();

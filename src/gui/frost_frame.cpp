@@ -408,13 +408,6 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
         bBuildStrataList_ = true;
         bBuildLayerList_ = true;
     }
-    else
-    {
-        Error(lType_.Back(),
-            "Trying to derive \""+sName_+"\" from \""+pObj->GetName()+"\", but they are not of the same type "
-            "(respectively "+this->GetObjectType()+" and "+pObj->GetObjectType()+")."
-        );
-    }
 }
 
 void Frame::CreateTitleRegion()

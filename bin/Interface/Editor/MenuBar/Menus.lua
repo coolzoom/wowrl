@@ -14,8 +14,8 @@ MenuBar:AddMenuItem("Edit", "Clone", "Ctrl-C");
 MenuBar:AddMenuItem("Edit", "Delete", "Del.");
 
 MenuBar:AddMenu("View");
-MenuBar:AddMenuCheckItem("View", "Wireframe", "F2", false):SetScript("OnClick", function() base:OnClick(); Frost:ToggleWireframeView(); end);
-MenuBar:AddMenuCheckItem("View", "Shading", "F3", true):SetScript("OnClick", function() base:OnClick(); Frost:ToggleShading(); end);
+MenuBar:AddMenuCheckItem("View", "Wireframe", "F2", false):SetScript("OnClick", function() Frost:ToggleWireframeView(); end);
+MenuBar:AddMenuCheckItem("View", "Shading", "F3", true):SetScript("OnClick", function() Frost:ToggleShading(); end);
 MenuBar:AddMenuItem("View", "BGColor");
 
 MenuBar:AddMenu("Settings");
