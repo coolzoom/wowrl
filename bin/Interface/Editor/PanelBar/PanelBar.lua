@@ -13,6 +13,7 @@ function PanelBar:AddPanel(name)
     if (panel) then
         panel.rank = PanelBar.panelNumber;
         panel:SetWidth(PanelBar.Config.panelWidth);
+        panel.Title:SetText(PanelBar.Locale[name])
         local header = CreateFrame("Button", "$parent"..name.."Header", PanelBar, "ButtonTemplate_PanelHeader");
         if (header) then
             panel.header = header;

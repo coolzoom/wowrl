@@ -102,6 +102,7 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
                         key:SetJustifyH("RIGHT");
                         key:SetText(keycode);
                         key:SetPoint("RIGHT", item, "RIGHT", -8, 0);
+                        key:SetTextColor(0.3,0.3,0.3);
                     end
                 end
                 
@@ -146,6 +147,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                         key:SetJustifyH("RIGHT");
                         key:SetText(keycode);
                         key:SetPoint("RIGHT", item, "RIGHT", -8, 0);
+                        key:SetTextColor(0.3,0.3,0.3);
                     end
                 end
                 

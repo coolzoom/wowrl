@@ -7,10 +7,56 @@
         </Anchors>
         <Scripts>
             <OnLoad>
-                this:SetBackdrop({ ["insets"] = {["left"] = 0, ["right"] = 0, ["top"] = 3, ["bottom"] = 0} });
+                this:SetBackdrop({{["top"] = 3}});
                 this:SetBackdropColor(PanelBar.Config.panelColor.r, PanelBar.Config.panelColor.g, PanelBar.Config.panelColor.b, PanelBar.Config.panelColor.a);
             </OnLoad>
         </Scripts>
+        <Frames>
+            <Frame name="$parentContent">
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop edgeFile="Interface/Editor/Templates/Border2PX.png">
+                    <BackgroundColor a="0.2" r="1" g="1" b="1"/>
+                </Backdrop>
+            </Frame>
+        </Frames>
+        <Layers>
+            <Layer>
+                <FontString name="$parentTitle" fontHeight="10" font="Fonts/VeraBold.ttf">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension y="8"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                    <Color r="1" g="1" b="1"/>
+                    <!Shadow>
+                        <Offset x="1" y="1"/>
+                    </Shadow>
+                </FontString>
+            </Layer>
+        </Layers>
     </Frame>
     
     <Button name="ButtonTemplate_PanelHeader" virtual="true">
