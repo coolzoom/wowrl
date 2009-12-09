@@ -591,7 +591,12 @@ s_ptr<Block> Block::GetRadioBlock( const s_uint& uiGroup )
 
 s_bool Block::HasBlock( const s_str& sName )
 {
-    if ( lDefBlockList_.Find(sName) || lPreDefBlockList_.Find(sName) )
+    return ( lDefBlockList_.Find(sName) || lPreDefBlockList_.Find(sName) );
+}
+
+s_bool Block::CanHaveBlock( const s_str& sName )
+{
+    if (HasBlock(sName))
     {
         return true;
     }

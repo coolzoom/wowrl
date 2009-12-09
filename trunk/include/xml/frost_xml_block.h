@@ -286,12 +286,19 @@ namespace XML
         */
         s_uint        GetDefChildNumber() const;
 
+        /// Checks if this Block has another Block defined as child.
+        /** \param sName The name of the Block to test
+        *   \return 'true' if this Block already has the other one as child.
+        *   \note Only used in definition stage.
+        */
+        s_bool        HasBlock(const s_str& sName);
+
         /// Checks if this Block can contain another Block.
         /** \param sName The name of the Block to test
         *   \return 'true' if this Block can contain the other one.
-        *   \note Only used in definition and loading stages.
+        *   \note Only used in loading stage.
         */
-        s_bool        HasBlock(const s_str& sName);
+        s_bool        CanHaveBlock(const s_str& sName);
 
         /// Creates a new Block in this one.
         /** \param sName The name of the Block to create

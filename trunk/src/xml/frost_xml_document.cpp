@@ -548,7 +548,7 @@ void Document::XMLState::ReadSingleTag( const s_str& sTagContent )
 
     if (pCurrentParentBlock_)
     {
-        if (pCurrentParentBlock_->HasBlock(sName))
+        if (pCurrentParentBlock_->CanHaveBlock(sName))
         {
             pCurrentBlock_ = pCurrentParentBlock_->CreateBlock(sName);
             if (!pCurrentBlock_->CheckAttributes(sAttributes))
@@ -641,7 +641,7 @@ void Document::XMLState::ReadOpeningTag( const s_str& sTagContent )
 
     if (pCurrentParentBlock_)
     {
-        if (pCurrentParentBlock_->HasBlock(sName))
+        if (pCurrentParentBlock_->CanHaveBlock(sName))
         {
             pCurrentBlock_ = pCurrentParentBlock_->CreateBlock(sName);
             if (!pCurrentBlock_->CheckAttributes(sAttributes))
