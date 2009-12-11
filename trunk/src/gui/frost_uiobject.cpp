@@ -106,15 +106,17 @@ void UIObject::CopyFrom( s_ptr<UIObject> pObj )
         else
             this->SetRelHeight(pObj->GetRelHeight());
 
-        for (s_uint i = 1; i <= pObj->GetNumPoint(); ++i)
+        const s_map<AnchorPoint, Anchor>& lAnchorList = pObj->GetPointList();
+        s_map<AnchorPoint, Anchor>::const_iterator iterAnchor;
+        foreach (iterAnchor, lAnchorList)
         {
-            s_ptr<Anchor> pAnchor = pObj->GetPoint(i);
-            if (pAnchor)
-            {
-                Anchor mAnchor(this, pAnchor->GetPoint(), pAnchor->GetParentRawName(), pAnchor->GetParentPoint());
-                mAnchor.SetAbsOffset(pAnchor->GetAbsOffsetX(), pAnchor->GetAbsOffsetY());
-                this->SetPoint(mAnchor);
-            }
+            this->SetAbsPoint(
+                iterAnchor->second.GetPoint(),
+                iterAnchor->second.GetParentRawName(),
+                iterAnchor->second.GetParentPoint(),
+                iterAnchor->second.GetAbsOffsetX(),
+                iterAnchor->second.GetAbsOffsetY()
+            );
         }
     }
 }
@@ -407,20 +409,20 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
     }
 }
 
-void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_int& iX, const s_int& iY )
+void UIObject::SetAbsPoint( AnchorPoint mPoint, const s_str& sParentName, AnchorPoint mRelativePoint, const s_int& iX, const s_int& iY )
 {
     GUIManager::GetSingleton()->NotifyObjectMoved();
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
-        Anchor mAnchor = Anchor(this, mPoint, pObj ? pObj->GetName() : "", mRelativePoint);
+        Anchor mAnchor = Anchor(this, mPoint, sParentName, mRelativePoint);
         mAnchor.SetAbsOffset(iX, iY);
         lAnchorList_[mPoint] = mAnchor;
     }
     else
     {
         s_ptr<Anchor> pAnchor = &iterAnchor->second;
-        pAnchor->SetParentRawName(pObj ? pObj->GetName() : "");
+        pAnchor->SetParentRawName(sParentName);
         pAnchor->SetParentPoint(mRelativePoint);
         pAnchor->SetAbsOffset(iX, iY);
     }
@@ -462,20 +464,20 @@ void UIObject::SetAbsPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoin
     FireUpdateBorders();
 }
 
-void UIObject::SetRelPoint( AnchorPoint mPoint, s_ptr<UIObject> pObj, AnchorPoint mRelativePoint, const s_float& fX, const s_float& fY )
+void UIObject::SetRelPoint( AnchorPoint mPoint, const s_str& sParentName, AnchorPoint mRelativePoint, const s_float& fX, const s_float& fY )
 {
     GUIManager::GetSingleton()->NotifyObjectMoved();
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
-        Anchor mAnchor = Anchor(this, mPoint, pObj ? pObj->GetName() : "", mRelativePoint);
+        Anchor mAnchor = Anchor(this, mPoint, sParentName, mRelativePoint);
         mAnchor.SetRelOffset(fX, fY);
         lAnchorList_[mPoint] = mAnchor;
     }
     else
     {
         s_ptr<Anchor> pAnchor = &iterAnchor->second;
-        pAnchor->SetParentRawName(pObj ? pObj->GetName() : "");
+        pAnchor->SetParentRawName(sParentName);
         pAnchor->SetParentPoint(mRelativePoint);
         pAnchor->SetRelOffset(fX, fY);
     }
@@ -582,17 +584,20 @@ s_uint UIObject::GetNumPoint() const
     return lAnchorList_.GetSize();
 }
 
-s_ptr<Anchor> UIObject::GetPoint( const s_uint& uiPoint )
+s_ptr<Anchor> UIObject::GetPoint( AnchorPoint mPoint )
 {
-    s_ptr<Anchor> pAnchor;
-    s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Begin();
-    for (s_uint i = 0; i < uiPoint; i++)
-    {
-        pAnchor = &(iterAnchor->second);
-        iterAnchor++;
-    }
+    GUIManager::GetSingleton()->NotifyObjectMoved();
+    FireUpdateBorders();
 
-    return pAnchor;
+    if (lAnchorList_.Find(mPoint))
+        return &lAnchorList_[mPoint];
+    else
+        return nullptr;
+}
+
+const s_map<AnchorPoint, Anchor>& UIObject::GetPointList() const
+{
+    return lAnchorList_;
 }
 
 const s_bool& UIObject::IsVirtual() const

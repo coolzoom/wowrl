@@ -25,6 +25,22 @@ void StatusBar::ParseBlock( s_ptr<XML::Block> pBlock )
     if (pBlock->IsProvided("drawLayer") || !bInherits_)
         SetBarDrawLayer(s_str(pBlock->GetAttribute("drawLayer")));
 
+    if (pBlock->IsProvided("orientation") || !bInherits_)
+    {
+        s_str sOrientation = pBlock->GetAttribute("orientation");
+        if (sOrientation == "HORIZONTAL")
+            SetOrientation(ORIENT_HORIZONTAL);
+        else if (sOrientation == "VERTICAL")
+            SetOrientation(ORIENT_VERTICAL);
+        else
+        {
+            Warning(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
+                "Unknown StatusBar orientation : \""+sOrientation+"\". Expecting either :\n"
+                "\"HORIZONTAL\" or \"VERTICAL\". Attribute ignored."
+            );
+        }
+    }
+
     CreateBarTexture_();
 
     Anchor mAnchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT);

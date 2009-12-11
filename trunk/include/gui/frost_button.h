@@ -45,6 +45,12 @@ namespace Frost
             /// Destructor.
             virtual ~Button();
 
+            /// Prints all relevant information about this widget in a string.
+            /** \param sTab The offset to give to all lines
+            *   \return All relevant information about this widget
+            */
+            virtual s_str     Serialize(const s_str& sTab) const;
+
             /// Creates the associated Lua glue.
             virtual void      CreateGlue();
 

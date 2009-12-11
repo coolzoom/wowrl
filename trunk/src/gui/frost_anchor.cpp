@@ -36,7 +36,7 @@ void Anchor::UpdateParent()
     {
         s_ptr<UIObject> pObjParent = pObj_->GetParent();
         if (pObjParent)
-            sParent_.Replace("$parent", pObjParent->GetName());
+            sParent_.Replace("$parent", pObjParent->GetLuaName());
         else
             sParent_.Replace("$parent", "");
 

@@ -25,6 +25,11 @@ Button::~Button()
 {
 }
 
+s_str Button::Serialize( const s_str& sTab ) const
+{
+    return Frame::Serialize(sTab);
+}
+
 void Button::CreateGlue()
 {
     if (bVirtual_)
@@ -76,19 +81,13 @@ void Button::On( const s_str& sScriptName, s_ptr<Event> pEvent )
     if (IsEnabled())
     {
         if (sScriptName == "Enter")
-        {
             Highlight();
-        }
 
         if (sScriptName == "Leave")
-        {
             Unlight();
-        }
 
         if (sScriptName == "MouseDown")
-        {
             Push();
-        }
 
         if (sScriptName == "MouseUp")
         {
@@ -102,12 +101,9 @@ void Button::OnEvent( const Event& mEvent )
 {
     Frame::OnEvent(mEvent);
 
-    if (mEvent.GetName() == "MOUSE_DOUBLE_CLICKED")
+    if (mEvent.GetName() == "MOUSE_DOUBLE_CLICKED" && bMouseInFrame_)
     {
-        if (bMouseInFrame_)
-        {
-            On("DoubleClicked");
-        }
+        On("DoubleClicked");
     }
 }
 

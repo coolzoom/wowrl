@@ -226,7 +226,7 @@ namespace Frost
             *   \param iY           The vertical coordinate
             *   \return 'true' if the provided coordinates are in the Frame
             */
-            s_bool              IsInFrame(const s_int& iX, const s_int& iY) const;
+            virtual s_bool      IsInFrame(const s_int& iX, const s_int& iY) const;
 
             /// Checks if this Frame can receive keyboard input.
             /** \return 'true' if this Frame can receive keyboard input
@@ -422,10 +422,22 @@ namespace Frost
             */
             void                Hide();
 
+            /// Changes this widget's absolute width (in pixels).
+            /** \param uiAbsWidth The new width
+            */
+            virtual void        SetAbsWidth(const s_uint& uiAbsWidth);
+
+            /// Changes this widget's absolute height (in pixels).
+            /** \param uiAbsHeight The new height
+            */
+            virtual void        SetAbsHeight(const s_uint& uiAbsHeight);
+
             /// Tells this Frame it is being overed by the mouse.
             /** \param bMouseInFrame 'true' if the mouse is above this Frame
+            *   \param iX            The horizontal mouse coordinate
+            *   \param iY            The vertical mouse coordinate
             */
-            void                NotifyMouseInFrame(const s_bool& bMouseInFrame);
+            virtual void        NotifyMouseInFrame(const s_bool& bMouseInFrame, const s_int& iX, const s_int& iY);
 
             /// Tells the Frame not to react to all events.
             void                UnregisterAllEvents();
@@ -504,14 +516,7 @@ namespace Frost
             s_float fScale_;
 
             s_bool bMouseInFrame_;
-            s_int  iMovementStartX_;
-            s_int  iMovementStartY_;
-            s_uint uiResizingStartW_;
-            s_uint uiResizingStartH_;
-            s_bool bResizeWidth_;
-            s_bool bResizeFromRight_;
-            s_bool bResizeHeight_;
-            s_bool bResizeFromBottom_;
+            s_bool bMouseInTitleRegion_;
 
             s_ptr<Region> pTitleRegion_;
 

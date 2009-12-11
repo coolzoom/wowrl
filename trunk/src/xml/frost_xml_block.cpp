@@ -586,7 +586,10 @@ s_ptr<Block> Block::GetRadioBlock( const s_uint& uiGroup )
         }
     }
     else
+    {
+        Warning(sFile_+":"+uiLineNbr_+":"+sName_, "This block isn't meant to contain radio childs.");
         return nullptr;
+    }
 }
 
 s_bool Block::HasBlock( const s_str& sName )

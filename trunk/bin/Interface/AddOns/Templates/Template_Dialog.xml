@@ -5,7 +5,7 @@
                 <AbsDimension x="64" y="64"/>
             </Min>
         </ResizeBounds>
-        <Backdrop bgFile="Interface/BaseUI/Templates/DialogBackground.png" edgeFile="Interface/BaseUI/Templates/DialogBorder.png" tile="true">
+        <Backdrop bgFile="|DialogBackground.png" edgeFile="|DialogBorder.png" tile="true">
             <BackgroundInsets>
                 <AbsInset left="8" right="8" top="8" bottom="8"/>
             </BackgroundInsets>
@@ -15,7 +15,7 @@
         </HitRectInsets>
         <TitleRegion>
             <Size>
-                <AbsDimension x="100" y="30"/>
+                <AbsDimension x="140" y="30"/>
             </Size>
             <Anchors>
                 <Anchor point="TOP">
@@ -170,10 +170,10 @@
                 <HitRectInsets>
 					<AbsInset left="6" right="8" top="6" bottom="8"/>
 				</HitRectInsets>
-                <NormalTexture    file="Interface/BaseUI/Templates/DialogCloseButtonUp.png"/>
-                <PushedTexture    file="Interface/BaseUI/Templates/DialogCloseButtonDown.png"/>
-                <DisabledTexture  file="Interface/BaseUI/Templates/DialogCloseButtonDisabled.png"/>
-                <HighlightTexture file="Interface/BaseUI/Templates/DialogCloseButtonHighlight.png"/>
+                <NormalTexture    file="|DialogCloseButtonUp.png"/>
+                <PushedTexture    file="|DialogCloseButtonDown.png"/>
+                <DisabledTexture  file="|DialogCloseButtonDisabled.png"/>
+                <HighlightTexture file="|DialogCloseButtonHighlight.png"/>
                 <Scripts>
                     <OnClick>
                         this:GetParent():Hide();
@@ -183,7 +183,7 @@
         </Frames>
         <Layers>
             <Layer level="BACKGROUND">
-				<Texture name="$parentTitleBorder" file="Interface/BaseUI/Templates/DialogHeader.png">
+				<Texture name="$parentTitleBorder" file="|DialogHeader.png">
 					<Size>
 						<AbsDimension x="160" y="32"/>
 					</Size>

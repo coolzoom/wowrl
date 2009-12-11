@@ -168,17 +168,13 @@ namespace Frost
 
             /// Changes this widget's absolute width (in pixels).
             /** \param uiAbsWidth The new width
-            *   \note Width will automatically be adjusted to include
-            *         all of this widget's childs.
             */
-            void            SetAbsWidth(const s_uint& uiAbsWidth);
+            virtual void    SetAbsWidth(const s_uint& uiAbsWidth);
 
             /// Changes this widget's absolute height (in pixels).
             /** \param uiAbsHeight The new height
-            *   \note Height will automatically be adjusted to include
-            *         all of this widget's childs.
             */
-            void            SetAbsHeight(const s_uint& uiAbsHeight);
+            virtual void    SetAbsHeight(const s_uint& uiAbsHeight);
 
             /// Checks if this widget's width has been defined as absolute.
             /** \return 'true' if this widget's width has been defined as absolute
@@ -314,26 +310,26 @@ namespace Frost
 
             /// Creates/modifies an anchor.
             /** \param mPoint         The anchor point for this object
-            *   \param pObj           The anchor parent
+            *   \param sParentName    The Anchor's parent
             *   \param mRelativePoint The anchor point for the parent
             *   \param iX             The horizontal offset
             *   \param iY             The vertical offset
             */
             void            SetAbsPoint(AnchorPoint mPoint,
-                                        s_ptr<UIObject> pObj,
+                                        const s_str& sParentName,
                                         AnchorPoint mRelativePoint,
                                         const s_int& iX,
                                         const s_int& iY);
 
             /// Creates/modifies an anchor.
             /** \param mPoint         The anchor point for this object
-            *   \param pObj           The Anchor's parent
+            *   \param sParentName    The Anchor's parent
             *   \param mRelativePoint The anchor point for the parent
             *   \param fX             The horizontal offset
             *   \param fY             The vertical offset
             */
             void            SetRelPoint(AnchorPoint mPoint,
-                                        s_ptr<UIObject> pObj,
+                                        const s_str& sParentName,
                                         AnchorPoint mRelativePoint,
                                         const s_float& fX,
                                         const s_float& fY);
@@ -354,11 +350,16 @@ namespace Frost
             */
             s_uint          GetNumPoint() const;
 
-            /// Gets an anchor by its ID.
-            /** \param uiPoint The anchor ID
+            /// Returns one of this widget's Anchor.
+            /** \param mPoint The anchor point
             *   \return A pointer to the anchor, nullptr if none
             */
-            s_ptr<Anchor>   GetPoint(const s_uint& uiPoint);
+            s_ptr<Anchor>   GetPoint(AnchorPoint mPoint);
+
+            /// Returns all of this widgets's anchors.
+            /** \return All of this widgets's anchors
+            */
+            const s_map<AnchorPoint, Anchor>& GetPointList() const;
 
             /// Checks if this UIObject is virtual.
             /** \return 'true' if this UIObject is virtual

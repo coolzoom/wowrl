@@ -68,8 +68,6 @@ int LuaStatusBar::_GetStatusBarTexture( lua_State* pLua )
         pTexture->PushOnLua(mFunc.GetState());
         mFunc.NotifyPushed();
     }
-    else
-        mFunc.PushNil();
 
     return mFunc.Return();
 }

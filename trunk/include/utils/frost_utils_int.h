@@ -173,10 +173,18 @@ namespace Frost
                 return iValue_;
         }
 
+        /// Adjusts this int's value to be contained into the provided interval.
+        /** \param iMin The minimum value
+        *   \param iMax The maximum value
+        */
+        void Clamp(const s_int_t& iMin, const s_int_t& iMax)
+        {
+            iValue_ = (*this < iMax) ? ((*this > iMin) ? iValue_ : iMin.iValue_) : iMax.iValue_;
+        }
+
         /// Returns the power of two just above the value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-
         s_uint_t<T> GetNearestPowerOfTwo() const
         {
             if (IsValid())
@@ -759,6 +767,17 @@ namespace Frost
         static s_int_t Max(const s_int_t& iLeft, const s_int_t& iRight)
         {
             return (iLeft <= iRight) ? iRight : iLeft;
+        }
+
+        /// Clamps the provided value into the provided interval.
+        /** \param iValue The value to clamp
+        *   \param iMin   The minimum value
+        *   \param iMax   The maximum value
+        *   \return The clamped value
+        */
+        static s_int_t Clamp(const s_int_t& iValue, const s_int_t& iMin, const s_int_t& iMax)
+        {
+            return (iValue < iMax) ? ((iValue > iMin) ? iValue : iMin) : iMax;
         }
 
         /// Returns a random int in the provided range.

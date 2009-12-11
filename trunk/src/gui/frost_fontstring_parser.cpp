@@ -26,7 +26,7 @@ void FontString::ParseAttributes_( s_ptr<XML::Block> pBlock )
     LayeredRegion::ParseAttributes_(pBlock);
 
     SetFont(
-        pBlock->GetAttribute("font"),
+        GUIManager::GetSingleton()->ParseFileName(pBlock->GetAttribute("font")),
         s_uint(pBlock->GetAttribute("fontHeight"))
     );
 
