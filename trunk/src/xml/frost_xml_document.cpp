@@ -817,6 +817,12 @@ void Document::DefState::ReadSingleTag( const s_str& sTagContent )
         sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, uiRadioGroup, false
     );
 
+    if (uiRadioGroup.IsValid() && sName == ".")
+    {
+        pCurrentParentBlock_->SetRadioGroupOptional(uiRadioGroup);
+        return;
+    }
+
     // Prepare attributes
     s_ctnr<s_str> lAttributes;
     if (lWords.GetSize() > 1)
@@ -1039,6 +1045,12 @@ void Document::DefState::ReadOpeningTag( const s_str& sTagContent )
     ReadPreDefCommands_(
         sName, sParent, uiMin, uiMax, bCopy, bPreDefining, bLoad, uiRadioGroup, true
     );
+
+    if (uiRadioGroup.IsValid() && sName == ".")
+    {
+        pCurrentParentBlock_->SetRadioGroupOptional(uiRadioGroup);
+        return;
+    }
 
     s_ctnr<s_str> lAttributes;
     if (lWords.GetSize() > 1)

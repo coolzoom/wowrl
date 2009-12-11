@@ -1,6 +1,6 @@
 MenuBar.Config = {
     ["barHeight"] = 16,
-    ["barColor"] = {["a"] = 0.8, ["r"] = 0.75, ["g"] = 0.75, ["b"] = 0.75},
+    ["barColor"] = PackColor(0.75, 0.75, 0.75, 0.8),
 }
 
 MenuBar.lastMenu = nil;
@@ -51,7 +51,7 @@ function MenuBar:CreateMenuDropdown(caption)
             local backdrop = dropdown:GetBackdrop();
             backdrop.edgeFile = "Interface/Editor/MenuBar/DropdownBorder.png";
             dropdown:SetBackdrop(backdrop);
-            dropdown:SetBackdropColor(MenuBar.Config.barColor.r, MenuBar.Config.barColor.g, MenuBar.Config.barColor.b, MenuBar.Config.barColor.a);
+            dropdown:SetBackdropColor(UnpackColor(MenuBar.Config.barColor));
             
             dropdown:SetScript("OnShow",
                 function()

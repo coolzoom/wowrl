@@ -29,6 +29,16 @@ s_str Slider::Serialize( const s_str& sTab ) const
     return Frame::Serialize(sTab);
 }
 
+s_bool Slider::CanUseScript( const s_str& sScriptName ) const
+{
+    if (Frame::CanUseScript(sScriptName))
+        return true;
+    else if (sScriptName == "OnValueChanged")
+        return true;
+    else
+        return false;
+}
+
 void Slider::CopyFrom( s_ptr<UIObject> pObj )
 {
     Frame::CopyFrom(pObj);
@@ -44,10 +54,29 @@ void Slider::CopyFrom( s_ptr<UIObject> pObj )
         this->SetThumbDrawLayer(pSlider->GetThumbDrawLayer());
         this->SetOrientation(pSlider->GetOrientation());
 
-        CreateThumbTexture_();
-        pThumbTexture_->CopyFrom(pSlider->GetThumbTexture());
-        GUIManager::GetSingleton()->AddUIObject(pThumbTexture_);
-        AddRegion(pThumbTexture_);
+        s_ptr<Texture> pThumb = pSlider->GetThumbTexture();
+        if (pThumb)
+        {
+            this->CreateThumbTexture_();
+            if (this->IsVirtual())
+                pThumbTexture_->SetVirtual();
+            pThumbTexture_->SetName(pThumb->GetName());
+            if (!GUIManager::GetSingleton()->AddUIObject(pThumbTexture_))
+            {
+                Warning(lType_.Back(),
+                    "Trying to add \""+pThumb->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pThumbTexture_->GetName()+"\". Skipped."
+                );
+                pThumbTexture_.Delete();
+            }
+            else
+            {
+                this->AddRegion(pThumbTexture_);
+                pThumbTexture_->CopyFrom(pThumb);
+                if (!pThumbTexture_->IsVirtual())
+                    pThumbTexture_->CreateGlue();
+            }
+        }
     }
 }
 
@@ -118,6 +147,7 @@ void Slider::SetValue( const s_float& fValue )
     {
         fValue_ = fValue;
         fValue_.Clamp(fMinValue_, fMaxValue_);
+        lQueuedEventList_.PushBack("ValueChanged");
         FireUpdateThumbTexture_();
     }
 }
@@ -275,6 +305,8 @@ void Slider::Update()
         StepValue(fMinValue_, fValueStep_);
         StepValue(fMaxValue_, fValueStep_);
 
+        s_float fOldValue = fValue_;
+
         if (bThumbMoved_)
         {
             if (mOrientation_ == ORIENT_HORIZONTAL)
@@ -288,6 +320,9 @@ void Slider::Update()
         }
 
         StepValue(fValue_, fValueStep_);
+        if (fValue_ != fOldValue)
+            lQueuedEventList_.PushBack("ValueChanged");
+
         s_float fCoef = (fValue_ - fMinValue_)/(fMaxValue_ - fMinValue_);
 
         s_ptr<Anchor> pAnchor = pThumbTexture_->GetPoint(ANCHOR_CENTER);

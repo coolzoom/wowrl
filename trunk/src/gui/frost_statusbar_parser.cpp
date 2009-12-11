@@ -41,33 +41,26 @@ void StatusBar::ParseBlock( s_ptr<XML::Block> pBlock )
         }
     }
 
-    CreateBarTexture_();
-
-    Anchor mAnchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT);
 
     s_ptr<XML::Block> pBarBlock = pBlock->GetRadioBlock();
-    if (pBarBlock->GetName() == "BarTexture")
+    if (pBarBlock)
     {
-        pBarTexture_->ParseBlock(pBarBlock);
-        pBarTexture_->ClearAllPoints();
-        pBarTexture_->SetPoint(mAnchor);
-    }
-    else
-    {
-        pBarTexture_->SetName("$parentBarTexture");
-        GUIManager::GetSingleton()->AddUIObject(pBarTexture_);
-
-        if (!bVirtual_)
-            pBarTexture_->CreateGlue();
-
-        AddRegion(pBarTexture_);
-
-        pBarTexture_->SetPoint(mAnchor);
-        SetBarColor(Color(
-            s_uchar(s_float(pBarBlock->GetAttribute("a"))*255.0f),
-            s_uchar(s_float(pBarBlock->GetAttribute("r"))*255.0f),
-            s_uchar(s_float(pBarBlock->GetAttribute("g"))*255.0f),
-            s_uchar(s_float(pBarBlock->GetAttribute("b"))*255.0f)
-        ));
+        Anchor mAnchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT);
+        if (pBarBlock->GetName() == "BarTexture")
+        {
+            CreateBarTexture_();
+            pBarTexture_->ParseBlock(pBarBlock);
+            pBarTexture_->ClearAllPoints();
+            pBarTexture_->SetPoint(mAnchor);
+        }
+        else
+        {
+            SetBarColor(Color(
+                s_uchar(s_float(pBarBlock->GetAttribute("a"))*255.0f),
+                s_uchar(s_float(pBarBlock->GetAttribute("r"))*255.0f),
+                s_uchar(s_float(pBarBlock->GetAttribute("g"))*255.0f),
+                s_uchar(s_float(pBarBlock->GetAttribute("b"))*255.0f)
+            ));
+        }
     }
 }

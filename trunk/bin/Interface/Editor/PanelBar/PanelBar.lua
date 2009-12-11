@@ -1,6 +1,6 @@
 PanelBar.Config = {
-    ["headerColor"] = {["a"] = 0.8, ["r"] = 0.75, ["g"] = 0.75, ["b"] = 0.75},
-    ["panelColor"] = {["a"] = 0.8, ["r"] = 0.75, ["g"] = 0.75, ["b"] = 0.75},
+    ["headerColor"] = PackColor(0.75, 0.75, 0.75, 0.8),
+    ["panelColor"] = PackColor(0.75, 0.75, 0.75, 0.8),
     ["panelWidth"] = 200,
 };
 
@@ -23,7 +23,7 @@ function PanelBar:AddPanel(name)
             else
                 header:SetPoint("TOPRIGHT", panel, "TOPLEFT");
             end
-            header.Background:SetVertexColor(PanelBar.Config.headerColor.r, PanelBar.Config.headerColor.g, PanelBar.Config.headerColor.b, PanelBar.Config.headerColor.a);
+            header.Background:SetVertexColor(UnpackColor(PanelBar.Config.headerColor));
             local thumb = header:CreateTexture("$parentThumbnail", "ARTWORK");
             if (thumb) then
                 thumb:SetWidth(64);

@@ -1,4 +1,6 @@
 Templates.Dialog = {};
 Templates.Dialog.Config = {
-    ["mainColor"] = {["a"] = 0.8, ["r"] = 0.75, ["g"] = 0.75, ["b"] = 0.75},
+    ["mainColor"]   = PackColor(0.75, 0.75, 0.75, 0.8),
+    ["titleColor"]  = PackColor(0.5, 0.5, 0.5, 0.8),
+    ["sliderColor"] = PackColor(0.2, 0.2, 0.2, 0.5),
 }

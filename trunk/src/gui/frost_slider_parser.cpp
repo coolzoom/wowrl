@@ -43,12 +43,16 @@ void Slider::ParseBlock( s_ptr<XML::Block> pBlock )
         }
     }
 
-    CreateThumbTexture_();
+    s_ptr<XML::Block> pThumbBlock = pBlock->GetBlock("ThumbTexture");
+    if (pThumbBlock)
+    {
+        CreateThumbTexture_();
 
-    pThumbTexture_->ParseBlock(pBlock->GetBlock("ThumbTexture"));
-    pThumbTexture_->ClearAllPoints();
-    pThumbTexture_->SetPoint(Anchor(
-        pThumbTexture_, ANCHOR_CENTER, "$parent",
-        GetOrientation() == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_BOTTOM
-    ));
+        pThumbTexture_->ParseBlock(pThumbBlock);
+        pThumbTexture_->ClearAllPoints();
+        pThumbTexture_->SetPoint(Anchor(
+            pThumbTexture_, ANCHOR_CENTER, "$parent",
+            GetOrientation() == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_BOTTOM
+        ));
+    }
 }
