@@ -58,7 +58,7 @@ namespace XML
 
         /// Returns the current parsing location.
         /** \return The current parsing location
-        *   \note Format : <filename>:<line>
+        *   \note Format : filename:line
         */
         s_str         GetCurrentLocation() const;
 

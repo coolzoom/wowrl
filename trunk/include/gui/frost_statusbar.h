@@ -94,7 +94,7 @@ namespace Frost
             void           SetBarTexture(s_ptr<Texture> pBarTexture);
 
             /// Sets this StatusBar's bar color.
-            /** \param pBarTexture The bar color
+            /** \param mBarColor The bar color
             */
             void           SetBarColor(const Color& mBarColor);
 

@@ -201,7 +201,7 @@ namespace Frost
 
         template<class N>
         /// Checks if this pointer equals another
-        /** \param pValue The pointer to test
+        /** \param mValue The pointer to test
         */
         s_bool operator == (const s_refptr<N>& mValue)
         {
@@ -218,7 +218,7 @@ namespace Frost
 
         template<class N>
         /// Checks if this pointer is different from another
-        /** \param pValue The pointer to test
+        /** \param mValue The pointer to test
         */
         s_bool operator != (const s_refptr<N>& mValue)
         {
