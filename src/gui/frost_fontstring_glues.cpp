@@ -308,10 +308,20 @@ int LuaFontString::_SetText( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetText", pLua);
     mFunc.Add(0, "text", Lua::TYPE_STRING);
+    mFunc.Add(0, "number", Lua::TYPE_NUMBER);
+    mFunc.Add(0, "bool", Lua::TYPE_BOOLEAN);
 
     if (mFunc.Check())
     {
-        pFontStringParent_->SetText(mFunc.Get(0)->GetString());
+        s_str sText;
+        if (mFunc.Get(0)->GetType() == Lua::TYPE_STRING)
+            sText = mFunc.Get(0)->GetString();
+        else if (mFunc.Get(0)->GetType() == Lua::TYPE_NUMBER)
+            sText = s_str(mFunc.Get(0)->GetNumber());
+        else if (mFunc.Get(0)->GetType() == Lua::TYPE_BOOLEAN)
+            sText = s_str(mFunc.Get(0)->GetBool());
+
+        pFontStringParent_->SetText(sText);
     }
 
     return mFunc.Return();

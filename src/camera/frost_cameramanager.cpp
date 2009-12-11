@@ -22,6 +22,7 @@ namespace Frost
 
     CameraManager::CameraManager()
     {
+        mBackgroundColor_ = Color::BLACK;
     }
 
     CameraManager::~CameraManager()
@@ -150,7 +151,24 @@ namespace Frost
         return pMainViewport_;
     }
 
-    void CameraManager::UpdateCameras(const s_float& fDelta)
+    void CameraManager::SetBackgroundColor( const Color& mColor )
+    {
+        if (pSceneViewport_)
+        {
+            Ogre::ColourValue mCV;
+            mCV.setAsABGR(mColor.GetPacked().Get());
+            pSceneViewport_->setBackgroundColour(mCV);
+        }
+
+        mBackgroundColor_ = mColor;
+    }
+
+    const Color& CameraManager::GetBackgroundColor() const
+    {
+        return mBackgroundColor_;
+    }
+
+    void CameraManager::UpdateCameras( const s_float& fDelta )
     {
         s_map< s_uint, s_ptr<Camera> >::iterator iterCamera;
         foreach (iterCamera, lCameraList_)

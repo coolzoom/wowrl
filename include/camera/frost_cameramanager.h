@@ -51,6 +51,16 @@ namespace Frost
         */
         s_ptr<Ogre::Viewport> GetMainViewport();
 
+        /// Sets the camera's background color.
+        /** \param mColor The background color
+        */
+        void            SetBackgroundColor(const Color& mColor);
+
+        /// Returns the camera's background color.
+        /** \return The camera's background color
+        */
+        const Color&    GetBackgroundColor() const;
+
         /// Updates all cameras.
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by Engine.
@@ -104,6 +114,8 @@ namespace Frost
         s_ptr<Ogre::Viewport> pMainViewport_;
         s_ptr<Ogre::Viewport> pSceneViewport_;
         s_bool                bNewViewport_;
+
+        Color mBackgroundColor_;
 
     };
 }

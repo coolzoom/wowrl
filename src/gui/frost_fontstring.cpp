@@ -159,10 +159,10 @@ void FontString::CopyFrom( s_ptr<UIObject> pObj )
 {
     UIObject::CopyFrom(pObj);
 
-    uiAbsWidth_ = s_uint::NaN;
+    /*uiAbsWidth_ = s_uint::NaN;
     uiAbsHeight_ = s_uint::NaN;
     fRelWidth_ = s_float::NaN;
-    fRelHeight_ = s_float::NaN;
+    fRelHeight_ = s_float::NaN;*/
 
     s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pObj);
 

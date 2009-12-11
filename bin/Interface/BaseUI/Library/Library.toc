@@ -1,0 +1,7 @@
+## Interface: 0045
+## Title: Library
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+Library_Color.lua

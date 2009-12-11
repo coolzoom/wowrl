@@ -1,0 +1,188 @@
+<Ui>
+    <Frame name="FrameTemplate_ColorSlider" virtual="true">
+        <Size>
+            <AbsDimension y="12"/>
+        </Size>
+        <Anchors>
+            <Anchor point="LEFT" relativeTo="$parent"/>
+            <Anchor point="RIGHT" relativeTo="$parentSwatch" relativePoint="LEFT"/>
+        </Anchors>
+        <Layers>
+            <Layer>
+                <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT">
+                    <Size>
+                        <AbsDimension x="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentValueString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="RIGHT" text="0">
+                    <Size>
+                        <AbsDimension x="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT" relativeTo="$parentTitleString" relativePoint="LEFT">
+                            <Offset>
+                                <AbsDimension x="-5"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Slider name="$parentSlider" minValue="0" maxValue="255" defaultValue="255" valueStep="1" orientation="HORIZONTAL">
+                <Size>
+                    <AbsDimension y="6"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="16"/>
+                        </Offset>          
+                    </Anchor>
+                    <Anchor point="RIGHT" relativeTo="$parentValueString" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-4"/>
+                        </Offset>          
+                    </Anchor>
+                </Anchors>
+                <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                <ThumbTexture file="Interface/Editor/Templates/SliderThumb.png">
+                    <Size>
+                        <AbsDimension x="8" y="8"/>
+                    </Size>
+                </ThumbTexture>
+                <Scripts>
+                    <OnLoad>
+                        this:SetBackdropColor(UnpackColor(Templates.Dialog.Config.sliderColor));
+                    </OnLoad>
+                    <OnValueChanged>
+                        local value = this:GetValue();
+                        this:GetParent().ValueString:SetText(value);
+                        ColorSelector.currentColor[this:GetParent().chanel] = value;
+                        ColorSelector:OnColorUpdate();
+                    </OnValueChanged>
+                </Scripts>
+            </Slider>
+        </Frames>
+    </Frame>
+    
+    <Frame name="ColorSelector" inherits="FrameTemplate_Dialog" hidden="true">
+        <Size>
+            <AbsDimension x="400" y="90"/>
+        </Size>
+        <ResizeBounds>
+            <Min>
+                <AbsDimension x="230" y="90"/>
+            </Min>
+            <Max>
+                <AbsDimension y="90"/>
+            </Max>
+        </ResizeBounds>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                base:OnLoad();
+                this.Title.TitleString:SetText(ColorSelector.Locale["Title"]);
+                this.currentColor = PackColor(1,1,1,1);
+            </OnLoad>
+        </Scripts>
+        <Frames>
+            <Frame name="$parentSwatch">
+                <Size>
+                    <AbsDimension x="60" y="40"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-16" y="32"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Frames>
+                    <Frame name="$parentColorZone" setAllPoints="true">
+                        <Backdrop edgeFile="Interface/Editor/Templates/Border2PX.png">
+                            <BackgroundInsets>
+                                <AbsInset left="2" right="2" top="2" bottom="2"/>
+                            </BackgroundInsets>
+                            <BackgroundColor r="0" g="0" b="0"/>
+                        </Backdrop>
+                    </Frame>
+                </Frames>
+                <Backdrop bgFile="Interface/Editor/Templates/Checker8PX.png" tile="true">
+                    <BackgroundInsets>
+                        <AbsInset left="2" right="2" top="2" bottom="2"/>
+                    </BackgroundInsets>
+                </Backdrop>
+            </Frame>
+            <Frame name="$parentSliderA" inherits="FrameTemplate_ColorSlider">
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension y="28"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this.TitleString:SetText(ColorSelector.Locale["SliderA"]);
+                        this.chanel = "a";
+                    </OnLoad>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentSliderR" inherits="FrameTemplate_ColorSlider">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentSliderA" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this.TitleString:SetText(ColorSelector.Locale["SliderR"]);
+                        this.chanel = "r";
+                    </OnLoad>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentSliderG" inherits="FrameTemplate_ColorSlider">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentSliderR" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this.TitleString:SetText(ColorSelector.Locale["SliderG"]);
+                        this.chanel = "g";
+                    </OnLoad>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentSliderB" inherits="FrameTemplate_ColorSlider">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentSliderG" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="0"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this.TitleString:SetText(ColorSelector.Locale["SliderB"]);
+                        this.chanel = "b";
+                    </OnLoad>
+                </Scripts>
+            </Frame>
+        </Frames>
+    </Frame>
+</Ui>

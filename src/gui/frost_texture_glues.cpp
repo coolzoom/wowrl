@@ -75,7 +75,7 @@ int LuaTexture::_GetTexture( lua_State* pLua )
 
 int LuaTexture::_GetVertexColor( lua_State* pLua )
 {
-    Lua::Function mFunc("Texture:GetVertexColor", pLua, 0);
+    Lua::Function mFunc("Texture:GetVertexColor", pLua, 4);
 
     Color mColor = pTextureParent_->GetVertexColor();
 

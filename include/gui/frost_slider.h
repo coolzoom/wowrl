@@ -38,6 +38,12 @@ namespace Frost
             */
             virtual s_str  Serialize(const s_str& sTab) const;
 
+            /// Returns 'true' if this Slider can use a script.
+            /** \param sScriptName The name of the script
+            *   \note This method can be overriden if needed.
+            */
+            virtual s_bool CanUseScript(const s_str& sScriptName) const;
+
             /// Copies an UIObject's parameters into this Slider (inheritance).
             /** \param pObj The UIObject to copy
             */

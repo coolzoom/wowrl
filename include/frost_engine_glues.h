@@ -22,10 +22,12 @@ namespace Frost
 
         LuaEngine(lua_State* luaVM);
 
+        int _GetBackgroundColor(lua_State*);
         int _LoadZone(lua_State*);
         int _LoadZoneFile(lua_State*);
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);
+        int _SetBackgroundColor(lua_State*);
         int _UnloadZone(lua_State*);
 
         // Lunar function

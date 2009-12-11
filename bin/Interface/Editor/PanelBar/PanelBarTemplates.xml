@@ -8,7 +8,7 @@
         <Scripts>
             <OnLoad>
                 this:SetBackdrop({{["top"] = 3}});
-                this:SetBackdropColor(PanelBar.Config.panelColor.r, PanelBar.Config.panelColor.g, PanelBar.Config.panelColor.b, PanelBar.Config.panelColor.a);
+                this:SetBackdropColor(UnpackColor(PanelBar.Config.panelColor));
             </OnLoad>
         </Scripts>
         <Frames>
@@ -51,9 +51,6 @@
                         </Anchor>
                     </Anchors>
                     <Color r="1" g="1" b="1"/>
-                    <!Shadow>
-                        <Offset x="1" y="1"/>
-                    </Shadow>
                 </FontString>
             </Layer>
         </Layers>

@@ -153,7 +153,6 @@ int Frost::l_CreateFrame( lua_State* pLua )
             }
         }
 
-
         pNewFrame->SetName(mFunc.Get(1)->GetString());
 
         if (GUIManager::GetSingleton()->GetUIObjectByName(pNewFrame->GetName()))

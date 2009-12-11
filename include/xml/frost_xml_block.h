@@ -280,6 +280,11 @@ namespace XML
         */
         void          SetDocument(s_ptr<Document> pDoc);
 
+        /// Flags a radio group as optional.
+        /** \param uiGroup The group ID
+        */
+        void          SetRadioGroupOptional(const s_uint& uiGroup);
+
         /// Returns the number of sub-blocks defined for this Block.
         /** \return the number of sub-blocks defined for this Block
         *   \note Only used in definition stage.
@@ -385,6 +390,7 @@ namespace XML
         s_map<s_str, PredefinedBlock> lPreDefBlockList_;
 
         s_map< s_uint, s_ptr<Block> > lRadioBlockList_;
+        s_ctnr<s_uint>                lOptionalRadioGroupList_;
 
         s_multimap< s_str, s_ptr<Block> >                                   lFoundBlockList_;
         s_ctnr<s_multimap< s_str, s_ptr<Block> >::iterator>                 lFoundBlockStack_;

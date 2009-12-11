@@ -5,7 +5,7 @@
                 <AbsDimension x="64" y="64"/>
             </Min>
         </ResizeBounds>
-        <Backdrop edgeFile="Interface/Editor/Templates/DialogBorder.png">
+        <Backdrop edgeFile="|DialogBorder.png">
             <BackgroundInsets>
                 <AbsInset left="8" right="8" top="8" bottom="8"/>
             </BackgroundInsets>
@@ -15,52 +15,35 @@
         </HitRectInsets>
         <TitleRegion>
             <Size>
-                <AbsDimension y="16"/>
+                <AbsDimension y="19"/>
             </Size>
             <Anchors>
-                <Anchor point="TOP" relativePoint="TOP"/>
-                <Anchor point="LEFT" relativePoint="LEFT"/>
-                <Anchor point="RIGHT" relativePoint="RIGHT"/>
+                <Anchor point="TOP" relativePoint="TOP">
+                    <Offset>
+                        <AbsDimension y="5"/>
+                    </Offset>
+                </Anchor>
+                <Anchor point="LEFT" relativePoint="LEFT">
+                    <Offset>
+                        <AbsDimension y="8"/>
+                    </Offset>
+                </Anchor>
+                <Anchor point="RIGHT" relativePoint="RIGHT">
+                    <Offset>
+                        <AbsDimension y="8"/>
+                    </Offset>
+                </Anchor>
             </Anchors>
         </TitleRegion>
         <Scripts>
             <OnLoad>
-                this:SetBackdropColor(
-                    Templates.Dialog.Config.mainColor.r,
-                    Templates.Dialog.Config.mainColor.g,
-                    Templates.Dialog.Config.mainColor.b,
-                    Templates.Dialog.Config.mainColor.a
-                );
+                this:SetBackdropColor(UnpackColor(Templates.Dialog.Config.mainColor));
             </OnLoad>
         </Scripts>
         <Frames>
-            <Frame name="$parentResizeZoneTL" enableMouse="true">
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPLEFT">
-                        <Offset>
-                            <AbsDimension x="5" y="5"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
-            <Frame name="$parentResizeZoneTR" enableMouse="true">
-                <Size>
-                    <AbsDimension x="20" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPLEFT">
-                        <Offset>
-                            <AbsDimension x="5" y="5"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-            </Frame>
             <Frame name="$parentResizeZoneBR" enableMouse="true">
                 <Size>
-                    <AbsDimension x="20" y="20"/>
+                    <AbsDimension x="10" y="10"/>
                 </Size>
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT">
@@ -83,7 +66,7 @@
             </Frame>
             <Frame name="$parentResizeZoneBL" enableMouse="true">
                 <Size>
-                    <AbsDimension x="20" y="20"/>
+                    <AbsDimension x="10" y="10"/>
                 </Size>
                 <Anchors>
                     <Anchor point="BOTTOMLEFT">
@@ -106,11 +89,11 @@
             </Frame>
             <Frame name="$parentResizeZoneL" enableMouse="true">
                 <Size>
-                    <AbsDimension x="20"/>
+                    <AbsDimension x="3"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOP" relativeTo="$parentResizeZoneTL" relativePoint="BOTTOM"/>
-                    <Anchor point="BOTTOM" relativeTo="$parentResizeZoneBL" relativePoint="TOP"/>
+                    <Anchor point="TOPLEFT" relativeTo="$parentResizeZoneTL" relativePoint="BOTTOMLEFT"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$parentResizeZoneBL" relativePoint="TOPLEFT"/>
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -126,11 +109,11 @@
             </Frame>
             <Frame name="$parentResizeZoneR" enableMouse="true">
                 <Size>
-                    <AbsDimension x="20"/>
+                    <AbsDimension x="3"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="TOP" relativeTo="$parentResizeZoneTR" relativePoint="BOTTOM"/>
-                    <Anchor point="BOTTOM" relativeTo="$parentResizeZoneBR" relativePoint="TOP"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentResizeZoneTR" relativePoint="BOTTOMRIGHT"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$parentResizeZoneBR" relativePoint="TOPRIGHT"/>
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -146,11 +129,11 @@
             </Frame>
             <Frame name="$parentResizeZoneB" enableMouse="true">
                 <Size>
-                    <AbsDimension y="20"/>
+                    <AbsDimension y="3"/>
                 </Size>
                 <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parentResizeZoneBL" relativePoint="RIGHT"/>
-                    <Anchor point="RIGHT" relativeTo="$parentResizeZoneBR" relativePoint="LEFT"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$parentResizeZoneBL" relativePoint="BOTTOMRIGHT"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$parentResizeZoneBR" relativePoint="BOTTOMLEFT"/>
                 </Anchors>
                 <Scripts>
                     <OnLoad>
@@ -171,29 +154,24 @@
                 <Anchors>
                     <Anchor point="TOP" relativePoint="TOP">
                         <Offset>
-                            <AbsDimension y="6"/>
+                            <AbsDimension y="8"/>
                         </Offset>
                     </Anchor>
                     <Anchor point="LEFT" relativePoint="LEFT">
                         <Offset>
-                            <AbsDimension x="6"/>
+                            <AbsDimension x="8"/>
                         </Offset>
                     </Anchor>
                     <Anchor point="RIGHT" relativePoint="RIGHT">
                         <Offset>
-                            <AbsDimension x="-6"/>
+                            <AbsDimension x="-8"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
                 <Scripts>
                     <OnLoad>
                         this:SetBackdrop({});
-                        this:SetBackdropColor(
-                            Templates.Dialog.Config.mainColor.r,
-                            Templates.Dialog.Config.mainColor.g,
-                            Templates.Dialog.Config.mainColor.b,
-                            Templates.Dialog.Config.mainColor.a
-                        );
+                        this:SetBackdropColor(UnpackColor(Templates.Dialog.Config.titleColor));
                     </OnLoad>
                 </Scripts>
                 <Layers>
@@ -205,7 +183,7 @@
                             <Anchors>
                                 <Anchor point="CENTER"/>
                             </Anchors>
-                            <Color r="0" g="0" b="0"/>
+                            <Color r="1" g="1" b="1"/>
                         </FontString>
                     </Layer>
                 </Layers>
@@ -225,9 +203,9 @@
                             <Anchors>
                                 <Anchor point="CENTER"/>
                             </Anchors>
-                            <Color r="0.0" g="0.0" b="0.0"/>
+                            <Color r="1" g="1" b="1"/>
                         </NormalText>
-                        <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
+                        <HighlightTexture file="|ButtonHighlight.png"/>
                         <Scripts>
                             <OnClick>
                                 this:GetParent():GetParent():Hide();

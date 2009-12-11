@@ -307,7 +307,7 @@
 
 <d[Frame]:Slider b:enableMouse="true" n:minValue="0" n:maxValue="1" n:defaultValue="1" n:valueStep="0.1" orientation="VERTICAL" drawLayer="OVERLAY">
 
-    <n[1,1]:c[Texture]:ThumbTexture name="$parentThumbTexture"/>
+    <n[.,1]:c[Texture]:ThumbTexture name="$parentThumbTexture"/>
 
     <n[.,1]:Scripts>
         <n[.,1]:OnDragStart/>
@@ -335,6 +335,7 @@
 
     <n[*]:c[Texture]:BarTexture name="$parentBarTexture"/>
     <n[*]:BarColor n:a="1" n:r="0.0" n:g="0.0" n:b="0.0"/>
+    <n[*]:./>
 
     <n[.,1]:Scripts>
         <n[.,1]:OnDragStart/>

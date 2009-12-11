@@ -51,24 +51,10 @@ void Button::CreateGlue()
 
 s_bool Button::CanUseScript( const s_str& sScriptName ) const
 {
-    if ((sScriptName == "OnClick") ||
-        (sScriptName == "OnDoubleClick") ||
-        (sScriptName == "OnDragStart") ||
-        (sScriptName == "OnDragStop") ||
-        (sScriptName == "OnEnter") ||
-        (sScriptName == "OnEvent") ||
-        (sScriptName == "OnHide") ||
-        (sScriptName == "OnKeyDown") ||
-        (sScriptName == "OnKeyUp") ||
-        (sScriptName == "OnLeave") ||
-        (sScriptName == "OnLoad") ||
-        (sScriptName == "OnMouseDown") ||
-        (sScriptName == "OnMouseUp") ||
-        (sScriptName == "OnMouseWheel") ||
-        (sScriptName == "OnReceiveDrag") ||
-        (sScriptName == "OnShow") ||
-        (sScriptName == "OnSizeChanged") ||
-        (sScriptName == "OnUpdate"))
+    if (Frame::CanUseScript(sScriptName))
+        return true;
+    else if ((sScriptName == "OnClick") ||
+        (sScriptName == "OnDoubleClick"))
         return true;
     else
         return false;

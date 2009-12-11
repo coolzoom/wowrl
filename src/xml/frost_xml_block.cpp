@@ -331,7 +331,7 @@ s_bool Block::CheckBlocks()
         s_map< s_uint, s_ptr<Block> >::iterator iterRadio;
         foreach (iterRadio, lRadioBlockList_)
         {
-            if (!iterRadio->second)
+            if (!iterRadio->second && !lOptionalRadioGroupList_.Find(iterRadio->first))
             {
                 Error(pDoc_->GetCurrentFileName()+":"+pDoc_->GetCurrentLineNbr()+" : "+sName_,
                     "No block found for radio group "+iterRadio->first+"."
@@ -468,6 +468,18 @@ const s_uint& Block::GetRadioGroup() const
 const s_bool& Block::HasRadioChilds() const
 {
     return bRadioChilds_;
+}
+
+void Block::SetRadioGroupOptional( const s_uint& uiGroup )
+{
+    if (!lOptionalRadioGroupList_.Find(uiGroup))
+        lOptionalRadioGroupList_.PushBack(uiGroup);
+    else
+    {
+        Warning(sFile_+":"+uiLineNbr_+":"+sName_,
+            "Radio group "+uiGroup+" has already been flagged as optional. Ignoring."
+        );
+    }
 }
 
 s_uint Block::GetDefChildNumber() const

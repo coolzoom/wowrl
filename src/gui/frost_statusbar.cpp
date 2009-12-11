@@ -31,23 +31,9 @@ s_str StatusBar::Serialize( const s_str& sTab ) const
 
 s_bool StatusBar::CanUseScript( const s_str& sScriptName ) const
 {
-    if ((sScriptName == "OnValueChanged") ||
-        (sScriptName == "OnDragStart") ||
-        (sScriptName == "OnDragStop") ||
-        (sScriptName == "OnEnter") ||
-        (sScriptName == "OnEvent") ||
-        (sScriptName == "OnHide") ||
-        (sScriptName == "OnKeyDown") ||
-        (sScriptName == "OnKeyUp") ||
-        (sScriptName == "OnLeave") ||
-        (sScriptName == "OnLoad") ||
-        (sScriptName == "OnMouseDown") ||
-        (sScriptName == "OnMouseUp") ||
-        (sScriptName == "OnMouseWheel") ||
-        (sScriptName == "OnReceiveDrag") ||
-        (sScriptName == "OnShow") ||
-        (sScriptName == "OnSizeChanged") ||
-        (sScriptName == "OnUpdate"))
+    if (Frame::CanUseScript(sScriptName))
+        return true;
+    else if (sScriptName == "OnValueChanged")
         return true;
     else
         return false;
@@ -67,10 +53,28 @@ void StatusBar::CopyFrom( s_ptr<UIObject> pObj )
         this->SetBarDrawLayer(pStatusBar->GetBarDrawLayer());
         this->SetOrientation(pStatusBar->GetOrientation());
 
-        CreateBarTexture_();
-        pBarTexture_->CopyFrom(pStatusBar->GetBarTexture());
-        GUIManager::GetSingleton()->AddUIObject(pBarTexture_);
-        AddRegion(pBarTexture_);
+        s_ptr<Texture> pBar = pStatusBar->GetBarTexture();
+        if (pBar)
+        {
+            this->CreateBarTexture_();
+            if (this->IsVirtual())
+                pBarTexture_->SetVirtual();
+            pBarTexture_->SetName(pBar->GetName());
+            if (!GUIManager::GetSingleton()->AddUIObject(pBarTexture_))
+            {
+                Warning(lType_.Back(),
+                    "Trying to add \""+pBar->GetName()+"\" to \""+sName_+"\",\n"
+                    "but its name was already taken : \""+pBarTexture_->GetName()+"\". Skipped."
+                );
+            }
+            else
+            {
+                this->AddRegion(pBarTexture_);
+                pBarTexture_->CopyFrom(pBar);
+                if (!pBarTexture_->IsVirtual())
+                    pBarTexture_->CreateGlue();
+            }
+        }
     }
 }
 
@@ -151,18 +155,38 @@ void StatusBar::SetBarDrawLayer( const s_str& sBarLayer )
 void StatusBar::SetBarTexture( s_ptr<Texture> pBarTexture )
 {
     pBarTexture_ = pBarTexture;
-    pBarTexture_->ClearAllPoints();
-    pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, sName_, ANCHOR_BOTTOMLEFT));
-    FireUpdateBarTexture_();
+    if (pBarTexture_)
+    {
+        pBarTexture_->ClearAllPoints();
+        pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT));
+        FireUpdateBarTexture_();
+    }
 }
 
 void StatusBar::SetBarColor( const Color& mBarColor )
 {
-    if (pBarTexture_)
+    if (!pBarTexture_)
     {
-        mBarColor_ = mBarColor;
-        pBarTexture_->SetColor(mBarColor_);
+        CreateBarTexture_();
+        pBarTexture_->SetName("$parentBarTexture");
+        GUIManager::GetSingleton()->AddUIObject(pBarTexture_);
+
+        if (!pBarTexture_)
+        {
+            pBarTexture_.Delete();
+            return;
+        }
+
+        if (!bVirtual_)
+            pBarTexture_->CreateGlue();
+
+        AddRegion(pBarTexture_);
+
+        pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT));
     }
+
+    mBarColor_ = mBarColor;
+    pBarTexture_->SetColor(mBarColor_);
 }
 
 void StatusBar::SetOrientation( Orientation mOrient )

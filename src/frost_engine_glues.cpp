@@ -79,6 +79,55 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEngine::_GetBackgroundColor( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:GetBackgroundColor", pLua, 4);
+
+        Color mColor = CameraManager::GetSingleton()->GetBackgroundColor();
+
+        mFunc.Push(s_float(mColor.GetR())/255.0f);
+        mFunc.Push(s_float(mColor.GetG())/255.0f);
+        mFunc.Push(s_float(mColor.GetB())/255.0f);
+        mFunc.Push(s_float(mColor.GetA())/255.0f);
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_SetBackgroundColor( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:SetBackgroundColor", pLua);
+        mFunc.Add(0, "red", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "green", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
+        mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
+
+        if (mFunc.Check())
+        {
+            Color mColor;
+            if (mFunc.IsProvided(3))
+            {
+                mColor = Color(
+                    s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                );
+            }
+            else
+            {
+                mColor = Color(
+                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                );
+            }
+
+            CameraManager::GetSingleton()->SetBackgroundColor(mColor);
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEngine::_UnloadZone( lua_State* pLua )
     {
         Lua::Function mFunc("Engine:UnloadZone", pLua);
@@ -99,10 +148,12 @@ namespace Frost
     Lunar<LuaEngine>::RegType LuaEngine::methods[] = {
         {"dt", &LuaEngine::GetDataTable},
 
+        method(Engine, GetBackgroundColor),
         method(Engine, LoadZone),
         method(Engine, LoadZoneFile),
         method(Engine, ToggleWireframeView),
         method(Engine, ToggleShading),
+        method(Engine, SetBackgroundColor),
         method(Engine, UnloadZone),
         {0,0}
     };
