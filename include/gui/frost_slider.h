@@ -54,7 +54,7 @@ namespace Frost
             s_ptr<Texture> GetThumbTexture() const;
 
             /// Sets the orientation of this Slider.
-            /** \param mOrient The orientation of this Slider
+            /** \param mOrientation The orientation of this Slider
             */
             void           SetOrientation(Orientation mOrientation);
 

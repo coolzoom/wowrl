@@ -42,7 +42,7 @@ namespace Frost
             ~Backdrop();
 
             /// Copies a Backdrop's parameters into this one (inheritance).
-            /** \param pBackdrop The Backdrop to copy
+            /** \param mBackdrop The Backdrop to copy
             */
             void CopyFrom(const Backdrop& mBackdrop);
 

@@ -142,11 +142,11 @@ void Slider::SetThumbTexture( s_ptr<Texture> pTexture )
     FireUpdateThumbTexture_();
 }
 
-void Slider::SetOrientation( Orientation mOrient )
+void Slider::SetOrientation( Orientation mOrientation )
 {
-    if (mOrient != mOrientation_)
+    if (mOrientation != mOrientation_)
     {
-        mOrientation_ = mOrient;
+        mOrientation_ = mOrientation;
         if (pThumbTexture_)
         {
             pThumbTexture_->SetPoint(Anchor(

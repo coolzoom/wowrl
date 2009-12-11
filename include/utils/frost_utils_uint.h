@@ -192,8 +192,8 @@ namespace Frost
         }
 
         /// Adjusts this uint's value to be contained into the provided interval.
-        /** \param iMin The minimum value
-        *   \param iMax The maximum value
+        /** \param uiMin The minimum value
+        *   \param uiMax The maximum value
         */
         void Clamp(const s_uint_t& uiMin, const s_uint_t& uiMax)
         {
