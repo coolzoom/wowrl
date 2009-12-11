@@ -462,6 +462,16 @@ s_ptr<LayeredRegion> Frame::GetRegion( const s_str& sName ) const
         return nullptr;
 }
 
+void Frame::SetAbsWidth( const s_uint& uiAbsWidth )
+{
+    UIObject::SetAbsWidth(s_uint::Clamp(uiAbsWidth, uiMinWidth_, uiMaxWidth_));
+}
+
+void Frame::SetAbsHeight( const s_uint& uiAbsHeight )
+{
+    UIObject::SetAbsHeight(s_uint::Clamp(uiAbsHeight, uiMinHeight_, uiMaxHeight_));
+}
+
 void Frame::CheckPosition()
 {
     if (lBorderList_[BORDER_RIGHT] - lBorderList_[BORDER_LEFT] < s_int(uiMinWidth_))
@@ -849,7 +859,7 @@ const s_bool& Frame::IsClampedToScreen() const
 
 s_bool Frame::IsInFrame( const s_int& iX, const s_int& iY ) const
 {
-    return (
+    s_bool bInFrame = (
         iX.IsInRange(
             lBorderList_[BORDER_LEFT]  + lAbsHitRectInsetList_[BORDER_LEFT],
             lBorderList_[BORDER_RIGHT] - lAbsHitRectInsetList_[BORDER_RIGHT] - 1
@@ -859,6 +869,11 @@ s_bool Frame::IsInFrame( const s_int& iX, const s_int& iY ) const
             lBorderList_[BORDER_BOTTOM] - lAbsHitRectInsetList_[BORDER_BOTTOM] - 1
         )
     );
+
+    if (pTitleRegion_ && pTitleRegion_->IsInRegion(iX, iY))
+        return true;
+    else
+        return bInFrame;
 }
 
 const s_bool& Frame::IsKeyboardEnabled() const
@@ -967,15 +982,8 @@ void Frame::OnEvent( const Event& mEvent )
         }
         else if (mEvent.GetName() == "MOUSE_PRESSED")
         {
-            if (bIsMovable_)
-            {
-                if (pTitleRegion_ && pTitleRegion_->IsInRegion(
-                    s_int(mEvent[1].Get<s_float>()),
-                    s_int(mEvent[2].Get<s_float>())))
-                {
-                    StartMoving();
-                }
-            }
+            if (bMouseInTitleRegion_)
+                StartMoving();
 
             if (bMouseInFrame_)
             {
@@ -991,9 +999,7 @@ void Frame::OnEvent( const Event& mEvent )
         else if (mEvent.GetName() == "MOUSE_RELEASED")
         {
             if (bIsMovable_)
-            {
                 StopMoving();
-            }
 
             if (bMouseInFrame_)
             {
@@ -1008,17 +1014,14 @@ void Frame::OnEvent( const Event& mEvent )
             lMouseButtonList_.Clear();
 
             if (bMouseDragged_)
-            {
                 On("DragStop");
-            }
+
             bMouseDragged_ = false;
         }
         else if (mEvent.GetName() == "MOUSE_WHEEL")
         {
             if (bMouseInFrame_)
-            {
                 On("MouseWheel");
-            }
         }
     }
 }
@@ -1281,19 +1284,6 @@ void Frame::StartMoving()
 {
     if (bIsMovable_)
     {
-        if (lAnchorList_.GetSize() > 1)
-        {
-            lAnchorList_.Clear();
-            Anchor mAnchor(this, ANCHOR_TOPLEFT, "", ANCHOR_TOPLEFT);
-            mAnchor.SetAbsOffset(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_TOP]);
-            lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
-
-            FireUpdateBorders();
-        }
-
-        iMovementStartX_ = lAnchorList_.Begin()->second.GetAbsOffsetX();
-        iMovementStartY_ = lAnchorList_.Begin()->second.GetAbsOffsetY();
-
         GUIManager::GetSingleton()->StartMoving(this);
     }
 }
@@ -1307,77 +1297,7 @@ void Frame::StartSizing( const AnchorPoint& mPoint )
 {
     if (bIsResizable_)
     {
-        AnchorPoint mOppositePoint = ANCHOR_CENTER;
-        s_int iOffX;
-        s_int iOffY;
-        switch (mPoint)
-        {
-            case ANCHOR_TOPLEFT :
-            case ANCHOR_TOP :
-                mOppositePoint = ANCHOR_BOTTOMRIGHT;
-                iOffX = lBorderList_[BORDER_RIGHT];
-                iOffY = lBorderList_[BORDER_BOTTOM];
-                bResizeFromRight_ = false;
-                bResizeFromBottom_ = false;
-                break;
-            case ANCHOR_TOPRIGHT :
-            case ANCHOR_RIGHT :
-                mOppositePoint = ANCHOR_BOTTOMLEFT;
-                iOffX = lBorderList_[BORDER_LEFT];
-                iOffY = lBorderList_[BORDER_BOTTOM];
-                bResizeFromRight_ = true;
-                bResizeFromBottom_ = false;
-                break;
-            case ANCHOR_BOTTOMRIGHT :
-            case ANCHOR_BOTTOM :
-                mOppositePoint = ANCHOR_TOPLEFT;
-                iOffX = lBorderList_[BORDER_LEFT];
-                iOffY = lBorderList_[BORDER_TOP];
-                bResizeFromRight_ = true;
-                bResizeFromBottom_ = true;
-                break;
-            case ANCHOR_BOTTOMLEFT :
-            case ANCHOR_LEFT :
-                mOppositePoint = ANCHOR_TOPRIGHT;
-                iOffX = lBorderList_[BORDER_RIGHT];
-                iOffY = lBorderList_[BORDER_TOP];
-                bResizeFromRight_ = false;
-                bResizeFromBottom_ = true;
-                break;
-            case ANCHOR_CENTER :
-                Error(lType_.Back(),
-                    "Can't resize \""+sName_+"\" from its center."
-                );
-                return;
-        }
-
-        lAnchorList_.Clear();
-        Anchor mAnchor(this, mOppositePoint, "", ANCHOR_TOPLEFT);
-        mAnchor.SetAbsOffset(iOffX, iOffY);
-        lAnchorList_[mOppositePoint] = mAnchor;
-
-        FireUpdateBorders();
-
-        uiResizingStartW_ = uiAbsWidth_;
-        uiResizingStartH_ = uiAbsHeight_;
-
-        if (mPoint == ANCHOR_LEFT || mPoint == ANCHOR_RIGHT)
-        {
-            bResizeWidth_ = true;
-            bResizeHeight_ = false;
-        }
-        else if (mPoint == ANCHOR_TOP || mPoint == ANCHOR_BOTTOM)
-        {
-            bResizeWidth_ = false;
-            bResizeHeight_ = true;
-        }
-        else
-        {
-            bResizeWidth_ = true;
-            bResizeHeight_ = true;
-        }
-
-        GUIManager::GetSingleton()->StartSizing(this);
+        GUIManager::GetSingleton()->StartSizing(this, mPoint);
     }
 }
 
@@ -1439,79 +1359,39 @@ void Frame::UnregisterEvent( const s_str& sEvent )
     lRegEventList_[sEvent] = false;
 }
 
-void Frame::NotifyMouseInFrame( const s_bool& bMouseInFrame )
+void Frame::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& iX, const s_int& iY )
 {
     if (bMouseInFrame)
     {
-        if (!bMouseInFrame_)
-            On("Enter");
+        if (pTitleRegion_ && pTitleRegion_->IsInRegion(iX, iY))
+        {
+            bMouseInTitleRegion_ = true;
+            if (bMouseInFrame_)
+                On("Leave");
+
+            bMouseInFrame_ = false;
+        }
+        else
+        {
+            if (!bMouseInFrame_)
+                On("Enter");
+
+            bMouseInTitleRegion_ = false;
+            bMouseInFrame_ = true;
+        }
     }
     else
     {
         if (bMouseInFrame_)
             On("Leave");
-    }
 
-    bMouseInFrame_ = bMouseInFrame;
+        bMouseInTitleRegion_ = false;
+        bMouseInFrame_ = false;
+    }
 }
 
 void Frame::Update()
 {
-    if (GUIManager::GetSingleton()->IsMoving(this))
-    {
-        lAnchorList_.Begin()->second.SetAbsOffset(
-            iMovementStartX_ + GUIManager::GetSingleton()->GetMovementX(),
-            iMovementStartY_ + GUIManager::GetSingleton()->GetMovementY()
-        );
-
-        FireUpdateBorders();
-    }
-    else if (GUIManager::GetSingleton()->IsSizing(this))
-    {
-        if (bResizeWidth_)
-        {
-            if (bResizeFromRight_)
-                uiAbsWidth_ = s_uint(
-                    s_int::Max(0, s_int(uiResizingStartW_) + GUIManager::GetSingleton()->GetMovementX())
-                );
-            else
-                uiAbsWidth_ = s_uint(
-                    s_int::Max(0, s_int(uiResizingStartW_) - GUIManager::GetSingleton()->GetMovementX())
-                );
-        }
-        if (bResizeHeight_)
-        {
-            if (bResizeFromBottom_)
-                uiAbsHeight_ = s_uint(
-                    s_int::Max(0, s_int(uiResizingStartH_) + GUIManager::GetSingleton()->GetMovementY())
-                );
-            else
-                uiAbsHeight_ = s_uint(
-                    s_int::Max(0, s_int(uiResizingStartH_) - GUIManager::GetSingleton()->GetMovementY())
-                );
-        }
-
-        if (uiAbsWidth_ < uiMinWidth_)
-        {
-            uiAbsWidth_ = uiMinWidth_;
-        }
-        else if (uiAbsWidth_ > uiMaxWidth_)
-        {
-            uiAbsWidth_ = uiMaxWidth_;
-        }
-
-        if (uiAbsHeight_ < uiMinHeight_)
-        {
-            uiAbsHeight_ = uiMinHeight_;
-        }
-        else if (uiAbsHeight_ > uiMaxHeight_)
-        {
-            uiAbsHeight_ = uiMaxHeight_;
-        }
-
-        FireUpdateBorders();
-    }
-
     s_bool bPositionUpdated = bUpdateBorders_;
     UIObject::Update();
 

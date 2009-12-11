@@ -26,6 +26,12 @@ namespace Frost
             /// Destructor.
             virtual ~CheckButton();
 
+            /// Prints all relevant information about this widget in a string.
+            /** \param sTab The offset to give to all lines
+            *   \return All relevant information about this widget
+            */
+            virtual s_str  Serialize(const s_str& sTab) const;
+
             /// Copies an UIObject's parameters into this CheckButton (inheritance).
             /** \param pObj The UIObject to copy
             */

@@ -24,6 +24,11 @@ CheckButton::~CheckButton()
 {
 }
 
+s_str CheckButton::Serialize( const s_str& sTab ) const
+{
+    return Button::Serialize(sTab);
+}
+
 void CheckButton::CopyFrom( s_ptr<UIObject> pObj )
 {
     Button::CopyFrom(pObj);

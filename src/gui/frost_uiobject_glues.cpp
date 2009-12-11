@@ -170,12 +170,28 @@ int LuaUIObject::_GetParent( lua_State* pLua )
 int LuaUIObject::_GetPoint( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:GetPoint", pLua, 5);
-    mFunc.Add(0, "point ID", Lua::TYPE_NUMBER);
+    mFunc.Add(0, "point ID", Lua::TYPE_NUMBER, true);
     if (mFunc.Check())
     {
-        s_ptr<Anchor> pAnchor = pParent_->GetPoint(s_uint(mFunc.Get(0)->GetNumber()));
-        if (pAnchor)
+        const s_map<AnchorPoint, Anchor>& lAnchorList = pParent_->GetPointList();
+        if (!lAnchorList.IsEmpty())
         {
+            s_uint uiAnchorID = 1;
+            if (mFunc.IsProvided(0))
+                uiAnchorID = s_uint(mFunc.Get(0)->GetNumber());
+
+            s_ptr<const Anchor> pAnchor;
+            s_uint uiCounter = 1;
+            s_map<AnchorPoint, Anchor>::const_iterator iter;
+            foreach (iter, lAnchorList)
+            {
+                pAnchor = &iter->second;
+                if (uiCounter == uiAnchorID)
+                    break;
+                else
+                    ++uiCounter;
+            }
+
             mFunc.Push(Anchor::GetStringPoint(pAnchor->GetPoint()));
             if (pAnchor->GetParent())
             {
@@ -377,7 +393,7 @@ int LuaUIObject::_SetPoint( lua_State* pLua )
         if (mFunc.IsProvided(4))
             iAbsY = s_int(mFunc.Get(4)->GetNumber());
 
-        pParent_->SetAbsPoint(mPoint, pParent, mParentPoint, iAbsX, iAbsY);
+        pParent_->SetAbsPoint(mPoint, pParent ? pParent->GetName() : "", mParentPoint, iAbsX, iAbsY);
     }
 
     return mFunc.Return();

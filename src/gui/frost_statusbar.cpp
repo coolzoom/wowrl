@@ -24,6 +24,11 @@ StatusBar::~StatusBar()
 {
 }
 
+s_str StatusBar::Serialize( const s_str& sTab ) const
+{
+    return Frame::Serialize(sTab);
+}
+
 s_bool StatusBar::CanUseScript( const s_str& sScriptName ) const
 {
     if ((sScriptName == "OnValueChanged") ||
@@ -60,16 +65,12 @@ void StatusBar::CopyFrom( s_ptr<UIObject> pObj )
         this->SetMaxValue(pStatusBar->GetMaxValue());
         this->SetValue(pStatusBar->GetValue());
         this->SetBarDrawLayer(pStatusBar->GetBarDrawLayer());
+        this->SetOrientation(pStatusBar->GetOrientation());
 
         CreateBarTexture_();
-
-        Anchor mAnchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT);
-
         pBarTexture_->CopyFrom(pStatusBar->GetBarTexture());
-        pBarTexture_->ClearAllPoints();
-        pBarTexture_->SetPoint(mAnchor);
-
         GUIManager::GetSingleton()->AddUIObject(pBarTexture_);
+        AddRegion(pBarTexture_);
     }
 }
 
@@ -119,32 +120,32 @@ void StatusBar::SetValue( const s_float& fValue )
 void StatusBar::SetBarDrawLayer( LayerType mBarLayer )
 {
     mBarLayer_ = mBarLayer;
-    pBarTexture_->SetDrawLayer(mBarLayer_);
+    if (pBarTexture_)
+        pBarTexture_->SetDrawLayer(mBarLayer_);
 }
 
 void StatusBar::SetBarDrawLayer( const s_str& sBarLayer )
 {
-    if (pBarTexture_)
+    if (sBarLayer == "ARTWORK")
+        mBarLayer_ = LAYER_ARTWORK;
+    else if (sBarLayer == "BACKGROUND")
+        mBarLayer_ = LAYER_BACKGROUND;
+    else if (sBarLayer == "BORDER")
+        mBarLayer_ = LAYER_BORDER;
+    else if (sBarLayer == "HIGHLIGHT")
+        mBarLayer_ = LAYER_HIGHLIGHT;
+    else if (sBarLayer == "OVERLAY")
+        mBarLayer_ = LAYER_OVERLAY;
+    else
     {
-        if (sBarLayer == "ARTWORK")
-            mBarLayer_ = LAYER_ARTWORK;
-        else if (sBarLayer == "BACKGROUND")
-            mBarLayer_ = LAYER_BACKGROUND;
-        else if (sBarLayer == "BORDER")
-            mBarLayer_ = LAYER_BORDER;
-        else if (sBarLayer == "HIGHLIGHT")
-            mBarLayer_ = LAYER_HIGHLIGHT;
-        else if (sBarLayer == "OVERLAY")
-            mBarLayer_ = LAYER_OVERLAY;
-        else
-        {
-            Warning(lType_.Back(),
-                "Uknown layer type : \""+sBarLayer+"\". Using \"ARTWORK\"."
-            );
-            mBarLayer_ = LAYER_ARTWORK;
-        }
-        pBarTexture_->SetDrawLayer(mBarLayer_);
+        Warning(lType_.Back(),
+            "Uknown layer type : \""+sBarLayer+"\". Using \"ARTWORK\"."
+        );
+        mBarLayer_ = LAYER_ARTWORK;
     }
+
+    if (pBarTexture_)
+        pBarTexture_->SetDrawLayer(mBarLayer_);
 }
 
 void StatusBar::SetBarTexture( s_ptr<Texture> pBarTexture )
@@ -164,7 +165,7 @@ void StatusBar::SetBarColor( const Color& mBarColor )
     }
 }
 
-void StatusBar::SetOrientation( const Orientation& mOrient )
+void StatusBar::SetOrientation( Orientation mOrient )
 {
     if (mOrient != mOrientation_)
     {

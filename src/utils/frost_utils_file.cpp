@@ -171,13 +171,6 @@ namespace Frost
         fstream mFile;
 
         mFile.open(sFileName.GetASCII().c_str(), ios::in);
-        if (mFile.is_open())
-        {
-            mFile.close();
-            return true;
-        }
-
-        mFile.close();
-        return false;
+        return mFile.is_open();
     }
 }

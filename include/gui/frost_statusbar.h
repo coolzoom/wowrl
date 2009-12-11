@@ -38,7 +38,13 @@ namespace Frost
             StatusBar();
 
             /// Destructor.
-            ~StatusBar();
+            virtual ~StatusBar();
+
+            /// Prints all relevant information about this widget in a string.
+            /** \param sTab The offset to give to all lines
+            *   \return All relevant information about this widget
+            */
+            virtual s_str  Serialize(const s_str& sTab) const;
 
             /// Returns 'true' if this StatusBar can use a script.
             /** \param sScriptName The name of the script
@@ -78,7 +84,7 @@ namespace Frost
             void           SetBarDrawLayer(LayerType mBarLayer);
 
             /// Sets the draw layer of this StatusBar's bar texture.
-            /** \param mBarLayer The layer
+            /** \param sBarLayer The layer
             */
             void           SetBarDrawLayer(const s_str& sBarLayer);
 
@@ -95,7 +101,7 @@ namespace Frost
             /// Sets this StatusBar's orientation.
             /** \param mOrient The orientation
             */
-            void           SetOrientation(const Orientation& mOrient);
+            void           SetOrientation(Orientation mOrient);
 
             /// Returns this StatusBar's minimum value.
             /** \return This StatusBar's minimum value
@@ -133,15 +139,15 @@ namespace Frost
             Orientation    GetOrientation() const;
 
             /// Returns this widget's Lua glue.
-            void           CreateGlue();
+            virtual void   CreateGlue();
 
             /// Parses data from an XML::Block.
             /** \param pBlock The StatusBar's XML::Block
             */
-            void           ParseBlock(s_ptr<XML::Block> pBlock);
+            virtual void   ParseBlock(s_ptr<XML::Block> pBlock);
 
             /// Updates this widget's logic.
-            void           Update();
+            virtual void   Update();
 
             static const s_str CLASS_NAME;
 

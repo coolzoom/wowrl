@@ -245,8 +245,13 @@ void Frame::ParseBackdropBlock_( s_ptr<XML::Block> pBlock )
     {
         s_refptr<GUI::Backdrop> pBackdrop(new GUI::Backdrop(this));
 
-        pBackdrop->SetBackground(pBackdropBlock->GetAttribute("bgFile"));
-        pBackdrop->SetEdge(pBackdropBlock->GetAttribute("edgeFile"));
+        pBackdrop->SetBackground(GUIManager::GetSingleton()->ParseFileName(
+            pBackdropBlock->GetAttribute("bgFile")
+        ));
+        pBackdrop->SetEdge(GUIManager::GetSingleton()->ParseFileName(
+            pBackdropBlock->GetAttribute("edgeFile")
+        ));
+
         pBackdrop->SetBackgroundTilling(s_bool(pBackdropBlock->GetAttribute("tile")));
 
         s_ptr<XML::Block> pBGInsetsBlock = pBackdropBlock->GetBlock("BackgroundInsets");

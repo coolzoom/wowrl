@@ -28,7 +28,11 @@ void Texture::ParseAttributes_( s_ptr<XML::Block> pBlock )
 
     s_str sFile = pBlock->GetAttribute("file");
     if (!sFile.IsEmpty())
-        SetTexture(sFile);
+    {
+        SetTexture(GUIManager::GetSingleton()->ParseFileName(
+            pBlock->GetAttribute("file")
+        ));
+    }
 }
 
 void Texture::ParseTexCoordsBlock_( s_ptr<XML::Block> pBlock )

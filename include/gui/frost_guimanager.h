@@ -11,6 +11,7 @@
 
 #include "frost.h"
 #include "utils/frost_utils_manager.h"
+#include "gui/frost_anchor.h"
 
 namespace Frost
 {
@@ -92,6 +93,14 @@ namespace Frost
     friend class Manager<GUIManager>;
     public :
 
+        /// Constraints movement along a particular axis
+        enum Constraint
+        {
+            CONSTRAINT_NONE,
+            CONSTRAINT_X,
+            CONSTRAINT_Y
+        };
+
         /// Initializes this manager.
         void                 Initialize();
 
@@ -141,6 +150,21 @@ namespace Frost
         */
         void                 PrintUI();
 
+        /// Returns the AddOn that is being parsed.
+        /** \return The AddOn that is being parsed
+        */
+        s_ptr<AddOn>         GetCurrentAddOn();
+
+        /// Reads a file address and completes it to make a working address.
+        /** \param sFileName The raw file name
+        *   \return The modified file name
+        *   \note All file names are relative to the Engine's executable path,
+        *         but sometimes you'd like to use a path that is relative to
+        *         your AddOn folder for example. To do so, you need to append
+        *         "|" in front of your file name.
+        */
+        s_str                ParseFileName(const s_str& sFileName) const;
+
         /// Returns the GUI Lua state.
         /** \return The GUI Lua state
         */
@@ -159,12 +183,17 @@ namespace Frost
         void                 RenderUI();
 
         /// Ask this manager for movement management.
-        /** \param pObj The object to move
-        *   \note This manager will not do any movement code.
-        *         It will only allow this widget to be moved
-        *         through the IsMoving() function.
+        /** \param pObj        The object to move
+        *   \param pAnchor     The reference anchor
+        *   \param mConstraint The constraint axis if any
+        *   \note Movement is handled by the manager itself, you don't
+        *         need to do anything.
         */
-        void                 StartMoving(s_ptr<GUI::UIObject> pObj);
+        void                 StartMoving(
+            s_ptr<GUI::UIObject> pObj,
+            s_ptr<GUI::Anchor> pAnchor = nullptr,
+            Constraint mConstraint = CONSTRAINT_NONE
+        );
 
         /// Stops movement for the given object.
         /** \param pObj The object to stop moving
@@ -177,13 +206,13 @@ namespace Frost
         */
         s_bool               IsMoving(s_ptr<GUI::UIObject> pObj) const;
 
-        /// Ask this manager for sizing management.
-        /** \param pObj The object to resize
-        *   \note This manager will not do any sizing code.
-        *         It will only allow this widget to be resized
-        *         through the IsSizing() function.
+        /// Starts resizing a widget.
+        /** \param pObj   The object to resize
+        *   \param mPoint The sizing point
+        *   \note Resizing is handled by the manager itself, you don't
+        *         need to do anything.
         */
-        void                 StartSizing(s_ptr<GUI::UIObject> pObj);
+        void                 StartSizing(s_ptr<GUI::UIObject> pObj, GUI::AnchorPoint mPoint);
 
         /// Stops sizing for the given object.
         /** \param pObj The object to stop sizing
@@ -273,6 +302,7 @@ namespace Frost
 
         s_ctnr<s_str>                       lGUIFolderList_;
         s_map< s_str, s_map<s_str, AddOn> > lAddOnList_;
+        s_ptr<AddOn>                        pCurrentAddOn_;
 
         s_map< s_uint, s_ptr<GUI::Frame> > lFrameList_;
         s_map<FrameStrata, Strata>         lStrataList_;
@@ -284,6 +314,18 @@ namespace Frost
         s_ptr<GUI::UIObject> pSizedObject_;
         s_float              fMouseMovementX_;
         s_float              fMouseMovementY_;
+
+        s_ptr<GUI::Anchor>   pMovedAnchor_;
+        s_int                iMovementStartPositionX_;
+        s_int                iMovementStartPositionY_;
+        Constraint           mConstraint_;
+
+        s_uint               uiResizeStartW_;
+        s_uint               uiResizeStartH_;
+        s_bool               bResizeWidth_;
+        s_bool               bResizeHeight_;
+        s_bool               bResizeFromRight_;
+        s_bool               bResizeFromBottom_;
     };
 }
 

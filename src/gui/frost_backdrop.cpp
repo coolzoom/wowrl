@@ -45,12 +45,23 @@ void Backdrop::SetBackground( const s_str& sBackgroundFile )
 {
     if (!sBackgroundFile.IsEmpty())
     {
-        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sBackgroundFile);
+        if (File::Exists(sBackgroundFile))
+        {
+            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sBackgroundFile);
 
-        uiTileSize_ = uiOriginalTileSize_ = s_uint(pMat->GetWidth());
+            uiTileSize_ = uiOriginalTileSize_ = s_uint(pMat->GetWidth());
 
-        pBackground_ = s_refptr<Sprite>(new Sprite(pMat));
-
+            pBackground_ = s_refptr<Sprite>(new Sprite(pMat));
+        }
+        else
+        {
+            Warning(CLASS_NAME,
+                "Couldn't find file : \""+sBackgroundFile+"\" for "+pParent_->GetName()+"'s backdrop background file.\n"
+                "No background will be drawn."
+            );
+            sBackgroundFile_ = "";
+            return;
+        }
     }
 
     sBackgroundFile_ = sBackgroundFile;

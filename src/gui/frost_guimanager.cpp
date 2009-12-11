@@ -262,6 +262,7 @@ namespace Frost
 
     void GUIManager::LoadAddOnFiles_( s_ptr<AddOn> pAddOn )
     {
+        pCurrentAddOn_ = pAddOn;
         s_ctnr<s_str>::iterator iterFile;
         foreach (iterFile, pAddOn->lFileList)
         {
@@ -461,6 +462,64 @@ namespace Frost
             fMouseMovementY_ += InputManager::GetSingleton()->GetMouseRawDY();
         }
 
+        if (pMovedObject_)
+        {
+            switch (mConstraint_)
+            {
+                case CONSTRAINT_NONE :
+                    pMovedAnchor_->SetAbsOffset(
+                        iMovementStartPositionX_ + s_int(fMouseMovementX_),
+                        iMovementStartPositionY_ + s_int(fMouseMovementY_)
+                    );
+                    break;
+                case CONSTRAINT_X :
+                    pMovedAnchor_->SetAbsOffset(
+                        iMovementStartPositionX_ + s_int(fMouseMovementX_),
+                        iMovementStartPositionY_
+                    );
+                    break;
+                case CONSTRAINT_Y :
+                    pMovedAnchor_->SetAbsOffset(
+                        iMovementStartPositionX_,
+                        iMovementStartPositionY_ + s_int(fMouseMovementY_)
+                    );
+                    break;
+            }
+
+            pMovedObject_->FireUpdateBorders();
+        }
+        else if (pSizedObject_)
+        {
+            if (bResizeWidth_)
+            {
+                s_uint uiWidth;
+                if (bResizeFromRight_)
+                    uiWidth = s_uint(
+                        s_int::Max(0, s_int(uiResizeStartW_) + s_int(fMouseMovementX_))
+                    );
+                else
+                    uiWidth = s_uint(
+                        s_int::Max(0, s_int(uiResizeStartW_) - s_int(fMouseMovementX_))
+                    );
+
+                pSizedObject_->SetAbsWidth(uiWidth);
+            }
+            if (bResizeHeight_)
+            {
+                s_uint uiHeight;
+                if (bResizeFromBottom_)
+                    uiHeight = s_uint(
+                        s_int::Max(0, s_int(uiResizeStartH_) + s_int(fMouseMovementY_))
+                    );
+                else
+                    uiHeight = s_uint(
+                        s_int::Max(0, s_int(uiResizeStartH_) - s_int(fMouseMovementY_))
+                    );
+
+                pSizedObject_->SetAbsHeight(uiHeight);
+            }
+        }
+
         // Update anchors for all widgets
         s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
         foreach (iterObj, lObjectList_)
@@ -555,27 +614,49 @@ namespace Frost
             if (pOveredFrame != pOveredFrame_)
             {
                 if (pOveredFrame_)
-                    pOveredFrame_->NotifyMouseInFrame(false);
+                    pOveredFrame_->NotifyMouseInFrame(false, iX, iY);
 
                 pOveredFrame_ = pOveredFrame;
-
-                if (pOveredFrame_)
-                {
-                    pOveredFrame_->NotifyMouseInFrame(true);
-                }
             }
+
+            if (pOveredFrame_)
+                pOveredFrame_->NotifyMouseInFrame(true, iX, iY);
         }
 
         bObjectMoved_ = false;
         bBuildStrataList_ = false;
     }
 
-    void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj )
+    void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj, s_ptr<GUI::Anchor> pAnchor, Constraint mConstraint )
     {
         pSizedObject_ = nullptr;
         pMovedObject_ = pObj;
         fMouseMovementX_ = 0.0f;
         fMouseMovementY_ = 0.0f;
+
+        if (pMovedObject_)
+        {
+            mConstraint_ = mConstraint;
+            if (pAnchor)
+            {
+                pMovedAnchor_ = pAnchor;
+                iMovementStartPositionX_ = pMovedAnchor_->GetAbsOffsetX();
+                iMovementStartPositionY_ = pMovedAnchor_->GetAbsOffsetY();
+            }
+            else
+            {
+                pMovedObject_->ClearAllPoints();
+                const s_array<s_int,4>& lBorders = pMovedObject_->GetBorders();
+                pMovedObject_->SetAbsPoint(
+                    GUI::ANCHOR_TOPLEFT, "", GUI::ANCHOR_TOPLEFT,
+                    lBorders[GUI::BORDER_LEFT], lBorders[GUI::BORDER_TOP]
+                );
+                pMovedAnchor_ = pMovedObject_->GetPoint(GUI::ANCHOR_TOPLEFT);
+
+                iMovementStartPositionX_ = lBorders[GUI::BORDER_LEFT];
+                iMovementStartPositionY_ = lBorders[GUI::BORDER_TOP];
+            }
+        }
     }
 
     void GUIManager::StopMoving( s_ptr<GUI::UIObject> pObj )
@@ -589,12 +670,84 @@ namespace Frost
         return (pMovedObject_ == pObj);
     }
 
-    void GUIManager::StartSizing( s_ptr<GUI::UIObject> pObj )
+    void GUIManager::StartSizing( s_ptr<GUI::UIObject> pObj, GUI::AnchorPoint mPoint )
     {
         pMovedObject_  = nullptr;
         pSizedObject_ = pObj;
         fMouseMovementX_ = 0.0f;
         fMouseMovementY_ = 0.0f;
+
+        if (pSizedObject_)
+        {
+            const s_array<s_int,4>& lBorders = pSizedObject_->GetBorders();
+
+            GUI::AnchorPoint mOppositePoint = GUI::ANCHOR_CENTER;
+            s_int iOffX;
+            s_int iOffY;
+            switch (mPoint)
+            {
+                case GUI::ANCHOR_TOPLEFT :
+                case GUI::ANCHOR_TOP :
+                    mOppositePoint = GUI::ANCHOR_BOTTOMRIGHT;
+                    iOffX = lBorders[GUI::BORDER_RIGHT];
+                    iOffY = lBorders[GUI::BORDER_BOTTOM];
+                    bResizeFromRight_ = false;
+                    bResizeFromBottom_ = false;
+                    break;
+                case GUI::ANCHOR_TOPRIGHT :
+                case GUI::ANCHOR_RIGHT :
+                    mOppositePoint = GUI::ANCHOR_BOTTOMLEFT;
+                    iOffX = lBorders[GUI::BORDER_LEFT];
+                    iOffY = lBorders[GUI::BORDER_BOTTOM];
+                    bResizeFromRight_ = true;
+                    bResizeFromBottom_ = false;
+                    break;
+                case GUI::ANCHOR_BOTTOMRIGHT :
+                case GUI::ANCHOR_BOTTOM :
+                    mOppositePoint = GUI::ANCHOR_TOPLEFT;
+                    iOffX = lBorders[GUI::BORDER_LEFT];
+                    iOffY = lBorders[GUI::BORDER_TOP];
+                    bResizeFromRight_ = true;
+                    bResizeFromBottom_ = true;
+                    break;
+                case GUI::ANCHOR_BOTTOMLEFT :
+                case GUI::ANCHOR_LEFT :
+                    mOppositePoint = GUI::ANCHOR_TOPRIGHT;
+                    iOffX = lBorders[GUI::BORDER_RIGHT];
+                    iOffY = lBorders[GUI::BORDER_TOP];
+                    bResizeFromRight_ = false;
+                    bResizeFromBottom_ = true;
+                    break;
+                case GUI::ANCHOR_CENTER :
+                    Error(CLASS_NAME,
+                        "Can't resize \""+pObj->GetName()+"\" from its center."
+                    );
+                    pSizedObject_ = nullptr;
+                    return;
+            }
+
+            pSizedObject_->ClearAllPoints();
+            pSizedObject_->SetAbsPoint(mOppositePoint, "", GUI::ANCHOR_TOPLEFT, iOffX, iOffY);
+
+            uiResizeStartW_ = pSizedObject_->GetAbsWidth();
+            uiResizeStartH_ = pSizedObject_->GetAbsHeight();
+
+            if (mPoint == GUI::ANCHOR_LEFT || mPoint == GUI::ANCHOR_RIGHT)
+            {
+                bResizeWidth_ = true;
+                bResizeHeight_ = false;
+            }
+            else if (mPoint == GUI::ANCHOR_TOP || mPoint == GUI::ANCHOR_BOTTOM)
+            {
+                bResizeWidth_ = false;
+                bResizeHeight_ = true;
+            }
+            else
+            {
+                bResizeWidth_ = true;
+                bResizeHeight_ = true;
+            }
+        }
     }
 
     void GUIManager::StopSizing( s_ptr<GUI::UIObject> pObj )
@@ -690,6 +843,23 @@ namespace Frost
                 }
             }
         }
+    }
+
+    s_ptr<AddOn> GUIManager::GetCurrentAddOn()
+    {
+        return pCurrentAddOn_;
+    }
+
+    s_str GUIManager::ParseFileName( const s_str& sFileName ) const
+    {
+        s_str sNewFile = sFileName;
+        if (sNewFile.StartsWith("|"))
+        {
+            sNewFile[0] = '/';
+            if (pCurrentAddOn_)
+                sNewFile = pCurrentAddOn_->sFolder + sNewFile;
+        }
+        return sNewFile;
     }
 
     void GUIManager::PrintUI()

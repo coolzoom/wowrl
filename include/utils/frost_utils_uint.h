@@ -191,6 +191,15 @@ namespace Frost
                 return uiValue_;
         }
 
+        /// Adjusts this uint's value to be contained into the provided interval.
+        /** \param iMin The minimum value
+        *   \param iMax The maximum value
+        */
+        void Clamp(const s_uint_t& uiMin, const s_uint_t& uiMax)
+        {
+            uiValue_ = (*this < uiMax) ? ((*this > uiMin) ? uiValue_ : uiMin.uiValue_) : uiMax.uiValue_;
+        }
+
         /// Returns the power of two just above the value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
@@ -625,6 +634,17 @@ namespace Frost
         static s_uint_t Max(const s_uint_t& uiLeft, const s_uint_t& uiRight)
         {
             return (uiLeft <= uiRight) ? uiRight : uiLeft;
+        }
+
+        /// Clamps the provided value into the provided interval.
+        /** \param uiValue The value to clamp
+        *   \param uiMin   The minimum value
+        *   \param uiMax   The maximum value
+        *   \return The clamped value
+        */
+        static s_uint_t Clamp(const s_uint_t& uiValue, const s_uint_t& uiMin, const s_uint_t& uiMax)
+        {
+            return (uiValue < uiMax) ? ((uiValue > uiMin) ? uiValue : uiMin) : uiMax;
         }
 
         /// Returns a random uint in the provided range.
