@@ -96,6 +96,39 @@ void Slider::OnEvent( const Event& mEvent )
                 );
                 bThumbMoved_ = true;
             }
+            else if (bMouseInFrame_)
+            {
+                s_float fValue;
+                if (mOrientation_ == ORIENT_HORIZONTAL)
+                {
+                    s_float fOffset = mEvent.Get(1)->Get<s_float>() - s_float(lBorderList_[BORDER_LEFT]);
+                    fValue = fOffset/s_float(uiAbsWidth_);
+                    SetValue(fValue*(fMaxValue_ - fMinValue_) + fMinValue_);
+                }
+                else
+                {
+                    s_float fOffset = s_float(lBorderList_[BORDER_BOTTOM]) - mEvent.Get(2)->Get<s_float>();
+                    fValue = fOffset/s_float(uiAbsHeight_);
+                    SetValue(fValue*(fMaxValue_ - fMinValue_) + fMinValue_);
+                }
+
+                if (pThumbTexture_)
+                {
+                    s_float fCoef = (fValue_ - fMinValue_)/(fMaxValue_ - fMinValue_);
+
+                    s_ptr<Anchor> pAnchor = pThumbTexture_->GetPoint(ANCHOR_CENTER);
+                    if (mOrientation_ == ORIENT_HORIZONTAL)
+                        pAnchor->SetAbsOffset(s_int(s_float(uiAbsWidth_)*fCoef), 0);
+                    else
+                        pAnchor->SetAbsOffset(0, -s_int(s_float(uiAbsHeight_)*fCoef));
+
+                    GUIManager::GetSingleton()->StartMoving(
+                        pThumbTexture_, pThumbTexture_->GetPoint(ANCHOR_CENTER),
+                        mOrientation_ == ORIENT_HORIZONTAL ? GUIManager::CONSTRAINT_X : GUIManager::CONSTRAINT_Y
+                    );
+                    bThumbMoved_ = true;
+                }
+            }
         }
         else if (mEvent.GetName() == "MOUSE_RELEASED")
         {
