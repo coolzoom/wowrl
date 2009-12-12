@@ -394,12 +394,6 @@ namespace Frost
                 this->LoadAddOnDirectory_(*iterDirectory);
             }
 
-            s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterUIObject;
-            foreach (iterUIObject, lMainObjectList_)
-            {
-                s_ptr<GUI::Frame>::DynamicCast(iterUIObject->second)->On("Load");
-            }
-
             bClosed_ = false;
         }
     }
