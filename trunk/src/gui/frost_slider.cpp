@@ -72,9 +72,9 @@ void Slider::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pThumbTexture_);
-                pThumbTexture_->CopyFrom(pThumb);
-                if (!pThumbTexture_->IsVirtual())
+                if (!IsVirtual())
                     pThumbTexture_->CreateGlue();
+                pThumbTexture_->CopyFrom(pThumb);
             }
         }
     }

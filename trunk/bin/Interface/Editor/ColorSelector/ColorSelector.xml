@@ -91,7 +91,7 @@
         <Scripts>
             <OnLoad>
                 base:OnLoad();
-                this.Title.TitleString:SetText(ColorSelector.Locale["Title"]);
+                this.Title.TitleString:SetText(AddOns.ColorSelector.Locale["Title"]);
                 this.currentColor = PackColor(1,1,1,1);
             </OnLoad>
         </Scripts>
@@ -133,7 +133,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        this.TitleString:SetText(ColorSelector.Locale["SliderA"]);
+                        this.TitleString:SetText(AddOns.ColorSelector.Locale["SliderA"]);
                         this.chanel = "a";
                     </OnLoad>
                 </Scripts>
@@ -148,7 +148,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        this.TitleString:SetText(ColorSelector.Locale["SliderR"]);
+                        this.TitleString:SetText(AddOns.ColorSelector.Locale["SliderR"]);
                         this.chanel = "r";
                     </OnLoad>
                 </Scripts>
@@ -163,7 +163,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        this.TitleString:SetText(ColorSelector.Locale["SliderG"]);
+                        this.TitleString:SetText(AddOns.ColorSelector.Locale["SliderG"]);
                         this.chanel = "g";
                     </OnLoad>
                 </Scripts>
@@ -178,7 +178,7 @@
                 </Anchors>
                 <Scripts>
                     <OnLoad>
-                        this.TitleString:SetText(ColorSelector.Locale["SliderB"]);
+                        this.TitleString:SetText(AddOns.ColorSelector.Locale["SliderB"]);
                         this.chanel = "b";
                     </OnLoad>
                 </Scripts>

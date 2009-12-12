@@ -11,7 +11,7 @@
             <OnLoad>
                 this.activeDropDown = nil;
                 this:SetBackdrop({["insets"]={["bottom"] = -3}});
-                this:SetBackdropColor(UnpackColor(MenuBar.Config.barColor));
+                this:SetBackdropColor(UnpackColor(AddOns.MenuBar.Config.barColor));
             </OnLoad>
         </Scripts>
         <Frames>

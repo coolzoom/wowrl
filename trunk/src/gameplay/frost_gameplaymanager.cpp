@@ -19,6 +19,7 @@ namespace Frost
     {
         pLua_ = LuaManager::GetSingleton()->CreateLua();
 
+        Lua::RegisterGlobalFuncs(pLua_);
         Lua::RegisterUnitClass(pLua_);
         Lua::RegisterMovableObjectClass(pLua_);
         Lua::RegisterGameplayClass(pLua_);

@@ -46,7 +46,7 @@ namespace Frost
         }
         else
         {
-            Error(CLASS_NAME, "Couldn't find folder \""+sRelPath_+"\".");
+            Error(CLASS_NAME, "Couldn't find directory \""+sRelPath_+"\".");
         }
     }
 

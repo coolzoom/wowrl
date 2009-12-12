@@ -53,7 +53,7 @@ namespace Frost
         *         files will appear on the list.<br>
         *         Example : if you use "xml, lua", then you'll only get *.xml and *.lua
         *         files.<br>
-        *         This function searches through subfolders too.
+        *         This function searches through subdirectories too.
         */
         s_ctnr<s_str> GetRecursiveFileList(const s_bool& bWithPath = false, const s_str& sExtensionFilter = "") const;
 

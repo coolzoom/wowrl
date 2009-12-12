@@ -1,7 +1,4 @@
-MenuBar.Config = {
-    ["barHeight"] = 16,
-    ["barColor"] = PackColor(0.75, 0.75, 0.75, 0.8),
-}
+
 
 MenuBar.lastMenu = nil;
 MenuBar.menus = {};
@@ -12,19 +9,15 @@ function MenuBar:AddMenu(caption)
         menu.caption = caption;
         menu.lastItem = nil;
        
-        menu:SetHeight(MenuBar.Config.barHeight);
+        menu:SetHeight(AddOns.MenuBar.Config.barHeight);
         if (MenuBar.lastMenu) then
             menu:SetPoint("TOPLEFT", MenuBar.lastMenu, "TOPRIGHT", 3);
         else
             menu:SetPoint("TOPLEFT", MenuBar, "TOPLEFT", 3);
         end
-        
-        menu:SetScript("OnLoad",
-            function()
-                this:SetText(MenuBar.Locale[this.caption]);
-                base:OnLoad();
-            end
-        );
+
+        menu:SetText(AddOns.MenuBar.Locale[menu.caption]);
+        menu:SetWidth(math.max(menu:GetTextWidth(), 10)+16);
         
         local border = CreateFrame("Frame", "$parentBorder", menu);
         if (border) then
@@ -51,7 +44,7 @@ function MenuBar:CreateMenuDropdown(caption)
             local backdrop = dropdown:GetBackdrop();
             backdrop.edgeFile = "Interface/Editor/MenuBar/DropdownBorder.png";
             dropdown:SetBackdrop(backdrop);
-            dropdown:SetBackdropColor(UnpackColor(MenuBar.Config.barColor));
+            dropdown:SetBackdropColor(UnpackColor(AddOns.MenuBar.Config.barColor));
             
             dropdown:SetScript("OnShow",
                 function()
@@ -80,20 +73,13 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
             if (item) then
                 item.caption = menuCaption..itemCaption;
             
-                item:SetHeight(MenuBar.Config.barHeight);
+                item:SetHeight(AddOns.MenuBar.Config.barHeight);
                 
                 if (menu.lastItem) then
                     item:SetPoint("TOPLEFT", menu.lastItem, "BOTTOMLEFT");
                 else
                     item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 9);
                 end
-                
-                item:SetScript("OnLoad",
-                    function()
-                        this:SetText(MenuBar.Locale[this.caption]);
-                        base:UpdateWidth();
-                    end
-                );
                 
                 if (keycode) then
                     local key = item:CreateFontString("$parentKey");
@@ -105,6 +91,15 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
                         key:SetTextColor(0.3,0.3,0.3);
                     end
                 end
+                
+                item:SetText(AddOns.MenuBar.Locale[item.caption]);
+                
+                local width = item:GetTextWidth();
+                if (item.Key) then
+                    width = width + 38 + item.Key:GetStringWidth();
+                end
+                width = math.max(width, 100);
+                item:SetWidth(width);
                 
                 menu.lastItem = item;
                 return item;
@@ -125,7 +120,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                 item.caption = menuCaption..itemCaption;
             
                 item:SetChecked(defaultState);
-                item:SetHeight(MenuBar.Config.barHeight);
+                item:SetHeight(AddOns.MenuBar.Config.barHeight);
                 
                 if (menu.lastItem) then
                     item:SetPoint("TOPLEFT", menu.lastItem, "BOTTOMLEFT");
@@ -133,12 +128,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                     item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 8);
                 end
                 
-                item:SetScript("OnLoad",
-                    function()
-                        this:SetText(MenuBar.Locale[this.caption]);
-                        base:UpdateWidth();
-                    end
-                );
+                item:SetText(AddOns.MenuBar.Locale[item.caption]);
                 
                 if (keycode) then
                     local key = item:CreateFontString("$parentKey");
@@ -150,6 +140,13 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                         key:SetTextColor(0.3,0.3,0.3);
                     end
                 end
+                
+                local width = item:GetTextWidth();
+                if (item.Key) then
+                    width = width + 38 + item.Key:GetStringWidth();
+                end
+                width = math.max(width, 100);
+                item:SetWidth(width);
                 
                 menu.lastItem = item;
                 return item;

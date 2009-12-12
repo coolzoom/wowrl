@@ -41,6 +41,7 @@ void Lua::RegisterGlobalFuncs( s_ptr<Lua::State> pLua )
     pLua->Register("GetTime", l_GetTime);
     pLua->Register("GetTimeOfTheDay", l_GetTimeOfTheDay);
     pLua->Register("Exit", l_Exit);
+    pLua->DoFile("DB/ClassHelper.lua");
 }
 
 void Lua::RegisterEngineClass( s_ptr<Lua::State> pLua )

@@ -420,6 +420,76 @@ void State::PrintError( const s_str& sError )
     EventManager::GetSingleton()->FireEvent(e);
 }
 
+s_bool State::IsSerializable( const s_int& iIndex )
+{
+    Type mType = GetType(iIndex);
+    return (mType == TYPE_BOOLEAN) || (mType == TYPE_NUMBER) ||
+           (mType == TYPE_STRING)  || (mType == TYPE_TABLE);
+}
+
+s_str State::SerializeGlobal( const s_str& sName )
+{
+    GetGlobal(sName);
+
+    s_str sContent;
+    if (IsSerializable())
+        sContent = sName+" = "+Serialize()+";";
+
+    Pop();
+
+    return sContent;
+}
+
+s_str State::Serialize( const s_str& sTab, const s_int& iIndex )
+{
+    s_str sResult;
+
+    Type mType = GetType(iIndex);
+    switch (mType)
+    {
+        case TYPE_BOOLEAN :
+            sResult << GetBool(iIndex);
+            break;
+
+        case TYPE_NUMBER :
+            sResult << GetNumber(iIndex);
+            break;
+
+        case TYPE_STRING :
+            sResult << "\""+GetString(iIndex)+"\"";
+            break;
+
+        case TYPE_TABLE :
+        {
+            sResult << "{";
+
+            s_str sContent = "\n";
+            PushValue(iIndex);
+            PushNil();
+            while (lua_next(pLua_, -2) != 0)
+            {
+                if (IsSerializable())
+                {
+                    sContent << sTab << "    [" << Serialize(sTab + "    ", -2) << "] = "
+                            << Serialize(sTab + "    ", -1) << ";\n";
+                }
+                Pop();
+            }
+            Pop();
+
+            if (sContent != "\n")
+                sResult << sContent << sTab;
+
+            sResult << "}";
+            break;
+        }
+
+        default : break;
+    }
+
+    return sResult;
+}
+
 void State::PushNumber( const s_int& iValue )
 {
     lua_pushnumber(pLua_, iValue.Get());

@@ -1,5 +1,5 @@
 if (GetLocale() == "frFR") then
-    MenuBar.Locale = {
+    AddOns.MenuBar.Locale = {
         ["File"] = "Fichier",
         ["FileNew"] = "Nouveau",
         ["FileOpen"] = "Ouvrir...",
@@ -22,7 +22,7 @@ if (GetLocale() == "frFR") then
         ["HelpAbout"] = "A propos"
     };
 else
-    MenuBar.Locale = {
+    AddOns.MenuBar.Locale = {
         ["File"] = "File",
         ["FileNew"] = "New",
         ["FileOpen"] = "Open...",

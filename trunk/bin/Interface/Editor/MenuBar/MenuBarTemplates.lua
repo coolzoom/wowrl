@@ -1,11 +1,11 @@
 
-function ButtonTemplate_MenuItem.UpdateWidth()
-    local width = this:GetTextWidth();
-    if (this.Key) then
-        width = width + 38 + this.Key:GetStringWidth();
+function ButtonTemplate_MenuItem.UpdateWidth(item)
+    local width = item:GetTextWidth();
+    if (item.Key) then
+        width = width + 38 + item.Key:GetStringWidth();
     end
     width = math.max(width, 100);
-    this:SetWidth(width);
+    item:SetWidth(width);
 end
 
 CheckButtonTemplate_MenuCheckItem.UpdateWidth = ButtonTemplate_MenuItem.UpdateWidth;
