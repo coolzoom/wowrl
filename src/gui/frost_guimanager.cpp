@@ -53,15 +53,15 @@ namespace Frost
         bClosed_ = true;
     }
 
-    void GUIManager::AddAddOnFolder( const s_str& sFolder )
+    void GUIManager::AddAddOnDirectory( const s_str& sDirectory )
     {
-        if (!lGUIFolderList_.Find(sFolder))
-            lGUIFolderList_.PushBack(sFolder);
+        if (!lGUIDirectoryList_.Find(sDirectory))
+            lGUIDirectoryList_.PushBack(sDirectory);
     }
 
-    void GUIManager::ClearAddOnFolderList()
+    void GUIManager::ClearAddOnDirectoryList()
     {
-        lGUIFolderList_.Clear();
+        lGUIDirectoryList_.Clear();
     }
 
     s_bool GUIManager::AddUIObject( s_ptr<GUI::UIObject> pObj )
@@ -168,15 +168,16 @@ namespace Frost
         return pLua_;
     }
 
-    void GUIManager::LoadAddOnTOC_( const s_str& sAddOnName, const s_str& sAddOnFolder )
+    void GUIManager::LoadAddOnTOC_( const s_str& sAddOnName, const s_str& sAddOnDirectory )
     {
-        if (!lAddOnList_[sAddOnFolder].Find(sAddOnName))
+        if (!lAddOnList_[sAddOnDirectory].Find(sAddOnName))
         {
             AddOn mAddOn;
             mAddOn.bEnabled = true;
-            mAddOn.sFolder = sAddOnFolder + "/" + sAddOnName;
+            mAddOn.sMainDirectory = sAddOnDirectory.Cut("/").Back();
+            mAddOn.sDirectory = sAddOnDirectory + "/" + sAddOnName;
 
-            File mFile(mAddOn.sFolder + "/" + sAddOnName + ".toc", File::I);
+            File mFile(mAddOn.sDirectory + "/" + sAddOnName + ".toc", File::I);
 
             if (mFile.IsOpen())
             {
@@ -229,7 +230,8 @@ namespace Frost
                                 foreach (iterVar, lVariables)
                                 {
                                     iterVar->Trim(' ');
-                                    mAddOn.lSavedVariableList.PushBack(*iterVar);
+                                    if (!iterVar->IsEmpty(true))
+                                        mAddOn.lSavedVariableList.PushBack(*iterVar);
                                 }
                             }
                         }
@@ -239,7 +241,7 @@ namespace Frost
                         sLine.Trim(' ');
                         if (sLine.Find(".lua") || sLine.Find(".xml"))
                         {
-                            mAddOn.lFileList.PushBack(mAddOn.sFolder + "/" + sLine);
+                            mAddOn.lFileList.PushBack(mAddOn.sDirectory + "/" + sLine);
                         }
                     }
                 }
@@ -249,12 +251,12 @@ namespace Frost
                 if (mAddOn.sName == "")
                     Error(CLASS_NAME, "Missing AddOn name in "+mFile.GetName()+".");
                 else
-                    lAddOnList_[sAddOnFolder][sAddOnName] = mAddOn;
+                    lAddOnList_[sAddOnDirectory][sAddOnName] = mAddOn;
             }
             else
             {
                 Warning(CLASS_NAME,
-                    "Missing TOC file for AddOn \""+sAddOnName+"\". Folder ignored."
+                    "Missing TOC file for AddOn \""+sAddOnName+"\". Directory ignored."
                 );
             }
         }
@@ -275,6 +277,17 @@ namespace Frost
                 this->ParseXMLFile_(*iterFile, pAddOn);
             }
         }
+
+        s_str sSavedVariablesFile = "Saves/Interface/"+pAddOn->sMainDirectory+"/"+pAddOn->sName+".lua";
+        if (File::Exists(sSavedVariablesFile))
+            pLua_->DoFile(sSavedVariablesFile);
+
+        Event mEvent("ADDON_LOADED");
+        mEvent.Add(pAddOn->sName);
+
+        EventManager::GetSingleton()->FireEvent(Event(
+            mEvent
+        ));
     }
 
     void GUIManager::LoadAddOnDirectory_( const s_str& sDirectory )
@@ -347,6 +360,21 @@ namespace Frost
         }
     }
 
+    void GUIManager::SaveVariables_( s_ptr<AddOn> pAddOn )
+    {
+        if (!pAddOn->lSavedVariableList.IsEmpty())
+        {
+            File mFile("Saves/Interface/"+pAddOn->sMainDirectory+"/"+pAddOn->sName+".lua", File::O);
+            s_ctnr<s_str>::iterator iterVariable;
+            foreach (iterVariable, pAddOn->lSavedVariableList)
+            {
+                s_str sVariable = pLua_->SerializeGlobal(*iterVariable);
+                if (!sVariable.IsEmpty())
+                    mFile.WriteLine(sVariable);
+            }
+        }
+    }
+
     void GUIManager::LoadUI()
     {
         if (bClosed_)
@@ -360,10 +388,10 @@ namespace Frost
                 Engine::GetSingleton()->CreateGlue(pLua_);
             }
 
-            s_ctnr<s_str>::iterator iterFolder;
-            foreach (iterFolder, lGUIFolderList_)
+            s_ctnr<s_str>::iterator iterDirectory;
+            foreach (iterDirectory, lGUIDirectoryList_)
             {
-                this->LoadAddOnDirectory_(*iterFolder);
+                this->LoadAddOnDirectory_(*iterDirectory);
             }
 
             s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterUIObject;
@@ -380,6 +408,16 @@ namespace Frost
     {
         if (!bClosed_)
         {
+            s_ctnr<s_str>::iterator iterDirectory;
+            foreach (iterDirectory, lGUIDirectoryList_)
+            {
+                s_map<s_str, AddOn>::iterator iterAddOn;
+                foreach (iterAddOn, lAddOnList_[*iterDirectory])
+                {
+                    this->SaveVariables_(&iterAddOn->second);
+                }
+            }
+
             s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
             foreach (iterObj, lMainObjectList_)
             {
@@ -791,11 +829,11 @@ namespace Frost
             {
                 if (pElemBlock->GetName() == "Script")
                 {
-                    pLua_->DoFile(pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"));
+                    pLua_->DoFile(pAddOn->sDirectory + "/" + pElemBlock->GetAttribute("file"));
                 }
                 else if (pElemBlock->GetName() == "Include")
                 {
-                    this->ParseXMLFile_(pAddOn->sFolder + "/" + pElemBlock->GetAttribute("file"), pAddOn);
+                    this->ParseXMLFile_(pAddOn->sDirectory + "/" + pElemBlock->GetAttribute("file"), pAddOn);
                 }
                 else
                 {
@@ -857,7 +895,7 @@ namespace Frost
         {
             sNewFile[0] = '/';
             if (pCurrentAddOn_)
-                sNewFile = pCurrentAddOn_->sFolder + sNewFile;
+                sNewFile = pCurrentAddOn_->sDirectory + sNewFile;
         }
         return sNewFile;
     }
@@ -867,12 +905,12 @@ namespace Frost
         if (lAddOnList_.GetSize() >= 1)
         {
             Log("\n\n######################## Loaded AddOns ########################\n");
-            s_map< s_str, s_map<s_str, AddOn> >::iterator iterFolder;
-            foreach (iterFolder, lAddOnList_)
+            s_map< s_str, s_map<s_str, AddOn> >::iterator iterDirectory;
+            foreach (iterDirectory, lAddOnList_)
             {
-                Log("# Folder : "+iterFolder->first+"\n|-###");
+                Log("# Directory : "+iterDirectory->first+"\n|-###");
                 s_map<s_str, AddOn>::iterator iterAdd;
-                foreach (iterAdd, iterFolder->second)
+                foreach (iterAdd, iterDirectory->second)
                 {
                     if (iterAdd->second.bEnabled)
                         Log("|   # "+iterAdd->first);

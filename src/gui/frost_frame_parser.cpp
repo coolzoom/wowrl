@@ -35,6 +35,9 @@ void Frame::ParseBlock( s_ptr<XML::Block> pBlock )
     ParseLayersBlock_(pBlock);
     ParseFramesBlock_(pBlock);
     ParseScriptsBlock_(pBlock);
+
+    if (!bVirtual_)
+        On("Load");
 }
 
 void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )

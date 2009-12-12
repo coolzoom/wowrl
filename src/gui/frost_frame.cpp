@@ -344,6 +344,8 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewChild->CreateGlue();
                     this->AddChild(pNewChild);
                     pNewChild->CopyFrom(pChild);
+                    if (!bVirtual_)
+                        pNewChild->On("Load");
                 }
             }
         }
@@ -1082,17 +1084,6 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 
         pLua->CallFunction(sName_+":On"+sScriptName);
     }
-
-    if (sScriptName == "Load")
-    {
-        // OnLoad must be called from parent to childs, because childs often
-        // rely on their parent's state
-        s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
-        foreach (iterChild, lChildList_)
-        {
-            iterChild->second->On("Load");
-        }
-    }
 }
 
 void Frame::RegisterAllEvents()
@@ -1104,6 +1095,7 @@ void Frame::RegisterAllEvents()
 void Frame::RegisterEvent( const s_str& sEvent )
 {
     lRegEventList_[sEvent] = true;
+    EventReceiver::RegisterEvent(sEvent);
 }
 
 void Frame::RegisterForDrag( const s_ctnr<s_str>& lButtonList )

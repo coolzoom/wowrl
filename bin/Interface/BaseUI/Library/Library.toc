@@ -4,4 +4,5 @@
 ## Author: Kalith
 ## SavedVariables: 
 
+Library_AddOn.lua
 Library_Color.lua

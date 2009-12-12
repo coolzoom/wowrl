@@ -50,7 +50,7 @@
                 </Backdrop>
                 <Scripts>
                     <OnLoad>
-                        this:SetWidth(PanelBar.Config.panelWidth);
+                        this:SetWidth(AddOns.PanelBar.Config.panelWidth);
                     </OnLoad>
                 </Scripts>
             </Frame>

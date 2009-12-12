@@ -120,9 +120,9 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pNormalTexture_);
-                pNormalTexture_->CopyFrom(pButton->GetNormalTexture());
-                if (!pNormalTexture_->IsVirtual())
+                if (!IsVirtual())
                     pNormalTexture_->CreateGlue();
+                pNormalTexture_->CopyFrom(pButton->GetNormalTexture());
             }
         }
         if (pButton->GetPushedTexture())
@@ -142,9 +142,9 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pPushedTexture_);
-                pPushedTexture_->CopyFrom(pButton->GetPushedTexture());
-                if (!pPushedTexture_->IsVirtual())
+                if (!IsVirtual())
                     pPushedTexture_->CreateGlue();
+                pPushedTexture_->CopyFrom(pButton->GetPushedTexture());
             }
         }
         if (pButton->GetHighlightTexture())
@@ -164,9 +164,9 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pHighlightTexture_);
-                pHighlightTexture_->CopyFrom(pButton->GetHighlightTexture());
-                if (!pHighlightTexture_->IsVirtual())
+                if (!IsVirtual())
                     pHighlightTexture_->CreateGlue();
+                pHighlightTexture_->CopyFrom(pButton->GetHighlightTexture());
             }
         }
         if (pButton->GetDisabledTexture())
@@ -186,9 +186,9 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pDisabledTexture_);
-                pDisabledTexture_->CopyFrom(pButton->GetDisabledTexture());
-                if (!pDisabledTexture_->IsVirtual())
+                if (!IsVirtual())
                     pDisabledTexture_->CreateGlue();
+                pDisabledTexture_->CopyFrom(pButton->GetDisabledTexture());
             }
         }
 
@@ -209,9 +209,9 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pNormalText_);
-                pNormalText_->CopyFrom(pButton->GetNormalText());
-                if (!pNormalText_->IsVirtual())
+                if (!IsVirtual())
                     pNormalText_->CreateGlue();
+                pNormalText_->CopyFrom(pButton->GetNormalText());
             }
         }
         if (pButton->GetHighlightText())
@@ -231,9 +231,9 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pHighlightText_);
-                pHighlightText_->CopyFrom(pButton->GetHighlightText());
-                if (!pHighlightText_->IsVirtual())
+                if (!IsVirtual())
                     pHighlightText_->CreateGlue();
+                pHighlightText_->CopyFrom(pButton->GetHighlightText());
             }
         }
         if (pButton->GetDisabledText())
@@ -253,9 +253,9 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pDisabledText_);
-                pDisabledText_->CopyFrom(pButton->GetDisabledText());
-                if (!pDisabledText_->IsVirtual())
+                if (!IsVirtual())
                     pDisabledText_->CreateGlue();
+                pDisabledText_->CopyFrom(pButton->GetDisabledText());
             }
         }
 

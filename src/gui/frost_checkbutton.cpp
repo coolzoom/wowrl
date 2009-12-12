@@ -54,9 +54,9 @@ void CheckButton::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pCheckedTexture_);
-                pCheckedTexture_->CopyFrom(pButton->GetCheckedTexture());
-                if (!pCheckedTexture_->IsVirtual())
+                if (!IsVirtual())
                     pCheckedTexture_->CreateGlue();
+                pCheckedTexture_->CopyFrom(pButton->GetCheckedTexture());
             }
         }
         if (pButton->GetDisabledCheckedTexture())
@@ -76,9 +76,9 @@ void CheckButton::CopyFrom( s_ptr<UIObject> pObj )
             else
             {
                 this->AddRegion(pDisabledCheckedTexture_);
-                pDisabledCheckedTexture_->CopyFrom(pButton->GetDisabledCheckedTexture());
-                if (!pDisabledCheckedTexture_->IsVirtual())
+                if (!IsVirtual())
                     pDisabledCheckedTexture_->CreateGlue();
+                pDisabledCheckedTexture_->CopyFrom(pButton->GetDisabledCheckedTexture());
             }
         }
     }

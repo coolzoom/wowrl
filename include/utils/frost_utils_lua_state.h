@@ -125,6 +125,26 @@ namespace Frost
             */
             void    PrintError(const s_str& sError);
 
+            /// Checks if a variable is serializable.
+            /** \param iIndex The index on the stack of the variable
+            *   \return 'true' for strings, numbers, booleans and tables.
+            */
+            s_bool  IsSerializable(const s_int& iIndex = -1);
+
+            /// Writes the content of a global variable in a string.
+            /** \param sName The name of the global variable
+            *   \return The content of the variable
+            */
+            s_str   SerializeGlobal(const s_str& sName);
+
+            /// Writes the content of a variable in a string.
+            /** \param sTab   Number of space to put in front of each line
+            *   \param iIndex The index on the stack of the variable
+            *   \note Can only serialize strings, numbers, booleans and tables.
+            *   \return The content of the variable
+            */
+            s_str   Serialize(const s_str& sTab = "", const s_int& iIndex = -1);
+
             /// Puts a number on the stack.
             /** \param iValue The value to push on the stack (converted to float)
             */

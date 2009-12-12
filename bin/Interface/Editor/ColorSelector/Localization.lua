@@ -1,5 +1,5 @@
 if (GetLocale() == "frFR") then
-    ColorSelector.Locale = {
+    AddOns.ColorSelector.Locale = {
         ["Title"] = "Selecteur de couleur",
         ["SliderA"] = "Alpha",
         ["SliderR"] = "Rouge",
@@ -7,7 +7,7 @@ if (GetLocale() == "frFR") then
         ["SliderB"] = "Bleu",
     };
 else
-    ColorSelector.Locale = {
+    AddOns.ColorSelector.Locale = {
         ["Title"] = "Color selector",
         ["SliderA"] = "Alpha",
         ["SliderR"] = "Red",

@@ -56,7 +56,7 @@ namespace Frost
         */
         s_ptr<PixelShader>  GetPixelShader(const s_str& sName) const;
 
-        /// Reads the content of the Shaders folder.
+        /// Reads the content of the Shaders directory.
         void                LoadShaders();
 
         /// Sends shaders parameters.

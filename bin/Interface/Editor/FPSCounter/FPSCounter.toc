@@ -4,4 +4,5 @@
 ## Author: Kalith
 ## SavedVariables: 
 
+DefaultConfig.lua
 FPSCounter.xml

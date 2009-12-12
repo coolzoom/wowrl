@@ -1,0 +1,14 @@
+<Ui>
+    <Frame name="Editor">
+        <Scripts>
+            <OnLoad>
+                this:RegisterEvent("ADDON_LOADED");
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED" and arg1 == "Editor") then
+                    Frost:SetBackgroundColor(UnpackColor(AddOns.Editor.Config.backgroundColor));
+                end
+            </OnEvent>
+        </Scripts>
+    </Frame>
+</Ui>

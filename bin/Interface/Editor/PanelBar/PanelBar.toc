@@ -4,8 +4,9 @@
 ## Author: Kalith
 ## SavedVariables: 
 
+DefaultConfig.lua
+Localization.lua
 PanelBarTemplates.xml
 PanelBar.xml
 PanelBar.lua
-Localization.lua
 Panels.lua

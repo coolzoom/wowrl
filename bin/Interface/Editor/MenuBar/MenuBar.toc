@@ -4,9 +4,9 @@
 ## Author: Kalith
 ## SavedVariables: 
 
+DefaultConfig.lua
+Localization.lua
 MenuBarTemplates.xml
-MenuBarTemplates.lua
 MenuBar.xml
 MenuBar.lua
-Localization.lua
 Menus.lua

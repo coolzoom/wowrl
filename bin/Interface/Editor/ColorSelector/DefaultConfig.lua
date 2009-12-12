@@ -1,0 +1,1 @@
+AddOns.ColorSelector = AddOn("ColorSelector");

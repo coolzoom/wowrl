@@ -12,9 +12,6 @@
         </NormalText>
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
         <Scripts>
-            <OnLoad>
-                this:SetWidth(math.max(this:GetTextWidth(), 10)+16);
-            </OnLoad>
             <OnClick>
                 if (UIParent.activeDropdown) then
                     if (UIParent.activeDropdown ~= this.Dropdown) then

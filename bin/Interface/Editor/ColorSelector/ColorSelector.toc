@@ -4,6 +4,7 @@
 ## Author: Kalith
 ## SavedVariables: 
 
+DefaultConfig.lua
+Localization.lua
 ColorSelector.xml
 ColorSelector.lua
-Localization.lua

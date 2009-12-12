@@ -8,7 +8,7 @@
         <Scripts>
             <OnLoad>
                 this:SetBackdrop({{["top"] = 3}});
-                this:SetBackdropColor(UnpackColor(PanelBar.Config.panelColor));
+                this:SetBackdropColor(UnpackColor(AddOns.PanelBar.Config.panelColor));
             </OnLoad>
         </Scripts>
         <Frames>
@@ -102,7 +102,7 @@
                     end
                 else
                     PanelBar.currentPanel = this.panel;
-                    PanelBar:SetPoint("RIGHT", UIParent, "RIGHT", -PanelBar.Config.panelWidth);
+                    PanelBar:SetPoint("RIGHT", UIParent, "RIGHT", -AddOns.PanelBar.Config.panelWidth);
                     PanelBar.currentPanel:Show();
                 end
                 PanelBar:UpdateVerticalBorder();

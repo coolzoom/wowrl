@@ -1,9 +1,3 @@
-PanelBar.Config = {
-    ["headerColor"] = PackColor(0.75, 0.75, 0.75, 0.8),
-    ["panelColor"] = PackColor(0.75, 0.75, 0.75, 0.8),
-    ["panelWidth"] = 200,
-};
-
 PanelBar.lastPanel = nil;
 PanelBar.panelNumber = 0;
 PanelBar.panels = {};
@@ -12,8 +6,8 @@ function PanelBar:AddPanel(name)
     local panel = CreateFrame("Frame", "$parent"..name, PanelBar, "FrameTemplate_Panel");
     if (panel) then
         panel.rank = PanelBar.panelNumber;
-        panel:SetWidth(PanelBar.Config.panelWidth);
-        panel.Title:SetText(PanelBar.Locale[name])
+        panel:SetWidth(AddOns.PanelBar.Config.panelWidth);
+        panel.Title:SetText(AddOns.PanelBar.Locale[name])
         local header = CreateFrame("Button", "$parent"..name.."Header", PanelBar, "ButtonTemplate_PanelHeader");
         if (header) then
             panel.header = header;
@@ -23,7 +17,7 @@ function PanelBar:AddPanel(name)
             else
                 header:SetPoint("TOPRIGHT", panel, "TOPLEFT");
             end
-            header.Background:SetVertexColor(UnpackColor(PanelBar.Config.headerColor));
+            header.Background:SetVertexColor(UnpackColor(AddOns.PanelBar.Config.headerColor));
             local thumb = header:CreateTexture("$parentThumbnail", "ARTWORK");
             if (thumb) then
                 thumb:SetWidth(64);

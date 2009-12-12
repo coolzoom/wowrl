@@ -44,7 +44,8 @@ namespace Frost
 
         s_bool bEnabled;
 
-        s_str sFolder;
+        s_str sMainDirectory;
+        s_str sDirectory;
 
         s_ctnr<s_str> lFileList;
         s_ctnr<s_str> lSavedVariableList;
@@ -104,17 +105,17 @@ namespace Frost
         /// Initializes this manager.
         void                 Initialize();
 
-        /// Adds a new folder to be parsed for UI AddOns.
-        /** \param sFolder The new folder
+        /// Adds a new directory to be parsed for UI AddOns.
+        /** \param sDirectory The new directory
         */
-        void                 AddAddOnFolder(const s_str& sFolder);
+        void                 AddAddOnDirectory(const s_str& sDirectory);
 
-        /// Clears the AddOn folder list.
+        /// Clears the AddOn directory list.
         /** \note This is usefull whenever you need to reload a
         *         completely different UI (for example, when switching
         *         from your game's main menu to the real game).
         */
-        void                 ClearAddOnFolderList();
+        void                 ClearAddOnDirectoryList();
 
         /// Adds an UIObject to be handled by this manager.
         /** \param pObj The object to add
@@ -160,7 +161,7 @@ namespace Frost
         *   \return The modified file name
         *   \note All file names are relative to the Engine's executable path,
         *         but sometimes you'd like to use a path that is relative to
-        *         your AddOn folder for example. To do so, you need to append
+        *         your AddOn directory for example. To do so, you need to append
         *         "|" in front of your file name.
         */
         s_str                ParseFileName(const s_str& sFileName) const;
@@ -285,9 +286,11 @@ namespace Frost
 
     private :
 
-        void LoadAddOnTOC_(const s_str& sAddOnName, const s_str& sAddOnFolder);
+        void LoadAddOnTOC_(const s_str& sAddOnName, const s_str& sAddOnDirectory);
         void LoadAddOnFiles_(s_ptr<AddOn> pAddOn);
         void LoadAddOnDirectory_(const s_str& sDirectory);
+
+        void SaveVariables_(s_ptr<AddOn> pAddOn);
 
         void ParseXMLFile_(const s_str& sFile, s_ptr<AddOn> pAddOn);
 
@@ -300,7 +303,7 @@ namespace Frost
         s_map< s_uint, s_ptr<GUI::UIObject> > lObjectList_;
         s_map< s_uint, s_ptr<GUI::UIObject> > lMainObjectList_;
 
-        s_ctnr<s_str>                       lGUIFolderList_;
+        s_ctnr<s_str>                       lGUIDirectoryList_;
         s_map< s_str, s_map<s_str, AddOn> > lAddOnList_;
         s_ptr<AddOn>                        pCurrentAddOn_;
 

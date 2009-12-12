@@ -41,6 +41,7 @@ MenuBar:AddMenuItem("View", "BGColor"):SetScript("OnClick",
         ColorSelector:SetColor(PackColor(Frost:GetBackgroundColor()));
         ColorSelector:SetOnColorUpdateFunc(
             function (color)
+                AddOns.Editor.Config.backgroundColor = color;
                 Frost:SetBackgroundColor(UnpackColor(color));
             end
         );
