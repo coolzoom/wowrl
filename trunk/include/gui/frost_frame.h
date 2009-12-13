@@ -447,6 +447,18 @@ namespace Frost
             */
             void                UnregisterEvent(const s_str& sEventName);
 
+            /// Sets the addon this Frame belongs to.
+            /** \param pAddOn The addon this Frame belongs to
+            */
+            void                SetAddOn(s_ptr<AddOn> pAddOn);
+
+            /// Returns this Frame's addon.
+            /** \return This Frame's addon
+            *   \note Returns "nullptr" if the Frame has been created
+            *         by Lua code and wasn't assigned a parent.
+            */
+            s_ptr<AddOn>        GetAddOn() const;
+
             /// Creates the associated Lua glue.
             virtual void        CreateGlue();
 
@@ -482,6 +494,8 @@ namespace Frost
             s_ctnr<s_str>                         lQueuedEventList_;
             s_map<s_str, s_bool>                  lRegEventList_;
             s_map<s_str, s_bool>                  lRegDragList_;
+
+            s_ptr<AddOn> pAddOn_;
 
             s_uint uiLevel_;
 

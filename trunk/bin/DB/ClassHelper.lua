@@ -34,16 +34,16 @@ function CreateClass(base, ctor)
     end
 
     c.init = ctor;
-    c.is_a = function(self, klass)
+    c.is_a = function(self, class)
         local m = getmetatable(self);
         while (m) do
-            if (m == klass) then
+            if (m == class) then
                 return true;
             end
             m = m._base;
         end
         return false;
     end
-    setmetatable(c,mt);
+    setmetatable(c, mt);
     return c;
 end

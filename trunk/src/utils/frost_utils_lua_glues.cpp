@@ -57,10 +57,11 @@ int Lua::l_ThrowError( lua_State* pLua )
     mFunc.Add(0, "caption", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        Log("# Error # : Lua : " + mFunc.Get(0)->GetString());
+        s_str sError = mFunc.Get(0)->GetString();
+        Error("", sError);
 
         Event e("LUA_ERROR");
-        e.Add(s_var(mFunc.Get(0)->GetString()));
+        e.Add(sError);
 
         EventManager::GetSingleton()->FireEvent(e);
     }
@@ -73,7 +74,7 @@ int Lua::l_ThrowInternalError( lua_State* pLua )
     if (lua_isstring(pLua, -1))
     {
         s_str sError = lua_tostring(pLua, -1);
-        Log("# Error # : Lua : " + sError);
+        Error("", sError);
         lua_pop(pLua, 1);
 
         Event e("LUA_ERROR");
@@ -93,7 +94,19 @@ int Lua::l_Log( lua_State* pLua )
     mFunc.Add(0, "caption", Lua::TYPE_STRING);
     if (mFunc.Check())
     {
-        Log("# Lua # : " + mFunc.Get(0)->GetString());
+        Log(mFunc.Get(0)->GetString());
+    }
+
+    return mFunc.Return();
+}
+
+int Lua::l_Warning( lua_State* pLua )
+{
+    Lua::Function mFunc("Warning", pLua);
+    mFunc.Add(0, "caption", Lua::TYPE_STRING);
+    if (mFunc.Check())
+    {
+        Warning("", mFunc.Get(0)->GetString());
     }
 
     return mFunc.Return();

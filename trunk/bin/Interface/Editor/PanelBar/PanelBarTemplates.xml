@@ -7,9 +7,31 @@
         </Anchors>
         <Scripts>
             <OnLoad>
-                this:SetBackdrop({{["top"] = 3}});
-                this:SetBackdropColor(UnpackColor(AddOns.PanelBar.Config.panelColor));
+                this.normalTextColor = Color(1,1,1);
+                this.normalBgColor   = Color(0.75, 0.75, 0.75, 0.8);
+                
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self:SetBackdropColor(newColor:Unpack());
+                    self.header.Background:SetVertexColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Title:SetTextColor(newColor:Unpack());
+                end);
             </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    this:SetBackdrop({{["top"] = 3}});
+                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
+                    this:SetBackdropColor(newColor:Unpack());
+                    this.header.Background:SetVertexColor(newColor:Unpack());
+                    
+                    newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this.Title:SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
         </Scripts>
         <Frames>
             <Frame name="$parentContent">

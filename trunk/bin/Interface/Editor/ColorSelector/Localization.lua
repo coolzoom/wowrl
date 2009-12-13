@@ -1,17 +1,21 @@
 if (GetLocale() == "frFR") then
-    AddOns.ColorSelector.Locale = {
-        ["Title"] = "Selecteur de couleur",
+    AddOns.ColorSelector:SetLocale({
+        ["Title"]   = "Selecteur de couleur",
         ["SliderA"] = "Alpha",
         ["SliderR"] = "Rouge",
         ["SliderG"] = "Vert",
         ["SliderB"] = "Bleu",
-    };
+        ["Copy"]    = "Copier",
+        ["Paste"]   = "Coller",
+    });
 else
-    AddOns.ColorSelector.Locale = {
-        ["Title"] = "Color selector",
+    AddOns.ColorSelector:SetLocale({
+        ["Title"]   = "Color selector",
         ["SliderA"] = "Alpha",
         ["SliderR"] = "Red",
         ["SliderG"] = "Green",
         ["SliderB"] = "Blue",
-    };
+        ["Copy"]    = "Copy",
+        ["Paste"]   = "Paste",
+    });
 end

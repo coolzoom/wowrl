@@ -1,0 +1,142 @@
+<Ui>
+    <Frame name="FrameTemplate_ConfigMenuPanel" virtual="true" hidden="true">
+        <Anchors>
+            <Anchor point="TOPLEFT">
+                <Offset>
+                    <AbsDimension x="16" y="48"/>
+                </Offset>
+            </Anchor>
+            <Anchor point="BOTTOMRIGHT">
+                <Offset>
+                    <AbsDimension x="-16" y="-16"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <Backdrop edgeFile="|PanelBorder.png">
+            <BackgroundInsets>
+                <AbsInset left="2" right="2" top="2" bottom="2"/>
+            </BackgroundInsets>
+            <BackgroundColor a="0.2" r="1" g="1" b="1"/>
+        </Backdrop>
+    </Frame>
+    
+    <Button name="ButtonTemplate_ConfigMenuPanelHeader" virtual="true">
+        <Size>
+            <AbsDimension y="18"/>
+        </Size>
+        <Backdrop edgeFile="|HeaderBorder.png">
+            <BackgroundInsets>
+                <AbsInset left="2" right="2" top="2" bottom="0"/>
+            </BackgroundInsets>
+            <BackgroundColor a="0.2" r="0.3" g="0.3" b="0.3"/>
+        </Backdrop>
+        <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
+        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
+            <Anchors>
+                <Anchor point="CENTER">
+                    <Offset>
+                        <AbsDimension y="1"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+            <Color r="0.8" g="0.8" b="0.8"/>
+        </NormalText>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor = Color(0.8,0.8,0.8);
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
+            <OnClick>
+                ConfigMenu:SetCurrentPanel(this.panel.caption);
+            </OnClick>
+        </Scripts>
+    </Button>
+    
+    <Frame name="FrameTemplate_ConfigMenuColorItem" virtual="true">
+        <Size>
+            <AbsDimension y="18"/>
+        </Size>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor = Color(1,1,1);
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Caption:SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this.Caption:SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
+        </Scripts>
+        <Layers>
+            <Layer>
+                <FontString name="$parentCaption" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT">
+                    <Anchors>
+                        <Anchor point="LEFT"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Button name="$parentSwatch">
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="RIGHT"/>
+                </Anchors>
+                <Frames>
+                    <Frame name="$parentColorZone" setAllPoints="true">
+                        <Backdrop edgeFile="Interface/Editor/Templates/Border2PX.png">
+                            <BackgroundInsets>
+                                <AbsInset left="2" right="2" top="2" bottom="2"/>
+                            </BackgroundInsets>
+                            <BackgroundColor r="0" g="0" b="0"/>
+                        </Backdrop>
+                    </Frame>
+                </Frames>
+                <Backdrop bgFile="Interface/Editor/Templates/Checker4PX.png" tile="true">
+                    <BackgroundInsets>
+                        <AbsInset left="2" right="2" top="2" bottom="2"/>
+                    </BackgroundInsets>
+                </Backdrop>
+                <HighlightTexture file="|ColorSwatchHighlight.png" setAllPoints="false">
+                    <Size>
+                        <AbsDimension x="32" y="32"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </HighlightTexture>
+                <Scripts>
+                    <OnClick>
+                        ConfigMenu.currentColorItem = this:GetParent();
+                        ColorSelector:SetColor(this:GetParent().color);
+                        ColorSelector:SetOnColorUpdateFunc(function (color)
+                            ConfigMenu.currentColorItem.Swatch.ColorZone:SetBackdropColor(color:Unpack());
+                            ConfigMenu.currentColorItem.color:Assign(color);
+                            if (ConfigMenu.currentColorItem.onColorChange) then
+                                ConfigMenu.currentColorItem.onColorChange(color);
+                            end
+                        end);
+                        ColorSelector:Show();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+    </Frame>
+</Ui>

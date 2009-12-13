@@ -6,5 +6,6 @@
 
 DefaultConfig.lua
 Localization.lua
+ColorSelector_Templates.xml
 ColorSelector.xml
 ColorSelector.lua

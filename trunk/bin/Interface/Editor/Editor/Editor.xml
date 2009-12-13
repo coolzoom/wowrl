@@ -5,8 +5,8 @@
                 this:RegisterEvent("ADDON_LOADED");
             </OnLoad>
             <OnEvent>
-                if (event == "ADDON_LOADED" and arg1 == "Editor") then
-                    Frost:SetBackgroundColor(UnpackColor(AddOns.Editor.Config.backgroundColor));
+                if (event == "ADDON_LOADED") then
+                    Frost:SetBackgroundColor(AddOns.Editor.Config.worldBackgroundColor:Unpack());
                 end
             </OnEvent>
         </Scripts>

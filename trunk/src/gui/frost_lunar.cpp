@@ -35,6 +35,17 @@ namespace Frost
 {
 namespace GUI
 {
+    const char LuaVirtualGlue::className[] = "VirtualGlue";
+    const char* LuaVirtualGlue::classList[] = {"VirtualGlue", 0};
+    Lunar<LuaVirtualGlue>::RegType LuaVirtualGlue::methods[] = {
+        {"dt", &LuaVirtualGlue::GetDataTable},
+
+        // VirtualGlue
+        method(VirtualGlue, MarkForCopy),
+
+        {0,0}
+    };
+
     const char LuaUIObject::className[] = "UIObject";
     const char* LuaUIObject::classList[] = {"UIObject",
         "Frame", "Button", "CheckButton", "ColorSelect", "Cooldown", "EditBox", "MessageFrame",

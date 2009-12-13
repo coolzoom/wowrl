@@ -1,11 +1,11 @@
 if (GetLocale() == "frFR") then
-    AddOns.PanelBar.Locale = {
-        ["Objects"] = "Objets",
-        ["Terrain"] = "Terrain",
-    };
+    AddOns.PanelBar:SetLocale({
+        ["Objects"] = "OBJETS",
+        ["Terrain"] = "TERRAIN",
+    });
 else
-    AddOns.PanelBar.Locale = {
-        ["Objects"] = "Objects",
-        ["Terrain"] = "Terrain",
-    };
+    AddOns.PanelBar:SetLocale({
+        ["Objects"] = "OBJECTS",
+        ["Terrain"] = "TERRAIN",
+    });
 end

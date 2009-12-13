@@ -1,5 +1,4 @@
 
-
 MenuBar.lastMenu = nil;
 MenuBar.menus = {};
 
@@ -16,7 +15,7 @@ function MenuBar:AddMenu(caption)
             menu:SetPoint("TOPLEFT", MenuBar, "TOPLEFT", 3);
         end
 
-        menu:SetText(AddOns.MenuBar.Locale[menu.caption]);
+        menu:SetText(AddOns.MenuBar:GetLocalizedString(menu.caption));
         menu:SetWidth(math.max(menu:GetTextWidth(), 10)+16);
         
         local border = CreateFrame("Frame", "$parentBorder", menu);
@@ -44,7 +43,6 @@ function MenuBar:CreateMenuDropdown(caption)
             local backdrop = dropdown:GetBackdrop();
             backdrop.edgeFile = "Interface/Editor/MenuBar/DropdownBorder.png";
             dropdown:SetBackdrop(backdrop);
-            dropdown:SetBackdropColor(UnpackColor(AddOns.MenuBar.Config.barColor));
             
             dropdown:SetScript("OnShow",
                 function()
@@ -88,11 +86,10 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
                         key:SetJustifyH("RIGHT");
                         key:SetText(keycode);
                         key:SetPoint("RIGHT", item, "RIGHT", -8, 0);
-                        key:SetTextColor(0.3,0.3,0.3);
                     end
                 end
                 
-                item:SetText(AddOns.MenuBar.Locale[item.caption]);
+                item:SetText(AddOns.MenuBar:GetLocalizedString(item.caption));
                 
                 local width = item:GetTextWidth();
                 if (item.Key) then
@@ -128,7 +125,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                     item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 8);
                 end
                 
-                item:SetText(AddOns.MenuBar.Locale[item.caption]);
+                item:SetText(AddOns.MenuBar:GetLocalizedString(item.caption));
                 
                 if (keycode) then
                     local key = item:CreateFontString("$parentKey");

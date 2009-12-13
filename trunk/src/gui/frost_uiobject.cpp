@@ -35,7 +35,7 @@ UIObject::UIObject()
 
 UIObject::~UIObject()
 {
-    s_ctnr< s_ptr<LuaUIObject> >::iterator iter;
+    s_ctnr< s_ptr<LuaGlue> >::iterator iter;
     foreach (iter, lGlueList_)
     {
         iter->Delete();
@@ -92,6 +92,29 @@ void UIObject::CopyFrom( s_ptr<UIObject> pObj )
 {
     if (pObj)
     {
+        // Copy marked variables
+        if (!pObj->lCopyList_.IsEmpty())
+        {
+            s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+            pLua->GetGlobal(pObj->GetLuaName());
+            if (pLua->GetType() != Lua::TYPE_NIL)
+            {
+                pLua->GetGlobal(sLuaName_);
+                if (pLua->GetType() != Lua::TYPE_NIL)
+                {
+                    s_ctnr<s_str>::iterator iterVariable;
+                    foreach (iterVariable, pObj->lCopyList_)
+                    {
+                        pLua->GetField(*iterVariable, -2);
+                        pLua->SetField(*iterVariable);
+                    }
+                }
+                pLua->Pop();
+            }
+            pLua->Pop();
+        }
+
+        // Inherit properties
         bInherits_ = true;
         pInheritance_ = pObj;
 
@@ -888,3 +911,16 @@ const s_bool& UIObject::IsSpecial() const
 {
     return bSpecial_;
 }
+
+void UIObject::MarkForCopy( const s_str& sVariable )
+{
+    if (!lCopyList_.Find(sVariable))
+        lCopyList_.PushBack(sVariable);
+    else
+    {
+        Warning(lType_.Back(),
+            "\""+sName_+"."+sVariable+"\" has already been marked for copy. Ignoring."
+        );
+    }
+}
+

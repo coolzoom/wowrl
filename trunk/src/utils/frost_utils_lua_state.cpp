@@ -56,6 +56,7 @@ State::State()
 
     Register("Log", l_Log);
     Register("Error", l_ThrowError);
+    Register("Warning", l_Warning);
     Register("RandomInt", l_RandomInt);
     Register("RandomFloat", l_RandomFloat);
     Register("StrReplace", l_StrReplace);
@@ -422,6 +423,18 @@ void State::PrintError( const s_str& sError )
 
 s_bool State::IsSerializable( const s_int& iIndex )
 {
+    if (lua_getmetatable(pLua_, iIndex.Get()))
+    {
+        Pop();
+        GetField("Serialize", iIndex.Get());
+        if (GetType() == TYPE_FUNCTION)
+        {
+            Pop();
+            return true;
+        }
+        Pop();
+    }
+
     Type mType = GetType(iIndex);
     return (mType == TYPE_BOOLEAN) || (mType == TYPE_NUMBER) ||
            (mType == TYPE_STRING)  || (mType == TYPE_TABLE);
@@ -442,7 +455,28 @@ s_str State::SerializeGlobal( const s_str& sName )
 
 s_str State::Serialize( const s_str& sTab, const s_int& iIndex )
 {
+    s_int iAbsoluteIndex = iIndex >= 0 ? iIndex : s_int(GetTop()+1) + iIndex;
     s_str sResult;
+
+    if (lua_getmetatable(pLua_, iAbsoluteIndex.Get()))
+    {
+        Pop();
+        GetField("Serialize", iAbsoluteIndex);
+        if (GetType() == TYPE_FUNCTION)
+        {
+            PushValue(iAbsoluteIndex);
+            PushString(sTab);
+            int iError = lua_pcall(pLua_, 2, 1, 0);
+            if (HandleError(iError))
+            {
+                sResult << GetString();
+                Pop();
+                return sResult;
+            }
+        }
+        else
+            Pop();
+    }
 
     Type mType = GetType(iIndex);
     switch (mType)

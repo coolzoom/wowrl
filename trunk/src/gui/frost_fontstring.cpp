@@ -68,6 +68,9 @@ void FontString::Render()
             }
         }
 
+        fX += s_float(iXOffset_);
+        fY += s_float(iYOffset_);
+
         if (bHasShadow_)
         {
             pText_->SetColor(mShadowColor_, true);
@@ -184,7 +187,7 @@ void FontString::CopyFrom( s_ptr<UIObject> pObj )
         {
             this->SetShadow(true);
             this->SetShadowColor(pFontString->GetShadowColor());
-            this->SetShadowOffsets(pFontString->GetShadowOffset());
+            this->SetShadowOffsets(pFontString->GetShadowOffsets());
         }
         this->SetTextColor(pFontString->GetTextColor());
         this->SetNonSpaceWrap(pFontString->CanNonSpaceWrap());
@@ -226,9 +229,14 @@ const Color& FontString::GetShadowColor() const
     return mShadowColor_;
 }
 
-s_array<s_int,2> FontString::GetShadowOffset() const
+s_array<s_int,2> FontString::GetShadowOffsets() const
 {
     return (iShadowXOffset_, iShadowYOffset_);
+}
+
+s_array<s_int,2> FontString::GetOffsets() const
+{
+    return (iXOffset_, iYOffset_);
 }
 
 const s_int& FontString::GetShadowXOffset() const
@@ -293,6 +301,18 @@ void FontString::SetShadowOffsets( const s_array<s_int,2>& lShadowOffsets )
 {
     iShadowXOffset_ = lShadowOffsets[0];
     iShadowYOffset_ = lShadowOffsets[1];
+}
+
+void FontString::SetOffsets( const s_int& iXOffset, const s_int& iYOffset )
+{
+    iXOffset_ = iXOffset;
+    iYOffset_ = iYOffset;
+}
+
+void FontString::SetOffsets( const s_array<s_int,2>& lOffsets )
+{
+    iXOffset_ = lOffsets[0];
+    iYOffset_ = lOffsets[1];
 }
 
 void FontString::SetSpacing( const s_float& fSpacing )

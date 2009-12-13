@@ -12,15 +12,9 @@ function ColorSelector:SetColor(color)
 end
 
 function ColorSelector:OnColorUpdate()
-    local temp = {};
-    temp.a = ColorSelector.currentColor.a/255.0;
-    temp.r = ColorSelector.currentColor.r/255.0;
-    temp.g = ColorSelector.currentColor.g/255.0;
-    temp.b = ColorSelector.currentColor.b/255.0;
-    
-    ColorSelector.Swatch.ColorZone:SetBackdropColor(UnpackColor(temp));
+    ColorSelector.Swatch.ColorZone:SetBackdropColor(ColorSelector.currentColor:Unpack());
     
     if (onColorUpdate) then
-        onColorUpdate(temp);
+        onColorUpdate(ColorSelector.currentColor);
     end
 end

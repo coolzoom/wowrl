@@ -14,7 +14,7 @@ using namespace Frost::GUI;
 
 void CheckButton::ParseBlock( s_ptr<XML::Block> pBlock )
 {
-    Frame::ParseBlock(pBlock);
+    Button::ParseBlock(pBlock);
 
     s_ptr<XML::Block> pSpecialBlock;
     pSpecialBlock = pBlock->GetBlock("CheckedTexture");

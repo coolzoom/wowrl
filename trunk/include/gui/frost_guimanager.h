@@ -60,6 +60,7 @@ namespace Frost
 
     enum FrameStrata
     {
+        STRATA_PARENT,
         STRATA_BACKGROUND,
         STRATA_LOW,
         STRATA_MEDIUM,
@@ -73,7 +74,7 @@ namespace Frost
     /// Contains Frame
     struct Level
     {
-        s_ptr<GUI::Frame>                  pTopLevel;
+        s_ctnr< s_ptr<GUI::Frame> >        lTopLevelList;
         s_map< s_uint, s_ptr<GUI::Frame> > lFrameList;
 
         static const s_str CLASS_NAME;
@@ -82,8 +83,8 @@ namespace Frost
     /// Contains Level
     struct Strata
     {
-        s_ptr<GUI::Frame>    pTopStrata;
-        s_map<s_uint, Level> lLevelList;
+        s_ctnr< s_ptr<GUI::Frame> > lTopStrataList;
+        s_map<s_uint, Level>        lLevelList;
 
         static const s_str CLASS_NAME;
     };
@@ -123,6 +124,12 @@ namespace Frost
         */
         s_bool               AddUIObject(s_ptr<GUI::UIObject> pObj);
 
+        /// Returns the UIObject associated with the given ID.
+        /** \param uiID The unique ID representing the widget
+        *   \return The UIObject associated with the given ID
+        */
+        s_ptr<GUI::UIObject> GetUIObject(const s_uint& uiID);
+
         /// Returns the UIObject associated with the given name.
         /** \param sName    The name of the widget you're after
         *   \param bVirtual 'true' to search for a virtual frame
@@ -132,19 +139,6 @@ namespace Frost
 
         /// Tells this manager it must rebuild its strata list.
         void                 FireBuildStrataList();
-
-        /// Returns a top strata frame.
-        /** \param mStrata The strata to search in
-        *   \return This strata's top frame
-        */
-        s_ptr<GUI::Frame>    GetTopStrata(FrameStrata mStrata);
-
-        /// Returns a top level frame.
-        /** \param mStrata The strata to search in
-        *   \param uiLevel The strat's level to search in
-        *   \return This level's top frame
-        */
-        s_ptr<GUI::Frame>    GetTopLevel(FrameStrata mStrata, const s_uint& uiLevel);
 
         /// Prints debug informations in the log file.
         /** \note Calls UIObject::Serialize().

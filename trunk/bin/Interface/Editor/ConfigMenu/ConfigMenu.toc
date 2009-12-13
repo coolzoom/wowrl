@@ -1,10 +1,11 @@
 ## Interface: 0045
-## Title: Templates
+## Title: ConfigMenu
 ## Version: 1.0
 ## Author: Kalith
 ## SavedVariables: 
 
 DefaultConfig.lua
-Template_Dialog.xml
-Template_Dropdown.xml
-Template_Button.xml
+Localization.lua
+ConfigMenu_Templates.xml
+ConfigMenu.xml
+ConfigMenu.lua

@@ -79,6 +79,25 @@ void Button::ParseBlock( s_ptr<XML::Block> pBlock )
         pFontString->ParseBlock(pSpecialBlock);
     }
 
+    s_ptr<XML::Block> pOffsetBlock = pBlock->GetBlock("PushedTextOffset");
+    if (pOffsetBlock)
+    {
+        s_ptr<XML::Block> pDimBlock = pOffsetBlock->GetRadioBlock();
+        if (pDimBlock->GetName() == "AbsDimension")
+        {
+            SetPushedTextOffset((
+                s_int(pDimBlock->GetAttribute("x")),
+                s_int(pDimBlock->GetAttribute("y"))
+            ));
+        }
+        else if (pDimBlock->GetName() == "RelDimension")
+        {
+            Warning(pDimBlock->GetFile()+":"+pDimBlock->GetLineNbr(),
+                "RelDimension for Button:PushedTextOffset is not yet supported ("+sName_+")."
+            );
+        }
+    }
+
     if ((pBlock->IsProvided("text") || !pBlock->IsProvided("inherits")))
         SetText(pBlock->GetAttribute("text"));
 }
