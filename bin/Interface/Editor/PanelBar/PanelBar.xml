@@ -9,7 +9,7 @@
             <Anchor point="RIGHT"/>
         </Anchors>
         <Frames>
-            <Frame name="$parentVerticalBorderTop" hidden="true" frameStrata="HIGH">
+            <Frame name="$parentVerticalBorderTop" hidden="true" topLevel="true">
                 <Size>
                     <AbsDimension x="3"/>
                 </Size>
@@ -21,7 +21,7 @@
                     <BackgroundColor r="1" g="1" b="1"/>
                 </Backdrop>
             </Frame>
-            <Frame name="$parentVerticalBorderBottom" frameStrata="HIGH">
+            <Frame name="$parentVerticalBorderBottom" topLevel="true">
                 <Size>
                     <AbsDimension x="3"/>
                 </Size>
@@ -38,7 +38,7 @@
                     </OnLoad>
                 </Scripts>
             </Frame>
-            <Frame name="$parentHorizontalBorder" frameStrata="HIGH">
+            <Frame name="$parentHorizontalBorder" topLevel="true">
                 <Size>
                     <AbsDimension y="3"/>
                 </Size>

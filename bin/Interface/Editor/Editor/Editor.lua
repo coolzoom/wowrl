@@ -12,4 +12,26 @@ UIParent:SetScript("OnMouseUp", function ()
     end
 end);
 
+function AddOns.Editor:RegisterTextColorFunction(object, func)
+    if (not self.textColorFuncList) then
+        self.textColorFuncList = {};
+    end
+    
+    self.textColorFuncList[object] = func;
+end
 
+function AddOns.Editor:RegisterSecondaryTextColorFunction(object, func)
+    if (not self.sndTextColorFuncList) then
+        self.sndTextColorFuncList = {};
+    end
+    
+    self.sndTextColorFuncList[object] = func;
+end
+
+function AddOns.Editor:RegisterBackgroundColorFunction(object, func)
+    if (not self.bgColorFuncList) then
+        self.bgColorFuncList = {};
+    end
+    
+    self.bgColorFuncList[object] = func;
+end

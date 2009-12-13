@@ -10,9 +10,21 @@
         <Scripts>
             <OnLoad>
                 this.activeDropDown = nil;
-                this:SetBackdrop({["insets"]={["bottom"] = -3}});
-                this:SetBackdropColor(UnpackColor(AddOns.MenuBar.Config.barColor));
+                this.normalBgColor = Color(0.75, 0.75, 0.75, 0.8);
+                
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self:SetBackdropColor(newColor:Unpack());
+                end);
             </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
+                    this:SetBackdrop({["insets"]={["bottom"] = -3}});
+                    this:SetBackdropColor(newColor:Unpack());
+                end
+            </OnEvent>
         </Scripts>
         <Frames>
             <Frame name="$parentHorizontalBorderLeft">
@@ -70,7 +82,7 @@
                 <Anchors>
                     <Anchor point="TOPRIGHT">
                         <Offset>
-                            <AbsDimension y="1"/>
+                            <AbsDimension x="-3" y="1"/>
                         </Offset>
                     </Anchor>
                 </Anchors>

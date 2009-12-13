@@ -8,10 +8,23 @@
                     </Offset>
                 </Anchor>
             </Anchors>
-            <Color r="1" g="1" b="1"/>
         </NormalText>
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
         <Scripts>
+            <OnLoad>
+                this.normalTextColor = Color(1,1,1);
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
             <OnClick>
                 if (UIParent.activeDropdown) then
                     if (UIParent.activeDropdown ~= this.Dropdown) then
@@ -43,6 +56,31 @@
             <Color r="1" g="1" b="1"/>
         </NormalText>
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor = Color(1, 1, 1);
+                
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterSecondaryTextColorFunction(this, function (self, color)
+                    if (self.Key) then
+                        self.Key:SetTextColor(color:Unpack());
+                    end
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    if (this.Key) then
+                        this.Key:SetTextColor(AddOns.Editor.Config.UISecondaryTextColor:Unpack());
+                    end
+                end
+            </OnEvent>
+        </Scripts>
     </Button>
     
     <CheckButton name="CheckButtonTemplate_MenuCheckItem" inherits="ButtonTemplate_MenuItem" virtual="true">

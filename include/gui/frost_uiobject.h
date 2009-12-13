@@ -398,6 +398,15 @@ namespace Frost
             */
             const s_bool&   IsSpecial() const;
 
+            /// Adds a Lua variable to copy when derivating.
+            /** \param sVariable The name of the variable
+            *   \note The variable must be an element of the widget's Lua glue.<br>
+            *         If you have a widget called "Test", and in some lua code you do :<br>
+            *         Test.someVariable = 2;<br>
+            *         ... then you can call this function with "someVariable".
+            */
+            void            MarkForCopy(const s_str& sVariable);
+
             /// Creates the associated Lua glue.
             /** \note This method is pure virtual : it must be overriden.
             */
@@ -441,7 +450,8 @@ namespace Frost
             s_bool          bVirtual_;
             s_bool          bReady_;
 
-            s_ctnr< s_ptr<LuaUIObject> > lGlueList_;
+            s_ctnr< s_ptr<LuaGlue> > lGlueList_;
+            s_ctnr<s_str>            lCopyList_;
 
             s_ctnr<s_str> lType_;
 
@@ -469,15 +479,48 @@ namespace Frost
         /** \cond NOT_REMOVE_FROM_DOC
         */
 
-        /// UIObject Lua glue
-        class LuaUIObject
+        // Generic Lua glue
+        class LuaGlue
         {
         public :
 
-            /// Contructor.
-            LuaUIObject(lua_State* luaVM);
+            LuaGlue(lua_State* luaVM);
+            virtual ~LuaGlue();
 
-            /// Destructor.
+            int GetDataTable(lua_State *L);
+
+        protected :
+
+            lua_State* pLua_;
+            int        iRef_;
+        };
+
+        // Virtual widget Lua glue
+        class LuaVirtualGlue : public LuaGlue
+        {
+        public :
+
+            LuaVirtualGlue(lua_State* luaVM);
+            virtual ~LuaVirtualGlue();
+
+            int _MarkForCopy(lua_State*);
+
+            static const char className[];
+            static const char* classList[];
+            static Lunar<LuaVirtualGlue>::RegType methods[];
+            static const s_str CLASS_NAME;
+
+        protected :
+
+            s_ptr<UIObject> pParent_;
+        };
+
+        // UIObject Lua glue
+        class LuaUIObject : public LuaGlue
+        {
+        public :
+
+            LuaUIObject(lua_State* luaVM);
             virtual ~LuaUIObject();
 
             s_ptr<UIObject> GetParent();
@@ -511,9 +554,6 @@ namespace Frost
             int _SetWidth(lua_State*);
             int _Show(lua_State*);
 
-            /// Lunar function
-            int GetDataTable(lua_State *L);
-
             static const char className[];
             static const char* classList[];
             static Lunar<LuaUIObject>::RegType methods[];
@@ -522,9 +562,6 @@ namespace Frost
         protected :
 
             s_ptr<UIObject> pParent_;
-
-            lua_State* pLua_;
-            int        iRef_;
         };
 
         /** \endcond

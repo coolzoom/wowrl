@@ -1,23 +1,24 @@
-PanelBar.lastPanel = nil;
-PanelBar.panelNumber = 0;
-PanelBar.panels = {};
-
 function PanelBar:AddPanel(name)
-    local panel = CreateFrame("Frame", "$parent"..name, PanelBar, "FrameTemplate_Panel");
+    if (not self.panels) then
+        self.lastPanel = nil;
+        self.panelNumber = 0;
+        self.panels = {};
+    end
+    
+    local panel = CreateFrame("Frame", "$parent"..name, self, "FrameTemplate_Panel");
     if (panel) then
-        panel.rank = PanelBar.panelNumber;
+        panel.rank = self.panelNumber;
         panel:SetWidth(AddOns.PanelBar.Config.panelWidth);
-        panel.Title:SetText(AddOns.PanelBar.Locale[name])
-        local header = CreateFrame("Button", "$parent"..name.."Header", PanelBar, "ButtonTemplate_PanelHeader");
+        panel.Title:SetText(AddOns.PanelBar:GetLocalizedString(name));
+        local header = CreateFrame("Button", "$parent"..name.."Header", self, "ButtonTemplate_PanelHeader");
         if (header) then
             panel.header = header;
             header.panel = panel;
-            if (PanelBar.lastPanel) then
-                header:SetPoint("TOPRIGHT", PanelBar.lastPanel.header, "BOTTOMRIGHT", 0, -3);
+            if (self.lastPanel) then
+                header:SetPoint("TOPRIGHT", self.lastPanel.header, "BOTTOMRIGHT", 0, -3);
             else
                 header:SetPoint("TOPRIGHT", panel, "TOPLEFT");
             end
-            header.Background:SetVertexColor(UnpackColor(AddOns.PanelBar.Config.headerColor));
             local thumb = header:CreateTexture("$parentThumbnail", "ARTWORK");
             if (thumb) then
                 thumb:SetWidth(64);
@@ -27,25 +28,25 @@ function PanelBar:AddPanel(name)
                 thumb:SetDesaturated(true);
             end
         end
-        PanelBar.lastPanel = panel;
-        PanelBar.panels[name] = panel;
-        PanelBar.panelNumber = PanelBar.panelNumber + 1;
+        self.lastPanel = panel;
+        self.panels[name] = panel;
+        self.panelNumber = self.panelNumber + 1;
         return panel;
     end
 end
 
 function PanelBar:UpdateVerticalBorder()
-    if (PanelBar.currentPanel) then
-        if (PanelBar.currentPanel.rank ~= 0) then
-            PanelBar.VerticalBorderTop:Show();
-            PanelBar.VerticalBorderTop:SetPoint("BOTTOM", PanelBar.currentPanel.header, "TOP");
-            PanelBar.VerticalBorderBottom:SetPoint("TOP", PanelBar.currentPanel.header, "BOTTOM");
+    if (self.currentPanel) then
+        if (self.currentPanel.rank ~= 0) then
+            self.VerticalBorderTop:Show();
+            self.VerticalBorderTop:SetPoint("BOTTOM", self.currentPanel.header, "TOP");
+            self.VerticalBorderBottom:SetPoint("TOP", self.currentPanel.header, "BOTTOM");
         else
-            PanelBar.VerticalBorderTop:Hide();
-            PanelBar.VerticalBorderBottom:SetPoint("TOP", PanelBar.currentPanel.header, "BOTTOM");
+            self.VerticalBorderTop:Hide();
+            self.VerticalBorderBottom:SetPoint("TOP", self.currentPanel.header, "BOTTOM");
         end
     else
-        PanelBar.VerticalBorderTop:Hide();
-        PanelBar.VerticalBorderBottom:SetPoint("TOP", PanelBar, "TOP");
+        self.VerticalBorderTop:Hide();
+        self.VerticalBorderBottom:SetPoint("TOP", self, "TOP");
     end
 end

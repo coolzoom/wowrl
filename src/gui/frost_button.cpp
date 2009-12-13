@@ -35,7 +35,10 @@ void Button::CreateGlue()
     if (bVirtual_)
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-        pLua->NewTable();
+        pLua->PushNumber(uiID_);
+        lGlueList_.PushBack(
+            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
+        );
         pLua->SetGlobal(sLuaName_);
     }
     else
@@ -540,6 +543,9 @@ void Button::Push()
             pPushedTexture_->Show();
         if (pNormalTexture_)
             pNormalTexture_->Hide();
+
+        if (pNormalText_)
+            pNormalText_->SetOffsets(lPushedTextOffset_);
     }
 }
 
@@ -551,6 +557,9 @@ void Button::Release()
             pPushedTexture_->Hide();
         if (pNormalTexture_)
             pNormalTexture_->Show();
+
+        if (pNormalText_)
+            pNormalText_->SetOffsets(0, 0);
     }
 }
 

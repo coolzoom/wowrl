@@ -137,29 +137,29 @@ namespace Frost
         }
     }
 
+    s_ptr<GUI::UIObject> GUIManager::GetUIObject( const s_uint& uiID )
+    {
+        if (lObjectList_.Find(uiID))
+            return lObjectList_[uiID];
+        else
+            return nullptr;
+    }
+
     s_ptr<GUI::UIObject> GUIManager::GetUIObjectByName( const s_str& sName, const s_bool& bVirtual )
     {
         if (bVirtual)
         {
             if (lNamedVirtualObjectList_.Find(sName))
-            {
                 return lNamedVirtualObjectList_[sName];
-            }
             else
-            {
                 return nullptr;
-            }
         }
         else
         {
             if (lNamedObjectList_.Find(sName))
-            {
                 return lNamedObjectList_[sName];
-            }
             else
-            {
                 return nullptr;
-            }
         }
     }
 
@@ -456,34 +456,30 @@ namespace Frost
                 foreach (iterFrame, mLevel.lFrameList)
                 {
                     s_ptr<GUI::Frame> pFrame = iterFrame->second;
-                    if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
+                    if ( (!pFrame->IsTopLevel()) && (!pFrame->IsTopStrata()) )
                     {
                         pFrame->Render();
                     }
                 }
 
-                if (mLevel.pTopLevel)
-                    mLevel.pTopLevel->Render();
+                s_ctnr< s_ptr<GUI::Frame> >::iterator iterTop;
+                foreach (iterTop, mLevel.lTopLevelList)
+                {
+                    (*iterTop)->Render();
+                }
             }
 
-            if (mStrata.pTopStrata)
-                mStrata.pTopStrata->Render();
+            s_ctnr< s_ptr<GUI::Frame> >::iterator iterTop;
+            foreach (iterTop, mStrata.lTopStrataList)
+            {
+                (*iterTop)->Render();
+            }
         }
     }
 
     void GUIManager::FireBuildStrataList()
     {
         bBuildStrataList_ = true;
-    }
-
-    s_ptr<GUI::Frame> GUIManager::GetTopStrata( FrameStrata mStrata )
-    {
-        return lStrataList_[mStrata].pTopStrata;
-    }
-
-    s_ptr<GUI::Frame> GUIManager::GetTopLevel( FrameStrata mStrata, const s_uint& uiLevel )
-    {
-        return lStrataList_[mStrata].lLevelList[uiLevel].pTopLevel;
     }
 
     void GUIManager::Update( const s_float& fDelta )
@@ -578,10 +574,10 @@ namespace Frost
                 pLevel->lFrameList[pFrame->GetID()] = pFrame;
 
                 if (pFrame->IsTopStrata())
-                    pStrata->pTopStrata = pFrame;
+                    pStrata->lTopStrataList.PushBack(pFrame);
 
                 if (pFrame->IsTopLevel())
-                    pLevel->pTopLevel = pFrame;
+                    pLevel->lTopLevelList.PushBack(pFrame);
             }
         }
 
@@ -599,47 +595,62 @@ namespace Frost
                 --iterStrata;
                 Strata& mStrata = iterStrata->second;
 
-                if (mStrata.pTopStrata && mStrata.pTopStrata->IsInFrame(iX, iY) && mStrata.pTopStrata->IsVisible())
+                if (!mStrata.lTopStrataList.IsEmpty())
                 {
-                    pOveredFrame = mStrata.pTopStrata;
-                    break;
-                }
-                else
-                {
-                    s_map<s_uint, Level>::iterator iterLevel = mStrata.lLevelList.End();
-                    while (iterLevel != mStrata.lLevelList.Begin() && !pOveredFrame)
+                    s_ctnr< s_ptr<GUI::Frame> >::iterator iterFrame;
+                    foreach (iterFrame, mStrata.lTopStrataList)
                     {
-                        --iterLevel;
-                        Level& mLevel = iterLevel->second;
-
-                        if (mLevel.pTopLevel && mLevel.pTopLevel->IsInFrame(iX, iY) && mLevel.pTopLevel->IsVisible())
+                        s_ptr<GUI::Frame> pFrame = *iterFrame;
+                        if (pFrame->IsMouseEnabled() && pFrame->IsVisible() && pFrame->IsInFrame(iX, iY))
                         {
-                            pOveredFrame = mLevel.pTopLevel;
+                            pOveredFrame = pFrame;
                             break;
                         }
-                        else
-                        {
-                            s_map< s_uint, s_ptr<GUI::Frame> >::iterator iterFrame;
-                            foreach (iterFrame, mLevel.lFrameList)
-                            {
-                                s_ptr<GUI::Frame> pFrame = iterFrame->second;
-                                if ( (pFrame != mLevel.pTopLevel) && (pFrame != mStrata.pTopStrata) )
-                                {
-                                    if (pFrame->IsInFrame(iX, iY) && pFrame->IsVisible() && pFrame->IsMouseEnabled())
-                                    {
-                                        pOveredFrame = pFrame;
-                                        break;
-                                    }
-                                }
-                            }
+                    }
 
-                            if (pOveredFrame)
+                    if (pOveredFrame)
+                        break;
+                }
+
+                s_map<s_uint, Level>::iterator iterLevel = mStrata.lLevelList.End();
+                while (iterLevel != mStrata.lLevelList.Begin() && !pOveredFrame)
+                {
+                    --iterLevel;
+                    Level& mLevel = iterLevel->second;
+
+                    if (!mLevel.lTopLevelList.IsEmpty())
+                    {
+                        s_ctnr< s_ptr<GUI::Frame> >::iterator iterFrame;
+                        foreach (iterFrame, mLevel.lTopLevelList)
+                        {
+                            s_ptr<GUI::Frame> pFrame = *iterFrame;
+                            if (pFrame->IsMouseEnabled() && pFrame->IsVisible() && pFrame->IsInFrame(iX, iY))
+                            {
+                                pOveredFrame = pFrame;
                                 break;
+                            }
                         }
 
                         if (pOveredFrame)
                             break;
                     }
+
+                    s_map< s_uint, s_ptr<GUI::Frame> >::iterator iterFrame;
+                    foreach (iterFrame, mLevel.lFrameList)
+                    {
+                        s_ptr<GUI::Frame> pFrame = iterFrame->second;
+                        if (!pFrame->IsTopStrata() && !pFrame->IsTopLevel())
+                        {
+                            if (pFrame->IsMouseEnabled() && pFrame->IsVisible() && pFrame->IsInFrame(iX, iY))
+                            {
+                                pOveredFrame = pFrame;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (pOveredFrame)
+                        break;
                 }
             }
 
@@ -860,7 +871,15 @@ namespace Frost
 
                     try
                     {
+                        s_ptr<GUI::Frame> pFrame = s_ptr<GUI::Frame>::DynamicCast(pUIObject);
+
+                        if (pFrame)
+                            pFrame->SetAddOn(GUIManager::GetSingleton()->GetCurrentAddOn());
+
                         pUIObject->ParseBlock(pElemBlock);
+
+                        if (!pUIObject->IsVirtual() && pFrame)
+                            pFrame->On("Load");
                     }
                     catch (const GUIException& e)
                     {

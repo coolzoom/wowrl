@@ -155,7 +155,7 @@ s_bool EditorRenderFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = false;
+    s_bool bEditor = true;
 
     // Read commands
     if (argc > 1)
@@ -185,8 +185,8 @@ int main(int argc, char* argv[])
 
             GameplayManager::GetSingleton()->SetCurrentGameplay("Editor");
 
-            GUIManager::GetSingleton()->AddAddOnFolder("Interface/BaseUI");
-            GUIManager::GetSingleton()->AddAddOnFolder("Interface/Editor");
+            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/BaseUI");
+            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/Editor");
             GUIManager::GetSingleton()->LoadUI();
 
             //s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
@@ -202,8 +202,8 @@ int main(int argc, char* argv[])
             SpriteManager::GetSingleton()->SetRenderFunction(&GameRenderFunc);
 
             // Load GUI
-            GUIManager::GetSingleton()->AddAddOnFolder("Interface/BaseUI");
-            GUIManager::GetSingleton()->AddAddOnFolder("Interface/AddOns");
+            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/BaseUI");
+            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/AddOns");
             GUIManager::GetSingleton()->LoadUI();
 
             // Populate the world !

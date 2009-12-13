@@ -12,15 +12,51 @@ using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
 
+const s_str LuaVirtualGlue::CLASS_NAME = "GUI::LuaVirtualGlue";
 const s_str LuaUIObject::CLASS_NAME = "GUI::LuaUIObject";
 
-LuaUIObject::LuaUIObject( lua_State* pLua )
+LuaGlue::LuaGlue( lua_State* pLua )
 {
-    s_str sName = lua_tostring(pLua, -1);
-
     lua_newtable(pLua);
     iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);
     pLua_ = pLua;
+}
+
+LuaGlue::~LuaGlue()
+{
+    luaL_unref(pLua_, LUA_REGISTRYINDEX, iRef_);
+}
+
+LuaVirtualGlue::LuaVirtualGlue( lua_State* pLua ) : LuaGlue(pLua)
+{
+    s_uint uiID = s_uint(s_float(lua_tonumber(pLua, -1)));
+
+    pParent_ = GUIManager::GetSingleton()->GetUIObject(uiID);
+    if (!pParent_)
+    {
+        throw Exception(CLASS_NAME, "Glue missing its parent (\""+uiID+"\") !");
+    }
+}
+
+LuaVirtualGlue::~LuaVirtualGlue()
+{
+}
+
+int LuaVirtualGlue::_MarkForCopy( lua_State* pLua )
+{
+    Lua::Function mFunc("VirtualGlue:MarkForCopy", pLua, 1);
+    mFunc.Add(0, "variable", Lua::TYPE_STRING);
+    if (mFunc.Check())
+    {
+        pParent_->MarkForCopy(mFunc.Get(0)->GetString());
+    }
+
+    return mFunc.Return();
+}
+
+LuaUIObject::LuaUIObject( lua_State* pLua ) : LuaGlue(pLua)
+{
+    s_str sName = lua_tostring(pLua, -1);
 
     pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sName);
     if (!pParent_)
@@ -31,7 +67,6 @@ LuaUIObject::LuaUIObject( lua_State* pLua )
 
 LuaUIObject::~LuaUIObject()
 {
-    luaL_unref(pLua_, LUA_REGISTRYINDEX, iRef_);
 }
 
 s_ptr<UIObject> LuaUIObject::GetParent()
@@ -39,7 +74,7 @@ s_ptr<UIObject> LuaUIObject::GetParent()
     return pParent_;
 }
 
-int LuaUIObject::GetDataTable( lua_State * pLua )
+int LuaGlue::GetDataTable( lua_State * pLua )
 {
     lua_getref(pLua, iRef_);
     return 1;

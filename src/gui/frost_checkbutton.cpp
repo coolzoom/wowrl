@@ -185,7 +185,10 @@ void CheckButton::CreateGlue()
     if (bVirtual_)
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-        pLua->NewTable();
+        pLua->PushNumber(uiID_);
+        lGlueList_.PushBack(
+            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
+        );
         pLua->SetGlobal(sLuaName_);
     }
     else

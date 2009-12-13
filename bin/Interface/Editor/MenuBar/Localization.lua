@@ -1,5 +1,5 @@
 if (GetLocale() == "frFR") then
-    AddOns.MenuBar.Locale = {
+    AddOns.MenuBar:SetLocale({
         ["File"] = "Fichier",
         ["FileNew"] = "Nouveau",
         ["FileOpen"] = "Ouvrir...",
@@ -17,12 +17,13 @@ if (GetLocale() == "frFR") then
         ["ViewShading"] = "Activer/desactiver l'eclairage",
         ["ViewBGColor"] = "Couleur d'arriere plan...",
         ["Settings"] = "Parametres",
+        ["SettingsOptions"] = "Options...",
         ["Help"] = "Aide",
         ["HelpShow"] = "Montrer l'aide",
         ["HelpAbout"] = "A propos"
-    };
+    });
 else
-    AddOns.MenuBar.Locale = {
+    AddOns.MenuBar:SetLocale({
         ["File"] = "File",
         ["FileNew"] = "New",
         ["FileOpen"] = "Open...",
@@ -40,8 +41,9 @@ else
         ["ViewShading"] = "Toggle shading",
         ["ViewBGColor"] = "Background color...",
         ["Settings"] = "Settings",
+        ["SettingsOptions"] = "Options...",
         ["Help"] = "Help",
         ["HelpShow"] = "Show help",
         ["HelpAbout"] = "About"
-    };
+    });
 end

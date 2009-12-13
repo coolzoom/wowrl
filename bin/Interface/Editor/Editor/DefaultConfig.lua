@@ -1,4 +1,7 @@
 AddOns.Editor = AddOn("Editor");
 AddOns.Editor.Config = {
-    ["backgroundColor"] = PackColor(0,0,0,1);
+    ["worldBackgroundColor"] = Color(0, 0, 0);
+    ["UIBackgroundColor"]    = Color(1, 1, 1);
+    ["UITextColor"]          = Color(1, 1, 1);
+    ["UISecondaryTextColor"] = Color(0.3, 0.3, 0.3);
 };

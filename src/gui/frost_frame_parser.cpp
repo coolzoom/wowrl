@@ -35,9 +35,6 @@ void Frame::ParseBlock( s_ptr<XML::Block> pBlock )
     ParseLayersBlock_(pBlock);
     ParseFramesBlock_(pBlock);
     ParseScriptsBlock_(pBlock);
-
-    if (!bVirtual_)
-        On("Load");
 }
 
 void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
@@ -158,8 +155,8 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
 
     if (pBlock->IsProvided("alpha") || !bInherits_)
         SetAlpha(s_float(pBlock->GetAttribute("alpha")));
-    if (pBlock->IsProvided("toplevel") || !bInherits_)
-        SetTopLevel(s_bool(pBlock->GetAttribute("toplevel")));
+    if (pBlock->IsProvided("topLevel") || !bInherits_)
+        SetTopLevel(s_bool(pBlock->GetAttribute("topLevel")));
     if (pBlock->IsProvided("movable") || !bInherits_)
         SetMovable(s_bool(pBlock->GetAttribute("movable")));
     if (pBlock->IsProvided("resizable") || !bInherits_)
@@ -417,8 +414,11 @@ void Frame::ParseFramesBlock_( s_ptr<XML::Block> pBlock )
 
             try
             {
+                pFrame->SetAddOn(GUIManager::GetSingleton()->GetCurrentAddOn());
                 pFrame->SetParent(this);
                 pFrame->ParseBlock(pElemBlock);
+                if (!pFrame->IsVirtual())
+                    pFrame->On("Load");
             }
             catch (const GUIException& e)
             {

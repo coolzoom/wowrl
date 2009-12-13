@@ -97,7 +97,10 @@ void Frame::CreateGlue()
     if (bVirtual_)
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-        pLua->NewTable();
+        pLua->PushNumber(uiID_);
+        lGlueList_.PushBack(
+            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
+        );
         pLua->SetGlobal(sLuaName_);
     }
     else
@@ -114,6 +117,19 @@ void Frame::CreateGlue()
 s_str Frame::Serialize( const s_str& sTab ) const
 {
     s_str sStr = Region::Serialize(sTab);
+    sStr << sTab << "  # Strata      : ";
+    switch (mStrata_)
+    {
+        case STRATA_PARENT :            sStr << "PARENT\n"; break;
+        case STRATA_BACKGROUND :        sStr << "BACKGROUND\n"; break;
+        case STRATA_LOW :               sStr << "LOW\n"; break;
+        case STRATA_MEDIUM :            sStr << "MEDIUM\n"; break;
+        case STRATA_HIGH :              sStr << "BACKGROUND\n"; break;
+        case STRATA_DIALOG :            sStr << "DIALOG\n"; break;
+        case STRATA_FULLSCREEN :        sStr << "FULLSCREEN\n"; break;
+        case STRATA_FULLSCREEN_DIALOG : sStr << "FULLSCREEN_DIALOG\n"; break;
+        case STRATA_TOOLTIP :           sStr << "TOOLTIP\n"; break;
+    }
     sStr << sTab << "  # Level       : " << uiLevel_ << "\n";
     if (!bIsMouseEnabled_ && !bIsKeyboardEnabled_ && !bIsMouseWheelEnabled_)
         sStr << sTab << "  # Inputs      : none\n";
@@ -718,13 +734,12 @@ void Frame::AddChild( s_ptr<Frame> pChild )
             if (!bVirtual_)
             {
                 s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
-                const s_str& sRawName = pChild->GetRawName();
+                s_str sRawName = pChild->GetRawName();
                 if (sRawName.StartsWith("$parent"))
                 {
-                    s_str sTempName = pChild->GetName();
-                    sTempName.EraseFromStart(sName_.GetSize());
-                    pLua->GetGlobal(pChild->GetName());
-                    pLua->SetGlobal(sName_+"."+sTempName);
+                    sRawName.EraseFromStart(7);
+                    pLua->GetGlobal(pChild->GetLuaName());
+                    pLua->SetGlobal(sLuaName_+"."+sRawName);
                 }
             }
         }
@@ -944,24 +959,15 @@ void Frame::OnEvent( const Event& mEvent )
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
 
-        // Lua handlers do not need direct arguments.
-        // Instead, we set the value of some global variables
-        // (event, arg1, arg2, ...) that the user can use
-        // however he wants in his handler.
-
-        // Set event name
-        pLua->PushString(mEvent.GetName());
-        pLua->SetGlobal("event");
-
-        // Set arguments
-        for (s_uint i; i < mEvent.GetNumParam(); ++i)
+        // ADDON_LOADED should only be fired if it's this Frame's addon
+        if (mEvent.GetName() == "ADDON_LOADED")
         {
-            s_ptr<const s_var> pArg = mEvent.Get(i);
-            pLua->PushVar(*pArg);
-            pLua->SetGlobal("arg"+(i+1));
+            if (!pAddOn_ || pAddOn_->sName != mEvent.Get(0)->Get<s_str>())
+                return;
         }
 
-        pLua->CallFunction(sName_+":OnEvent");
+        Event mTemp = mEvent;
+        On("Event", &mTemp);
     }
 
     if (bIsMouseEnabled_)
@@ -1081,6 +1087,20 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             pLua->PushNumber(TimeManager::GetSingleton()->GetDelta());
             pLua->SetGlobal("arg1");
         }
+        else if (sScriptName == "Event")
+        {
+            // Set event name
+            pLua->PushString(pEvent->GetName());
+            pLua->SetGlobal("event");
+
+            // Set arguments
+            for (s_uint i; i < pEvent->GetNumParam(); ++i)
+            {
+                s_ptr<const s_var> pArg = pEvent->Get(i);
+                pLua->PushVar(*pArg);
+                pLua->SetGlobal("arg"+(i+1));
+            }
+        }
 
         pLua->CallFunction(sName_+":On"+sScriptName);
     }
@@ -1115,7 +1135,18 @@ void Frame::SetClampedToScreen( const s_bool& bIsClampedToScreen )
 
 void Frame::SetFrameStrata( FrameStrata mStrata )
 {
-    if (mStrata_ != mStrata)
+    if (mStrata == STRATA_PARENT)
+    {
+        if (!bVirtual_)
+        {
+            if (pParentFrame_)
+                mStrata = pParentFrame_->GetFrameStrata();
+            else
+                mStrata = STRATA_MEDIUM;
+        }
+    }
+
+    if ( (mStrata_ != mStrata) && !bVirtual_ )
         GUIManager::GetSingleton()->FireBuildStrataList();
 
     mStrata_ = mStrata;
@@ -1143,10 +1174,15 @@ void Frame::SetFrameStrata( const s_str& sStrata )
         mStrata = STRATA_TOOLTIP;
     else if (sStrata == "PARENT")
     {
-        if (pParentFrame_)
-            mStrata = pParentFrame_->GetFrameStrata();
+        if (bVirtual_)
+            mStrata = STRATA_PARENT;
         else
-            mStrata = STRATA_MEDIUM;
+        {
+            if (pParentFrame_)
+                mStrata = pParentFrame_->GetFrameStrata();
+            else
+                mStrata = STRATA_MEDIUM;
+        }
     }
     else
     {
@@ -1217,6 +1253,9 @@ void Frame::SetParent( s_ptr<UIObject> pParent )
         pParent_ = pParent;
         pParentFrame_ = s_ptr<Frame>::DynamicCast(pParent);
 
+        if (!pAddOn_ && pParentFrame_)
+            pAddOn_ = pParentFrame_->GetAddOn();
+
         FireUpdateDimensions();
     }
     else
@@ -1237,34 +1276,22 @@ void Frame::SetScale( const s_float& fScale )
 
 void Frame::SetTopLevel( const s_bool& bIsTopLevel )
 {
-    if ( pParent_ && (bIsTopLevel_ != bIsTopLevel) )
+    if (bIsTopLevel_ != bIsTopLevel)
     {
+        bIsTopLevel_ = bIsTopLevel;
+        bIsTopStrata_ = false;
         GUIManager::GetSingleton()->FireBuildStrataList();
-        if (bIsTopLevel)
-        {
-            s_ptr<Frame> pTopLevel = GUIManager::GetSingleton()->GetTopLevel(mStrata_, uiLevel_);
-            if (pTopLevel)
-                pTopLevel->SetTopLevel(false);
-        }
     }
-
-    bIsTopLevel_ = bIsTopLevel;
 }
 
 void Frame::SetTopStrata( const s_bool& bIsTopStrata )
 {
     if ( pParent_ && (bIsTopStrata_ != bIsTopStrata) )
     {
+        bIsTopStrata_ = bIsTopStrata;
+        bIsTopLevel_ = false;
         GUIManager::GetSingleton()->FireBuildStrataList();
-        if (bIsTopStrata)
-        {
-            s_ptr<Frame> pTopStrata = GUIManager::GetSingleton()->GetTopStrata(mStrata_);
-            if (pTopStrata)
-                pTopStrata->SetTopStrata(false);
-        }
     }
-
-    bIsTopStrata_ = bIsTopStrata;
 }
 
 void Frame::SetUserPlaced( const s_bool& bIsUserPlaced )
@@ -1349,6 +1376,23 @@ void Frame::UnregisterAllEvents()
 void Frame::UnregisterEvent( const s_str& sEvent )
 {
     lRegEventList_[sEvent] = false;
+}
+
+void Frame::SetAddOn( s_ptr<AddOn> pAddOn )
+{
+    if (!pAddOn_)
+    {
+        pAddOn_ = pAddOn;
+    }
+    else
+    {
+        Warning(lType_.Back(), "SetAddOn() can only be called once.");
+    }
+}
+
+s_ptr<AddOn> Frame::GetAddOn() const
+{
+    return pAddOn_;
 }
 
 void Frame::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& iX, const s_int& iY )

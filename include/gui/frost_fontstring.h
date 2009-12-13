@@ -89,7 +89,7 @@ namespace Frost
             /** \return This FontString's shadow offsets
             *   \note Contains (X, Y) offsets.
             */
-            s_array<s_int,2> GetShadowOffset() const;
+            s_array<s_int,2> GetShadowOffsets() const;
 
             /// Returns this FontString's shadow X offset.
             /** \return This FontString's shadow X offset
@@ -100,6 +100,12 @@ namespace Frost
             /** \return This FontString's shadow Y offset
             */
             const s_int&     GetShadowYOffset() const;
+
+            /// Returns this FontString's offsets.
+            /** \return This FontString's offsets
+            *   \note Contains (X, Y) offsets.
+            */
+            s_array<s_int,2> GetOffsets() const;
 
             /// Returns the space between each letter.
             /** \return The space between each letter
@@ -143,6 +149,18 @@ namespace Frost
             *   \note Contains (X, Y) offsets.
             */
             void             SetShadowOffsets(const s_array<s_int,2>& lShadowOffsets);
+
+            /// Sets this FontString's offsets.
+            /** \param iXOffset The horizontal offset
+            *   \param iYOffset The vertical offset
+            */
+            void             SetOffsets(const s_int& iXOffset, const s_int& iYOffset);
+
+            /// Sets this FontString's offsets.
+            /** \param lOffsets Offsets
+            *   \note Contains (X, Y) offsets.
+            */
+            void             SetOffsets(const s_array<s_int,2>& lOffsets);
 
             /// Sets the space between each letter.
             /** \param fSpacing The space between each letter
@@ -232,6 +250,8 @@ namespace Frost
             Color           mShadowColor_;
             s_int           iShadowXOffset_;
             s_int           iShadowYOffset_;
+            s_int           iXOffset_;
+            s_int           iYOffset_;
 
         };
 

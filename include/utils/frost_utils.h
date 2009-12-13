@@ -36,7 +36,6 @@
 #include "frost_utils_lua_state.h"
 #include "frost_utils_lua_function.h"
 #include "frost_utils_luamanager.h"
-#include "frost_utils_lua_glues.h"
 
 #include "frost_utils_timers.h"
 #include "frost_utils_profiler.h"

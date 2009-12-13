@@ -446,7 +446,7 @@ s_bool Document::Check( const s_str& sPreProcCommands )
     // Start parsing line by line
     while (mFile.IsValid() && bValid_)
     {
-        sLine += mFile.GetLine();
+        sLine += mFile.GetLine() + "\n";
         ++uiCurrentLineNbr_;
 
         if (!sLine.IsEmpty(true))

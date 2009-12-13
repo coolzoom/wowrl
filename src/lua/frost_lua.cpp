@@ -51,6 +51,7 @@ void Lua::RegisterEngineClass( s_ptr<Lua::State> pLua )
 
 void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
 {
+    pLua->Register<GUI::LuaVirtualGlue>();
     pLua->Register<GUI::LuaUIObject>();
     pLua->Register<GUI::LuaFrame>();
     pLua->Register<GUI::LuaButton>();

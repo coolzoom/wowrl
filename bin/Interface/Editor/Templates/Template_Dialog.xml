@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true">
+    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true" frameStrata="DIALOG">
         <ResizeBounds>
             <Min>
                 <AbsDimension x="64" y="64"/>
@@ -37,10 +37,66 @@
         </TitleRegion>
         <Scripts>
             <OnLoad>
-                this:SetBackdropColor(UnpackColor(Templates.Dialog.Config.mainColor));
+                this.normalTextColor  = Color(1, 1, 1);
+                this.normalBgColor    = Color(0.75, 0.75, 0.75, 0.8);
+                this.normalTitleColor = Color(0.5, 0.5, 0.5, 0.8);
+                
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self:SetBackdropColor(newColor:Unpack());
+                    
+                    newColor = self.normalTitleColor*color;
+                    newColor.a = self.normalTitleColor.a;
+                    self.Title:SetBackdropColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Title.TitleString:SetTextColor(newColor:Unpack());
+                    self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
             </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
+                    this:SetBackdropColor(newColor:Unpack());
+                    
+                    newColor = this.normalTitleColor*AddOns.Editor.Config.UIBackgroundColor;
+                    newColor.a = this.normalTitleColor.a;
+                    this.Title:SetBackdrop({});
+                    this.Title:SetBackdropColor(newColor:Unpack());
+                
+                    newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this.Title.TitleString:SetTextColor(newColor:Unpack());
+                    this.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
         </Scripts>
         <Frames>
+            <Frame name="$parentResizeZoneTL">
+                <Size>
+                    <AbsDimension x="10" y="10"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentResizeZoneTR">
+                <Size>
+                    <AbsDimension x="10" y="10"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
             <Frame name="$parentResizeZoneBR" enableMouse="true">
                 <Size>
                     <AbsDimension x="10" y="10"/>
@@ -168,12 +224,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        this:SetBackdrop({});
-                        this:SetBackdropColor(UnpackColor(Templates.Dialog.Config.titleColor));
-                    </OnLoad>
-                </Scripts>
                 <Layers>
                     <Layer level="ARTWORK">
                         <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="CENTER" text="">

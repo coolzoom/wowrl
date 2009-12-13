@@ -49,6 +49,8 @@ namespace Frost
 
         // gui/frost_uiobject.h
         class  UIObject;
+        class  LuaGlue;
+        class  LuaVirtualGlue;
         class  LuaUIObject;
 
         // gui/frost_frame.h

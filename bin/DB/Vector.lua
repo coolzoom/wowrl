@@ -40,7 +40,7 @@ function Vector.__pow(vec1, vec2)
     );
 end
 
-function Vector.__tostring(p)
+function Vector.__concat(p)
     return "("..p.x..", "..p.y..", "..p.z..")";
 end
 
