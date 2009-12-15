@@ -310,17 +310,9 @@ s_bool Slider::IsInFrame( const s_int& iX, const s_int& iY ) const
 
 void Slider::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& iX, const s_int& iY )
 {
-    if (bMouseInFrame && pThumbTexture_ && pThumbTexture_->IsInRegion(iX, iY))
-    {
-        // The mouse is over the thumb texture, ignore input.
-        bMouseInThumb_ = true;
-        Frame::NotifyMouseInFrame(false, iX, iY);
-    }
-    else
-    {
-        bMouseInThumb_ = false;
-        Frame::NotifyMouseInFrame(bMouseInFrame, iX, iY);
-    }
+    Frame::NotifyMouseInFrame(bMouseInFrame, iX, iY);
+
+    bMouseInThumb_ = (bMouseInFrame && pThumbTexture_ && pThumbTexture_->IsInRegion(iX, iY));
 }
 
 void StepValue( s_float& fValue, const s_float& fStep )

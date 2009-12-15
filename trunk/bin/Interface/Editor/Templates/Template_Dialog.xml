@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true" frameStrata="DIALOG">
+    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true" frameStrata="DIALOG" topLevel="true">
         <ResizeBounds>
             <Min>
                 <AbsDimension x="64" y="64"/>

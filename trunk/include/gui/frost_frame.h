@@ -258,11 +258,6 @@ namespace Frost
             */
             const s_bool&       IsTopLevel() const;
 
-            /// Checks if this Frame is at top strata.
-            /** \return 'true' if this Frame is at top strata
-            */
-            const s_bool&       IsTopStrata() const;
-
             /// Checks if this Frame has been moved by the user.
             /** \return 'true' if this Frame has been moved by the user
             */
@@ -386,10 +381,17 @@ namespace Frost
             */
             void                SetTopLevel(const s_bool& bIsTopLevel);
 
-            /// Sets if this Frame is at top strata.
-            /** \param bIsTopStrata 'true' to put the Frame at top strata
+            /// Decreases this Frame's level so it's the lowest of the strata.
+            /** \note All its children are lowered of the same ammount.
+            *   \note Only works for top level frames.
             */
-            void                SetTopStrata(const s_bool& bIsTopStrata);
+            void                Lower();
+
+            /// Increases this Frame's level so it's the highest of the strata.
+            /** \note All its children are raised of the same ammount.
+            *   \note Only works for top level frames.
+            */
+            void                Raise();
 
             /// Sets if this Frame has been moved by the user.
             /** \param bIsUserPlaced 'true' if this Frame has been moved by the user
@@ -487,6 +489,10 @@ namespace Frost
             void NotifyVisible_();
             void NotifyInvisible_();
 
+            void NotifyTopLevelParent_(const s_bool& bTopLevel, s_ptr<Frame> pParent);
+
+            void AddLevel_(const s_uint& uiAmount);
+
             s_map< s_uint, s_ptr<Frame> >         lChildList_;
             s_map< s_uint, s_ptr<LayeredRegion> > lRegionList_;
             s_map<LayerType, Layer>               lLayerList_;
@@ -499,10 +505,9 @@ namespace Frost
 
             s_uint uiLevel_;
 
-            FrameStrata mStrata_;
-            s_bool      bIsParentStrata_;
-            s_bool      bIsTopStrata_;
-            s_bool      bIsTopLevel_;
+            FrameStrata  mStrata_;
+            s_bool       bIsTopLevel_;
+            s_ptr<Frame> pTopLevelParent_;
 
             s_refptr<Backdrop> pBackdrop_;
 
@@ -588,8 +593,8 @@ namespace Frost
             int _IsResizable(lua_State*);
             int _IsTopLevel(lua_State*);
             int _IsUserPlaced(lua_State*);
-            /**/ int _Lower(lua_State*) { return 0; }
-            /**/ int _Raise(lua_State*) { return 0; }
+            int _Lower(lua_State*);
+            int _Raise(lua_State*);
             int _RegisterAllEvents(lua_State*);
             int _RegisterEvent(lua_State*);
             int _RegisterForDrag(lua_State*);
@@ -597,7 +602,7 @@ namespace Frost
             int _SetBackdropBorderColor(lua_State*);
             int _SetBackdropColor(lua_State*);
             int _SetClampedToScreen(lua_State*);
-            int _SetFrameLevel(lua_State*) { return 0; } // WBI
+            int _SetFrameLevel(lua_State*);
             int _SetFrameStrata(lua_State*);
             int _SetHitRectInsets(lua_State*);
             int _SetID(lua_State*) { return 0; } // WBI

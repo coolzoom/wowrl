@@ -38,13 +38,13 @@ Frame::Frame() : Region(), lAbsHitRectInsetList_(0), lRelHitRectInsetList_(0.0f)
     mStrata_ = STRATA_MEDIUM;
 
     uiMinWidth_ = 0u;
-    uiMaxWidth_ = s_uint(s_uint::INTEGER_INF);
+    uiMaxWidth_ = s_uint::INF;
     uiMinHeight_ = 0u;
-    uiMaxHeight_ = s_uint(s_uint::INTEGER_INF);
+    uiMaxHeight_ = s_uint::INF;
 
     fScale_ = 1.0f;
 
-    uiLevel_ = 0u;
+    uiLevel_ = s_uint::NaN;
 }
 
 Frame::~Frame()
@@ -69,9 +69,7 @@ void Frame::Render()
     if (IsVisible())
     {
         if (pBackdrop_)
-        {
             pBackdrop_->Render();
-        }
 
         // Render child regions
         s_map<LayerType, Layer>::iterator iterLayer;
@@ -131,6 +129,11 @@ s_str Frame::Serialize( const s_str& sTab ) const
         case STRATA_TOOLTIP :           sStr << "TOOLTIP\n"; break;
     }
     sStr << sTab << "  # Level       : " << uiLevel_ << "\n";
+    sStr << sTab << "  # TopLevel    : " << bIsTopLevel_;
+    if (!bIsTopLevel_ && pTopLevelParent_)
+        sStr << " (" << pTopLevelParent_->GetName() << ")\n";
+    else
+        sStr << "\n";
     if (!bIsMouseEnabled_ && !bIsKeyboardEnabled_ && !bIsMouseWheelEnabled_)
         sStr << sTab << "  # Inputs      : none\n";
     else
@@ -264,10 +267,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
 
         this->SetFrameStrata(pFrame->GetFrameStrata());
 
-        // ?
-        //bIsParentStrata_ = pFrame->bIsParentStrata_;
-
-        if (pFrame->GetFrameLevel() != 0)
+        if (pFrame->GetFrameLevel().IsValid())
         {
             s_ptr<UIObject> pHighParent = this;
             for (s_uint i = 0; i < pFrame->GetFrameLevel(); ++i)
@@ -281,8 +281,6 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             );
         }
 
-
-        this->SetTopStrata(pFrame->IsTopStrata());
         this->SetTopLevel(pFrame->IsTopLevel());
 
         this->EnableKeyboard(pFrame->IsKeyboardEnabled());
@@ -728,6 +726,12 @@ void Frame::AddChild( s_ptr<Frame> pChild )
     {
         if (!lChildList_.Find(pChild->GetID()))
         {
+            if (bIsTopLevel_)
+                pChild->NotifyTopLevelParent_(true, this);
+
+            if (pTopLevelParent_)
+                pChild->NotifyTopLevelParent_(true, pTopLevelParent_);
+
             lChildList_[pChild->GetID()] = pChild;
             GUIManager::GetSingleton()->FireBuildStrataList();
 
@@ -923,11 +927,6 @@ const s_bool& Frame::IsTopLevel() const
     return bIsTopLevel_;
 }
 
-const s_bool& Frame::IsTopStrata() const
-{
-    return bIsTopStrata_;
-}
-
 const s_bool& Frame::IsUserPlaced() const
 {
     return bIsUserPlaced_;
@@ -995,6 +994,12 @@ void Frame::OnEvent( const Event& mEvent )
 
             if (bMouseInFrame_)
             {
+                if (bIsTopLevel_)
+                    Raise();
+
+                if (pTopLevelParent_)
+                    pTopLevelParent_->Raise();
+
                 s_str sMouseButton = InputManager::GetSingleton()->GetMouseButtonString(
                     (MouseButton)mEvent[0].Get<s_uint>().Get()
                 );
@@ -1212,13 +1217,12 @@ void Frame::SetRelHitRectInsets( const s_float& fLeft, const s_float& fRight, co
 
 void Frame::SetLevel( const s_uint& uiLevel )
 {
-    if (uiLevel_ == 0)
+    if (uiLevel != uiLevel || !uiLevel_.IsValid())
     {
         uiLevel_ = uiLevel;
-    }
-    else
-    {
-        Warning(lType_.Back(), "SetLevel() can't be called more than once.");
+
+        if (!bVirtual_)
+            GUIManager::GetSingleton()->FireBuildStrataList();
     }
 }
 
@@ -1279,18 +1283,55 @@ void Frame::SetTopLevel( const s_bool& bIsTopLevel )
     if (bIsTopLevel_ != bIsTopLevel)
     {
         bIsTopLevel_ = bIsTopLevel;
-        bIsTopStrata_ = false;
-        GUIManager::GetSingleton()->FireBuildStrataList();
+
+        s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
+        foreach (iterChild, lChildList_)
+        {
+            iterChild->second->NotifyTopLevelParent_(bIsTopLevel_, this);
+        }
     }
 }
 
-void Frame::SetTopStrata( const s_bool& bIsTopStrata )
+void Frame::Lower()
 {
-    if ( pParent_ && (bIsTopStrata_ != bIsTopStrata) )
+    // NOTE : Frame::Lower() does nothing.
+    // Doesn't seem to have any effect in WoW...
+}
+
+void Frame::Raise()
+{
+    if (bIsTopLevel_)
     {
-        bIsTopStrata_ = bIsTopStrata;
-        bIsTopLevel_ = false;
-        GUIManager::GetSingleton()->FireBuildStrataList();
+        s_uint uiOldLevel = uiLevel_;
+        uiLevel_ = GUIManager::GetSingleton()->GetHighestLevel(mStrata_) + 1;
+
+        if (uiLevel_ < uiOldLevel)
+        {
+            uiLevel_ = uiOldLevel;
+        }
+        else
+        {
+            s_uint uiAmount = uiLevel_ - uiOldLevel;
+
+            s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
+            foreach (iterChild, lChildList_)
+            {
+                iterChild->second->AddLevel_(uiAmount);
+            }
+
+            GUIManager::GetSingleton()->FireBuildStrataList();
+        }
+    }
+}
+
+void Frame::AddLevel_( const s_uint& uiAmount )
+{
+    uiLevel_ += uiAmount;
+
+    s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
+    foreach (iterChild, lChildList_)
+    {
+        iterChild->second->AddLevel_(uiAmount);
     }
 }
 
@@ -1347,6 +1388,20 @@ void Frame::NotifyInvisible_()
     }
 }
 
+void Frame::NotifyTopLevelParent_( const s_bool& bTopLevel, s_ptr<Frame> pParent )
+{
+    if (bTopLevel)
+        pTopLevelParent_ = pParent;
+    else
+        pTopLevelParent_ = nullptr;
+
+    s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
+    foreach (iterChild, lChildList_)
+    {
+        iterChild->second->NotifyTopLevelParent_(bTopLevel, pParent);
+    }
+}
+
 void Frame::Show()
 {
     s_bool bWasShown = bIsShown_;
@@ -1399,22 +1454,11 @@ void Frame::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& iX, co
 {
     if (bMouseInFrame)
     {
-        if (pTitleRegion_ && pTitleRegion_->IsInRegion(iX, iY))
-        {
-            bMouseInTitleRegion_ = true;
-            if (bMouseInFrame_)
-                On("Leave");
+        if (!bMouseInFrame_)
+            On("Enter");
+        bMouseInFrame_ = true;
 
-            bMouseInFrame_ = false;
-        }
-        else
-        {
-            if (!bMouseInFrame_)
-                On("Enter");
-
-            bMouseInTitleRegion_ = false;
-            bMouseInFrame_ = true;
-        }
+        bMouseInTitleRegion_ = (pTitleRegion_ && pTitleRegion_->IsInRegion(iX, iY));
     }
     else
     {

@@ -661,6 +661,25 @@ int LuaFrame::_IsUserPlaced(lua_State* pLua)
     return mFunc.Return();
 }
 
+
+int LuaFrame::_Lower(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:Lower", pLua);
+
+    pFrameParent_->Lower();
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_Raise(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:Raise", pLua);
+
+    pFrameParent_->Raise();
+
+    return mFunc.Return();
+}
+
 int LuaFrame::_RegisterAllEvents(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:RegisterAllEvents", pLua);
@@ -834,6 +853,18 @@ int LuaFrame::_SetClampedToScreen(lua_State* pLua)
     if (mFunc.Check())
     {
         pFrameParent_->SetClampedToScreen(mFunc.Get(0)->GetBool());
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_SetFrameLevel(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetFrameLevel", pLua);
+    mFunc.Add(0, "level", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pFrameParent_->SetLevel(s_uint(mFunc.Get(0)->GetNumber()));
     }
 
     return mFunc.Return();

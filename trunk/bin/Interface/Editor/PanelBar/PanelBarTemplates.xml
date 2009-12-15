@@ -48,7 +48,7 @@
                     </Anchor>
                     <Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM">
                         <Offset>
-                            <AbsDimension y="5"/>
+                            <AbsDimension y="3"/>
                         </Offset>
                     </Anchor>
                     <Anchor point="BOTTOM">
@@ -64,7 +64,7 @@
         </Frames>
         <Layers>
             <Layer>
-                <FontString name="$parentTitle" fontHeight="10" font="Fonts/VeraBold.ttf">
+                <FontString name="$parentTitle" fontHeight="8" font="Fonts/Vera.ttf">
                     <Anchors>
                         <Anchor point="TOP">
                             <Offset>

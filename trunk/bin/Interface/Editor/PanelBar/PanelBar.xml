@@ -9,50 +9,54 @@
             <Anchor point="RIGHT"/>
         </Anchors>
         <Frames>
-            <Frame name="$parentVerticalBorderTop" hidden="true" topLevel="true">
-                <Size>
-                    <AbsDimension x="3"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="RIGHT"/>
-                    <Anchor point="TOP"/>
-                </Anchors>
-                <Backdrop>
-                    <BackgroundColor r="1" g="1" b="1"/>
-                </Backdrop>
-            </Frame>
-            <Frame name="$parentVerticalBorderBottom" topLevel="true">
-                <Size>
-                    <AbsDimension x="3"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="RIGHT"/>
-                    <Anchor point="BOTTOM"/>
-                </Anchors>
-                <Backdrop>
-                    <BackgroundColor r="1" g="1" b="1"/>
-                </Backdrop>
-                <Scripts>
-                    <OnLoad>
-                        this:SetPoint("TOP", PanelBar, "TOP");
-                    </OnLoad>
-                </Scripts>
-            </Frame>
-            <Frame name="$parentHorizontalBorder" topLevel="true">
-                <Size>
-                    <AbsDimension y="3"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT"/>
-                </Anchors>
-                <Backdrop>
-                    <BackgroundColor r="1" g="1" b="1"/>
-                </Backdrop>
-                <Scripts>
-                    <OnLoad>
-                        this:SetWidth(AddOns.PanelBar.Config.panelWidth);
-                    </OnLoad>
-                </Scripts>
+            <Frame name="$parentBorders" setAllPoints="true">
+                <Frames>
+                    <Frame name="$parentVerticalTop" hidden="true">
+                        <Size>
+                            <AbsDimension x="3"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="RIGHT"/>
+                            <Anchor point="TOP"/>
+                        </Anchors>
+                        <Backdrop>
+                            <BackgroundColor r="1" g="1" b="1"/>
+                        </Backdrop>
+                    </Frame>
+                    <Frame name="$parentVerticalBottom">
+                        <Size>
+                            <AbsDimension x="3"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="RIGHT"/>
+                            <Anchor point="BOTTOM"/>
+                        </Anchors>
+                        <Backdrop>
+                            <BackgroundColor r="1" g="1" b="1"/>
+                        </Backdrop>
+                        <Scripts>
+                            <OnLoad>
+                                this:SetPoint("TOP", PanelBar, "TOP");
+                            </OnLoad>
+                        </Scripts>
+                    </Frame>
+                    <Frame name="$parentHorizontal">
+                        <Size>
+                            <AbsDimension y="3"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT"/>
+                        </Anchors>
+                        <Backdrop>
+                            <BackgroundColor r="1" g="1" b="1"/>
+                        </Backdrop>
+                        <Scripts>
+                            <OnLoad>
+                                this:SetWidth(AddOns.PanelBar.Config.panelWidth);
+                            </OnLoad>
+                        </Scripts>
+                    </Frame>
+                </Frames>
             </Frame>
         </Frames>
     </Frame>
