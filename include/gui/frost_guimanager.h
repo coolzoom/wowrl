@@ -74,8 +74,7 @@ namespace Frost
     /// Contains Frame
     struct Level
     {
-        s_ctnr< s_ptr<GUI::Frame> >        lTopLevelList;
-        s_map< s_uint, s_ptr<GUI::Frame> > lFrameList;
+        s_ctnr< s_ptr<GUI::Frame> > lFrameList;
 
         static const s_str CLASS_NAME;
     };
@@ -83,8 +82,7 @@ namespace Frost
     /// Contains Level
     struct Strata
     {
-        s_ctnr< s_ptr<GUI::Frame> > lTopStrataList;
-        s_map<s_uint, Level>        lLevelList;
+        s_map<s_uint, Level> lLevelList;
 
         static const s_str CLASS_NAME;
     };
@@ -241,6 +239,12 @@ namespace Frost
         /** \return The Frame under the mouse (nullptr if none)
         */
         s_ptr<GUI::Frame>    GetOveredFrame() const;
+
+        /// Returns the highest level on the provided strata.
+        /** \param mFrameStrata The strata to inspect
+        *   \return The highest level on the provided strata
+        */
+        s_uint               GetHighestLevel(FrameStrata mFrameStrata) const;
 
         /// Updates this manager and its widgets.
         /** \param fDelta The time elapsed since the last call

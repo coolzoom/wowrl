@@ -38,15 +38,15 @@ end
 function PanelBar:UpdateVerticalBorder()
     if (self.currentPanel) then
         if (self.currentPanel.rank ~= 0) then
-            self.VerticalBorderTop:Show();
-            self.VerticalBorderTop:SetPoint("BOTTOM", self.currentPanel.header, "TOP");
-            self.VerticalBorderBottom:SetPoint("TOP", self.currentPanel.header, "BOTTOM");
+            self.Borders.VerticalTop:Show();
+            self.Borders.VerticalTop:SetPoint("BOTTOM", self.currentPanel.header, "TOP");
+            self.Borders.VerticalBottom:SetPoint("TOP", self.currentPanel.header, "BOTTOM");
         else
-            self.VerticalBorderTop:Hide();
-            self.VerticalBorderBottom:SetPoint("TOP", self.currentPanel.header, "BOTTOM");
+            self.Borders.VerticalTop:Hide();
+            self.Borders.VerticalBottom:SetPoint("TOP", self.currentPanel.header, "BOTTOM");
         end
     else
-        self.VerticalBorderTop:Hide();
-        self.VerticalBorderBottom:SetPoint("TOP", self, "TOP");
+        self.Borders.VerticalTop:Hide();
+        self.Borders.VerticalBottom:SetPoint("TOP", self, "TOP");
     end
 end

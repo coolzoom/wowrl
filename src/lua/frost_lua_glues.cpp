@@ -172,6 +172,8 @@ int Frost::l_CreateFrame( lua_State* pLua )
             pParent->AddChild(pNewFrame);
             pNewFrame->SetLevel(pParent->GetFrameLevel() + 1);
         }
+        else
+            pNewFrame->SetLevel(0);
 
         if (mFunc.Get(3)->GetType() == Lua::TYPE_STRING)
         {

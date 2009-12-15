@@ -83,8 +83,8 @@ function ConfigMenu:SetCurrentPanel(caption)
         self.currentPanel.header.normalTextColor = Color(1, 1, 1);
         local newColor = self.currentPanel.header.normalTextColor*AddOns.Editor.Config.UITextColor;
         self.currentPanel.header:GetNormalFontObject():SetTextColor(newColor:Unpack());
-        self.HorizontalBorderLeft:SetPoint("RIGHT", self.currentPanel.header, "BOTTOMLEFT", 2);
-        self.HorizontalBorderRight:SetPoint("LEFT", self.currentPanel.header, "BOTTOMRIGHT", -2);
+        self.Borders.HorizontalLeft:SetPoint("RIGHT", self.currentPanel.header, "BOTTOMLEFT", 2);
+        self.Borders.HorizontalRight:SetPoint("LEFT", self.currentPanel.header, "BOTTOMRIGHT", -2);
     end
 end
 

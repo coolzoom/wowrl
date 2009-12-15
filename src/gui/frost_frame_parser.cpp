@@ -111,6 +111,8 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
         pParentFrame_->AddChild(this);
         SetLevel(pParentFrame_->GetFrameLevel() + 1);
     }
+    else
+        SetLevel(0);
 
     s_str sInheritance = pBlock->GetAttribute("inherits");
     if (!sInheritance.IsEmpty(true))
