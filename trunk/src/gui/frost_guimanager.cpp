@@ -592,6 +592,11 @@ namespace Frost
                 }
             }
 
+            if (pOveredFrame && !pOveredFrame->IsWorldInputAllowed())
+                InputManager::GetSingleton()->BlockClicks("WORLD");
+            else
+                InputManager::GetSingleton()->AllowClicks("WORLD");
+
             if (pOveredFrame != pOveredFrame_)
             {
                 if (pOveredFrame_)
@@ -601,10 +606,7 @@ namespace Frost
             }
 
             if (pOveredFrame_)
-            {
-                //Log("overed : "+pOveredFrame_->GetName());
                 pOveredFrame_->NotifyMouseInFrame(true, iX, iY);
-            }
         }
 
         bObjectMoved_ = false;

@@ -9,6 +9,7 @@
 #include "gameplay/frost_gameplaymanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include "frost_inputmanager.h"
 
 using namespace std;
 
@@ -102,6 +103,19 @@ namespace Frost
 
     void Gameplay::OnEvent( const Event& mEvent )
     {
+        if ((mEvent.GetName() == "MOUSE_PRESSED") ||
+            (mEvent.GetName() == "MOUSE_RELEASED") ||
+            (mEvent.GetName() == "MOUSE_DOUBLE_CLICKED") ||
+            (mEvent.GetName() == "MOUSE_DOWN") ||
+            (mEvent.GetName() == "MOUSE_DOWN_LONG"))
+        {
+            if (!InputManager::GetSingleton()->CanGroupReceiveClicks("WORLD"))
+            {
+                // Click events are disabled for now.
+                return;
+            }
+        }
+
         s_ptr<Lua::State> pLua = GameplayManager::GetSingleton()->GetLua();
 
         // Lua handlers do not need direct arguments.

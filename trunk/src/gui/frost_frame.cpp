@@ -602,7 +602,7 @@ void Frame::EnableKeyboard( const s_bool& bIsKeyboardEnabled )
     bIsKeyboardEnabled_ = bIsKeyboardEnabled;
 }
 
-void Frame::EnableMouse( const s_bool& bIsMouseEnabled )
+void Frame::EnableMouse( const s_bool& bIsMouseEnabled, const s_bool& bAllowWorldInput )
 {
     if (!bVirtual_)
     {
@@ -622,6 +622,7 @@ void Frame::EnableMouse( const s_bool& bIsMouseEnabled )
         }
     }
 
+    bAllowWorldInput_ = bAllowWorldInput;
     bIsMouseEnabled_ = bIsMouseEnabled;
 }
 
@@ -905,6 +906,11 @@ const s_bool& Frame::IsKeyboardEnabled() const
 const s_bool& Frame::IsMouseEnabled() const
 {
     return bIsMouseEnabled_;
+}
+
+const s_bool& Frame::IsWorldInputAllowed() const
+{
+    return bAllowWorldInput_;
 }
 
 const s_bool& Frame::IsMouseWheelEnabled() const

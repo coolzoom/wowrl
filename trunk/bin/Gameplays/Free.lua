@@ -92,10 +92,12 @@ function FreeGameplay.OnEvent()
         if (arg1 == MOUSE_RIGHT) then
             FreeGameplay.mouse.rightPressed = true;
         end
+        Frost:ForceWorldClicksAllowed(true);
     elseif (event == "MOUSE_RELEASED") then
         if (arg1 == MOUSE_RIGHT) then
             FreeGameplay.mouse.rightPressed = false;
         end
+        Frost:ForceWorldClicksAllowed(false);
     end
 end
 

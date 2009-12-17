@@ -19,6 +19,9 @@ namespace Frost
     friend class Manager<GameplayManager>;
     public:
 
+        /// Initializes this manager.
+        void            Initialize();
+
         /// Returns the Gameplay with the name you provided.
         /** \param sName The name of the Gameplay you're after
         *   \return The Gameplay with the name you provided

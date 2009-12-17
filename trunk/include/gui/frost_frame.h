@@ -92,8 +92,9 @@ namespace Frost
 
             /// Sets if this Frame can receive mouse input.
             /** \param bIsMouseEnabled 'true' to enable
+            *   \param bAllowWorldInput 'true' to allow world input
             */
-            void                EnableMouse(const s_bool& bIsMouseEnabled);
+            void                EnableMouse(const s_bool& bIsMouseEnabled, const s_bool& bAllowWorldInput = false);
 
             /// Sets if this Frame can receive mouse wheel input.
             /** \param bIsMouseWheelEnabled 'true' to enable
@@ -237,6 +238,11 @@ namespace Frost
             /** \return 'true' if this Frame can receive mouse input
             */
             const s_bool&       IsMouseEnabled() const;
+
+            /// Checks if this Frame allows world input.
+            /** \return 'true' if this Frame allows world input
+            */
+            const s_bool&       IsWorldInputAllowed() const;
 
             /// Checks if this Frame can receive mouse wheel input.
             /** \return 'true' if this Frame can receive mouse wheel input
@@ -515,6 +521,7 @@ namespace Frost
 
             s_bool bIsKeyboardEnabled_;
             s_bool bIsMouseEnabled_;
+            s_bool bAllowWorldInput_;
             s_bool bIsMouseWheelEnabled_;
             s_bool bIsMovable_;
             s_bool bIsClampedToScreen_;

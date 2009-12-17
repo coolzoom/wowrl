@@ -17,6 +17,16 @@ namespace Frost
 
     GameplayManager::GameplayManager()
     {
+    }
+
+    GameplayManager::~GameplayManager()
+    {
+        Log("Closing "+CLASS_NAME+"...");
+        LuaManager::GetSingleton()->CloseLua(pLua_);
+    }
+
+    void GameplayManager::Initialize()
+    {
         pLua_ = LuaManager::GetSingleton()->CreateLua();
 
         Lua::RegisterGlobalFuncs(pLua_);
@@ -25,12 +35,8 @@ namespace Frost
         Lua::RegisterGameplayClass(pLua_);
         Lua::RegisterVectorClass(pLua_);
         Lua::RegisterKeyCodes(pLua_);
-    }
-
-    GameplayManager::~GameplayManager()
-    {
-        Log("Closing "+CLASS_NAME+"...");
-        LuaManager::GetSingleton()->CloseLua(pLua_);
+        Lua::RegisterEngineClass(pLua_);
+        Engine::GetSingleton()->CreateGlue(pLua_);
     }
 
     s_ptr<Gameplay> GameplayManager::GetGameplay( const s_str& sName )

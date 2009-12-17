@@ -8,6 +8,7 @@
 #include "camera/frost_camera.h"
 #include "scene/frost_lightmanager.h"
 #include "scene/frost_zonemanager.h"
+#include "frost_inputmanager.h"
 
 #include <OgreCamera.h>
 
@@ -26,6 +27,65 @@ namespace Frost
         lua_newtable(pLua);
         iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);
         pLua_ = pLua;
+    }
+
+    int LuaEngine::_AllowWorldClicks( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:AllowWorldClicks", pLua);
+
+        InputManager::GetSingleton()->AllowClicks("WORLD");
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_BlockWorldClicks( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:AllowWorldClicks", pLua);
+
+        InputManager::GetSingleton()->BlockClicks("WORLD");
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_FireEvent( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:FireEvent", pLua);
+        mFunc.Add(0, "event name", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            Event mEvent(mFunc.Get(0)->GetString());
+
+            s_ptr<Lua::State> pLua = mFunc.GetState();
+            s_int iTop = s_int(pLua->GetTop());
+            if (iTop > 1)
+            {
+                for (s_int i = 2; i <= iTop; ++i)
+                {
+                    mEvent.Add(pLua->GetValue(i));
+                }
+            }
+
+            EventManager::GetSingleton()->FireEvent(mEvent);
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_ForceWorldClicksAllowed( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:ForceWorldClicksAllowed", pLua);
+        mFunc.Add(0, "allowed", Lua::TYPE_BOOLEAN, true);
+
+        if (mFunc.Check())
+        {
+            if ((mFunc.IsProvided(0) && mFunc.Get(0)->GetBool()) || !mFunc.IsProvided(0))
+                InputManager::GetSingleton()->ForceClicksAllowed("WORLD", true);
+            else
+                InputManager::GetSingleton()->ForceClicksAllowed("WORLD", false);
+        }
+
+        return mFunc.Return();
     }
 
     int LuaEngine::_LoadZone( lua_State* pLua )
@@ -148,6 +208,10 @@ namespace Frost
     Lunar<LuaEngine>::RegType LuaEngine::methods[] = {
         {"dt", &LuaEngine::GetDataTable},
 
+        method(Engine, AllowWorldClicks),
+        method(Engine, BlockWorldClicks),
+        method(Engine, FireEvent),
+        method(Engine, ForceWorldClicksAllowed),
         method(Engine, GetBackgroundColor),
         method(Engine, LoadZone),
         method(Engine, LoadZoneFile),

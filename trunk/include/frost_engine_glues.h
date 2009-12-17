@@ -22,18 +22,22 @@ namespace Frost
 
         LuaEngine(lua_State* luaVM);
 
+        int _AllowWorldClicks(lua_State*);
+        int _BlockWorldClicks(lua_State*);
+        int _FireEvent(lua_State*);
+        int _ForceWorldClicksAllowed(lua_State*);
         int _GetBackgroundColor(lua_State*);
         int _LoadZone(lua_State*);
         int _LoadZoneFile(lua_State*);
+        int _SetBackgroundColor(lua_State*);
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);
-        int _SetBackgroundColor(lua_State*);
         int _UnloadZone(lua_State*);
 
         // Lunar function
         int GetDataTable(lua_State *L);
 
-        static const char className[];
+        static const char  className[];
         static const char* classList[];
         static Lunar<LuaEngine>::RegType methods[];
         static const s_str CLASS_NAME;
