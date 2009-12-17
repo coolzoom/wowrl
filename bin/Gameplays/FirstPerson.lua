@@ -148,6 +148,7 @@ function FirstPersonGameplay.OnEvent()
                     FirstPersonGameplay.unit:SetMoveForward(true);
                 end
             end
+            Frost:ForceWorldClicksAllowed(true);
         elseif (event == "MOUSE_RELEASED") then
             if (FirstPersonGameplay.mouse.bothPressed and not FirstPersonGameplay.key.mouseForwardPressed) then
                 FirstPersonGameplay.unit:SetMoveForward(false);
@@ -161,6 +162,7 @@ function FirstPersonGameplay.OnEvent()
             end
         elseif (event == "MOUSE_WHEEL_SMOOTH") then
             FirstPersonGameplay.unit:ZoomCamera(-arg1);
+            Frost:ForceWorldClicksAllowed(false);
         end
     end
 end

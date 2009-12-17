@@ -225,33 +225,21 @@ namespace Frost
         }
 
         pUnitMgr_->Initialize();
-
         pUnitMgr_->ParseData();
 
+        pGameplayMgr_->Initialize();
         pGameplayMgr_->ParseData();
 
         pPhysicsMgr_->ReadConfig();
 
-        // Initialize the input manager
         pInputMgr_->Initialize(pRenderWindow_);
         pInputMgr_->ReadConfig();
 
-        // Initialize the material manager
         pMaterialMgr_->Initialize();
-
-        // Initialize the scene manager
         pSceneMgr_->Initialize();
-
-        // Initialize the light manager
         pLightMgr_->Initialize();
-
-        // Initialize the sprite manager
         pSpriteMgr_->Initialize();
-
-        // Initialize the GUI manager
         pGUIMgr_->Initialize();
-
-        // Initialize the zone manager
         pZoneMgr_->Initialize();
     }
 

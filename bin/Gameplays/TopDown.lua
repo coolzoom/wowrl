@@ -69,10 +69,12 @@ function TopDownGameplay.OnEvent()
         if (arg1 == MOUSE_RIGHT) then
             TopDownGameplay.mouse.rightPressed = true;
         end
+        Frost:ForceWorldClicksAllowed(true);
     elseif (event == "MOUSE_RELEASED") then
         if (arg1 == MOUSE_RIGHT) then
             TopDownGameplay.mouse.rightPressed = false;
         end
+        Frost:ForceWorldClicksAllowed(false);
     elseif (event == "MOUSE_WHEEL_SMOOTH") then
         TopDownGameplay.camera:Translate(-2.0*arg1*Vector.UNIT_Z, true);
     end

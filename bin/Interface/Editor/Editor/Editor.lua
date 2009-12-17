@@ -1,5 +1,5 @@
 UIParent:SetFrameStrata("BACKGROUND");
-UIParent:EnableMouse(true);
+UIParent:EnableMouse(true, true);
 
 UIParent:SetScript("OnMouseUp", function ()
     if (arg1 == "LeftButton") then

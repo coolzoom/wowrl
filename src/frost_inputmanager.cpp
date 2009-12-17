@@ -92,6 +92,47 @@ namespace Frost
             fMouseSensibility_ = pEngine->GetFloatConstant("MouseSensibility");
     }
 
+    void InputManager::AllowClicks( const s_str& sGroupName )
+    {
+        lClickGroupList_[sGroupName] = true;
+    }
+
+    void InputManager::BlockClicks( const s_str& sGroupName )
+    {
+        lClickGroupList_[sGroupName] = false;
+    }
+
+    s_bool InputManager::CanGroupReceiveClicks( const s_str& sGroupName ) const
+    {
+        Log("can "+sGroupName+" ?");
+        s_map<s_str, s_bool>::const_iterator iter = lClickGroupList_.Get(sGroupName);
+        if (iter != lClickGroupList_.End())
+        {
+            Log("found in click groups");
+            if (!iter->second)
+            {
+                Log("blocked");
+                iter = lForcedClickGroupList_.Get(sGroupName);
+                if (iter != lForcedClickGroupList_.End())
+                {
+                    Log("forced");
+                    return iter->second;
+                }
+                else
+                    return false;
+            }
+            else
+                return true;
+        }
+        else
+            return true;
+    }
+
+    void InputManager::ForceClicksAllowed( const s_str& sGroupName, const s_bool& bForce )
+    {
+        lForcedClickGroupList_[sGroupName] = bForce;
+    }
+
     s_bool InputManager::GetKey( s_bool bForce ) const
     {
         if (!bForce && bFocus_)

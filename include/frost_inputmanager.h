@@ -190,6 +190,30 @@ namespace Frost
         /// Updates input (keyboard and mouse).
         void            Update();
 
+        /// Allows a particular input group to receive click events.
+        /** \param sGroupName The name of the group to enable
+        */
+        void            AllowClicks(const s_str& sGroupName);
+
+        /// Prevents a particular input group from receiving click events.
+        /** \param sGroupName The name of the group to disable
+        */
+        void            BlockClicks(const s_str& sGroupName);
+
+        /// Checks if a particular input group can receive click events.
+        /** \param sGroupName The name of the group to check
+        *   \return 'true' if the group can receive click events
+        */
+        s_bool          CanGroupReceiveClicks(const s_str& sGroupName) const;
+
+        /// Makes sure a particular input group receives click events.
+        /** \param sGroupName The name of the group to force
+        *   \param bForce     'true' to force input
+        *   \note Even if you call BlockClicks() with the same group name,
+        *         CanGroupReceiveClicks() will return true.
+        */
+        void            ForceClicksAllowed(const s_str& sGroupName, const s_bool& bForce);
+
         /// Checks if a key has been pressed.
         /** \param bForce 'true' to bypass focus (see SetFocus())
         *   \return 'true' if a key has been pressed
@@ -502,6 +526,9 @@ namespace Frost
         s_array<s_bool,INPUT_MOUSE_BUTTON_NUMBER>     lMouseBuf_;
         s_array<s_bool,INPUT_MOUSE_BUTTON_NUMBER>     lMouseBufOld_;
         s_array<MouseState,INPUT_MOUSE_BUTTON_NUMBER> lMouseState_;
+
+        s_map<s_str, s_bool> lClickGroupList_;
+        s_map<s_str, s_bool> lForcedClickGroupList_;
 
         s_float fMX_, fMY_;
         s_float fDMX_, fDMY_;
