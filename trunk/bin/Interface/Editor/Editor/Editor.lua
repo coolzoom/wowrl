@@ -12,6 +12,29 @@ UIParent:SetScript("OnMouseUp", function ()
     end
 end);
 
+function AddOns.Editor:SetCurrentDropdown(dropdown)
+    if (self.activeDropdown) then
+        if (self.activeDropdown ~= dropdown) then
+            self.activeDropdown:Hide();
+            self.activeDropdown = dropdown;
+            self.activeDropdown:Show();
+        else
+            self.activeDropdown:Hide();
+            self.activeDropdown = nil;
+        end
+    else
+        self.activeDropdown = dropdown;
+        self.activeDropdown:Show();
+    end
+end
+
+function AddOns.Editor:CloseCurrentDropdown()
+    if (self.activeDropdown) then
+        self.activeDropdown:Hide();
+        self.activeDropdown = nil;
+    end
+end
+
 function AddOns.Editor:RegisterTextColorFunction(object, func)
     if (not self.textColorFuncList) then
         self.textColorFuncList = {};

@@ -152,11 +152,34 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
     end
 end
 
-function MenuBar:UpdateHorizontalBorder()
-    if (UIParent.activeDropdown) then
-        MenuBar.HorizontalBorderRight:SetPoint("TOPLEFT", UIParent.activeDropdown:GetParent(), "BOTTOMRIGHT");
-        MenuBar.HorizontalBorderLeft:SetPoint("TOPRIGHT", UIParent.activeDropdown:GetParent(), "BOTTOMLEFT");
+function MenuBar:SetCurrentDropdown(dropdown)
+    if (self.activeDropdown) then
+        if (self.activeDropdown ~= dropdown) then
+            self.activeDropdown:Hide();
+            self.activeDropdown = dropdown;
+            self.activeDropdown:Show();
+        else
+            self.activeDropdown:Hide();
+            self.activeDropdown = nil;
+        end
     else
-        MenuBar.HorizontalBorderLeft:SetPoint("TOPRIGHT", MenuBar, "BOTTOMRIGHT");
+        self.activeDropdown = dropdown;
+        self.activeDropdown:Show();
+    end
+end
+
+function MenuBar:CloseCurrentDropdown()
+    if (self.activeDropdown) then
+        self.activeDropdown:Hide();
+        self.activeDropdown = nil;
+    end
+end
+
+function MenuBar:UpdateHorizontalBorder()
+    if (self.activeDropdown) then
+        self.HorizontalBorderRight:SetPoint("TOPLEFT", self.activeDropdown:GetParent(), "BOTTOMRIGHT");
+        self.HorizontalBorderLeft:SetPoint("TOPRIGHT", self.activeDropdown:GetParent(), "BOTTOMLEFT");
+    else
+        self.HorizontalBorderLeft:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT");
     end
 end

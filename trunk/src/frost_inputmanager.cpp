@@ -104,18 +104,14 @@ namespace Frost
 
     s_bool InputManager::CanGroupReceiveClicks( const s_str& sGroupName ) const
     {
-        Log("can "+sGroupName+" ?");
         s_map<s_str, s_bool>::const_iterator iter = lClickGroupList_.Get(sGroupName);
         if (iter != lClickGroupList_.End())
         {
-            Log("found in click groups");
             if (!iter->second)
             {
-                Log("blocked");
                 iter = lForcedClickGroupList_.Get(sGroupName);
                 if (iter != lForcedClickGroupList_.End())
                 {
-                    Log("forced");
                     return iter->second;
                 }
                 else

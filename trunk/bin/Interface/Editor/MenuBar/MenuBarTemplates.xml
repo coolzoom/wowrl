@@ -26,19 +26,7 @@
                 end
             </OnEvent>
             <OnClick>
-                if (UIParent.activeDropdown) then
-                    if (UIParent.activeDropdown ~= this.Dropdown) then
-                        UIParent.activeDropdown:Hide();
-                        UIParent.activeDropdown = this.Dropdown;
-                        this.Dropdown:Show();
-                    else
-                        UIParent.activeDropdown = nil;
-                        this.Dropdown:Hide();
-                    end
-                else
-                    this.Dropdown:Show();
-                    UIParent.activeDropdown = this.Dropdown;
-                end
+                MenuBar:SetCurrentDropdown(this.Dropdown);
             </OnClick>
         </Scripts>
     </Button>
