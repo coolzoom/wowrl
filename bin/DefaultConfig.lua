@@ -14,13 +14,10 @@ GameOptions = {
     
     -- Renderer
     ["RenderSystem"] = "OpenGL",
-    --["RenderSystem"] = "DirectX",
     
     -- Advanced graphics options
     ["TerrainTextureFiltering"] = "ANISOTROPIC";
-    --["TerrainTextureFiltering"] = "BILINEAR";
     ["AntiAliasingLevel"] = 0,
-    ["DummyHOQFrameQueue"] = 0,
     ["EnableVSync"] = true,
     ["EnableSpecular"] = true,
     

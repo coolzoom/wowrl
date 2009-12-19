@@ -61,6 +61,58 @@ namespace Frost
             return *this;
         }
 
+        s_bool operator == (const s_var& mVar) const
+        {
+            if (GetType() == mVar.GetType())
+            {
+                if (IsOfType<s_str>())
+                {
+                    s_str s1 = Get<s_str>();
+                    s_str s2 = mVar.Get<s_str>();
+                    return s1 == s2;
+                }
+                else if (IsOfType<s_float>())
+                {
+                    s_float f1 = Get<s_float>();
+                    s_float f2 = mVar.Get<s_float>();
+                    return f1 == f2;
+                }
+                else if (IsOfType<s_double>())
+                {
+                    s_double d1 = Get<s_double>();
+                    s_double d2 = mVar.Get<s_double>();
+                    return d1 == d2;
+                }
+                else if (IsOfType<s_int>())
+                {
+                    s_int i1 = Get<s_int>();
+                    s_int i2 = mVar.Get<s_int>();
+                    return i1 == i2;
+                }
+                else if (IsOfType<s_uint>())
+                {
+                    s_uint ui1 = Get<s_uint>();
+                    s_uint ui2 = mVar.Get<s_uint>();
+                    return ui1 == ui2;
+                }
+                else if (IsOfType<s_bool>())
+                {
+                    s_bool b1 = Get<s_bool>();
+                    s_bool b2 = mVar.Get<s_bool>();
+                    return b1 == b2;
+                }
+                else if (IsOfType<void>())
+                    return true;
+            }
+
+            return false;
+        }
+
+        s_bool operator != (const s_var& mVar)
+        {
+            return !(operator == (mVar));
+        }
+
         /// Swaps this value with another.
         /** \param mVar the value to swap with this one
         */

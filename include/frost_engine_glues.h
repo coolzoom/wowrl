@@ -27,9 +27,11 @@ namespace Frost
         int _FireEvent(lua_State*);
         int _ForceWorldClicksAllowed(lua_State*);
         int _GetBackgroundColor(lua_State*);
+        int _GetConstant(lua_State*);
         int _LoadZone(lua_State*);
         int _LoadZoneFile(lua_State*);
         int _SetBackgroundColor(lua_State*);
+        int _SetConstant(lua_State*);
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);
         int _UnloadZone(lua_State*);

@@ -139,6 +139,37 @@ namespace Frost
         return mFunc.Return();
     }
 
+
+    int LuaEngine::_GetConstant( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:GetConstant", pLua, 1);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            mFunc.Push(Engine::GetSingleton()->GetConstant(mFunc.Get(0)->GetString()));
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_SetConstant( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:SetConstant", pLua);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+        mFunc.Add(1, "value", Lua::TYPE_STRING);
+        mFunc.Add(1, "value", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "value", Lua::TYPE_BOOLEAN);
+        mFunc.Add(1, "value", Lua::TYPE_NIL);
+
+        if (mFunc.Check())
+        {
+            Engine::GetSingleton()->SetConstant(mFunc.Get(0)->GetString(), mFunc.Get(1)->GetData()->GetValue());
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEngine::_GetBackgroundColor( lua_State* pLua )
     {
         Lua::Function mFunc("Engine:GetBackgroundColor", pLua, 4);
