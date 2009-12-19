@@ -31,19 +31,18 @@ namespace Frost
         uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
         uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
 
-        Ogre::PixelFormat mPF;
         switch (mType)
         {
-            case PIXEL_ARGB : mPF = Ogre::PF_A8R8G8B8; break;
-            case PIXEL_XRGB : mPF = Ogre::PF_X8R8G8B8; break;
-            case PIXEL_FLOAT : mPF = Ogre::PF_FLOAT32_R; break;
-            default : mPF = Ogre::PF_A8R8G8B8;
+            case PIXEL_ARGB : mPixelFormat_ = Ogre::PF_A8R8G8B8; break;
+            case PIXEL_XRGB : mPixelFormat_ = Ogre::PF_X8R8G8B8; break;
+            case PIXEL_FLOAT : mPixelFormat_ = Ogre::PF_FLOAT32_R; break;
+            default : mPixelFormat_ = Ogre::PF_A8R8G8B8;
         }
 
         Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
             sName_.Get(), "Frost", Ogre::TEX_TYPE_2D,
             uiRealWidth_.Get(), uiRealHeight_.Get(),
-            0, mPF, Ogre::TU_RENDERTARGET
+            0, mPixelFormat_, Ogre::TU_RENDERTARGET
         );
         hResourceHandle_ = pTexture->getHandle();
 
@@ -65,19 +64,18 @@ namespace Frost
         uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
         uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
 
-        Ogre::PixelFormat mPF;
         switch (mType)
         {
-            case PIXEL_ARGB : mPF = Ogre::PF_A8R8G8B8; break;
-            case PIXEL_XRGB : mPF = Ogre::PF_X8R8G8B8; break;
-            case PIXEL_FLOAT : mPF = Ogre::PF_FLOAT32_R; break;
-            default : mPF = Ogre::PF_A8R8G8B8;
+            case PIXEL_ARGB : mPixelFormat_ = Ogre::PF_A8R8G8B8; break;
+            case PIXEL_XRGB : mPixelFormat_ = Ogre::PF_X8R8G8B8; break;
+            case PIXEL_FLOAT : mPixelFormat_ = Ogre::PF_FLOAT32_R; break;
+            default : mPixelFormat_ = Ogre::PF_A8R8G8B8;
         }
 
         Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
             sName_.Get(), "Frost", Ogre::TEX_TYPE_2D,
             uiRealWidth_.Get(), uiRealHeight_.Get(),
-            0, mPF, Ogre::TU_RENDERTARGET
+            0, mPixelFormat_, Ogre::TU_RENDERTARGET
         );
         hResourceHandle_ = pTexture->getHandle();
 
@@ -132,9 +130,9 @@ namespace Frost
             uiRealWidth_ = uiNewWidth;
             uiRealHeight_ = uiNewHeight;
             Ogre::TexturePtr pTexture = Ogre::TextureManager::getSingleton().createManual(
-                ("_AutoNamedTarget:"+uiID_).Get(), "Frost", Ogre::TEX_TYPE_2D,
+                sName_.Get(), "Frost", Ogre::TEX_TYPE_2D,
                 uiRealWidth_.Get(), uiRealHeight_.Get(),
-                0, Ogre::PF_A8B8G8R8, Ogre::TU_RENDERTARGET
+                0, mPixelFormat_, Ogre::TU_RENDERTARGET
             );
             hResourceHandle_ = pTexture->getHandle();
 

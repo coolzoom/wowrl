@@ -21,7 +21,7 @@ namespace Frost
         s_str sPreProcessorCommands;
         if (Engine::GetSingleton()->GetBoolConstant("EnableSpecular"))
             sPreProcessorCommands += "SPECULAR,";
-        if (Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
+        if (IsMotionBlurEnabled())
             sPreProcessorCommands += "MOTION_BLUR,";
         if (Engine::GetSingleton()->GetRenderer() == "OpenGL")
             sPreProcessorCommands += "OPEN_GL,";

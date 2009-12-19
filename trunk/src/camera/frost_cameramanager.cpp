@@ -7,7 +7,7 @@
 
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
-#include "gui/frost_guistructs.h"
+#include "material/frost_shadermanager.h"
 
 #include <OgreCamera.h>
 #include <OgreRenderWindow.h>
@@ -88,7 +88,7 @@ namespace Frost
                 pMainCamera_ = pCamera;
                 pMainCamera_->NotifyMainCamera(true);
 
-                if (Engine::GetSingleton()->GetBoolConstant("EnablePostProcessing"))
+                if (ShaderManager::GetSingleton()->IsPostProcessingEnabled())
                 {
                     if (!pMainViewport_)
                     {
@@ -102,7 +102,7 @@ namespace Frost
                             Ogre::Real(pMainViewport_->getActualHeight())
                         );
 
-                        pSceneViewport_ = Engine::GetSingleton()->GetSceneMultiRenderTarget()->addViewport(
+                        pSceneViewport_ = ShaderManager::GetSingleton()->GetSceneMultiRenderTarget()->addViewport(
                             pMainCamera_->GetOgreCamera().Get()
                         );
                         pSceneViewport_->setClearEveryFrame(true);
@@ -153,11 +153,17 @@ namespace Frost
 
     void CameraManager::SetBackgroundColor( const Color& mColor )
     {
+        Ogre::ColourValue mCV;
+        mCV.setAsABGR(mColor.GetPacked().Get());
+
         if (pSceneViewport_)
         {
-            Ogre::ColourValue mCV;
-            mCV.setAsABGR(mColor.GetPacked().Get());
             pSceneViewport_->setBackgroundColour(mCV);
+        }
+
+        if (pMainViewport_)
+        {
+            pMainViewport_->setBackgroundColour(mCV);
         }
 
         mBackgroundColor_ = mColor;

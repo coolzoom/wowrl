@@ -19,6 +19,7 @@
 #include "unit/frost_powertype.h"
 #include "material/frost_material.h"
 #include "material/frost_decal.h"
+#include "material/frost_shadermanager.h"
 #include "gameplay/frost_gameplaymanager.h"
 
 using namespace std;
@@ -379,7 +380,7 @@ namespace Frost
 
     void Unit::EnableMotionBlur()
     {
-        if (!bMotionBlurEnabled_ && Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
+        if (!bMotionBlurEnabled_ && ShaderManager::GetSingleton()->IsMotionBlurEnabled())
         {
             bMotionBlurEnabled_ = true;
             pBodyModel_->SetCustomShaderParameter(0, Ogre::Vector4(1,1,1,1));
@@ -388,7 +389,7 @@ namespace Frost
 
     void Unit::DisableMotionBlur()
     {
-        if (bMotionBlurEnabled_ && Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
+        if (bMotionBlurEnabled_ && ShaderManager::GetSingleton()->IsMotionBlurEnabled())
         {
             bMotionBlurEnabled_ = false;
             pBodyModel_->SetCustomShaderParameter(0, Ogre::Vector4(0,0,0,0));

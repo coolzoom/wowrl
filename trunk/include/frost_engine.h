@@ -83,11 +83,24 @@ namespace Frost
         */
         const s_bool&       IsGamePaused() const;
 
+        /// Parses Config.lua.
+        void                ReadConfig();
+
+        /// Updates the content of Config.lua.
+        void                SaveConfig();
+
         /// Returns a game constant.
         /** \param sConstantName The name of the constant you're searching for
         *   \return An untyped value containing the value you asked
         */
         s_var               GetConstant(const s_str& sConstantName);
+
+        /// Sets the value of a game constant.
+        /** \param sConstantName The name of the constant to modify
+        *   \param vValue        The value to assign it
+        *   \note Fires the GAME_CONSTANT_CHANGED event.
+        */
+        void                SetConstant(const s_str& sConstantName, const s_var& vValue);
 
         /// Checks if a game constant has been defined.
         /** \param sConstantName The name of the constant you're searching for
@@ -155,22 +168,15 @@ namespace Frost
         */
         s_str               GetRenderer() const;
 
+        /// Returns the Ogre::RenderSystem used by the engine.
+        /** \return The Ogre::RenderSystem used by the engine
+        */
+        s_ptr<Ogre::RenderSystem> GetRenderSystem();
+
         /// Returns the Ogre::RenderWindow used by the engine.
         /** \return The Ogre::RenderWindow used by the engine
         */
         s_ptr<Ogre::RenderWindow> GetRenderWindow();
-
-        /// Returns the render target on which the scene is drawn in.
-        /** \return The render target on which the scene is drawn in
-        */
-        s_ptr<RenderTarget> GetSceneRenderTarget();
-
-        /// Returns the multi render target on which the scene is drawn in.
-        /** \return The multi render target on which the scene is drawn in
-        *   \note This render target "contains" several ones : the scene is
-        *         drawn on each of these with a different shader code.
-        */
-        s_ptr<Ogre::MultiRenderTarget> GetSceneMultiRenderTarget();
 
         typedef             s_bool (*Function)();
         /// Sets the new function to call on each frame.
@@ -267,14 +273,9 @@ namespace Frost
         s_ptr<Lua::State>          pLua_;
         s_ctnr< s_ptr<LuaEngine> > lGlueList_;
 
-        // Render targets
-        s_ptr<Ogre::MultiRenderTarget> pSceneMRT_;
-        s_ptr<RenderTarget> pSceneRenderTarget_;
-        s_ptr<RenderTarget> pMotionBlurMask_;
-        s_ptr<Sprite>       pSceneSprite_;
-
         // OGRE variables
         s_ptr<Ogre::Root>         pRoot_;
+        s_ptr<Ogre::RenderSystem> pRenderSystem_;
         s_ptr<Ogre::SceneManager> pOgreSceneMgr_;
         s_ptr<Ogre::RenderWindow> pRenderWindow_;
 
