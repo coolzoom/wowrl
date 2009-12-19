@@ -448,8 +448,20 @@ namespace Frost
 
     void Engine::ReadConfig()
     {
-        if (!pLua_->DoFile("Config.lua"))
-            throw Exception(CLASS_NAME, "Error reading Config.lua.");
+        if (!pLua_->DoFile("DefaultConfig.lua"))
+            throw Exception(CLASS_NAME, "Error reading DefaultConfig.lua.");
+
+        pLua_->PushGlobal("GameOptions");
+        pLua_->PushNil();
+        while (lua_next(pLua_->GetState(), -2) != 0)
+        {
+            lDefaultGameOptionList_[pLua_->GetString(-2)] = pLua_->GetValue(-1);
+            pLua_->Pop();
+        }
+        pLua_->Pop();
+
+        if (!pLua_->DoFile("Saves/Config.lua"))
+            Warning(CLASS_NAME, "Error reading Saves/Config.lua.");
 
         pLua_->PushGlobal("GameOptions");
         pLua_->PushNil();
@@ -458,11 +470,42 @@ namespace Frost
             lGameOptionList_[pLua_->GetString(-2)] = pLua_->GetValue(-1);
             pLua_->Pop();
         }
+        pLua_->Pop();
     }
 
     void Engine::SaveConfig()
     {
+        File mFile("Saves/Config.lua", File::O);
 
+        mFile.WriteLine("-- Frost Engine configuration overrides :");
+
+        s_map<s_str, s_var>::iterator iterChanged, iterDefault;
+        foreach (iterChanged, lGameOptionList_)
+        {
+            s_bool bWrite = false;
+            iterDefault = lDefaultGameOptionList_.Get(iterChanged->first);
+            if (iterDefault != lDefaultGameOptionList_.End())
+                bWrite = iterDefault->second != iterChanged->second;
+            else
+                bWrite = true;
+
+            if (bWrite)
+            {
+                s_str sChanged;
+                if (iterChanged->second.IsOfType<s_str>())
+                    sChanged = "\""+iterChanged->second.Get<s_str>()+"\"";
+                else if (iterChanged->second.IsOfType<s_float>())
+                    sChanged = s_str(iterChanged->second.Get<s_float>());
+                else if (iterChanged->second.IsOfType<s_bool>())
+                    sChanged = s_str(iterChanged->second.Get<s_bool>());
+                else if (iterChanged->second.IsOfType<void>())
+                    sChanged = "nil";
+                else
+                    continue;
+
+                mFile.WriteLine("GameOptions[\""+iterChanged->first+"\"] = "+sChanged+";");
+            }
+        }
     }
 
     s_var Engine::GetConstant( const s_str& sConstantName )
@@ -475,6 +518,13 @@ namespace Frost
 
     void Engine::SetConstant( const s_str& sConstantName, const s_var& vValue )
     {
+        s_map<s_str, s_var>::iterator iter = lGameOptionList_.Get(sConstantName);
+        if (iter != lGameOptionList_.End())
+        {
+            if (iter->second == vValue)
+                return;
+        }
+
         lGameOptionList_[sConstantName] = vValue;
 
         Event mEvent("GAME_CONSTANT_CHANGED");

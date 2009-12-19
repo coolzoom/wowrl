@@ -668,7 +668,7 @@ s_var State::GetValue( const s_int& iIndex )
         case LUA_TBOOLEAN : return GetBool(iIndex);
         case LUA_TNUMBER : return GetNumber(iIndex);
         case LUA_TSTRING : return GetString(iIndex);
-        default : return static_cast<void*>(nullptr);
+        default : return s_var();
     }
 }
 

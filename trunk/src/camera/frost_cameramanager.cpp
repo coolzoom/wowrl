@@ -88,6 +88,9 @@ namespace Frost
                 pMainCamera_ = pCamera;
                 pMainCamera_->NotifyMainCamera(true);
 
+                Ogre::ColourValue mCV;
+                mCV.setAsABGR(mBackgroundColor_.GetPacked().Get());
+
                 if (ShaderManager::GetSingleton()->IsPostProcessingEnabled())
                 {
                     if (!pMainViewport_)
@@ -96,7 +99,7 @@ namespace Frost
                         pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
                             pDefaultCamera_->GetOgreCamera().Get()
                         );
-                        pMainViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+                        pMainViewport_->setBackgroundColour(mCV);
                         pDefaultCamera_->GetOgreCamera()->setAspectRatio(
                             Ogre::Real(pMainViewport_->getActualWidth()) /
                             Ogre::Real(pMainViewport_->getActualHeight())
@@ -106,7 +109,7 @@ namespace Frost
                             pMainCamera_->GetOgreCamera().Get()
                         );
                         pSceneViewport_->setClearEveryFrame(true);
-                        pSceneViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+                        pSceneViewport_->setBackgroundColour(mCV);
 
                         pSceneViewport_->setDimensions(
                             0, 0,
@@ -128,7 +131,7 @@ namespace Frost
                         pMainViewport_ = Engine::GetSingleton()->GetRenderWindow()->addViewport(
                             pMainCamera_->GetOgreCamera().Get()
                         );
-                        pMainViewport_->setBackgroundColour(Ogre::ColourValue::Black);
+                        pMainViewport_->setBackgroundColour(mCV);
 
                         bNewViewport_ = true;
                     }
@@ -157,14 +160,9 @@ namespace Frost
         mCV.setAsABGR(mColor.GetPacked().Get());
 
         if (pSceneViewport_)
-        {
             pSceneViewport_->setBackgroundColour(mCV);
-        }
-
-        if (pMainViewport_)
-        {
+        else if (pMainViewport_)
             pMainViewport_->setBackgroundColour(mCV);
-        }
 
         mBackgroundColor_ = mColor;
     }

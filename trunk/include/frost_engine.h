@@ -243,6 +243,7 @@ namespace Frost
         s_bool bGamePaused_;
 
         // Game constants
+        s_map<s_str, s_var> lDefaultGameOptionList_;
         s_map<s_str, s_var> lGameOptionList_;
 
         // Frame function
