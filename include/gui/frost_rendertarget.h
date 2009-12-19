@@ -10,6 +10,8 @@
 
 #include "frost.h"
 
+#include <OgreTexture.h>
+
 namespace Frost
 {
     /// A wrapper around Ogre::RenderTarget
@@ -134,6 +136,7 @@ namespace Frost
         s_uint uiRealHeight_;
         s_uint uiWidth_;
         s_uint uiHeight_;
+        Ogre::PixelFormat mPixelFormat_;
 
         s_ptr<Ogre::RenderTarget> pOgreRenderTarget_;
 

@@ -60,7 +60,39 @@ namespace Frost
         void                LoadShaders();
 
         /// Sends shaders parameters.
-        void                UpdateShaders();
+        /** \param fDelta The time elapsed since the last call
+        */
+        void                UpdateShaders(const s_float& fDelta);
+
+        /// Renders the post processed scene on the current render target.
+        void                RenderPostProcessedScene();
+
+        /// Checks if post processing is enabled.
+        /** \return 'true' if post processing is enabled
+        */
+        s_bool              IsPostProcessingEnabled();
+
+        /// Checks if motion blur is enabled.
+        /** \return 'true' if motion blur is enabled
+        */
+        s_bool              IsMotionBlurEnabled();
+
+        /// Enables/disables post processing effects.
+        /** \param bEnable 'true' to enable post processing
+        */
+        void                EnablePostProcessing(const s_bool& bEnable);
+
+        /// Enables/disables motion blur effect.
+        /** \param bEnable 'true' to enable motion blur
+        */
+        void                EnableMotionBlur(const s_bool& bEnable);
+
+        /// Returns the multi render target on which the scene is drawn in.
+        /** \return The multi render target on which the scene is drawn in
+        *   \note This render target "contains" several ones : the scene is
+        *         drawn on each of these with a different shader code.
+        */
+        s_ptr<Ogre::MultiRenderTarget> GetSceneMultiRenderTarget();
 
         static const s_str CLASS_NAME;
 
@@ -102,6 +134,12 @@ namespace Frost
         s_bool ParseParams_(s_ptr<XML::Block> pShaderBlock, s_ptr<Shader> pShader);
 
         s_map< s_str, s_ptr<Shader> > lShaderList_;
+
+        // Render targets, for post processing
+        s_ptr<Ogre::MultiRenderTarget> pSceneMRT_;
+        s_ptr<RenderTarget>            pSceneRenderTarget_;
+        s_ptr<RenderTarget>            pMotionBlurMask_;
+        s_ptr<Sprite>                  pSceneSprite_;
 
     };
 }

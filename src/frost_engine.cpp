@@ -31,7 +31,6 @@
 #include <OgreRenderSystem.h>
 #include <OgreRenderWindow.h>
 #include <OgreWindowEventUtilities.h>
-#include <OgreRenderTargetListener.h>
 #include <OgrePass.h>
 #include <OgreGpuCommandBufferFlush.h>
 
@@ -41,27 +40,6 @@ using namespace std;
 
 namespace Frost
 {
-    class RenderWindowListener : public Ogre::RenderTargetListener
-    {
-    public :
-
-        void preRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
-        {
-            // Only render the SpriteManager's render target on the screen
-            Engine::GetSingleton()->GetOgreSceneManager()->setSpecialCaseRenderQueueMode(
-                Ogre::SceneManager::SCRQM_INCLUDE
-            );
-        }
-
-        void postRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
-        {
-            // ... and disable it for the scene render target
-            Engine::GetSingleton()->GetOgreSceneManager()->setSpecialCaseRenderQueueMode(
-                Ogre::SceneManager::SCRQM_EXCLUDE
-            );
-        }
-    };
-
     const s_str Engine::CLASS_NAME = "Engine";
 
     Engine::Engine() : mLog_("Frost.log", File::O)
@@ -70,7 +48,7 @@ namespace Frost
         bGamePaused_ = false;
         bShutDown_ = false;
 
-        lGameOptionList_["GameVersion"] = s_str("0.045");
+        SetConstant("GameVersion", s_str("0.045"));
 
         pFrameFunc_ = nullptr;
 
@@ -99,9 +77,6 @@ namespace Frost
         pUnitMgr_     = UnitManager::GetSingleton();
         pGameplayMgr_ = GameplayManager::GetSingleton();
         pZoneMgr_     = ZoneManager::GetSingleton();
-
-        pLua_ = pLuaMgr_->CreateLua();
-        pLuaMgr_->SetDefaultLua(pLua_);
 
         //mTimeMgr_->SetProfiling(true);
     }
@@ -156,26 +131,15 @@ namespace Frost
 
         //pEventMgr_->ToggleDebugOutput();
 
-        // Load configuration
-        if (!pLua_->DoFile("Config.lua"))
-            throw Exception(CLASS_NAME, "Error reading Config.lua.");
-
+        // Create the Lua state
+        pLua_ = pLuaMgr_->CreateLua();
+        pLuaMgr_->SetDefaultLua(pLua_);
         Lua::RegisterGlobalFuncs(pLua_);
         Lua::RegisterEngineClass(pLua_);
         CreateGlue(pLua_);
 
-        pLua_->PushGlobal("GameOptions");
-        pLua_->PushNil();
-        while (lua_next(pLua_->GetState(), -2) != 0)
-        {
-            lGameOptionList_[pLua_->GetString(-2)] = pLua_->GetValue(-1);
-            pLua_->Pop();
-        }
-
-        if (!GetBoolConstant("EnablePostProcessing"))
-        {
-            lGameOptionList_["EnableMotionBlur"] = s_bool(false);
-        }
+        // Load configuration
+        ReadConfig();
 
         s_str sLine = "# Starting Frost Engine ("+GetStringConstant("GameVersion")+") #";
         Log(s_str('#', sLine.GetLength()));
@@ -195,34 +159,9 @@ namespace Frost
 
         // Create Ogre's scene manager
         pOgreSceneMgr_ = pRoot_->createSceneManager(Ogre::ST_GENERIC, "FrostSceneMgr");
-        if (GetBoolConstant("EnablePostProcessing"))
-            pOgreSceneMgr_->addSpecialCaseRenderQueue(Ogre::RENDER_QUEUE_OVERLAY);
 
         // Load shaders
         pShaderMgr_->LoadShaders();
-
-        if (GetBoolConstant("EnablePostProcessing"))
-        {
-            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
-                pSceneRenderTarget_
-            );
-            s_ptr<Ogre::Pass> pPass = pMat->GetDefaultPass();
-            pPass->setSeparateSceneBlending(
-                Ogre::SBF_ONE, Ogre::SBF_ZERO,
-                Ogre::SBF_ZERO, Ogre::SBF_ZERO
-            );
-            pPass->getTextureUnitState(0)->setTextureAddressingMode(
-                Ogre::TextureUnitState::TAM_CLAMP
-            );
-            s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
-            pTUS->setTextureName(pMotionBlurMask_->GetName().Get());
-            if (GetBoolConstant("EnableMotionBlur"))
-            {
-                pMat->SetPixelShader("MotionBlur");
-            }
-
-            pSceneSprite_ = new Sprite(pMat);
-        }
 
         pUnitMgr_->Initialize();
         pUnitMgr_->ParseData();
@@ -249,7 +188,7 @@ namespace Frost
 
         pCameraMgr_->CheckSettings();
 
-        pRoot_->getRenderSystem()->_initRenderTargets();
+        pRenderSystem_->_initRenderTargets();
         pTimeMgr_->Initialize();
 
         // Dummy hardware occlusion query, to avoid frame stuttering
@@ -310,35 +249,11 @@ namespace Frost
             pGUIMgr_->Update(fDelta);
 
             // Send shader parameters
-            pShaderMgr_->UpdateShaders();
+            pShaderMgr_->UpdateShaders(fDelta);
 
             // Update our own render targets
             if (!pSpriteMgr_->RenderTargets())
                 bRun_ = false;
-
-            if (GetBoolConstant("EnableMotionBlur"))
-            {
-                Ogre::GpuProgramParametersSharedPtr pParam = pSceneSprite_->GetMaterial()->GetDefaultPass()->getFragmentProgramParameters();
-                s_ptr<Ogre::Camera> pCam = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera();
-                Ogre::Matrix4 mViewProj = pCam->getProjectionMatrixWithRSDepth() * pCam->getViewMatrix(true);
-                Ogre::Matrix4 mViewProjInverse = mViewProj.inverse();
-                pParam->setNamedConstant("mViewProjInverse", mViewProjInverse);
-
-                static Ogre::Matrix4 mPrevViewProj = Ogre::Matrix4::IDENTITY;
-                pParam->setNamedConstant("mPrevViewProj", mPrevViewProj);
-                mPrevViewProj = mViewProj;
-
-                pParam->setNamedConstant("mFPS", 1.0f/fDelta.Get());
-
-                if (bFirstIteration)
-                {
-                    pParam->setNamedConstant("mMaxUV", Ogre::Vector4(
-                        (s_float(pSceneRenderTarget_->GetWidth()-1.0f)/s_float(pSceneRenderTarget_->GetRealWidth())).Get(),
-                        (s_float(pSceneRenderTarget_->GetHeight()-1.0f)/s_float(pSceneRenderTarget_->GetRealHeight())).Get(),
-                        0.0f, 0.0f
-                    ));
-                }
-            }
 
             // Render everyting
             pRoot_->_updateAllRenderTargets();
@@ -371,11 +286,9 @@ namespace Frost
                 Log("Best FPS : "+ pTimeMgr_->GetBestFPS());
                 Log("Worst FPS : "+ pTimeMgr_->GetWorstFPS()+"\n");
 
+                SaveConfig();
+
                 // End, delete/free everything
-                // ...
-                pSceneSprite_.Delete();
-                pSpriteMgr_->DeleteRenderTarget(pSceneRenderTarget_);
-                pSceneRenderTarget_ = nullptr;
 
                 // Print out profiling info
                 pTimeMgr_->Print();
@@ -432,7 +345,6 @@ namespace Frost
     void Engine::ReadGraphicsConfig_()
     {
         s_str sRenderSystem = GetStringConstant("RenderSystem");
-        Ogre::RenderSystem* pRS;
 
         if (sRenderSystem == "OpenGL")
         {
@@ -442,8 +354,8 @@ namespace Frost
                 pRoot_->loadPlugin("RenderSystem_GL");
             #endif
 
-            pRS = pRoot_->getRenderSystemByName("OpenGL Rendering Subsystem");
-            if (!pRS)
+            pRenderSystem_ = pRoot_->getRenderSystemByName("OpenGL Rendering Subsystem");
+            if (!pRenderSystem_)
             {
                 throw Exception(CLASS_NAME,
                     "Can't load the "+sRenderSystem+" renderer, maybe a problem with the DLL."
@@ -458,8 +370,8 @@ namespace Frost
                 pRoot_->loadPlugin("RenderSystem_Direct3D9");
             #endif
 
-            pRS = pRoot_->getRenderSystemByName("Direct3D9 Rendering Subsystem");
-            if (!pRS)
+            pRenderSystem_ = pRoot_->getRenderSystemByName("Direct3D9 Rendering Subsystem");
+            if (!pRenderSystem_)
             {
                 throw Exception(CLASS_NAME,
                     "Can't load the "+sRenderSystem+" renderer, maybe a problem with the DLL."
@@ -467,7 +379,7 @@ namespace Frost
             }
 
             // NOTE : Lua needs this to work properly
-            pRS->setConfigOption("Floating-point mode", "Consistent");
+            pRenderSystem_->setConfigOption("Floating-point mode", "Consistent");
         }
         else
         {
@@ -476,7 +388,7 @@ namespace Frost
             );
         }
 
-        pRoot_->setRenderSystem(pRS);
+        pRoot_->setRenderSystem(pRenderSystem_.Get());
         pRoot_->initialise(false);
 
         s_uint uiScreenWidth = GetUIntConstant("ScreenWidth");
@@ -514,7 +426,7 @@ namespace Frost
 
         if (sRenderSystem == "OpenGL")
         {
-            if (!pRS->getCapabilities()->isShaderProfileSupported("glsl"))
+            if (!pRenderSystem_->getCapabilities()->isShaderProfileSupported("glsl"))
             {
                 throw Exception(CLASS_NAME,
                     "Frost requires a GLSL compatible card."
@@ -523,58 +435,34 @@ namespace Frost
         }
         else if (sRenderSystem == "DirectX")
         {
-            if (!pRS->getCapabilities()->isShaderProfileSupported("hlsl") ||
-                !pRS->getCapabilities()->isShaderProfileSupported("ps_2_0") ||
-                !pRS->getCapabilities()->isShaderProfileSupported("vs_2_0"))
+            if (!pRenderSystem_->getCapabilities()->isShaderProfileSupported("hlsl") ||
+                !pRenderSystem_->getCapabilities()->isShaderProfileSupported("ps_2_0") ||
+                !pRenderSystem_->getCapabilities()->isShaderProfileSupported("vs_2_0"))
             {
                 throw Exception(CLASS_NAME,
                     "Frost requires a HLSL (VS and PS 2.0) compatible card."
                 );
             }
         }
+    }
 
-        if (GetBoolConstant("EnableMotionBlur"))
+    void Engine::ReadConfig()
+    {
+        if (!pLua_->DoFile("Config.lua"))
+            throw Exception(CLASS_NAME, "Error reading Config.lua.");
+
+        pLua_->PushGlobal("GameOptions");
+        pLua_->PushNil();
+        while (lua_next(pLua_->GetState(), -2) != 0)
         {
-            if (pRS->getCapabilities()->getNumMultiRenderTargets() < 2)
-            {
-                lGameOptionList_["EnablePostProcessing"] = s_bool(false);
-                lGameOptionList_["EnableMotionBlur"] = s_bool(false);
-                Warning(CLASS_NAME, "Your graphics card doesn't support Multiple Render Targets (MRTs).\n"
-                    "Frost needs at least 2 for motion blur to be enabled."
-                );
-            }
+            lGameOptionList_[pLua_->GetString(-2)] = pLua_->GetValue(-1);
+            pLua_->Pop();
         }
+    }
 
-        if (GetBoolConstant("EnablePostProcessing"))
-        {
-            pRenderWindow_->addListener(
-                new RenderWindowListener()
-            );
+    void Engine::SaveConfig()
+    {
 
-            pSceneRenderTarget_ = pSpriteMgr_->CreateRenderTarget(
-                "SceneTarget",
-                bFullScreen ? uiScreenWidth  : uiWindowWidth,
-                bFullScreen ? uiScreenHeight : uiWindowHeight,
-                RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
-            );
-
-            pMotionBlurMask_ = pSpriteMgr_->CreateRenderTarget(
-                "MotionBlurMask",
-                bFullScreen ? uiScreenWidth  : uiWindowWidth,
-                bFullScreen ? uiScreenHeight : uiWindowHeight,
-                RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
-            );
-
-            pSceneMRT_ = Ogre::Root::getSingleton().getRenderSystem()->createMultiRenderTarget(
-                "Scene_MRT"
-            );
-            pSceneMRT_->bindSurface(0,
-                (Ogre::RenderTexture*)pSceneRenderTarget_->GetOgreRenderTarget().Get()
-            );
-            pSceneMRT_->bindSurface(1,
-                (Ogre::RenderTexture*)pMotionBlurMask_->GetOgreRenderTarget().Get()
-            );
-        }
     }
 
     s_var Engine::GetConstant( const s_str& sConstantName )
@@ -583,6 +471,16 @@ namespace Frost
         if (iter == lGameOptionList_.End())
             return s_var();
         return iter->second;
+    }
+
+    void Engine::SetConstant( const s_str& sConstantName, const s_var& vValue )
+    {
+        lGameOptionList_[sConstantName] = vValue;
+
+        Event mEvent("GAME_CONSTANT_CHANGED");
+        mEvent.Add(sConstantName);
+        mEvent.Add(vValue);
+        EventManager::GetSingleton()->FireEvent(mEvent);
     }
 
     s_bool Engine::IsConstantDefined( const s_str& sConstantName ) const
@@ -632,6 +530,11 @@ namespace Frost
         return &mLog_;
     }
 
+    s_ptr<Ogre::RenderSystem> Engine::GetRenderSystem()
+    {
+        return pRenderSystem_;
+    }
+
     s_ptr<Ogre::SceneManager> Engine::GetOgreSceneManager()
     {
         return pOgreSceneMgr_;
@@ -640,16 +543,6 @@ namespace Frost
     s_ptr<Ogre::RenderWindow> Engine::GetRenderWindow()
     {
         return pRenderWindow_;
-    }
-
-    s_ptr<RenderTarget> Engine::GetSceneRenderTarget()
-    {
-        return pSceneRenderTarget_;
-    }
-
-    s_ptr<Ogre::MultiRenderTarget> Engine::GetSceneMultiRenderTarget()
-    {
-        return pSceneMRT_;
     }
 
     s_ptr<Lua::State> Engine::GetLua()
@@ -687,8 +580,8 @@ namespace Frost
 
     void Engine::RenderScene()
     {
-        if (GetBoolConstant("EnablePostProcessing"))
-            pSceneSprite_->Render(0, 0);
+        if (pShaderMgr_->IsPostProcessingEnabled())
+            pShaderMgr_->RenderPostProcessedScene();
         else
             pSpriteMgr_->Clear(Color::VOID);
     }
