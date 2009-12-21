@@ -11,7 +11,7 @@
         <Scripts>
             <OnLoad>
                 this.updated = false;
-                this.normalBgColor = Color(0.75, 0.75, 0.75, 0.8);
+                this.normalBgColor = Color(0.75, 0.75, 0.75);
                 
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)

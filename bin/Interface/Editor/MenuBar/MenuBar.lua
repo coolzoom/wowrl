@@ -46,7 +46,7 @@ function MenuBar:CreateMenuDropdown(caption)
             
             dropdown:SetScript("OnShow",
                 function()
-                    base:OnShow(); 
+                    this:GetBase():OnShow(); 
                     MenuBar:UpdateHorizontalBorder();
                 end
             );

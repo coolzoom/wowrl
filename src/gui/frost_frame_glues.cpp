@@ -938,6 +938,62 @@ int LuaFrame::_SetMinResize(lua_State* pLua)
     return mFunc.Return();
 }
 
+int LuaFrame::_SetMaxWidth(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetMaxWidth", pLua);
+    mFunc.Add(0, "width", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pFrameParent_->SetMaxWidth(
+            s_uint(mFunc.Get(0)->GetNumber())
+        );
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_SetMaxHeight(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetMaxHeight", pLua);
+    mFunc.Add(0, "height", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pFrameParent_->SetMaxHeight(
+            s_uint(mFunc.Get(0)->GetNumber())
+        );
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_SetMinWidth(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetMinWidth", pLua);
+    mFunc.Add(0, "width", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pFrameParent_->SetMinWidth(
+            s_uint(mFunc.Get(0)->GetNumber())
+        );
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFrame::_SetMinHeight(lua_State* pLua)
+{
+    Lua::Function mFunc("Frame:SetMinHeight", pLua);
+    mFunc.Add(0, "height", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pFrameParent_->SetMinHeight(
+            s_uint(mFunc.Get(0)->GetNumber())
+        );
+    }
+
+    return mFunc.Return();
+}
+
 int LuaFrame::_SetMovable(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetMovable", pLua);
@@ -978,8 +1034,8 @@ int LuaFrame::_SetScript(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:SetScript", pLua);
     mFunc.Add(0, "script name", Lua::TYPE_STRING);
-    mFunc.Add(1, "function", Lua::TYPE_FUNCTION);
-    mFunc.Add(1, "nil", Lua::TYPE_NIL);
+    mFunc.Add(1, "function", Lua::TYPE_FUNCTION, true);
+    mFunc.Add(1, "nil", Lua::TYPE_NIL, true);
     if (mFunc.Check())
     {
         s_str sScriptName = mFunc.Get(0)->GetString();
@@ -987,17 +1043,17 @@ int LuaFrame::_SetScript(lua_State* pLua)
         {
             s_ptr<Lua::State> pLua = mFunc.GetState();
             s_ptr<Lua::Argument> pArg = mFunc.Get(1);
-            if (pArg->GetType() == Lua::TYPE_FUNCTION)
+            if (pArg->IsProvided() && pArg->GetType() == Lua::TYPE_FUNCTION)
             {
                 pLua->PushValue(pArg->GetIndex());
                 pLua->SetGlobal(pFrameParent_->GetName() + ":" + sScriptName);
-                pFrameParent_->NotifyScriptDefined(sScriptName);
+                pFrameParent_->NotifyScriptDefined(sScriptName, true);
             }
             else
             {
                 pLua->PushNil();
                 pLua->SetGlobal(pFrameParent_->GetName() + ":" + sScriptName);
-                pFrameParent_->NotifyScriptDefined(sScriptName);
+                pFrameParent_->NotifyScriptDefined(sScriptName, false);
             }
         }
         else

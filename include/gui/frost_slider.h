@@ -96,9 +96,10 @@ namespace Frost
             const s_float& GetMaxValue() const;
 
             /// Sets this Slider's value.
-            /** \param fValue The value
+            /** \param fValue  The value
+            *   \param bSilent 'true' to prevent OnValueChanged to be fired
             */
-            void           SetValue(const s_float& fValue);
+            void           SetValue(const s_float& fValue, const s_bool& bSilent = false);
 
             /// Returns this Slider's value.
             /** \return This Slider's value

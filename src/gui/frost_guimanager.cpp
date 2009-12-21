@@ -40,6 +40,7 @@ namespace Frost
 
     GUIManager::GUIManager()
     {
+        RegisterEvent("KEY_PRESSED");
     }
 
     GUIManager::~GUIManager()
@@ -611,6 +612,13 @@ namespace Frost
 
         bObjectMoved_ = false;
         bBuildStrataList_ = false;
+
+        static s_bool bFirstIteration = true;
+        if (bFirstIteration)
+        {
+            EventManager::GetSingleton()->FireEvent(Event("ENTERING_WORLD"));
+            bFirstIteration = false;
+        }
     }
 
     void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj, s_ptr<GUI::Anchor> pAnchor, Constraint mConstraint )
@@ -765,6 +773,17 @@ namespace Frost
     s_ptr<GUI::Frame> GUIManager::GetOveredFrame() const
     {
         return pOveredFrame_;
+    }
+
+    void GUIManager::SetKeyBinding( const s_uint& uiKey, const s_str& sLuaString )
+    {
+        lKeyBindingList_[uiKey] = sLuaString;
+    }
+
+    void GUIManager::RemoveKeyBinding( const s_uint& uiKey )
+    {
+        if (lKeyBindingList_.Find(uiKey))
+            lKeyBindingList_.Erase(uiKey);
     }
 
     s_uint GUIManager::GetHighestLevel( FrameStrata mFrameStrata ) const

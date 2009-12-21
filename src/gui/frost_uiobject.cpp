@@ -114,10 +114,10 @@ void UIObject::CopyFrom( s_ptr<UIObject> pObj )
             pLua->Pop();
         }
 
-        // Inherit properties
         bInherits_ = true;
         pInheritance_ = pObj;
 
+        // Inherit properties
         this->SetAlpha(pObj->GetAlpha());
         this->SetShown(pObj->IsShown());
         if (pObj->IsWidthAbsolute())
@@ -288,8 +288,9 @@ const s_uint& UIObject::GetAbsWidth() const
     return uiAbsWidth_;
 }
 
-s_uint UIObject::GetAppearentWidth() const
+s_uint UIObject::GetAppearentWidth()
 {
+    UpdateBorders_();
     return s_uint(lBorderList_[BORDER_RIGHT] - lBorderList_[BORDER_LEFT]);
 }
 
@@ -298,8 +299,9 @@ const s_uint& UIObject::GetAbsHeight() const
     return uiAbsHeight_;
 }
 
-s_uint UIObject::GetAppearentHeight() const
+s_uint UIObject::GetAppearentHeight()
 {
+    UpdateBorders_();
     return s_uint(lBorderList_[BORDER_BOTTOM] - lBorderList_[BORDER_TOP]);
 }
 
@@ -331,6 +333,11 @@ void UIObject::SetParent( s_ptr<UIObject> pParent )
 s_ptr<UIObject> UIObject::GetParent()
 {
     return pParent_;
+}
+
+s_ptr<UIObject> UIObject::GetBase()
+{
+    return pInheritance_;
 }
 
 const s_int& UIObject::GetBottom() const

@@ -951,11 +951,14 @@ void Frame::DefineScript( const s_str& sScriptName, const s_str& sContent )
     GUIManager::GetSingleton()->GetLua()->DoString(sStr);
 }
 
-void Frame::NotifyScriptDefined( const s_str& sScriptName )
+void Frame::NotifyScriptDefined( const s_str& sScriptName, const s_bool& bDefined )
 {
     s_str sCutScriptName = sScriptName;
     sCutScriptName.EraseFromStart(2);
-    lDefinedScriptList_[sCutScriptName] = "";
+    if (bDefined)
+        lDefinedScriptList_[sCutScriptName] = "";
+    else
+        lDefinedScriptList_.Erase(sCutScriptName);
 }
 
 void Frame::OnEvent( const Event& mEvent )
@@ -1053,17 +1056,6 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
 
         this->PushOnLua(pLua);
         pLua->SetGlobal("this");
-
-        if (pInheritance_)
-        {
-            pInheritance_->PushOnLua(pLua);
-            pLua->SetGlobal("base");
-        }
-        else
-        {
-            pLua->PushNil();
-            pLua->SetGlobal("base");
-        }
 
         if ((sScriptName == "KeyDown") ||
             (sScriptName == "KeyUp"))
@@ -1238,6 +1230,8 @@ void Frame::SetMaxResize( const s_uint& uiMaxWidth, const s_uint& uiMaxHeight )
         uiMaxWidth_ = uiMaxWidth;
     if (uiMaxHeight >= uiMinHeight_)
         uiMaxHeight_ = uiMaxHeight;
+
+    FireUpdateDimensions();
 }
 
 void Frame::SetMinResize( const s_uint& uiMinWidth, const s_uint& uiMinHeight )
@@ -1246,6 +1240,40 @@ void Frame::SetMinResize( const s_uint& uiMinWidth, const s_uint& uiMinHeight )
         uiMinWidth_ = uiMinWidth;
     if (uiMinHeight <= uiMaxHeight_)
         uiMinHeight_ = uiMinHeight;
+
+    FireUpdateDimensions();
+}
+
+void Frame::SetMaxHeight( const s_uint& uiMaxHeight )
+{
+    if (uiMaxHeight >= uiMinHeight_)
+        uiMaxHeight_ = uiMaxHeight;
+
+    FireUpdateDimensions();
+}
+
+void Frame::SetMaxWidth( const s_uint& uiMaxWidth )
+{
+    if (uiMaxWidth >= uiMinWidth_)
+        uiMaxWidth_ = uiMaxWidth;
+
+    FireUpdateDimensions();
+}
+
+void Frame::SetMinHeight( const s_uint& uiMinHeight )
+{
+    if (uiMinHeight <= uiMaxHeight_)
+        uiMinHeight_ = uiMinHeight;
+
+    FireUpdateDimensions();
+}
+
+void Frame::SetMinWidth( const s_uint& uiMinWidth )
+{
+    if (uiMinWidth <= uiMaxWidth_)
+        uiMinWidth_ = uiMinWidth;
+
+    FireUpdateDimensions();
 }
 
 void Frame::SetMovable( const s_bool& bIsMovable )

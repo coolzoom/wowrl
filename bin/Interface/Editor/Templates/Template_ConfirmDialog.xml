@@ -1,0 +1,92 @@
+<Ui>
+    <Frame name="FrameTemplate_ConfirmDialog" virtual="true" inherits="FrameTemplate_ResizableDialog" hidden="true" frameStrata="TOOLTIP">
+        <Size>
+            <AbsDimension x="250" y="128"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor  = Color(1, 1, 1);
+                this.normalBgColor    = Color(0.75, 0.75, 0.75);
+                this.normalTitleColor = Color(0.5, 0.5, 0.5);
+                
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self:SetBackdropColor(newColor:Unpack());
+                    
+                    newColor = self.normalTitleColor*color;
+                    newColor.a = self.normalTitleColor.a;
+                    self.Title:SetBackdropColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Title.TitleString:SetTextColor(newColor:Unpack());
+                    self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    self.Content:SetTextColor(newColor:Unpack());
+                end);
+                
+                this.Title.TitleString:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogTitle"));
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
+                    this:SetBackdropColor(newColor:Unpack());
+                    
+                    newColor = this.normalTitleColor*AddOns.Editor.Config.UIBackgroundColor;
+                    newColor.a = this.normalTitleColor.a;
+                    this.Title:SetBackdrop({});
+                    this.Title:SetBackdropColor(newColor:Unpack());
+                
+                    newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this.Title.TitleString:SetTextColor(newColor:Unpack());
+                    this.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    this.Content:SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
+        </Scripts>
+        <Frames>
+            <Button name="$parentCancelButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():GetBase():OnLoad();
+                        this:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogCancel"));
+                    </OnLoad>
+                    <OnClick>
+                        this:GetParent():Hide();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentOkButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentCancelButton" relativePoint="LEFT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():GetBase():OnLoad();
+                        this:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogOK"));
+                    </OnLoad>
+                    <OnClick>
+                        this:GetParent():OnOK();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Layers>
+            <Layer>
+                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="8">
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                        <Anchor point="BOTTOMRIGHT" relativeTo="$parentCancelButton" relativePoint="TOPRIGHT"/>
+                    </Anchors>
+                    <Color r="1" g="1" b="1"/>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>

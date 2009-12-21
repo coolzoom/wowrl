@@ -30,6 +30,7 @@ namespace Frost
         uiHeight_ = uiHeight;
         uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
         uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
+        mUsage_ = mUsage;
 
         switch (mType)
         {
@@ -48,7 +49,7 @@ namespace Frost
 
         pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
 
-        if (mUsage == USAGE_2D)
+        if (mUsage_ == USAGE_2D)
         {
             pOgreRenderTarget_->addViewport(0);
             pOgreRenderTarget_->setAutoUpdated(false);
@@ -137,7 +138,12 @@ namespace Frost
             hResourceHandle_ = pTexture->getHandle();
 
             pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
-            pOgreRenderTarget_->addViewport(0);
+
+            if (mUsage_ == USAGE_2D)
+            {
+                pOgreRenderTarget_->addViewport(0);
+                pOgreRenderTarget_->setAutoUpdated(false);
+            }
             return true;
         }
         else

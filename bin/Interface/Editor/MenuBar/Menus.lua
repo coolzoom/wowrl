@@ -11,8 +11,13 @@ MenuBar:AddMenuItem("File", "Close", "Ctrl-W"):SetScript("OnClick", function()
     Frost:UnloadZone();
     MenuBar:CloseCurrentDropdown();
 end);
-MenuBar:AddMenuItem("File", "Quit", "Esc."):SetScript("OnClick", function()
-    Exit();
+MenuBar:AddMenuItem("File", "Exit", "Esc."):SetScript("OnClick", function()
+    if (AddOns.Editor:IsDataSaved()) then
+        Exit();
+    else
+        EscMenuConfirmDialog:Show();
+    end
+    MenuBar:CloseCurrentDropdown();
 end);
 
 MenuBar:AddMenu("Edit");

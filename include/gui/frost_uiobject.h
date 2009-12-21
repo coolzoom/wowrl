@@ -127,6 +127,11 @@ namespace Frost
             */
             s_ptr<UIObject> GetParent();
 
+            /// Returns the widget this one inherits from.
+            /** \return The widget this one inherits from
+            */
+            s_ptr<UIObject> GetBase();
+
             /// Changes this widget's alpha (opacity).
             /** \param fAlpha The new alpha value
             *   \note Default is 1.0f.
@@ -202,7 +207,7 @@ namespace Frost
 
             /// Returns this widget's absolute width (in pixels).
             /** \return This widget's absolute width (in pixels)
-            *   \note If you need to get the size of a widget on the,
+            *   \note If you need to get the size of a widget on the screen,
             *         use GetAppearentWidth() instead, because some
             *         widgets can have an infinite or undefined width.
             */
@@ -210,15 +215,15 @@ namespace Frost
 
             /// Returns this widget's appearend width (in pixels).
             /** \return This widget's appearend width (in pixels)
-            *   \note If you need to get the size of a widget on the,
+            *   \note If you need to get the size of a widget on the screen,
             *         use this function instead of GetAbsWidth(), because
             *         some widgets can have an infinite or undefined width.
             */
-            s_uint          GetAppearentWidth() const;
+            s_uint          GetAppearentWidth();
 
             /// Returns this widget's absolute height (in pixels).
             /** \return This widget's absolute height (in pixels)
-            *   \note If you need to get the size of a widget on the,
+            *   \note If you need to get the size of a widget on the screen,
             *         use GetAppearentHeight() instead, because some
             *         widgets can have an infinite or undefined height.
             */
@@ -226,11 +231,11 @@ namespace Frost
 
             /// Returns this widget's appearend height (in pixels).
             /** \return This widget's appearend height (in pixels)
-            *   \note If you need to get the size of a widget on the,
+            *   \note If you need to get the size of a widget on the screen,
             *         use this function instead of GetAbsHeight(), because
             *         some widgets can have an infinite or undefined height.
             */
-            s_uint          GetAppearentHeight() const;
+            s_uint          GetAppearentHeight();
 
             /// Returns this widget's width (relative to its parent).
             /** \return This widget's width (relative to its parent)
@@ -504,6 +509,8 @@ namespace Frost
             virtual ~LuaVirtualGlue();
 
             int _MarkForCopy(lua_State*);
+            int _GetBase(lua_State*);
+            int _GetName(lua_State*);
 
             static const char className[];
             static const char* classList[];
@@ -533,6 +540,7 @@ namespace Frost
             int _SetAlpha(lua_State*);
             // Region
             int _ClearAllPoints(lua_State*);
+            int _GetBase(lua_State*);
             int _GetBottom(lua_State*);
             int _GetCenter(lua_State*);
             int _GetHeight(lua_State*);

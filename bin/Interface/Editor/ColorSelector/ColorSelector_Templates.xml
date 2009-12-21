@@ -7,6 +7,24 @@
             <Anchor point="LEFT" relativeTo="$parent"/>
             <Anchor point="RIGHT" relativeTo="$parentSwatch" relativePoint="LEFT"/>
         </Anchors>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor = Color(1,1,1);
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.TitleString:SetTextColor(newColor:Unpack());
+                    self.ValueString:SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this.TitleString:SetTextColor(newColor:Unpack());
+                    this.ValueString:SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
+        </Scripts>
         <Layers>
             <Layer>
                 <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT">
@@ -35,24 +53,6 @@
                 </FontString>
             </Layer>
         </Layers>
-        <Scripts>
-            <OnLoad>
-                this.normalTextColor = Color(1,1,1);
-                this:RegisterEvent("ADDON_LOADED");
-                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
-                    local newColor = self.normalTextColor*color;
-                    self.TitleString:SetTextColor(newColor:Unpack());
-                    self.ValueString:SetTextColor(newColor:Unpack());
-                end);
-            </OnLoad>
-            <OnEvent>
-                if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this.TitleString:SetTextColor(newColor:Unpack());
-                    this.ValueString:SetTextColor(newColor:Unpack());
-                end
-            </OnEvent>
-        </Scripts>
         <Frames>
             <Slider name="$parentSlider" minValue="0" maxValue="255" defaultValue="255" valueStep="1" orientation="HORIZONTAL">
                 <Size>
@@ -83,8 +83,7 @@
                     <OnValueChanged>
                         local value = this:GetValue();
                         this:GetParent().ValueString:SetText(value);
-                        ColorSelector.currentColor[this:GetParent().chanel] = value/255.0;
-                        ColorSelector:OnColorUpdate();
+                        ColorSelector:OnColorUpdate(this:GetParent().chanel, value);
                     </OnValueChanged>
                 </Scripts>
             </Slider>
