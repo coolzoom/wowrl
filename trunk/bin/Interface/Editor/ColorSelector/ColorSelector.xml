@@ -104,6 +104,7 @@
                     <OnClick>
                         if (ColorSelector.savedColor) then
                             ColorSelector:SetColor(ColorSelector.savedColor);
+                            ColorSelector:OnColorUpdate();
                         end
                     </OnClick>
                 </Scripts>
