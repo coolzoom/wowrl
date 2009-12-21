@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="ConfigMenu" parent="UIParent" inherits="FrameTemplate_Dialog" hidden="true">
+    <Frame name="ConfigMenu" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
         <Size>
             <AbsDimension x="400" y="400"/>
         </Size>
@@ -8,7 +8,7 @@
         </Anchors>
         <Scripts>
             <OnLoad>
-                base:OnLoad();
+                this:GetBase():OnLoad();
                 this.Title.TitleString:SetText(AddOns.ConfigMenu:GetLocalizedString("Title"));
             </OnLoad>
         </Scripts>

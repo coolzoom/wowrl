@@ -91,12 +91,6 @@ s_bool EditorFrameFunc()
 {
     static s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
 
-    if (pInputMgr->KeyIsPressed(KEY_ESCAPE))
-    {
-        Log("Escape pressed, exiting...");
-        return false;
-    }
-
     if (pInputMgr->KeyIsPressed(KEY_T))
     {
         Engine::GetSingleton()->TakeScreenshot();

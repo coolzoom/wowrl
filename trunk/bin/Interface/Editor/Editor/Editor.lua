@@ -12,6 +12,21 @@ UIParent:SetScript("OnMouseUp", function ()
     end
 end);
 
+function AddOns.Editor:NotifyDataChanged()
+    self.dataSaved = false;
+end
+
+function AddOns.Editor:NotifyDataSaved()
+    self.dataSaved = true;
+end
+
+function AddOns.Editor:IsDataSaved()
+    if (not self.dataSaved) then
+        self.dataSaved = true;
+    end
+    return self.dataSaved;
+end
+
 function AddOns.Editor:SetCurrentDropdown(dropdown)
     if (self.activeDropdown) then
         if (self.activeDropdown ~= dropdown) then

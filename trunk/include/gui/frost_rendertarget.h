@@ -136,6 +136,7 @@ namespace Frost
         s_uint uiRealHeight_;
         s_uint uiWidth_;
         s_uint uiHeight_;
+        Usage  mUsage_;
         Ogre::PixelFormat mPixelFormat_;
 
         s_ptr<Ogre::RenderTarget> pOgreRenderTarget_;

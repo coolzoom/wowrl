@@ -54,6 +54,30 @@ int LuaVirtualGlue::_MarkForCopy( lua_State* pLua )
     return mFunc.Return();
 }
 
+int LuaVirtualGlue::_GetName( lua_State* pLua )
+{
+    Lua::Function mFunc("VirtualGlue:GetName", pLua, 1);
+
+    mFunc.Push(pParent_->GetLuaName());
+
+    return mFunc.Return();
+}
+
+int LuaVirtualGlue::_GetBase( lua_State* pLua )
+{
+    Lua::Function mFunc("VirtualGlue:GetBase", pLua, 1);
+
+    if (pParent_->GetBase())
+    {
+        pParent_->GetBase()->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
 LuaUIObject::LuaUIObject( lua_State* pLua ) : LuaGlue(pLua)
 {
     s_str sName = lua_tostring(pLua, -1);
@@ -194,6 +218,21 @@ int LuaUIObject::_GetParent( lua_State* pLua )
     if (pParent_->GetParent())
     {
         pParent_->GetParent()->PushOnLua(mFunc.GetState());
+        mFunc.NotifyPushed();
+    }
+    else
+        mFunc.PushNil();
+
+    return mFunc.Return();
+}
+
+int LuaUIObject::_GetBase( lua_State* pLua )
+{
+    Lua::Function mFunc("UIObject:GetBase", pLua, 1);
+
+    if (pParent_->GetBase())
+    {
+        pParent_->GetBase()->PushOnLua(mFunc.GetState());
         mFunc.NotifyPushed();
     }
     else

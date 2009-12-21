@@ -89,6 +89,30 @@ int Frost::l_Exit( lua_State* pLua )
     return mFunc.Return();
 }
 
+int Frost::l_SetKeyBinding( lua_State* pLua )
+{
+    Lua::Function mFunc("SetKeyBinding", pLua);
+    mFunc.Add(0, "key", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "code", Lua::TYPE_STRING, true);
+    mFunc.Add(1, "nil", Lua::TYPE_NIL, true);
+
+    if (mFunc.Check())
+    {
+        if (mFunc.IsProvided(1) && mFunc.Get(1)->GetType() == Lua::TYPE_STRING)
+        {
+            GUIManager::GetSingleton()->SetKeyBinding(
+                s_uint(mFunc.Get(0)->GetNumber()), mFunc.Get(1)->GetString()
+            );
+        }
+        else
+        {
+            GUIManager::GetSingleton()->RemoveKeyBinding(s_uint(mFunc.Get(0)->GetNumber()));
+        }
+    }
+
+    return mFunc.Return();
+}
+
 int Frost::l_CreateFrame( lua_State* pLua )
 {
     Lua::Function mFunc("CreateFrame", pLua, 1);

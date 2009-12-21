@@ -277,8 +277,9 @@ namespace Frost
 
             /// Tells this Frame that a script has been defined.
             /** \param sScriptName The name of the script
+            *   \param bDefined    'true' if the script is defined
             */
-            void                NotifyScriptDefined(const s_str& sScriptName);
+            void                NotifyScriptDefined(const s_str& sScriptName, const s_bool& bDefined);
 
             /// Calls a script.
             /** \param sScriptName The name of the script
@@ -359,6 +360,26 @@ namespace Frost
             *   \param uiMinHeight The minimum height this Frame can have
             */
             void                SetMinResize(const s_uint& uiMinWidth, const s_uint& uiMinHeight);
+
+            /// Set this Frame's maximum height.
+            /** \param uiMaxHeight The maximum height this Frame can have
+            */
+            void                SetMaxHeight(const s_uint& uiMaxHeight);
+
+            /// Set this Frame's maximum width.
+            /** \param uiMaxWidth  The maximum width this Frame can have
+            */
+            void                SetMaxWidth(const s_uint& uiMaxWidth);
+
+            /// Set this Frame's minimum height.
+            /** \param uiMinHeight The minimum height this Frame can have
+            */
+            void                SetMinHeight(const s_uint& uiMinHeight);
+
+            /// Set this Frame's minimum width.
+            /** \param uiMinWidth  The minimum width this Frame can have
+            */
+            void                SetMinWidth(const s_uint& uiMinWidth);
 
             /// Sets if this Frame can be moved by the user.
             /** \param bIsMovable 'true' to allow the user to move this Frame
@@ -584,6 +605,10 @@ namespace Frost
             int _GetID(lua_State*);
             int _GetMaxResize(lua_State*);
             int _GetMinResize(lua_State*);
+            int _SetMaxWidth(lua_State*);
+            int _SetMaxHeight(lua_State*);
+            int _SetMinWidth(lua_State*);
+            int _SetMinHeight(lua_State*);
             int _GetNumChildren(lua_State*);
             int _GetNumRegions(lua_State*);
             int _GetScale(lua_State*);

@@ -138,9 +138,13 @@ int LuaSlider::_SetValue(lua_State* pLua)
 {
     Lua::Function mFunc("Slider:SetValue", pLua);
     mFunc.Add(0, "value", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "silent", Lua::TYPE_BOOLEAN, true);
     if (mFunc.Check())
     {
-        pSliderParent_->SetValue(mFunc.Get(0)->GetNumber());
+        if (mFunc.IsProvided(1))
+            pSliderParent_->SetValue(mFunc.Get(0)->GetNumber(), mFunc.Get(1)->GetBool());
+        else
+            pSliderParent_->SetValue(mFunc.Get(0)->GetNumber());
     }
 
     return mFunc.Return();

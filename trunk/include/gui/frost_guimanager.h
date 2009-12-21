@@ -158,6 +158,17 @@ namespace Frost
         */
         s_str                ParseFileName(const s_str& sFileName) const;
 
+        /// Binds some Lua code to a key.
+        /** \param uiKey      The key to bind
+        *   \param sLuaString The Lua code that will be executed
+        */
+        void                 SetKeyBinding(const s_uint& uiKey, const s_str& sLuaString);
+
+        /// Unbinds a key.
+        /** \param uiKey The key to unbind
+        */
+        void                 RemoveKeyBinding(const s_uint& uiKey);
+
         /// Returns the GUI Lua state.
         /** \return The GUI Lua state
         */
@@ -294,6 +305,8 @@ namespace Frost
 
         s_ptr<Lua::State> pLua_;
         s_bool            bClosed_;
+
+        s_map<s_uint, s_str> lKeyBindingList_;
 
         s_map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
         s_map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;

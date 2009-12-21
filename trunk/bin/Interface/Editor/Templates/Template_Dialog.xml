@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true" frameStrata="DIALOG" topLevel="true">
+    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" enableMouse="true" clampedToScreen="true" frameStrata="DIALOG" topLevel="true">
         <ResizeBounds>
             <Min>
                 <AbsDimension x="64" y="64"/>
@@ -38,8 +38,8 @@
         <Scripts>
             <OnLoad>
                 this.normalTextColor  = Color(1, 1, 1);
-                this.normalBgColor    = Color(0.75, 0.75, 0.75, 0.8);
-                this.normalTitleColor = Color(0.5, 0.5, 0.5, 0.8);
+                this.normalBgColor    = Color(0.75, 0.75, 0.75);
+                this.normalTitleColor = Color(0.5, 0.5, 0.5);
                 
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
@@ -56,6 +56,9 @@
                     self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
                 end);
             </OnLoad>
+            <OnShow>
+                this:Raise();
+            </OnShow>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
                     local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
@@ -72,6 +75,72 @@
                 end
             </OnEvent>
         </Scripts>
+        <Frames>
+            <Frame name="$parentTitle">
+                <Size>
+                    <AbsDimension y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="TOP">
+                        <Offset>
+                            <AbsDimension y="8"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="LEFT" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="8"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT" relativePoint="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-8"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="CENTER" text="">
+                            <Size>
+                                <AbsDimension x="140" y="32"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                            <Color r="1" g="1" b="1"/>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Frames>
+                    <Button name="$parentCloseButton" text="X">
+                        <Size>
+                            <AbsDimension x="16" y="16"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="RIGHT">
+                                <Offset>
+                                    <AbsDimension y="1"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                            <Color r="1" g="1" b="1"/>
+                        </NormalText>
+                        <HighlightTexture file="|ButtonHighlight.png"/>
+                        <Scripts>
+                            <OnClick>
+                                this:GetParent():GetParent():Hide();
+                            </OnClick>
+                        </Scripts>
+                    </Button>
+                </Frames>
+            </Frame>
+        </Frames>
+    </Frame>
+
+    <Frame name="FrameTemplate_ResizableDialog" virtual="true" inherits="FrameTemplate_Dialog" resizable="true">
         <Frames>
             <Frame name="$parentResizeZoneTL">
                 <Size>
@@ -202,67 +271,6 @@
                         this:GetParent():StopMovingOrSizing();
                     </OnDragStop>
                 </Scripts>
-            </Frame>
-            <Frame name="$parentTitle">
-                <Size>
-                    <AbsDimension y="16"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="TOP" relativePoint="TOP">
-                        <Offset>
-                            <AbsDimension y="8"/>
-                        </Offset>
-                    </Anchor>
-                    <Anchor point="LEFT" relativePoint="LEFT">
-                        <Offset>
-                            <AbsDimension x="8"/>
-                        </Offset>
-                    </Anchor>
-                    <Anchor point="RIGHT" relativePoint="RIGHT">
-                        <Offset>
-                            <AbsDimension x="-8"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Layers>
-                    <Layer level="ARTWORK">
-                        <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="CENTER" text="">
-                            <Size>
-                                <AbsDimension x="140" y="32"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="CENTER"/>
-                            </Anchors>
-                            <Color r="1" g="1" b="1"/>
-                        </FontString>
-                    </Layer>
-                </Layers>
-                <Frames>
-                    <Button name="$parentCloseButton" text="X">
-                        <Size>
-                            <AbsDimension x="16" y="16"/>
-                        </Size>
-                        <Anchors>
-                            <Anchor point="RIGHT">
-                                <Offset>
-                                    <AbsDimension y="1"/>
-                                </Offset>
-                            </Anchor>
-                        </Anchors>
-                        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
-                            <Anchors>
-                                <Anchor point="CENTER"/>
-                            </Anchors>
-                            <Color r="1" g="1" b="1"/>
-                        </NormalText>
-                        <HighlightTexture file="|ButtonHighlight.png"/>
-                        <Scripts>
-                            <OnClick>
-                                this:GetParent():GetParent():Hide();
-                            </OnClick>
-                        </Scripts>
-                    </Button>
-                </Frames>
             </Frame>
         </Frames>
     </Frame>

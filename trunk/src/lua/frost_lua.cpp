@@ -68,7 +68,9 @@ void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
     pLua->Register<GUI::LuaTexture>();
     pLua->Register<GUI::LuaFontString>();
 
-    pLua->Register("CreateFrame", l_CreateFrame);
+    RegisterKeyCodes(pLua);
+    pLua->Register("SetKeyBinding", l_SetKeyBinding);
+    pLua->Register("CreateFrame",   l_CreateFrame);
 }
 
 void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )

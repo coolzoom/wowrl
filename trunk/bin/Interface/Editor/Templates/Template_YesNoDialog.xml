@@ -1,0 +1,123 @@
+<Ui>
+    <Frame name="FrameTemplate_YesNoDialog" virtual="true" inherits="FrameTemplate_ResizableDialog" hidden="true" frameStrata="TOOLTIP">
+        <Size>
+            <AbsDimension x="250" y="100"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor  = Color(1, 1, 1);
+                this.normalBgColor    = Color(0.75, 0.75, 0.75);
+                this.normalTitleColor = Color(0.5, 0.5, 0.5);
+                
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self:SetBackdropColor(newColor:Unpack());
+                    
+                    newColor = self.normalTitleColor*color;
+                    newColor.a = self.normalTitleColor.a;
+                    self.Title:SetBackdropColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Title.TitleString:SetTextColor(newColor:Unpack());
+                    self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    self.Content:SetTextColor(newColor:Unpack());
+                end);
+                
+                this.Title.TitleString:SetText(AddOns.Templates:GetLocalizedString("YesNoDialogTitle"));
+                this:SetMinWidth(250);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
+                    this:SetBackdropColor(newColor:Unpack());
+                    
+                    newColor = this.normalTitleColor*AddOns.Editor.Config.UIBackgroundColor;
+                    newColor.a = this.normalTitleColor.a;
+                    this.Title:SetBackdrop({});
+                    this.Title:SetBackdropColor(newColor:Unpack());
+                
+                    newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
+                    this.Title.TitleString:SetTextColor(newColor:Unpack());
+                    this.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    this.Content:SetTextColor(newColor:Unpack());
+                end
+            </OnEvent>
+        </Scripts>
+        <Frames>
+            <Button name="$parentCancelButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-12" y="-12"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():GetBase():OnLoad();
+                        this:SetText(AddOns.Templates:GetLocalizedString("YesNoDialogCancel"));
+                    </OnLoad>
+                    <OnClick>
+                        this:GetParent():Hide();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentNoButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentCancelButton" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():GetBase():OnLoad();
+                        this:SetText(AddOns.Templates:GetLocalizedString("YesNoDialogNo"));
+                    </OnLoad>
+                    <OnClick>
+                        this:GetParent():OnNo();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentYesButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentNoButton" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():GetBase():OnLoad();
+                        this:SetText(AddOns.Templates:GetLocalizedString("YesNoDialogYes"));
+                    </OnLoad>
+                    <OnClick>
+                        this:GetParent():OnYes();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Layers>
+            <Layer>
+                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="12" y="18"/>
+                            </Offset>
+                        </Anchor>
+                        <Anchor point="BOTTOMRIGHT" relativeTo="$parentCancelButton" relativePoint="TOPRIGHT"/>
+                    </Anchors>
+                    <Color r="1" g="1" b="1"/>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>

@@ -141,13 +141,28 @@ void Slider::OnEvent( const Event& mEvent )
     }
 }
 
+void StepValue( s_float& fValue, const s_float& fStep )
+{
+    // Makes the value a multiple of the step :
+    // fValue = N*fStep, where N is an integer.
+    if (!fStep.IsNull())
+        fValue = s_float::Round(fValue/fStep)*fStep;
+}
+
 void Slider::SetMinValue( const s_float& fMin )
 {
     if (fMin != fMinValue_)
     {
         fMinValue_ = fMin;
         if (fMinValue_ > fMaxValue_) fMinValue_ = fMaxValue_;
-        fValue_.Clamp(fMinValue_, fMaxValue_);
+        else StepValue(fMinValue_, fValueStep_);
+
+        if (fValue_ < fMinValue_)
+        {
+            fValue_ = fMinValue_;
+            lQueuedEventList_.PushBack("ValueChanged");
+        }
+
         FireUpdateThumbTexture_();
     }
 }
@@ -158,7 +173,14 @@ void Slider::SetMaxValue( const s_float& fMax )
     {
         fMaxValue_ = fMax;
         if (fMaxValue_ < fMaxValue_) fMaxValue_ = fMinValue_;
-        fValue_.Clamp(fMinValue_, fMaxValue_);
+        else StepValue(fMaxValue_, fValueStep_);
+
+        if (fValue_ > fMaxValue_)
+        {
+            fValue_ = fMaxValue_;
+            lQueuedEventList_.PushBack("ValueChanged");
+        }
+
         FireUpdateThumbTexture_();
     }
 }
@@ -169,18 +191,26 @@ void Slider::SetMinMaxValues( const s_float& fMin, const s_float& fMax )
     {
         fMinValue_ = s_float::Min(fMin, fMax);
         fMaxValue_ = s_float::Max(fMin, fMax);
-        fValue_.Clamp(fMinValue_, fMaxValue_);
+        StepValue(fMinValue_, fValueStep_);
+        StepValue(fMaxValue_, fValueStep_);
+        if (fValue_ > fMaxValue_ || fValue_ < fMinValue_)
+        {
+            fValue_.Clamp(fMinValue_, fMaxValue_);
+            lQueuedEventList_.PushBack("ValueChanged");
+        }
         FireUpdateThumbTexture_();
     }
 }
 
-void Slider::SetValue( const s_float& fValue )
+void Slider::SetValue( const s_float& fValue, const s_bool& bSilent )
 {
     if (fValue != fValue_)
     {
         fValue_ = fValue;
         fValue_.Clamp(fMinValue_, fMaxValue_);
-        lQueuedEventList_.PushBack("ValueChanged");
+        StepValue(fValue_, fValueStep_);
+        if (!bSilent)
+            lQueuedEventList_.PushBack("ValueChanged");
         FireUpdateThumbTexture_();
     }
 }
@@ -190,6 +220,14 @@ void Slider::SetValueStep( const s_float& fValueStep )
     if (fValueStep_ != fValueStep)
     {
         fValueStep_ = fValueStep;
+
+        StepValue(fMinValue_, fValueStep_);
+        StepValue(fMaxValue_, fValueStep_);
+        s_float fOldValue = fValue_;
+        StepValue(fValue_,    fValueStep_);
+        fValue_.Clamp(fMinValue_, fMaxValue_);
+        if (fValue_ != fOldValue)
+            lQueuedEventList_.PushBack("ValueChanged");
         FireUpdateThumbTexture_();
     }
 }
@@ -315,21 +353,10 @@ void Slider::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& iX, c
     bMouseInThumb_ = (bMouseInFrame && pThumbTexture_ && pThumbTexture_->IsInRegion(iX, iY));
 }
 
-void StepValue( s_float& fValue, const s_float& fStep )
-{
-    // Makes the value a multiple of the step :
-    // fValue = N*fStep, where N is an integer.
-    if (!fStep.IsNull())
-        fValue = s_float::Round(fValue/fStep)*fStep;
-}
-
 void Slider::Update()
 {
     if ( (bUpdateThumbTexture_ || bThumbMoved_) && pThumbTexture_ )
     {
-        StepValue(fMinValue_, fValueStep_);
-        StepValue(fMaxValue_, fValueStep_);
-
         s_float fOldValue = fValue_;
 
         if (bThumbMoved_)
@@ -342,11 +369,11 @@ void Slider::Update()
             fValue_ *= (fMaxValue_ - fMinValue_);
             fValue_ += fMinValue_;
             fValue_.Clamp(fMinValue_, fMaxValue_);
-        }
+            StepValue(fValue_, fValueStep_);
 
-        StepValue(fValue_, fValueStep_);
-        if (fValue_ != fOldValue)
-            lQueuedEventList_.PushBack("ValueChanged");
+            if (fValue_ != fOldValue)
+                lQueuedEventList_.PushBack("ValueChanged");
+        }
 
         s_float fCoef = (fValue_ - fMinValue_)/(fMaxValue_ - fMinValue_);
 

@@ -10,7 +10,7 @@
         <Scripts>
             <OnLoad>
                 this.activeDropDown = nil;
-                this.normalBgColor = Color(0.75, 0.75, 0.75, 0.8);
+                this.normalBgColor = Color(0.75, 0.75, 0.75);
                 
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
@@ -88,7 +88,11 @@
                 </Anchors>
                 <Scripts>
                     <OnClick>
-                        Exit();
+                        if (AddOns.Editor:IsDataSaved()) then
+                            Exit();
+                        else
+                            EscMenuConfirmDialog:Show();
+                        end
                     </OnClick>
                 </Scripts>
             </Button>

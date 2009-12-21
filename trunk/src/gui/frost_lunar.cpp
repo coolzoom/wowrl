@@ -42,6 +42,8 @@ namespace GUI
 
         // VirtualGlue
         method(VirtualGlue, MarkForCopy),
+        method(VirtualGlue, GetBase),
+        method(VirtualGlue, GetName),
 
         {0,0}
     };
@@ -63,6 +65,7 @@ namespace GUI
         method(UIObject, SetAlpha),
 
         method(UIObject, ClearAllPoints),
+        method(UIObject, GetBase),
         method(UIObject, GetBottom),
         method(UIObject, GetCenter),
         method(UIObject, GetHeight),
@@ -104,6 +107,7 @@ namespace GUI
         method(Frame, SetAlpha),
 
         method(Frame, ClearAllPoints),
+        method(Frame, GetBase),
         method(Frame, GetBottom),
         method(Frame, GetCenter),
         method(Frame, GetHeight),
@@ -149,6 +153,10 @@ namespace GUI
         method(Frame, GetID),
         method(Frame, GetMaxResize),
         method(Frame, GetMinResize),
+        method(Frame, SetMaxWidth),
+        method(Frame, SetMaxHeight),
+        method(Frame, SetMinWidth),
+        method(Frame, SetMinHeight),
         method(Frame, GetNumChildren),
         method(Frame, GetNumRegions),
         method(Frame, GetScale),
@@ -206,6 +214,7 @@ namespace GUI
         method(CheckButton, SetAlpha),
 
         method(CheckButton, ClearAllPoints),
+        method(CheckButton, GetBase),
         method(CheckButton, GetBottom),
         method(CheckButton, GetCenter),
         method(CheckButton, GetHeight),
@@ -251,6 +260,10 @@ namespace GUI
         method(CheckButton, GetID),
         method(CheckButton, GetMaxResize),
         method(CheckButton, GetMinResize),
+        method(CheckButton, SetMaxWidth),
+        method(CheckButton, SetMaxHeight),
+        method(CheckButton, SetMinWidth),
+        method(CheckButton, SetMinHeight),
         method(CheckButton, GetNumChildren),
         method(CheckButton, GetNumRegions),
         method(CheckButton, GetScale),
@@ -371,6 +384,7 @@ namespace GUI
         method(StatusBar, SetAlpha),
 
         method(StatusBar, ClearAllPoints),
+        method(StatusBar, GetBase),
         method(StatusBar, GetBottom),
         method(StatusBar, GetCenter),
         method(StatusBar, GetHeight),
@@ -416,6 +430,10 @@ namespace GUI
         method(StatusBar, GetID),
         method(StatusBar, GetMaxResize),
         method(StatusBar, GetMinResize),
+        method(StatusBar, SetMaxWidth),
+        method(StatusBar, SetMaxHeight),
+        method(StatusBar, SetMinWidth),
+        method(StatusBar, SetMinHeight),
         method(StatusBar, GetNumChildren),
         method(StatusBar, GetNumRegions),
         method(StatusBar, GetScale),
@@ -513,6 +531,7 @@ namespace GUI
         method(Button, SetAlpha),
 
         method(Button, ClearAllPoints),
+        method(Button, GetBase),
         method(Button, GetBottom),
         method(Button, GetCenter),
         method(Button, GetHeight),
@@ -558,6 +577,10 @@ namespace GUI
         method(Button, GetID),
         method(Button, GetMaxResize),
         method(Button, GetMinResize),
+        method(Button, SetMaxWidth),
+        method(Button, SetMaxHeight),
+        method(Button, SetMinWidth),
+        method(Button, SetMinHeight),
         method(Button, GetNumChildren),
         method(Button, GetNumRegions),
         method(Button, GetScale),
@@ -656,6 +679,7 @@ namespace GUI
         method(Slider, SetAlpha),
 
         method(Slider, ClearAllPoints),
+        method(Slider, GetBase),
         method(Slider, GetBottom),
         method(Slider, GetCenter),
         method(Slider, GetHeight),
@@ -701,6 +725,10 @@ namespace GUI
         method(Slider, GetID),
         method(Slider, GetMaxResize),
         method(Slider, GetMinResize),
+        method(Slider, SetMaxWidth),
+        method(Slider, SetMaxHeight),
+        method(Slider, SetMinWidth),
+        method(Slider, SetMinHeight),
         method(Slider, GetNumChildren),
         method(Slider, GetNumRegions),
         method(Slider, GetScale),
@@ -779,6 +807,7 @@ namespace GUI
         method(Texture, SetAlpha),
 
         method(Texture, ClearAllPoints),
+        method(Texture, GetBase),
         method(Texture, GetBottom),
         method(Texture, GetCenter),
         method(Texture, GetHeight),
@@ -836,6 +865,7 @@ namespace GUI
         method(FontString, SetAlpha),
 
         method(FontString, ClearAllPoints),
+        method(FontString, GetBase),
         method(FontString, GetBottom),
         method(FontString, GetCenter),
         method(FontString, GetHeight),

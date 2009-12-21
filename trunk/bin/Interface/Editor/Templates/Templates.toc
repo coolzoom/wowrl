@@ -5,6 +5,9 @@
 ## SavedVariables: 
 
 DefaultConfig.lua
+Localization.lua
 Template_Dialog.xml
 Template_Dropdown.xml
 Template_Button.xml
+Template_ConfirmDialog.xml
+Template_YesNoDialog.xml

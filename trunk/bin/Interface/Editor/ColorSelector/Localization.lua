@@ -5,6 +5,9 @@ if (GetLocale() == "frFR") then
         ["SliderR"] = "Rouge",
         ["SliderG"] = "Vert",
         ["SliderB"] = "Bleu",
+        ["SliderH"] = "Teinte",
+        ["SliderS"] = "Sat.",
+        ["SliderL"] = "Lum.",
         ["Copy"]    = "Copier",
         ["Paste"]   = "Coller",
     });
@@ -15,6 +18,9 @@ else
         ["SliderR"] = "Red",
         ["SliderG"] = "Green",
         ["SliderB"] = "Blue",
+        ["SliderH"] = "Hue",
+        ["SliderS"] = "Sat.",
+        ["SliderL"] = "Light",
         ["Copy"]    = "Copy",
         ["Paste"]   = "Paste",
     });
