@@ -24,28 +24,33 @@ namespace Frost
 
         /// Default constructor.
         /** \param sTextureFile The file containing the texture to draw
-        *   \param pOgreMat     The material on which the decal will be applied
-        *   \note The last two parameters are here for the Material class to create its
-        *         own decals. If you want to create a temporary decal, only use the first
-        *         parameter.
         */
-        Decal(const s_str& sTextureFile, s_ptr<Ogre::Material> pOgreMat = nullptr);
+        Decal(const s_str& sTextureFile);
 
         /// Copy constructor.
         /** \param mDecal   The base decal to copy
-        *   \param pOgreMat The material on which the decal will be applied
-        *   \note You shouldn't have to call this.
         */
-        Decal(const Decal& mDecal, s_ptr<Ogre::Material> pOgreMat);
+        Decal(const Decal& mDecal);
 
         /// Destructor.
         virtual ~Decal();
 
+        /// Makes this Decal appear on the provided Material.
+        /** \param pMat The material
+        */
+        void                    AddMaterial(s_wptr<Material> pMat);
+
+        /// Removes this Decal from the provided Material.
+        /** \param pMat The material
+        *   \note If you want to temporarily hide it, use the Hide() function.
+        */
+        void                    RemoveMaterial(s_wptr<Material> pMat);
+
         /// Makes this Decal visible on its Material.
-        void                    Show();
+        void                    Show(s_wptr<Material> pMat = nullptr);
 
         /// Makes this Decal invisible on its Material.
-        void                    Hide();
+        void                    Hide(s_wptr<Material> pMat = nullptr);
 
         /// Checks if this Decal is shown.
         /** \return 'true' if this Decal is shown
@@ -101,12 +106,6 @@ namespace Frost
         */
         const s_uint&           GetID() const;
 
-        /// Returns the associated Material.
-        /** \return The associated Material
-        *   \note If none, nullptr is returned.
-        */
-        s_ptr<Ogre::Pass>       GetOgrePass();
-
         /// Returns this Decal's Ogre Frustum.
         /** \return This Decal's Ogre Frustum
         */
@@ -121,12 +120,16 @@ namespace Frost
 
     private :
 
-        Decal(const Decal& mDecal);
+        struct MaterialInfo
+        {
+            s_wptr<Material>              pMat;
+            s_ptr<Ogre::Material>         pOgreMat;
+            s_ptr<Ogre::Pass>             pOgrePass;
+            s_ptr<Ogre::TextureUnitState> pTUS;
+            s_bool                        bShown;
+        };
 
-        s_ptr<Ogre::Material>         pOgreMat_;
-        s_ptr<Ogre::Pass>             pOgrePass_;
-        s_ptr<Ogre::TextureUnitState> pTUS_;
-        s_uint                        uiTUSIndex_;
+        s_map<s_uint, MaterialInfo>   lMaterialList_;
         s_refptr<Ogre::Frustum>       pOgreFrustum_;
         s_float                       fScale_;
         s_str                         sTextureFile_;

@@ -12,6 +12,7 @@
 #include "model/frost_animmanager.h"
 #include "scene/frost_scenemanager.h"
 #include "scene/frost_node.h"
+#include "scene/frost_zonemanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "unit/frost_unitmanager.h"
@@ -33,8 +34,7 @@ namespace Frost
     // TODO : Unit : Implement buffs
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
-        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN),
-        uiSelectionDecalID_(s_uint::NaN)
+        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN)
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
         pCamera_ = CameraManager::GetSingleton()->CreateCamera(Vector(0, 4, 5));
@@ -48,26 +48,25 @@ namespace Frost
         pSelectionDecal_->SetDirection(Vector(0, -1, 0));
         pSelectionDecal_->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
         pSelectionDecal_->SetScale(1.5f);
-        pSelectionDecal_->SetDiffuse(Color(0, 255, 0));
-        pSelectionDecal_->SetAmbient(Color(0, 255, 0));
+        pSelectionDecal_->SetSelfIllumination(Color(0, 255, 0));
+        pSelectionDecal_->Show();
 
-        s_refptr<Decal> pShadowDecal(new Decal("Textures/UnitShadow.png"));
-        pShadowDecal->Attach(pNode_, false, true);
-        pShadowDecal->SetPosition(Vector(0, 5, 0));
-        pShadowDecal->SetDirection(Vector(0, -1, 0));
-        pShadowDecal->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
-        pShadowDecal->SetScale(1.8f);
-        pShadowDecal->SetDiffuse(Color(128, 255, 255, 255));
+        pShadowDecal_ = s_refptr<Decal>(new Decal("Textures/UnitShadow.png"));
+        pShadowDecal_->Attach(pNode_, false, true);
+        pShadowDecal_->SetPosition(Vector(0, 5, 0));
+        pShadowDecal_->SetDirection(Vector(0, -1, 0));
+        pShadowDecal_->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
+        pShadowDecal_->SetScale(1.8f);
+        pShadowDecal_->Show();
 
-        uiShadowDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pShadowDecal);
+        ZoneManager::GetSingleton()->AddDecalOnGround(pShadowDecal_);
     }
 
     Unit::~Unit()
     {
-        SceneManager::GetSingleton()->RemoveDecalFromGround(uiShadowDecalID_);
-        pSelectionDecal_.SetNull();
-        if (uiSelectionDecalID_.IsValid())
-            SceneManager::GetSingleton()->RemoveDecalFromGround(uiSelectionDecalID_);
+        ZoneManager::GetSingleton()->RemoveDecalFromGround(pShadowDecal_);
+        if (bSelected_)
+            ZoneManager::GetSingleton()->RemoveDecalFromGround(pSelectionDecal_);
 
         CameraManager::GetSingleton()->DeleteCamera(pCamera_);
         SceneManager::GetSingleton()->DeleteNode(pNode_);
@@ -288,14 +287,9 @@ namespace Frost
         {
             bSelected_ = bSelected;
             if (bSelected_)
-            {
-                uiSelectionDecalID_ = SceneManager::GetSingleton()->AddDecalOnGround(pSelectionDecal_);
-            }
+                ZoneManager::GetSingleton()->AddDecalOnGround(pSelectionDecal_);
             else
-            {
-                SceneManager::GetSingleton()->RemoveDecalFromGround(uiSelectionDecalID_);
-                uiSelectionDecalID_.SetNaN();
-            }
+                ZoneManager::GetSingleton()->RemoveDecalFromGround(pSelectionDecal_);
         }
     }
 

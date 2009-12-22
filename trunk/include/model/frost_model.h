@@ -24,13 +24,13 @@ namespace Frost
         ModelPart(s_ptr<Model> pParent, const s_uint& uiID);
         ModelPart(const ModelPart &mMP, s_ptr<Model> pParent);
 
-        void               Show();
-        void               Hide();
-        void               SetMaterial(s_refptr<Material> pMat);
-        s_refptr<Material> GetMaterial();
-        void               SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
+        void             Show();
+        void             Hide();
+        void             SetMaterial(s_refptr<Material> pMat);
+        s_wptr<Material> GetMaterial();
+        void             SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
-        void               AddSubEntity(const s_uint& uiID);
+        void             AddSubEntity(const s_uint& uiID);
 
         static const s_str CLASS_NAME;
 
@@ -61,17 +61,17 @@ namespace Frost
         s_ptr<Ogre::Entity> GetEntity();
         s_ptr<Ogre::Mesh>   GetMesh();
 
-        void                Show();
-        void                Hide(s_bool bSubMeshes = false);
-        void                SetMaterial(s_refptr<Material> pMat);
-        s_refptr<Material>  GetMaterial();
-        void                SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
+        void              Show();
+        void              Hide(s_bool bSubMeshes = false);
+        void              SetMaterial(s_refptr<Material> pMat);
+        s_wptr<Material>  GetMaterial();
+        void              SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
-        void                SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj);
+        void              SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj);
 
-        const Vector&       GetEllipsoidRadius() const;
+        const Vector&     GetEllipsoidRadius() const;
 
-        void                Update(const s_float& fDelta);
+        void              Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 

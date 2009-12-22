@@ -78,7 +78,7 @@ namespace Frost
             pEntity_->setMaterialName("Default3D");
     }
 
-    s_refptr<Material> Plane::GetMaterial()
+    s_wptr<Material> Plane::GetMaterial()
     {
         return pMaterial_;
     }

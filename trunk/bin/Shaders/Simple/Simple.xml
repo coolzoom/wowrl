@@ -1,0 +1,29 @@
+<Shaders>
+    
+    <VertexShader name="SimpleTexture" file="Shaders/Simple/SimpleTexture_vs">
+        <Params>
+            <LightParams number="5" includeDirectional="true"/>
+            <AutoParam name="mAmbient"/>
+            <AutoParam name="mWorldViewProj"/>
+            <AutoParam name="mWorld"/>
+            <AutoParam name="mTexCoordMat" param="texture_matrix" data="0"/>
+        </Params>
+        <PreProcessor>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
+        </PreProcessor>
+    </VertexShader>
+    
+    <PixelShader name="SimpleTexture" file="Shaders/Simple/SimpleTexture_ps">
+        <TextureBinds>
+            <TextureBind name="mTexture" id="0"/>
+        </TextureBinds>
+        <PreProcessor>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
+        </PreProcessor>
+    </PixelShader>
+    
+</Shaders>

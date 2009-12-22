@@ -265,7 +265,7 @@ namespace Frost
         /// Returns this Text's material.
         /** \return This Text's material
         */
-        s_refptr<Material> GetMaterial();
+        s_wptr<Material> GetMaterial();
 
         /// Renders this Text at the given position.
         /** \param fX The horizontal position of the top left corner

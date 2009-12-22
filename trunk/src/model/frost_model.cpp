@@ -146,7 +146,7 @@ namespace Frost
         }
     }
 
-    s_refptr<Material> Model::GetMaterial()
+    s_wptr<Material> Model::GetMaterial()
     {
         return pMaterial_;
     }

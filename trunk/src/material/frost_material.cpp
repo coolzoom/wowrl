@@ -128,52 +128,6 @@ namespace Frost
             pDefaultPass_->setPolygonMode(Ogre::PM_SOLID);
     }
 
-    s_wptr<Decal> Material::AddDecal( s_wptr<Decal> pDecal )
-    {
-        if (s_refptr<Decal> pLocked = pDecal.Lock())
-        {
-            s_refptr<Decal> pNewDecal = s_refptr<Decal>(new Decal(*pLocked, pOgreMat_));
-            lDecalList_[pNewDecal->GetID()] = pNewDecal;
-
-            pNewDecal->Show();
-
-            return pNewDecal;
-        }
-        else
-            return s_wptr<Decal>();
-    }
-
-    s_wptr<Decal> Material::AddDecal( const s_str& sTextureFile )
-    {
-        s_refptr<Decal> pDecal = s_refptr<Decal>(new Decal(sTextureFile, pOgreMat_));
-        lDecalList_[pDecal->GetID()] = pDecal;
-
-        pDecal->Show();
-
-        return pDecal;
-    }
-
-    void Material::RemoveDecal( s_wptr<Decal> pDecal )
-    {
-        if (s_refptr<Decal> pLocked = pDecal.Lock())
-        {
-            s_map< s_uint, s_refptr<Decal> >::iterator iterDecal = lDecalList_.Get(pLocked->GetID());
-            if (iterDecal != lDecalList_.End())
-            {
-                if (iterDecal->second == pLocked)
-                {
-                    lDecalList_.Erase(iterDecal);
-                    return;
-                }
-            }
-
-            Warning(CLASS_NAME,
-                "Trying to remove a Decal that doesn't belong to this Material "
-                "("+sName_+")."
-            );
-        }
-    }
-
     const s_float& Material::GetWidth() const
     {
         return fWidth_;
@@ -294,5 +248,10 @@ namespace Frost
     s_bool Material::IsPlain() const
     {
         return (mType_ == TYPE_3D_PLAIN) || (mType_ == TYPE_2D_PLAIN);
+    }
+
+    const s_uint& Material::GetID() const
+    {
+        return uiID_;
     }
 }

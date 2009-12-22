@@ -47,7 +47,7 @@ namespace Frost
         return pMat;
     }
 
-    s_refptr<Material> MaterialManager::CreateMaterial2D(s_ptr<Ogre::Material> pOgreMat)
+    s_refptr<Material> MaterialManager::CreateMaterial2D( s_ptr<Ogre::Material> pOgreMat )
     {
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_UNKNOWN, pOgreMat));
         uiCounter_++;

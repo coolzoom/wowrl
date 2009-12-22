@@ -40,8 +40,8 @@ void main()
     #ifdef MOTION_BLUR
         gl_FragData[0] = texture2D(mTexture, gl_TexCoord[0].st);
         gl_FragData[0].rgb *= tLightColor;
-        gl_FragData[0].a = vPosition.z/vPosition.w;
         gl_FragData[1] = mMotionBlurMask;
+        gl_FragData[1].r = vPosition.z/vPosition.w;
     #else
         gl_FragColor = texture2D(mTexture, gl_TexCoord[0].st);
         gl_FragColor.rgb *= tLightColor;

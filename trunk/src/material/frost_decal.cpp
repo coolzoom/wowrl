@@ -1,4 +1,7 @@
 #include "material/frost_decal.h"
+#include "material/frost_material.h"
+#include "material/frost_shadermanager.h"
+#include "material/frost_shader.h"
 
 #include <OgreFrustum.h>
 #include <OgreSceneNode.h>
@@ -9,15 +12,8 @@ namespace Frost
 {
     s_str Decal::CLASS_NAME = "Decal";
 
-    Decal::Decal( const s_str& sTextureFile, s_ptr<Ogre::Material> pOgreMat )
+    Decal::Decal( const s_str& sTextureFile )
     {
-        pOgreMat_ = pOgreMat;
-        if (pOgreMat_)
-        {
-            pOgrePass_ = pOgreMat_->getTechnique(0)->createPass();
-            pOgrePass_->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-            pOgrePass_->setDepthBias(1, 0.1);
-        }
         sTextureFile_ = sTextureFile;
         pOgreFrustum_ = s_refptr<Ogre::Frustum>(new Ogre::Frustum());
         pOgreFrustum_->setAspectRatio(1.0f);
@@ -29,12 +25,8 @@ namespace Frost
         mAmbient_ = Color::BLACK;
     }
 
-    Decal::Decal( const Decal& mDecal, s_ptr<Ogre::Material> pOgreMat ) : MovableObject(mDecal)
+    Decal::Decal( const Decal& mDecal ) : MovableObject(mDecal)
     {
-        pOgreMat_ = pOgreMat;
-        pOgrePass_ = pOgreMat_->getTechnique(0)->createPass();
-        pOgrePass_->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-        pOgrePass_->setDepthBias(1, 0.1);
         sTextureFile_ = mDecal.sTextureFile_;
         pOgreFrustum_ = s_refptr<Ogre::Frustum>(new Ogre::Frustum());
         pOgreFrustum_->setAspectRatio(1.0f);
@@ -48,15 +40,67 @@ namespace Frost
 
     Decal::~Decal()
     {
-        if (pOgreMat_)
+        s_map<s_uint, MaterialInfo>::iterator iter;
+        foreach (iter, lMaterialList_)
         {
-            this->Hide();
-            pOgreMat_->getTechnique(0)->removePass(pOgrePass_->getIndex());
+            if (s_refptr<Material> pLocked = iter->second.pMat.Lock())
+            {
+                Hide(iter->second.pMat);
+                iter->second.pOgreMat->getTechnique(0)->removePass(iter->second.pOgrePass->getIndex());
+            }
         }
 
         if (pOgreFrustum_)
-        {
             pNode_->detachObject(pOgreFrustum_.Get());
+    }
+
+    void Decal::AddMaterial( s_wptr<Material> pMat )
+    {
+        if (s_refptr<Material> pLocked = pMat.Lock())
+        {
+            MaterialInfo mInfo;
+            mInfo.pMat      = pMat;
+            mInfo.pOgreMat  = pLocked->GetOgreMaterial();
+            mInfo.pOgrePass = mInfo.pOgreMat->getTechnique(0)->createPass();
+
+            mInfo.pOgrePass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+            mInfo.pOgrePass->setDepthBias(1.0f, 0.1f);
+            mInfo.pOgrePass->setDiffuse(
+                mDiffuse_.GetR().Get()/255.0f,
+                mDiffuse_.GetG().Get()/255.0f,
+                mDiffuse_.GetB().Get()/255.0f,
+                mDiffuse_.GetA().Get()/255.0f
+            );
+            mInfo.pOgrePass->setSelfIllumination(
+                mSelfIllum_.GetR().Get()/255.0f,
+                mSelfIllum_.GetG().Get()/255.0f,
+                mSelfIllum_.GetB().Get()/255.0f
+            );
+            mInfo.pOgrePass->setAmbient(
+                mAmbient_.GetR().Get()/255.0f,
+                mAmbient_.GetG().Get()/255.0f,
+                mAmbient_.GetB().Get()/255.0f
+            );
+            mInfo.pOgrePass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_FAIL);
+
+            lMaterialList_[pLocked->GetID()] = mInfo;
+
+            if (bShown_)
+                Show(pMat);
+        }
+    }
+
+    void Decal::RemoveMaterial( s_wptr<Material> pMat )
+    {
+        if (s_refptr<Material> pLocked = pMat.Lock())
+        {
+            s_map<s_uint, MaterialInfo>::iterator iter = lMaterialList_.Get(pLocked->GetID());
+            if (iter != lMaterialList_.End())
+            {
+                Hide(pMat);
+                iter->second.pOgreMat->getTechnique(0)->removePass(iter->second.pOgrePass->getIndex());
+                lMaterialList_.Erase(iter);
+            }
         }
     }
 
@@ -86,13 +130,14 @@ namespace Frost
     void Decal::SetDiffuse( const Color& mColor )
     {
         mDiffuse_ = mColor;
-        if (pOgrePass_)
+        s_map<s_uint, MaterialInfo>::iterator iter;
+        foreach (iter, lMaterialList_)
         {
-            pOgrePass_->setDiffuse(
-                mColor.GetR().Get()/255.0f,
-                mColor.GetG().Get()/255.0f,
-                mColor.GetB().Get()/255.0f,
-                mColor.GetA().Get()/255.0f
+            iter->second.pOgrePass->setDiffuse(
+                mDiffuse_.GetR().Get()/255.0f,
+                mDiffuse_.GetG().Get()/255.0f,
+                mDiffuse_.GetB().Get()/255.0f,
+                mDiffuse_.GetA().Get()/255.0f
             );
         }
     }
@@ -105,12 +150,13 @@ namespace Frost
     void Decal::SetSelfIllumination( const Color& mColor )
     {
         mSelfIllum_ = mColor;
-        if (pOgrePass_)
+        s_map<s_uint, MaterialInfo>::iterator iter;
+        foreach (iter, lMaterialList_)
         {
-            pOgrePass_->setSelfIllumination(
-                mColor.GetR().Get()/255.0f,
-                mColor.GetG().Get()/255.0f,
-                mColor.GetB().Get()/255.0f
+            iter->second.pOgrePass->setSelfIllumination(
+                mSelfIllum_.GetR().Get()/255.0f,
+                mSelfIllum_.GetG().Get()/255.0f,
+                mSelfIllum_.GetB().Get()/255.0f
             );
         }
     }
@@ -118,12 +164,13 @@ namespace Frost
     void Decal::SetAmbient( const Color& mColor )
     {
         mAmbient_ = mColor;
-        if (pOgrePass_)
+        s_map<s_uint, MaterialInfo>::iterator iter;
+        foreach (iter, lMaterialList_)
         {
-            pOgrePass_->setAmbient(
-                mColor.GetR().Get()/255.0f,
-                mColor.GetG().Get()/255.0f,
-                mColor.GetB().Get()/255.0f
+            iter->second.pOgrePass->setAmbient(
+                mAmbient_.GetR().Get()/255.0f,
+                mAmbient_.GetG().Get()/255.0f,
+                mAmbient_.GetB().Get()/255.0f
             );
         }
     }
@@ -136,7 +183,7 @@ namespace Frost
             case PROJ_PERSPECTIVE :
             {
                 pOgreFrustum_->setProjectionType(Ogre::PT_PERSPECTIVE);
-                pOgreFrustum_->setFOVy(Ogre::Degree(45/fScale_.Get()));
+                pOgreFrustum_->setFOVy(Ogre::Degree(45.0f/fScale_.Get()));
                 break;
             }
             case PROJ_ORTHOGRAPHIC :
@@ -153,26 +200,60 @@ namespace Frost
         return mProjection_;
     }
 
-    void Decal::Show()
+    void Decal::Show( s_wptr<Material> pMat )
     {
-        if (pOgrePass_ && !bShown_)
+        if (s_refptr<Material> pLocked = pMat.Lock())
         {
-            pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
-            pTUS_ = pOgrePass_->createTextureUnitState(sTextureFile_.Get());
-            pTUS_->setProjectiveTexturing(true, pOgreFrustum_.Get());
-            pTUS_->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
-            pTUS_->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_LINEAR, Ogre::FO_NONE);
+            s_map<s_uint, MaterialInfo>::iterator iter = lMaterialList_.Get(pLocked->GetID());
+            if (iter != lMaterialList_.End())
+            {
+                if (!iter->second.bShown)
+                {
+                    iter->second.pOgrePass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
+                    iter->second.pTUS = iter->second.pOgrePass->createTextureUnitState(sTextureFile_.Get());
+                    iter->second.pTUS->setProjectiveTexturing(true, pOgreFrustum_.Get());
+                    iter->second.pTUS->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+                    iter->second.pTUS->setTextureFiltering(Ogre::FO_POINT, Ogre::FO_LINEAR, Ogre::FO_NONE);
+                    iter->second.bShown = true;
+                }
+            }
+        }
+        else
+        {
+            s_map<s_uint, MaterialInfo>::iterator iter;
+            foreach (iter, lMaterialList_)
+            {
+                Show(iter->second.pMat);
+            }
 
             bShown_ = true;
         }
     }
 
-    void Decal::Hide()
+    void Decal::Hide( s_wptr<Material> pMat )
     {
-        if (pOgrePass_ && bShown_)
+        if (s_refptr<Material> pLocked = pMat.Lock())
         {
-            pOgrePass_->removeTextureUnitState(pOgrePass_->getTextureUnitStateIndex(pTUS_.Get()));
-            pOgrePass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_FAIL);
+            s_map<s_uint, MaterialInfo>::iterator iter = lMaterialList_.Get(pLocked->GetID());
+            if (iter != lMaterialList_.End())
+            {
+                if (iter->second.bShown)
+                {
+                    iter->second.pOgrePass->removeTextureUnitState(
+                        iter->second.pOgrePass->getTextureUnitStateIndex(iter->second.pTUS.Get())
+                    );
+                    iter->second.pOgrePass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_FAIL);
+                    iter->second.bShown = false;
+                }
+            }
+        }
+        else
+        {
+            s_map<s_uint, MaterialInfo>::iterator iter;
+            foreach (iter, lMaterialList_)
+            {
+                Hide(iter->second.pMat);
+            }
 
             bShown_ = false;
         }
@@ -186,11 +267,6 @@ namespace Frost
     const s_uint& Decal::GetID() const
     {
         return uiID_;
-    }
-
-    s_ptr<Ogre::Pass> Decal::GetOgrePass()
-    {
-        return pOgrePass_;
     }
 
     s_refptr<Ogre::Frustum> Decal::GetOgreFrustum()

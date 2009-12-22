@@ -279,7 +279,7 @@ namespace Frost
         /** \return This Sprite's Material
         *   \note nullptr is returned if no Material is used.
         */
-        s_refptr<Material> GetMaterial();
+        s_wptr<Material>   GetMaterial();
 
         static const s_str CLASS_NAME;
 

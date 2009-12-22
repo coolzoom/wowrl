@@ -313,9 +313,9 @@ namespace Frost
         s_refptr<Model> pBodyModel_;
         s_ptr<Node>     pNode_;
         s_ptr<Camera>   pCamera_;
+
         s_refptr<Decal> pSelectionDecal_;
-        s_uint          uiSelectionDecalID_;
-        s_uint          uiShadowDecalID_;
+        s_refptr<Decal> pShadowDecal_;
         s_bool          bMotionBlurEnabled_;
 
         s_bool          bSelected_;

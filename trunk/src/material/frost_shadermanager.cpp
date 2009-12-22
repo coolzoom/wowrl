@@ -22,6 +22,27 @@ using namespace std;
 
 namespace Frost
 {
+    class SceneRenderTargetListener : public Ogre::RenderTargetListener
+    {
+    public :
+
+        void preRenderTargetUpdate( const Ogre::RenderTargetEvent& mEvent )
+        {
+            // Clear the render target with the selected background color
+            ShaderManager::GetSingleton()->GetSceneRenderTarget()->Clear(
+                CameraManager::GetSingleton()->GetBackgroundColor()
+            );
+
+            if (ShaderManager::GetSingleton()->IsMotionBlurEnabled())
+            {
+                // Clear the render target with the initial color
+                ShaderManager::GetSingleton()->GetMotionBlurMaskRenderTarget()->Clear(
+                    Color(0, 255, 255, 255)
+                );
+            }
+        }
+    };
+
     class RenderWindowListener : public Ogre::RenderTargetListener
     {
     public :
@@ -158,6 +179,7 @@ namespace Frost
             pSceneMRT_ = Engine::GetSingleton()->GetRenderSystem()->createMultiRenderTarget(
                 "Scene_MRT"
             );
+            pSceneMRT_->addListener(new SceneRenderTargetListener());
             pSceneMRT_->bindSurface(0,
                 (Ogre::RenderTexture*)pSceneRenderTarget_->GetOgreRenderTarget().Get()
             );
@@ -264,5 +286,15 @@ namespace Frost
     s_ptr<Ogre::MultiRenderTarget> ShaderManager::GetSceneMultiRenderTarget()
     {
         return pSceneMRT_;
+    }
+
+    s_ptr<RenderTarget> ShaderManager::GetSceneRenderTarget()
+    {
+        return pSceneRenderTarget_;
+    }
+
+    s_ptr<RenderTarget> ShaderManager::GetMotionBlurMaskRenderTarget()
+    {
+        return pMotionBlurMask_;
     }
 }

@@ -78,6 +78,12 @@ namespace Frost
         */
         void                      AddListener(s_ptr<Ogre::RenderTargetListener> pListener);
 
+        /// Clears the content of this RenderTarget.
+        /** \param mColor The color to use as background
+        *   \note Also clears the depth buffer.
+        */
+        void                      Clear(const Color& mColor);
+
         /// Returns this render target's width.
         /** \return This render target's width
         */

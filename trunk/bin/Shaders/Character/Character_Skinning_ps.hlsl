@@ -53,9 +53,9 @@ void main_ps(
     #ifdef MOTION_BLUR
         oColor0 = tex2D(mTexture, iTexture);
         oColor0.rgb *= tLightColor;
-        oColor0.a = oPosition2.z/oPosition2.w;
         
         oColor1 = mMotionBlurMask;
+        oColor1.r = oPosition2.z/oPosition2.w;
     #else
         oColor = tex2D(mTexture, iTexture);
         oColor.rgb *= tLightColor;

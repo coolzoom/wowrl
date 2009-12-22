@@ -43,6 +43,24 @@ namespace Frost
         */
         void        UnloadZone();
 
+        /// Shows a decal on the ground following the mouse.
+        /** \param pDecal The decal to use
+        */
+        void        EnableMouseDecal(s_wptr<Decal> pDecal);
+
+        /// Hides the mouse decal.
+        void        DisableMouseDecal();
+
+        /// Adds a new Decal on the ground.
+        /** \param pDecal The decal to put on the ground
+        */
+        void        AddDecalOnGround(s_wptr<Decal> pDecal);
+
+        /// Removes a Decal from the ground.
+        /** \param pDecal The decal to remove
+        */
+        void        RemoveDecalFromGround(s_wptr<Decal> pDecal);
+
         /// Returns the Lua state used by zones.
         /** \return The Lua state used by zones
         */
@@ -93,6 +111,9 @@ namespace Frost
         s_ptr<Zone> pCurrentZone_;
         s_ptr<Lua::State> pLua_;
 
+        s_refptr<Decal> pMouseDecal_;
+
+        s_ctnr< s_wptr<Decal> > lDecalList_;
     };
 }
 

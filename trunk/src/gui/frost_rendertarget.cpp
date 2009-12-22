@@ -15,6 +15,7 @@
 #include <OgreRenderTarget.h>
 #include <OgreRenderTargetListener.h>
 #include <OgreRenderTexture.h>
+#include <OgreRenderSystem.h>
 
 using namespace std;
 
@@ -49,9 +50,11 @@ namespace Frost
 
         pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
 
+        // Viewport for clearing or 2D drawing
+        pOgreRenderTarget_->addViewport(nullptr, 0);
+
         if (mUsage_ == USAGE_2D)
         {
-            pOgreRenderTarget_->addViewport(0);
             pOgreRenderTarget_->setAutoUpdated(false);
         }
     }
@@ -64,6 +67,7 @@ namespace Frost
         uiHeight_ = uiHeight;
         uiRealWidth_ = uiWidth.GetNearestPowerOfTwo();
         uiRealHeight_ = uiHeight.GetNearestPowerOfTwo();
+        mUsage_ = mUsage;
 
         switch (mType)
         {
@@ -82,9 +86,11 @@ namespace Frost
 
         pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
 
-        if (mUsage == USAGE_2D)
+        // Viewport for clearing or 2D drawing
+        pOgreRenderTarget_->addViewport(nullptr, 0);
+
+        if (mUsage_ == USAGE_2D)
         {
-            pOgreRenderTarget_->addViewport(0);
             pOgreRenderTarget_->setAutoUpdated(false);
         }
     }
@@ -104,6 +110,18 @@ namespace Frost
     {
         pOgreRenderTarget_->addListener(pListener.Get());
         lListenerList_.PushBack(pListener);
+    }
+
+    void RenderTarget::Clear( const Color& mColor )
+    {
+        Engine::GetSingleton()->GetRenderSystem()->_setViewport(
+            pOgreRenderTarget_->getViewport(0)
+        );
+        Ogre::ColourValue mCV;
+        mCV.setAsABGR(mColor.GetPacked().Get());
+        Engine::GetSingleton()->GetRenderSystem()->clearFrameBuffer(
+            Ogre::FBT_COLOUR | Ogre::FBT_DEPTH, mCV
+        );
     }
 
     const s_uint& RenderTarget::GetWidth() const
@@ -139,11 +157,14 @@ namespace Frost
 
             pOgreRenderTarget_ = pTexture->getBuffer()->getRenderTarget();
 
+            // Viewport for clearing or 2D drawing
+            pOgreRenderTarget_->addViewport(nullptr, 0);
+
             if (mUsage_ == USAGE_2D)
             {
-                pOgreRenderTarget_->addViewport(0);
                 pOgreRenderTarget_->setAutoUpdated(false);
             }
+
             return true;
         }
         else

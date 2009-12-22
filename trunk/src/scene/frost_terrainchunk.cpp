@@ -539,7 +539,7 @@ namespace Frost
         }
     }
 
-    s_refptr<Material> TerrainChunk::GetMaterial()
+    s_wptr<Material> TerrainChunk::GetMaterial()
     {
         return pMat_;
     }

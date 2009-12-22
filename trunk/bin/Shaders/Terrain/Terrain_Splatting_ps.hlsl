@@ -87,9 +87,8 @@ void main_ps(
             oColor0.rgb += iSpecColor*tSpec.rgb*tSpec.a;
         #endif
         
-        oColor0.a = oPosition2.z/oPosition2.w;
-        
         oColor1 = float4(1,1,1,1);
+        oColor1.r = oPosition2.z/oPosition2.w;
     #else
         oColor  = tex2D(mTexture1, iTexture1)*tMask.a;
         oColor += tex2D(mTexture2, iTexture2)*tMask.r;

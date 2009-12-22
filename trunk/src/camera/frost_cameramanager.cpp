@@ -108,8 +108,7 @@ namespace Frost
                         pSceneViewport_ = ShaderManager::GetSingleton()->GetSceneMultiRenderTarget()->addViewport(
                             pMainCamera_->GetOgreCamera().Get()
                         );
-                        pSceneViewport_->setClearEveryFrame(true);
-                        pSceneViewport_->setBackgroundColour(mCV);
+                        pSceneViewport_->setClearEveryFrame(false);
 
                         pSceneViewport_->setDimensions(
                             0, 0,
