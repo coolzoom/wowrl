@@ -891,6 +891,18 @@ namespace Frost
         return sNewFile;
     }
 
+    void GUIManager::OnEvent( const Event& mEvent )
+    {
+        if (mEvent.GetName() == "KEY_PRESSED")
+        {
+            s_map<s_uint, s_str>::iterator iter = lKeyBindingList_.Get(mEvent.Get(0)->Get<s_uint>());
+            if (iter != lKeyBindingList_.End())
+            {
+                pLua_->DoString(iter->second);
+            }
+        }
+    }
+
     void GUIManager::PrintUI()
     {
         if (lAddOnList_.GetSize() >= 1)
