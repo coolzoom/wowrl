@@ -152,7 +152,7 @@ namespace Frost
         }
 
         pMainSprite_ = s_refptr<Sprite>(new Sprite(
-            pMainSprite_->GetMaterial(), fWidth, fHeight
+            pMainSprite_->GetMaterial().Lock(), fWidth, fHeight
         ));
     }
 

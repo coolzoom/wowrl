@@ -85,7 +85,7 @@ namespace Frost
             /// Returns this widget's material.
             /** \return This widget's material (texture)
             */
-            s_refptr<Material> GetMaterial();
+            s_wptr<Material> GetMaterial();
 
             /// Tells this widget to update its borders.
             virtual void    FireUpdateBorders();

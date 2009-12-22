@@ -88,7 +88,7 @@ namespace Frost
     };
 
     /// Manages the user interface
-    class GUIManager : public Manager<GUIManager>
+    class GUIManager : public Manager<GUIManager>, public EventReceiver
     {
     friend class Manager<GUIManager>;
     public :
@@ -261,6 +261,11 @@ namespace Frost
         /** \param fDelta The time elapsed since the last call
         */
         void                 Update(const s_float& fDelta);
+
+        /// Called whenever an Event occurs.
+        /** \param mEvent The Event which has occured
+        */
+        void                 OnEvent(const Event& mEvent);
 
         static const s_str CLASS_NAME;
 
