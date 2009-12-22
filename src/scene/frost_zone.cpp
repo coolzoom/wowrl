@@ -9,6 +9,7 @@
 
 #include "scene/frost_terrainchunk.h"
 #include "camera/frost_camera.h"
+#include "material/frost_decal.h"
 
 using namespace std;
 
@@ -52,6 +53,30 @@ namespace Frost
     {
         lChunkList_[lChunkList_.GetSize()] = pChunk;
         return lChunkList_.GetSize()-1;
+    }
+
+    void Zone::AddDecal( s_wptr<Decal> pDecal )
+    {
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            s_map< s_uint, s_ptr<TerrainChunk> >::iterator iterChunk;
+            foreach (iterChunk, lChunkList_)
+            {
+                pLocked->AddMaterial(iterChunk->second->GetMaterial());
+            }
+        }
+    }
+
+    void Zone::RemoveDecal( s_wptr<Decal> pDecal )
+    {
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            s_map< s_uint, s_ptr<TerrainChunk> >::iterator iterChunk;
+            foreach (iterChunk, lChunkList_)
+            {
+                pLocked->RemoveMaterial(iterChunk->second->GetMaterial());
+            }
+        }
     }
 
     void Zone::UpdateChunks( s_ptr<Camera> pCamera )

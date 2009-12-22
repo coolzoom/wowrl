@@ -42,7 +42,7 @@ UIObject::~UIObject()
     }
 }
 
-s_refptr<Material> UIObject::GetMaterial()
+s_wptr<Material> UIObject::GetMaterial()
 {
     return pMaterial_;
 }

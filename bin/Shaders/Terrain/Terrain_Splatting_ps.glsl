@@ -61,9 +61,8 @@ void main()
             gl_FragData[0].rgb += vSpecColor*tSpec.rgb*tSpec.a;
         #endif
         
-        gl_FragData[0].a = vPosition.z/vPosition.w;
-        
         gl_FragData[1] = vec4(1,1,1,1);
+        gl_FragData[1].r = vPosition.z/vPosition.w;
     #else
         gl_FragColor  = texture2D(mTexture1,  gl_TexCoord[1].st)*tMask.a;
         gl_FragColor += texture2D(mTexture2,  gl_TexCoord[2].st)*tMask.r;

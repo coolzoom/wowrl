@@ -94,6 +94,21 @@ namespace Frost
         */
         s_ptr<Ogre::MultiRenderTarget> GetSceneMultiRenderTarget();
 
+        /// Returns the scene render target.
+        /** \return The scene render target
+        *   \note Returns nullptr if post processing is disabled.
+        *   \note This is the render target on which the scene is rendered.
+        */
+        s_ptr<RenderTarget> GetSceneRenderTarget();
+
+        /// Returns the motion blur mask render target.
+        /** \return The motion blur mask render target
+        *   \note Returns nullptr if motion blur is disabled.
+        *   \note This is the render target on which depth and blur masking
+        *         is rendered (depth : red, mask : alpha).
+        */
+        s_ptr<RenderTarget> GetMotionBlurMaskRenderTarget();
+
         static const s_str CLASS_NAME;
 
     protected :
@@ -140,6 +155,7 @@ namespace Frost
         s_ptr<RenderTarget>            pSceneRenderTarget_;
         s_ptr<RenderTarget>            pMotionBlurMask_;
         s_ptr<Sprite>                  pSceneSprite_;
+
 
     };
 }

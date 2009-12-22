@@ -397,7 +397,7 @@ namespace Frost
         return pOgreFont_;
     }
 
-    s_refptr<Material> Text::GetMaterial()
+    s_wptr<Material> Text::GetMaterial()
     {
         return pFontMat_;
     }

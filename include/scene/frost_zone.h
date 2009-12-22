@@ -29,7 +29,7 @@ namespace Frost
         /// Sets this Zone's default ambient color.
         /** \param mColor The ambient color
         */
-        void SetAmbientColor(const Color& mColor);
+        void         SetAmbientColor(const Color& mColor);
 
         /// Returns this Zone's default ambient color.
         /** \return This Zone's default ambient color
@@ -39,7 +39,7 @@ namespace Frost
         /// Sets this Zone's default sun color.
         /** \param mColor The sun color
         */
-        void SetSunColor(const Color& mColor);
+        void         SetSunColor(const Color& mColor);
 
         /// Returns this Zone's default sun color.
         /** \return This Zone's default sun color
@@ -51,15 +51,25 @@ namespace Frost
         *   \return The ID of the chunk
         *   \note Automatically called by TerrainChunk.
         */
-        s_uint AddChunk(s_ptr<TerrainChunk> pChunk);
+        s_uint       AddChunk(s_ptr<TerrainChunk> pChunk);
 
         /// Adds a new light to this Zone.
-        void AddLight(const s_str& sLightName, s_ptr<Light> pLight);
+        void         AddLight(const s_str& sLightName, s_ptr<Light> pLight);
+
+        /// Adds a new Decal on the ground.
+        /** \param pDecal The decal to put on the ground
+        */
+        void         AddDecal(s_wptr<Decal> pDecal);
+
+        /// Removes a Decal from the ground.
+        /** \param pDecal The decal to remove
+        */
+        void         RemoveDecal(s_wptr<Decal> pDecal);
 
         /// Hides/Shows chunks for them to be seen by the camera.
         /** \param pCamera The rendering camera
         */
-        void UpdateChunks(s_ptr<Camera> pCamera);
+        void         UpdateChunks(s_ptr<Camera> pCamera);
 
         /// Returns this Zone's name.
         /** \return This Zone's name

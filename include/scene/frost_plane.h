@@ -80,7 +80,7 @@ namespace Frost
         /// Returns this Plane's Material.
         /** \return This Plane's Material
         */
-        s_refptr<Material> GetMaterial();
+        s_wptr<Material> GetMaterial();
 
         static const s_str CLASS_NAME;
 

@@ -74,27 +74,6 @@ namespace Frost
         */
         void            SetWireframe(const s_bool& bWireframe);
 
-        /// Adds a new Decal to this Material.
-        /** \param pDecal The new decal
-        *   \return The new Decal, copied from the provided one.
-        *   \note The created Decal is automatically shown.
-        */
-        s_wptr<Decal>   AddDecal(s_wptr<Decal> pDecal);
-
-        /// Creates a new Decal and adds it to this Material.
-        /** \param sTextureFile The file containing the texture to draw
-        *   \return The Decal that was just created.
-        *   \note You can use the returned Decal on another Material by calling
-        *         AddDecal().<br>
-        *         The created Decal is automatically shown.
-        */
-        s_wptr<Decal>   AddDecal(const s_str& sTextureFile);
-
-        /// Removes a previously created Decal from this Material.
-        /** \param pDecal The Decal to remove
-        */
-        void            RemoveDecal(s_wptr<Decal> pDecal);
-
         /// Returns this Material's width.
         /** \return This Material's width
         *   \note Doesn't work for plain materials.
@@ -177,19 +156,14 @@ namespace Frost
         */
         s_bool          IsPlain() const;
 
+        /// Returns this Material's unique ID.
+        /** \return This Material's unique ID
+        */
+        const s_uint&   GetID() const;
+
         static const s_str CLASS_NAME;
 
-        /// Creates a new Decal.
-        /** \param sTextureFile The file containing the texture to draw
-        *   \return The Decal that was just created.
-        *   \note You can use the returned Decal on any Material by calling
-        *         AddDecal().
-        */
-        static s_refptr<Decal> CreateDecal(const s_str& sTextureFile);
-
     private :
-
-        s_ptr<Ogre::Pass> CreateDecalPass_();
 
         s_uint  uiID_;
         Type    mType_;
@@ -206,8 +180,6 @@ namespace Frost
         s_bool bAlphaReject_;
         s_bool bHardwareSkinning_;
         s_bool bIsDesaturated_;
-
-        s_map< s_uint, s_refptr<Decal> > lDecalList_;
     };
 }
 

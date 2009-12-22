@@ -507,7 +507,7 @@ namespace Frost
         return fHeight_;
     }
 
-    s_refptr<Material> Sprite::GetMaterial()
+    s_wptr<Material> Sprite::GetMaterial()
     {
         return pQuad_->pMat;
     }

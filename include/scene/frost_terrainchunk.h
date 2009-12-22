@@ -105,7 +105,7 @@ namespace Frost
         /// Returns this chunk's Material.
         /** \return This chunk's Material
         */
-        s_refptr<Material> GetMaterial();
+        s_wptr<Material> GetMaterial();
 
         /// Returns this chunk's unique ID.
         /** \return This chunk's unique ID
@@ -116,7 +116,7 @@ namespace Frost
 
     private :
 
-        s_uint uiID_;
+        s_uint      uiID_;
         s_ptr<Zone> pZone_;
 
         Vector mPosition_;

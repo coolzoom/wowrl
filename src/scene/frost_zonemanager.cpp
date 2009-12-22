@@ -11,6 +11,7 @@
 #include "lua/frost_lua.h"
 #include "camera/frost_cameramanager.h"
 #include "scene/frost_lightmanager.h"
+#include "material/frost_decal.h"
 
 using namespace std;
 
@@ -48,6 +49,12 @@ namespace Frost
 
             LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
             LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());
+
+            s_ctnr< s_wptr<Decal> >::iterator iter;
+            foreach (iter, lDecalList_)
+            {
+                pCurrentZone_->AddDecal(*iter);
+            }
         }
         else
         {
@@ -67,12 +74,60 @@ namespace Frost
         LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
         LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());
 
+        s_ctnr< s_wptr<Decal> >::iterator iter;
+        foreach (iter, lDecalList_)
+        {
+            pCurrentZone_->AddDecal(*iter);
+        }
+
         return pCurrentZone_;
     }
 
     void ZoneManager::UnloadZone()
     {
+        if (pCurrentZone_)
+        {
+            s_ctnr< s_wptr<Decal> >::iterator iter;
+            foreach (iter, lDecalList_)
+            {
+                pCurrentZone_->AddDecal(*iter);
+            }
+        }
+
         pCurrentZone_.Delete();
+    }
+
+    void ZoneManager::EnableMouseDecal( s_wptr<Decal> pDecal )
+    {
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            pMouseDecal_ = s_refptr<Decal>(new Decal(*pLocked.Get()));
+            AddDecalOnGround(pMouseDecal_);
+        }
+    }
+
+    void ZoneManager::DisableMouseDecal()
+    {
+        RemoveDecalFromGround(pMouseDecal_);
+        pMouseDecal_ = nullptr;
+    }
+
+    void ZoneManager::AddDecalOnGround( s_wptr<Decal> pDecal )
+    {
+        if (pCurrentZone_)
+            pCurrentZone_->AddDecal(pDecal);
+
+        lDecalList_.PushBack(pDecal);
+    }
+
+    void ZoneManager::RemoveDecalFromGround( s_wptr<Decal> pDecal )
+    {
+        if (pCurrentZone_)
+            pCurrentZone_->RemoveDecal(pDecal);
+
+        s_ctnr< s_wptr<Decal> >::iterator iter = lDecalList_.Get(pDecal);
+        if (iter != lDecalList_.End())
+            lDecalList_.Erase(iter);
     }
 
     s_ptr<Lua::State> ZoneManager::GetLua()
@@ -88,5 +143,3 @@ namespace Frost
         }
     }
 }
-
-
