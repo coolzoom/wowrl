@@ -53,7 +53,7 @@ namespace Frost
         *   \param mPreviousPos  The initial position of the object (center of the ellipsoid)
         *   \param mNextPos      The wanted position of the object
         *   \param mFinalPos     The initial wanted position of the object
-        *   \param rData         The collision data (output)
+        *   \param[out] rData    The collision data (output)
         *   \return 'true' if there was no collision
         *   \note The collision algorithm of PhysicsManager is recursive, so this function
         *         can be called several times per frame for the same object.<br>
@@ -73,21 +73,32 @@ namespace Frost
             CollisionData& rData
         ) const = 0;
 
+        /// Checks if a ray intersects this obstacle.
+        /** \param mRayOrigin         The start point of the ray
+        *   \param mRayDirection      The direction on which to cast the ray
+        *   \param[out] mIntersection The intersection point
+        *   \return 'true' if the ray has intersected the obstacle
+        */
+        virtual s_bool GetRayIntersection(
+            const Vector& mRayOrigin, const Vector& mRayDirection,
+            Vector& mIntersection
+        ) const = 0;
+
         /// Sets this obstacle as active.
         /** \param bIsActive 'true' to enable this obstacle
         */
-        void          SetActive(const s_bool& bIsActive);
+        void           SetActive(const s_bool& bIsActive);
 
         /// Checks if this obstacle is active.
         /** \return 'true' if this obstacle is active
         */
-        const s_bool& IsActive() const;
+        const s_bool&  IsActive() const;
 
         /// Update this object's parameters.
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by PhysicsManager.
         */
-        virtual void  Update(const s_float& fDelta);
+        virtual void   Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 

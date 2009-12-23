@@ -57,6 +57,16 @@ namespace Frost
         */
         const s_bool&           IsShown() const;
 
+        /// Sets the texture file to project.
+        /** \param sFile The texture file
+        */
+        void                    SetTextureFile(const s_str& sFile);
+
+        /// Returns this Decal's texture file name.
+        /** \return This Decal's texture file name
+        */
+        const s_str&            GetTextureFile() const;
+
         /// Sets the scale of the projection.
         /** \param fScale The scale of the projection
         */
@@ -75,7 +85,7 @@ namespace Frost
         /// Returns this Decal's color.
         /** \return This Decal's color
         */
-        Color                   GetDiffuse() const;
+        const Color&            GetDiffuse() const;
 
         /// Sets this Decal's self illumination color.
         /** \param mColor The self illumination color
@@ -83,11 +93,21 @@ namespace Frost
         */
         void                    SetSelfIllumination(const Color& mColor);
 
+        /// Returns this Decal's self illumination color.
+        /** \return This Decal's self illumination color
+        */
+        const Color&            GetSelfIllumination() const;
+
         /// Sets this Decal's ambient color.
         /** \param mColor The ambient color
         *   \note Alpha isn't taken into account
         */
         void                    SetAmbient(const Color& mColor);
+
+        /// Returns this Decal's ambient color.
+        /** \return This Decal's ambient color
+        */
+        const Color&            GetAmbient() const;
 
         /// Set the Decal's projection mode.
         /** \param mProjection The new projection mode
@@ -110,11 +130,6 @@ namespace Frost
         /** \return This Decal's Ogre Frustum
         */
         s_refptr<Ogre::Frustum> GetOgreFrustum();
-
-        /// Returns this Decal's texture file name.
-        /** \return This Decal's texture file name
-        */
-        const s_str&            GetTextureFile() const;
 
         static s_str CLASS_NAME;
 

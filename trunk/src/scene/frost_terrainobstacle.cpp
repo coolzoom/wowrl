@@ -14,9 +14,16 @@ using namespace std;
 
 namespace Frost
 {
-    TerrainObstacle::TerrainObstacle( const s_array<Triangle>& lTriangleArray, s_ptr<TerrainChunk> pParent ) :
-        lTriangleArray_(lTriangleArray), pParent_(pParent)
+    TerrainObstacle::TerrainObstacle( const s_array<Triangle>& lTriangleArray,
+        const s_array<s_float>& lHeightData, const s_uint& uiNX, const s_uint& uiNZ,
+        const s_float& fXSize, const s_float& fZSize, const s_float& fOffX, const s_float& fOffZ,
+        s_ptr<TerrainChunk> pParent ) :
+        lTriangleArray_(lTriangleArray), lHeightData_(lHeightData),
+        uiNX_(uiNX), uiNZ_(uiNZ), fXSize_(fXSize), fZSize_(fZSize), fOffX_(fOffX), fOffZ_(fOffZ),
+        pParent_(pParent)
     {
+        fTileXSize_ = fXSize_/s_float(uiNX_);
+        fTileZSize_ = fZSize_/s_float(uiNZ_);
     }
 
     s_bool TerrainObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
@@ -272,8 +279,89 @@ namespace Frost
         return !bCollision;
     }
 
-    s_float TerrainObstacle::GetPointHeight( const s_float& fX, const s_float& fZ )
+    s_bool TerrainObstacle::GetRayIntersection(
+        const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
     {
-        return 0.0f;
+        // NOTE : Assumes the ray origin is inside the bounding box
+        AxisAlignedBox mBox = pParent_->GetTrueBoundingBox(true);
+
+        Vector mPoint = mRayOrigin - pParent_->GetPosition();
+        Vector mIteration = mRayDirection*0.01f;
+        s_float fDist = mPoint.Y() - GetPointHeight(mPoint.X(), mPoint.Z());
+        while (mBox.Contains(mPoint))
+        {
+            // Move further...
+            mPoint += mIteration;
+
+            s_float fNewDist = mPoint.Y() - GetPointHeight(mPoint.X(), mPoint.Z());
+            if (fNewDist*fDist < 0.0f)
+            {
+                // The ray has crossed the terrain
+                mIntersection = mPoint - mIteration + pParent_->GetPosition();
+                return true;
+            }
+
+            fDist = fNewDist;
+        }
+
+        return false;
+    }
+
+    s_float TerrainObstacle::GetPointHeight( const s_float& fX, const s_float& fZ ) const
+    {
+        s_float fNormalizedX = (fX/fXSize_ + fOffX_)*s_float(uiNX_);
+        s_float fNormalizedZ = (fZ/fZSize_ + fOffZ_)*s_float(uiNZ_);
+
+        // Calculate the quad on which this point is
+        s_float fXMin = s_float::RoundDown(fNormalizedX);
+        s_float fZMin = s_float::RoundDown(fNormalizedZ);
+        s_float fXMax = s_float::RoundUp(fNormalizedX);
+        s_float fZMax = s_float::RoundUp(fNormalizedZ);
+
+        s_uint uiXMin = s_uint(fXMin);
+        s_uint uiZMin = s_uint(fZMin);
+        s_uint uiXMax = s_uint(fXMax);
+        s_uint uiZMax = s_uint(fZMax);
+
+        s_float fLocalX = (fNormalizedX - fXMin);
+        s_float fLocalZ = (fNormalizedZ - fZMin);
+
+        s_float fH1 = lHeightData_[uiXMin*uiNZ_ + uiZMin];
+        s_float fH4 = lHeightData_[uiXMax*uiNZ_ + uiZMax];
+
+        // A terrain quad is constructed this way :
+        //
+        //  Z
+        //  ^   3____________4
+        //  :   |           *|
+        //  :   | "up"    *  |
+        //  :   |       *    |
+        //  :   |     *      |
+        //  :   |   *        |
+        //  :   | *   "down" |
+        //  :   1____________2
+        //  :
+        //  :................> X
+        //
+        // Depending on where we are, we should use either the "up" OR the "down" triangle.
+        // We can't make a weigted average of four vertices' heights because the quad is
+        // not guaranteed to be planar.
+
+        if (fLocalX < fLocalZ)
+        {
+            // Use the "up" triangle (vertex 3)
+            s_float fH3 = lHeightData_[uiXMin*uiNZ_ + uiZMax];
+
+            // Blend the 3 heights
+            return fH1 + (fH4 - fH3)*fLocalX + (fH3 - fH1)*fLocalZ;
+        }
+        else
+        {
+            // Use the "down" triangle (vertex 2)
+            s_float fH2 = lHeightData_[uiXMax*uiNZ_ + uiZMin];
+
+            // Blend the 3 heights
+            return fH1 + (fH4 - fH2)*fLocalZ + (fH2 - fH1)*fLocalX;
+        }
     }
 }

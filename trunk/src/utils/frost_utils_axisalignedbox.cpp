@@ -8,6 +8,7 @@
 #include "frost_utils_axisalignedbox.h"
 
 #include <OgreAxisAlignedBox.h>
+#include <OgreRay.h>
 
 using namespace std;
 
@@ -92,6 +93,16 @@ namespace Frost
             return Vector::NaN;
     }
 
+    AxisAlignedBox AxisAlignedBox::operator + ( const Vector& mAdd ) const
+    {
+        return AxisAlignedBox(mMin_ + mAdd, mMax_ + mAdd);
+    }
+
+    AxisAlignedBox AxisAlignedBox::operator - ( const Vector& mAdd ) const
+    {
+        return AxisAlignedBox(mMin_ - mAdd, mMax_ - mAdd);
+    }
+
     s_bool AxisAlignedBox::Contains(const AxisAlignedBox& mBox) const
     {
         for (uint ui = 0; ui < 8; ++ui)
@@ -108,6 +119,22 @@ namespace Frost
         return (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) &&
                 mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()) &&
                 mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()));
+    }
+
+    s_bool AxisAlignedBox::GetRayIntersection( const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
+    {
+        // Fall back to Ogre here (not the time to rewrite the code)
+        Ogre::AxisAlignedBox mAAB = FrostToOgre(*this);
+        Ogre::Ray            mRay(Vector::FrostToOgre(mRayOrigin), Vector::FrostToOgre(mRayDirection));
+
+        std::pair<bool, Ogre::Real> mResult = mRay.intersects(mAAB);
+        if (mResult.first)
+        {
+            mIntersection = Vector::OgreToFrost(mRay.getPoint(mResult.second));
+            return true;
+        }
+        else
+            return false;
     }
 
     Ogre::AxisAlignedBox AxisAlignedBox::FrostToOgre(const AxisAlignedBox& mBox)

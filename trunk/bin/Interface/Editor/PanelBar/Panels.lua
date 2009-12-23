@@ -1,3 +1,2 @@
-
-PanelBar:AddPanel("Objects");
-PanelBar:AddPanel("Terrain");
+local objectsPanel = PanelBar:AddPanel("Objects");
+local terrainPanel = PanelBar:AddPanel("Terrain");

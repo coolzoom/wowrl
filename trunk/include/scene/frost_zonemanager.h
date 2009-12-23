@@ -15,7 +15,7 @@
 namespace Frost
 {
     /// Handles zone loading/unloading.
-    class ZoneManager : public Manager<ZoneManager>
+    class ZoneManager : public Manager<ZoneManager>, public EventReceiver
     {
     friend class Manager<ZoneManager>;
     public :
@@ -51,6 +51,11 @@ namespace Frost
         /// Hides the mouse decal.
         void        DisableMouseDecal();
 
+        /// Returns the mouse decal.
+        /** \return The mouse decal
+        */
+        s_wptr<Decal> GetMouseDecal();
+
         /// Adds a new Decal on the ground.
         /** \param pDecal The decal to put on the ground
         */
@@ -61,6 +66,11 @@ namespace Frost
         */
         void        RemoveDecalFromGround(s_wptr<Decal> pDecal);
 
+        /// Casts a ray to find the terrain position under the mouse.
+        /** \return The terrain position under the mouse
+        */
+        Vector      GetTerrainUnderMouse();
+
         /// Returns the Lua state used by zones.
         /** \return The Lua state used by zones
         */
@@ -70,7 +80,12 @@ namespace Frost
         /** \param fDelta The time elapsed since the last call
         *   \note Automatically called by Engine.
         */
-        void Update(const s_float& fDelta);
+        void        Update(const s_float& fDelta);
+
+        /// Calls the OnEvent script.
+        /** \param mEvent The Event that occured
+        */
+        void        OnEvent(const Event& mEvent);
 
         static const s_str CLASS_NAME;
 

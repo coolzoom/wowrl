@@ -21,6 +21,8 @@
 #include <OgreHardwareBufferManager.h>
 #include <OgreEntity.h>
 
+#include <algorithm>
+
 using namespace std;
 
 namespace Frost
@@ -177,10 +179,12 @@ namespace Frost
 
                 pSubMesh->setMaterialName(pMat_->GetOgreMaterial()->getName());
 
-                pMesh_->_setBounds(Ogre::AxisAlignedBox(
-                    -fXSize/2.0f, -0.1, -fZSize/2.0f,
-                    fXSize/2.0f,  0.1,  fZSize/2.0f
-                ));
+                mTrueBoundingBox_ = AxisAlignedBox(
+                    Vector(-fXSize/2.0f, -0.1, -fZSize/2.0f),
+                    Vector( fXSize/2.0f,  0.1,  fZSize/2.0f)
+                );
+
+                pMesh_->_setBounds(AxisAlignedBox::FrostToOgre(mTrueBoundingBox_));
 
                 pMesh_->_setBoundingSphereRadius(
                     std::max(fXSize, fZSize)/2.0f
@@ -231,6 +235,7 @@ namespace Frost
                 uint uiNX = mHeader.uiNumXPoint;
                 uint uiNZ = mHeader.uiNumZPoint;
                 float fXSize = mHeader.fXSize;
+                float fYSize = mHeader.fYSize;
                 float fZSize = mHeader.fZSize;
                 uint uiVertexCount = uiNX*uiNZ;
                 uint uiIndexCount = (uiNX-1)*(uiNZ-1)*6;
@@ -276,25 +281,43 @@ namespace Frost
 
                 s_array<TerrainVertex> lPointList; lPointList.Resize(uiNX*uiNZ);
                 mFile.Read(lPointList.GetClassicArray(), uiNX*uiNZ*sizeof(TerrainVertex));
+                mFile.Close();
 
                 uint uiParamNbr = 3+3+2;
                 s_array<float> lData; lData.Resize(uiVertexCount*uiParamNbr);
                 s_array<ushort> lIndices; lIndices.Resize(uiIndexCount);
 
+                s_array<s_float> lHeightData;
+                lHeightData.Resize(uiNX*uiNZ);
+
+                float fNX = uiNX;
+                float fNZ = uiNZ;
+
+                float fOffX = (uiNX % 2 == 0) ? 0.5f - 1.0f/(2.0f*uiNX) : 0.5f;
+                float fOffZ = (uiNZ % 2 == 0) ? 0.5f - 1.0f/(2.0f*uiNZ) : 0.5f;
+
                 for (uint x = 0; x < uiNX; ++x)
                 {
                     for (uint z = 0; z < uiNZ; ++z)
                     {
-                        uint i = (x*uiNZ+z)*uiParamNbr;
+                        uint j = x*uiNZ + z;
+                        uint i = j*uiParamNbr;
+
+                        float fHeight = lPointList[j].fHeight;
+
+                        if (lPointList[j].ucFlags == 1)
+                            lHeightData[j] = s_float::NaN;
+                        else
+                            lHeightData[j] = fHeight*fYSize;
 
                         // Position
-                        lData[i+0] = (fXSize*x)/uiNX-fXSize/2.0f;
-                        lData[i+1] = lPointList[x*uiNZ+z].fHeight;
-                        lData[i+2] = (fZSize*z)/uiNZ-fZSize/2.0f;
+                        lData[i+0] = fXSize*(x/fNX - fOffX);
+                        lData[i+1] = fHeight*fYSize;
+                        lData[i+2] = fZSize*(z/fNZ - fOffZ);
 
-                        // Texture coordinates
-                        lData[i+6] = x/(float)uiNX;
-                        lData[i+7] = z/(float)uiNZ;
+                        // Texture coordinates (constant scale)
+                        lData[i+6] = x/0.3f;
+                        lData[i+7] = z/0.3f;
                     }
                 }
 
@@ -373,13 +396,15 @@ namespace Frost
 
                 pSubMesh->setMaterialName(pMat_->GetOgreMaterial()->getName());
 
-                pMesh_->_setBounds(Ogre::AxisAlignedBox(
-                   -fXSize/2.0f, -5.0f, -fZSize/2.0f,
-                    fXSize/2.0f,  5.0f,  fZSize/2.0f
-                ));
+                mTrueBoundingBox_ = AxisAlignedBox(
+                    Vector(-fXSize*fOffX, -fYSize/2.0f - 1.0f, -fZSize*fOffZ),
+                    Vector( fXSize*fOffX,  fYSize/2.0f + 1.0f,  fZSize*fOffZ)
+                );
+
+                pMesh_->_setBounds(AxisAlignedBox::FrostToOgre(mTrueBoundingBox_));
 
                 pMesh_->_setBoundingSphereRadius(
-                    std::max(fXSize, fZSize)/2.0f
+                    std::max(fXSize*fOffX, fZSize*fOffZ)
                 );
 
                 pMesh_->load();
@@ -393,17 +418,9 @@ namespace Frost
                 );
                 pNode_->attachObject(pEntity_.Get());
 
-                s_array<s_float> lCollisionData;
-                lCollisionData.Resize(uiNX*uiNZ);
-                for (uint i = 0; i < uiNX*uiNZ; ++i)
-                {
-                    if (lPointList[i].ucFlags == 1)
-                        lCollisionData[i] = s_float::NaN;
-                    else
-                        lCollisionData[i] = lPointList[i].fHeight;
-                }
-
-                pObstacle_ = new TerrainObstacle(lTriangleArray, this);
+                pObstacle_ = new TerrainObstacle(
+                    lTriangleArray, lHeightData, uiNX, uiNZ, fXSize, fZSize, fOffX, fOffZ, this
+                );
             }
 
             bLoaded_ = true;
@@ -486,9 +503,7 @@ namespace Frost
         bAlwaysVisible_ = bAlwaysVisible;
 
         if (bAlwaysVisible_)
-        {
-            mSize_ = Vector(s_float::INFPLUS);
-        }
+            mBoundingBox_ = AxisAlignedBox();
     }
 
     const s_bool& TerrainChunk::IsAlwaysVisible() const
@@ -501,9 +516,10 @@ namespace Frost
         mPosition_ = mPosition;
     }
 
-    void TerrainChunk::SetSize(const Vector& mSize)
+    void TerrainChunk::SetBoundingBox(const AxisAlignedBox& mBox)
     {
-        mSize_ = mSize;
+        bAlwaysVisible_ = false;
+        mBoundingBox_ = mBox;
     }
 
     const Vector& TerrainChunk::GetPosition() const
@@ -511,9 +527,20 @@ namespace Frost
         return mPosition_;
     }
 
-    const Vector& TerrainChunk::GetSize() const
+    AxisAlignedBox TerrainChunk::GetBoundingBox( const s_bool& bLocalSpace ) const
     {
-        return mSize_;
+        if (bLocalSpace)
+            return mBoundingBox_;
+        else
+            return mBoundingBox_ + mPosition_;
+    }
+
+    AxisAlignedBox TerrainChunk::GetTrueBoundingBox( const s_bool& bLocalSpace ) const
+    {
+        if (bLocalSpace)
+            return mTrueBoundingBox_;
+        else
+            return mTrueBoundingBox_ + mPosition_;
     }
 
     s_float TerrainChunk::GetPointHeight(const s_float& fX, const s_float& fZ) const
@@ -537,6 +564,30 @@ namespace Frost
                 return s_float::NaN;
             }
         }
+    }
+
+    s_bool TerrainChunk::GetRayIntersection( const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mPosition ) const
+    {
+        if (bLoaded_)
+        {
+            Vector mNewRayOrigin = mRayOrigin;
+
+            // First see if the ray intersects the bounding box
+            if (!mTrueBoundingBox_.Contains(mRayOrigin - mPosition_))
+            {
+                // The ray origin is not inside the box, we'll have to cast it
+                Vector mIntersection;
+                if (!mTrueBoundingBox_.GetRayIntersection(mRayOrigin - mPosition_, mRayDirection, mIntersection))
+                    return false;
+
+                // We can move the ray origin to the intersection
+                mNewRayOrigin = mIntersection + mRayDirection*0.001f + mPosition_;
+            }
+
+            return pObstacle_->GetRayIntersection(mNewRayOrigin, mRayDirection, mPosition);
+        }
+        else
+            return false;
     }
 
     s_wptr<Material> TerrainChunk::GetMaterial()

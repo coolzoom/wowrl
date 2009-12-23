@@ -35,6 +35,22 @@ MenuBar:AddMenuCheckItem("View", "Shading", "F3", true):SetScript("OnClick", fun
     Frost:ToggleShading();
     MenuBar:CloseCurrentDropdown();
 end);
+MenuBar:AddMenuCheckItem("View", "Decal", "F4", true):SetScript("OnClick", function ()
+    if (AddOns.Editor:IsMouseDecalEnabled()) then
+        AddOns.Editor:EnableMouseDecal(false);
+    else
+        AddOns.Editor:EnableMouseDecal(true);
+    end
+end);
+MenuBar:AddMenuItem("View", "DecalColor"):SetScript("OnClick", function ()
+    ColorSelector:SetColor(Color(Frost:GetMouseDecalColor()));
+    ColorSelector:SetOnColorUpdateFunc(function (color)
+        AddOns.Editor.Config.mouseDecalColor = Color(color);
+        Frost:SetMouseDecalColor(color:Unpack());
+    end);
+    ColorSelector:Show();
+    MenuBar:CloseCurrentDropdown();
+end);
 MenuBar:AddMenuItem("View", "BGColor"):SetScript("OnClick", function ()
     ColorSelector:SetColor(Color(Frost:GetBackgroundColor()));
     ColorSelector:SetOnColorUpdateFunc(function (color)

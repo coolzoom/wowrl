@@ -40,29 +40,52 @@ namespace Frost
         /// Destructor.
         ~AxisAlignedBox();
 
-        void SetMin(const Vector& mMin);
+        /// Sets the first point of the box.
+        /** \param mMin The first point of the box
+        */
+        void          SetMin(const Vector& mMin);
 
-        void SetMax(const Vector& mMax);
+        /// Sets the second point of the box.
+        /** \param mMin The second point of the box
+        */
+        void          SetMax(const Vector& mMax);
 
+        /// Returns the first point of the box.
+        /** \return The first point of the box
+        */
         const Vector& GetMin() const;
 
+        /// Returns the second point of the box.
+        /** \return The second point of the box
+        */
         const Vector& GetMax() const;
-
-        Vector operator[] (const s_uint& uiIndex) const;
-        Vector operator[] (const uint& uiIndex) const;
 
         /// Checks if this box contains another.
         /** \param mBox The other box
         *   \return 'true' if this box contains the other
         *   \note The box can be partially contained.
         */
-        s_bool Contains(const AxisAlignedBox& mBox) const;
+        s_bool        Contains(const AxisAlignedBox& mBox) const;
 
         /// Checks if this box contains a point.
         /** \param mPoint The point
         *   \return 'true' if this box contains the point
         */
-        s_bool Contains(const Vector& mPoint) const;
+        s_bool        Contains(const Vector& mPoint) const;
+
+        /// Checks if a ray intersects this box.
+        /** \param mRayOrigin         The start point of the ray
+        *   \param mRayDirection      The direction on which to cast the ray
+        *   \param[out] mIntersection The intersection point
+        *   \return 'true' if the ray has intersected the box
+        */
+        s_bool        GetRayIntersection(const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection) const;
+
+        Vector operator[] (const s_uint& uiIndex) const;
+        Vector operator[] (const uint& uiIndex) const;
+
+        AxisAlignedBox operator + (const Vector& mAdd) const;
+        AxisAlignedBox operator - (const Vector& mAdd) const;
 
         /// Converts a Frost::AxisAlignedBox to an Ogre::AxisAlignedBox.
         /** \param mBox The box to convert

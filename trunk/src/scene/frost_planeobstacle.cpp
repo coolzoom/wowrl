@@ -275,6 +275,12 @@ namespace Frost
         return true;
     }
 
+    s_bool PlaneObstacle::GetRayIntersection(
+        const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
+    {
+        return false;
+    }
+
     void PlaneObstacle::Update( const s_float& fDelta )
     {
         MovableObstacle::Update(fDelta);

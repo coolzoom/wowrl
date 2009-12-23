@@ -66,6 +66,15 @@ namespace Frost
         */
         void         RemoveDecal(s_wptr<Decal> pDecal);
 
+        /// Casts a ray to find the terrain position under the mouse.
+        /** \param fX              The horizontal coordinate of the cursor
+        *   \param fY              The vertical coordinate of the cursor
+        *   \param bSnapToVertices 'true' to snap the result to the nearest
+        *                          vertex
+        *   \return The position
+        */
+        Vector       GetTerrainUnderMouse(const s_float& fX, const s_float& fY) const;
+
         /// Hides/Shows chunks for them to be seen by the camera.
         /** \param pCamera The rendering camera
         */

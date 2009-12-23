@@ -21,10 +21,35 @@ function AddOns.Editor:NotifyDataSaved()
 end
 
 function AddOns.Editor:IsDataSaved()
-    if (not self.dataSaved) then
+    if (self.dataSaved == nil) then
         self.dataSaved = true;
     end
     return self.dataSaved;
+end
+
+function AddOns.Editor:EnableMouseDecal(enabled)
+    if (self.mouseDecalEnabled == nil) then
+        self.mouseDecalEnabled = false;
+    end
+    
+    if (self.mouseDecalEnabled ~= enabled) then
+        if (enabled) then
+            Frost:EnableMouseDecal(true,
+                "Textures/EditorCrosshair.png", 5, self.Config.mouseDecalColor:Unpack()
+            );
+        else
+            Frost:EnableMouseDecal(false);
+        end
+        
+        self.mouseDecalEnabled = enabled;
+    end
+end
+
+function AddOns.Editor:IsMouseDecalEnabled()
+    if (self.mouseDecalEnabled == nil) then
+        self.mouseDecalEnabled = true;
+    end
+    return self.mouseDecalEnabled;
 end
 
 function AddOns.Editor:SetCurrentDropdown(dropdown)
@@ -51,7 +76,7 @@ function AddOns.Editor:CloseCurrentDropdown()
 end
 
 function AddOns.Editor:RegisterTextColorFunction(object, func)
-    if (not self.textColorFuncList) then
+    if (self.textColorFuncList == nil) then
         self.textColorFuncList = {};
     end
     
@@ -59,7 +84,7 @@ function AddOns.Editor:RegisterTextColorFunction(object, func)
 end
 
 function AddOns.Editor:RegisterSecondaryTextColorFunction(object, func)
-    if (not self.sndTextColorFuncList) then
+    if (self.sndTextColorFuncList == nil) then
         self.sndTextColorFuncList = {};
     end
     
@@ -67,7 +92,7 @@ function AddOns.Editor:RegisterSecondaryTextColorFunction(object, func)
 end
 
 function AddOns.Editor:RegisterBackgroundColorFunction(object, func)
-    if (not self.bgColorFuncList) then
+    if (self.bgColorFuncList == nil) then
         self.bgColorFuncList = {};
     end
     

@@ -41,6 +41,14 @@ namespace Frost
             CollisionData& rData
         ) const;
 
+        /// \copybrief Frost::Obstacle::GetRayIntersection()
+        /** \copydetails Frost::Obstacle::GetRayIntersection()
+        */
+        s_bool GetRayIntersection(
+            const Vector& mRayOrigin, const Vector& mRayDirection,
+            Vector& mIntersection
+        ) const;
+
         /// Update this object's parameters.
         /** \param fDelta The time elapsed since the last call
         */
