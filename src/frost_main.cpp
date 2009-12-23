@@ -8,6 +8,8 @@
 #include "gui/frost_text.h"
 #include "gui/frost_spritemanager.h"
 #include "gui/frost_uiobject.h"
+#include "gui/frost_frame.h"
+#include "gui/frost_fontstring.h"
 #include "frost_inputmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
@@ -121,6 +123,13 @@ s_bool GameRenderFunc()
     pSpriteMgr->Begin();
 
         Engine::GetSingleton()->RenderScene();
+
+        // Debug output (replaces FPS counter)
+        /*s_ptr<GUI::FontString>::DynamicCast(
+            s_ptr<GUI::Frame>::DynamicCast(
+                GUIManager::GetSingleton()->GetUIObjectByName("FPSCounter_Frame")
+            )->GetRegion("FPSCounter_Text")
+        )->SetText("");*/
 
         GUIManager::GetSingleton()->RenderUI();
 

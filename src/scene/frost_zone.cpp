@@ -8,8 +8,11 @@
 #include "scene/frost_zone.h"
 
 #include "scene/frost_terrainchunk.h"
+#include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "material/frost_decal.h"
+
+#include <OgreCamera.h>
 
 using namespace std;
 
@@ -79,6 +82,33 @@ namespace Frost
         }
     }
 
+    Vector Zone::GetTerrainUnderMouse( const s_float& fX, const s_float& fY ) const
+    {
+        s_map< s_float, s_ptr<TerrainChunk> > lSortedChunkList;
+        s_ptr<Camera> pMainCam = CameraManager::GetSingleton()->GetMainCamera();
+        Ogre::Ray mRay = pMainCam->GetOgreCamera()->getCameraToViewportRay(fX.Get(), fY.Get());
+
+        Vector mRayOrigin    = Vector::OgreToFrost(mRay.getOrigin());
+        Vector mRayDirection = Vector::OgreToFrost(mRay.getDirection());
+
+        s_map< s_uint, s_ptr<TerrainChunk> >::const_iterator iterChunk;
+        foreach (iterChunk, lChunkList_)
+        {
+            s_float fDistance = (iterChunk->second->GetPosition() - pMainCam->GetPosition()).GetNorm();
+            lSortedChunkList[fDistance] = iterChunk->second;
+        }
+
+        Vector mPos = Vector::NaN;
+        s_map< s_float, s_ptr<TerrainChunk> >::iterator iterSorted;
+        foreach (iterSorted, lSortedChunkList)
+        {
+            if (iterSorted->second->GetRayIntersection(mRayOrigin, mRayDirection, mPos));
+                break;
+        }
+
+        return mPos;
+    }
+
     void Zone::UpdateChunks( s_ptr<Camera> pCamera )
     {
         s_map< s_uint, s_ptr<TerrainChunk> >::iterator iterChunk;
@@ -92,29 +122,16 @@ namespace Frost
                 {
                     pChunk->Load();
 
-                    AxisAlignedBox mBox(
-                        pChunk->GetPosition() - pChunk->GetSize()/2.0f,
-                        pChunk->GetPosition() + pChunk->GetSize()/2.0f
-                    );
-
-                    if (pCamera->IsVisible(mBox))
-                    {
+                    if (pCamera->IsVisible(pChunk->GetBoundingBox()))
                         pChunk->Show();
-                    }
                     else
-                    {
                         pChunk->Hide();
-                    }
                 }
                 else
-                {
                     pChunk->Unload();
-                }
             }
             else
-            {
                 pChunk->Show();
-            }
         }
     }
 
@@ -123,5 +140,3 @@ namespace Frost
         return sName_;
     }
 }
-
-

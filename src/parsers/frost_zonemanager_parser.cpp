@@ -85,11 +85,12 @@ namespace Frost
             s_ptr<XML::Block> pSizeBlock = pBoundingBoxBlock->GetBlock("Size");
             if (!pChunk->IsAlwaysVisible() && pSizeBlock)
             {
-                pChunk->SetSize(Vector(
+                Vector mSize(
                     s_float(pSizeBlock->GetAttribute("x")),
                     s_float(pSizeBlock->GetAttribute("y")),
                     s_float(pSizeBlock->GetAttribute("z"))
-                ));
+                );
+                pChunk->SetBoundingBox(AxisAlignedBox(-mSize, mSize));
             }
 
             // Mesh Data

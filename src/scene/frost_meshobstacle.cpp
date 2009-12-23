@@ -389,4 +389,10 @@ namespace Frost
 
         return !bCollision;
     }
+
+    s_bool MeshObstacle::GetRayIntersection(
+        const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
+    {
+        return false;
+    }
 }

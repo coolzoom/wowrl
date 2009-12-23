@@ -35,11 +35,17 @@ namespace Frost
         /** \copydetails Frost::Obstacle::EllipsoidGoThrough()
         */
         s_bool EllipsoidGoThrough(
-            const Vector& mRadiusVector,
-            const Vector& mPreviousPos,
-            const Vector& mNextPos,
-            const Vector& mFinalPos,
+            const Vector& mRadiusVector, const Vector& mPreviousPos,
+            const Vector& mNextPos, const Vector& mFinalPos,
             CollisionData& rData
+        ) const;
+
+        /// \copybrief Frost::Obstacle::GetRayIntersection()
+        /** \copydetails Frost::Obstacle::GetRayIntersection()
+        */
+        s_bool GetRayIntersection(
+            const Vector& mRayOrigin, const Vector& mRayDirection,
+            Vector& mIntersection
         ) const;
 
         static const s_str CLASS_NAME;

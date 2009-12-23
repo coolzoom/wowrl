@@ -8,6 +8,7 @@
 #include "camera/frost_camera.h"
 #include "scene/frost_lightmanager.h"
 #include "scene/frost_zonemanager.h"
+#include "material/frost_decal.h"
 #include "frost_inputmanager.h"
 
 #include <OgreCamera.h>
@@ -43,6 +44,65 @@ namespace Frost
         Lua::Function mFunc("Engine:AllowWorldClicks", pLua);
 
         InputManager::GetSingleton()->BlockClicks("WORLD");
+
+        return mFunc.Return();
+    }
+
+
+    int LuaEngine::_EnableMouseDecal( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:EnableMouseDecal", pLua);
+        mFunc.Add(0, "enable", Lua::TYPE_BOOLEAN);
+        mFunc.Add(1, "texture", Lua::TYPE_STRING, true);
+        mFunc.Add(2, "size", Lua::TYPE_NUMBER, true);
+        mFunc.Add(3, "color (red)", Lua::TYPE_NUMBER, true);
+        mFunc.Add(4, "color (green)", Lua::TYPE_NUMBER, true);
+        mFunc.Add(5, "color (blue)", Lua::TYPE_NUMBER, true);
+        mFunc.Add(6, "color (alpha)", Lua::TYPE_NUMBER, true);
+
+        if (mFunc.Check())
+        {
+            if (mFunc.Get(0)->GetBool())
+            {
+                if (!mFunc.Get(1)->IsProvided())
+                {
+                    Error(mFunc.GetName(),
+                        "You must provide a texture file to enable the mouse decal."
+                    );
+                    return mFunc.Return();
+                }
+
+                s_refptr<Decal> pDecal = s_refptr<Decal>(new Decal(mFunc.Get(1)->GetString()));
+
+                if (mFunc.IsProvided(2))
+                {
+                    pDecal->SetScale(mFunc.Get(2)->GetNumber());
+                }
+
+                if (mFunc.IsProvided(5))
+                {
+                    pDecal->SetSelfIllumination(Color(
+                        s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
+                        s_uchar(255.0f*mFunc.Get(4)->GetNumber()),
+                        s_uchar(255.0f*mFunc.Get(5)->GetNumber())
+                    ));
+                }
+
+                if (mFunc.IsProvided(6))
+                {
+                    pDecal->SetDiffuse(Color(
+                        s_uchar(255.0f*mFunc.Get(6)->GetNumber()),
+                        255, 255, 255
+                    ));
+                }
+
+                ZoneManager::GetSingleton()->EnableMouseDecal(pDecal);
+            }
+            else
+            {
+                ZoneManager::GetSingleton()->DisableMouseDecal();
+            }
+        }
 
         return mFunc.Return();
     }
@@ -170,6 +230,74 @@ namespace Frost
         return mFunc.Return();
     }
 
+
+    int LuaEngine::_GetMouseDecalColor( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:GetMouseDecalColor", pLua, 4);
+
+        s_wptr<Decal> pDecal = ZoneManager::GetSingleton()->GetMouseDecal();
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            Color mColor = pLocked->GetSelfIllumination();
+            mFunc.Push(s_float(mColor.GetR())/255.0f);
+            mFunc.Push(s_float(mColor.GetG())/255.0f);
+            mFunc.Push(s_float(mColor.GetB())/255.0f);
+            mFunc.Push(s_float(pLocked->GetDiffuse().GetA())/255.0f);
+        }
+
+        return mFunc.Return();
+    }
+
+
+    int LuaEngine::_SetMouseDecalColor( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:SetMouseDecalColor", pLua);
+        mFunc.Add(0, "red", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "green", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
+        mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
+
+        s_wptr<Decal> pDecal = ZoneManager::GetSingleton()->GetMouseDecal();
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            if (mFunc.Check())
+            {
+                pLocked->SetSelfIllumination(Color(
+                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
+                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                ));
+
+                if (mFunc.IsProvided(3))
+                {
+                    pLocked->SetDiffuse(Color(
+                        s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
+                        255, 255, 255
+                    ));
+                }
+            }
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_SetMouseDecalTexture( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:SetMouseDecalTexture", pLua);
+        mFunc.Add(0, "file", Lua::TYPE_STRING);
+
+        s_wptr<Decal> pDecal = ZoneManager::GetSingleton()->GetMouseDecal();
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            if (mFunc.Check())
+            {
+                pLocked->SetTextureFile(mFunc.Get(0)->GetString());
+            }
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEngine::_GetBackgroundColor( lua_State* pLua )
     {
         Lua::Function mFunc("Engine:GetBackgroundColor", pLua, 4);
@@ -241,14 +369,20 @@ namespace Frost
 
         method(Engine, AllowWorldClicks),
         method(Engine, BlockWorldClicks),
+        method(Engine, EnableMouseDecal),
         method(Engine, FireEvent),
         method(Engine, ForceWorldClicksAllowed),
         method(Engine, GetBackgroundColor),
+        method(Engine, GetConstant),
+        method(Engine, GetMouseDecalColor),
         method(Engine, LoadZone),
         method(Engine, LoadZoneFile),
         method(Engine, ToggleWireframeView),
         method(Engine, ToggleShading),
         method(Engine, SetBackgroundColor),
+        method(Engine, SetConstant),
+        method(Engine, SetMouseDecalColor),
+        method(Engine, SetMouseDecalTexture),
         method(Engine, UnloadZone),
         {0,0}
     };

@@ -31,8 +31,8 @@ namespace Frost
         pOgreFrustum_ = s_refptr<Ogre::Frustum>(new Ogre::Frustum());
         pOgreFrustum_->setAspectRatio(1.0f);
         pNode_->attachObject(pOgreFrustum_.Get());
-        mProjection_ = PROJ_PERSPECTIVE;
-        fScale_ = 1.0f;
+        SetProjection(mDecal.mProjection_);
+        SetScale(mDecal.fScale_);
         SetDiffuse(mDecal.mDiffuse_);
         SetSelfIllumination(mDecal.mSelfIllum_);
         SetAmbient(mDecal.mAmbient_);
@@ -104,6 +104,27 @@ namespace Frost
         }
     }
 
+    void Decal::SetTextureFile( const s_str& sFile )
+    {
+        if (sFile != sTextureFile_)
+        {
+            sTextureFile_ = sFile;
+            s_map<s_uint, MaterialInfo>::iterator iter;
+            foreach (iter, lMaterialList_)
+            {
+                if (iter->second.bShown)
+                {
+                    iter->second.pTUS->setTextureName(sTextureFile_.Get());
+                }
+            }
+        }
+    }
+
+    const s_str& Decal::GetTextureFile() const
+    {
+        return sTextureFile_;
+    }
+
     void Decal::SetScale( const s_float& fScale )
     {
         fScale_ = fScale;
@@ -142,7 +163,7 @@ namespace Frost
         }
     }
 
-    Color Decal::GetDiffuse() const
+    const Color& Decal::GetDiffuse() const
     {
         return mDiffuse_;
     }
@@ -161,6 +182,11 @@ namespace Frost
         }
     }
 
+    const Color& Decal::GetSelfIllumination() const
+    {
+        return mSelfIllum_;
+    }
+
     void Decal::SetAmbient( const Color& mColor )
     {
         mAmbient_ = mColor;
@@ -173,6 +199,11 @@ namespace Frost
                 mAmbient_.GetB().Get()/255.0f
             );
         }
+    }
+
+    const Color& Decal::GetAmbient() const
+    {
+        return mAmbient_;
     }
 
     void Decal::SetProjection( const Projection& mProjection )
@@ -272,10 +303,5 @@ namespace Frost
     s_refptr<Ogre::Frustum> Decal::GetOgreFrustum()
     {
         return pOgreFrustum_;
-    }
-
-    const s_str& Decal::GetTextureFile() const
-    {
-        return sTextureFile_;
     }
 }

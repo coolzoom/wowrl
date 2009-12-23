@@ -12,6 +12,7 @@
 #include "camera/frost_cameramanager.h"
 #include "scene/frost_lightmanager.h"
 #include "material/frost_decal.h"
+#include "frost_inputmanager.h"
 
 using namespace std;
 
@@ -21,12 +22,13 @@ namespace Frost
 
     ZoneManager::ZoneManager()
     {
+        RegisterEvent("MOUSE_MOVED");
     }
 
     ZoneManager::~ZoneManager()
     {
         Log("Closing "+CLASS_NAME+"...");
-        pCurrentZone_.Delete();
+        UnloadZone();
     }
 
     void ZoneManager::Initialize()
@@ -90,18 +92,31 @@ namespace Frost
             s_ctnr< s_wptr<Decal> >::iterator iter;
             foreach (iter, lDecalList_)
             {
-                pCurrentZone_->AddDecal(*iter);
+                pCurrentZone_->RemoveDecal(*iter);
             }
-        }
 
-        pCurrentZone_.Delete();
+            pCurrentZone_.Delete();
+        }
     }
 
     void ZoneManager::EnableMouseDecal( s_wptr<Decal> pDecal )
     {
         if (s_refptr<Decal> pLocked = pDecal.Lock())
         {
+            if (pMouseDecal_)
+                RemoveDecalFromGround(pMouseDecal_);
+
             pMouseDecal_ = s_refptr<Decal>(new Decal(*pLocked.Get()));
+            pMouseDecal_->SetDirection(Vector(0, -1, 0));
+            pMouseDecal_->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
+
+            Vector mPos = GetTerrainUnderMouse();
+            if (!mPos.IsNaN())
+            {
+                pMouseDecal_->Show();
+                pMouseDecal_->SetPosition(mPos + Vector(0, 5, 0));
+            }
+
             AddDecalOnGround(pMouseDecal_);
         }
     }
@@ -110,6 +125,11 @@ namespace Frost
     {
         RemoveDecalFromGround(pMouseDecal_);
         pMouseDecal_ = nullptr;
+    }
+
+    s_wptr<Decal> ZoneManager::GetMouseDecal()
+    {
+        return pMouseDecal_;
     }
 
     void ZoneManager::AddDecalOnGround( s_wptr<Decal> pDecal )
@@ -130,6 +150,19 @@ namespace Frost
             lDecalList_.Erase(iter);
     }
 
+    Vector ZoneManager::GetTerrainUnderMouse()
+    {
+        if (pCurrentZone_)
+        {
+            return pCurrentZone_->GetTerrainUnderMouse(
+                InputManager::GetSingleton()->GetMousePosX()/s_float(Engine::GetSingleton()->GetScreenWidth()),
+                InputManager::GetSingleton()->GetMousePosY()/s_float(Engine::GetSingleton()->GetScreenHeight())
+            );
+        }
+        else
+            return Vector::NaN;
+    }
+
     s_ptr<Lua::State> ZoneManager::GetLua()
     {
         return pLua_;
@@ -140,6 +173,26 @@ namespace Frost
         if (pCurrentZone_)
         {
             pCurrentZone_->UpdateChunks(CameraManager::GetSingleton()->GetMainCamera());
+        }
+    }
+
+    void ZoneManager::OnEvent( const Event& mEvent )
+    {
+        if (mEvent.GetName() == "MOUSE_MOVED")
+        {
+            if (pMouseDecal_)
+            {
+                Vector mPos = GetTerrainUnderMouse();
+                if (mPos.IsNaN())
+                    pMouseDecal_->Hide();
+                else
+                {
+                    if (!pMouseDecal_->IsShown())
+                        pMouseDecal_->Show();
+
+                    pMouseDecal_->SetPosition(mPos + Vector(0, 5, 0));
+                }
+            }
         }
     }
 }

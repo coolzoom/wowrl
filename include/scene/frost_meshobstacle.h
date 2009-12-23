@@ -55,6 +55,14 @@ namespace Frost
             CollisionData& rData
         ) const;
 
+        /// \copybrief Frost::Obstacle::GetRayIntersection()
+        /** \copydetails Frost::Obstacle::GetRayIntersection()
+        */
+        s_bool GetRayIntersection(
+            const Vector& mRayOrigin, const Vector& mRayDirection,
+            Vector& mIntersection
+        ) const;
+
         static const s_str CLASS_NAME;
 
     private :

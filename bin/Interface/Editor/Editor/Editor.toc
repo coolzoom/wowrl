@@ -5,5 +5,5 @@
 ## SavedVariables: AddOns.Editor.Config
 
 DefaultConfig.lua
-Editor.xml
 Editor.lua
+Editor.xml

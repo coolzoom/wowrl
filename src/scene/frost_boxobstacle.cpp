@@ -32,4 +32,10 @@ namespace Frost
     {
         return true;
     }
+
+    s_bool BoxObstacle::GetRayIntersection(
+        const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
+    {
+        return false;
+    }
 }

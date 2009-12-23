@@ -7,6 +7,7 @@
             <OnEvent>
                 if (event == "ADDON_LOADED") then
                     Frost:SetBackgroundColor(AddOns.Editor.Config.worldBackgroundColor:Unpack());
+                    AddOns.Editor:EnableMouseDecal(true);
                 end
             </OnEvent>
         </Scripts>
