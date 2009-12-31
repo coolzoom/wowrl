@@ -30,7 +30,7 @@ void main()
     float tAtten;
     
     vec3 tPosition = (mWorld * vertex).xyz;
-    vec3 tNormal = normalize((mWorld * vec4(normal, 1.0)).xyz);
+    vec3 tNormal = normalize((mWorld * vec4(normal, 0.0)).xyz);
     
     for (int i = 0; i < 5; ++i)
     {

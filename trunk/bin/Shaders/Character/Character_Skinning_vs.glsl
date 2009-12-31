@@ -24,8 +24,7 @@ void main()
     vBlendedNormal = vec3(0, 0, 0);
     
     // Temporary variables
-    mat4  tBlendVMatrix; tBlendVMatrix[3] = vec4(0);
-    mat3  tBlendNMatrix;
+    mat4  tBlendVMatrix; tBlendVMatrix[3] = vec4(0, 0, 0, 1);
     int   tBoneIndex;
     float tWeight;
     
@@ -41,8 +40,7 @@ void main()
         vBlendedPosition += tWeight * (vertex * tBlendVMatrix).xyz;
 
         // Apply bones to the normal
-        tBlendNMatrix = mat3(tBlendVMatrix[0].xyz, tBlendVMatrix[1].xyz, tBlendVMatrix[2].xyz);
-		vBlendedNormal += tWeight * (normal * tBlendNMatrix);
+        vBlendedNormal += tWeight * ((vec4(normal, 0.0) * tBlendVMatrix)).xyz;
     }
     
     // Apply position and camera projection
