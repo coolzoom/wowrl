@@ -253,6 +253,14 @@ namespace Frost
             return (mType_ == INTEGER);
         }
 
+        /// Checks if this int is an infinite number.
+        /** \return 'true' if this int is an infinite number
+        */
+        s_bool IsInfinite() const
+        {
+            return (mType_ == INTEGER_INF_MINUS) || (mType_ == INTEGER_INF_PLUS);
+        }
+
         /// Elevates this int to a certain power (this^n).
         /** \param uiPower The power
         */

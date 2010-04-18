@@ -202,6 +202,201 @@ namespace Frost
             return *this;
         }
 
+        /// Checks if this pointer equals another
+        /** \param pValue The pointer to test
+        */
+        template<class N>
+        s_bool operator == (const s_wptr<N>& pValue) const
+        {
+            return (pValue_ == pValue.pValue_);
+        }
+        
+        /// Checks if this pointer equals another
+        /** \param pValue The pointer to test
+        */
+        template<class N>
+        s_bool operator == (const s_refptr<N>& pValue) const
+        {
+            return (pValue_ == pValue.pValue_);
+        }
+
+        /// Checks if this pointer equals another
+        /** \param pValue The pointer to test
+        */
+        template<class N>
+        s_bool operator == (N* pValue) const
+        {
+            return (pValue_ == pValue);
+        }
+
+        /// Checks if this pointer is null
+        /** \param pValue The null pointer
+        *   \return 'true' if this pointer is null
+        */
+        s_bool operator == (s_nullptr pValue) const
+        {
+            return pValue_;
+        }
+
+        /// Checks if this pointer is different from another
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer is different from another
+        */
+        template<class N>
+        s_bool operator != (const s_wptr<N>& pValue) const
+        {
+            return (pValue_ != pValue.pValue_);
+        }
+        
+        /// Checks if this pointer is different from another
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer is different from another
+        */
+        template<class N>
+        s_bool operator != (const s_refptr<N>& pValue) const
+        {
+            return (pValue_ != pValue.pValue_);
+        }
+
+        /// Checks if this pointer is different from another
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer is different from another
+        */
+        template<class N>
+        s_bool operator != (N* pValue) const
+        {
+            return (pValue_ != pValue);
+        }
+
+        /// Checks if this pointer is not null
+        /** \param pValue The null pointer
+        *   \return 'true' if this pointer is not null
+        */
+        s_bool operator != (s_nullptr pValue) const
+        {
+            return pValue_;
+        }
+
+        /// Checks if this pointer's value is lower than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower than the other
+        */
+        template<class N>
+        s_bool operator < (const s_wptr<N>& pValue) const
+        {
+            return (pValue_ < pValue.pValue_);
+        }
+        
+        /// Checks if this pointer's value is lower than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower than the other
+        */
+        template<class N>
+        s_bool operator < (const s_refptr<N>& pValue) const
+        {
+            return (pValue_ < pValue.pValue_);
+        }
+
+        /// Checks if this pointer's value is lower than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower than the other
+        */
+        template<class N>
+        s_bool operator < (N* pValue) const
+        {
+            return (pValue_ < pValue);
+        }
+
+        /// Checks if this pointer's value is lower or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower or equal than the other
+        */
+        template<class N>
+        s_bool operator <= (const s_wptr<N>& pValue) const
+        {
+            return (pValue_ <= pValue.pValue_);
+        }
+        
+        /// Checks if this pointer's value is lower or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower or equal than the other
+        */
+        template<class N>
+        s_bool operator <= (const s_refptr<N>& pValue) const
+        {
+            return (pValue_ <= pValue.pValue_);
+        }
+
+        /// Checks if this pointer's value is lower or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is lower or equal than the other
+        */
+        template<class N>
+        s_bool operator <= (N* pValue) const
+        {
+            return (pValue_ <= pValue);
+        }
+
+        /// Checks if this pointer's value is greater than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater than the other
+        */
+        template<class N>
+        s_bool operator > (const s_wptr<N>& pValue) const
+        {
+            return (pValue_ > pValue.pValue_);
+        }
+        
+        /// Checks if this pointer's value is greater than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater than the other
+        */
+        template<class N>
+        s_bool operator > (const s_refptr<N>& pValue) const
+        {
+            return (pValue_ > pValue.pValue_);
+        }
+
+        /// Checks if this pointer's value is greater than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater than the other
+        */
+        template<class N>
+        s_bool operator > (N* pValue) const
+        {
+            return (pValue_ > pValue);
+        }
+
+        /// Checks if this pointer's value is greater or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater or equal than the other
+        */
+        template<class N>
+        s_bool operator >= (const s_wptr<N>& pValue) const
+        {
+            return (pValue_ >= pValue.pValue_);
+        }
+        
+        /// Checks if this pointer's value is greater or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater or equal than the other
+        */
+        template<class N>
+        s_bool operator >= (const s_refptr<N>& pValue) const
+        {
+            return (pValue_ >= pValue.pValue_);
+        }
+
+        /// Checks if this pointer's value is greater or equal than the other
+        /** \param pValue The pointer to test
+        *   \return 'true' if this pointer's value is greater or equal than the other
+        */
+        template<class N>
+        s_bool operator >= (N* pValue) const
+        {
+            return (pValue_ >= pValue);
+        }
+
         /// Allows : "if (!pPointer)".
         bool operator ! () const
         {

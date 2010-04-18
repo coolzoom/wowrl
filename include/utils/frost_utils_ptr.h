@@ -279,6 +279,16 @@ namespace Frost
             return static_cast<T*>(pValue.pValue_);
         }
 
+        /// Casts the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        */
+        template<class N>
+        static s_ptr<T> StaticCast(N* pValue)
+        {
+            return static_cast<T*>(pValue);
+        }
+
         /// Tries to dynamic cast the provided pointer to this one's type.
         /** \param pValue The pointer to cast
         *   \return The new casted pointer
@@ -289,6 +299,18 @@ namespace Frost
         static s_ptr<T> DynamicCast(const s_ptr<N>& pValue)
         {
             return dynamic_cast<T*>(pValue.pValue_);
+        }
+
+        /// Tries to dynamic cast the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        *   \note Dynamic cast can fail, and in this case, will result in
+        *         a NULL pointer.
+        */
+        template<class N>
+        static s_ptr<T> DynamicCast(N* pValue)
+        {
+            return dynamic_cast<T*>(pValue);
         }
 
         static const s_str CLASS_NAME;

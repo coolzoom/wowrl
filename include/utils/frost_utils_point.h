@@ -46,7 +46,41 @@ namespace Frost
             mX_ = mX; mY_ = mY;
         }
 
-        Point<T> operator + (const Point& mPoint)  const
+        T GetNorm() const
+        {
+            return T(sqrt(mX_*mX_ + mY_*mY_));
+        }
+
+        void Normalize()
+        {
+            T mNorm = T(sqrt(mX_*mX_ + mY_*mY_));
+            mX_ = mX_/mNorm;
+            mY_ = mY_/mNorm;
+        }
+
+        Point GetUnit() const
+        {
+            T mNorm = T(sqrt(mX_*mX_ + mY_*mY_));
+            return Point(mX_/mNorm, mY_/mNorm);
+        }
+
+        void Rotate(const s_float& fAngle)
+        {
+            Point p;
+
+            p.mX_ = mX_*T(cos(fAngle)) - mY_*T(sin(fAngle));
+            p.mY_ = mY_*T(sin(fAngle)) + mY_*T(cos(fAngle));
+
+            mX_ = p.mX_;
+            mY_ = p.mY_;
+        }
+
+        Point GetRotation(const s_float& fAngle) const
+        {
+            return Point(mX_*T(cos(fAngle)) - mY_*T(sin(fAngle)), mY_*T(sin(fAngle)) + mY_*T(cos(fAngle)));
+        }
+
+        Point operator + (const Point& mPoint)  const
         {
             return Point(mX_ + mPoint.mX_, mY_ + mPoint.mY_);
         }
@@ -55,7 +89,7 @@ namespace Frost
             mX_ += mPoint.mX_; mY_ += mPoint.mY_;
         }
 
-        Point<T> operator - (const Point& mPoint) const
+        Point operator - (const Point& mPoint) const
         {
             return Point(mX_ - mPoint.mX_, mY_ - mPoint.mY_);
         }
@@ -71,6 +105,21 @@ namespace Frost
         s_bool operator != (const Point& mPoint) const
         {
             return !( (mX_ == mPoint.mX_) && (mY_ == mPoint.mY_) );
+        }
+
+        Point operator * (const T& mValue) const
+        {
+            return Point(mX_*mValue, mY_*mValue);
+        }
+
+        Point operator / (const T& mValue) const
+        {
+            return Point(mX_/mValue, mY_/mValue);
+        }
+
+        T operator * (const Point& mPoint) const
+        {
+            return mX_*mPoint.mX_ + mY_*mPoint.mY_;
         }
 
         const T& X() const

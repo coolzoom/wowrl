@@ -238,7 +238,7 @@ namespace Frost
         */
         s_bool IsInfiniteMinus() const
         {
-            return (!IsValid() && (fValue_ < 0.0));
+            return (IsInfinite() && (fValue_ < 0.0));
         }
 
         /// Checks if this float is infinite and positive
@@ -246,7 +246,7 @@ namespace Frost
         */
         s_bool IsInfinitePlus() const
         {
-            return (!IsValid() && (fValue_ > 0.0));
+            return (IsInfinite() && (fValue_ > 0.0));
         }
 
         /// Checks if this float is contained into the provided range.
@@ -284,6 +284,18 @@ namespace Frost
                 return _finite(fValue_) != 0;
             #else
                 return std::isfinite(fValue_);
+            #endif
+        }
+
+        /// Checks if this float is an infinite number.
+        /** \return 'true' if this float is an infinite number
+        */
+        s_bool IsInfinite() const
+        {
+            #ifdef MSVC
+                return (_finite(fValue_) == 0) && (_isnan(fValue_) == 0);
+            #else
+                return !std::isfinite(fValue_) && !std::isnan(fValue_);
             #endif
         }
 

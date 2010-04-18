@@ -127,6 +127,14 @@ namespace Frost
         static const string_object BOOL_YES;
         static T                   bDummy;
 
+        /// Returns a random boolean.
+        /** \return Either 'true' or 'false' (50% each).
+        */
+        static s_bool_t Random()
+        {
+            return (rand()/(RAND_MAX+1.0) < 0.5f);
+        }
+
     private :
 
         T bValue_;

@@ -12,10 +12,12 @@
 #include "frost_utils_config.h"
 #include "frost_utils_vector.h"
 
+#ifdef USING_OGRE
 namespace Ogre
 {
     class AxisAlignedBox;
 }
+#endif
 
 namespace Frost
 {
@@ -87,6 +89,7 @@ namespace Frost
         AxisAlignedBox operator + (const Vector& mAdd) const;
         AxisAlignedBox operator - (const Vector& mAdd) const;
 
+        #ifdef USING_OGRE
         /// Converts a Frost::AxisAlignedBox to an Ogre::AxisAlignedBox.
         /** \param mBox The box to convert
         */
@@ -96,6 +99,7 @@ namespace Frost
         /** \param mBox The box to convert
         */
         static AxisAlignedBox OgreToFrost(const Ogre::AxisAlignedBox& mBox);
+        #endif
 
         static const s_str CLASS_NAME;
 
@@ -104,6 +108,10 @@ namespace Frost
         Vector mMin_, mMax_;
 
     };
+
+    s_str  operator + (const char* sLeft, const AxisAlignedBox& mRight);
+    s_str  operator + (const s_str& sLeft, const AxisAlignedBox& mRight);
+    s_str& operator << (s_str& sLeft, const AxisAlignedBox& mRight);
 }
 
 #endif

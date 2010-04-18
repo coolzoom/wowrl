@@ -297,6 +297,12 @@ namespace Frost
             std::reverse(mContainer_.begin(), mContainer_.end());
         }
 
+        /// Sorts the elements of this container according to the "<" operator.
+        void Sort()
+        {
+            std::sort(mContainer_.begin(), mContainer_.end());
+        }
+
         s_ctnr_t& operator, (const ValueType& mElem)
         {
             mContainer_.push_back(mElem);

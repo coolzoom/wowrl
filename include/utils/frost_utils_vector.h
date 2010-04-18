@@ -10,11 +10,13 @@
 #include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
+#ifdef USING_OGRE
 namespace Ogre
 {
     class Vector3;
     class Matrix4;
 }
+#endif
 
 namespace Frost
 {
@@ -27,6 +29,17 @@ namespace Frost
     class Vector
     {
     public :
+
+        enum Constraint
+        {
+            CONSTRAINT_NONE,
+            CONSTRAINT_X,
+            CONSTRAINT_Y,
+            CONSTRAINT_Z,
+            CONSTRAINT_XY,
+            CONSTRAINT_YZ,
+            CONSTRAINT_ZX
+        };
 
         /// Default constructor.
         Vector();
@@ -52,6 +65,11 @@ namespace Frost
         /** \return 'true' if this vector only contains NaN attributes
         */
         s_bool         IsNaN() const;
+
+        /// Checks if at least one component of the vector is infinite.
+        /** \return 'true' if at least one component of the vector is infinite
+        */
+        s_bool         IsInfinite() const;
 
         /// Returns the norm of this vector.
         /** \return The norm of this vector
@@ -183,6 +201,7 @@ namespace Frost
 
         static const s_str CLASS_NAME;
 
+        #ifdef USING_OGRE
         /// Converts a Frost vector to an Ogre one.
         /** \param mVector The vector to convert
         *   \return The Ogre vector
@@ -196,6 +215,7 @@ namespace Frost
         *   \note Also adjusts coordinates.
         */
         static Vector OgreToFrost(const Ogre::Vector3& mVector);
+        #endif
 
     private :
 
@@ -208,7 +228,10 @@ namespace Frost
     s_str  operator + (const s_str& sLeft, const Vector& mRight);
     s_str& operator << (s_str& sLeft, const Vector& mRight);
     Vector operator * (const s_float& fLeft, const Vector& mRight);
+
+    #ifdef USING_OGRE
     Vector operator * (const Ogre::Matrix4& mLeft, const Vector& mRight);
+    #endif
 }
 
 #endif
