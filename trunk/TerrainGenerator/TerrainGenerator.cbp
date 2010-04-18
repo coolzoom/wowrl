@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="TerrainGenerator" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\TerrainGeneratorD" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="libutils_d.a" />
+					<Add library="liblua5.1_d.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\TerrainGenerator" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libutils.a" />
+					<Add library="liblua5.1.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-Dcimg_use_png" />
+			<Add directory="include" />
+			<Add directory="..\include\utils" />
+			<Add directory="..\dependencies\lua" />
+			<Add directory="..\dependencies\CImg" />
+			<Add directory="..\..\libpng" />
+			<Add directory="..\..\zlib123" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl,--enable-runtime-pseudo-reloc" />
+			<Add option="-Wl,--enable-auto-image-base" />
+			<Add option="-Wl,--add-stdcall-alias" />
+			<Add option="-Wl,--allow-multiple-definition" />
+			<Add library="libgdi32.a" />
+			<Add library="libPNG.a" />
+			<Add library="libZLIB.a" />
+			<Add directory="..\lib" />
+			<Add directory="..\bin" />
+		</Linker>
+		<Unit filename="include\generator.h" />
+		<Unit filename="src\main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
