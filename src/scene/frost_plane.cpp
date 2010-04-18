@@ -21,21 +21,16 @@ namespace Frost
 
     Plane::Plane() : MovableObject()
     {
-        mInterface_.SetPlane(this);
-
         // Use the default plane mesh, link it to our node
         pEntity_ = Engine::GetSingleton()->GetOgreSceneManager()->createEntity(
             ("PlaneEntity_"+uiID_).Get(), "Plane"
         );
         pNode_->attachObject(pEntity_.Get());
         pEntity_->setMaterialName("Default3D");
-        pEntity_->setUserObject(&mInterface_);
     }
 
     Plane::Plane( const s_float& fWidth, const s_float& fHeight, const s_float& fDensity ) : MovableObject()
     {
-        mInterface_.SetPlane(this);
-
         // Create the mesh
         Ogre::Plane mPlane(Ogre::Vector3::UNIT_Y, 0);
         Ogre::MeshManager::getSingletonPtr()->createPlane(
@@ -81,25 +76,5 @@ namespace Frost
     s_wptr<Material> Plane::GetMaterial()
     {
         return pMaterial_;
-    }
-
-    PlaneOgreInterface::PlaneOgreInterface()
-    {
-    }
-
-    void PlaneOgreInterface::SetPlane( s_ptr<Plane> pPlane )
-    {
-        pPlane_ = pPlane;
-    }
-
-    const Ogre::String& PlaneOgreInterface::getTypeName() const
-    {
-        static Ogre::String sName = "PLANE";
-        return sName;
-    }
-
-    s_ptr<Plane> PlaneOgreInterface::GetPlane() const
-    {
-        return pPlane_;
     }
 }

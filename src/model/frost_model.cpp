@@ -101,11 +101,6 @@ namespace Frost
         return pMesh_;
     }
 
-    void Model::SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj)
-    {
-        pEntity_->setUserObject(pObj.Get());
-    }
-
     void Model::Show()
     {
         pEntity_->setVisible(true);
@@ -122,6 +117,40 @@ namespace Frost
         }
 
         pEntity_->setVisible(false);
+    }
+
+
+    void Model::Highlight()
+    {
+        if (!bHighlighted_)
+        {
+            bHighlighted_ = true;
+            if (pMaterial_)
+                pMaterial_->SetSelfIllumination(Color(128, 128, 128));
+
+            s_map< s_uint, s_ptr<ModelPart> >::iterator iterMP;
+            foreach (iterMP, lModelPartList_)
+            {
+                iterMP->second->Highlight();
+            }
+        }
+    }
+
+    void Model::Unlight()
+    {
+        if (bHighlighted_)
+        {
+            bHighlighted_ = false;
+            if (pMaterial_)
+                pMaterial_->SetSelfIllumination(Color(0, 0, 0));
+
+            s_map< s_uint, s_ptr<ModelPart> >::iterator iterMP;
+            foreach (iterMP, lModelPartList_)
+            {
+                iterMP->second->Unlight();
+            }
+        }
+
     }
 
     s_wptr<AnimManager> Model::GetAnimMgr()
@@ -158,14 +187,6 @@ namespace Frost
 
     void Model::Update(const s_float& fDelta)
     {
-        /*Vector mTemp = GetPosition();
-        MovableObject::Update(fDelta);
-        mTemp -= GetPosition();
-        if (!mTemp.IsNull())
-        {
-            SetDirection(mTemp);
-        }*/
-
         pAnimMgr_->Update(fDelta);
     }
 }

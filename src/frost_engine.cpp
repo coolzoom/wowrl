@@ -199,8 +199,6 @@ namespace Frost
 
         bRun_ = true;
 
-        s_bool bFirstIteration = true;
-
         // Start the main loop
         while (bRun_)
         {
@@ -229,6 +227,8 @@ namespace Frost
 
             // Update current gameplay
             pGameplayMgr_->Update(fDelta);
+
+            pSceneMgr_->Update(fDelta);
 
             // Update cameras' state and animations
             pCameraMgr_->UpdateCameras(fDelta);
@@ -266,8 +266,6 @@ namespace Frost
                 bRun_ = false;
 
             pEventMgr_->FrameEnded();
-
-            bFirstIteration = false;
         }
 
         bRun_ = false;

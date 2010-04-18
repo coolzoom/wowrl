@@ -19,8 +19,6 @@ namespace Frost
     {
         /// The best available position
         Vector mNewPosition;
-        /// The remaining movement (direction calculated from collision plane)
-        Vector mRemainingMovement;
         /// The collision point
         Vector mCollisionPoint;
         /// The collision plane normal
@@ -73,23 +71,35 @@ namespace Frost
             CollisionData& rData
         ) const = 0;
 
-        /// Checks if a ray intersects this obstacle.
+        /// Checks if a ray intersects this Obstacle.
         /** \param mRayOrigin         The start point of the ray
         *   \param mRayDirection      The direction on which to cast the ray
         *   \param[out] mIntersection The intersection point
-        *   \return 'true' if the ray has intersected the obstacle
+        *   \return 'true' if the ray has intersected the Obstacle
         */
         virtual s_bool GetRayIntersection(
             const Vector& mRayOrigin, const Vector& mRayDirection,
             Vector& mIntersection
         ) const = 0;
 
-        /// Sets this obstacle as active.
+        /// Checks if the provided point is inside this Obstacle's bouding box.
+        /** \param mPoint The point to test
+        *   \return 'true' if the provided point is inside this Obstacle's one
+        */
+        virtual s_bool IsInBoundingBox(const Vector& mPoint) const;
+
+        /// Checks if the provided box intersects this Obstacle's bouding box.
+        /** \param mBox The bounding box to test
+        *   \return 'true' if the provided box intersects this Obstacle's one
+        */
+        virtual s_bool IsInBoundingBox(const AxisAlignedBox& mBox) const;
+
+        /// Sets this Obstacle as active.
         /** \param bIsActive 'true' to enable this obstacle
         */
         void           SetActive(const s_bool& bIsActive);
 
-        /// Checks if this obstacle is active.
+        /// Checks if this Obstacle is active.
         /** \return 'true' if this obstacle is active
         */
         const s_bool&  IsActive() const;
@@ -104,7 +114,8 @@ namespace Frost
 
     protected :
 
-        s_bool bIsActive_;
+        s_bool         bIsActive_;
+        AxisAlignedBox mBoundingBox_;
     };
 
     /// A movable obstacle (abstract).
@@ -119,6 +130,18 @@ namespace Frost
 
         /// Destructor.
         virtual ~MovableObstacle();
+
+        /// Checks if the provided point is inside this Obstacle's bouding box.
+        /** \param mPoint The point to test
+        *   \return 'true' if the provided point is inside this Obstacle's one
+        */
+        virtual s_bool IsInBoundingBox(const Vector& mPoint) const;
+
+        /// Checks if the provided box intersects this Obstacle's bouding box.
+        /** \param mBox The bounding box to test
+        *   \return 'true' if the provided box intersects this Obstacle's one
+        */
+        virtual s_bool IsInBoundingBox(const AxisAlignedBox& mBox) const;
 
         /// Tells this obstacle that it is now static.
         /** \param bIsStatic 'true' to make this obstacle static

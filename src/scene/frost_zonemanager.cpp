@@ -9,6 +9,7 @@
 
 #include "scene/frost_zone.h"
 #include "lua/frost_lua.h"
+#include "model/frost_modelmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "scene/frost_lightmanager.h"
 #include "material/frost_decal.h"
@@ -96,6 +97,7 @@ namespace Frost
             }
 
             pCurrentZone_.Delete();
+            ModelManager::GetSingleton()->RemoveCategory("Zone");
         }
     }
 
@@ -163,6 +165,11 @@ namespace Frost
             return Vector::NaN;
     }
 
+    s_ptr<Zone> ZoneManager::GetCurrentZone()
+    {
+        return pCurrentZone_;
+    }
+
     s_ptr<Lua::State> ZoneManager::GetLua()
     {
         return pLua_;
@@ -172,14 +179,9 @@ namespace Frost
     {
         if (pCurrentZone_)
         {
+            pCurrentZone_->Update(fDelta);
             pCurrentZone_->UpdateChunks(CameraManager::GetSingleton()->GetMainCamera());
-        }
-    }
 
-    void ZoneManager::OnEvent( const Event& mEvent )
-    {
-        if (mEvent.GetName() == "MOUSE_MOVED")
-        {
             if (pMouseDecal_)
             {
                 Vector mPos = GetTerrainUnderMouse();
@@ -193,6 +195,14 @@ namespace Frost
                     pMouseDecal_->SetPosition(mPos + Vector(0, 5, 0));
                 }
             }
+        }
+    }
+
+    void ZoneManager::OnEvent( const Event& mEvent )
+    {
+        if (mEvent.GetName() == "MOUSE_MOVED")
+        {
+
         }
     }
 }

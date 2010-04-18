@@ -88,6 +88,8 @@ namespace Frost
         Ogre::GpuProgramParameters::AutoConstantType mType;
         if (sName == "mAmbient")
             mType = Ogre::GpuProgramParameters::ACT_DERIVED_SCENE_COLOUR;
+        else if (sName == "mDiffuse")
+            mType = Ogre::GpuProgramParameters::ACT_SURFACE_DIFFUSE_COLOUR;
         else if (sName == "mWorld")
             mType = Ogre::GpuProgramParameters::ACT_WORLD_MATRIX;
         else if (sName == "mWorldViewProj")

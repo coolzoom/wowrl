@@ -92,7 +92,7 @@ void Slider::OnEvent( const Event& mEvent )
             {
                 GUIManager::GetSingleton()->StartMoving(
                     pThumbTexture_, pThumbTexture_->GetPoint(ANCHOR_CENTER),
-                    mOrientation_ == ORIENT_HORIZONTAL ? GUIManager::CONSTRAINT_X : GUIManager::CONSTRAINT_Y
+                    mOrientation_ == ORIENT_HORIZONTAL ? Vector::CONSTRAINT_X : Vector::CONSTRAINT_Y
                 );
                 bThumbMoved_ = true;
             }
@@ -124,7 +124,7 @@ void Slider::OnEvent( const Event& mEvent )
 
                     GUIManager::GetSingleton()->StartMoving(
                         pThumbTexture_, pThumbTexture_->GetPoint(ANCHOR_CENTER),
-                        mOrientation_ == ORIENT_HORIZONTAL ? GUIManager::CONSTRAINT_X : GUIManager::CONSTRAINT_Y
+                        mOrientation_ == ORIENT_HORIZONTAL ? Vector::CONSTRAINT_X : Vector::CONSTRAINT_Y
                     );
                     bThumbMoved_ = true;
                 }

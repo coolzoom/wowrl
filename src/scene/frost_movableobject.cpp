@@ -12,6 +12,7 @@
 
 #include <OgreSceneManager.h>
 #include <OgreRoot.h>
+#include <OgreEntity.h>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ namespace Frost
 
     MovableObject::MovableObject() : mInitialDirection_(-Vector::UNIT_Z)
     {
-        uiID_ = SceneManager::GetSingleton()->GetNewID(this);
+        uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
         pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
             Ogre::Vector3::ZERO
         );
@@ -30,7 +31,15 @@ namespace Frost
 
     MovableObject::MovableObject( const MovableObject& mObject ) : mInitialDirection_(-Vector::UNIT_Z)
     {
-        uiID_ = SceneManager::GetSingleton()->GetNewID(this);
+        uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
+
+        mOrbitCenter_ = mObject.mOrbitCenter_;
+        mTrackedPoint_ = mObject.mTrackedPoint_;
+        bOrbits_ = mObject.bOrbits_;
+        bOrbitCenterRelative_ = mObject.bOrbitCenterRelative_;
+        bTracks_ = mObject.bTracks_;
+        bTrackedPointRelative_ = mObject.bTrackedPointRelative_;
+
         if (!bOrbits_)
             pNode_ = mObject.pNode_->getParentSceneNode()->createChildSceneNode(mObject.pNode_->getPosition());
         else
@@ -43,13 +52,6 @@ namespace Frost
         pNode_->setOrientation(mObject.pNode_->getOrientation());
         pNode_->setFixedYawAxis(true);
 
-        mOrbitCenter_ = mObject.mOrbitCenter_;
-        mTrackedPoint_ = mObject.mTrackedPoint_;
-        bOrbits_ = mObject.bOrbits_;
-        bOrbitCenterRelative_ = mObject.bOrbitCenterRelative_;
-        bTracks_ = mObject.bTracks_;
-        bTrackedPointRelative_ = mObject.bTrackedPointRelative_;
-
         if (bOrbits_)
             CreateOrbitNode_();
 
@@ -61,7 +63,7 @@ namespace Frost
 
     MovableObject::MovableObject( const Vector& mPosition ) : mInitialDirection_(-Vector::UNIT_Z)
     {
-        uiID_ = SceneManager::GetSingleton()->GetNewID(this);
+        uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
         pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
             Vector::FrostToOgre(mPosition)
         );
@@ -70,6 +72,8 @@ namespace Frost
 
     MovableObject::~MovableObject()
     {
+        SceneManager::GetSingleton()->UnregisterObject(this);
+
         UnlockTracking();
         s_ctnr< s_ptr<MovableObject> >::iterator iter = lLookingAtList_.Begin();
         while (iter != lLookingAtList_.End())
@@ -88,7 +92,15 @@ namespace Frost
         }
     }
 
-    void MovableObject::Attach( s_ptr<MovableObject> pObject, const s_bool& bInheritRot, const s_bool& bInheritScale )
+    void MovableObject::SetOgreInterface( s_ptr<OgreInterface> pOgreInterface )
+    {
+        if (pEntity_)
+        {
+            pEntity_->setUserObject(pOgreInterface.Get());
+        }
+    }
+
+    void MovableObject::AttachTo( s_ptr<MovableObject> pObject, const s_bool& bInheritRot, const s_bool& bInheritScale )
     {
         if (pObject)
         {
@@ -232,9 +244,22 @@ namespace Frost
         }
     }
 
+    void MovableObject::SetOrientation( const s_float& fX, const s_float& fY, const s_float& fZ, const s_float& fW )
+    {
+        UnlockOrbiting();
+        UnlockTracking();
+
+        pNode_->setOrientation(fW.Get(), fX.Get(), fY.Get(), fZ.Get());
+    }
+
     void MovableObject::SetInitialDirection( const Vector& mInitialDirection )
     {
         mInitialDirection_ = mInitialDirection;
+    }
+
+    void MovableObject::SetScale( const Vector& mScale )
+    {
+        pNode_->setScale(Vector::FrostToOgre(mScale));
     }
 
     void MovableObject::SetPosition( const Vector& mPosition )
@@ -364,6 +389,14 @@ namespace Frost
             return Vector::OgreToFrost(pNode_->_getDerivedPosition());
     }
 
+    Vector MovableObject::GetScale( const s_bool& bRelative) const
+    {
+        if (bRelative)
+            return Vector::OgreToFrost(pNode_->getScale());
+        else
+            return Vector::OgreToFrost(pNode_->_getDerivedScale());
+    }
+
     Vector MovableObject::GetDirection( const s_bool& bRelative ) const
     {
         if (bRelative)
@@ -457,5 +490,48 @@ namespace Frost
     void MovableObject::PushOnLua( s_ptr<Lua::State> pLua ) const
     {
         pLua->PushGlobal("Movable_"+uiID_);
+    }
+
+    OgreInterface::OgreInterface()
+    {
+    }
+
+    OgreInterface::~OgreInterface()
+    {
+    }
+
+    void OgreInterface::SetMovableObject( s_ptr<MovableObject> pMovableObject )
+    {
+        pMovableObject_ = pMovableObject;
+    }
+
+    s_ptr<MovableObject> OgreInterface::GetMovableObject() const
+    {
+        return pMovableObject_;
+    }
+
+    void OgreInterface::SetPriority( const s_int& iPriority )
+    {
+        iPriority_ = iPriority;
+    }
+
+    const s_int& OgreInterface::GetPriority() const
+    {
+        return iPriority_;
+    }
+
+    s_bool OgreInterface::IsSelectable() const
+    {
+        return false;
+    }
+
+    void OgreInterface::EnableMouse( const s_bool& bEnable )
+    {
+        bMouseEnabled_ = bEnable;
+    }
+
+    const s_bool& OgreInterface::IsMouseEnabled() const
+    {
+        return bMouseEnabled_;
     }
 }

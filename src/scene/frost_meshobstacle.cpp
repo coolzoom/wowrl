@@ -19,6 +19,8 @@ namespace Frost
     MeshObstacle::MeshObstacle( const s_array<Triangle>& lTriangleArray )
     {
         lTriangleArray_ = lTriangleArray;
+        // TODO : MeshObstacle : calculate bounding box (or copy ?)
+        mBoundingBox_ = AxisAlignedBox();
     }
 
     MeshObstacle::~MeshObstacle()
@@ -353,9 +355,7 @@ namespace Frost
         if (bCollision)
         {
             // Calculate the new end position
-            rData.mNewPosition = mTransform*(
-                mPosition + fBestT*mDistance - 0.0001f*mInitialDistance.GetUnit()
-            );
+            rData.mNewPosition = mTransform*(mPosition + fBestT*mDistance);
 
             // Transform the collision point
             rData.mCollisionPoint = mTransform*mIntersection;
@@ -375,16 +375,6 @@ namespace Frost
                 mRadiusVector.X()*mRadiusVector.Y()
             ));
             rData.mPlaneNormal.Normalize();
-
-            fSignedDistance = mPlaneNormal*(mInitialDestination - mIntersection);
-            rData.mRemainingMovement = mInitialDestination - fSignedDistance*mPlaneNormal - mIntersection;
-            if (!rData.mRemainingMovement.IsNull())
-            {
-                rData.mRemainingMovement = mOrientationTransform*rData.mRemainingMovement;
-                rData.mRemainingMovement.ScaleUp(mTransformedRadiusVector);
-                rData.mRemainingMovement.Normalize();
-                rData.mRemainingMovement *= (mFinalPos - rData.mNewPosition).GetNorm();
-            }
         }
 
         return !bCollision;

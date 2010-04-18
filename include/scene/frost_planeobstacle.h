@@ -20,10 +20,17 @@ namespace Frost
     public :
 
         /// Constructor.
+        /** \note Creates an infinite plane.<br>
+        *         When created, the plane will face toward the positive Y axis
+        *         and be centered at the origin (0, 0, 0).
+        */
+        PlaneObstacle();
+
+        /// Constructor.
         /** \param fXSize The X dimension of the plane
         *   \param fZSize The Z dimension of the plane
         *   \note When created, the plane will face toward the positive Y axis
-        *         and centered at the origin (0, 0, 0).
+        *         and be centered at the origin (0, 0, 0).
         */
         PlaneObstacle(const s_float& fXSize, const s_float& fZSize);
 
@@ -62,9 +69,10 @@ namespace Frost
         s_bool IsPointInsideQuad_(const Vector& mPoint) const;
         s_float GetSmallestRoot_(const s_float& fA, const s_float& fB, const s_float& fC) const;
 
-        s_float fXSize_, fZSize_;
+        s_float            fXSize_, fZSize_;
+        s_bool             bInfinite_;
         s_array<Vector, 4> mP_;
-        Vector mCenter_, mNormal_;
+        Vector             mCenter_, mNormal_;
     };
 }
 

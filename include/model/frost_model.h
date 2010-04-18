@@ -26,20 +26,27 @@ namespace Frost
 
         void             Show();
         void             Hide();
-        void             SetMaterial(s_refptr<Material> pMat);
+        void             Highlight();
+        void             Unlight();
+        void             SetMaterial(s_refptr<Material> pMat, const s_uint& uiSubEntity = s_uint::NaN);
         s_wptr<Material> GetMaterial();
         void             SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
         void             AddSubEntity(const s_uint& uiID);
+        const s_ctnr<s_uint>& GetSubEntityList() const;
 
         static const s_str CLASS_NAME;
 
     private :
 
-        s_ctnr<s_uint>     lSubEntity_;
+        s_uint             uiID_;
         s_ptr<Model>       pParent_;
         s_refptr<Material> pMaterial_;
-        s_uint             uiID_;
+
+        s_bool bHighlighted_;
+
+        s_ctnr<s_uint>                      lSubEntity_;
+        s_map< s_uint, s_refptr<Material> > lSubEntityMaterialList_;
     };
 
     /// A 3D element (mesh)
@@ -63,11 +70,11 @@ namespace Frost
 
         void              Show();
         void              Hide(s_bool bSubMeshes = false);
+        void              Highlight();
+        void              Unlight();
         void              SetMaterial(s_refptr<Material> pMat);
         s_wptr<Material>  GetMaterial();
         void              SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
-
-        void              SetUserObject(s_ptr<Ogre::UserDefinedObject> pObj);
 
         const Vector&     GetEllipsoidRadius() const;
 
@@ -78,7 +85,6 @@ namespace Frost
     private :
 
         s_ptr<Ogre::Mesh>   pMesh_;
-        s_ptr<Ogre::Entity> pEntity_;
 
         s_refptr<Material> pMaterial_;
 
@@ -86,6 +92,8 @@ namespace Frost
 
         s_str sModelName_;
         s_str sEntityName_;
+
+        s_bool bHighlighted_;
 
         s_map< s_uint, s_ptr<ModelPart> > lModelPartList_;
     };

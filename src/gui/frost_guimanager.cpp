@@ -479,24 +479,28 @@ namespace Frost
         {
             switch (mConstraint_)
             {
-                case CONSTRAINT_NONE :
+                case Vector::CONSTRAINT_XY :
+                case Vector::CONSTRAINT_NONE :
                     pMovedAnchor_->SetAbsOffset(
                         iMovementStartPositionX_ + s_int(fMouseMovementX_),
                         iMovementStartPositionY_ + s_int(fMouseMovementY_)
                     );
                     break;
-                case CONSTRAINT_X :
+                case Vector::CONSTRAINT_ZX :
+                case Vector::CONSTRAINT_X :
                     pMovedAnchor_->SetAbsOffset(
                         iMovementStartPositionX_ + s_int(fMouseMovementX_),
                         iMovementStartPositionY_
                     );
                     break;
-                case CONSTRAINT_Y :
+                case Vector::CONSTRAINT_YZ :
+                case Vector::CONSTRAINT_Y :
                     pMovedAnchor_->SetAbsOffset(
                         iMovementStartPositionX_,
                         iMovementStartPositionY_ + s_int(fMouseMovementY_)
                     );
                     break;
+                default : break;
             }
 
             pMovedObject_->FireUpdateBorders();
@@ -621,7 +625,7 @@ namespace Frost
         }
     }
 
-    void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj, s_ptr<GUI::Anchor> pAnchor, Constraint mConstraint )
+    void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj, s_ptr<GUI::Anchor> pAnchor, Vector::Constraint mConstraint )
     {
         pSizedObject_ = nullptr;
         pMovedObject_ = pObj;

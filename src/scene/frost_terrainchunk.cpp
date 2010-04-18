@@ -30,7 +30,7 @@ namespace Frost
     struct TerrainHeader
     {
         /// Makes sure we are opening a terrain file
-        char sID[4];
+        char sID[2];
         /// Makes sure the loading code supports this file
         char sVersion[4];
         /// The dimension of the terrain in world unit on the X axis
@@ -51,6 +51,10 @@ namespace Frost
     {
         /// Vertex height
         float fHeight;
+        /// Vertex normal
+        float fNormal[3];
+        /// Texture coordinates
+        float fUVs[2];
         /// Flags
         uchar ucFlags;
     };
@@ -201,7 +205,10 @@ namespace Frost
                 );
                 pNode_->attachObject(pEntity_.Get());
 
-                pObstacle_ = new PlaneObstacle(fXSize_, fZSize_);
+                s_ptr<MovableObstacle> pMObstacle = new PlaneObstacle(fXSize_, fZSize_);
+                pMObstacle->SetPosition(mPosition_);
+
+                pObstacle_ = pMObstacle;
             }
             else
             {
@@ -217,7 +224,7 @@ namespace Frost
                 TerrainHeader mHeader;
                 mFile.Read(mHeader);
 
-                if (s_str(mHeader.sID, 4) != "FTER")
+                if (s_str(mHeader.sID, 2) != "FT")
                 {
                     throw Exception(CLASS_NAME,
                         "\""+sTerrainFile_+"\" is not a terrain file."
@@ -296,6 +303,9 @@ namespace Frost
                 float fOffX = (uiNX % 2 == 0) ? 0.5f - 1.0f/(2.0f*uiNX) : 0.5f;
                 float fOffZ = (uiNZ % 2 == 0) ? 0.5f - 1.0f/(2.0f*uiNZ) : 0.5f;
 
+                s_float fYMin = s_float::INFPLUS;
+                s_float fYMax = s_float::INFMINUS;
+
                 for (uint x = 0; x < uiNX; ++x)
                 {
                     for (uint z = 0; z < uiNZ; ++z)
@@ -308,16 +318,28 @@ namespace Frost
                         if (lPointList[j].ucFlags == 1)
                             lHeightData[j] = s_float::NaN;
                         else
-                            lHeightData[j] = fHeight*fYSize;
+                        {
+                            s_float fTemp = lHeightData[j] = fHeight*fYSize;
+                            if (fTemp > fYMax)
+                                fYMax = fTemp;
+
+                            if (fTemp < fYMin)
+                                fYMin = fTemp;
+                        }
 
                         // Position
-                        lData[i+0] = fXSize*(x/fNX - fOffX);
+                        lData[i+0] = fXSize*(x/(fNX-1) - fOffX);
                         lData[i+1] = fHeight*fYSize;
-                        lData[i+2] = fZSize*(z/fNZ - fOffZ);
+                        lData[i+2] = fZSize*(z/(fNZ-1) - fOffZ);
+
+                        // Normal
+                        lData[i+3] = lPointList[j].fNormal[0];
+                        lData[i+4] = lPointList[j].fNormal[1];
+                        lData[i+5] = lPointList[j].fNormal[2];
 
                         // Texture coordinates (constant scale)
-                        lData[i+6] = x/0.3f;
-                        lData[i+7] = z/0.3f;
+                        lData[i+6] = lPointList[j].fUVs[0];
+                        lData[i+7] = lPointList[j].fUVs[1];
                     }
                 }
 
@@ -340,11 +362,9 @@ namespace Frost
                 }
 
                 s_array<TerrainObstacle::Triangle> lTriangleArray;
+                lTriangleArray.Reserve(uiIndexCount/3);
                 TerrainObstacle::Triangle mTri;
 
-                // Normals
-                // Calculation code taken from :
-                // http://www.devmaster.net/forums/showthread.php?t=1783
                 s_array<Vector> lNArray; lNArray.Resize(uiIndexCount);
                 for (uint i = 0; i < uiIndexCount; i += 3)
                 {
@@ -358,31 +378,6 @@ namespace Frost
                     mTri.mP[2] = Vector(lData[i3*uiParamNbr+0], lData[i3*uiParamNbr+1], lData[i3*uiParamNbr+2]);
 
                     lTriangleArray.PushBack(mTri);
-
-                    // Calculate the normal
-                    Vector mNormal = (mTri.mP[1] - mTri.mP[0])^(mTri.mP[2] - mTri.mP[0]);
-
-                    // Sum up the face's normal for each of the vertices that make up the face.
-                    lNArray[i1] += mNormal;
-                    lNArray[i2] += mNormal;
-                    lNArray[i3] += mNormal;
-                }
-
-                // Normals
-                for (uint x = 0; x < uiNX; ++x)
-                {
-                    for (uint z = 0; z < uiNZ; ++z)
-                    {
-                        uint i1 = (x*uiNZ+z)*uiParamNbr;
-                        uint i2 = x*uiNZ+z;
-
-                        // Normalize the sum at the very end
-                        lNArray[i2].Normalize();
-
-                        lData[i1+3] = lNArray[i2].X().Get();
-                        lData[i1+4] = lNArray[i2].Y().Get();
-                        lData[i1+5] = lNArray[i2].Z().Get();
-                    }
                 }
 
                 pVBuf->writeData(0, pVBuf->getSizeInBytes(), lData.GetClassicArray(), true);
@@ -397,14 +392,14 @@ namespace Frost
                 pSubMesh->setMaterialName(pMat_->GetOgreMaterial()->getName());
 
                 mTrueBoundingBox_ = AxisAlignedBox(
-                    Vector(-fXSize*fOffX, -fYSize/2.0f - 1.0f, -fZSize*fOffZ),
-                    Vector( fXSize*fOffX,  fYSize/2.0f + 1.0f,  fZSize*fOffZ)
+                    Vector(-fXSize*fOffX, fYMin-1, -fZSize*fOffZ),
+                    Vector( fXSize*(1.0f-fOffX), fYMax+1,  fZSize*(1.0f-fOffZ))
                 );
 
                 pMesh_->_setBounds(AxisAlignedBox::FrostToOgre(mTrueBoundingBox_));
 
                 pMesh_->_setBoundingSphereRadius(
-                    std::max(fXSize*fOffX, fZSize*fOffZ)
+                    std::max(fXSize*(1.0f-fOffX), fZSize*(1.0f-fOffZ))
                 );
 
                 pMesh_->load();
@@ -417,9 +412,11 @@ namespace Frost
                     Vector::FrostToOgre(mPosition_)
                 );
                 pNode_->attachObject(pEntity_.Get());
+                //pNode_->showBoundingBox(true);
 
                 pObstacle_ = new TerrainObstacle(
-                    lTriangleArray, lHeightData, uiNX, uiNZ, fXSize, fZSize, fOffX, fOffZ, this
+                    lTriangleArray, lHeightData, uiNX, uiNZ,
+                    fXSize, fZSize, fOffX, fOffZ, this
                 );
             }
 
@@ -431,6 +428,8 @@ namespace Frost
     {
         if (bLoaded_)
         {
+            pObstacle_.Delete();
+
             pEntity_->detatchFromParent();
             Engine::GetSingleton()->GetOgreSceneManager()->destroyEntity(pEntity_.Get());
             pEntity_ = nullptr;
@@ -440,8 +439,6 @@ namespace Frost
 
             Engine::GetSingleton()->GetOgreSceneManager()->destroySceneNode(pNode_.Get());
             pNode_ = nullptr;
-
-            pObstacle_.Delete();
 
             bLoaded_ = false;
         }
@@ -511,12 +508,12 @@ namespace Frost
         return bAlwaysVisible_;
     }
 
-    void TerrainChunk::SetPosition(const Vector& mPosition)
+    void TerrainChunk::SetPosition( const Vector& mPosition )
     {
         mPosition_ = mPosition;
     }
 
-    void TerrainChunk::SetBoundingBox(const AxisAlignedBox& mBox)
+    void TerrainChunk::SetBoundingBox( const AxisAlignedBox& mBox )
     {
         bAlwaysVisible_ = false;
         mBoundingBox_ = mBox;
@@ -543,7 +540,18 @@ namespace Frost
             return mTrueBoundingBox_ + mPosition_;
     }
 
-    s_float TerrainChunk::GetPointHeight(const s_float& fX, const s_float& fZ) const
+    s_bool TerrainChunk::ContainsPoint( const s_float& fX, const s_float& fZ ) const
+    {
+        Vector mTemp = Vector(
+            fX - mPosition_.X(),
+            (mTrueBoundingBox_.GetMax().Y() + mTrueBoundingBox_.GetMin().Y())/2.0f,
+            fZ - mPosition_.Z()
+        );
+
+        return mTrueBoundingBox_.Contains(mTemp);
+    }
+
+    s_float TerrainChunk::GetPointHeight( const s_float& fX, const s_float& fZ ) const
     {
         if (bPlane_)
         {
@@ -554,7 +562,7 @@ namespace Frost
             s_ptr<TerrainObstacle> pTerrainObstacle = s_ptr<TerrainObstacle>::DynamicCast(pObstacle_);
             if (pTerrainObstacle)
             {
-                return pTerrainObstacle->GetPointHeight(fX, fZ);
+                return pTerrainObstacle->GetPointHeight(fX, fZ) + mPosition_.Y();
             }
             else
             {

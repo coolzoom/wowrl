@@ -163,10 +163,10 @@ namespace Frost
         */
         const s_uint&    GetLevel() const;
 
-        /// Tells this Unit that it has been highlithed (or not).
-        /** \param bHighlighted 'true' if the Unit has been highlighted
+        /// Makes this Unit fully lighted (no shadow).
+        /** \param bHighlighted 'true' to make the Unit highlighted
         */
-        void             NotifyHighlighted(const s_bool& bHighlighted);
+        void             Highlight(const s_bool& bHighlighted);
 
         /// Checks if this Unit is highlighted.
         /** \return 'true' if this Unit is highlithed
@@ -250,7 +250,7 @@ namespace Frost
         /// Returns this Unit's body model.
         /** \return This Unit's body model
         */
-        s_refptr<Model>  GetBodyModel();
+        s_wptr<Model>    GetBodyModel();
 
         /// Returns this Unit's node.
         /** \return This Unit's node

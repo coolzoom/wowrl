@@ -18,8 +18,7 @@ namespace Frost
     const s_str PhysicsManager::CLASS_NAME = "PhysicsManager";
 
     PhysicsManager::PhysicsManager() :
-        mGravity_(0, -9.81f, 0), uiMaxCollisionRecursion_(5u),
-        fMinSlidingAngle_(0.125f), fMaxClimbingAngle_(0.125f)
+        mGravity_(0, -9.81f, 0), uiMaxCollisionRecursion_(5u)
     {
     }
 
@@ -33,12 +32,6 @@ namespace Frost
         s_ptr<Engine> pEngine = Engine::GetSingleton();
         if (pEngine->IsConstantDefined("MaxCollisionRecursion"))
             uiMaxCollisionRecursion_ = pEngine->GetUIntConstant("MaxCollisionRecursion");
-
-        if (pEngine->IsConstantDefined("MinSlidingAngle"))
-            fMinSlidingAngle_ = pEngine->GetFloatConstant("MinSlidingAngle");
-
-        if (pEngine->IsConstantDefined("MaxClimbingAngle"))
-            fMaxClimbingAngle_ = pEngine->GetFloatConstant("MaxClimbingAngle");
 
         return true;
     }
@@ -75,26 +68,6 @@ namespace Frost
     const Vector& PhysicsManager::GetGravity() const
     {
         return mGravity_;
-    }
-
-    void PhysicsManager::SetMinSlidingAngle( const s_float& fMinSlidingAngle )
-    {
-        fMinSlidingAngle_ = fMinSlidingAngle;
-    }
-
-    const s_float& PhysicsManager::GetMinSlidingAngle() const
-    {
-        return fMinSlidingAngle_;
-    }
-
-    void PhysicsManager::SetMaxClimbingAngle( const s_float& fMaxClimbingAngle )
-    {
-        fMaxClimbingAngle_ = fMaxClimbingAngle;
-    }
-
-    const s_float& PhysicsManager::GetMaxClimbingAngle() const
-    {
-        return fMaxClimbingAngle_;
     }
 
     const s_uint& PhysicsManager::GetMaxCollisionRecursion() const

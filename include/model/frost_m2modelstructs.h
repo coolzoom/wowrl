@@ -6,8 +6,8 @@
 /*                                        */
 
 
-#ifndef FROST_MODELSTRUCTS_H
-#define FROST_MODELSTRUCTS_H
+#ifndef FROST_M2MODELSTRUCTS_H
+#define FROST_M2MODELSTRUCTS_H
 
 /** \cond NOT_REMOVE_FROM_DOC
 */

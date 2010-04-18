@@ -57,11 +57,16 @@
     <n[.,1]:Models>
         <-- Model : binds a file to a model name -->
         <Model name file>
-            <-- Texture : applies a texture to this model -->
-            <n[.,1]:Texture>
-                <-- Diffuse : the picture to use as diffuse color -->
-                <n[.,1]:Diffuse file/>
-            </Texture>
+            <-- Materials : lists materials of each submesh -->
+            <n[.,1]:Materials>
+                <-- Material : how to render the submesh -->
+                <Material n:subMeshID="-1" n:subEntityID="-1">
+                    <-- DiffuseColor : a plain color -->
+                    <n[*,1]:DiffuseColor n:r="0" n:g="0" n:b="0" n:a="0"/>
+                    <-- DiffuseTexture : a texture file -->
+                    <n[*,1]:DiffuseTexture file b:alphaReject="false"/>
+                </Material>
+            </Materials>
         </Model>
     </Models>
     

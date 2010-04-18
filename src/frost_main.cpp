@@ -30,6 +30,8 @@
 #include "scene/frost_meshobstacle.h"
 #include "scene/frost_planeobstacle.h"
 #include "scene/frost_physicshandler.h"
+#include "scene/frost_zone.h"
+#include "scene/frost_doodad.h"
 #include "lua/frost_lua.h"
 
 #include <OgreException.h>
@@ -112,6 +114,13 @@ s_bool EditorFrameFunc()
         GUIManager::GetSingleton()->PrintUI();
     }
 
+    if (pInputMgr->KeyIsPressed(KEY_F))
+    {
+        s_wptr<AnimManager> pAM = ZoneManager::GetSingleton()->GetCurrentZone()->GetDoodadByName("TestDoodad")->GetModel()->GetAnimMgr();
+        pAM->SetAnim(ANIM_CLOSE);
+        pAM->Play();
+    }
+
     return true;
 }
 
@@ -158,7 +167,7 @@ s_bool EditorRenderFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = true;
+    s_bool bEditor = false;
 
     // Read commands
     if (argc > 1)
@@ -191,8 +200,6 @@ int main(int argc, char* argv[])
             GUIManager::GetSingleton()->AddAddOnDirectory("Interface/BaseUI");
             GUIManager::GetSingleton()->AddAddOnDirectory("Interface/Editor");
             GUIManager::GetSingleton()->LoadUI();
-
-            //s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone("Test");
 
             LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
         }

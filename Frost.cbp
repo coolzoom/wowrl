@@ -32,7 +32,7 @@
 					<Add option="-Wl,--allow-multiple-definition" />
 					<Add library="OgreMain" />
 					<Add library="libOIS.a" />
-					<Add library="libutils.a" />
+					<Add library="libutils_ogre.a" />
 					<Add library="liblua5.1.a" />
 					<Add library="libxml.a" />
 				</Linker>
@@ -62,7 +62,7 @@
 					<Add option="-Wl,--allow-multiple-definition" />
 					<Add library="OgreMain_d" />
 					<Add library="libOIS_d.a" />
-					<Add library="libutils_d.a" />
+					<Add library="libutils_ogre_d.a" />
 					<Add library="liblua5.1_d.a" />
 					<Add library="libxml_d.a" />
 				</Linker>
@@ -101,21 +101,31 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-mthreads" />
+					<Add option="-fmessage-length=0" />
+					<Add option="-fexceptions" />
+					<Add option="-fident" />
 					<Add option="-D_DEBUG" />
-					<Add option="-DFROST_LINUX" />
-					<Add option="-DLUA_USE_MKSTEMP" />
+					<Add option="-DWIN32" />
+					<Add option="-D_WINDOWS" />
 				</Compiler>
 				<Linker>
+					<Add option="-Wl,--enable-runtime-pseudo-reloc" />
+					<Add option="-Wl,--enable-auto-image-base" />
+					<Add option="-Wl,--enable-auto-import" />
+					<Add option="-Wl,--add-stdcall-alias" />
+					<Add option="-Wl,--allow-multiple-definition" />
 					<Add library="OgreMain_d" />
-					<Add library="OIS" />
-					<Add library="libutils_l_d.a" />
-					<Add library="liblua5.1_l_d.a" />
-					<Add library="libxml_l_d.a" />
+					<Add library="libOIS_d.a" />
+					<Add library="libutils_ogre_d.a" />
+					<Add library="liblua5.1_d.a" />
+					<Add library="libxml_d.a" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-DUSING_OGRE" />
 			<Add directory="..\ogre\OgreMain\include" />
 			<Add directory="include" />
 			<Add directory="include\utils" />
@@ -173,10 +183,14 @@
 		<Unit filename="include\material\frost_shader.h" />
 		<Unit filename="include\material\frost_shadermanager.h" />
 		<Unit filename="include\model\frost_animmanager.h" />
+		<Unit filename="include\model\frost_fmmodeldata.h" />
+		<Unit filename="include\model\frost_fmmodelstructs.h" />
+		<Unit filename="include\model\frost_m2modeldata.h" />
+		<Unit filename="include\model\frost_m2modelstructs.h" />
 		<Unit filename="include\model\frost_model.h" />
 		<Unit filename="include\model\frost_modeldata.h" />
 		<Unit filename="include\model\frost_modelmanager.h" />
-		<Unit filename="include\model\frost_modelstructs.h" />
+		<Unit filename="include\model\frost_ogremeshmodeldata.h" />
 		<Unit filename="include\path\frost_directpath.h" />
 		<Unit filename="include\path\frost_manualpath.h" />
 		<Unit filename="include\path\frost_path.h" />
@@ -184,6 +198,8 @@
 		<Unit filename="include\scene\frost_axisalignedobstacle.h" />
 		<Unit filename="include\scene\frost_boxobstacle.h" />
 		<Unit filename="include\scene\frost_cylinderobstacle.h" />
+		<Unit filename="include\scene\frost_doodad.h" />
+		<Unit filename="include\scene\frost_gizmo.h" />
 		<Unit filename="include\scene\frost_light.h" />
 		<Unit filename="include\scene\frost_lightmanager.h" />
 		<Unit filename="include\scene\frost_meshobstacle.h" />
@@ -289,10 +305,13 @@
 		<Unit filename="src\material\frost_shader.cpp" />
 		<Unit filename="src\material\frost_shadermanager.cpp" />
 		<Unit filename="src\model\frost_animmanager.cpp" />
+		<Unit filename="src\model\frost_fmmodeldata.cpp" />
+		<Unit filename="src\model\frost_m2modeldata.cpp" />
 		<Unit filename="src\model\frost_model.cpp" />
 		<Unit filename="src\model\frost_modeldata.cpp" />
 		<Unit filename="src\model\frost_modelmanager.cpp" />
 		<Unit filename="src\model\frost_modelpart.cpp" />
+		<Unit filename="src\model\frost_ogremeshmodeldata.cpp" />
 		<Unit filename="src\parsers\frost_gameplaymanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_shadermanager_parser.cpp" />
 		<Unit filename="src\parsers\frost_unitmanager_parser.cpp" />
@@ -304,6 +323,8 @@
 		<Unit filename="src\scene\frost_axisalignedobstacle.cpp" />
 		<Unit filename="src\scene\frost_boxobstacle.cpp" />
 		<Unit filename="src\scene\frost_cylinderobstacle.cpp" />
+		<Unit filename="src\scene\frost_doodad.cpp" />
+		<Unit filename="src\scene\frost_gizmo.cpp" />
 		<Unit filename="src\scene\frost_light.cpp" />
 		<Unit filename="src\scene\frost_lightmanager.cpp" />
 		<Unit filename="src\scene\frost_meshobstacle.cpp" />

@@ -24,6 +24,8 @@ namespace Frost
     {
         fTileXSize_ = fXSize_/s_float(uiNX_);
         fTileZSize_ = fZSize_/s_float(uiNZ_);
+
+        mBoundingBox_ = pParent_->GetTrueBoundingBox();
     }
 
     s_bool TerrainObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
@@ -240,7 +242,7 @@ namespace Frost
         if (bCollision)
         {
             // Calculate the new end position
-            rData.mNewPosition = mPosition + fBestT*mDistance - 0.0001f*mInitialDistance.GetUnit();
+            rData.mNewPosition = mPosition + fBestT*mDistance;
             rData.mNewPosition.ScaleUp(mRadiusVector);
             rData.mNewPosition += pParent_->GetPosition();
 
@@ -264,16 +266,6 @@ namespace Frost
                 mRadiusVector.X()*mRadiusVector.Y()
             ));
             rData.mPlaneNormal.Normalize();
-
-            // Calculate the remaining movement
-            fSignedDistance = rData.mPlaneNormal*(mPreviousPos - mFinalPos);
-            rData.mRemainingMovement = mFinalPos - mPreviousPos;
-            rData.mRemainingMovement += fSignedDistance*rData.mPlaneNormal;
-            if (!rData.mRemainingMovement.IsNull())
-            {
-                rData.mRemainingMovement.Normalize();
-                rData.mRemainingMovement *= (mFinalPos - rData.mNewPosition).GetNorm();
-            }
         }
 
         return !bCollision;
@@ -309,8 +301,8 @@ namespace Frost
 
     s_float TerrainObstacle::GetPointHeight( const s_float& fX, const s_float& fZ ) const
     {
-        s_float fNormalizedX = (fX/fXSize_ + fOffX_)*s_float(uiNX_);
-        s_float fNormalizedZ = (fZ/fZSize_ + fOffZ_)*s_float(uiNZ_);
+        s_float fNormalizedX = (fX/fXSize_ + fOffX_)*s_float(uiNX_-1);
+        s_float fNormalizedZ = (fZ/fZSize_ + fOffZ_)*s_float(uiNZ_-1);
 
         // Calculate the quad on which this point is
         s_float fXMin = s_float::RoundDown(fNormalizedX);
@@ -332,36 +324,36 @@ namespace Frost
         // A terrain quad is constructed this way :
         //
         //  Z
-        //  ^   3____________4
+        //  ^   2____________4
         //  :   |           *|
         //  :   | "up"    *  |
         //  :   |       *    |
         //  :   |     *      |
         //  :   |   *        |
         //  :   | *   "down" |
-        //  :   1____________2
+        //  :   1____________3
         //  :
         //  :................> X
         //
         // Depending on where we are, we should use either the "up" OR the "down" triangle.
-        // We can't make a weigted average of four vertices' heights because the quad is
-        // not guaranteed to be planar.
+        // We can't make a weighted average of four vertices' heights because the quad is
+        // not necessarily planar.
 
         if (fLocalX < fLocalZ)
         {
-            // Use the "up" triangle (vertex 3)
-            s_float fH3 = lHeightData_[uiXMin*uiNZ_ + uiZMax];
+            // Use the "up" triangle (vertex 2)
+            s_float fH2 = lHeightData_[uiXMin*uiNZ_ + uiZMax];
 
             // Blend the 3 heights
-            return fH1 + (fH4 - fH3)*fLocalX + (fH3 - fH1)*fLocalZ;
+            return fH1 + (fH4 - fH2)*fLocalX + (fH2 - fH1)*fLocalZ;
         }
         else
         {
-            // Use the "down" triangle (vertex 2)
-            s_float fH2 = lHeightData_[uiXMax*uiNZ_ + uiZMin];
+            // Use the "down" triangle (vertex 3)
+            s_float fH3 = lHeightData_[uiXMax*uiNZ_ + uiZMin];
 
             // Blend the 3 heights
-            return fH1 + (fH4 - fH2)*fLocalZ + (fH2 - fH1)*fLocalX;
+            return fH1 + (fH4 - fH3)*fLocalZ + (fH3 - fH1)*fLocalX;
         }
     }
 }

@@ -165,6 +165,12 @@ namespace Frost
     struct MeshAnimation;
     class  AnimManager;
 
+    // model/frost_fmmodeldata.h
+    class  FMModelData;
+
+    // model/frost_m2modeldata.h
+    class  M2ModelData;
+
     // model/frost_model.h
     class  Model;
     class  ModelPart;
@@ -174,6 +180,9 @@ namespace Frost
 
     // model/frost_modelmanager.h
     class  ModelManager;
+
+    // model/frost_ogremeshmodeldata.h
+    class  OgreMeshModelData;
 
     /* PATH **********************************************/
     // path/frost_path.h
@@ -198,6 +207,12 @@ namespace Frost
     // scene/frost_cylinderobstacle.h
     class  CylinderObstacle;
 
+    // scene/frost_doodad.h
+    class  Doodad;
+
+    // scene/frost_guizmo.h
+    class  Gizmo;
+
     // scene/frost_light.h
     class  Light;
 
@@ -208,6 +223,7 @@ namespace Frost
     class  MeshObstacle;
 
     // scene/frost_movableobject.h
+    class  OgreInterface;
     class  MovableObject;
     class  LuaMovableObject;
 

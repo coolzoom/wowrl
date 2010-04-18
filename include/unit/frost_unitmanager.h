@@ -25,6 +25,11 @@ namespace Frost
         /// Prepares this class for being used.
         void                      Initialize();
 
+        /// Reads configuration.
+        /** \return 'false' if something went wrong
+        */
+        s_bool                    ReadConfig();
+
         /// Creates a new Character.
         s_ptr<Character>          CreateCharacter(const s_str& sName, const s_str& sRace, Character::Gender mGender);
 
@@ -57,6 +62,21 @@ namespace Frost
         void                      AddUnitListToSelection(s_ctnr< s_ptr<Unit> > lUnitList);
 
         void                      ClearSelection();
+
+        /// Sets the maximum climbing angle.
+        /** \param fMaxClimbingAngle The new maximum climbing angle
+        *   \note See GetMaxClimbingAngle() for more information.
+        */
+        void                      SetMaxClimbingAngle(const s_float& fMaxClimbingAngle);
+
+        /// Returns the maximum climbing angle.
+        /** \return The maximum climbing angle (non dimensional angle)
+        *   \note Whenever there is a collision, you calculate the angle
+        *         between the up axis (Y) and the collision plane's normal.
+        *         If this angle is greater than the value returned by this
+        *         function, then the object can't climb along this plane.
+        */
+        const s_float&            GetMaxClimbingAngle() const;
 
         /// Reads all xml files related to Units.
         void                      ParseData();
@@ -93,6 +113,11 @@ namespace Frost
         /** \param pLua The Lua::State on which to create this glue
         */
         void                      CreateGlue(s_ptr<Lua::State> pLua);
+
+        /// Notifies this manager that there is a unit under the mouse.
+        /** \param pUnit The unit under the mouse
+        */
+        void                      NotifyMouseOveredUnit(s_ptr<Unit> pUnit);
 
         /// Updates all units.
         /** \param fDelta The time elapsed since the last call
@@ -147,6 +172,8 @@ namespace Frost
         s_map<s_str, Class>          lClassList_;
         s_map<s_str, HealthType>     lHealthTypeList_;
         s_map<s_str, PowerType>      lPowerTypeList_;
+
+        s_float fMaxClimbingAngle_;
 
         s_ptr<Unit>                  pMouseOveredUnit_;
         s_map< s_uint, s_ptr<Unit> > lSelectedUnitList_;

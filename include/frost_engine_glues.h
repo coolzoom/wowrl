@@ -22,6 +22,7 @@ namespace Frost
 
         LuaEngine(lua_State* luaVM);
 
+        int _AddDoodad(lua_State*);
         int _AllowWorldClicks(lua_State*);
         int _BlockWorldClicks(lua_State*);
         int _EnableMouseDecal(lua_State*);
@@ -32,6 +33,7 @@ namespace Frost
         int _GetMouseDecalColor(lua_State*);
         int _LoadZone(lua_State*);
         int _LoadZoneFile(lua_State*);
+        int _NotifyDoodadPositioned(lua_State*);
         int _SetBackgroundColor(lua_State*);
         int _SetConstant(lua_State*);
         int _SetMouseDecalColor(lua_State*);

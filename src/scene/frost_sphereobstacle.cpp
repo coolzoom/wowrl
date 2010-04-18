@@ -19,6 +19,10 @@ namespace Frost
     SphereObstacle::SphereObstacle( const s_float& fRadius ) :
         fRadius_(fRadius)
     {
+        mBoundingBox_ = AxisAlignedBox(
+            Vector(-fRadius_, -fRadius_, -fRadius_),
+            Vector( fRadius_,  fRadius_,  fRadius_)
+        );
     }
 
     s_bool SphereObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const

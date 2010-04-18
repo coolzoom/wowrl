@@ -11,8 +11,7 @@
 
 #include "frost.h"
 #include "unit/frost_movableunit.h"
-
-#include <OgreUserDefinedObject.h>
+#include "scene/frost_movableobject.h"
 
 namespace Frost
 {
@@ -59,25 +58,24 @@ namespace Frost
     };
 
     /// Makes the link between Character and Ogre::MovableObject.
-    class CharacterOgreInterface : public Ogre::UserDefinedObject
+    class CharacterOgreInterface : public OgreInterface
     {
     public :
 
-        /// Constructor.
-        CharacterOgreInterface();
-
-        /// Sets the associated Character.
-        /** \param pCharacter The associated Character
+        /// Sets the Character linked to this interface.
+        /** \param pCharacter The Character
         */
-        void SetCharacter(s_ptr<Character> pCharacter);
+        void   SetCharacter(s_ptr<Character> pCharacter);
 
-        /// Inherited from UserDefinedObject.
-        virtual const Ogre::String& getTypeName() const;
-
-        /// Returns the associated Character.
-        /** \return The associated Character
+        /// Checks if this object can be selected or not.
+        /** \return 'true' if this object can be selected
         */
-        s_ptr<Character> GetCharacter() const;
+        s_bool IsSelectable() const;
+
+        /// Callback to react to events.
+        /** \param sEvent The name of the event
+        */
+        void   On(const s_str& sEvent);
 
     private :
 
@@ -149,7 +147,7 @@ namespace Frost
 
     private :
 
-        CharacterOgreInterface mInterface_;
+        CharacterOgreInterface mOgreInterface_;
 
         Gender mGender_;
         Race   mRace_;

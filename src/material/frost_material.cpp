@@ -29,7 +29,9 @@ namespace Frost
         pOgreMat_ = pOgreMat;
         sName_ = pOgreMat_->getName();
 
-        pDefaultPass_ = pOgreMat->getTechnique(0)->getPass(0);
+        lPassList_.PushBack(PassInfo());
+        lPassList_[0].pPass = pOgreMat->getTechnique(0)->getPass(0);
+        pDefaultPass_ = &lPassList_[0];
 
         if ((mType != TYPE_2D_PLAIN) && (mType != TYPE_3D_PLAIN))
         {
@@ -70,23 +72,23 @@ namespace Frost
 
     void Material::SetAlphaReject( const s_bool& bEnable )
     {
-        if (!bAlphaReject_ && bEnable)
+        if (!pDefaultPass_->bAlphaReject && bEnable)
         {
-            pDefaultPass_->setAlphaRejectSettings(Ogre::CMPF_GREATER, 200);
-            pDefaultPass_->setCullingMode(Ogre::CULL_NONE);
-            bAlphaReject_ = bEnable;
+            pDefaultPass_->pPass->setAlphaRejectSettings(Ogre::CMPF_GREATER, 200);
+            pDefaultPass_->pPass->setCullingMode(Ogre::CULL_NONE);
+            pDefaultPass_->bAlphaReject = true;
         }
-        else if (bAlphaReject_ && !bEnable)
+        else if (pDefaultPass_->bAlphaReject && !bEnable)
         {
-            pDefaultPass_->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
-            pDefaultPass_->setCullingMode(Ogre::CULL_CLOCKWISE);
-            bAlphaReject_ = bEnable;
+            pDefaultPass_->pPass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
+            pDefaultPass_->pPass->setCullingMode(Ogre::CULL_CLOCKWISE);
+            pDefaultPass_->bAlphaReject = false;
         }
     }
 
     void Material::SetTilling( const s_float& fTileFactorH, const s_float& fTileFactorV )
     {
-        pDefaultPass_->getTextureUnitState(0)->setTextureScale(
+        pDefaultPass_->pPass->getTextureUnitState(0)->setTextureScale(
             fTileFactorH.Get(),
             fTileFactorV.Get()
         );
@@ -94,7 +96,10 @@ namespace Frost
 
     void Material::SetDiffuse( const Color& mColor )
     {
-        pDefaultPass_->setDiffuse(
+        if (mColor.GetA() != 255)
+            pDefaultPass_->pPass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+
+        pDefaultPass_->pPass->setDiffuse(
             mColor.GetR().Get()/255.0f,
             mColor.GetG().Get()/255.0f,
             mColor.GetB().Get()/255.0f,
@@ -104,7 +109,7 @@ namespace Frost
 
     void Material::SetSelfIllumination( const Color& mColor )
     {
-        pDefaultPass_->setSelfIllumination(
+        pDefaultPass_->pPass->setSelfIllumination(
             mColor.GetR().Get()/255.0f,
             mColor.GetG().Get()/255.0f,
             mColor.GetB().Get()/255.0f
@@ -113,7 +118,7 @@ namespace Frost
 
     void Material::SetAmbient( const Color& mColor )
     {
-        pDefaultPass_->setAmbient(
+        pDefaultPass_->pPass->setAmbient(
             mColor.GetR().Get()/255.0f,
             mColor.GetG().Get()/255.0f,
             mColor.GetB().Get()/255.0f
@@ -123,9 +128,19 @@ namespace Frost
     void Material::SetWireframe( const s_bool& bWireframe )
     {
         if (bWireframe)
-            pDefaultPass_->setPolygonMode(Ogre::PM_WIREFRAME);
+            pDefaultPass_->pPass->setPolygonMode(Ogre::PM_WIREFRAME);
         else
-            pDefaultPass_->setPolygonMode(Ogre::PM_SOLID);
+            pDefaultPass_->pPass->setPolygonMode(Ogre::PM_SOLID);
+    }
+
+    void Material::SetDepthCheck( const s_bool& bDepthCheck )
+    {
+        pDefaultPass_->pPass->setDepthCheckEnabled(bDepthCheck);
+    }
+
+    void Material::SetDepthWrite( const s_bool& bDepthWrite )
+    {
+        pDefaultPass_->pPass->setDepthWriteEnabled(bDepthWrite);
     }
 
     const s_float& Material::GetWidth() const
@@ -145,56 +160,56 @@ namespace Frost
 
     void Material::SetVertexShader( s_ptr<VertexShader> pVS )
     {
-        if (pVS_)
-            pVS_->UnBind(pDefaultPass_);
+        if (pDefaultPass_->pVS)
+            pDefaultPass_->pVS->UnBind(pDefaultPass_->pPass);
 
         if (pVS && pVS->IsValid())
         {
-            pVS->BindTo(pDefaultPass_);
-            pVS_ = pVS;
+            pVS->BindTo(pDefaultPass_->pPass);
+            pDefaultPass_->pVS = pVS;
         }
         else
         {
-            pDefaultPass_->setVertexProgram("");
-            pVS_ = nullptr;
+            pDefaultPass_->pPass->setVertexProgram("");
+            pDefaultPass_->pVS = nullptr;
         }
     }
 
     void Material::RemoveVertexShader()
     {
-        if (pVS_)
-            pVS_->UnBind(pDefaultPass_);
+        if (pDefaultPass_->pVS)
+            pDefaultPass_->pVS->UnBind(pDefaultPass_->pPass);
 
-        pDefaultPass_->setVertexProgram("");
+        pDefaultPass_->pPass->setVertexProgram("");
 
-        pVS_ = nullptr;
+        pDefaultPass_->pVS = nullptr;
     }
 
     void Material::SetPixelShader( s_ptr<PixelShader> pPS )
     {
-        if (pPS_)
-            pPS_->UnBind(pDefaultPass_);
+        if (pDefaultPass_->pPS)
+            pDefaultPass_->pPS->UnBind(pDefaultPass_->pPass);
 
         if (pPS && pPS->IsValid())
         {
-            pPS->BindTo(pDefaultPass_);
-            pPS_ = pPS;
+            pPS->BindTo(pDefaultPass_->pPass);
+            pDefaultPass_->pPS = pPS;
         }
         else
         {
-            pDefaultPass_->setFragmentProgram("");
-            pPS_ = nullptr;
+            pDefaultPass_->pPass->setFragmentProgram("");
+            pDefaultPass_->pPS = nullptr;
         }
     }
 
     void Material::RemovePixelShader()
     {
-        if (pPS_)
-            pPS_->UnBind(pDefaultPass_);
+        if (pDefaultPass_->pPS)
+            pDefaultPass_->pPS->UnBind(pDefaultPass_->pPass);
 
-        pDefaultPass_->setFragmentProgram("");
+        pDefaultPass_->pPass->setFragmentProgram("");
 
-        pPS_ = nullptr;
+        pDefaultPass_->pPS = nullptr;
     }
 
     void Material::SetShaders( const s_str& sSName )
@@ -205,26 +220,32 @@ namespace Frost
 
     void Material::SetVertexShader( const s_str& sVSName )
     {
-        s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader(sVSName);
-        SetVertexShader(pVS);
+        SetVertexShader(ShaderManager::GetSingleton()->GetVertexShader(sVSName));
     }
 
     void Material::SetPixelShader( const s_str& sPSName )
     {
-        s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader(sPSName);
-        SetPixelShader(pPS);
+        SetPixelShader(ShaderManager::GetSingleton()->GetPixelShader(sPSName));
+    }
+
+    s_uint Material::CreatePass()
+    {
+        s_ptr<Ogre::Pass> pPass = pOgreMat_->getTechnique(0)->createPass();
+        lPassList_.PushBack(PassInfo());
+        lPassList_.Back().pPass = pPass;
+
+        return pPass->getIndex();
     }
 
     void Material::SetDefaultPass( const s_uint& uiIndex )
     {
-        if (uiIndex < pOgreMat_->getTechnique(0)->getNumPasses())
-            pDefaultPass_ = pOgreMat_->getTechnique(0)->getPass(uiIndex.Get());
+        if (uiIndex < lPassList_.GetSize())
+            pDefaultPass_ = &lPassList_[uiIndex];
         else
         {
             Warning(CLASS_NAME,
                 "Calling SetDefaultPass() with a too high index : "+uiIndex+" (only "+
-                s_uint((uint)pOgreMat_->getTechnique(0)->getNumPasses())+" pass"+
-                s_str(pOgreMat_->getTechnique(0)->getNumPasses() > 1 ? "es" : "")+
+                lPassList_.GetSize()+" pass"+s_str(lPassList_.GetSize() > 1 ? "es" : "")+
                 " available)."
             );
         }
@@ -232,7 +253,7 @@ namespace Frost
 
     s_ptr<Ogre::Pass> Material::GetDefaultPass()
     {
-        return pDefaultPass_;
+        return pDefaultPass_->pPass;
     }
 
     const s_str& Material::GetOgreMaterialName() const

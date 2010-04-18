@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*               XXX header               */
+/*             ModelData header           */
 /*                                        */
 /*                                        */
 
@@ -13,29 +13,36 @@
 
 namespace Frost
 {
-    /// Holds raw data for model loading
+    /// Holds raw data for model loading.
     /** Can be used to load custom file formats.
     *   \note Only used for loading purposes.
     */
     class ModelData
     {
+    friend class Model;
     public :
 
         /// Default constructor.
-        ModelData(const s_str& sFile, const s_str& sModelName);
+        /** \param sFile The file from which to load the model
+        *   \note This constructor only creates an empty model, and
+        *         nothing more. Actual model loading is done by derived
+        *         classes.
+        */
+        ModelData(const s_str& sFile);
 
         /// Destructor.
-        ~ModelData();
+        /** \note Takes care of deleting the ModelParts.
+        */
+        virtual ~ModelData();
 
         static const s_str CLASS_NAME;
 
-    // private : (not private to simplify Model creation)
+    protected :
 
-        void _CreateBuffers(Ogre::SubMesh* pSub, uint iVertexNbr, uint iIndexNbr, float* lVertices, float* lUVs, ushort* lIndices);
+        void CreateBuffers_(Ogre::SubMesh* pSub, uint iVertexNbr, uint iIndexNbr, float* lVertices, float* lUVs, ushort* lIndices);
 
-        s_ptr<Ogre::Mesh>    pMesh_;
-        s_refptr<AnimManager> pAnimMgr_;
-        s_str                 sModelName_;
+        s_ptr<Ogre::Mesh> pMesh_;
+        s_str             sModelName_;
 
         s_map< s_uint, s_ptr<ModelPart> > lModelPartList_;
         s_map<s_uint, MeshAnimation>      lAnimList_;
