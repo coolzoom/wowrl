@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ModelConverter" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\ModelConverterD" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="libxml_d.a" />
+					<Add library="libutils_d.a" />
+					<Add library="liblua5.1_d.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\ModelConverter" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="libxml.a" />
+					<Add library="libutils.a" />
+					<Add library="liblua5.1.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-DWIN32" />
+			<Add directory="include" />
+			<Add directory="..\include\xml" />
+			<Add directory="..\include\utils" />
+			<Add directory="..\dependencies\lua" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl,--enable-runtime-pseudo-reloc" />
+			<Add option="-Wl,--enable-auto-image-base" />
+			<Add option="-Wl,--add-stdcall-alias" />
+			<Add option="-Wl,--allow-multiple-definition" />
+			<Add directory="..\lib" />
+		</Linker>
+		<Unit filename="include\converter.h" />
+		<Unit filename="include\fmloader.h" />
+		<Unit filename="include\fmmodelstructs.h" />
+		<Unit filename="include\m2loader.h" />
+		<Unit filename="include\m2modelstructs.h" />
+		<Unit filename="include\modeldata.h" />
+		<Unit filename="include\xmlloader.h" />
+		<Unit filename="src\fmloader.cpp" />
+		<Unit filename="src\m2loader.cpp" />
+		<Unit filename="src\main.cpp" />
+		<Unit filename="src\modeldata.cpp" />
+		<Unit filename="src\xmlloader.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
