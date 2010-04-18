@@ -2,6 +2,8 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="Frost">
 		<Project filename="Frost.cbp" active="1" />
+		<Project filename="ModelConverter/ModelConverter.cbp" />
+		<Project filename="TerrainGenerator/TerrainGenerator.cbp" />
 		<Project filename="Frost - XML.cbp" />
 		<Project filename="Frost - Utils.cbp" />
 		<Project filename="../temp/temp.cbp" />
