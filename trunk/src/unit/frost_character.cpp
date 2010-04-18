@@ -33,7 +33,8 @@ namespace Frost
     Character::Character( const s_uint& uiID, const s_str& sName, const Race& mRace, Gender mGender ) :
        MovableUnit(uiID, sName), mGender_(mGender), mRace_(mRace)
     {
-        mInterface_.SetCharacter(this);
+        mOgreInterface_.SetCharacter(this);
+        mOgreInterface_.EnableMouse(true);
 
         // Get the gender
         s_ptr<CharacterModelInfo> pCharModelInfo;
@@ -98,8 +99,8 @@ namespace Frost
             }
         }
 
-        pBodyModel_->Attach(pNode_);
-        pBodyModel_->SetUserObject(&mInterface_);
+        pBodyModel_->AttachTo(pNode_);
+        pBodyModel_->SetOgreInterface(&mOgreInterface_);
 
         const Ogre::AxisAlignedBox& mBox = pBodyModel_->GetMesh()->getBounds();
         const Ogre::Vector3& mMin = mBox.getMinimum();
@@ -164,23 +165,27 @@ namespace Frost
         MovableUnit::Update(fDelta);
     }
 
-    CharacterOgreInterface::CharacterOgreInterface()
-    {
-    }
-
     void CharacterOgreInterface::SetCharacter( s_ptr<Character> pCharacter )
     {
         pCharacter_ = pCharacter;
     }
 
-    const Ogre::String& CharacterOgreInterface::getTypeName() const
+    s_bool CharacterOgreInterface::IsSelectable() const
     {
-        static Ogre::String sName = "CHARACTER";
-        return sName;
+        return true;
     }
 
-    s_ptr<Character> CharacterOgreInterface::GetCharacter() const
+    void CharacterOgreInterface::On( const s_str& sEvent )
     {
-        return pCharacter_;
+        if (sEvent == "Enter")
+        {
+            pCharacter_->Highlight(true);
+            UnitManager::GetSingleton()->NotifyMouseOveredUnit(pCharacter_);
+        }
+        else if (sEvent == "Leave")
+        {
+            pCharacter_->Highlight(false);
+            UnitManager::GetSingleton()->NotifyMouseOveredUnit(nullptr);
+        }
     }
 }

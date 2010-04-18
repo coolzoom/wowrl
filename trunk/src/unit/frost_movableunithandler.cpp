@@ -7,8 +7,12 @@
 
 #include "unit/frost_movableunithandler.h"
 #include "unit/frost_movableunit.h"
+#include "unit/frost_unitmanager.h"
 #include "scene/frost_physicsmanager.h"
 #include "scene/frost_node.h"
+
+#include "scene/frost_zonemanager.h"
+#include "scene/frost_zone.h"
 
 using namespace std;
 
@@ -16,8 +20,8 @@ namespace Frost
 {
     MovableUnitHandler::MovableUnitHandler( s_ptr<MovableUnit> pMovableUnit ) :
         PhysicsHandler(pMovableUnit ? pMovableUnit->GetNode() : nullptr),
-        pMovableUnit_(pMovableUnit), bFirstUpdate_(true), mState_(STATE_FREEFALL),
-        mPreviousState_(STATE_FREEFALL), mRadius_(Vector::UNIT)
+        pMovableUnit_(pMovableUnit), mRadius_(Vector::UNIT), mBoundingBox_(-mRadius_, mRadius_),
+        bFirstUpdate_(true), mState_(STATE_FREEFALL), mPreviousState_(STATE_FREEFALL)
     {
         SetEventReceiver(pMovableUnit_);
     }
@@ -40,6 +44,7 @@ namespace Frost
     void MovableUnitHandler::SetEllipsoidRadius( const Vector& mRadius )
     {
         mRadius_ = mRadius;
+        mBoundingBox_ = AxisAlignedBox(-mRadius, mRadius);
     }
 
     const Vector& MovableUnitHandler::GetEllipsoidRadius() const
@@ -71,6 +76,8 @@ namespace Frost
     {
         if (IsEnabled())
         {
+            // TODO : ## voir pk ca saute
+
             mPosition_ = pParent_->GetPosition(false) - mHotSpot_;
             mPreviousState_ = mState_;
             Vector mPreviousPos = mPosition_;
@@ -103,18 +110,18 @@ namespace Frost
 
                     // Try to remain on the ground
                     mMovement_ = -Vector::UNIT_Y*(
-                        0.001f + fMovement*tan(
-                            PhysicsManager::GetSingleton()->GetMinSlidingAngle()
-                        )
+                        0.001f + fMovement*tan(UnitManager::GetSingleton()->GetMaxClimbingAngle())
                     );
 
+                    bGravityCheck_ = true;
                     uiRecursionCounter_ = PhysicsManager::GetSingleton()->GetMaxCollisionRecursion() - 1;
                     UpdateMovement_();
+                    bGravityCheck_ = false;
 
                     if (mState_ == STATE_FREEFALL)
                     {
                         // The unit starts to fall, give it some impulsion
-                        mSpeed_  = mHorizontalSpeed_;
+                        mSpeed_  = mHorizontalSpeed_*0.5f;
                     }
 
                     break;
@@ -142,19 +149,25 @@ namespace Frost
             s_bool bCollision;
 
             s_ptr<Obstacle> pCurrentlyBinded = pBindedObstacle_;
+            AxisAlignedBox mTempBox = mBoundingBox_ + mPosition_;
 
             // Check for collision with all obstacles
             const s_ctnr< s_ptr<Obstacle> >& lObstacleList = PhysicsManager::GetSingleton()->GetObstacleList();
             s_ctnr< s_ptr<Obstacle> >::const_iterator iterObstacle;
             foreach (iterObstacle, lObstacleList)
             {
-                if (!(*iterObstacle)->EllipsoidGoThrough(
-                    mRadius_, mPosition_, mDestination, mFinalDestination, mData))
+                s_ptr<Obstacle> pObstacle = (*iterObstacle);
+                // First check if the two bounding boxes intersect
+                if (pObstacle->IsInBoundingBox(mTempBox))
                 {
-                    mDestination = mData.mNewPosition;
-                    pBindedObstacle_ = *iterObstacle;
-                    mData_ = mData;
-                    bCollision = true;
+                    // Then do the true collision detection
+                    if (!pObstacle->EllipsoidGoThrough(mRadius_, mPosition_, mDestination, mFinalDestination, mData))
+                    {
+                        mDestination = mData.mNewPosition;
+                        pBindedObstacle_ = *iterObstacle;
+                        mData_ = mData;
+                        bCollision = true;
+                    }
                 }
             }
 
@@ -166,46 +179,57 @@ namespace Frost
                 {
                     case STATE_TERRAIN :
                     {
-                        s_float fDotProduct = mMovement_*Vector::UNIT_Y;
-                        s_float fAngle = acos(mData_.mPlaneNormal*Vector::UNIT_Y);
-                        if (fDotProduct == 0.0f)
+                        if (bGravityCheck_)
                         {
-                            // Horizontal movement
-                            if (fAngle > PhysicsManager::GetSingleton()->GetMaxClimbingAngle())
-                            {
-                                // The slope is too steep, the unit can't go there.
-                                // End the movement.
-                                mMovement_ = Vector::ZERO;
-                                mState_ = STATE_TERRAIN;
-                            }
-                            else
-                            {
-                                // The slope is fine, move as usual.
-                                mMovement_ = mData_.mRemainingMovement;
-                                mGroundNormal_ = mData_.mPlaneNormal;
-                                mGroundIntersection_ = mData_.mCollisionPoint;
-                                mState_ = STATE_TERRAIN;
-                            }
+                            mMovement_ = Vector::ZERO;
+                            mState_ = STATE_TERRAIN;
                         }
                         else
                         {
-                            // Gravity test
-                            if (fAngle > PhysicsManager::GetSingleton()->GetMinSlidingAngle())
-                            {
-                                // The slope is too steep, the unit slides.
-                                mSpeed_  = mHorizontalSpeed_;
-                                mMovement_ = Vector::ZERO;
-
-                                mState_ = STATE_FREEFALL;
-                                pBindedObstacle_ = nullptr;
-                            }
-                            else
+                            s_float fAngle = acos(mData_.mPlaneNormal*Vector::UNIT_Y);
+                            if (fAngle < UnitManager::GetSingleton()->GetMaxClimbingAngle())
                             {
                                 // The slope is fine, move as usual.
                                 mGroundNormal_ = mData_.mPlaneNormal;
                                 mGroundIntersection_ = mData_.mCollisionPoint;
-                                mMovement_ = Vector::ZERO;
+
+                                // Calculate remaning movement
+                                if (!mData_.mPlaneNormal.Y().IsNull())
+                                {
+                                    mMovement_ = mFinalDestination - mPosition_;
+                                    mMovement_.Y() = 0.0f;
+                                    mMovement_.Y() = - mMovement_*mData_.mPlaneNormal/mData_.mPlaneNormal.Y();
+                                    mMovement_.Normalize();
+                                    mMovement_ *= (mFinalDestination - mPosition_).GetNorm();
+                                }
+                                else
+                                    mMovement_ = Vector::ZERO;
+
                                 mState_ = STATE_TERRAIN;
+                            }
+                            else
+                            {
+                                Vector mHorizontalMovement = mMovement_; mHorizontalMovement.Y() = 0.0f;
+                                bClimbing_ = (mHorizontalMovement*mData_.mPlaneNormal < 0.0f);
+
+                                if (bClimbing_)
+                                {
+                                    // The slope is too steep, the unit can't go there.
+                                    /*Vector mTangent = mData_.mPlaneNormal^Vector::UNIT_Y;
+                                    mTangent = mTangent^mData_.mPlaneNormal;
+                                    mMovement_ = mData_.mRemainingMovement - mTangent*(mData_.mRemainingMovement*mTangent);*/
+                                    mMovement_ = Vector::ZERO;
+                                    mState_ = STATE_TERRAIN;
+                                }
+                                else
+                                {
+                                    // The slope is too steep, the unit slides.
+                                    mSpeed_  = mHorizontalSpeed_;
+                                    mMovement_ = Vector::ZERO;
+
+                                    mState_ = STATE_FREEFALL;
+                                    pBindedObstacle_ = nullptr;
+                                }
                             }
                         }
                         break;
@@ -213,10 +237,16 @@ namespace Frost
                     case STATE_FREEFALL :
                     {
                         s_float fAngle = acos(mData_.mPlaneNormal*Vector::UNIT_Y);
-                        if (fAngle > PhysicsManager::GetSingleton()->GetMinSlidingAngle())
+                        if (fAngle > UnitManager::GetSingleton()->GetMaxClimbingAngle())
                         {
                             // The slope is too steep to land, continue the free fall
-                            mMovement_ = mData_.mRemainingMovement;
+                            mMovement_ = mFinalDestination - mPosition_;
+                            mMovement_ -= (mData.mPlaneNormal*mMovement_)*mData.mPlaneNormal;
+                            if (!mMovement_.IsNull())
+                            {
+                                mMovement_.Normalize();
+                                mMovement_ *= (mFinalDestination - mPosition_).GetNorm();
+                            }
 
                             // ... and adjust the speed
                             mSpeed_ -= (mData_.mPlaneNormal*mSpeed_)*mData_.mPlaneNormal;

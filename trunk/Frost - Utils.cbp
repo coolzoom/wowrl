@@ -70,10 +70,80 @@
 					<Add library="liblua5.1_l_d.a" />
 				</Linker>
 			</Target>
+			<Target title="OgreRelease_Win32">
+				<Option platforms="Windows;" />
+				<Option output="lib\libutils_ogre" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj_Utils\Release_Ogre_Win32\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wall" />
+					<Add option="-DUSING_OGRE" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="OgreDebug_Win32">
+				<Option platforms="Windows;" />
+				<Option output="lib\libutils_ogre_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj_Utils\Debug_Ogre_Win32\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DUSING_OGRE" />
+				</Compiler>
+			</Target>
+			<Target title="OgreRelease_Linux">
+				<Option platforms="Unix;" />
+				<Option output="lib\libutils_ogre_l" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj_Utils\Release_Linux\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DFROST_LINUX" />
+					<Add option="-DUSING_OGRE" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="liblua5.1_l.a" />
+				</Linker>
+			</Target>
+			<Target title="OgreDebug_Linux">
+				<Option platforms="Unix;" />
+				<Option output="lib\libutils_ogre_l_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj_Utils\Debug_Ogre_Linux\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DFROST_LINUX" />
+					<Add option="-DUSING_OGRE" />
+				</Compiler>
+				<Linker>
+					<Add library="liblua5.1_l_d.a" />
+				</Linker>
+			</Target>
 		</Build>
 		<VirtualTargets>
 			<Add alias="Linux" targets="Debug_Linux;Release_Linux;" />
+			<Add alias="Linux Ogre" targets="OgreRelease_Linux;OgreDebug_Linux;" />
 			<Add alias="Win32" targets="Debug_Win32;Release_Win32;" />
+			<Add alias="Win32 Ogre" targets="OgreRelease_Win32;OgreDebug_Win32;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add directory="include\utils" />
@@ -126,7 +196,12 @@
 		<Unit filename="include\utils\frost_utilsmanager.h" />
 		<Unit filename="src\utils\frost_utils_axisalignedbox.cpp" />
 		<Unit filename="src\utils\frost_utils_color.cpp" />
-		<Unit filename="src\utils\frost_utils_directory.cpp" />
+		<Unit filename="src\utils\frost_utils_directory.cpp">
+			<Option target="OgreRelease_Win32" />
+			<Option target="OgreDebug_Win32" />
+			<Option target="OgreRelease_Linux" />
+			<Option target="OgreDebug_Linux" />
+		</Unit>
 		<Unit filename="src\utils\frost_utils_event.cpp" />
 		<Unit filename="src\utils\frost_utils_eventmanager.cpp" />
 		<Unit filename="src\utils\frost_utils_eventreceiver.cpp" />
@@ -142,8 +217,18 @@
 		<Unit filename="src\utils\frost_utils_luamanager.cpp" />
 		<Unit filename="src\utils\frost_utils_math.cpp" />
 		<Unit filename="src\utils\frost_utils_profiler.cpp" />
-		<Unit filename="src\utils\frost_utils_timemanager.cpp" />
-		<Unit filename="src\utils\frost_utils_timers.cpp" />
+		<Unit filename="src\utils\frost_utils_timemanager.cpp">
+			<Option target="OgreRelease_Win32" />
+			<Option target="OgreDebug_Win32" />
+			<Option target="OgreRelease_Linux" />
+			<Option target="OgreDebug_Linux" />
+		</Unit>
+		<Unit filename="src\utils\frost_utils_timers.cpp">
+			<Option target="OgreRelease_Win32" />
+			<Option target="OgreDebug_Win32" />
+			<Option target="OgreRelease_Linux" />
+			<Option target="OgreDebug_Linux" />
+		</Unit>
 		<Unit filename="src\utils\frost_utils_var.cpp" />
 		<Unit filename="src\utils\frost_utils_vector.cpp" />
 		<Unit filename="src\utils\frost_utilsmanager.cpp" />

@@ -29,18 +29,20 @@ namespace Frost
         };
 
         /// Constructor.
+        /** \param uiID The unique ID associated to this Material
+        */
         Material(const s_uint& uiID, Type mType, s_ptr<Ogre::Material> pOgreMat);
 
         /// Destructor.
         ~Material();
 
-        /// Sets whether alpha rejecting should be on or off.
+        /// Sets whether alpha rejecting should be on or off for the current pass.
         /** \param bEnable 'true' to enable
         *   \note Only works for 3D materials.
         */
         void            SetAlphaReject(const s_bool& bEnable);
 
-        /// Tiles the texture.
+        /// Sets texture tiling for the current pass.
         /** \param fTileFactorH The horizontal tilling
         *   \param fTileFactorV The vertical tilling
         *   \note A factor of 1.0f doesn't change anything.<br>
@@ -50,29 +52,40 @@ namespace Frost
         */
         void            SetTilling(const s_float& fTileFactorH, const s_float& fTileFactorV);
 
-        /// Sets this Material's diffuse color.
+        /// Sets the current pass's diffuse color.
         /** \param mColor The diffuse color
         */
         void            SetDiffuse(const Color& mColor);
 
-        /// Sets this Material's self illumination color.
+        /// Sets the current pass's self illumination color.
         /** \param mColor The self illumination color
         *   \note Alpha isn't taken into account
         */
         void            SetSelfIllumination(const Color& mColor);
 
-        /// Sets this Material's ambient color.
+        /// Sets the current pass's ambient color.
         /** \param mColor The ambient color
         *   \note Alpha isn't taken into account
         */
         void            SetAmbient(const Color& mColor);
 
-        /// Sets this Material's polygon render type.
-        /** \param bWireframe 'true' if you only want to render
-        *                     the polygons' edges, 'false' if you
-        *                     want to render the model normally.
+        /// Sets the current pass's polygon render type.
+        /** \param bWireframe 'true' if you only want to render the polygons' edges,
+        *                     'false' if you want to render the model normally.
         */
         void            SetWireframe(const s_bool& bWireframe);
+
+        /// Sets whether the current pass should read the depth buffer.
+        /** \param bDepthCheck 'false' to disable depth checking
+        *   \note Enabled by default.
+        */
+        void            SetDepthCheck(const s_bool& bDepthCheck);
+
+        /// Sets whether the current pass should write to the depth buffer.
+        /** \param bDepthWrite 'false' to disable depth writing
+        *   \note Enabled by default.
+        */
+        void            SetDepthWrite(const s_bool& bDepthWrite);
 
         /// Returns this Material's width.
         /** \return This Material's width
@@ -129,6 +142,11 @@ namespace Frost
         /// Removes the linked vertex shader and use the fixed pipeline.
         void            RemovePixelShader();
 
+        /// Creates a new pass.
+        /** \return The index of the new pass
+        */
+        s_uint          CreatePass();
+
         /// Sets a new default pass.
         /** \param uiIndex The index of the new pass
         */
@@ -165,6 +183,17 @@ namespace Frost
 
     private :
 
+        struct PassInfo
+        {
+            s_ptr<Ogre::Pass> pPass;
+            s_ptr<VertexShader> pVS;
+            s_ptr<PixelShader>  pPS;
+
+            s_bool bAlphaReject;
+            s_bool bHardwareSkinning;
+            s_bool bIsDesaturated;
+        };
+
         s_uint  uiID_;
         Type    mType_;
         s_str   sName_;
@@ -172,14 +201,9 @@ namespace Frost
         s_float fHeight_;
 
         s_ptr<Ogre::Material> pOgreMat_;
-        s_ptr<Ogre::Pass>     pDefaultPass_;
+        s_ptr<PassInfo>       pDefaultPass_;
 
-        s_ptr<VertexShader> pVS_;
-        s_ptr<PixelShader>  pPS_;
-
-        s_bool bAlphaReject_;
-        s_bool bHardwareSkinning_;
-        s_bool bIsDesaturated_;
+        s_ctnr<PassInfo> lPassList_;
     };
 }
 

@@ -104,7 +104,14 @@ namespace Frost
         */
         AxisAlignedBox   GetTrueBoundingBox(const s_bool& bLocalSpace = false) const;
 
-        /// Returns the height of a point in the 2D space (X, Z).
+        /// Checks if the provided position lies inside this chunk's bounding box.
+        /** \param fX The X coordinate
+        *   \param fZ The Z coordinate
+        *   \return 'true' if this chunk covers the provided 2D position
+        */
+        s_bool           ContainsPoint(const s_float& fX, const s_float& fZ) const;
+
+        /// Returns the height of a point in the local 2D space (X, Z).
         /** \param fX The X coordinate
         *   \param fZ The Z coordinate
         *   \return The height of this point

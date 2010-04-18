@@ -8,6 +8,7 @@
 #include "scene/frost_zonemanager.h"
 #include "scene/frost_zone.h"
 #include "scene/frost_terrainchunk.h"
+#include "scene/frost_doodad.h"
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
 #include "xml/frost_xml_document.h"
@@ -55,6 +56,131 @@ namespace Frost
                 {
                     this->ParseTerrain_(pCurrentZone, pElemBlock);
                 }
+                else if (pElemBlock->GetName() == "Models")
+                {
+                    this->ParseModels_(pCurrentZone, pElemBlock);
+                }
+                else if (pElemBlock->GetName() == "Doodads")
+                {
+                    this->ParseDoodads_(pCurrentZone, pElemBlock);
+                }
+            }
+        }
+    }
+
+    void ZoneManager::ParseModels_( s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pModelsBlock )
+    {
+        s_ptr<XML::Block> pModelBlock;
+        foreach_block (pModelBlock, pModelsBlock)
+        {
+            s_str sModel = pModelBlock->GetAttribute("name");
+            s_bool bResult = pCurrentZone->RegisterModel(
+                sModel, pModelBlock->GetAttribute("file")
+            );
+
+            if (!bResult)
+            {
+                Warning(pModelBlock->GetFile()+":"+pModelBlock->GetLineNbr(),
+                    "Couldn't link or preload model \""+sModel+"\"."
+                );
+            }
+            else
+            {
+                s_ptr<XML::Block> pMaterialsBlock = pModelBlock->GetBlock("Materials");
+                if (pMaterialsBlock)
+                {
+                    s_map< s_int, s_map<s_int, MaterialInfo> > lMatList;
+
+                    s_ptr<XML::Block> pMaterialBlock;
+                    foreach_block (pMaterialBlock, pMaterialsBlock)
+                    {
+                        s_int iID = s_int(pMaterialBlock->GetAttribute("subMeshID"));
+                        s_int iEntityID = s_int(pMaterialBlock->GetAttribute("subEntityID"));
+                        if (iID < 0)
+                            iID = -1;
+                        if (iEntityID < 0)
+                            iEntityID = -1;
+
+                        if (lMatList.Find(iID))
+                        {
+                            if (lMatList[iID].Find(iEntityID))
+                            {
+                                Warning(pMaterialBlock->GetFile()+":"+pMaterialBlock->GetLineNbr(),
+                                    "A material has already been defined for \""+sModel+"\""+
+                                    (iID < 0 ? "." : ("'s submesh "+iID+
+                                    (iEntityID < 0 ? "." : ("(subentity "+iEntityID+")."))))
+                                );
+                                continue;
+                            }
+                        }
+
+                        MaterialInfo mInfo;
+                        s_ptr<XML::Block> pDiffuseBlock = pMaterialBlock->GetRadioBlock(1);
+                        if (pDiffuseBlock->GetName() == "DiffuseColor")
+                        {
+                            mInfo.bDiffuseColor = true;
+                            mInfo.mDiffuseColor = Color(
+                                s_uchar(s_float(pDiffuseBlock->GetAttribute("a"))*255),
+                                s_uchar(s_float(pDiffuseBlock->GetAttribute("r"))*255),
+                                s_uchar(s_float(pDiffuseBlock->GetAttribute("g"))*255),
+                                s_uchar(s_float(pDiffuseBlock->GetAttribute("b"))*255)
+                            );
+                        }
+                        else
+                        {
+                            mInfo.bDiffuseColor = false;
+                            mInfo.sDiffuseFile = pDiffuseBlock->GetAttribute("file");
+                            mInfo.bAlphaReject = s_bool(pDiffuseBlock->GetAttribute("alphaReject"));
+                        }
+
+                        lMatList[iID][iEntityID] = mInfo;
+                    }
+
+                    pCurrentZone->SetMaterialInfo(sModel, lMatList);
+                }
+            }
+        }
+    }
+
+    void ZoneManager::ParseDoodads_( s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pDoodadsBlock )
+    {
+        s_ptr<XML::Block> pDoodadBlock;
+        foreach_block (pDoodadBlock, pDoodadsBlock)
+        {
+            s_ptr<Doodad> pDoodad = pCurrentZone->AddDoodad(
+                pDoodadBlock->GetAttribute("name"),
+                pDoodadBlock->GetAttribute("model")
+            );
+
+            if (s_bool(pDoodadBlock->GetAttribute("hidden")))
+                pDoodad->Hide();
+
+            s_ptr<XML::Block> pPosition = pDoodadBlock->GetBlock("Position");
+            pDoodad->SetPosition(Vector(
+                s_float(pPosition->GetAttribute("x")),
+                s_float(pPosition->GetAttribute("y")),
+                s_float(pPosition->GetAttribute("z"))
+            ));
+
+            s_ptr<XML::Block> pScale = pDoodadBlock->GetBlock("Scale");
+            if (pScale)
+            {
+                pDoodad->SetScale(Vector(
+                    s_float(pScale->GetAttribute("x")),
+                    s_float(pScale->GetAttribute("y")),
+                    s_float(pScale->GetAttribute("z"))
+                ));
+            }
+
+            s_ptr<XML::Block> pOrientation = pDoodadBlock->GetBlock("Orientation");
+            if (pOrientation)
+            {
+                pDoodad->SetOrientation(
+                    s_float(pScale->GetAttribute("x")),
+                    s_float(pScale->GetAttribute("y")),
+                    s_float(pScale->GetAttribute("z")),
+                    s_float(pScale->GetAttribute("w"))
+                );
             }
         }
     }

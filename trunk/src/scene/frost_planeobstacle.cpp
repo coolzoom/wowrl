@@ -16,10 +16,44 @@ namespace Frost
 {
     const s_str PlaneObstacle::CLASS_NAME = "PlaneObstacle";
 
+    PlaneObstacle::PlaneObstacle() :
+        fXSize_(1.0f), fZSize_(1.0f)
+    {
+        bInfinite_ = true;
+
+        SetInitialDirection(Vector::UNIT_Y);
+
+        mP_[0] = Vector(-fXSize_/2.0f, 0.0f, -fZSize_/2.0f);
+        mP_[1] = Vector( fXSize_/2.0f, 0.0f, -fZSize_/2.0f);
+        mP_[2] = Vector( fXSize_/2.0f, 0.0f,  fZSize_/2.0f);
+        mP_[3] = Vector(-fXSize_/2.0f, 0.0f,  fZSize_/2.0f);
+
+        mNormal_ = Vector(0.0f, 1.0f, 0.0f);
+
+        mBoundingBox_ = AxisAlignedBox(
+            Vector(s_float::INFMINUS, -5.0f, s_float::INFMINUS),
+            Vector(s_float::INFPLUS,   5.0f, s_float::INFPLUS)
+        );
+    }
+
     PlaneObstacle::PlaneObstacle( const s_float& fXSize, const s_float& fZSize ) :
         fXSize_(fXSize), fZSize_(fZSize)
     {
+        bInfinite_ = false;
+
         SetInitialDirection(Vector::UNIT_Y);
+
+        mP_[0] = Vector(-fXSize_/2.0f, 0.0f, -fZSize_/2.0f);
+        mP_[1] = Vector( fXSize_/2.0f, 0.0f, -fZSize_/2.0f);
+        mP_[2] = Vector( fXSize_/2.0f, 0.0f,  fZSize_/2.0f);
+        mP_[3] = Vector(-fXSize_/2.0f, 0.0f,  fZSize_/2.0f);
+
+        mNormal_ = Vector(0.0f, 1.0f, 0.0f);
+
+        mBoundingBox_ = AxisAlignedBox(
+            Vector(-fXSize_/2.0f, -5.0f, -fZSize/2.0f),
+            Vector( fXSize_/2.0f,  5.0f,  fZSize/2.0f)
+        );
     }
 
     s_bool PlaneObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
@@ -154,11 +188,11 @@ namespace Frost
         Vector mWorldIntersection = mPlaneIntersection;
         mWorldIntersection.ScaleUp(mRadiusVector);
 
-        if (!bEmbedded && IsPointInsideQuad_(mWorldIntersection))
+        if ( bInfinite_ || (!bEmbedded && IsPointInsideQuad_(mWorldIntersection)) )
         {
             // The sphere collided the plane inside the defined quad.
             // Calculate the new end position
-            rData.mNewPosition = mPosition + fStartTime*mDistance - 0.0001f*mDistance.GetUnit();
+            rData.mNewPosition = mPosition + fStartTime*mDistance;
             rData.mNewPosition.ScaleUp(mRadiusVector);
 
             // Transform the collision point
@@ -168,15 +202,6 @@ namespace Frost
             mDistance.Normalize();
 
             rData.mPlaneNormal = mNormal_;
-
-            fSignedDistance = mAdjustedNormal*(mDestination - mPlaneIntersection);
-            rData.mRemainingMovement = mDestination - fSignedDistance*mAdjustedNormal - mPlaneIntersection;
-            if (!rData.mRemainingMovement.IsNull())
-            {
-                rData.mRemainingMovement.ScaleUp(mRadiusVector);
-                rData.mRemainingMovement.Normalize();
-                rData.mRemainingMovement *= (mFinalPos - rData.mNewPosition).GetNorm();
-            }
 
             return false;
         }
@@ -243,7 +268,7 @@ namespace Frost
         {
             // The sphere collided the plane.
             // Calculate the new end position
-            rData.mNewPosition = mPosition + fBestT*mDistance - 0.0001f*mDistance.GetUnit();
+            rData.mNewPosition = mPosition + fBestT*mDistance;
             rData.mNewPosition.ScaleUp(mRadiusVector);
 
             // Transform the collision point
@@ -260,14 +285,14 @@ namespace Frost
             rData.mPlaneNormal.Normalize();
 
             // Calculate the remaining movement
-            fSignedDistance = rData.mPlaneNormal*(mPreviousPos - mFinalPos);
+            /*fSignedDistance = rData.mPlaneNormal*(mPreviousPos - mFinalPos);
             rData.mRemainingMovement = mFinalPos - mPreviousPos;
             rData.mRemainingMovement += fSignedDistance*rData.mPlaneNormal;
             if (!rData.mRemainingMovement.IsNull())
             {
                 rData.mRemainingMovement.Normalize();
                 rData.mRemainingMovement *= (mFinalPos - rData.mNewPosition).GetNorm();
-            }
+            }*/
 
             return false;
         }
@@ -278,6 +303,30 @@ namespace Frost
     s_bool PlaneObstacle::GetRayIntersection(
         const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
     {
+        s_float fDot = mRayDirection*mNormal_;
+        if (fabs(fDot) < 0.001f)
+        {
+            // The ray is parallel to the plane, no intersection
+            return false;
+        }
+        else
+        {
+            s_float fT = (mCenter_ - mRayOrigin)*mNormal_ / fDot;
+            if (fT < 0.0f)
+            {
+                // The intersection is behind the ray, forget it
+                return false;
+            }
+
+            Vector mWorldIntersection = mRayOrigin + fT*mRayDirection;
+            if (bInfinite_ || IsPointInsideQuad_(mWorldIntersection))
+            {
+                // The ray intersected the plane
+                mIntersection = mWorldIntersection;
+                return true;
+            }
+        }
+
         return false;
     }
 

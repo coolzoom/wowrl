@@ -90,18 +90,24 @@ namespace Frost
         void UpdateMovement_();
 
         s_ptr<MovableUnit> pMovableUnit_;
-        s_bool             bFirstUpdate_;
-        State              mState_, mPreviousState_;
-        Vector             mPosition_;
-        Vector             mHotSpot_;
-        Vector             mRadius_;
-        Vector             mSpeed_;
-        Vector             mMovement_, mHorizontalSpeed_;
-        s_uint             uiRecursionCounter_;
-        s_ptr<Obstacle>    pBindedObstacle_;
-        Vector             mGroundNormal_;
-        Vector             mGroundIntersection_;
-        CollisionData      mData_;
+
+        Vector         mPosition_;
+        Vector         mHotSpot_;
+        Vector         mRadius_;
+        AxisAlignedBox mBoundingBox_;
+
+        Vector mSpeed_;
+        Vector mMovement_, mHorizontalSpeed_;
+        s_bool bFirstUpdate_;
+        State  mState_, mPreviousState_;
+        s_bool bGravityCheck_;
+        s_bool bClimbing_;
+
+        s_uint          uiRecursionCounter_;
+        s_ptr<Obstacle> pBindedObstacle_;
+        Vector          mGroundNormal_;
+        Vector          mGroundIntersection_;
+        CollisionData   mData_;
     };
 }
 

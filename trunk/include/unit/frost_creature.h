@@ -11,31 +11,29 @@
 
 #include "frost.h"
 #include "unit/frost_movableunit.h"
-
-#include <OgreUserDefinedObject.h>
+#include "scene/frost_movableobject.h"
 
 namespace Frost
 {
     /// Makes the link between Creature and Ogre::MovableObject.
-    class CreatureOgreInterface : public Ogre::UserDefinedObject
+    class CreatureOgreInterface : public OgreInterface
     {
     public :
 
-        /// Constructor.
-        CreatureOgreInterface();
-
-        /// Sets the associated Creature.
-        /** \param pCreature The associated Creature
+        /// Sets the Creature linked to this interface.
+        /** \param pCreature The Creature
         */
-        void SetCreature(s_ptr<Creature> pCreature);
+        void   SetCreature(s_ptr<Creature> pCreature);
 
-        /// Inherited from UserDefinedObject.
-        virtual const Ogre::String& getTypeName() const;
-
-        /// Returns the associated Creature.
-        /** \return The associated Creature
+        /// Checks if this object can be selected or not.
+        /** \return 'true' if this object can be selected
         */
-        s_ptr<Creature> GetCreature() const;
+        s_bool IsSelectable() const;
+
+        /// Callback to react to events.
+        /** \param sEvent The name of the event
+        */
+        void   On(const s_str& sEvent);
 
     private :
 
@@ -89,7 +87,7 @@ namespace Frost
 
     private :
 
-        CreatureOgreInterface mInterface_;
+        CreatureOgreInterface mOgreInterface_;
 
     };
 

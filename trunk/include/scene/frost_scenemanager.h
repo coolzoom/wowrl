@@ -48,6 +48,12 @@ namespace Frost
         */
         s_ptr<Node>    CreateNode(const Vector& mPos = Vector::ZERO);
 
+        /// Creates a new Gizmo.
+        /** \param mPos The position to give to the Gizmo
+        *   \return The created Gizmo
+        */
+        s_ptr<Gizmo>   CreateGizmo(const Vector& mPos = Vector::ZERO);
+
         /// Returns the MovableObject associated to the provided id.
         /** \param uiID The ID of the MovableObject you're after
         *   \return The MovableObject associated to the provided id
@@ -68,14 +74,77 @@ namespace Frost
         */
         void           DeleteNode(s_ptr<Node> pNode);
 
-        /// Returns a new unused ID for a new resource.
+        /// Deletes a particular Gizmo.
+        /** \param pGizmo The Gizmo to delete
+        *   \note All gizmos created by this manager are automatically deleted
+        *         when the application closes.
+        */
+        void           DeleteGizmo(s_ptr<Gizmo> pGizmo);
+
+        /// Starts moving an object.
+        /** \param pObject     The object to move
+        *   \param mConstraint The axis on which translation must be constrained
+        *   \param bOnGround   'true' to force the object to remain on the ground
+        */
+        void           StartMoving(
+            s_ptr<MovableObject> pObject,
+            Vector::Constraint   mConstraint = Vector::CONSTRAINT_NONE,
+            const s_bool&        bOnGround   = false
+        );
+
+        /// Starts sizing an object.
+        /** \param pObject     The object to move
+        *   \param mConstraint The axis on which scaling must be constrained
+        */
+        void           StartSizing(
+            s_ptr<MovableObject> pObject,
+            Vector::Constraint   mConstraint = Vector::CONSTRAINT_NONE
+        );
+
+        /// Start rotating an object.
+        /** \param pObject     The object to move
+        *   \param mConstraint The axis on which rotation must be constrained
+        */
+        void           StartRotating(
+            s_ptr<MovableObject> pObject,
+            Vector::Constraint   mConstraint = Vector::CONSTRAINT_NONE
+        );
+
+        /// Makes the translated object follow the ground.
+        /** \param bConstraint 'true' to force on ground
+        */
+        void           ConstraintTranslationOnGround(const s_bool& bConstaint);
+
+        /// Stops all transformations that could be enabled.
+        /** \note This stops doodad/light transformations (translation, scale,
+        *         rotation) and terrain editing.
+        */
+        void           StopAllTransformations();
+
+        /// Registers an object to this manager and gives it an unused ID.
         /** \param pObj The object requesting the ID
         *   \return A new unused ID for a new resource
-        *   \note Used by MovableObject to define its ID.<br>
-        *         This function also registers the MovableObject
-        *         to the SceneManager.
+        *   \note Automatically called by MovableObject.
         */
-        const s_uint&  GetNewID(s_ptr<MovableObject> pObj);
+        const s_uint&  RegisterObject(s_ptr<MovableObject> pObj);
+
+        /// Unregisters an object from this manager.
+        /** \param pObj The object to unreg
+        *   \note Automatically called by MovableObject.
+        */
+        void           UnregisterObject(s_ptr<MovableObject> pObj);
+
+        /// Deletes an object.
+        /** \param pObj The object to delete
+        *   \note Only works for objects created by this manager.
+        */
+        void           DeleteObject(s_ptr<MovableObject> pObj);
+
+        /// Updates this manager.
+        /** \param fDelta The time elapsed since the last call
+        *   \note Automatically called by Engine.
+        */
+        void           Update(const s_float& fDelta);
 
         static const s_str CLASS_NAME;
 
@@ -110,13 +179,27 @@ namespace Frost
 
     private :
 
+        enum Transformation
+        {
+            TRANSFORM_NONE,
+            TRANSFORM_TRANSLATION,
+            TRANSFORM_SCALING,
+            TRANSFORM_ROTATION
+        };
+
         s_uint uiObjectCounter_;
 
-        s_map< s_uint, s_ptr<MovableObject> > lObjectList_;
+        s_map< s_uint, s_ptr<MovableObject> > lRegisteredObjectList_;
+        s_map< s_uint, s_ptr<MovableObject> > lCreatedObjectList_;
 
-        s_map< s_uint, s_ptr<Plane> > lPlaneList_;
-        s_map< s_uint, s_ptr<Node> >  lNodeList_;
+        s_ptr<OgreInterface> pMouseOveredObject_;
+        s_ptr<OgreInterface> pSelectedObject_;
+        s_ptr<OgreInterface> pDraggedObject_;
 
+        Transformation       mCurrentTransformation_;
+        Vector::Constraint   mTransformationConstraint_;
+        s_ptr<MovableObject> pTransformedObject_;
+        s_bool               bConstrainOnGround_;
     };
 }
 

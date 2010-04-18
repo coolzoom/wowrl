@@ -13,6 +13,20 @@
 
 namespace Frost
 {
+    /// Exception to be thrown by Model loading code.
+    class ModelLoadingException : public Exception
+    {
+    public :
+
+        ModelLoadingException(const s_str& sMessage) : Exception(sMessage)
+        {
+        }
+
+        ModelLoadingException(const s_str& sClassName, const s_str& sMessage) : Exception(sClassName, sMessage)
+        {
+        }
+    };
+
     /// Handles creation and updating of models
     class ModelManager : public Manager<ModelManager>
     {
@@ -43,22 +57,59 @@ namespace Frost
         /// Links a model name to a file.
         /** \param sModelName The model name to link
         *   \param sFile      The file to link to
+        *   \return 'true' if the link has been established, 'false'
+        *           if the provided name was already in use
         *   \note This function allows you to avoid writing the whole
         *         file name everytime you want to create a new model.
         */
-        void         LinkModelNameToFile(const s_str& sModelName, const s_str& sFile);
+        s_bool       LinkModelNameToFile(const s_str& sModelName, const s_str& sFile);
 
         /// Links a model name to a file.
         /** \param sCategory  The category into which to store this link
         *   \param sModelName The model name to link
         *   \param sFile      The file to link to
+        *   \return 'true' if the link has been established, 'false'
+        *           if the provided name was already in use
         *   \note This function allows you to avoid writing the whole
         *         file name everytime you want to create a new model.
         */
-        void         LinkModelNameToFile(const s_str& sCategory, const s_str& sModelName, const s_str& sFile);
+        s_bool       LinkModelNameToFile(const s_str& sCategory, const s_str& sModelName, const s_str& sFile);
+
+        /// Loads a model's data but doesn't create any entity from it.
+        /** \param sModelName The name of the model to load
+        *   \return 'true' if everything went fine, 'false' if the model
+        *           couldn't be loaded.
+        *   \note Use this function on models that you're sure you'll have
+        *         to load at some point.<br>
+        *         Using this function increases loading times, but improves
+        *         performances.
+        */
+        s_bool       PreloadModel(const s_str& sModelName);
+
+        /// Loads a model's data but doesn't create any entity from it.
+        /** \param sCategory  The category into which this model is located
+        *   \param sModelName The name of the model to load
+        *   \return 'true' if everything went fine, 'false' if the model
+        *           couldn't be loaded.
+        *   \note Use this function on models that you're sure you'll have
+        *         to load at some point.<br>
+        *         Using this function increases loading times, but improves
+        *         performances.
+        */
+        s_bool       PreloadModel(const s_str& sCategory, const s_str& sModelName);
+
+        /// Loads an entire category.
+        /** \param sCategory    The categor to load
+        *   \param bStopOnError 'true' to stop loading on the first error
+        *   \return 'true' if everything went fine, 'false' if at least one
+        *           of the model in the category couldn't be loaded
+        *   \note For more information, see PreloadModel().
+        */
+        s_bool       PreloadCategory(const s_str& sCategory, const s_bool& bStopOnError = false);
 
         /// Removes a particular category and all the links it contains.
         /** \param sCategory The category to remove
+        *   \note Also unloads the models.
         */
         void         RemoveCategory(const s_str& sCategory);
 
@@ -72,6 +123,19 @@ namespace Frost
         *   \param sModelName The model name to unlink
         */
         void         ClearLink(const s_str& sCategory, const s_str& sModelName);
+
+        /// Checks if a model name has been linked to a file.
+        /** \param sCategory  The category into which the model should be defined
+        *   \param sModelName The model name to look for
+        *   \return 'true' if the model has been linked and is ready to be loaded
+        */
+        s_bool       IsModelAvailable(const s_str& sCategory, const s_str& sModelName);
+
+        /// Checks if a model name has been linked to a file.
+        /** \param sModelName The model name to look for
+        *   \return 'true' if the model has been linked and is ready to be loaded
+        */
+        s_bool       IsModelAvailable(const s_str& sModelName);
 
         static const s_str CLASS_NAME;
 
@@ -106,8 +170,21 @@ namespace Frost
 
     private :
 
+        /** \cond NOT_REMOVE_FROM_DOC
+        */
+        struct ModelInfo
+        {
+            s_str            sFile;
+            s_ptr<ModelData> pData;
+            s_uint           uiRefCount;
+        };
+        /** \endcond
+        */
+
+        s_ptr<ModelData> LoadModelData_( const s_str& sFile );
+
         s_map< s_str, s_map<s_str, s_str> > lModelNameToFileMap_;
-        s_map< s_str, s_ptr<ModelData> >    lLoadedModelList_;
+        s_map<s_str, ModelInfo>             lLoadedModelList_;
     };
 }
 

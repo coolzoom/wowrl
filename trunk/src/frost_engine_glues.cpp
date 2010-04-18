@@ -8,6 +8,9 @@
 #include "camera/frost_camera.h"
 #include "scene/frost_lightmanager.h"
 #include "scene/frost_zonemanager.h"
+#include "scene/frost_zone.h"
+#include "scene/frost_doodad.h"
+#include "scene/frost_scenemanager.h"
 #include "material/frost_decal.h"
 #include "frost_inputmanager.h"
 
@@ -28,6 +31,26 @@ namespace Frost
         lua_newtable(pLua);
         iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);
         pLua_ = pLua;
+    }
+
+
+    int LuaEngine::_AddDoodad( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:AddDoodad", pLua);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+        mFunc.Add(1, "model", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->GetCurrentZone();
+            s_ptr<Doodad> pDoodad = pZone->AddDoodad(
+                mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString()
+            );
+
+            SceneManager::GetSingleton()->StartMoving(pDoodad, Vector::CONSTRAINT_NONE, true);
+        }
+
+        return mFunc.Return();
     }
 
     int LuaEngine::_AllowWorldClicks( lua_State* pLua )
@@ -170,6 +193,16 @@ namespace Frost
         {
             ZoneManager::GetSingleton()->LoadZoneFile(mFunc.Get(0)->GetString());
         }
+
+        return mFunc.Return();
+    }
+
+
+    int LuaEngine::_NotifyDoodadPositioned( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:NotifyDoodadPositioned", pLua);
+
+        SceneManager::GetSingleton()->StopAllTransformations();
 
         return mFunc.Return();
     }
@@ -367,6 +400,7 @@ namespace Frost
     Lunar<LuaEngine>::RegType LuaEngine::methods[] = {
         {"dt", &LuaEngine::GetDataTable},
 
+        method(Engine, AddDoodad),
         method(Engine, AllowWorldClicks),
         method(Engine, BlockWorldClicks),
         method(Engine, EnableMouseDecal),
@@ -377,6 +411,7 @@ namespace Frost
         method(Engine, GetMouseDecalColor),
         method(Engine, LoadZone),
         method(Engine, LoadZoneFile),
+        method(Engine, NotifyDoodadPositioned),
         method(Engine, ToggleWireframeView),
         method(Engine, ToggleShading),
         method(Engine, SetBackgroundColor),

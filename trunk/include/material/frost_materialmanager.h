@@ -84,10 +84,44 @@ namespace Frost
         *   \param ucR   The red component
         *   \param ucG   The green component
         *   \param ucB   The blue component
+        *   \param ucA   The alpha component
         *   \return The new Material
         *   \note Creates a blank Material filled with a color
         */
-        s_refptr<Material> CreateMaterial3D(const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB);
+        s_refptr<Material> CreateMaterial3D(const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB, const s_uchar& ucA = 255);
+
+        /// Creates a new Material (for 3D rendering).
+        /** \param sName  The name of the new Material
+        *   \param mColor The color to apply
+        *   \return The new Material
+        *   \note Creates a blank Material filled with a color
+        */
+        s_refptr<Material> CreateMaterial3D(const s_str& sName, const Color& mColor);
+
+        /// Creates a new Material (for 3D rendering).
+        /** \param ucR   The red component
+        *   \param ucG   The green component
+        *   \param ucB   The blue component
+        *   \param ucA   The alpha component
+        *   \return The new Material
+        *   \note Creates a blank Material filled with a color
+        */
+        s_refptr<Material> CreateMaterial3D(const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB, const s_uchar& ucA = 255);
+
+        /// Creates a new Material (for 3D rendering).
+        /** \param mColor The color to apply
+        *   \return The new Material
+        *   \note Creates a blank Material filled with a color
+        */
+        s_refptr<Material> CreateMaterial3D(const Color& mColor);
+
+        /// Creates a new Material (for 3D rendering).
+        /** \param sName     The name of the new Material
+        *   \param sFileName The file name of the texture to use
+        *   \return The new Material
+        *   \note Automatically loads the texture if needed.
+        */
+        s_refptr<Material> CreateMaterial3D(const s_str& sName, const s_str& sFileName);
 
         /// Creates a new Material (for 3D rendering).
         /** \param sFileName The file name of the texture to use
@@ -95,6 +129,11 @@ namespace Frost
         *   \note Automatically loads the texture if needed.
         */
         s_refptr<Material> CreateMaterial3D(const s_str& sFileName);
+
+        /// Creates a new Material (for 3D rendering).
+        /** \return The new Material
+        */
+        s_refptr<Material> CreateMaterial3D();
 
         /// Returns the default Material (for 3D rendering).
         /** \return The default Material (for 3D rendering)

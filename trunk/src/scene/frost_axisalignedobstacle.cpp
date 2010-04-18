@@ -19,6 +19,10 @@ namespace Frost
     AxisAlignedObstacle::AxisAlignedObstacle( const s_float& fXSize, const s_float& fYSize, const s_float& fZSize ) :
         fXSize_(fXSize), fYSize_(fYSize), fZSize_(fZSize)
     {
+        mBoundingBox_ = AxisAlignedBox(
+            Vector(-fXSize_/2.0f, -fYSize_/2.0f, -fZSize_/2.0f),
+            Vector( fXSize_/2.0f,  fYSize_/2.0f,  fZSize_/2.0f)
+        );
     }
 
     s_bool AxisAlignedObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const

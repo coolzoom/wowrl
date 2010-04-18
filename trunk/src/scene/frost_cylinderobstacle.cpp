@@ -19,6 +19,10 @@ namespace Frost
     CylinderObstacle::CylinderObstacle( const s_float& fRadius, const s_float& fHeight ) :
         fRadius_(fRadius), fHeight_(fHeight)
     {
+        mBoundingBox_ = AxisAlignedBox(
+            Vector(-fRadius_, -fHeight/2.0f, -fRadius_),
+            Vector( fRadius_,  fHeight/2.0f,  fRadius_)
+        );
     }
 
     s_bool CylinderObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const

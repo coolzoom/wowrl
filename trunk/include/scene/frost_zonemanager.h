@@ -71,6 +71,11 @@ namespace Frost
         */
         Vector      GetTerrainUnderMouse();
 
+        /// Returns the current Zone.
+        /** \return The current Zone
+        */
+        s_ptr<Zone> GetCurrentZone();
+
         /// Returns the Lua state used by zones.
         /** \return The Lua state used by zones
         */
@@ -122,6 +127,8 @@ namespace Frost
 
         void ParseXMLFile_(const s_str& sFile, s_ptr<Zone> pCurrentZone);
         void ParseTerrain_(s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pTerrainBlock);
+        void ParseModels_(s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pTerrainBlock);
+        void ParseDoodads_(s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pTerrainBlock);
 
         s_ptr<Zone> pCurrentZone_;
         s_ptr<Lua::State> pLua_;

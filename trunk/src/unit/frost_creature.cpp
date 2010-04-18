@@ -24,7 +24,8 @@ namespace Frost
     Creature::Creature( const s_uint& uiID, const s_str& sName ) :
         MovableUnit(uiID, sName)
     {
-        mInterface_.SetCreature(this);
+        mOgreInterface_.SetCreature(this);
+        mOgreInterface_.EnableMouse(true);
     }
 
     Creature::~Creature()
@@ -49,7 +50,7 @@ namespace Frost
         }
 
         pBodyModel_ = ModelManager::GetSingleton()->CreateModel(sModelName, sName_);
-        pBodyModel_->SetUserObject(&mInterface_);
+        pBodyModel_->SetOgreInterface(&mOgreInterface_);
     }
 
     void Creature::PushOnLua( s_ptr<Lua::State> pLua ) const
@@ -67,26 +68,27 @@ namespace Frost
         MovableUnit::Update(fDelta);
     }
 
-    CreatureOgreInterface::CreatureOgreInterface()
-    {
-    }
-
     void CreatureOgreInterface::SetCreature( s_ptr<Creature> pCreature )
     {
-         pCreature_ = pCreature;
+        pCreature_ = pCreature;
     }
 
-    const Ogre::String& CreatureOgreInterface::getTypeName() const
+    s_bool CreatureOgreInterface::IsSelectable() const
     {
-        static Ogre::String sName = "CREATURE";
-        return sName;
+        return true;
     }
 
-    s_ptr<Creature> CreatureOgreInterface::GetCreature() const
+    void CreatureOgreInterface::On( const s_str& sEvent )
     {
-        return pCreature_;
+        if (sEvent == "Enter")
+        {
+            pCreature_->Highlight(true);
+            UnitManager::GetSingleton()->NotifyMouseOveredUnit(pCreature_);
+        }
+        else if (sEvent == "Leave")
+        {
+            pCreature_->Highlight(false);
+            UnitManager::GetSingleton()->NotifyMouseOveredUnit(nullptr);
+        }
     }
 }
-
-
-

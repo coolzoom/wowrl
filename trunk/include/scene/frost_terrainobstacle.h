@@ -72,6 +72,7 @@ namespace Frost
         /** \param fX The X coordinate
         *   \param fZ The Z coordinate
         *   \return The height of this point
+        *   \note Assumes X and Z are in local space.
         */
         s_float GetPointHeight(const s_float& fX, const s_float& fZ) const;
 

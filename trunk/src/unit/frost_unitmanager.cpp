@@ -17,12 +17,7 @@
 #include "unit/frost_healthtype.h"
 #include "unit/frost_powertype.h"
 #include "frost_inputmanager.h"
-#include "camera/frost_cameramanager.h"
-#include "camera/frost_camera.h"
 #include "gameplay/frost_gameplaymanager.h"
-
-#include <OgreRay.h>
-#include <OgreSceneManager.h>
 
 using namespace std;
 
@@ -30,7 +25,7 @@ namespace Frost
 {
     const s_str UnitManager::CLASS_NAME = "UnitManager";
 
-    UnitManager::UnitManager()
+    UnitManager::UnitManager() : fMaxClimbingAngle_(0.25f)
     {
     }
 
@@ -57,6 +52,25 @@ namespace Frost
         pLua_ = LuaManager::GetSingleton()->CreateLua();
         Lua::RegisterUnitClass(pLua_);
         Lua::RegisterGlobalFuncs(pLua_);
+    }
+
+    s_bool UnitManager::ReadConfig()
+    {
+        s_ptr<Engine> pEngine = Engine::GetSingleton();
+        if (pEngine->IsConstantDefined("MaxClimbingAngle"))
+            fMaxClimbingAngle_ = pEngine->GetFloatConstant("MaxClimbingAngle");
+
+        return true;
+    }
+
+    void UnitManager::SetMaxClimbingAngle( const s_float& fMaxClimbingAngle )
+    {
+        fMaxClimbingAngle_ = fMaxClimbingAngle;
+    }
+
+    const s_float& UnitManager::GetMaxClimbingAngle() const
+    {
+        return fMaxClimbingAngle_;
     }
 
     s_ptr<Character> UnitManager::CreateCharacter( const s_str& sName, const s_str& sRace, Character::Gender mGender )
@@ -142,58 +156,17 @@ namespace Frost
         return lSelectedUnitList_;
     }
 
+    void UnitManager::NotifyMouseOveredUnit( s_ptr<Unit> pUnit )
+    {
+        pMouseOveredUnit_ = pUnit;
+    }
+
     void UnitManager::UpdateUnits( const s_float& fDelta )
     {
-        // Handle selection
-        s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
-        s_ptr<Engine>       pFrost = Engine::GetSingleton();
-
-        Ogre::Ray mRay = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera()->getCameraToViewportRay(
-            (pInputMgr->GetMousePosX()/s_float(pFrost->GetScreenWidth())).Get(),
-            (pInputMgr->GetMousePosY()/s_float(pFrost->GetScreenHeight())).Get()
-        );
-        s_ptr<Ogre::RaySceneQuery> pRayQuery = pFrost->GetOgreSceneManager()->createRayQuery(mRay);
-
-        pRayQuery->setSortByDistance(true);
-        Ogre::RaySceneQueryResult& mRes = pRayQuery->execute();
-        Ogre::RaySceneQueryResult::iterator iter = mRes.begin();
-        s_ptr<Unit> pUnit;
-        if (iter != mRes.end())
-        {
-            foreach (iter, mRes)
-            {
-                s_ptr<Ogre::MovableObject> pObject = iter->movable;
-                s_ptr<Ogre::UserDefinedObject> pMyObject = pObject->getUserObject();
-                if (pMyObject)
-                {
-                    s_str sType = pMyObject->getTypeName();
-                    if (sType == "CHARACTER")
-                    {
-                        pUnit = s_ptr<CharacterOgreInterface>::DynamicCast(pMyObject)->GetCharacter();
-                        break;
-                    }
-                    else if (sType == "CREATURE")
-                    {
-                        pUnit = s_ptr<CreatureOgreInterface>::DynamicCast(pMyObject)->GetCreature();
-                        break;
-                    }
-                }
-            }
-        }
-        pFrost->GetOgreSceneManager()->destroyQuery(pRayQuery.Get());
-
-        if (pMouseOveredUnit_ != pUnit)
-        {
-            if (pMouseOveredUnit_)
-                pMouseOveredUnit_->NotifyHighlighted(false);
-            if (pUnit)
-                pUnit->NotifyHighlighted(true);
-        }
-
         // Single click selection
-        if (pInputMgr->MouseIsReleased(MOUSE_LEFT))
+        if (InputManager::GetSingleton()->MouseIsReleased(MOUSE_LEFT))
         {
-            if (pInputMgr->GetMouseDownDuration(MOUSE_LEFT) < 0.2f)
+            if (InputManager::GetSingleton()->GetMouseDownDuration(MOUSE_LEFT) < 0.2f)
             {
                 s_map< s_uint, s_ptr<Unit> >::iterator iterUnit;
                 foreach (iterUnit, lSelectedUnitList_)
@@ -202,15 +175,13 @@ namespace Frost
                 }
                 lSelectedUnitList_.IsEmpty();
 
-                if (pUnit)
+                if (pMouseOveredUnit_)
                 {
-                    pUnit->NotifySelected(true);
-                    lSelectedUnitList_[pUnit->GetID()] = pUnit;
+                    pMouseOveredUnit_->NotifySelected(true);
+                    lSelectedUnitList_[pMouseOveredUnit_->GetID()] = pMouseOveredUnit_;
                 }
             }
         }
-
-        pMouseOveredUnit_ = pUnit;
 
         // Update units
         s_map< s_uint, s_ptr<Unit> >::iterator iterUnit;

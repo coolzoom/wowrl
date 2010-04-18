@@ -1,3 +1,10 @@
+/* ###################################### */
+/* ###     Frost Engine, by Kalith    ### */
+/* ###################################### */
+/*              Decal source              */
+/*                                        */
+/*                                        */
+
 #include "material/frost_decal.h"
 #include "material/frost_material.h"
 #include "material/frost_shadermanager.h"

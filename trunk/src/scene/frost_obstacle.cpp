@@ -40,12 +40,36 @@ namespace Frost
     {
     }
 
+    s_bool Obstacle::IsInBoundingBox( const Vector& mPoint ) const
+    {
+        return mBoundingBox_.Contains(mPoint);
+    }
+
+    s_bool Obstacle::IsInBoundingBox( const AxisAlignedBox& mBox ) const
+    {
+        return mBoundingBox_.Contains(mBox);
+    }
+
     MovableObstacle::MovableObstacle()
     {
     }
 
     MovableObstacle::~MovableObstacle()
     {
+    }
+
+    s_bool MovableObstacle::IsInBoundingBox( const Vector& mPoint ) const
+    {
+        AxisAlignedBox mTemp = mBoundingBox_;
+        mTemp = mTemp + GetPosition(false);
+        return mTemp.Contains(mPoint);
+    }
+
+    s_bool MovableObstacle::IsInBoundingBox( const AxisAlignedBox& mBox ) const
+    {
+        AxisAlignedBox mTemp = mBoundingBox_;
+        mTemp = mTemp + GetPosition(false);
+        return mTemp.Contains(mBox);
     }
 
     void MovableObstacle::ForceUpdate()

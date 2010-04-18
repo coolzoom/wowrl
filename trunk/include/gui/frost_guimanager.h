@@ -93,13 +93,6 @@ namespace Frost
     friend class Manager<GUIManager>;
     public :
 
-        /// Constraints movement along a particular axis
-        enum Constraint
-        {
-            CONSTRAINT_NONE,
-            CONSTRAINT_X,
-            CONSTRAINT_Y
-        };
 
         /// Initializes this manager.
         void                 Initialize();
@@ -196,7 +189,7 @@ namespace Frost
         void                 StartMoving(
             s_ptr<GUI::UIObject> pObj,
             s_ptr<GUI::Anchor> pAnchor = nullptr,
-            Constraint mConstraint = CONSTRAINT_NONE
+            Vector::Constraint mConstraint = Vector::CONSTRAINT_NONE
         );
 
         /// Stops movement for the given object.
@@ -337,7 +330,7 @@ namespace Frost
         s_ptr<GUI::Anchor>   pMovedAnchor_;
         s_int                iMovementStartPositionX_;
         s_int                iMovementStartPositionY_;
-        Constraint           mConstraint_;
+        Vector::Constraint   mConstraint_;
 
         s_uint               uiResizeStartW_;
         s_uint               uiResizeStartH_;

@@ -248,7 +248,9 @@
 
 <d[Frame]:ScrollFrame>
 
-    <n[.,1]:c[Frame]:ScrollChild/>
+    <n[.,1]:ScrollChild>
+        <n[1,1]:l:Frame/>
+    </ScrollChild>
     
     <n[.,1]:Scripts>
         <n[.,1]:OnDragStart/>

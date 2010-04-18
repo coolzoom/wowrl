@@ -15,6 +15,9 @@
 namespace Frost
 {
     /// Handles all PhysicsHandlers.
+    /** \note Collision detection is done by PhysicsHandler and
+    *         its derivated classes.
+    */
     class PhysicsManager : public Manager<PhysicsManager>
     {
     friend class Manager<PhysicsManager>;
@@ -50,40 +53,6 @@ namespace Frost
         /** \return The gravity force
         */
         const Vector&         GetGravity() const;
-
-        /// Sets the minimum sliding angle.
-        /** \param fMinSlidingAngle The new minimum sliding angle
-        *   \note See GetMinSlidingAngle() for more information.
-        *   \note Only functionnal when sliding is enabled (gravity).
-        */
-        void                  SetMinSlidingAngle(const s_float& fMinSlidingAngle);
-
-        /// Returns the minimum sliding angle.
-        /** \return The minimum sliding angle (non dimensional angle)
-        *   \note Whenever there is a collision, you calculate the absolute angle
-        *         between the motion vector and the collision plane's normal.
-        *         If this angle is greater than the value returned by this
-        *         function, then the object can slide along this plane.
-        *   \note Only functionnal when sliding is enabled (gravity).
-        */
-        const s_float&        GetMinSlidingAngle() const;
-
-        /// Sets the maximum climbing angle.
-        /** \param fMaxClimbingAngle The new maximum climbing angle
-        *   \note See GetMaxClimbingAngle() for more information.
-        *   \note Only functionnal when climbing is enabled (unit movement).
-        */
-        void                  SetMaxClimbingAngle(const s_float& fMaxClimbingAngle);
-
-        /// Returns the maximum climbing angle.
-        /** \return The maximum climbing angle (non dimensional angle)
-        *   \note Whenever there is a collision, you calculate the absolute angle
-        *         between the motion vector and the collision plane's normal.
-        *         If this angle is smaller than the value returned by this
-        *         function, then the object can climb along this plane.
-        *   \note Only functionnal when climbing is enabled (unit movement).
-        */
-        const s_float&        GetMaxClimbingAngle() const;
 
         /// Returns the maximum number of collision recursion per frame and object.
         /** \return The maximum number of collision recursion per frame and object
@@ -159,8 +128,6 @@ namespace Frost
 
         Vector  mGravity_;
         s_uint  uiMaxCollisionRecursion_;
-        s_float fMinSlidingAngle_;
-        s_float fMaxClimbingAngle_;
 
     };
 }

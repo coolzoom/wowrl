@@ -39,11 +39,11 @@ namespace Frost
         pNode_ = SceneManager::GetSingleton()->CreateNode();
         pCamera_ = CameraManager::GetSingleton()->CreateCamera(Vector(0, 4, 5));
         pCamera_->OrbitAround(Vector(0, 2, 0));
-        pCamera_->Attach(pNode_, false, false);
+        pCamera_->AttachTo(pNode_, false, false);
         pCamera_->CreateGlue(GameplayManager::GetSingleton()->GetLua());
 
         pSelectionDecal_ = s_refptr<Decal>(new Decal("Textures/UnitSelection.png"));
-        pSelectionDecal_->Attach(pNode_, false, true);
+        pSelectionDecal_->AttachTo(pNode_, false, true);
         pSelectionDecal_->SetPosition(Vector(0, 5, 0));
         pSelectionDecal_->SetDirection(Vector(0, -1, 0));
         pSelectionDecal_->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
@@ -52,7 +52,7 @@ namespace Frost
         pSelectionDecal_->Show();
 
         pShadowDecal_ = s_refptr<Decal>(new Decal("Textures/UnitShadow.png"));
-        pShadowDecal_->Attach(pNode_, false, true);
+        pShadowDecal_->AttachTo(pNode_, false, true);
         pShadowDecal_->SetPosition(Vector(0, 5, 0));
         pShadowDecal_->SetDirection(Vector(0, -1, 0));
         pShadowDecal_->SetProjection(Decal::PROJ_ORTHOGRAPHIC);
@@ -260,7 +260,7 @@ namespace Frost
         return uiLevel_;
     }
 
-    void Unit::NotifyHighlighted( const s_bool& bHighlighted )
+    void Unit::Highlight( const s_bool& bHighlighted )
     {
         if (bHighlighted != bHighlighted_)
         {
@@ -324,7 +324,7 @@ namespace Frost
         pNode_->SetDirection(mPosition - pNode_->GetPosition(false));
     }
 
-    s_refptr<Model> Unit::GetBodyModel()
+    s_wptr<Model> Unit::GetBodyModel()
     {
         return pBodyModel_;
     }

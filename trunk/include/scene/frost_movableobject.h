@@ -13,8 +13,71 @@
 
 #include "path/frost_path.h"
 
+#include <OgreUserDefinedObject.h>
+
 namespace Frost
 {
+    class OgreInterface : public Ogre::UserDefinedObject
+    {
+    public :
+
+        /// Constructor.
+        OgreInterface();
+
+        /// Destructor.
+        virtual ~OgreInterface();
+
+        /// Sets the associated MovableObject.
+        /** \param pCharacter The associated MovableObject
+        */
+        void                 SetMovableObject(s_ptr<MovableObject> pMovableObject);
+
+        /// Returns the associated MovableObject.
+        /** \return The associated MovableObject
+        */
+        s_ptr<MovableObject> GetMovableObject() const;
+
+        /// Sets the priority of this object.
+        /** \param iPriority The priority
+        *   \note No matter if there is an object in front of
+        *         this one : if its priority is higher, it will
+        *         be picked in place of the other one.<br>
+        *         Default is 0.
+        */
+        void                 SetPriority(const s_int& iPriority);
+
+        /// Returns the priority of this object.
+        /** \return The priority of this object
+        */
+        const s_int&         GetPriority() const;
+
+        /// Allows this object to react to mouse events.
+        /** \param bEnable 'true' to enable mouse events
+        */
+        void                 EnableMouse(const s_bool& bEnable);
+
+        /// Checks if this object can react to mouse events.
+        /** \return 'true' if this object can react to mouse events
+        */
+        const s_bool&        IsMouseEnabled() const;
+
+        /// Checks if this object can be selected or not.
+        /** \return 'true' if this object can be selected
+        */
+        virtual s_bool       IsSelectable() const;
+
+        /// Callback to react to events.
+        /** \param sEvent The name of the event
+        */
+        virtual void         On(const s_str& sEvent) = 0;
+
+    private :
+
+        s_ptr<MovableObject> pMovableObject_;
+        s_int                iPriority_;
+        s_bool               bMouseEnabled_;
+    };
+
     /// A class storing position, orientation and scale
     /** It's a base for every object in the 3D world.
     */
@@ -34,6 +97,13 @@ namespace Frost
         /// Destructor.
         virtual ~MovableObject();
 
+        /// Sets the OgreInterface object to use as a callback.
+        /** \param pOgreInterface The callback object
+        *   \note  This movable object <b>must</b> have an entity for
+        *          the callback to work properly.
+        */
+        void                  SetOgreInterface(s_ptr<OgreInterface> pOgreInterface);
+
         /// Attaches this object to another.
         /** \param pObject       The new parent
         *   \param bInheritRot   'true' if you want your object to
@@ -43,7 +113,7 @@ namespace Frost
         *   \note If you move pObject, this object will follow it,
         *         but pObject wont move if you move this object.
         */
-        virtual void          Attach(s_ptr<MovableObject> pObject, const s_bool& bInheritRot = true, const s_bool& bInheritScale = true);
+        virtual void          AttachTo(s_ptr<MovableObject> pObject, const s_bool& bInheritRot = true, const s_bool& bInheritScale = true);
 
         /// Removes the link this object had with its parent.
         /** \note Disables inheritance.
@@ -82,6 +152,20 @@ namespace Frost
         *   \note Disables orbiting and tracking.
         */
         virtual void          SetDirection(const Vector& mDirection);
+
+        /// Orientates the object to a certain direction.
+        /** \param fX The first coordinate of the quaternion
+        *   \param fY The second coordinate of the quaternion
+        *   \param fZ The third coordinate of the quaternion
+        *   \param fW The fourth coordinate of the quaternion
+        *   \note Disables orbiting and tracking.
+        */
+        virtual void          SetOrientation(const s_float& fX, const s_float& fY, const s_float& fZ, const s_float& fW);
+
+        /// Sets this object's scale.
+        /** \param mScale The new scale
+        */
+        virtual void          SetScale(const Vector& mScale);
 
         /// Sets this object's reference direction.
         /** \param mInitialDirection The initial direction
@@ -162,6 +246,11 @@ namespace Frost
         /** \return The position of this object
         */
         Vector                GetPosition(const s_bool& bRelative = true) const;
+
+        /// Returns the scale of this object.
+        /** \return The scale of this object
+        */
+        Vector                GetScale(const s_bool& bRelative = true) const;
 
         /// Returns the direction of this object.
         /** \return The direction of this object
@@ -247,6 +336,7 @@ namespace Frost
 
         s_ctnr< s_ptr<MovableObject> > lLookingAtList_;
 
+        s_ptr<Ogre::Entity>     pEntity_;
         s_ptr<Ogre::SceneNode>  pNode_;
         s_ptr<Ogre::SceneNode>  pTargetNode_;
 
