@@ -10,10 +10,12 @@
 #include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
+#ifdef USING_OGRE
 namespace Ogre
 {
     class ColourValue;
 }
+#endif
 
 namespace Frost
 {
@@ -107,6 +109,18 @@ namespace Frost
         s_bool operator == (const Color& mColor) const;
         s_bool operator != (const Color& mColor) const;
 
+        Color  operator * (const Color& mColor) const;
+        Color  operator / (const Color& mColor) const;
+
+        Color  operator + (const Color& mColor) const;
+        Color  operator - (const Color& mColor) const;
+
+        Color&  operator *= (const Color& mColor);
+        Color&  operator /= (const Color& mColor);
+
+        Color&  operator += (const Color& mColor);
+        Color&  operator -= (const Color& mColor);
+
         /// Creates a random color.
         /** \param bRandomAlpha 'true' to randomize the alpha chanel too,
         *                       'false' to make it opaque (alpha = 255)
@@ -114,6 +128,7 @@ namespace Frost
         */
         static Color  Random(const s_bool& bRandomAlpha = false);
 
+        #ifdef USING_OGRE
         /// Converts a Frost color to an Ogre one.
         /** \param mColor The color to convert
         *   \return The Ogre color
@@ -125,6 +140,7 @@ namespace Frost
         *   \return The Frost color
         */
         static Color OgreToFrost(const Ogre::ColourValue& mColor);
+        #endif
 
         static const Color BLACK;
         static const Color WHITE;

@@ -6,9 +6,11 @@
 #include "frost_utils_vector.h"
 #include "frost_utils_math.h"
 
+#ifdef USING_OGRE
 #include <OgreQuaternion.h>
 #include <OgreVector3.h>
 #include <OgreMatrix4.h>
+#endif
 
 #define ISQRT_2 0.7071067811865475244008443621048
 #define ISQRT_3 0.5773502691896257645091487805019
@@ -51,6 +53,11 @@ namespace Frost
     s_bool Vector::IsNaN() const
     {
         return (fX_.IsNaN() && fY_.IsNaN() && fZ_.IsNaN());
+    }
+
+    s_bool Vector::IsInfinite() const
+    {
+        return (fX_.IsInfinite() || fY_.IsInfinite() || fZ_.IsInfinite());
     }
 
     s_float Vector::GetNorm() const
@@ -240,6 +247,7 @@ namespace Frost
         return *this;
     }
 
+    #ifdef USING_OGRE
     Ogre::Vector3 Vector::FrostToOgre( const Vector &mVector )
     {
         return Ogre::Vector3(
@@ -253,6 +261,7 @@ namespace Frost
     {
         return Vector(mVector.x, mVector.y, mVector.z);
     }
+    #endif
 
     s_str operator + (const string_element* sLeft, const Vector& mRight)
     {
@@ -274,6 +283,7 @@ namespace Frost
         return mRight*fLeft;
     }
 
+    #ifdef USING_OGRE
     Vector operator * (const Ogre::Matrix4& mLeft, const Vector& mRight)
     {
         Vector mR;
@@ -287,4 +297,5 @@ namespace Frost
 
         return mR;
     }
+    #endif
 }
