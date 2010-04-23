@@ -27,114 +27,6 @@ namespace Frost
     {
     }
 
-    s_bool MeshObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
-    {
-        // TODO : Rewrite this code : not precise and not working
-        Vector mDirection = *pNextPos - mPreviousPos;
-        s_float fMaxDistance = mDirection.GetNorm();
-        mDirection /= fMaxDistance;
-
-        // Algorithm taken from :
-        // http://www.graphics.cornell.edu/pubs/1997/MT97.pdf
-
-        Vector  mE1, mE2, mTemp, mP1Dir;
-        Vector  mCollisionPoint = *pNextPos;
-        Vector  mOffset;
-        s_float fDet, fInvDet, fU, fV, fDistance;
-        s_float fShortestDistance = fMaxDistance;
-        s_float fPrevDistance, fNextDistance;
-        s_bool  bCollision;
-
-        // Test each triangle of the list
-        s_array<Triangle>::const_iterator iterTriangle;
-        foreach (iterTriangle, lTriangleArray_)
-        {
-            // Get the direction from the origin of the ray to the first vertex
-            mP1Dir = mPreviousPos - iterTriangle->mP[0];
-
-            fPrevDistance = mP1Dir*iterTriangle->mNormal;
-            fNextDistance = (*pNextPos - iterTriangle->mP[0])*iterTriangle->mNormal;
-
-            if (fPrevDistance*fNextDistance < 0.0f)
-            {
-                if (fPrevDistance < 0.0f)
-                    mOffset = 0.00001f*iterTriangle->mNormal;
-                else
-                    mOffset = -0.00001f*iterTriangle->mNormal;
-
-                // Get the base of the triangle (local 2D space)
-                mE1 = iterTriangle->mP[1] - iterTriangle->mP[0];
-                mE2 = iterTriangle->mP[2] - iterTriangle->mP[0];
-
-                // Calculate the determinant
-                mTemp = mDirection^mE2;
-                fDet = mE1*mTemp;
-
-                if (fDet > -0.000001f && fDet < 0.000001f)
-                {
-                    // The ray is contained inside the triangle's plane. Skip it.
-                    continue;
-                }
-
-                fInvDet = 1.0f/fDet;
-
-                // U and V are the coordinates of the intersection point in the local 2D space
-                // Calculate U
-                fU = fInvDet*(mP1Dir*mTemp);
-
-                if (fU < 0.0f || fU > 1.0f)
-                {
-                    // By definition, U and V are positive (U > 0), and U+V < 1 (U < 1).
-                    // This U doesn't meet the conditions : the intersection is inside the
-                    // triangle's plane, but not inside the triangle itself. Skip it.
-                    continue;
-                }
-
-                // Calculate V
-                mTemp = mP1Dir^mE1;
-                fV = fInvDet*(mDirection*mTemp);
-
-                if (fV < 0.0f || fU + fV > 1.0f)
-                {
-                    // Again, V must be positive and U+V < 1, so this V doesn't meet the
-                    // conditions. Skip this triangle.
-                    continue;
-                }
-
-                // We know the intersection is inside the triangle, now let's calculate
-                // it's position from the ray's point of view :
-                // intersection = origin + distance*direction
-                fDistance = fInvDet*(mE2*mTemp);
-                if (fDistance > 0.000001f)
-                {
-                    // Distance is positive : the intersection point is in the good direction.
-                    // We keep on searching for a smaller distance, in case there are
-                    // "overlapping" triangles.
-                    if (fDistance < fShortestDistance)
-                    {
-                        fShortestDistance = fDistance-0.00001f;
-                        mCollisionPoint = ((1.0f-fU-fV)*iterTriangle->mP[0] + fU*iterTriangle->mP[1] + fV*iterTriangle->mP[2]) - mOffset;
-                    }
-                    bCollision = true;
-                    continue;
-                }
-                else
-                {
-                    // Distance is negative : the intersection point is "behind" the ray.
-                    // It's not an acceptable intersection. Skip this triangle.
-                    continue;
-                }
-            }
-        }
-
-        if (mCollisionPoint != *pNextPos)
-        {
-            *pNextPos = mCollisionPoint;
-        }
-
-        return !bCollision;
-    }
-
     s_bool MeshObstacle::IsPointInsideTriangle_( const Vector& mPoint, const Triangle& mTriangle ) const
     {
         // Note : code taken from :
@@ -179,7 +71,7 @@ namespace Frost
 
     s_bool MeshObstacle::EllipsoidGoThrough(
         const Vector& mRadiusVector, const Vector& mPreviousPos,
-        const Vector& mNextPos, const Vector& mFinalPos, CollisionData& rData ) const
+        const Vector& mNextPos, CollisionData& rData ) const
     {
         // Note : algorithm taken from :
         // http://www.peroxide.dk/papers/collision/collision.pdf
@@ -206,7 +98,6 @@ namespace Frost
         // and convert world coordinates to ellipsoid coordinates
         Vector mPosition = mInverse*mPreviousPos;
         Vector mDestination = mInverse*mNextPos;
-        Vector mInitialDestination = mInverse*mFinalPos;
 
         Vector mDistance = mDestination - mPosition;
         s_float fDistanceSquared = mDistance.GetLengthSquared();

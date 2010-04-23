@@ -5,7 +5,10 @@ MenuBar:AddMenuItem("File", "Open", "Ctrl-O"):SetScript("OnClick", function()
     Frost:LoadZoneFile("Zones/Test/Test.xml");
     MenuBar:CloseCurrentDropdown();
 end);
-MenuBar:AddMenuItem("File", "Save", "Ctrl-S");
+MenuBar:AddMenuItem("File", "Save", "Ctrl-S"):SetScript("OnClick", function()
+    Frost:SaveZone("Zones/Test/Test.xml");
+    MenuBar:CloseCurrentDropdown();
+end);
 MenuBar:AddMenuItem("File", "SaveAs");
 MenuBar:AddMenuItem("File", "Close", "Ctrl-W"):SetScript("OnClick", function()
     Frost:UnloadZone();
@@ -41,6 +44,7 @@ MenuBar:AddMenuCheckItem("View", "Decal", "F4", true):SetScript("OnClick", funct
     else
         AddOns.Editor:EnableMouseDecal(true);
     end
+    MenuBar:CloseCurrentDropdown();
 end);
 MenuBar:AddMenuItem("View", "DecalColor"):SetScript("OnClick", function ()
     ColorSelector:SetColor(Color(Frost:GetMouseDecalColor()));

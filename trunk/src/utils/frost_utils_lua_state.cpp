@@ -526,22 +526,34 @@ s_str State::Serialize( const s_str& sTab, const s_int& iIndex )
 
 void State::PushNumber( const s_int& iValue )
 {
-    lua_pushnumber(pLua_, iValue.Get());
+    if (iValue.IsValid())
+        lua_pushnumber(pLua_, iValue.Get());
+    else
+        lua_pushnil(pLua_);
 }
 
 void State::PushNumber( const s_uint& uiValue)
 {
-    lua_pushnumber(pLua_, uiValue.Get());
+    if (uiValue.IsValid())
+        lua_pushnumber(pLua_, uiValue.Get());
+    else
+        lua_pushnil(pLua_);
 }
 
 void State::PushNumber( const s_float& fValue )
 {
-    lua_pushnumber(pLua_, fValue.Get());
+    if (fValue.IsValid())
+        lua_pushnumber(pLua_, fValue.Get());
+    else
+        lua_pushnil(pLua_);
 }
 
 void State::PushNumber( const s_double& dValue )
 {
-    lua_pushnumber(pLua_, dValue.Get());
+    if (dValue.IsValid())
+        lua_pushnumber(pLua_, dValue.Get());
+    else
+        lua_pushnil(pLua_);
 }
 
 void State::PushBool( const s_bool& bValue )

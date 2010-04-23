@@ -174,12 +174,43 @@ namespace Frost
         /// Forces writing everything to the file.
         void        Flush();
 
+        /// Sets the tabulation string.
+        /** \param sTabStr The tabulation string
+        *   \note Default is 4 spaces : "    "
+        */
+        void        SetTabCharacter(const s_str& sTabStr);
+
+        /// Returns the tabulation string.
+        /** \return The tabulation string
+        *   \note Default is 4 spaces : "    "
+        */
+        const s_str& GetTabCharacter() const;
+
+        /// Adds a tabulation string.
+        /** \note Calling this function increments the tab counter.<br>
+        *         When WriteLine() is called, the tabulation string is written
+        *         in front of each line, as many time as you've called this
+        *         function.
+        */
+        void        AddTab();
+
+        /// Removes a tabulation string.
+        /** \note Calling this function decrements the tab counter.<br>
+        *         See AddTab() for more infos.
+        */
+        void        RemoveTab();
+
+        /// Removes all tabulation strings.
+        /** \note Calling this function sets the tab counter to zero.<br>
+        *         See AddTab() for more infos.
+        */
+        void        RemoveAllTabs();
+
         /// Checks if a file exists.
         /** \param sFileName The name of the file
-        *   \param bPrint    Print an error in the log file or not
         *   \return 'true' if the file exists, 'false' otherwise
         */
-        static s_bool Exists(const s_str& sFileName, const s_bool& bPrint = true);
+        static s_bool Exists(const s_str& sFileName);
 
         static const s_str CLASS_NAME;
 
@@ -189,6 +220,10 @@ namespace Frost
         file_stream mFile_;
         /// The name of this file
         s_str       sName_;
+        /// The tabbing string
+        s_str       sTabStr_;
+        /// The total tabbing
+        s_uint      uiTabCount_;
     };
 }
 

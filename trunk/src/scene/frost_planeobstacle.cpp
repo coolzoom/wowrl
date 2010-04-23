@@ -56,11 +56,6 @@ namespace Frost
         );
     }
 
-    s_bool PlaneObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
-    {
-        return true;
-    }
-
     s_bool PlaneObstacle::IsPointInsideQuad_( const Vector& mPoint ) const
     {
         // Note : code inspired from :
@@ -105,7 +100,7 @@ namespace Frost
 
     s_bool PlaneObstacle::EllipsoidGoThrough(
         const Vector& mRadiusVector, const Vector& mPreviousPos,
-        const Vector& mNextPos, const Vector& mFinalPos, CollisionData& rData ) const
+        const Vector& mNextPos, CollisionData& rData ) const
     {
         // Note : algorithm inspired from :
         // http://www.peroxide.dk/papers/collision/collision.pdf
@@ -283,16 +278,6 @@ namespace Frost
                 mRadiusVector.X()*mRadiusVector.Y()
             ));
             rData.mPlaneNormal.Normalize();
-
-            // Calculate the remaining movement
-            /*fSignedDistance = rData.mPlaneNormal*(mPreviousPos - mFinalPos);
-            rData.mRemainingMovement = mFinalPos - mPreviousPos;
-            rData.mRemainingMovement += fSignedDistance*rData.mPlaneNormal;
-            if (!rData.mRemainingMovement.IsNull())
-            {
-                rData.mRemainingMovement.Normalize();
-                rData.mRemainingMovement *= (mFinalPos - rData.mNewPosition).GetNorm();
-            }*/
 
             return false;
         }

@@ -123,6 +123,11 @@ namespace Frost
                 mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()));
     }
 
+    s_bool AxisAlignedBox::IsInfinite() const
+    {
+        return mMin_.IsInfinite() || mMax_.IsInfinite();
+    }
+
     s_bool AxisAlignedBox::GetRayIntersection( const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
     {
         if (Contains(mRayOrigin))
@@ -201,32 +206,12 @@ namespace Frost
         }
 
         return fLowestT.IsValid();
-
-        // Fall back to Ogre here (not the time to rewrite the code)
-        /*#ifdef USING_OGRE
-        Ogre::AxisAlignedBox mAAB = FrostToOgre(*this);
-        Ogre::Ray            mRay(Vector::FrostToOgre(mRayOrigin), Vector::FrostToOgre(mRayDirection));
-
-        std::pair<bool, Ogre::Real> mResult = mRay.intersects(mAAB);
-        if (mResult.first)
-        {
-            mIntersection = Vector::OgreToFrost(mRay.getPoint(mResult.second));
-            return true;
-        }
-        else
-            return false;
-        #else
-
-
-
-            return false;
-        #endif*/
     }
 
     #ifdef USING_OGRE
     Ogre::AxisAlignedBox AxisAlignedBox::FrostToOgre(const AxisAlignedBox& mBox)
     {
-        if (mBox.GetMin().IsInfinite() || mBox.GetMax().IsInfinite())
+        if (mBox.IsInfinite())
             return Ogre::AxisAlignedBox(Ogre::AxisAlignedBox::EXTENT_INFINITE);
         else
             return Ogre::AxisAlignedBox(Vector::FrostToOgre(mBox.GetMin()), Vector::FrostToOgre(mBox.GetMax()));

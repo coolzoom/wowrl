@@ -207,6 +207,19 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEngine::_SaveZone( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:SaveZone", pLua);
+        mFunc.Add(0, "file", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            ZoneManager::GetSingleton()->SaveZone(mFunc.Get(0)->GetString());
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEngine::_ToggleWireframeView( lua_State* pLua )
     {
         Lua::Function mFunc("Engine:ToggleWireframeView", pLua);
@@ -263,7 +276,6 @@ namespace Frost
         return mFunc.Return();
     }
 
-
     int LuaEngine::_GetMouseDecalColor( lua_State* pLua )
     {
         Lua::Function mFunc("Engine:GetMouseDecalColor", pLua, 4);
@@ -281,6 +293,21 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEngine::_GetMouseDecalPosition( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:GetMouseDecalPosition", pLua, 4);
+
+        s_wptr<Decal> pDecal = ZoneManager::GetSingleton()->GetMouseDecal();
+        if (s_refptr<Decal> pLocked = pDecal.Lock())
+        {
+            Vector mPos = pLocked->GetPosition(false);
+            mFunc.Push(mPos.X());
+            mFunc.Push(mPos.Y() - 5.0f);
+            mFunc.Push(mPos.Z());
+        }
+
+        return mFunc.Return();
+    }
 
     int LuaEngine::_SetMouseDecalColor( lua_State* pLua )
     {
@@ -409,11 +436,13 @@ namespace Frost
         method(Engine, GetBackgroundColor),
         method(Engine, GetConstant),
         method(Engine, GetMouseDecalColor),
+        method(Engine, GetMouseDecalPosition),
         method(Engine, LoadZone),
         method(Engine, LoadZoneFile),
         method(Engine, NotifyDoodadPositioned),
         method(Engine, ToggleWireframeView),
         method(Engine, ToggleShading),
+        method(Engine, SaveZone),
         method(Engine, SetBackgroundColor),
         method(Engine, SetConstant),
         method(Engine, SetMouseDecalColor),

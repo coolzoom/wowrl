@@ -93,11 +93,22 @@ namespace Frost
         */
         s_wptr<Model> GetModel();
 
+        /// Returns this Doodad's name.
+        /** \return This Doodad's name
+        */
+        const s_str&  GetName() const;
+
+        /// Returns this Doodad's Model's name.
+        /** \return This Doodad's Model's name
+        */
+        const s_str&  GetModelName() const;
+
         static const s_str CLASS_NAME;
 
     private :
 
         s_str       sName_;
+        s_str       sModelName_;
         s_ptr<Zone> pParent_;
 
         s_bool bIsShown_;

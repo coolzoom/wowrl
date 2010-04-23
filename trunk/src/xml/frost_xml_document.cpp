@@ -133,8 +133,12 @@ void Document::ReadOpeningTag_( s_str& sTagContent )
                 foreach (iterID, lIDList)
                 {
                     iterID->Trim(' ');
+                    s_str sCommand = *iterID;
+                    if (iterID->StartsWith("!"))
+                        sCommand.EraseFromStart(1);
+
                     // Compare with the preprocessor commands given by the user
-                    if (lPreProcessorCommands_.Find(*iterID) == iterID->StartsWith("!"))
+                    if (lPreProcessorCommands_.Find(sCommand) == iterID->StartsWith("!"))
                     {
                         // Skip all the following code until the proper ending tag is found
                         bPreProcessor_ = true;

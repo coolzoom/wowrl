@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*           UnitManager source           */
+/*           ZoneManager source           */
 /*                                        */
 /*                                        */
 
@@ -12,13 +12,6 @@
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
 #include "xml/frost_xml_document.h"
-#include "material/frost_shadermanager.h"
-#include "material/frost_shader.h"
-
-#include <OgreTextureManager.h>
-#include <OgreMaterialManager.h>
-#include <OgreTechnique.h>
-#include <OgrePass.h>
 
 using namespace std;
 
@@ -176,10 +169,10 @@ namespace Frost
             if (pOrientation)
             {
                 pDoodad->SetOrientation(
-                    s_float(pScale->GetAttribute("x")),
-                    s_float(pScale->GetAttribute("y")),
-                    s_float(pScale->GetAttribute("z")),
-                    s_float(pScale->GetAttribute("w"))
+                    s_float(pOrientation->GetAttribute("x")),
+                    s_float(pOrientation->GetAttribute("y")),
+                    s_float(pOrientation->GetAttribute("z")),
+                    s_float(pOrientation->GetAttribute("w"))
                 );
             }
         }
@@ -239,80 +232,67 @@ namespace Frost
             s_ptr<XML::Block> pTexturesBlock = pChunkBlock->GetBlock("Textures");
             if (pTexturesBlock)
             {
-                s_bool bEnableSpecular = Engine::GetSingleton()->GetBoolConstant("EnableSpecular");
+                TerrainChunk::MaterialInfo mMatInfo;
+                s_bool bError = false;
                 s_ptr<XML::Block> pMaskBlock = pTexturesBlock->GetBlock("Mask");
-
-                s_str sTFO = Engine::GetSingleton()->GetStringConstant("TerrainTextureFiltering");
-                Ogre::TextureFilterOptions mTFO;
-                if (sTFO == "ANISOTROPIC")
-                    mTFO = Ogre::TFO_ANISOTROPIC;
-                else if (sTFO == "BILINEAR")
-                    mTFO = Ogre::TFO_BILINEAR;
-                else
-                {
-                    Warning("Engine",
-                        "Unknown value for \"TerrainTextureFiltering\" : \""+sTFO+"\". "
-                        "Using no filtering."
-                    );
-                    mTFO = Ogre::TFO_NONE;
-                }
 
                 if (pMaskBlock && pTexturesBlock->GetChildNumber() > 2)
                 {
-                    s_str sMaskFile = pMaskBlock->GetAttribute("file");
+                    mMatInfo.sMaskFile = pMaskBlock->GetAttribute("file");
+                    if (!File::Exists(mMatInfo.sMaskFile))
+                    {
+                        Warning(CLASS_NAME,
+                            "Parsing "+pMaskBlock->GetFile()+" :\n"
+                            "Couldn't find texture : \""+mMatInfo.sMaskFile+"\""
+                        );
+                        bError = true;
+                    }
 
-                    s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
-                        ("_TCMat_"+uiChunkNbr).Get(), "Frost"
-                    ).get();
+                    mMatInfo.uiLayerCount = pTexturesBlock->GetChildNumber("Layer");
 
-                    s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
-                    pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
-
-                    s_uint uiLayerNbr = pTexturesBlock->GetChildNumber("Layer");
-
-                    s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader("Terrain_Splatting_"+uiLayerNbr);
-                    s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader("Terrain_Splatting_"+uiLayerNbr);
-                    pVS->BindTo(pPass);
-                    pPS->BindTo(pPass);
-
-                    s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
-                    Ogre::TextureManager::getSingleton().load(sMaskFile.Get(), "Frost");
-                    pTUS->setTextureName(sMaskFile.Get());
-
+                    s_uint uiLayer = 0;
                     s_ptr<XML::Block> pLayerBlock;
-                    s_uint uiLayer = 1;
                     foreach_named_block (pLayerBlock, "Layer", pTexturesBlock)
                     {
+                        TerrainChunk::MaterialInfo::Layer& mLayer = mMatInfo.lLayerList[uiLayer];
+
                         s_ptr<XML::Block> pDiffuseBlock = pLayerBlock->GetBlock("Diffuse");
-                        s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
-                        s_str sFileName = pDiffuseBlock->GetAttribute("file");
-                        Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
-                        pTUS->setTextureName(sFileName.Get());
-                        pTUS->setTextureFiltering(mTFO);
+                        mLayer.sDiffuseFile = pDiffuseBlock->GetAttribute("file");
+                        if (!File::Exists(mLayer.sDiffuseFile))
+                        {
+                            Warning(CLASS_NAME,
+                                "Parsing "+pLayerBlock->GetFile()+" :\n"
+                                "Couldn't find texture : \""+mLayer.sDiffuseFile+"\""
+                            );
+                            bError = true;
+                        }
 
                         s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
                         if (pTillingBlock)
                         {
-                            pTUS->setTextureScale(
-                                s_float(pTillingBlock->GetAttribute("x")).Get(),
-                                s_float(pTillingBlock->GetAttribute("y")).Get()
-                            );
+                            mLayer.fXTilling = s_float(pTillingBlock->GetAttribute("x"));
+                            mLayer.fZTilling = s_float(pTillingBlock->GetAttribute("z"));
                         }
 
                         s_ptr<XML::Block> pSpecularBlock = pLayerBlock->GetBlock("Specular");
-                        if (pSpecularBlock && bEnableSpecular)
+                        if (pSpecularBlock)
                         {
-                            pTUS = pPass->createTextureUnitState();
-                            sFileName = pSpecularBlock->GetAttribute("file");
-                            Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
-                            pTUS->setTextureName(sFileName.Get());
-                            pTUS->setTextureFiltering(mTFO);
+                            mLayer.sSpecularFile = pSpecularBlock->GetAttribute("file");
+                            if (!File::Exists(mLayer.sSpecularFile))
+                            {
+                                Warning(CLASS_NAME,
+                                    "Parsing "+pLayerBlock->GetFile()+" :\n"
+                                    "Couldn't find texture : \""+mLayer.sSpecularFile+"\""
+                                );
+                                bError = true;
+                            }
                         }
 
                         ++uiLayer;
                     }
 
-                    pChunk->SetMaterial(MaterialManager::GetSingleton()->CreateMaterial(pOgreMat));
+                    if (!bError)
+                        pChunk->SetMaterialInfo(mMatInfo);
                 }
                 else if (pTexturesBlock->GetBlock("Layer"))
                 {
@@ -337,34 +317,43 @@ namespace Frost
                         pLayerBlock = pTexturesBlock->First("Layer");
                     }
 
+                    mMatInfo.uiLayerCount = 1;
+                    TerrainChunk::MaterialInfo::Layer& mLayer = mMatInfo.lLayerList[0];
+
                     s_ptr<XML::Block> pDiffuseBlock = pLayerBlock->GetBlock("Diffuse");
-                    s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(
-                        pDiffuseBlock->GetAttribute("file")
-                    );
-                    pMat->GetDefaultPass()->getTextureUnitState(0)->setTextureFiltering(mTFO);
-                    pMat->SetShaders("Terrain");
+                    mLayer.sDiffuseFile = pDiffuseBlock->GetAttribute("file");
+                    if (!File::Exists(mLayer.sDiffuseFile))
+                    {
+                        Warning(CLASS_NAME,
+                            "Parsing "+pLayerBlock->GetFile()+" :\n"
+                            "Couldn't find texture : \""+mLayer.sDiffuseFile+"\""
+                        );
+                        bError = true;
+                    }
 
                     s_ptr<XML::Block> pTillingBlock = pDiffuseBlock->GetBlock("Tilling");
                     if (pTillingBlock)
                     {
-                        pMat->SetTilling(
-                            s_float(pTillingBlock->GetAttribute("x")),
-                            s_float(pTillingBlock->GetAttribute("y"))
-                        );
+                        mLayer.fXTilling = s_float(pTillingBlock->GetAttribute("x"));
+                        mLayer.fZTilling = s_float(pTillingBlock->GetAttribute("z"));
                     }
 
                     s_ptr<XML::Block> pSpecularBlock = pLayerBlock->GetBlock("Specular");
-                    if (pSpecularBlock && bEnableSpecular)
+                    if (pSpecularBlock)
                     {
-                        s_ptr<Ogre::Pass> pPass = pMat->GetDefaultPass();
-                        s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
-                        s_str sFileName = pSpecularBlock->GetAttribute("file");
-                        Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
-                        pTUS->setTextureName(sFileName.Get());
-                        pTUS->setTextureFiltering(mTFO);
+                        mLayer.sSpecularFile = pSpecularBlock->GetAttribute("file");
+                        if (!File::Exists(mLayer.sSpecularFile))
+                        {
+                            Warning(CLASS_NAME,
+                                "Parsing "+pSpecularBlock->GetFile()+" :\n"
+                                "Couldn't find texture : \""+mLayer.sSpecularFile+"\""
+                            );
+                            bError = true;
+                        }
                     }
 
-                    pChunk->SetMaterial(pMat);
+                    if (!bError)
+                        pChunk->SetMaterialInfo(mMatInfo);
                 }
             }
 

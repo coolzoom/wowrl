@@ -133,7 +133,18 @@ namespace Frost
         */
         const s_str& GetName();
 
+        /// Saves this Zone's data into an XML file.
+        /** \param sFileName The file to write to
+        */
+        void         Serialize(const s_str& sFileName) const;
+
+        static const s_str CLASS_NAME;
+
     private :
+
+        void SerializeModels_(File& mFile) const;
+        void SerializeDoodads_(File& mFile) const;
+        void SerializeTerrain_(File& mFile) const;
 
         s_str sName_;
         Color mAmbientColor_;
@@ -141,6 +152,7 @@ namespace Frost
 
         s_map< s_str, s_ptr<Light> >         lLightList_;
         s_map< s_uint, s_ptr<TerrainChunk> > lChunkList_;
+        s_map< s_str, s_str >                lModelList_;
         s_map< s_str, s_ptr<Doodad> >        lDoodadList_;
 
         s_map< s_str, s_map<s_int, s_map<s_int, MaterialInfo> > > lMaterialInfoList_;

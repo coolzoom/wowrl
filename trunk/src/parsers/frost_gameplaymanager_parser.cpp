@@ -1,7 +1,7 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*           UnitManager source           */
+/*          GameplayManager source        */
 /*                                        */
 /*                                        */
 

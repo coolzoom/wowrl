@@ -1,7 +1,7 @@
 // Input (names are forced by Ogre)
 attribute vec4 vertex;
 attribute vec3 normal;
-attribute vec4 uv0;
+attribute vec4 uv1;
 
 // Output
 varying vec3 vColor;
@@ -71,5 +71,5 @@ void main()
         vPosition = gl_Position;
     #endif
 
-    gl_TexCoord[0] = mTexCoordMat * uv0;
+    gl_TexCoord[0] = mTexCoordMat * uv1;
 }

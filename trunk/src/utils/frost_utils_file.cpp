@@ -14,6 +14,7 @@ namespace Frost
     File::File( const s_str& sName, const FileType& mType, const s_bool& bBinary )
     {
         sName_ = sName;
+        sTabStr_ = "    ";
 
         switch (mType)
         {
@@ -157,8 +158,20 @@ namespace Frost
 
     void File::WriteLine( const s_str& sLine )
     {
-        mFile_.write(sLine.c_str(), sLine.GetSize().Get());
-        mFile_.put('\n');
+        if (uiTabCount_ == 0)
+        {
+            mFile_.write(sLine.c_str(), sLine.GetSize().Get());
+            mFile_.put('\n');
+        }
+        else
+        {
+            s_str sTab = s_str(sTabStr_, uiTabCount_);
+            s_str sNewLine = sTab+sLine;
+            sNewLine.Replace("\n", "\n"+sTab);
+
+            mFile_.write(sNewLine.c_str(), sNewLine.GetSize().Get());
+            mFile_.put('\n');
+        }
     }
 
     void File::Flush()
@@ -166,11 +179,39 @@ namespace Frost
         mFile_.flush();
     }
 
-    s_bool File::Exists( const s_str& sFileName, const s_bool& bPrint )
+    s_bool File::Exists( const s_str& sFileName )
     {
-        fstream mFile;
+        if (sFileName.IsEmpty())
+            return false;
 
+        fstream mFile;
         mFile.open(sFileName.GetASCII().c_str(), ios::in);
         return mFile.is_open();
+    }
+
+    void File::SetTabCharacter(const s_str& sTabStr)
+    {
+        sTabStr_ = sTabStr;
+    }
+
+    const s_str& File::GetTabCharacter() const
+    {
+        return sTabStr_;
+    }
+
+    void File::AddTab()
+    {
+        ++uiTabCount_;
+    }
+
+    void File::RemoveTab()
+    {
+        if (uiTabCount_ != 0)
+            --uiTabCount_;
+    }
+
+    void File::RemoveAllTabs()
+    {
+        uiTabCount_ = 0;
     }
 }

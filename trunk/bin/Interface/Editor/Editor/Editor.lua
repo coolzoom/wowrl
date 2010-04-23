@@ -2,6 +2,10 @@ UIParent:SetFrameStrata("BACKGROUND");
 UIParent:EnableMouse(true, true);
 
 UIParent:SetScript("OnMouseUp", function ()
+    if (AddOns.Editor.worldClickFunction ~= nil) then
+        AddOns.Editor.worldClickFunction(arg1);
+    end
+    
     if (arg1 == "LeftButton") then
         if (this.activeDropdown) then
             this.activeDropdown:Hide();
@@ -11,6 +15,10 @@ UIParent:SetScript("OnMouseUp", function ()
         -- Handle right clicking the 3D view
     end
 end);
+
+function AddOns.Editor:SetWorldClickFunction(func)
+    self.worldClickFunction = func;
+end
 
 function AddOns.Editor:NotifyDataChanged()
     self.dataSaved = false;

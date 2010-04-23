@@ -20,10 +20,8 @@ namespace Frost
 {
     const s_str Doodad::CLASS_NAME = "Doodad";
 
-    // TODO : # fix "Set decal color..."
-
     Doodad::Doodad(const s_str& sName, const s_str& sModelName, s_ptr<Zone> pParent) :
-        sName_(sName), pParent_(pParent), bIsShown_(true)
+        sName_(sName), sModelName_(sModelName), pParent_(pParent), bIsShown_(true)
     {
         mOgreInterface_.SetDoodad(this);
         if (Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR)
@@ -34,6 +32,7 @@ namespace Frost
         {
             pModel_->AttachTo(this);
             pModel_->SetOgreInterface(&mOgreInterface_);
+            pEntity_ = pModel_->GetEntity();
         }
     }
 
@@ -125,6 +124,16 @@ namespace Frost
     s_wptr<Model> Doodad::GetModel()
     {
         return pModel_;
+    }
+
+    const s_str& Doodad::GetName() const
+    {
+        return sName_;
+    }
+
+    const s_str& Doodad::GetModelName() const
+    {
+        return sModelName_;
     }
 
     void DoodadOgreInterface::SetDoodad( s_ptr<Doodad> pDoodad )

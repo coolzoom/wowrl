@@ -51,6 +51,42 @@ namespace Frost
             sValue_ = sValue;
         }
 
+        /// Repeat constructor.
+        /** \param sValue The string to repeat
+        */
+        template<class N>
+        s_str_t(const s_str_t& sValue, const s_uint_t<N>& uiNbr)
+        {
+            sValue_ = "";
+
+            for (s_uint_t<N> uiCounter; uiCounter < uiNbr; ++uiCounter)
+                sValue_ += sValue.Get();
+        }
+
+        /// Repeat constructor.
+        /** \param sValue The string to repeat
+        */
+        template<class N>
+        s_str_t(const string_object& sValue, const s_uint_t<N>& uiNbr)
+        {
+            sValue_ = "";
+
+            for (s_uint_t<N> uiCounter; uiCounter < uiNbr; ++uiCounter)
+                sValue_ += sValue;
+        }
+
+        /// Repeat constructor.
+        /** \param sValue The string to repeat
+        */
+        template<class N>
+        s_str_t(const string_element* sValue, const s_uint_t<N>& uiNbr)
+        {
+            sValue_ = "";
+
+            for (s_uint_t<N> uiCounter; uiCounter < uiNbr; ++uiCounter)
+                sValue_ += sValue;
+        }
+
         /// Constructor.
         /** \param sValue The string to use
         *   \param uiSize The number of character to copy

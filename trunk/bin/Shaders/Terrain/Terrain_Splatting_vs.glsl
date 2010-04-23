@@ -2,6 +2,7 @@
 attribute vec4 vertex;
 attribute vec3 normal;
 attribute vec4 uv0;
+attribute vec4 uv1;
 
 // Output
 varying vec3 vColor;
@@ -79,12 +80,12 @@ void main()
     #endif
 
     gl_TexCoord[0] = uv0;
-    gl_TexCoord[1] = mTexCoordMat1 * uv0;
-    gl_TexCoord[2] = mTexCoordMat2 * uv0;
+    gl_TexCoord[1] = mTexCoordMat1 * uv1;
+    gl_TexCoord[2] = mTexCoordMat2 * uv1;
     #if LAYER > 2
-        gl_TexCoord[3] = mTexCoordMat3 * uv0;
+        gl_TexCoord[3] = mTexCoordMat3 * uv1;
     #endif
     #if LAYER > 3
-        gl_TexCoord[4] = mTexCoordMat4 * uv0;
+        gl_TexCoord[4] = mTexCoordMat4 * uv1;
     #endif
 }

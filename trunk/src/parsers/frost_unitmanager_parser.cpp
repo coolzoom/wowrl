@@ -6,7 +6,6 @@
 /*                                        */
 
 #include "unit/frost_unitmanager.h"
-
 #include "unit/frost_character.h"
 #include "unit/frost_creature.h"
 #include "unit/frost_healthtype.h"

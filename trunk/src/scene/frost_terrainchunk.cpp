@@ -10,6 +10,8 @@
 #include "scene/frost_zone.h"
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
+#include "material/frost_shadermanager.h"
+#include "material/frost_shader.h"
 #include "scene/frost_terrainobstacle.h"
 #include "scene/frost_planeobstacle.h"
 #include "scene/frost_physicsmanager.h"
@@ -20,6 +22,10 @@
 #include <OgreSubMesh.h>
 #include <OgreHardwareBufferManager.h>
 #include <OgreEntity.h>
+#include <OgreTextureManager.h>
+#include <OgreMaterialManager.h>
+#include <OgreTechnique.h>
+#include <OgrePass.h>
 
 #include <algorithm>
 
@@ -54,7 +60,7 @@ namespace Frost
         /// Vertex normal
         float fNormal[3];
         /// Texture coordinates
-        float fUVs[2];
+        float fUVs[4];
         /// Flags
         uchar ucFlags;
     };
@@ -107,7 +113,11 @@ namespace Frost
                 );
                 pDecl->addElement(
                     0, (3+3)*Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT1),
-                    Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES
+                    Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, 0
+                );
+                pDecl->addElement(
+                    0, (3+3+2)*Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT1),
+                    Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, 1
                 );
 
                 Ogre::HardwareVertexBufferSharedPtr pVBuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
@@ -150,7 +160,10 @@ namespace Frost
                         lData.PushBack(1.0f);
                         lData.PushBack(0.0f);
 
-                        // Texture coordinates
+                        // Texture coordinates (normalized)
+                        lData.PushBack(i/(float)(uiNX-1));
+                        lData.PushBack(j/(float)(uiNZ-1));
+                        // Texture coordinates (constant scale)
                         lData.PushBack((x+fXSize/2.0f)/fXSize);
                         lData.PushBack((z+fZSize/2.0f)/fZSize);
                     }
@@ -266,7 +279,11 @@ namespace Frost
                 );
                 pDecl->addElement(
                     0, (3+3)*Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT1),
-                    Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES
+                    Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, 0
+                );
+                pDecl->addElement(
+                    0, (3+3+2)*Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT1),
+                    Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, 1
                 );
 
                 Ogre::HardwareVertexBufferSharedPtr pVBuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
@@ -290,7 +307,7 @@ namespace Frost
                 mFile.Read(lPointList.GetClassicArray(), uiNX*uiNZ*sizeof(TerrainVertex));
                 mFile.Close();
 
-                uint uiParamNbr = 3+3+2;
+                uint uiParamNbr = 3+3+2+2;
                 s_array<float> lData; lData.Resize(uiVertexCount*uiParamNbr);
                 s_array<ushort> lIndices; lIndices.Resize(uiIndexCount);
 
@@ -337,9 +354,12 @@ namespace Frost
                         lData[i+4] = lPointList[j].fNormal[1];
                         lData[i+5] = lPointList[j].fNormal[2];
 
-                        // Texture coordinates (constant scale)
+                        // Texture coordinates (normalized)
                         lData[i+6] = lPointList[j].fUVs[0];
                         lData[i+7] = lPointList[j].fUVs[1];
+                        // Texture coordinates (constant scale)
+                        lData[i+8] = lPointList[j].fUVs[2];
+                        lData[i+9] = lPointList[j].fUVs[3];
                     }
                 }
 
@@ -481,6 +501,11 @@ namespace Frost
         sTerrainFile_ = sTerrainFile;
     }
 
+    const s_str& TerrainChunk::GetTerrainFile() const
+    {
+        return sTerrainFile_;
+    }
+
     void TerrainChunk::SetPlane( const s_float& fXSize, const s_float& fZSize, const s_float& fDensity )
     {
         bPlane_ = true;
@@ -490,9 +515,113 @@ namespace Frost
         fDensity_ = fDensity;
     }
 
-    void TerrainChunk::SetMaterial( s_refptr<Material> pMat )
+    const s_float& TerrainChunk::GetPlaneXSize() const
     {
-        pMat_ = pMat;
+        return fXSize_;
+    }
+
+    const s_float& TerrainChunk::GetPlaneZSize() const
+    {
+        return fZSize_;
+    }
+
+    const s_float& TerrainChunk::GetPlaneDensity() const
+    {
+        return fDensity_;
+    }
+
+    const s_bool& TerrainChunk::IsPlanar() const
+    {
+        return bPlane_;
+    }
+
+    void TerrainChunk::SetMaterialInfo( const MaterialInfo& mMatInfo )
+    {
+        mMatInfo_ = mMatInfo;
+
+        s_bool bEnableSpecular = Engine::GetSingleton()->GetBoolConstant("EnableSpecular");
+
+        s_str sTFO = Engine::GetSingleton()->GetStringConstant("TerrainTextureFiltering");
+        Ogre::TextureFilterOptions mTFO;
+        if (sTFO == "ANISOTROPIC")
+            mTFO = Ogre::TFO_ANISOTROPIC;
+        else if (sTFO == "BILINEAR")
+            mTFO = Ogre::TFO_BILINEAR;
+        else
+        {
+            Warning("Engine",
+                "Unknown value for \"TerrainTextureFiltering\" : \""+sTFO+"\". "
+                "Using no filtering."
+            );
+            mTFO = Ogre::TFO_NONE;
+        }
+
+        if (mMatInfo_.sMaskFile.IsEmpty())
+        {
+            const MaterialInfo::Layer& mLayer = mMatInfo_.lLayerList[0];
+            pMat_ = MaterialManager::GetSingleton()->CreateMaterial3D(mLayer.sDiffuseFile);
+            pMat_->GetDefaultPass()->getTextureUnitState(0)->setTextureFiltering(mTFO);
+            pMat_->SetShaders("Terrain");
+            pMat_->SetTilling(mLayer.fXTilling, mLayer.fZTilling);
+
+            if (!mLayer.sSpecularFile.IsEmpty() && bEnableSpecular)
+            {
+                s_ptr<Ogre::Pass> pPass = pMat_->GetDefaultPass();
+                s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
+                Ogre::TextureManager::getSingleton().load(mLayer.sSpecularFile.Get(), "Frost");
+                pTUS->setTextureName(mLayer.sSpecularFile.Get());
+                pTUS->setTextureFiltering(mTFO);
+            }
+        }
+        else
+        {
+            s_ptr<Ogre::Material> pOgreMat = dynamic_cast<Ogre::Material*>(Ogre::MaterialManager::getSingleton().create(
+                ("_TCMat_"+uiID_).Get(), "Frost"
+            ).get());
+
+            s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
+            pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
+
+            s_ptr<VertexShader> pVS = ShaderManager::GetSingleton()->GetVertexShader(
+                "Terrain_Splatting_"+mMatInfo_.uiLayerCount
+            );
+            s_ptr<PixelShader> pPS = ShaderManager::GetSingleton()->GetPixelShader(
+                "Terrain_Splatting_"+mMatInfo_.uiLayerCount
+            );
+            pVS->BindTo(pPass);
+            pPS->BindTo(pPass);
+
+            s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
+            Ogre::TextureManager::getSingleton().load(mMatInfo_.sMaskFile.Get(), "Frost");
+            pTUS->setTextureName(mMatInfo_.sMaskFile.Get());
+            pTUS->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
+
+            for (s_uint i = 0; i < mMatInfo_.uiLayerCount; ++i)
+            {
+                const MaterialInfo::Layer& mLayer = mMatInfo_.lLayerList[i];
+                Ogre::TextureManager::getSingleton().load(mLayer.sDiffuseFile.Get(), "Frost");
+
+                s_ptr<Ogre::TextureUnitState> pTUS = pPass->createTextureUnitState();
+                pTUS->setTextureName(mLayer.sDiffuseFile.Get());
+                pTUS->setTextureFiltering(mTFO);
+                pTUS->setTextureScale(mLayer.fXTilling.Get(), mLayer.fZTilling.Get());
+
+                if (!mLayer.sSpecularFile.IsEmpty() && bEnableSpecular)
+                {
+                    Ogre::TextureManager::getSingleton().load(mLayer.sSpecularFile.Get(), "Frost");
+                    pTUS = pPass->createTextureUnitState();
+                    pTUS->setTextureName(mLayer.sSpecularFile.Get());
+                    pTUS->setTextureFiltering(mTFO);
+                }
+            }
+
+            pMat_ = MaterialManager::GetSingleton()->CreateMaterial(pOgreMat);
+        }
+    }
+
+    const TerrainChunk::MaterialInfo& TerrainChunk::GetMaterialInfo() const
+    {
+        return mMatInfo_;
     }
 
     void TerrainChunk::SetAlwaysVisible( const s_bool& bAlwaysVisible )

@@ -43,11 +43,8 @@ namespace Frost
 
     void Creature::SetBodyModel( const s_str& sModelName )
     {
-        if (pBodyModel_)
-        {
-            if (sModelName == pBodyModel_->GetModelName())
-                return;
-        }
+        if (pBodyModel_ && sModelName == pBodyModel_->GetOgreModelName())
+            return;
 
         pBodyModel_ = ModelManager::GetSingleton()->CreateModel(sModelName, sName_);
         pBodyModel_->SetOgreInterface(&mOgreInterface_);

@@ -342,6 +342,7 @@
 		<Unit filename="src\scene\frost_terrainobstacle.cpp" />
 		<Unit filename="src\scene\frost_zone.cpp" />
 		<Unit filename="src\scene\frost_zonemanager.cpp" />
+		<Unit filename="src\serializers\frost_zone_serializer.cpp" />
 		<Unit filename="src\spell\frost_spell.cpp" />
 		<Unit filename="src\unit\frost_character.cpp" />
 		<Unit filename="src\unit\frost_character_glues.cpp" />

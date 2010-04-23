@@ -79,7 +79,7 @@
             </#>
         </TextureBinds>
         <PreProcessor>
-            <Directive variable="LAYER" value="3"/>
+            <Directive variable="LAYER" value="2"/>
             <#[SPECULAR]>
                 <Directive variable="SPECULAR"/>
             </#>

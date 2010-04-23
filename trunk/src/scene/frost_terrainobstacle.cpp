@@ -28,11 +28,6 @@ namespace Frost
         mBoundingBox_ = pParent_->GetTrueBoundingBox();
     }
 
-    s_bool TerrainObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
-    {
-        return true;
-    }
-
     s_bool TerrainObstacle::IsPointInsideTriangle_( const Vector& mPoint, const Triangle& mTriangle ) const
     {
         // Note : code taken from :
@@ -77,7 +72,7 @@ namespace Frost
 
     s_bool TerrainObstacle::EllipsoidGoThrough(
         const Vector& mRadiusVector, const Vector& mPreviousPos,
-        const Vector& mNextPos, const Vector& mFinalPos, CollisionData& rData ) const
+        const Vector& mNextPos, CollisionData& rData ) const
     {
         // Note : algorithm taken from :
         // http://www.peroxide.dk/papers/collision/collision.pdf
@@ -92,9 +87,6 @@ namespace Frost
         Vector mDestination = mNextPos - pParent_->GetPosition();
         mDestination.ScaleDown(mRadiusVector);
 
-        Vector mInitialDestination = mFinalPos - pParent_->GetPosition();
-        mInitialDestination.ScaleDown(mRadiusVector);
-
         Vector mDistance = mDestination - mPosition;
         Vector mInitialDistance = mDistance;
         s_float fDistanceSquared = mDistance.GetLengthSquared();
@@ -104,6 +96,7 @@ namespace Frost
 
         // Declare needed variables
         Vector  mPlaneNormal, mIntersection;
+        enum {TYPE_NONE, TYPE_FACE, TYPE_VERTEX, TYPE_EDGE} mCollisionType = TYPE_NONE;
         s_float fStartTime, fEndTime;
         s_float fT, fBestT = 1.0f;
         s_float fSignedDistance, fNormDotDist;
@@ -179,6 +172,7 @@ namespace Frost
                 mIntersection = mPlaneIntersection;
                 fBestT = fStartTime;
                 bCollision = true;
+                mCollisionType = TYPE_FACE;
                 continue;
             }
 
@@ -197,6 +191,7 @@ namespace Frost
                     mIntersection = mTriangle.mP[i];
                     fBestT = fT;
                     bCollision = true;
+                    mCollisionType = TYPE_VERTEX;
                 }
             }
 
@@ -214,7 +209,7 @@ namespace Frost
                 fEdgeDotBTV = mEdge*mBaseToVertex;
 
                 fT = GetSmallestRoot_(
-                    -fDistanceSquared*fEdgeSquared  + fEdgeDotDist*fEdgeDotDist,
+                    -fDistanceSquared*fEdgeSquared + fEdgeDotDist*fEdgeDotDist,
                     fEdgeSquared*2.0f*(mDistance*mBaseToVertex) - 2.0f*fEdgeDotDist*fEdgeDotBTV,
                     fEdgeSquared*(1.0f - mBaseToVertex*mBaseToVertex) + fEdgeDotBTV*fEdgeDotBTV
                 );
@@ -227,6 +222,7 @@ namespace Frost
                         mIntersection = mTriangle.mP[i] + fEdgeCollisionPoint*mEdge;
                         fBestT = fT;
                         bCollision = true;
+                        mCollisionType = TYPE_EDGE;
                     }
                 }
             }
@@ -251,15 +247,19 @@ namespace Frost
             rData.mCollisionPoint.ScaleUp(mRadiusVector);
             rData.mCollisionPoint += pParent_->GetPosition();
 
-            // Calculate the sliding movement
-            mPlaneNormal = mPosition + fBestT*mDistance - mIntersection;
-            mPlaneNormal.Normalize();
-
-            mDistance = mNextPos - mPreviousPos;
-            mDistance.Normalize();
-
             // Calculate the world space collision normal
-            rData.mPlaneNormal = mPlaneNormal;
+            rData.mPlaneNormal = mPosition + fBestT*mDistance - mIntersection;
+            // TODO : voir pourquoi ca saute
+            Log("  T : "+fBestT+", norm : "+rData.mPlaneNormal.GetNorm());
+            switch (mCollisionType)
+            {
+                case TYPE_NONE : Log("  type : none"); break;
+                case TYPE_FACE : Log("  type : face"); break;
+                case TYPE_EDGE : Log("  type : edge"); break;
+                case TYPE_VERTEX : Log("  type : vertex"); break;
+            }
+
+            rData.mPlaneNormal.Normalize();
             rData.mPlaneNormal.ScaleUp(Vector(
                 mRadiusVector.Y()*mRadiusVector.Z(),
                 mRadiusVector.Z()*mRadiusVector.X(),

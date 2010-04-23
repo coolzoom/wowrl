@@ -75,6 +75,11 @@ namespace Frost
         */
         s_bool        Contains(const Vector& mPoint) const;
 
+        /// Checks if this box is infinite in all directions.
+        /** \return 'true' if this box is infinite in all directions
+        */
+        s_bool        IsInfinite() const;
+
         /// Checks if a ray intersects this box.
         /** \param mRayOrigin         The start point of the ray
         *   \param mRayDirection      The direction on which to cast the ray
