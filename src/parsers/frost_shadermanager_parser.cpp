@@ -1,10 +1,9 @@
 /* ###################################### */
 /* ###     Frost Engine, by Kalith    ### */
 /* ###################################### */
-/*           UnitManager source           */
+/*          ShaderManager source          */
 /*                                        */
 /*                                        */
-
 
 #include "material/frost_shadermanager.h"
 #include "material/frost_shader.h"

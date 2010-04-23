@@ -76,8 +76,6 @@ namespace Frost
     {
         if (IsEnabled())
         {
-            // TODO : ## voir pk ca saute
-
             mPosition_ = pParent_->GetPosition(false) - mHotSpot_;
             mPreviousState_ = mState_;
             Vector mPreviousPos = mPosition_;
@@ -106,6 +104,7 @@ namespace Frost
 
                     // Check for collisions
                     uiRecursionCounter_ = 0;
+                    Log("#1");
                     UpdateMovement_();
 
                     // Try to remain on the ground
@@ -115,19 +114,19 @@ namespace Frost
 
                     bGravityCheck_ = true;
                     uiRecursionCounter_ = PhysicsManager::GetSingleton()->GetMaxCollisionRecursion() - 1;
+                    Log("#2");
                     UpdateMovement_();
                     bGravityCheck_ = false;
 
                     if (mState_ == STATE_FREEFALL)
                     {
                         // The unit starts to fall, give it some impulsion
-                        mSpeed_  = mHorizontalSpeed_*0.5f;
+                        mSpeed_ = mHorizontalSpeed_*0.5f;
                     }
 
                     break;
                 }
             }
-
 
             // Move the unit
             pParent_->Translate(mPosition_ - mPreviousPos);
@@ -161,7 +160,7 @@ namespace Frost
                 if (pObstacle->IsInBoundingBox(mTempBox))
                 {
                     // Then do the true collision detection
-                    if (!pObstacle->EllipsoidGoThrough(mRadius_, mPosition_, mDestination, mFinalDestination, mData))
+                    if (!pObstacle->EllipsoidGoThrough(mRadius_, mPosition_, mDestination, mData))
                     {
                         mDestination = mData.mNewPosition;
                         pBindedObstacle_ = *iterObstacle;
@@ -186,7 +185,11 @@ namespace Frost
                         }
                         else
                         {
-                            s_float fAngle = acos(mData_.mPlaneNormal*Vector::UNIT_Y);
+                            static s_float fLastAngle = 0.0;
+                            s_float fAngle = acos(mData_.mPlaneNormal.Y());
+                            // TODO : voir pourquoi ca saute
+                            Log("["+s_str(s_uint(100*fabs((fAngle - fLastAngle)/fAngle)),3)+"] angle : "+fAngle+" ("+UnitManager::GetSingleton()->GetMaxClimbingAngle()+"), "+mData_.mCollisionPoint);
+                            fLastAngle = fAngle;
                             if (fAngle < UnitManager::GetSingleton()->GetMaxClimbingAngle())
                             {
                                 // The slope is fine, move as usual.
@@ -194,16 +197,11 @@ namespace Frost
                                 mGroundIntersection_ = mData_.mCollisionPoint;
 
                                 // Calculate remaning movement
-                                if (!mData_.mPlaneNormal.Y().IsNull())
-                                {
-                                    mMovement_ = mFinalDestination - mPosition_;
-                                    mMovement_.Y() = 0.0f;
-                                    mMovement_.Y() = - mMovement_*mData_.mPlaneNormal/mData_.mPlaneNormal.Y();
-                                    mMovement_.Normalize();
-                                    mMovement_ *= (mFinalDestination - mPosition_).GetNorm();
-                                }
-                                else
-                                    mMovement_ = Vector::ZERO;
+                                mMovement_ = mFinalDestination - mPosition_;
+                                mMovement_.Y() = 0.0f;
+                                mMovement_.Y() = - mMovement_*mData_.mPlaneNormal/mData_.mPlaneNormal.Y();
+                                mMovement_.Normalize();
+                                mMovement_ *= (mFinalDestination - mPosition_).GetNorm();
 
                                 mState_ = STATE_TERRAIN;
                             }
@@ -215,10 +213,20 @@ namespace Frost
                                 if (bClimbing_)
                                 {
                                     // The slope is too steep, the unit can't go there.
-                                    /*Vector mTangent = mData_.mPlaneNormal^Vector::UNIT_Y;
-                                    mTangent = mTangent^mData_.mPlaneNormal;
-                                    mMovement_ = mData_.mRemainingMovement - mTangent*(mData_.mRemainingMovement*mTangent);*/
-                                    mMovement_ = Vector::ZERO;
+                                    // Calculate remaning movement
+                                    /*mMovement_ = mFinalDestination - mPosition_;
+                                    mMovement_.Y() = 0.0f;
+                                    mMovement_.Y() = - mMovement_*mData_.mPlaneNormal/mData_.mPlaneNormal.Y();
+                                    mMovement_.Normalize();
+                                    mMovement_ *= (mFinalDestination - mPosition_).GetNorm();*/
+
+                                    // Slide
+                                    mMovement_ = mData_.mPlaneNormal^Vector::UNIT_Y;
+                                    mMovement_.Normalize();
+                                    mMovement_ = ((mFinalDestination - mPosition_)*mMovement_)*mMovement_;
+                                    /*mTangent = mTangent^mData_.mPlaneNormal;
+                                    mMovement_ = mMovement_ - mTangent*(mMovement_*mTangent);*/
+                                    //mMovement_ = Vector::ZERO;
                                     mState_ = STATE_TERRAIN;
                                 }
                                 else

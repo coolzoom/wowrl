@@ -14,6 +14,7 @@
 #include "path/frost_path.h"
 
 #include <OgreUserDefinedObject.h>
+#include <OgreQuaternion.h>
 
 namespace Frost
 {
@@ -263,6 +264,11 @@ namespace Frost
         */
         const Vector&         GetInitialDirection() const;
 
+        /// Returns the orientation of this object.
+        /** \return The orientation of this object
+        */
+        Ogre::Quaternion      GetOrientation(const s_bool& bRelative = true) const;
+
         /// Returns the point this object is tracking on.
         /** \return The point this object is tracking on
         */
@@ -292,6 +298,11 @@ namespace Frost
         /** \return The controlled node
         */
         s_ptr<Ogre::SceneNode> GetOgreNode();
+
+        /// Returns this MovableObject's entity (if any).
+        /** \return This MovableObject's entity (if any)
+        */
+        s_ptr<Ogre::Entity>   GetOgreEntity();
 
         /// Returns this MovableObject's unique ID.
         /** \return This MovableObject's unique ID

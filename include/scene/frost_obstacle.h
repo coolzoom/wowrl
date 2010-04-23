@@ -38,19 +38,10 @@ namespace Frost
         /// Destructor.
         virtual ~Obstacle();
 
-        /// Check for collision between the two provided points.
-        /** \param mPreviousPos The point to start from
-        *   \param pNextPos     The point you need to reach
-        *   \return 'true' if no collision happened
-        *   \note pNextPos is also used to store the collision point
-        */
-        virtual s_bool PointGoThrough(const Vector& mPreviousPos, s_ptr<Vector> pNextPos) const = 0;
-
         /// Check for collision for an ellipsoidal object.
         /** \param mRadiusVector The radius vector of the object
         *   \param mPreviousPos  The initial position of the object (center of the ellipsoid)
         *   \param mNextPos      The wanted position of the object
-        *   \param mFinalPos     The initial wanted position of the object
         *   \param[out] rData    The collision data (output)
         *   \return 'true' if there was no collision
         *   \note The collision algorithm of PhysicsManager is recursive, so this function
@@ -67,8 +58,7 @@ namespace Frost
         */
         virtual s_bool EllipsoidGoThrough(
             const Vector& mRadiusVector, const Vector& mPreviousPos,
-            const Vector& mNextPos, const Vector& mFinalPos,
-            CollisionData& rData
+            const Vector& mNextPos, CollisionData& rData
         ) const = 0;
 
         /// Checks if a ray intersects this Obstacle.

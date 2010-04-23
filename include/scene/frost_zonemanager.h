@@ -37,13 +37,18 @@ namespace Frost
         */
         s_ptr<Zone> LoadZoneFile(const s_str& sZoneFile);
 
-        /// Unloads the current zone.
+        /// Unloads the current Zone.
         /** \note This is automatically called by LoadZone() and
         *         LoadZoneFile().
         */
         void        UnloadZone();
 
-        /// Shows a decal on the ground following the mouse.
+        /// Saves the current Zone in a file.
+        /** \param sZoneFile The file into which to save the Zone
+        */
+        void        SaveZone(const s_str& sZoneFile);
+
+        /// Shows a Decal on the ground following the mouse.
         /** \param pDecal The decal to use
         */
         void        EnableMouseDecal(s_wptr<Decal> pDecal);

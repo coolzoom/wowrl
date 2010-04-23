@@ -400,14 +400,22 @@ namespace Frost
     Vector MovableObject::GetDirection( const s_bool& bRelative ) const
     {
         if (bRelative)
-            return Vector::OgreToFrost(pNode_->getOrientation() * -Ogre::Vector3::UNIT_Z);
+            return Vector::OgreToFrost(pNode_->getOrientation() * Vector::FrostToOgre(mInitialDirection_));
         else
-            return Vector::OgreToFrost(pNode_->_getDerivedOrientation() * -Ogre::Vector3::UNIT_Z);
+            return Vector::OgreToFrost(pNode_->_getDerivedOrientation() * Vector::FrostToOgre(mInitialDirection_));
     }
 
     const Vector& MovableObject::GetInitialDirection() const
     {
         return mInitialDirection_;
+    }
+
+    Ogre::Quaternion MovableObject::GetOrientation( const s_bool& bRelative ) const
+    {
+        if (bRelative)
+            return pNode_->getOrientation();
+        else
+            return pNode_->_getDerivedOrientation();
     }
 
     s_wptr<Path> MovableObject::GetPath()
@@ -438,6 +446,11 @@ namespace Frost
     const s_uint& MovableObject::GetID() const
     {
         return uiID_;
+    }
+
+    s_ptr<Ogre::Entity> MovableObject::GetOgreEntity()
+    {
+        return pEntity_;
     }
 
     void MovableObject::Update( const s_float& fDelta )

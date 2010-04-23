@@ -26,18 +26,12 @@ namespace Frost
         */
         SphereObstacle(const s_float& fRadius);
 
-        /// \copybrief Frost::Obstacle::PointGoThrough()
-        /** \copydetails Frost::Obstacle::PointGoThrough()
-        */
-        s_bool PointGoThrough(const Vector& mPreviousPos, s_ptr<Vector> pNextPos) const;
-
         /// \copybrief Frost::Obstacle::EllipsoidGoThrough()
         /** \copydetails Frost::Obstacle::EllipsoidGoThrough()
         */
         s_bool EllipsoidGoThrough(
             const Vector& mRadiusVector, const Vector& mPreviousPos,
-            const Vector& mNextPos, const Vector& mFinalPos,
-            CollisionData& rData
+            const Vector& mNextPos, CollisionData& rData
         ) const;
 
         /// \copybrief Frost::Obstacle::GetRayIntersection()

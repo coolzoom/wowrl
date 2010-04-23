@@ -24,6 +24,8 @@ using namespace std;
 
 namespace Frost
 {
+    const s_str Zone::CLASS_NAME = "Zone";
+
     Zone::Zone( const s_str& sName ) :
         sName_(sName)
     {
@@ -99,7 +101,12 @@ namespace Frost
         if (!ModelManager::GetSingleton()->LinkModelNameToFile("Zone", sName, sFile))
             return false;
 
-        return ModelManager::GetSingleton()->PreloadModel("Zone", sName);
+        if (!ModelManager::GetSingleton()->PreloadModel("Zone", sName))
+            return false;
+
+        lModelList_[sName] = sFile;
+
+        return true;
     }
 
     void Zone::SetMaterialInfo( const s_str& sModelName, const s_map<s_int, s_map<s_int, MaterialInfo> >& lMatInfo )
@@ -218,12 +225,9 @@ namespace Frost
                 s_float fHeight = iterChunk->second->GetPointHeight(fX - mPosition.X(), fZ - mPosition.Z());
                 if (fHeight.IsValid())
                     return fHeight;
-                else
-                    Log("0. !");
             }
         }
 
-        Log("0 !");
         return s_float::NaN;
     }
 

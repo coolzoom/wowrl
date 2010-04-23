@@ -138,7 +138,24 @@ namespace Frost
         pControlledObject_ = pObj;
 
         if (pControlledObject_)
+        {
             AttachTo(pControlledObject_);
+            s_ptr<Ogre::Entity> pEntity = pObj->GetOgreEntity();
+            if (pEntity)
+            {
+                s_ptr<Ogre::Mesh> pMesh = pEntity->getMesh().get();
+                if (pMesh)
+                {
+                    AxisAlignedBox mBox = AxisAlignedBox::OgreToFrost(pMesh->getBounds());
+                    if (!mBox.IsInfinite())
+                    {
+                        Vector mSize = mBox.GetMax() - mBox.GetMin();
+                        s_float fScale = s_float::Min(mSize.X(), s_float::Min(mSize.Y(), mSize.Z()));
+                        SetScale(fScale*Vector::UNIT);
+                    }
+                }
+            }
+        }
     }
 
     s_ptr<MovableObject> Gizmo::GetControlledObject()
@@ -213,6 +230,7 @@ namespace Frost
                 {
                     s_ptr<Axis> pAxis = lDraggedList.Back();
 
+                    // Cast a ray from the mouse
                     s_ptr<Camera> pMainCam = CameraManager::GetSingleton()->GetMainCamera();
                     Ogre::Ray mRay = pMainCam->GetOgreCamera()->getCameraToViewportRay(
                         (InputManager::GetSingleton()->GetMousePosX()/s_float(Engine::GetSingleton()->GetScreenWidth())).Get(),
@@ -224,15 +242,19 @@ namespace Frost
 
                     if (!pAxis->pDraggedPlane)
                     {
+                        // Choose which drag plane to use
                         s_float fDot1 = fabs(mRayDirection*pAxis->lDragPlaneList[0]->GetDirection());
                         s_float fDot2 = fabs(mRayDirection*pAxis->lDragPlaneList[1]->GetDirection());
 
+                        // Pick the one which is most facing the camera
                         pAxis->pDraggedPlane = (fDot1 > fDot2) ? pAxis->lDragPlaneList[0] : pAxis->lDragPlaneList[1];
 
+                        // Store the beginning dragging position
                         pAxis->pDraggedPlane->GetRayIntersection(mRayOrigin, mRayDirection, pAxis->mOldDragPos);
                     }
                     else
                     {
+                        // Get the intersection of the ray and the drag plane
                         Vector mPos;
                         if (pAxis->pDraggedPlane->GetRayIntersection(mRayOrigin, mRayDirection, mPos))
                         {
@@ -254,8 +276,8 @@ namespace Frost
                                 mMovement.Y() = 0.0f;
                             }
 
+                            // Move the object
                             pControlledObject_->Translate(mMovement);
-
                             pAxis->mOldDragPos = mPos;
                         }
                     }

@@ -101,6 +101,14 @@ namespace Frost
         }
     }
 
+    void ZoneManager::SaveZone( const s_str& sZoneFile )
+    {
+        if (pCurrentZone_)
+        {
+            pCurrentZone_->Serialize(sZoneFile);
+        }
+    }
+
     void ZoneManager::EnableMouseDecal( s_wptr<Decal> pDecal )
     {
         if (s_refptr<Decal> pLocked = pDecal.Lock())

@@ -129,23 +129,30 @@ namespace Frost
             (sFileName+"_2D_"+uiCounter_).Get(), "Frost"
         ).get();
 
-        Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
+        if (File::Exists(sFileName))
+        {
+            Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
 
-        s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
-        /*pPass->setSeparateSceneBlending(
-            Ogre::SBF_ZERO, Ogre::SBF_DEST_ALPHA, // color
-            Ogre::SBF_ZERO, Ogre::SBF_ONE         // alpha
-        );
+            s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
+            /*pPass->setSeparateSceneBlending(
+                Ogre::SBF_ZERO, Ogre::SBF_DEST_ALPHA, // color
+                Ogre::SBF_ZERO, Ogre::SBF_ONE         // alpha
+            );
 
-        pPass = pOgreMat->getTechnique(0)->createPass();*/
+            pPass = pOgreMat->getTechnique(0)->createPass();*/
 
-        pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
-        pPass->createTextureUnitState()->setTextureName(sFileName.Get());
-        pPass->setTextureFiltering(Ogre::TFO_NONE);
-        pPass->setSeparateSceneBlending(
-            Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, // color
-            Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA           // alpha
-        );
+            pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
+            pPass->createTextureUnitState()->setTextureName(sFileName.Get());
+            pPass->setTextureFiltering(Ogre::TFO_NONE);
+            pPass->setSeparateSceneBlending(
+                Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, // color
+                Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA           // alpha
+            );
+        }
+        else
+        {
+            Error(CLASS_NAME, "Couldn't load texture : \""+sFileName+"\".");
+        }
 
         pOgreMat->load();
         pOgreMat->setLightingEnabled(false);
@@ -251,11 +258,18 @@ namespace Frost
             sName.Get(), "Frost"
         ).get();
 
-        Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
+        if (File::Exists(sFileName))
+        {
+            Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
 
-        s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
-        pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
-        pPass->createTextureUnitState()->setTextureName(sFileName.Get());
+            s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
+            pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
+            pPass->createTextureUnitState()->setTextureName(sFileName.Get());
+        }
+        else
+        {
+            Error(CLASS_NAME, "Couldn't load texture : \""+sFileName+"\".");
+        }
 
         pOgreMat->load();
 

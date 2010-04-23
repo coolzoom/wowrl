@@ -31,11 +31,11 @@ namespace Frost
     Model::Model( const ModelData& mData, const s_str& sEntityName ) : MovableObject()
     {
         pMesh_ = mData.pMesh_;
-        sModelName_ = mData.sModelName_;
+        sOgreModelName_ = mData.sModelName_;
         sEntityName_ = sEntityName;
 
         s_ptr<Ogre::SceneManager> pSceneMgr = Engine::GetSingleton()->GetOgreSceneManager();
-        pEntity_ = pSceneMgr->createEntity(sEntityName_.Get(), sModelName_.Get());
+        pEntity_ = pSceneMgr->createEntity(sEntityName_.Get(), sOgreModelName_.Get());
 
         pNode_->attachObject(pEntity_.Get());
 
@@ -65,9 +65,9 @@ namespace Frost
         }
     }
 
-    const s_str& Model::GetModelName() const
+    const s_str& Model::GetOgreModelName() const
     {
-        return sModelName_;
+        return sOgreModelName_;
     }
 
     const s_str& Model::GetEntityName() const
@@ -84,7 +84,7 @@ namespace Frost
         else
         {
             Warning(CLASS_NAME,
-                "ModelPart "+s_str(uiID, 4)+" doesn't seem to exist for \""+sModelName_+"\"."
+                "ModelPart "+s_str(uiID, 4)+" doesn't seem to exist for \""+sOgreModelName_+"\"."
             );
             return nullptr;
         }

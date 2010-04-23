@@ -25,14 +25,9 @@ namespace Frost
         );
     }
 
-    s_bool CylinderObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
-    {
-        return true;
-    }
-
     s_bool CylinderObstacle::EllipsoidGoThrough(
         const Vector& mRadiusVector, const Vector& mPreviousPos,
-        const Vector& mNextPos, const Vector& mFinalPos, CollisionData& rData ) const
+        const Vector& mNextPos, CollisionData& rData ) const
     {
         return true;
     }

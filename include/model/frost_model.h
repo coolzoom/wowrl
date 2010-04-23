@@ -61,7 +61,7 @@ namespace Frost
         ~Model();
 
         s_wptr<AnimManager> GetAnimMgr();
-        const s_str&        GetModelName() const;
+        const s_str&        GetOgreModelName() const;
         const s_str&        GetEntityName() const;
         s_ptr<ModelPart>    GetModelPart(const s_uint& uiID);
         const s_map< s_uint, s_ptr<ModelPart> >& GetModelPartList() const;
@@ -90,7 +90,7 @@ namespace Frost
 
         s_refptr<AnimManager> pAnimMgr_;
 
-        s_str sModelName_;
+        s_str sOgreModelName_;
         s_str sEntityName_;
 
         s_bool bHighlighted_;

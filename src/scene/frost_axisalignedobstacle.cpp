@@ -25,14 +25,9 @@ namespace Frost
         );
     }
 
-    s_bool AxisAlignedObstacle::PointGoThrough( const Vector& mPreviousPos, s_ptr<Vector> pNextPos ) const
-    {
-        return true;
-    }
-
     s_bool AxisAlignedObstacle::EllipsoidGoThrough(
         const Vector& mRadiusVector, const Vector& mPreviousPos,
-        const Vector& mNextPos, const Vector& mFinalPos, CollisionData& rData ) const
+        const Vector& mNextPos, CollisionData& rData ) const
     {
         return true;
     }

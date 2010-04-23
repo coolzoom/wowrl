@@ -25,7 +25,7 @@ namespace Frost
 {
     const s_str UnitManager::CLASS_NAME = "UnitManager";
 
-    UnitManager::UnitManager() : fMaxClimbingAngle_(0.25f)
+    UnitManager::UnitManager() : fMaxClimbingAngle_(0.125f)
     {
     }
 

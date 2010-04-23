@@ -4,7 +4,7 @@ void main_vs(
             // Inputs
               float4 iPosition      : POSITION,
               float3 iNormal        : NORMAL,
-              float2 iTexture       : TEXCOORD0,
+              float2 iTexture2      : TEXCOORD1,
 
             // Outputs
               out float4 oPosition  : POSITION,
@@ -76,5 +76,5 @@ void main_vs(
         oPosition2 = oPosition;
     #endif
 
-    oTexture = mul(mTexCoordMat, iTexture);
+    oTexture = mul(mTexCoordMat, iTexture2);
 }
