@@ -34,21 +34,7 @@ void main()
 {
     vec4 tMask = texture2D(mMask, gl_TexCoord[0].st);
     
-    vec4 tSpec = texture2D(mTexture1S, gl_TexCoord[1].st)*tMask.a;
-    tSpec     += texture2D(mTexture2S, gl_TexCoord[2].st)*tMask.r;
-    
-    gl_FragColor  = texture2D(mTexture1,  gl_TexCoord[1].st)*tMask.a;
-    gl_FragColor += texture2D(mTexture2,  gl_TexCoord[2].st)*tMask.r;
-    
-    gl_FragColor.rgb *= vColor;
-    
-    gl_FragColor.rgb += vSpecColor*tSpec.rgb*tSpec.a;
-    
-    #if LAYER > 2
-        gl_FragColor.rgb = 1;
-    #endif
-    
-    /*#ifdef SPECULAR
+    #ifdef SPECULAR
         vec4 tSpec = texture2D(mTexture1S, gl_TexCoord[1].st)*tMask.a;
         tSpec     += texture2D(mTexture2S, gl_TexCoord[2].st)*tMask.r;
         #if LAYER > 2
@@ -92,5 +78,5 @@ void main()
         #ifdef SPECULAR
             gl_FragColor.rgb += vSpecColor*tSpec.rgb*tSpec.a;
         #endif
-    #endif*/
+    #endif
 }
