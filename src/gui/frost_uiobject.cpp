@@ -919,6 +919,16 @@ const s_bool& UIObject::IsSpecial() const
     return bSpecial_;
 }
 
+void UIObject::SetManuallyRendered( const s_bool& bManuallyRendered )
+{
+    bManuallyRendered_ = bManuallyRendered;
+}
+
+const s_bool& UIObject::IsManuallyRendered() const
+{
+    return bManuallyRendered_;
+}
+
 void UIObject::MarkForCopy( const s_str& sVariable )
 {
     if (!lCopyList_.Find(sVariable))

@@ -69,9 +69,9 @@ void StatusBar::CopyFrom( s_ptr<UIObject> pObj )
             }
             else
             {
-                this->AddRegion(pBarTexture_);
                 if (!IsVirtual())
                     pBarTexture_->CreateGlue();
+                this->AddRegion(pBarTexture_);
                 pBarTexture_->CopyFrom(pBar);
             }
         }

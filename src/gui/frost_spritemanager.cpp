@@ -581,7 +581,7 @@ namespace Frost
         s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
             uiTargetCounter_, sTargetName, uiWidth, uiHeight, mType, mUsage
         );
-        uiTargetCounter_++;
+        ++uiTargetCounter_;
 
         return pRTarget;
     }
@@ -591,7 +591,7 @@ namespace Frost
         s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
             uiTargetCounter_, uiWidth, uiHeight, mType, mUsage
         );
-        uiTargetCounter_++;
+        ++uiTargetCounter_;
 
         return pRTarget;
     }

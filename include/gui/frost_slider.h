@@ -16,6 +16,12 @@ namespace Frost
 {
     namespace GUI
     {
+        /// A frame with a movable texture
+        /** This widget contains a special texture, the slider thumb.
+        *   It can be moved along a single axis (X or Y) and its position
+        *   can be used to represent a value (for configuration menus, or
+        *   scroll bars).
+        */
         class Slider : public Frame
         {
         public :

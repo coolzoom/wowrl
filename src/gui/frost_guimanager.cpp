@@ -24,6 +24,8 @@
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
 #include "gui/frost_statusbar.h"
+#include "gui/frost_texture.h"
+#include "gui/frost_fontstring.h"
 #include "lua/frost_lua.h"
 
 #include "frost_inputmanager.h"
@@ -63,6 +65,85 @@ namespace Frost
     void GUIManager::ClearAddOnDirectoryList()
     {
         lGUIDirectoryList_.Clear();
+    }
+
+    s_ptr<GUI::UIObject> GUIManager::CreateUIObject( const s_str& sClassName )
+    {
+        if (sClassName == "Frame")
+            return new GUI::Frame();
+        else if (sClassName == "Button")
+            return new GUI::Button();
+        else if (sClassName == "CheckButton")
+            return new GUI::CheckButton();
+        else if (sClassName == "ColorSelect")
+            return new GUI::ColorSelect();
+        else if (sClassName == "Cooldown")
+            return new GUI::Cooldown();
+        else if (sClassName == "EditBox")
+            return new GUI::EditBox();
+        else if (sClassName == "MessageFrame")
+            return new GUI::MessageFrame();
+        else if (sClassName == "ScrollFrame")
+            return new GUI::ScrollFrame();
+        else if (sClassName == "ScrollingMessageFrame")
+            return new GUI::ScrollingMessageFrame();
+        else if (sClassName == "Slider")
+            return new GUI::Slider();
+        else if (sClassName == "StatusBar")
+            return new GUI::StatusBar();
+        else if (sClassName == "Texture")
+            return new GUI::Texture();
+        else if (sClassName == "FontString")
+            return new GUI::FontString();
+        else
+        {
+            Warning(CLASS_NAME, "Unkown UIObject class : \""+sClassName+"\".");
+            return nullptr;
+        }
+    }
+
+    s_ptr<GUI::Frame> GUIManager::CreateFrame( const s_str& sClassName )
+    {
+        if (sClassName == "Frame")
+            return new GUI::Frame();
+        else if (sClassName == "Button")
+            return new GUI::Button();
+        else if (sClassName == "CheckButton")
+            return new GUI::CheckButton();
+        else if (sClassName == "ColorSelect")
+            return new GUI::ColorSelect();
+        else if (sClassName == "Cooldown")
+            return new GUI::Cooldown();
+        else if (sClassName == "EditBox")
+            return new GUI::EditBox();
+        else if (sClassName == "MessageFrame")
+            return new GUI::MessageFrame();
+        else if (sClassName == "ScrollFrame")
+            return new GUI::ScrollFrame();
+        else if (sClassName == "ScrollingMessageFrame")
+            return new GUI::ScrollingMessageFrame();
+        else if (sClassName == "Slider")
+            return new GUI::Slider();
+        else if (sClassName == "StatusBar")
+            return new GUI::StatusBar();
+        else
+        {
+            Warning(CLASS_NAME, "Unkown Frame class : \""+sClassName+"\".");
+            return nullptr;
+        }
+    }
+
+    s_ptr<GUI::LayeredRegion> GUIManager::CreateLayeredRegion( const s_str& sClassName )
+    {
+        if (sClassName == "Texture")
+            return new GUI::Texture();
+        else if (sClassName == "FontString")
+            return new GUI::FontString();
+        else
+        {
+            Warning(CLASS_NAME, "Unkown LayeredRegion class : \""+sClassName+"\".");
+            return nullptr;
+        }
     }
 
     s_bool GUIManager::AddUIObject( s_ptr<GUI::UIObject> pObj )
@@ -456,7 +537,9 @@ namespace Frost
                 s_ctnr< s_ptr<GUI::Frame> >::iterator iterFrame;
                 foreach (iterFrame, mLevel.lFrameList)
                 {
-                    (*iterFrame)->Render();
+                    s_ptr<GUI::Frame> pFrame = *iterFrame;
+                    if (!pFrame->IsManuallyRendered())
+                        pFrame->Render();
                 }
             }
         }
@@ -824,44 +907,27 @@ namespace Frost
                 }
                 else
                 {
-                    s_ptr<GUI::UIObject> pUIObject;
-
-                    if (pElemBlock->GetName() == "Frame")
-                        pUIObject = new GUI::Frame();
-                    else if (pElemBlock->GetName() == "Button")
-                        pUIObject = new GUI::Button();
-                    else if (pElemBlock->GetName() == "CheckButton")
-                        pUIObject = new GUI::CheckButton();
-                    else if (pElemBlock->GetName() == "ColorSelect")
-                        pUIObject = new GUI::ColorSelect();
-                    else if (pElemBlock->GetName() == "Cooldown")
-                        pUIObject = new GUI::Cooldown();
-                    else if (pElemBlock->GetName() == "EditBox")
-                        pUIObject = new GUI::EditBox();
-                    else if (pElemBlock->GetName() == "MessageFrame")
-                        pUIObject = new GUI::MessageFrame();
-                    else if (pElemBlock->GetName() == "ScrollFrame")
-                        pUIObject = new GUI::ScrollFrame();
-                    else if (pElemBlock->GetName() == "ScrollingMessageFrame")
-                        pUIObject = new GUI::ScrollingMessageFrame();
-                    else if (pElemBlock->GetName() == "Slider")
-                        pUIObject = new GUI::Slider();
-                    else if (pElemBlock->GetName() == "StatusBar")
-                        pUIObject = new GUI::StatusBar();
-
-                    // TODO : Allow virtual regions to be created at root
+                    s_ptr<GUI::UIObject> pUIObject = CreateUIObject(pElemBlock->GetName());
 
                     try
                     {
                         s_ptr<GUI::Frame> pFrame = s_ptr<GUI::Frame>::DynamicCast(pUIObject);
 
                         if (pFrame)
+                        {
                             pFrame->SetAddOn(GUIManager::GetSingleton()->GetCurrentAddOn());
 
-                        pUIObject->ParseBlock(pElemBlock);
+                            pUIObject->ParseBlock(pElemBlock);
 
-                        if (!pUIObject->IsVirtual() && pFrame)
-                            pFrame->On("Load");
+                            if (!pUIObject->IsVirtual() && pFrame)
+                                pFrame->On("Load");
+                        }
+                        else
+                        {
+                            // TODO : Allow virtual regions to be created at root
+                            Warning(CLASS_NAME, "Creating Texture or FontString at root level is forbidden. Skipped.");
+                            pUIObject.Delete();
+                        }
                     }
                     catch (const GUIException& e)
                     {

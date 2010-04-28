@@ -391,7 +391,7 @@ namespace Frost
             /// Flags this object as "special".
             /** \note Special objects are not automatically copied
             *         in the Frame inheritance process. They must be
-            *         explicitely copyied by the derived class
+            *         explicitely copied by the derived class
             *         (example : Button will have to copy its button
             *         textures itself).
             */
@@ -402,6 +402,19 @@ namespace Frost
             *   \note For more informations, see SetSpecial().
             */
             const s_bool&   IsSpecial() const;
+
+            /// Flags this object as "manually rendered".
+            /** \param bManuallyRendered 'true' to flag it as manually rendered
+            *   \note Manually rendered objects are not automatically rendered
+            *         by their parent.
+            */
+            void            SetManuallyRendered(const s_bool& bManuallyRendered);
+
+            /// Checks if this object is manually rendered.
+            /** \return 'true' if this object is manually rendered
+            *   \note For more informations, see SetManuallyRendered().
+            */
+            const s_bool&   IsManuallyRendered() const;
 
             /// Adds a Lua variable to copy when derivating.
             /** \param sVariable The name of the variable
@@ -450,6 +463,7 @@ namespace Frost
             s_ptr<UIObject> pParent_;
             s_ptr<UIObject> pInheritance_;
             s_bool          bSpecial_;
+            s_bool          bManuallyRendered_;
             s_bool          bInherits_;
 
             s_bool          bVirtual_;

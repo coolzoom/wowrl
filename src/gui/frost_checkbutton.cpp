@@ -53,9 +53,9 @@ void CheckButton::CopyFrom( s_ptr<UIObject> pObj )
             }
             else
             {
-                this->AddRegion(pCheckedTexture_);
                 if (!IsVirtual())
                     pCheckedTexture_->CreateGlue();
+                this->AddRegion(pCheckedTexture_);
                 pCheckedTexture_->CopyFrom(pButton->GetCheckedTexture());
             }
         }

@@ -185,11 +185,7 @@ namespace Frost
                         }
                         else
                         {
-                            static s_float fLastAngle = 0.0;
                             s_float fAngle = acos(mData_.mPlaneNormal.Y());
-                            // TODO : voir pourquoi ca saute
-                            Log("["+s_str(s_uint(100*fabs((fAngle - fLastAngle)/fAngle)),3)+"] angle : "+fAngle+" ("+UnitManager::GetSingleton()->GetMaxClimbingAngle()+"), "+mData_.mCollisionPoint);
-                            fLastAngle = fAngle;
                             if (fAngle < UnitManager::GetSingleton()->GetMaxClimbingAngle())
                             {
                                 // The slope is fine, move as usual.
