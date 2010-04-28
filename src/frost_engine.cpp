@@ -292,9 +292,9 @@ namespace Frost
                 pTimeMgr_->Print();
 
                 // Delete managers
-                ZoneManager::Delete();
                 GameplayManager::Delete();
                 UnitManager::Delete();
+                ZoneManager::Delete();
                 GUIManager::Delete();
                 SpriteManager::Delete();
                 ModelManager::Delete();

@@ -23,10 +23,12 @@ namespace Frost
 
     FontManager::FontManager()
     {
+        Log("Creating "+CLASS_NAME+".");
     }
 
     FontManager::~FontManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
     }
 
     s_ptr<Ogre::Font> FontManager::GetFont(const s_str& sFontFile, const s_uint& uiSize)

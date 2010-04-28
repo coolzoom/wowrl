@@ -9,6 +9,7 @@
 #include "gui/frost_texture.h"
 #include "gui/frost_guimanager.h"
 #include "gui/frost_spritemanager.h"
+#include "frost_inputmanager.h"
 
 using namespace std;
 using namespace Frost;
@@ -43,7 +44,7 @@ void ScrollFrame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
     Frame::On(sScriptName, pEvent);
 
     if (sScriptName == "SizeChanged")
-        bUpdateScrollRenderTarget_ = true;
+        bRebuildScrollRenderTarget_ = true;
 }
 
 void ScrollFrame::CopyFrom( s_ptr<UIObject> pObj )
@@ -98,6 +99,10 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
             lBorderList_[BORDER_LEFT] - iHorizontalScroll_,
             lBorderList_[BORDER_TOP]  - iVerticalScroll_
         );
+
+        lScrollChildList_.Clear();
+        lScrollStrataList_.Clear();
+        bRebuildScrollStrataList_ = true;
     }
     else if (!IsVirtual() && !pScrollTexture_)
     {
@@ -123,21 +128,23 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
 
         pScrollTexture_->SetAllPoints(this);
 
-        bUpdateScrollRenderTarget_ = true;
+        bRebuildScrollRenderTarget_ = true;
     }
 
     pScrollChild_ = pFrame;
 
     if (pScrollChild_)
     {
-        pScrollChild_->SetManuallyRendered(true);
-        pScrollChild_->ClearAllPoints();
         if (pScrollChild_->GetParent() != this)
         {
             pScrollChild_->SetParent(this);
             AddChild(pScrollChild_);
         }
+        pScrollChild_->SetManuallyRendered(true);
+        pScrollChild_->ClearAllPoints();
         pScrollChild_->SetAbsPoint(ANCHOR_TOPLEFT, "", ANCHOR_TOPLEFT, -iHorizontalScroll_, -iVerticalScroll_);
+
+        AddToScrollChildList_(pScrollChild_);
 
         iHorizontalScrollRange_ = s_int(pScrollChild_->GetAbsWidth()) - s_int(uiAbsWidth_);
         if (iHorizontalScrollRange_ < 0) iHorizontalScrollRange_ = 0;
@@ -148,6 +155,7 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
         On("ScrollRangeChanged");
 
         bUpdateScrollRange_ = false;
+        bRebuildScrollStrataList_ = true;
     }
 }
 
@@ -194,7 +202,6 @@ const s_int& ScrollFrame::GetVerticalScrollRange() const
 
 void ScrollFrame::Update()
 {
-    // TODO : ## voir pourquoi seul 1 px de la RT est rendu
     s_uint uiOldChildWidth;
     s_uint uiOldChildHeight;
 
@@ -209,46 +216,183 @@ void ScrollFrame::Update()
     if ( pScrollChild_ && (uiOldChildWidth != pScrollChild_->GetAbsWidth() || uiOldChildHeight != pScrollChild_->GetAbsHeight()) )
         bUpdateScrollRange_ = true;
 
-    if (bUpdateScrollRenderTarget_ && pScrollTexture_)
+    if (bRebuildScrollRenderTarget_ && pScrollTexture_)
     {
-        if (!pScrollRenderTarget_)
-        {
-            pScrollRenderTarget_ = SpriteManager::GetSingleton()->CreateRenderTarget(uiAbsWidth_, uiAbsHeight_);
-        }
-        else
-        {
-            pScrollRenderTarget_->SetDimensions(uiAbsWidth_, uiAbsHeight_);
-            bUpdateScrollRange_ = true;
-        }
-
-        pScrollTexture_->SetTexture(pScrollRenderTarget_);
-
-        bUpdateScrollRenderTarget_ = false;
+        RebuildScrollRenderTarget_();
+        bRebuildScrollRenderTarget_ = false;
     }
 
     if (bUpdateScrollRange_)
     {
-        iHorizontalScrollRange_ = s_int(pScrollChild_->GetAbsWidth()) - s_int(uiAbsWidth_);
-        if (iHorizontalScrollRange_ < 0) iHorizontalScrollRange_ = 0;
-
-        iVerticalScrollRange_ = s_int(pScrollChild_->GetAbsHeight()) - s_int(uiAbsHeight_);
-        if (iVerticalScrollRange_ < 0) iVerticalScrollRange_ = 0;
-
-        On("ScrollRangeChanged");
-
+        UpdateScrollRange_();
         bUpdateScrollRange_ = false;
+    }
+
+    if (bRebuildScrollStrataList_)
+    {
+        RebuildScrollStrataList_();
+        bRebuildScrollStrataList_ = false;
+    }
+
+    if (pScrollChild_)
+    {
+        UpdateScrollChildInput_();
     }
 
     if (pScrollChild_ && pScrollRenderTarget_)
     {
-        s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
+        RenderScrollStrataList_();
+    }
+}
 
-        pSpriteMgr->Begin(pScrollRenderTarget_);
-        pSpriteMgr->Clear(Color::VOID);
+void ScrollFrame::UpdateScrollRange_()
+{
+    iHorizontalScrollRange_ = s_int(pScrollChild_->GetAbsWidth()) - s_int(uiAbsWidth_);
+    if (iHorizontalScrollRange_ < 0) iHorizontalScrollRange_ = 0;
 
-        pScrollChild_->Render();
+    iVerticalScrollRange_ = s_int(pScrollChild_->GetAbsHeight()) - s_int(uiAbsHeight_);
+    if (iVerticalScrollRange_ < 0) iVerticalScrollRange_ = 0;
 
-        pSpriteMgr->End();
+    On("ScrollRangeChanged");
+}
+
+void ScrollFrame::UpdateScrollChildInput_()
+{
+    s_int iX = s_int(InputManager::GetSingleton()->GetMousePosX()) - lBorderList_[BORDER_LEFT];
+    s_int iY = s_int(InputManager::GetSingleton()->GetMousePosY()) - lBorderList_[BORDER_TOP];
+
+    if (bMouseInScrollTexture_)
+    {
+        s_ptr<Frame> pOveredFrame;
+
+        s_map<FrameStrata, Strata>::const_iterator iterStrata = lScrollStrataList_.End();
+        while (iterStrata != lScrollStrataList_.Begin() && !pOveredFrame)
+        {
+            --iterStrata;
+            const Strata& mStrata = iterStrata->second;
+
+            s_map<s_uint, Level>::const_iterator iterLevel = mStrata.lLevelList.End();
+            while (iterLevel != mStrata.lLevelList.Begin() && !pOveredFrame)
+            {
+                --iterLevel;
+                const Level& mLevel = iterLevel->second;
+
+                s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
+                foreach (iterFrame, mLevel.lFrameList)
+                {
+                    s_ptr<GUI::Frame> pFrame = *iterFrame;
+                    if (pFrame->IsMouseEnabled() && pFrame->IsVisible() && pFrame->IsInFrame(iX, iY))
+                    {
+                        pOveredFrame = pFrame;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (pOveredFrame != pOveredScrollChild_)
+        {
+            if (pOveredScrollChild_)
+                pOveredScrollChild_->NotifyMouseInFrame(false, iX, iY);
+
+            pOveredScrollChild_ = pOveredFrame;
+        }
+
+        if (pOveredScrollChild_)
+            pOveredScrollChild_->NotifyMouseInFrame(true, iX, iY);
+    }
+    else if (pOveredScrollChild_)
+    {
+        pOveredScrollChild_->NotifyMouseInFrame(false, iX, iY);
+        pOveredScrollChild_ = nullptr;
+    }
+}
+
+void ScrollFrame::RebuildScrollRenderTarget_()
+{
+    if (!pScrollRenderTarget_)
+    {
+        pScrollRenderTarget_ = SpriteManager::GetSingleton()->CreateRenderTarget(uiAbsWidth_, uiAbsHeight_);
+    }
+    else
+    {
+        pScrollRenderTarget_->SetDimensions(uiAbsWidth_, uiAbsHeight_);
+        bUpdateScrollRange_ = true;
+    }
+
+    pScrollTexture_->SetTexture(pScrollRenderTarget_);
+}
+
+void ScrollFrame::RebuildScrollStrataList_()
+{
+    lScrollStrataList_.Clear();
+
+    s_map< s_uint, s_ptr<GUI::Frame> >::iterator iterFrame;
+    foreach (iterFrame, lScrollChildList_)
+    {
+        s_ptr<GUI::Frame> pFrame = iterFrame->second;
+        lScrollStrataList_[pFrame->GetFrameStrata()].
+            lLevelList[pFrame->GetFrameLevel()].
+                lFrameList.PushBack(pFrame);
+    }
+}
+
+void ScrollFrame::RenderScrollStrataList_()
+{
+    s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
+
+    pSpriteMgr->Begin(pScrollRenderTarget_);
+    pSpriteMgr->Clear(Color::VOID);
+
+    s_map<FrameStrata, Strata>::const_iterator iterStrata;
+    foreach (iterStrata, lScrollStrataList_)
+    {
+        const Strata& mStrata = iterStrata->second;
+
+        s_map<s_uint, Level>::const_iterator iterLevel;
+        foreach (iterLevel, mStrata.lLevelList)
+        {
+            const Level& mLevel = iterLevel->second;
+
+            s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
+            foreach (iterFrame, mLevel.lFrameList)
+            {
+                s_ptr<GUI::Frame> pFrame = *iterFrame;
+                pFrame->Render();
+            }
+        }
+    }
+
+    pSpriteMgr->End();
+}
+
+s_bool ScrollFrame::IsInFrame( const s_int& iX, const s_int& iY ) const
+{
+    if (pScrollTexture_)
+        return Frame::IsInFrame(iX, iY) || pScrollTexture_->IsInRegion(iX, iY);
+    else
+        return Frame::IsInFrame(iX, iY);
+}
+
+void ScrollFrame::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& iX, const s_int& iY )
+{
+    Frame::NotifyMouseInFrame(bMouseInFrame, iX, iY);
+
+    bMouseInScrollTexture_ = (bMouseInFrame && pScrollTexture_ && pScrollTexture_->IsInRegion(iX, iY));
+}
+
+void ScrollFrame::NotifyChildStrataChanged( s_ptr<Frame> pChild )
+{
+    if (pChild == pScrollChild_)
+    {
+        bRebuildScrollStrataList_ = true;
+    }
+    else
+    {
+        if (pParentFrame_)
+            pParentFrame_->NotifyChildStrataChanged(this);
+        else
+            GUIManager::GetSingleton()->FireBuildStrataList();
     }
 }
 
@@ -271,5 +415,15 @@ void ScrollFrame::CreateGlue()
             pLua->Push<LuaScrollFrame>(new LuaScrollFrame(pLua->GetState()))
         );
         pLua->SetGlobal(sLuaName_);
+    }
+}
+
+void ScrollFrame::AddToScrollChildList_( s_ptr<Frame> pChild )
+{
+    lScrollChildList_[pChild->GetID()] = pChild;
+    s_map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
+    foreach (iterChild, pChild->GetChildren())
+    {
+        AddToScrollChildList_(iterChild->second);
     }
 }

@@ -328,7 +328,9 @@ void Texture::SetTexture( s_ptr<RenderTarget> pRenderTarget )
     if (pRenderTarget)
     {
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(pRenderTarget);
-        pSprite_ = s_refptr<Sprite>(new Sprite(pMat));
+        pSprite_ = s_refptr<Sprite>(new Sprite(
+            pMat, 0, 0, s_float(pRenderTarget->GetWidth()), s_float(pRenderTarget->GetHeight())
+        ));
     }
     else
     {

@@ -27,6 +27,7 @@ namespace Frost
 
     SceneManager::SceneManager()
     {
+        Log("Creating "+CLASS_NAME+".");
     }
 
     SceneManager::~SceneManager()

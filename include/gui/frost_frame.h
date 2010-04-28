@@ -133,7 +133,7 @@ namespace Frost
             /// Returns the child list.
             /** \return The child list
             */
-            s_ctnr< s_ptr<Frame> > GetChildren();
+            const s_map< s_uint, s_ptr<Frame> >& GetChildren() const;
 
             /// Returns one of this Frame's children.
             /** \param sName The name of the child
@@ -451,6 +451,16 @@ namespace Frost
             */
             void                Hide();
 
+            /// Flags this object as "manually rendered".
+            /** \param bManuallyRendered 'true' to flag it as manually rendered
+            *   \note Manually rendered objects are not automatically rendered
+            *         by their parent (for LayeredRegions) or the GUIManager
+            *         (for Frames). They also don't receive automatic input.
+            *   \note This function propagates the manually rendered flag to
+            *         this Frame's children.
+            */
+            virtual void        SetManuallyRendered(const s_bool& bManuallyRendered);
+
             /// Changes this widget's absolute width (in pixels).
             /** \param uiAbsWidth The new width
             */
@@ -467,6 +477,13 @@ namespace Frost
             *   \param iY            The vertical mouse coordinate
             */
             virtual void        NotifyMouseInFrame(const s_bool& bMouseInFrame, const s_int& iX, const s_int& iY);
+
+            /// Tells this Frame that at least one of its children has modified its strata or level.
+            /** \param pChild The child that has changed its strata (can also be a child of this child)
+            *   \note If this Frame has no parent, it calls GUIManager::FireBuildStrataList(). Else it
+            *         notifies its parent.
+            */
+            virtual void        NotifyChildStrataChanged(s_ptr<Frame> pChild);
 
             /// Tells the Frame not to react to all events.
             void                UnregisterAllEvents();
@@ -515,6 +532,7 @@ namespace Frost
 
             void NotifyVisible_();
             void NotifyInvisible_();
+            void NotifyStrataChanged_();
 
             void NotifyTopLevelParent_(const s_bool& bTopLevel, s_ptr<Frame> pParent);
 
@@ -549,7 +567,6 @@ namespace Frost
             s_bool bIsResizable_;
             s_bool bIsUserPlaced_;
 
-            s_bool bBuildStrataList_;
             s_bool bBuildLayerList_;
 
             s_array<s_int,  4> lAbsHitRectInsetList_;

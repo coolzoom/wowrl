@@ -365,7 +365,6 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             }
         }
 
-        bBuildStrataList_ = true;
         bBuildLayerList_ = true;
     }
 }
@@ -722,16 +721,9 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
     }
 }
 
-s_ctnr< s_ptr<Frame> > Frame::GetChildren()
+const s_map< s_uint, s_ptr<Frame> >& Frame::GetChildren() const
 {
-    s_ctnr< s_ptr<Frame> > lChilds;
-    s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
-    foreach (iterChild, lChildList_)
-    {
-        lChilds.PushBack(iterChild->second);
-    }
-
-    return lChilds;
+    return lChildList_;
 }
 
 s_float Frame::GetEffectiveAlpha() const
@@ -1342,6 +1334,36 @@ void Frame::StartSizing( const AnchorPoint& mPoint )
 void Frame::StopSizing()
 {
     GUIManager::GetSingleton()->StopSizing(this);
+}
+
+void Frame::SetManuallyRendered( const s_bool& bManuallyRendered )
+{
+    if (bManuallyRendered_ != bManuallyRendered)
+        NotifyStrataChanged_();
+
+    UIObject::SetManuallyRendered(bManuallyRendered);
+
+    s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
+    foreach (iterChild, lChildList_)
+    {
+        iterChild->second->SetManuallyRendered(bManuallyRendered);
+    }
+}
+
+void Frame::NotifyChildStrataChanged( s_ptr<Frame> pChild )
+{
+    if (pParentFrame_)
+        pParentFrame_->NotifyChildStrataChanged(this);
+    else
+        GUIManager::GetSingleton()->FireBuildStrataList();
+}
+
+void Frame::NotifyStrataChanged_()
+{
+    if (pParentFrame_)
+        pParentFrame_->NotifyChildStrataChanged(this);
+    else
+        GUIManager::GetSingleton()->FireBuildStrataList();
 }
 
 void Frame::NotifyVisible_()

@@ -70,6 +70,7 @@ namespace Frost
 
     SpriteManager::SpriteManager()
     {
+        Log("Creating "+CLASS_NAME+".");
         pRenderFunc_ = nullptr;
         mAxisType_ = AXIS_DOWN;
     }

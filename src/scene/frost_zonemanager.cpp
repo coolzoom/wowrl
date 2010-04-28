@@ -23,6 +23,7 @@ namespace Frost
 
     ZoneManager::ZoneManager()
     {
+        Log("Creating "+CLASS_NAME+".");
         RegisterEvent("MOUSE_MOVED");
     }
 

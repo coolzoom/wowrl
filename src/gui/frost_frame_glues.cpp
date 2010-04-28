@@ -382,13 +382,13 @@ int LuaFrame::_GetBackdropColor(lua_State* pLua)
 
 int LuaFrame::_GetChildren(lua_State* pLua)
 {
-    s_ctnr< s_ptr<Frame> > lChildList = pFrameParent_->GetChildren();
+    const s_map< s_uint, s_ptr<Frame> >& lChildList = pFrameParent_->GetChildren();
     Lua::Function mFunc("Frame:GetChildren", pLua, lChildList.GetSize());
 
-    s_ctnr< s_ptr<Frame> >::iterator iterChild;
+    s_map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
     foreach (iterChild, lChildList)
     {
-        (*iterChild)->PushOnLua(mFunc.GetState());
+        iterChild->second->PushOnLua(mFunc.GetState());
         mFunc.NotifyPushed();
     }
 

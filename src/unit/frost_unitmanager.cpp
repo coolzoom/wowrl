@@ -27,6 +27,7 @@ namespace Frost
 
     UnitManager::UnitManager() : fMaxClimbingAngle_(0.125f)
     {
+        Log("Creating "+CLASS_NAME+".");
     }
 
     UnitManager::~UnitManager()
