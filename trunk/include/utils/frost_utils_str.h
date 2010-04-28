@@ -53,6 +53,7 @@ namespace Frost
 
         /// Repeat constructor.
         /** \param sValue The string to repeat
+        *   \param uiNbr  The number of time to repeat the string
         */
         template<class N>
         s_str_t(const s_str_t& sValue, const s_uint_t<N>& uiNbr)
@@ -65,6 +66,7 @@ namespace Frost
 
         /// Repeat constructor.
         /** \param sValue The string to repeat
+        *   \param uiNbr  The number of time to repeat the string
         */
         template<class N>
         s_str_t(const string_object& sValue, const s_uint_t<N>& uiNbr)
@@ -77,6 +79,7 @@ namespace Frost
 
         /// Repeat constructor.
         /** \param sValue The string to repeat
+        *   \param uiNbr  The number of time to repeat the string
         */
         template<class N>
         s_str_t(const string_element* sValue, const s_uint_t<N>& uiNbr)

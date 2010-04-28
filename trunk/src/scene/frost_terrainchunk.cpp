@@ -642,9 +642,9 @@ namespace Frost
         mPosition_ = mPosition;
     }
 
-    void TerrainChunk::SetBoundingBox( const AxisAlignedBox& mBox )
+    void TerrainChunk::SetVisibilityBox( const AxisAlignedBox& mBox )
     {
-        bAlwaysVisible_ = false;
+        bAlwaysVisible_ = mBox.IsInfinite();
         mBoundingBox_ = mBox;
     }
 
@@ -653,7 +653,7 @@ namespace Frost
         return mPosition_;
     }
 
-    AxisAlignedBox TerrainChunk::GetBoundingBox( const s_bool& bLocalSpace ) const
+    AxisAlignedBox TerrainChunk::GetVisibilityBox( const s_bool& bLocalSpace ) const
     {
         if (bLocalSpace)
             return mBoundingBox_;
@@ -661,7 +661,7 @@ namespace Frost
             return mBoundingBox_ + mPosition_;
     }
 
-    AxisAlignedBox TerrainChunk::GetTrueBoundingBox( const s_bool& bLocalSpace ) const
+    AxisAlignedBox TerrainChunk::GetBoundingBox( const s_bool& bLocalSpace ) const
     {
         if (bLocalSpace)
             return mTrueBoundingBox_;

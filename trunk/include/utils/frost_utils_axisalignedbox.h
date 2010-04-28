@@ -48,7 +48,7 @@ namespace Frost
         void          SetMin(const Vector& mMin);
 
         /// Sets the second point of the box.
-        /** \param mMin The second point of the box
+        /** \param mMax The second point of the box
         */
         void          SetMax(const Vector& mMax);
 

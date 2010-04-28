@@ -113,7 +113,7 @@ namespace Frost
         /// Makes the translated object follow the ground.
         /** \param bConstraint 'true' to force on ground
         */
-        void           ConstraintTranslationOnGround(const s_bool& bConstaint);
+        void           ConstraintTranslationOnGround(const s_bool& bConstraint);
 
         /// Stops all transformations that could be enabled.
         /** \note This stops doodad/light transformations (translation, scale,

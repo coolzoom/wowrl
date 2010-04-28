@@ -29,7 +29,9 @@ namespace Frost
         };
 
         /// Constructor.
-        /** \param uiID The unique ID associated to this Material
+        /** \param uiID     The unique ID associated to this Material
+        *   \param mType    The underlying type of this Material
+        *   \param pOgreMat The wrapped Ogre::Material
         */
         Material(const s_uint& uiID, Type mType, s_ptr<Ogre::Material> pOgreMat);
 

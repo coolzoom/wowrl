@@ -91,7 +91,7 @@ namespace Frost
 
                 mFile.WriteLine(SerializeVector(pChunk->GetPosition(), "Position"));
 
-                AxisAlignedBox mBBox = pChunk->GetBoundingBox();
+                AxisAlignedBox mBBox = pChunk->GetVisibilityBox();
                 if (mBBox.IsInfinite())
                     mFile.WriteLine("<BoundingBox alwaysVisible=\"true\"/>");
                 else
