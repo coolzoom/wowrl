@@ -78,7 +78,7 @@ namespace Frost
             const s_int&   GetHorizontalScrollRange() const;
 
             /// Sets the vertical offset of the scroll child.
-            /** \param iHorizontalScroll The vertical offset
+            /** \param iVerticalScroll The vertical offset
             */
             void           SetVerticalScroll(const s_int& iVerticalScroll);
 

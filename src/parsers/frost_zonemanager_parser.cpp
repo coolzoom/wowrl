@@ -209,7 +209,7 @@ namespace Frost
                     s_float(pSizeBlock->GetAttribute("y")),
                     s_float(pSizeBlock->GetAttribute("z"))
                 );
-                pChunk->SetBoundingBox(AxisAlignedBox(-mSize, mSize));
+                pChunk->SetVisibilityBox(AxisAlignedBox(-mSize, mSize));
             }
 
             // Mesh Data

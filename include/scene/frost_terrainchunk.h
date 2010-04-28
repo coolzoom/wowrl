@@ -99,7 +99,7 @@ namespace Frost
         const s_bool&    IsPlanar() const;
 
         /// Sets this chunk's MaterialInfo.
-        /** \param pMat The MaterialInfo to use
+        /** \param mMatInfo The MaterialInfo to use
         *   \note Creates the real Material.
         */
         void             SetMaterialInfo(const MaterialInfo& mMatInfo);
@@ -125,31 +125,31 @@ namespace Frost
         */
         void             SetPosition(const Vector& mPosition);
 
-        /// Sets this chunk's size.
-        /** \param mSize The size of this chunk
-        *   \note Size is only used for visibility check : it doesn't
-        *         change this chunk's real size.
-        */
-        void             SetBoundingBox(const AxisAlignedBox& mBox);
-
         /// Returns this chunk's position.
         /** \return This chunk's position
         */
         const Vector&    GetPosition() const;
+
+        /// Sets this chunk's visibility bounding box.
+        /** \param mBox The visibility box
+        *   \note This bounding box is only used for visibility check : it doesn't
+        *         have anything to do with this chunk's physical bounding box.
+        */
+        void             SetVisibilityBox(const AxisAlignedBox& mBox);
 
         /// Returns this chunk's visibility bounding box.
         /** \param bLocalSpace 'true' to get the bounding box in the chunk's space
         *                      (not translated by its position)
         *   \return This chunk's visibility bounding box
         */
-        AxisAlignedBox   GetBoundingBox(const s_bool& bLocalSpace = false) const;
+        AxisAlignedBox   GetVisibilityBox(const s_bool& bLocalSpace = false) const;
 
         /// Returns this chunk's physical bounding box.
         /** \param bLocalSpace 'true' to get the bounding box in the chunk's space
         *                      (not translated by its position)
         *   \return This chunk's physical bounding box
         */
-        AxisAlignedBox   GetTrueBoundingBox(const s_bool& bLocalSpace = false) const;
+        AxisAlignedBox   GetBoundingBox(const s_bool& bLocalSpace = false) const;
 
         /// Checks if the provided position lies inside this chunk's bounding box.
         /** \param fX The X coordinate

@@ -25,7 +25,7 @@ namespace Frost
         fTileXSize_ = fXSize_/s_float(uiNX_);
         fTileZSize_ = fZSize_/s_float(uiNZ_);
 
-        mBoundingBox_ = pParent_->GetTrueBoundingBox();
+        mBoundingBox_ = pParent_->GetBoundingBox();
     }
 
     s_bool TerrainObstacle::IsPointInsideTriangle_( const Vector& mPoint, const Triangle& mTriangle ) const
@@ -261,7 +261,7 @@ namespace Frost
         const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
     {
         // NOTE : Assumes the ray origin is inside the bounding box
-        AxisAlignedBox mBox = pParent_->GetTrueBoundingBox(true);
+        AxisAlignedBox mBox = pParent_->GetBoundingBox(true);
 
         Vector mPoint = mRayOrigin - pParent_->GetPosition();
         Vector mIteration = mRayDirection*0.01f;

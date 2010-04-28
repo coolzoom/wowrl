@@ -253,7 +253,7 @@ namespace Frost
                 {
                     pChunk->Load();
 
-                    if (pCamera->IsVisible(pChunk->GetBoundingBox()))
+                    if (pCamera->IsVisible(pChunk->GetVisibilityBox()))
                         pChunk->Show();
                     else
                         pChunk->Hide();

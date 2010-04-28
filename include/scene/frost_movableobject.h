@@ -34,7 +34,7 @@ namespace Frost
         virtual ~OgreInterface();
 
         /// Sets the associated MovableObject.
-        /** \param pCharacter The associated MovableObject
+        /** \param pMovableObject The associated MovableObject
         */
         void                 SetMovableObject(s_ptr<MovableObject> pMovableObject);
 
