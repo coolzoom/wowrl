@@ -71,9 +71,9 @@ void Slider::CopyFrom( s_ptr<UIObject> pObj )
             }
             else
             {
-                this->AddRegion(pThumbTexture_);
                 if (!IsVirtual())
                     pThumbTexture_->CreateGlue();
+                this->AddRegion(pThumbTexture_);
                 pThumbTexture_->CopyFrom(pThumb);
             }
         }
@@ -107,7 +107,7 @@ void Slider::OnEvent( const Event& mEvent )
                 }
                 else
                 {
-                    s_float fOffset = s_float(lBorderList_[BORDER_BOTTOM]) - mEvent.Get(2)->Get<s_float>();
+                    s_float fOffset = mEvent.Get(2)->Get<s_float>() - s_float(lBorderList_[BORDER_TOP]);
                     fValue = fOffset/s_float(uiAbsHeight_);
                     SetValue(fValue*(fMaxValue_ - fMinValue_) + fMinValue_);
                 }
@@ -120,7 +120,7 @@ void Slider::OnEvent( const Event& mEvent )
                     if (mOrientation_ == ORIENT_HORIZONTAL)
                         pAnchor->SetAbsOffset(s_int(s_float(uiAbsWidth_)*fCoef), 0);
                     else
-                        pAnchor->SetAbsOffset(0, -s_int(s_float(uiAbsHeight_)*fCoef));
+                        pAnchor->SetAbsOffset(0, s_int(s_float(uiAbsHeight_)*fCoef));
 
                     GUIManager::GetSingleton()->StartMoving(
                         pThumbTexture_, pThumbTexture_->GetPoint(ANCHOR_CENTER),
@@ -238,7 +238,7 @@ void Slider::SetThumbTexture( s_ptr<Texture> pTexture )
     pThumbTexture_->ClearAllPoints();
     pThumbTexture_->SetPoint(Anchor(
         pThumbTexture_, ANCHOR_TOPLEFT, sName_,
-        mOrientation_ == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_BOTTOM
+        mOrientation_ == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_TOP
     ));
     FireUpdateThumbTexture_();
 }
@@ -252,7 +252,7 @@ void Slider::SetOrientation( Orientation mOrientation )
         {
             pThumbTexture_->SetPoint(Anchor(
                 pThumbTexture_, ANCHOR_TOPLEFT, sName_,
-                mOrientation_ == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_BOTTOM
+                mOrientation_ == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_TOP
             ));
         }
         FireUpdateThumbTexture_();
@@ -364,7 +364,7 @@ void Slider::Update()
             if (mOrientation_ == ORIENT_HORIZONTAL)
                 fValue_ = s_float(pThumbTexture_->GetPoint(ANCHOR_CENTER)->GetAbsOffsetX())/s_float(uiAbsWidth_);
             else
-                fValue_ = -s_float(pThumbTexture_->GetPoint(ANCHOR_CENTER)->GetAbsOffsetY())/s_float(uiAbsHeight_);
+                fValue_ = s_float(pThumbTexture_->GetPoint(ANCHOR_CENTER)->GetAbsOffsetY())/s_float(uiAbsHeight_);
 
             fValue_ *= (fMaxValue_ - fMinValue_);
             fValue_ += fMinValue_;
@@ -381,7 +381,7 @@ void Slider::Update()
         if (mOrientation_ == ORIENT_HORIZONTAL)
             pAnchor->SetAbsOffset(s_int(s_float(uiAbsWidth_)*fCoef), 0);
         else
-            pAnchor->SetAbsOffset(0, -s_int(s_float(uiAbsHeight_)*fCoef));
+            pAnchor->SetAbsOffset(0, s_int(s_float(uiAbsHeight_)*fCoef));
 
         bUpdateThumbTexture_ = false;
     }

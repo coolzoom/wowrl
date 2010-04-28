@@ -157,11 +157,19 @@ namespace Frost
             /// Sets this Texture's texture file.
             /** \param sFile The file from which to read data
             *   \note This function takes care of checking that the file can be opened.
-            *   \note To disable this texture file, call SetTexture("").
             *   \note This function is not compatible with SetColor() : only the latest
             *         you have called will apply.
             */
             void                      SetTexture(const s_str& sFile);
+
+            /// Reads texture data from a RenderTarget.
+            /** \param pRenderTarget The RenderTarget from which to read the data
+            *   \note This function is only meant for internal use and is not available
+            *         to the Lua API.
+            *   \note This function is not compatible with SetColor() : only the latest
+            *         you have called will apply.
+            */
+            void                      SetTexture(s_ptr<RenderTarget> pRenderTarget);
 
             /// Sets this Texture's color.
             /** \param mColor The color to use

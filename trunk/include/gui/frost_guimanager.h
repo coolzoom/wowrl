@@ -109,6 +109,30 @@ namespace Frost
         */
         void                 ClearAddOnDirectoryList();
 
+        /// Creates a new UIObject.
+        /** \param sClassName The class of the UIObject (Frame, FontString, Button, ...)
+        *   \return The new UIObject
+        *   \note You have the responsability to detroy the created
+        *         UIObject by yourself.
+        */
+        s_ptr<GUI::UIObject> CreateUIObject(const s_str& sClassName);
+
+        /// Creates a new Frame.
+        /** \param sClassName The sub class of the Frame (Button, ...)
+        *   \return The new Frame
+        *   \note You have the responsability to detroy the created
+        *         Frame by yourself.
+        */
+        s_ptr<GUI::Frame>    CreateFrame(const s_str& sClassName);
+
+        /// Creates a new LayeredRegion.
+        /** \param sClassName The sub class of the LayeredRegion (FontString or Texture)
+        *   \return The new LayeredRegion
+        *   \note You have the responsability to detroy the created
+        *         LayeredRegion by yourself.
+        */
+        s_ptr<GUI::LayeredRegion>    CreateLayeredRegion(const s_str& sClassName);
+
         /// Adds an UIObject to be handled by this manager.
         /** \param pObj The object to add
         *   \return 'false' if the name of the widget was already taken

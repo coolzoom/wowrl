@@ -96,7 +96,6 @@ namespace Frost
 
         // Declare needed variables
         Vector  mPlaneNormal, mIntersection;
-        enum {TYPE_NONE, TYPE_FACE, TYPE_VERTEX, TYPE_EDGE} mCollisionType = TYPE_NONE;
         s_float fStartTime, fEndTime;
         s_float fT, fBestT = 1.0f;
         s_float fSignedDistance, fNormDotDist;
@@ -172,7 +171,6 @@ namespace Frost
                 mIntersection = mPlaneIntersection;
                 fBestT = fStartTime;
                 bCollision = true;
-                mCollisionType = TYPE_FACE;
                 continue;
             }
 
@@ -191,7 +189,6 @@ namespace Frost
                     mIntersection = mTriangle.mP[i];
                     fBestT = fT;
                     bCollision = true;
-                    mCollisionType = TYPE_VERTEX;
                 }
             }
 
@@ -222,7 +219,6 @@ namespace Frost
                         mIntersection = mTriangle.mP[i] + fEdgeCollisionPoint*mEdge;
                         fBestT = fT;
                         bCollision = true;
-                        mCollisionType = TYPE_EDGE;
                     }
                 }
             }
@@ -249,16 +245,6 @@ namespace Frost
 
             // Calculate the world space collision normal
             rData.mPlaneNormal = mPosition + fBestT*mDistance - mIntersection;
-            // TODO : voir pourquoi ca saute
-            Log("  T : "+fBestT+", norm : "+rData.mPlaneNormal.GetNorm());
-            switch (mCollisionType)
-            {
-                case TYPE_NONE : Log("  type : none"); break;
-                case TYPE_FACE : Log("  type : face"); break;
-                case TYPE_EDGE : Log("  type : edge"); break;
-                case TYPE_VERTEX : Log("  type : vertex"); break;
-            }
-
             rData.mPlaneNormal.Normalize();
             rData.mPlaneNormal.ScaleUp(Vector(
                 mRadiusVector.Y()*mRadiusVector.Z(),

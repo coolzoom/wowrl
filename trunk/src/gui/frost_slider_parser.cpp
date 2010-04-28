@@ -52,7 +52,7 @@ void Slider::ParseBlock( s_ptr<XML::Block> pBlock )
         pThumbTexture_->ClearAllPoints();
         pThumbTexture_->SetPoint(Anchor(
             pThumbTexture_, ANCHOR_CENTER, "$parent",
-            GetOrientation() == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_BOTTOM
+            GetOrientation() == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_TOP
         ));
     }
 }

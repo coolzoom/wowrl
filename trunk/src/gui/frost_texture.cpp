@@ -299,13 +299,12 @@ void Texture::SetTexture( const s_str& sFile )
     mGradient_ = Gradient();
     mColor_ = Color::NaN;
     sTextureFile_ = sFile;
-    s_refptr<Material> pMat;
 
     pSprite_ = nullptr; // Deletes the old sprite and its material
 
     if (File::Exists(sTextureFile_))
     {
-        pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sTextureFile_);
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sTextureFile_);
         pSprite_ = s_refptr<Sprite>(new Sprite(pMat));
     }
     else
@@ -313,7 +312,30 @@ void Texture::SetTexture( const s_str& sFile )
         Error(lType_.Back(),
             "Cannot find file \""+sFile+"\" for \""+sName_+"\".\nUsing white texture instead."
         );
-        pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
+        pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
+    }
+}
+
+void Texture::SetTexture( s_ptr<RenderTarget> pRenderTarget )
+{
+    mGradient_ = Gradient();
+    mColor_ = Color::NaN;
+    sTextureFile_ = "";
+
+    pSprite_ = nullptr; // Deletes the old sprite and its material
+
+    if (pRenderTarget)
+    {
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(pRenderTarget);
+        pSprite_ = s_refptr<Sprite>(new Sprite(pMat));
+    }
+    else
+    {
+        Error(lType_.Back(),
+            "Cannot create a Texture with a NULL RenterTarget.\nUsing white texture instead."
+        );
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
         pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
     }
 }

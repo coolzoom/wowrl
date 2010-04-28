@@ -18,6 +18,11 @@
 
 namespace Frost
 {
+    /// Abstract base class for mouse picking.
+    /** The use of this class is to react to mouse picking in the
+    *   3D world. It must be derivated to implement the On() function,
+    *   which defines the click behavior of the associated object.
+    */
     class OgreInterface : public Ogre::UserDefinedObject
     {
     public :

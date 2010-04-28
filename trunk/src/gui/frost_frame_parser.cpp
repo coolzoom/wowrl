@@ -4,17 +4,9 @@
 /*                                        */
 
 #include "gui/frost_frame.h"
-
-#include "gui/frost_guimanager.h"
 #include "gui/frost_backdrop.h"
-#include "gui/frost_region.h"
-#include "gui/frost_button.h"
-#include "gui/frost_statusbar.h"
-#include "gui/frost_slider.h"
-#include "gui/frost_scrollingmessageframe.h"
-#include "gui/frost_editbox.h"
-#include "gui/frost_texture.h"
-#include "gui/frost_fontstring.h"
+#include "gui/frost_layeredregion.h"
+
 #include "xml/frost_xml_document.h"
 
 using namespace std;
@@ -363,28 +355,25 @@ void Frame::ParseLayersBlock_( s_ptr<XML::Block> pBlock )
             s_ptr<XML::Block> pRegionBlock;
             foreach_block (pRegionBlock, pLayerBlock)
             {
-                s_ptr<GUI::LayeredRegion> pRegion;
-
-                if (pRegionBlock->GetName() == "FontString")
-                    pRegion = new GUI::FontString();
-                else if (pRegionBlock->GetName() == "Texture")
-                    pRegion = new GUI::Texture();
-
-                try
+                s_ptr<GUI::LayeredRegion> pRegion = GUIManager::GetSingleton()->CreateLayeredRegion(pRegionBlock->GetName());
+                if (pRegion)
                 {
-                    pRegion->SetDrawLayer(sLevel);
-                    pRegion->SetParent(this);
-                    pRegion->ParseBlock(pRegionBlock);
-                }
-                catch (const GUIException& e)
-                {
-                    pRegion.Delete();
-                    Error("", e.GetDescription());
-                }
-                catch (...)
-                {
-                    pRegion.Delete();
-                    throw;
+                    try
+                    {
+                        pRegion->SetDrawLayer(sLevel);
+                        pRegion->SetParent(this);
+                        pRegion->ParseBlock(pRegionBlock);
+                    }
+                    catch (const GUIException& e)
+                    {
+                        pRegion.Delete();
+                        Error("", e.GetDescription());
+                    }
+                    catch (...)
+                    {
+                        pRegion.Delete();
+                        throw;
+                    }
                 }
             }
         }
@@ -399,38 +388,27 @@ void Frame::ParseFramesBlock_( s_ptr<XML::Block> pBlock )
         s_ptr<XML::Block> pElemBlock;
         foreach_block (pElemBlock, pFramesBlock)
         {
-            s_ptr<Frame> pFrame;
-
-            if (pElemBlock->GetName() == "Frame")
-                pFrame = new Frame();
-            else if (pElemBlock->GetName() == "Button")
-                pFrame = new Button();
-            else if (pElemBlock->GetName() == "EditBox")
-                pFrame = new EditBox();
-            else if (pElemBlock->GetName() == "ScrollingMessageFrame")
-                pFrame = new ScrollingMessageFrame();
-            else if (pElemBlock->GetName() == "Slider")
-                pFrame = new Slider();
-            else if (pElemBlock->GetName() == "StatusBar")
-                pFrame = new StatusBar();
-
-            try
+            s_ptr<Frame> pFrame = GUIManager::GetSingleton()->CreateFrame(pElemBlock->GetName());
+            if (pFrame)
             {
-                pFrame->SetAddOn(GUIManager::GetSingleton()->GetCurrentAddOn());
-                pFrame->SetParent(this);
-                pFrame->ParseBlock(pElemBlock);
-                if (!pFrame->IsVirtual())
-                    pFrame->On("Load");
-            }
-            catch (const GUIException& e)
-            {
-                pFrame.Delete();
-                Error("", e.GetDescription());
-            }
-            catch (...)
-            {
-                pFrame.Delete();
-                throw;
+                try
+                {
+                    pFrame->SetAddOn(GUIManager::GetSingleton()->GetCurrentAddOn());
+                    pFrame->SetParent(this);
+                    pFrame->ParseBlock(pElemBlock);
+                    if (!pFrame->IsVirtual())
+                        pFrame->On("Load");
+                }
+                catch (const GUIException& e)
+                {
+                    pFrame.Delete();
+                    Error("", e.GetDescription());
+                }
+                catch (...)
+                {
+                    pFrame.Delete();
+                    throw;
+                }
             }
         }
     }

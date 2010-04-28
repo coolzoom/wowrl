@@ -16,6 +16,11 @@ namespace Frost
 {
     namespace GUI
     {
+        /// A frame with scrollable content
+        /** This widget has a special child Frame, the scroll child.
+        *   The scroll child is rendered on a RenderTarget, which is
+        *   then rendered on the screen.
+        */
         class ScrollFrame : public Frame
         {
         public :
@@ -26,22 +31,93 @@ namespace Frost
             /// Destructor.
             virtual ~ScrollFrame();
 
+            /// Updates this widget's logic.
+            virtual void   Update();
+
             /// Copies an UIObject's parameters into this ScrollFrame (inheritance).
             /** \param pObj The UIObject to copy
             */
             virtual void   CopyFrom(s_ptr<UIObject> pObj);
 
+            /// Returns 'true' if this ScrollFrame can use a script.
+            /** \param sScriptName The name of the script
+            *   \note This method can be overriden if needed.
+            */
+            virtual s_bool CanUseScript(const s_str& sScriptName) const;
+
+            /// Calls a script.
+            /** \param sScriptName The name of the script
+            *   \param pEvent      Stores scripts arguments
+            */
+            virtual void      On(const s_str& sScriptName, s_ptr<Event> pEvent = nullptr);
+
+            /// Sets this ScrollFrame's scroll child.
+            /** \param pFrame The scroll child
+            *   \note Creates the RenderTarget and the associated Sprite.
+            */
+            void           SetScrollChild(s_ptr<Frame> pFrame);
+
+            /// Returns this ScrollFrame's scroll child.
+            /** \return This ScrollFrame's scroll child
+            */
+            s_ptr<Frame>   GetScrollChild();
+
+            /// Sets the horizontal offset of the scroll child.
+            /** \param iHorizontalScroll The horizontal offset
+            */
+            void           SetHorizontalScroll(const s_int& iHorizontalScroll);
+
+            /// Returns the horizontal offset of the scroll child.
+            /** \return The horizontal offset of the scroll child
+            */
+            const s_int&   GetHorizontalScroll() const;
+
+            /// Returns the maximum horizontal offset of the scroll child.
+            /** \return The maximum horizontal offset of the scroll child
+            */
+            const s_int&   GetHorizontalScrollRange() const;
+
+            /// Sets the vertical offset of the scroll child.
+            /** \param iHorizontalScroll The vertical offset
+            */
+            void           SetVerticalScroll(const s_int& iVerticalScroll);
+
+            /// Returns the vertical offset of the scroll child.
+            /** \return The vertical offset of the scroll child
+            */
+            const s_int&   GetVerticalScroll() const;
+
+            /// Returns the maximum vertical offset of the scroll child.
+            /** \return The maximum vertical offset of the scroll child
+            */
+            const s_int&   GetVerticalScrollRange() const;
+
             /// Returns this widget's Lua glue.
-            virtual void CreateGlue();
+            virtual void   CreateGlue();
 
             /// Parses data from an XML::Block.
             /** \param pBlock The ScrollFrame's XML::Block
             */
-            virtual void ParseBlock(s_ptr<XML::Block> pBlock);
+            virtual void   ParseBlock(s_ptr<XML::Block> pBlock);
 
             static const s_str CLASS_NAME;
 
         protected :
+
+            virtual void ParseScrollChildBlock_(s_ptr<XML::Block> pBlock);
+
+            s_int iHorizontalScroll_;
+            s_int iHorizontalScrollRange_;
+            s_int iVerticalScroll_;
+            s_int iVerticalScrollRange_;
+
+            s_ptr<Frame>        pScrollChild_;
+
+            s_bool              bUpdateScrollRenderTarget_;
+            s_bool              bUpdateScrollRange_;
+            s_ptr<RenderTarget> pScrollRenderTarget_;
+
+            s_ptr<Texture>      pScrollTexture_;
 
         };
 
@@ -55,6 +131,14 @@ namespace Frost
             LuaScrollFrame(lua_State* pLua);
 
             // Glues
+            int _GetHorizontalScroll(lua_State*);
+            int _GetHorizontalScrollRange(lua_State*);
+            int _GetScrollChild(lua_State*);
+            int _GetVerticalScroll(lua_State*);
+            int _GetVerticalScrollRange(lua_State*);
+            int _SetHorizontalScroll(lua_State*);
+            int _SetScrollChild(lua_State*);
+            int _SetVerticalScroll(lua_State*);
 
             static const char className[];
             static const char* classList[];

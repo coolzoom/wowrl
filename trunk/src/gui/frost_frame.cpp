@@ -6,20 +6,6 @@
 #include "gui/frost_frame.h"
 
 #include "gui/frost_layeredregion.h"
-#include "gui/frost_uiobject.h"
-#include "gui/frost_region.h"
-#include "gui/frost_button.h"
-#include "gui/frost_checkbutton.h"
-#include "gui/frost_colorselect.h"
-#include "gui/frost_cooldown.h"
-#include "gui/frost_editbox.h"
-#include "gui/frost_messageframe.h"
-#include "gui/frost_scrollframe.h"
-#include "gui/frost_scrollingmessageframe.h"
-#include "gui/frost_slider.h"
-#include "gui/frost_statusbar.h"
-#include "gui/frost_texture.h"
-#include "gui/frost_fontstring.h"
 #include "gui/frost_guimanager.h"
 #include "gui/frost_backdrop.h"
 #include "frost_inputmanager.h"
@@ -82,7 +68,7 @@ void Frame::Render()
                 foreach (iterRegion, mLayer.lRegionList)
                 {
                     s_ptr<LayeredRegion> pRegion = iterRegion->second;
-                    if (pRegion->IsShown())
+                    if (pRegion->IsShown() && !pRegion->IsManuallyRendered())
                         pRegion->Render();
                 }
             }
@@ -309,37 +295,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             s_ptr<Frame> pChild = iterChild->second;
             if (!pChild->IsSpecial())
             {
-                s_ptr<Frame> pNewChild;
-                if (pChild->GetObjectType() == "Frame")
-                    pNewChild = new Frame();
-                else if (pChild->GetObjectType() == "Button")
-                    pNewChild = new Button();
-                else if (pChild->GetObjectType() == "CheckButton")
-                    pNewChild = new CheckButton();
-                else if (pChild->GetObjectType() == "ColorSelect")
-                    pNewChild = new ColorSelect();
-                else if (pChild->GetObjectType() == "Cooldown")
-                    pNewChild = new Cooldown();
-                else if (pChild->GetObjectType() == "EditBox")
-                    pNewChild = new EditBox();
-                else if (pChild->GetObjectType() == "MessageFrame")
-                    pNewChild = new MessageFrame();
-                else if (pChild->GetObjectType() == "ScrollFrame")
-                    pNewChild = new ScrollFrame();
-                else if (pChild->GetObjectType() == "ScrollingMessageFrame")
-                    pNewChild = new ScrollingMessageFrame();
-                else if (pChild->GetObjectType() == "Slider")
-                    pNewChild = new Slider();
-                else if (pChild->GetObjectType() == "StatusBar")
-                    pNewChild = new StatusBar();
-                else
-                {
-                    Warning(lType_.Back(),
-                        "Trying to add \""+pChild->GetName()+"\" (type : "+pChild->GetObjectType()+") to \""+sName_+"\", "
-                        "but no copying code was available. Skipped."
-                    );
-                }
-
+                s_ptr<Frame> pNewChild = GUIManager::GetSingleton()->CreateFrame(pChild->GetObjectType());
                 if (pNewChild)
                 {
                     pNewChild->SetParent(this);
@@ -358,7 +314,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewChild->CreateGlue();
                     this->AddChild(pNewChild);
                     pNewChild->CopyFrom(pChild);
-                    if (!bVirtual_)
+                    if (!this->IsVirtual())
                         pNewChild->On("Load");
                 }
             }
@@ -382,19 +338,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
             s_ptr<LayeredRegion> pArt = iterRegion->second;
             if (!pArt->IsSpecial())
             {
-                s_ptr<LayeredRegion> pNewArt;
-                if (pArt->GetObjectType() == "Texture")
-                    pNewArt = new Texture();
-                else if (pArt->GetObjectType() == "FontString")
-                    pNewArt = new FontString();
-                else
-                {
-                    Warning(lType_.Back(),
-                        "Trying to add \""+pArt->GetName()+"\" (type : "+pArt->GetObjectType()+") to \""+sName_+"\", "
-                        "but no copying code was available. Skipped."
-                    );
-                }
-
+                s_ptr<LayeredRegion> pNewArt = GUIManager::GetSingleton()->CreateLayeredRegion(pArt->GetObjectType());
                 if (pNewArt)
                 {
                     pNewArt->SetParent(this);
@@ -1507,10 +1451,16 @@ void Frame::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& iX, co
 void Frame::Update()
 {
     s_bool bPositionUpdated = bUpdateBorders_;
+    s_uint uiOldWidth  = uiAbsWidth_;
+    s_uint uiOldHeight = uiAbsHeight_;
+
     UIObject::Update();
 
     if (bPositionUpdated)
         CheckPosition();
+
+    if (uiOldWidth != uiAbsWidth_ || uiOldHeight != uiAbsHeight_)
+        On("SizeChanged");
 
     s_ctnr<s_str>::iterator iterEvent;
     foreach (iterEvent, lQueuedEventList_)
