@@ -15,6 +15,7 @@ namespace Frost
 
     LocaleManager::LocaleManager()
     {
+        Log("Creating "+CLASS_NAME+".");
     }
 
     LocaleManager::~LocaleManager()

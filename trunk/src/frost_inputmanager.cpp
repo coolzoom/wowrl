@@ -20,6 +20,7 @@ namespace Frost
 
     InputManager::InputManager()
     {
+        Log("Creating "+CLASS_NAME+".");
         dDoubleClickTime_ = 0.25;
         dMouseHistoryMaxLength_ = 0.03;
         fMouseSensibility_ = 1.0f;

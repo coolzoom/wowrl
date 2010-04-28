@@ -26,6 +26,7 @@ namespace Frost
 
     MaterialManager::MaterialManager()
     {
+        Log("Creating "+CLASS_NAME+".");
     }
 
     MaterialManager::~MaterialManager()

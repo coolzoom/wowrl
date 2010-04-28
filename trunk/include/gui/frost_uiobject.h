@@ -406,9 +406,10 @@ namespace Frost
             /// Flags this object as "manually rendered".
             /** \param bManuallyRendered 'true' to flag it as manually rendered
             *   \note Manually rendered objects are not automatically rendered
-            *         by their parent.
+            *         by their parent (for LayeredRegions) or the GUIManager
+            *         (for Frames). They also don't receive automatic input.
             */
-            void            SetManuallyRendered(const s_bool& bManuallyRendered);
+            virtual void    SetManuallyRendered(const s_bool& bManuallyRendered);
 
             /// Checks if this object is manually rendered.
             /** \return 'true' if this object is manually rendered

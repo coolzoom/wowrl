@@ -24,6 +24,7 @@ namespace Frost
 
     ModelManager::ModelManager()
     {
+        Log("Creating "+CLASS_NAME+".");
     }
 
     ModelManager::~ModelManager()

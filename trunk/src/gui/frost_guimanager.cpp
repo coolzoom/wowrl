@@ -42,6 +42,7 @@ namespace Frost
 
     GUIManager::GUIManager()
     {
+        Log("Creating "+CLASS_NAME+".");
         RegisterEvent("KEY_PRESSED");
     }
 
@@ -524,22 +525,21 @@ namespace Frost
 
     void GUIManager::RenderUI()
     {
-        s_map<FrameStrata, Strata>::iterator iterStrata;
+        s_map<FrameStrata, Strata>::const_iterator iterStrata;
         foreach (iterStrata, lStrataList_)
         {
-            Strata& mStrata = iterStrata->second;
+            const Strata& mStrata = iterStrata->second;
 
-            s_map<s_uint, Level>::iterator iterLevel;
+            s_map<s_uint, Level>::const_iterator iterLevel;
             foreach (iterLevel, mStrata.lLevelList)
             {
-                Level& mLevel = iterLevel->second;
+                const Level& mLevel = iterLevel->second;
 
-                s_ctnr< s_ptr<GUI::Frame> >::iterator iterFrame;
+                s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
                 foreach (iterFrame, mLevel.lFrameList)
                 {
                     s_ptr<GUI::Frame> pFrame = *iterFrame;
-                    if (!pFrame->IsManuallyRendered())
-                        pFrame->Render();
+                    pFrame->Render();
                 }
             }
         }
@@ -641,9 +641,12 @@ namespace Frost
             foreach (iterFrame, lFrameList_)
             {
                 s_ptr<GUI::Frame> pFrame = iterFrame->second;
-                lStrataList_[pFrame->GetFrameStrata()].
-                    lLevelList[pFrame->GetFrameLevel()].
-                        lFrameList.PushBack(pFrame);
+                if (!pFrame->IsManuallyRendered())
+                {
+                    lStrataList_[pFrame->GetFrameStrata()].
+                        lLevelList[pFrame->GetFrameLevel()].
+                            lFrameList.PushBack(pFrame);
+                }
             }
         }
 
@@ -655,19 +658,19 @@ namespace Frost
             s_int iY = s_int(InputManager::GetSingleton()->GetMousePosY());
             s_ptr<GUI::Frame> pOveredFrame;
 
-            s_map<FrameStrata, Strata>::iterator iterStrata = lStrataList_.End();
+            s_map<FrameStrata, Strata>::const_iterator iterStrata = lStrataList_.End();
             while (iterStrata != lStrataList_.Begin() && !pOveredFrame)
             {
                 --iterStrata;
-                Strata& mStrata = iterStrata->second;
+                const Strata& mStrata = iterStrata->second;
 
-                s_map<s_uint, Level>::iterator iterLevel = mStrata.lLevelList.End();
+                s_map<s_uint, Level>::const_iterator iterLevel = mStrata.lLevelList.End();
                 while (iterLevel != mStrata.lLevelList.Begin() && !pOveredFrame)
                 {
                     --iterLevel;
-                    Level& mLevel = iterLevel->second;
+                    const Level& mLevel = iterLevel->second;
 
-                    s_ctnr< s_ptr<GUI::Frame> >::iterator iterFrame;
+                    s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
                     foreach (iterFrame, mLevel.lFrameList)
                     {
                         s_ptr<GUI::Frame> pFrame = *iterFrame;

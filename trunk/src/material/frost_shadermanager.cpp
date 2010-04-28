@@ -68,10 +68,12 @@ namespace Frost
 
     ShaderManager::ShaderManager()
     {
+        Log("Creating "+CLASS_NAME+".");
     }
 
     ShaderManager::~ShaderManager()
     {
+        Log("Closing "+CLASS_NAME+"...");
         pSceneSprite_.Delete();
     }
 

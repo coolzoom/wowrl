@@ -22,6 +22,7 @@ namespace Frost
 
     CameraManager::CameraManager()
     {
+        Log("Creating "+CLASS_NAME+".");
         mBackgroundColor_ = Color::BLACK;
     }
 
