@@ -59,29 +59,30 @@ void ScrollFrame::CopyFrom( s_ptr<UIObject> pObj )
 
         if (pScrollFrame->GetScrollChild())
         {
-            pScrollChild_ = GUIManager::GetSingleton()->CreateFrame(pScrollFrame->GetScrollChild()->GetObjectType());
-            if (pScrollChild_)
+            s_ptr<Frame> pScrollChild = GUIManager::GetSingleton()->CreateFrame(pScrollFrame->GetScrollChild()->GetObjectType());
+            if (pScrollChild)
             {
-                pScrollChild_->SetManuallyRendered(true);
-                pScrollChild_->SetParent(this);
+                pScrollChild->SetParent(this);
                 if (this->IsVirtual())
-                    pScrollChild_->SetVirtual();
-                pScrollChild_->SetName(pScrollFrame->GetScrollChild()->GetRawName());
-                if (!GUIManager::GetSingleton()->AddUIObject(pScrollChild_))
+                    pScrollChild->SetVirtual();
+                pScrollChild->SetName(pScrollFrame->GetScrollChild()->GetRawName());
+                if (!GUIManager::GetSingleton()->AddUIObject(pScrollChild))
                 {
                     Warning(lType_.Back(),
-                        "Trying to add \""+pScrollChild_->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
-                        +pScrollChild_->GetName()+"\". Skipped."
+                        "Trying to add \""+pScrollChild->GetName()+"\" to \""+sName_+"\", but its name was already taken : \""
+                        +pScrollChild->GetName()+"\". Skipped."
                     );
-                    pScrollChild_.Delete();
+                    pScrollChild.Delete();
                 }
                 else
                 {
-                    pScrollChild_->CreateGlue();
-                    this->AddChild(pScrollChild_);
-                    pScrollChild_->CopyFrom(pScrollFrame->GetScrollChild());
+                    pScrollChild->CreateGlue();
+                    this->AddChild(pScrollChild);
+                    pScrollChild->CopyFrom(pScrollFrame->GetScrollChild());
                     if (!this->IsVirtual())
-                        pScrollChild_->On("Load");
+                        pScrollChild->On("Load");
+
+                    this->SetScrollChild(pScrollChild);
                 }
             }
         }
