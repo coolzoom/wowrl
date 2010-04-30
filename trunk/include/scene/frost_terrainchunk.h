@@ -191,8 +191,8 @@ namespace Frost
         s_ptr<Zone> pZone_;
 
         Vector         mPosition_;
+        AxisAlignedBox mVisibilityBoundingBox_;
         AxisAlignedBox mBoundingBox_;
-        AxisAlignedBox mTrueBoundingBox_;
         s_bool bAlwaysVisible_;
 
         s_bool bLoaded_;
