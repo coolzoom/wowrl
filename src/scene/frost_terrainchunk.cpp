@@ -196,12 +196,12 @@ namespace Frost
 
                 pSubMesh->setMaterialName(pMat_->GetOgreMaterial()->getName());
 
-                mTrueBoundingBox_ = AxisAlignedBox(
+                mBoundingBox_ = AxisAlignedBox(
                     Vector(-fXSize/2.0f, -0.1, -fZSize/2.0f),
                     Vector( fXSize/2.0f,  0.1,  fZSize/2.0f)
                 );
 
-                pMesh_->_setBounds(AxisAlignedBox::FrostToOgre(mTrueBoundingBox_));
+                pMesh_->_setBounds(AxisAlignedBox::FrostToOgre(mBoundingBox_));
 
                 pMesh_->_setBoundingSphereRadius(
                     std::max(fXSize, fZSize)/2.0f
@@ -411,12 +411,12 @@ namespace Frost
 
                 pSubMesh->setMaterialName(pMat_->GetOgreMaterial()->getName());
 
-                mTrueBoundingBox_ = AxisAlignedBox(
+                mBoundingBox_ = AxisAlignedBox(
                     Vector(-fXSize*fOffX, fYMin-1, -fZSize*fOffZ),
                     Vector( fXSize*(1.0f-fOffX), fYMax+1,  fZSize*(1.0f-fOffZ))
                 );
 
-                pMesh_->_setBounds(AxisAlignedBox::FrostToOgre(mTrueBoundingBox_));
+                pMesh_->_setBounds(AxisAlignedBox::FrostToOgre(mBoundingBox_));
 
                 pMesh_->_setBoundingSphereRadius(
                     std::max(fXSize*(1.0f-fOffX), fZSize*(1.0f-fOffZ))
@@ -629,7 +629,7 @@ namespace Frost
         bAlwaysVisible_ = bAlwaysVisible;
 
         if (bAlwaysVisible_)
-            mBoundingBox_ = AxisAlignedBox();
+            mVisibilityBoundingBox_ = AxisAlignedBox();
     }
 
     const s_bool& TerrainChunk::IsAlwaysVisible() const
@@ -645,7 +645,7 @@ namespace Frost
     void TerrainChunk::SetVisibilityBox( const AxisAlignedBox& mBox )
     {
         bAlwaysVisible_ = mBox.IsInfinite();
-        mBoundingBox_ = mBox;
+        mVisibilityBoundingBox_ = mBox;
     }
 
     const Vector& TerrainChunk::GetPosition() const
@@ -656,28 +656,28 @@ namespace Frost
     AxisAlignedBox TerrainChunk::GetVisibilityBox( const s_bool& bLocalSpace ) const
     {
         if (bLocalSpace)
-            return mBoundingBox_;
+            return mVisibilityBoundingBox_;
         else
-            return mBoundingBox_ + mPosition_;
+            return mVisibilityBoundingBox_ + mPosition_;
     }
 
     AxisAlignedBox TerrainChunk::GetBoundingBox( const s_bool& bLocalSpace ) const
     {
         if (bLocalSpace)
-            return mTrueBoundingBox_;
+            return mBoundingBox_;
         else
-            return mTrueBoundingBox_ + mPosition_;
+            return mBoundingBox_ + mPosition_;
     }
 
     s_bool TerrainChunk::ContainsPoint( const s_float& fX, const s_float& fZ ) const
     {
         Vector mTemp = Vector(
             fX - mPosition_.X(),
-            (mTrueBoundingBox_.GetMax().Y() + mTrueBoundingBox_.GetMin().Y())/2.0f,
+            (mBoundingBox_.GetMax().Y() + mBoundingBox_.GetMin().Y())/2.0f,
             fZ - mPosition_.Z()
         );
 
-        return mTrueBoundingBox_.Contains(mTemp);
+        return mBoundingBox_.Contains(mTemp);
     }
 
     s_float TerrainChunk::GetPointHeight( const s_float& fX, const s_float& fZ ) const
@@ -707,21 +707,7 @@ namespace Frost
     {
         if (bLoaded_)
         {
-            Vector mNewRayOrigin = mRayOrigin;
-
-            // First see if the ray intersects the bounding box
-            if (!mTrueBoundingBox_.Contains(mRayOrigin - mPosition_))
-            {
-                // The ray origin is not inside the box, we'll have to cast it
-                Vector mIntersection;
-                if (!mTrueBoundingBox_.GetRayIntersection(mRayOrigin - mPosition_, mRayDirection, mIntersection))
-                    return false;
-
-                // We can move the ray origin to the intersection
-                mNewRayOrigin = mIntersection + mRayDirection*0.001f + mPosition_;
-            }
-
-            return pObstacle_->GetRayIntersection(mNewRayOrigin, mRayDirection, mPosition);
+            return pObstacle_->GetRayIntersection(mRayOrigin, mRayDirection, mPosition);
         }
         else
             return false;

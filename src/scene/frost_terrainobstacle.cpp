@@ -260,12 +260,25 @@ namespace Frost
     s_bool TerrainObstacle::GetRayIntersection(
         const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
     {
-        // NOTE : Assumes the ray origin is inside the bounding box
-        AxisAlignedBox mBox = pParent_->GetBoundingBox(true);
+        Vector mPoint;
 
-        Vector mPoint = mRayOrigin - pParent_->GetPosition();
+        // First see if the ray intersects the bounding box
+        if (!mBoundingBox_.Contains(mRayOrigin))
+        {
+            // The ray origin is not inside the box, we'll have to cast it
+            Vector mIntersection;
+            if (!mBoundingBox_.GetRayIntersection(mRayOrigin, mRayDirection, mIntersection))
+                return false;
+
+            // We can move the ray origin to the intersection
+            mPoint = mIntersection + mRayDirection*0.001f - pParent_->GetPosition();
+        }
+        else
+            mPoint = mRayOrigin - pParent_->GetPosition();
+
         Vector mIteration = mRayDirection*0.01f;
         s_float fDist = mPoint.Y() - GetPointHeight(mPoint.X(), mPoint.Z());
+        AxisAlignedBox mBox = pParent_->GetBoundingBox(true);
         while (mBox.Contains(mPoint))
         {
             // Move further...
