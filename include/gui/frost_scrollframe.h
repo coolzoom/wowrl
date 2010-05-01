@@ -131,7 +131,10 @@ namespace Frost
 
             virtual void ParseScrollChildBlock_(s_ptr<XML::Block> pBlock);
 
+            virtual void NotifyManuallyRenderedObject_(s_ptr<UIObject> pObject, const s_bool& bManuallyRendered);
+
             void AddToScrollChildList_(s_ptr<Frame> pChild);
+            void RemoveFromScrollChildList_(s_ptr<Frame> pChild);
 
             void UpdateScrollRange_();
             void UpdateScrollChildInput_();

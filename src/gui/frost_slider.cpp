@@ -237,7 +237,7 @@ void Slider::SetThumbTexture( s_ptr<Texture> pTexture )
     pThumbTexture_ = pTexture;
     pThumbTexture_->ClearAllPoints();
     pThumbTexture_->SetPoint(Anchor(
-        pThumbTexture_, ANCHOR_TOPLEFT, sName_,
+        pThumbTexture_, ANCHOR_CENTER, sName_,
         mOrientation_ == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_TOP
     ));
     FireUpdateThumbTexture_();

@@ -140,7 +140,7 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
             pScrollChild_->SetParent(this);
             AddChild(pScrollChild_);
         }
-        pScrollChild_->SetManuallyRendered(true);
+        pScrollChild_->SetManuallyRendered(true, this);
         pScrollChild_->ClearAllPoints();
         pScrollChild_->SetAbsPoint(ANCHOR_TOPLEFT, "", ANCHOR_TOPLEFT, -iHorizontalScroll_, -iVerticalScroll_);
 
@@ -216,32 +216,35 @@ void ScrollFrame::Update()
     if ( pScrollChild_ && (uiOldChildWidth != pScrollChild_->GetAbsWidth() || uiOldChildHeight != pScrollChild_->GetAbsHeight()) )
         bUpdateScrollRange_ = true;
 
-    if (bRebuildScrollRenderTarget_ && pScrollTexture_)
+    if (IsVisible())
     {
-        RebuildScrollRenderTarget_();
-        bRebuildScrollRenderTarget_ = false;
-    }
+        if (bRebuildScrollRenderTarget_ && pScrollTexture_)
+        {
+            RebuildScrollRenderTarget_();
+            bRebuildScrollRenderTarget_ = false;
+        }
 
-    if (bUpdateScrollRange_)
-    {
-        UpdateScrollRange_();
-        bUpdateScrollRange_ = false;
-    }
+        if (bUpdateScrollRange_)
+        {
+            UpdateScrollRange_();
+            bUpdateScrollRange_ = false;
+        }
 
-    if (bRebuildScrollStrataList_)
-    {
-        RebuildScrollStrataList_();
-        bRebuildScrollStrataList_ = false;
-    }
+        if (bRebuildScrollStrataList_)
+        {
+            RebuildScrollStrataList_();
+            bRebuildScrollStrataList_ = false;
+        }
 
-    if (pScrollChild_)
-    {
-        UpdateScrollChildInput_();
-    }
+        if (pScrollChild_)
+        {
+            UpdateScrollChildInput_();
+        }
 
-    if (pScrollChild_ && pScrollRenderTarget_)
-    {
-        RenderScrollStrataList_();
+        if (pScrollChild_ && pScrollRenderTarget_)
+        {
+            RenderScrollStrataList_();
+        }
     }
 }
 
@@ -312,15 +315,20 @@ void ScrollFrame::RebuildScrollRenderTarget_()
 {
     if (!pScrollRenderTarget_)
     {
-        pScrollRenderTarget_ = SpriteManager::GetSingleton()->CreateRenderTarget(uiAbsWidth_, uiAbsHeight_);
+        if (uiAbsWidth_.IsValid() && uiAbsHeight_.IsValid())
+            pScrollRenderTarget_ = SpriteManager::GetSingleton()->CreateRenderTarget(uiAbsWidth_, uiAbsHeight_);
     }
     else
     {
-        pScrollRenderTarget_->SetDimensions(uiAbsWidth_, uiAbsHeight_);
-        bUpdateScrollRange_ = true;
+        if (uiAbsWidth_.IsValid() && uiAbsHeight_.IsValid())
+        {
+            pScrollRenderTarget_->SetDimensions(uiAbsWidth_, uiAbsHeight_);
+            bUpdateScrollRange_ = true;
+        }
     }
 
-    pScrollTexture_->SetTexture(pScrollRenderTarget_);
+    if (pScrollRenderTarget_)
+        pScrollTexture_->SetTexture(pScrollRenderTarget_);
 }
 
 void ScrollFrame::RebuildScrollStrataList_()
@@ -354,11 +362,12 @@ void ScrollFrame::RenderScrollStrataList_()
         {
             const Level& mLevel = iterLevel->second;
 
-            s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
+            s_ctnr< s_ptr<Frame> >::const_iterator iterFrame;
             foreach (iterFrame, mLevel.lFrameList)
             {
-                s_ptr<GUI::Frame> pFrame = *iterFrame;
-                pFrame->Render();
+                s_ptr<Frame> pFrame = *iterFrame;
+                if (!pFrame->IsNewlyCreated())
+                    pFrame->Render();
             }
         }
     }
@@ -425,5 +434,29 @@ void ScrollFrame::AddToScrollChildList_( s_ptr<Frame> pChild )
     foreach (iterChild, pChild->GetChildren())
     {
         AddToScrollChildList_(iterChild->second);
+    }
+}
+
+void ScrollFrame::RemoveFromScrollChildList_( s_ptr<Frame> pChild )
+{
+    lScrollChildList_.Erase(pChild->GetID());
+    s_map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
+    foreach (iterChild, pChild->GetChildren())
+    {
+        RemoveFromScrollChildList_(iterChild->second);
+    }
+}
+
+void ScrollFrame::NotifyManuallyRenderedObject_( s_ptr<UIObject> pObject, const s_bool& bManuallyRendered )
+{
+    s_ptr<Frame> pFrame = s_ptr<Frame>::DynamicCast(pObject);
+    if (pFrame)
+    {
+        if (bManuallyRendered)
+            AddToScrollChildList_(pFrame);
+        else
+            RemoveFromScrollChildList_(pFrame);
+
+        bRebuildScrollStrataList_ = true;
     }
 }

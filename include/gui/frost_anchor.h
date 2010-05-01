@@ -53,12 +53,12 @@ namespace Frost
             /// Returns this Anchor absolute X (in pixel).
             /** \return This Anchor absolute X.
             */
-            const s_int&       GetAbsX();
+            const s_int&       GetAbsX() const;
 
             /// Returns this Anchor absolute Y (in pixel).
             /** \return This Anchor absolute Y.
             */
-            const s_int&       GetAbsY();
+            const s_int&       GetAbsY() const;
 
             /// Returns this Anchor's base widget.
             /** \return This Anchor's base widget
@@ -144,7 +144,7 @@ namespace Frost
             s_str              Serialize(const s_str& sTab) const;
 
             /// Gets the anchor parent from the parent string.
-            void               UpdateParent();
+            void               UpdateParent() const;
 
             /// Returns the name of an anchor point.
             /** \param mPoint The anchor point
@@ -162,16 +162,18 @@ namespace Frost
         private :
 
             s_ptr<UIObject> pObj_;
-            s_ptr<UIObject> pParent_;
-            s_str           sParent_;
-            s_bool          bParentUpdated_;
             AnchorPoint     mParentPoint_;
             AnchorPoint     mPoint_;
             AnchorType      mType_;
             s_int           iAbsOffX_, iAbsOffY_;
             s_float         fRelOffX_, fRelOffY_;
-            s_int           iAbsX_, iAbsY_;
-            s_float         fRelX_, fRelY_;
+
+            mutable s_int   iAbsX_, iAbsY_;
+            mutable s_float fRelX_, fRelY_;
+
+            mutable s_ptr<UIObject> pParent_;
+            mutable s_str           sParent_;
+            mutable s_bool          bParentUpdated_;
         };
     }
 }

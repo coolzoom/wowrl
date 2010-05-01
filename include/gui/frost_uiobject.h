@@ -366,6 +366,12 @@ namespace Frost
             */
             const s_map<AnchorPoint, Anchor>& GetPointList() const;
 
+            /// Notifies this widget that another one is anchored to it.
+            /** \param pObj      The anchored widget
+            *   \param bAnchored 'true' if it is anchored, 'false' if it's no longer the case
+            */
+            void            NotifyAnchoredObject(s_ptr<UIObject> pObj, const s_bool& bAnchored);
+
             /// Checks if this UIObject is virtual.
             /** \return 'true' if this UIObject is virtual
             *   \note A virtual UIObject can be inherited.
@@ -405,17 +411,32 @@ namespace Frost
 
             /// Flags this object as "manually rendered".
             /** \param bManuallyRendered 'true' to flag it as manually rendered
+            *   \param pRenderer         The UIObject that will take care of
+            *                            rendering this widget
             *   \note Manually rendered objects are not automatically rendered
             *         by their parent (for LayeredRegions) or the GUIManager
             *         (for Frames). They also don't receive automatic input.
             */
-            virtual void    SetManuallyRendered(const s_bool& bManuallyRendered);
+            virtual void    SetManuallyRendered(const s_bool& bManuallyRendered, s_ptr<UIObject> pRenderer = nullptr);
 
             /// Checks if this object is manually rendered.
             /** \return 'true' if this object is manually rendered
             *   \note For more informations, see SetManuallyRendered().
             */
             const s_bool&   IsManuallyRendered() const;
+
+            /// Flags this object as newly created.
+            /** \note Newly created objects aren't rendered.
+            *         They unflag themselves after the first Update() call.
+            *   \note This function is only called on objects created in Lua.
+            */
+            void            SetNewlyCreated();
+
+            /// Checks if this object has been newly created.
+            /** \return 'true' if this object has been newly created
+            *   \note For more informations, see SetNewlyCreated().
+            */
+            const s_bool&   IsNewlyCreated() const;
 
             /// Adds a Lua variable to copy when derivating.
             /** \param sVariable The name of the variable
@@ -452,10 +473,12 @@ namespace Frost
             virtual void ParseSizeBlock_(s_ptr<XML::Block> pBlock);
             virtual void ParseAnchorsBlock_(s_ptr<XML::Block> pBlock);
 
+            void         ReadAnchors_(s_int& iLeft, s_int& iRight, s_int& iTop, s_int& iBottom, s_int& iXCenter, s_int& iYCenter) const;
             void         MakeBorders_(s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize);
             virtual void UpdateBorders_();
             virtual void UpdateDimensions_();
-            virtual void CheckAnchors_();
+
+            virtual void NotifyManuallyRenderedObject_(s_ptr<UIObject> pObject, const s_bool& bManuallyRendered);
 
             s_str           sName_;
             s_str           sRawName_;
@@ -465,6 +488,8 @@ namespace Frost
             s_ptr<UIObject> pInheritance_;
             s_bool          bSpecial_;
             s_bool          bManuallyRendered_;
+            s_bool          bNewlyCreated_;
+            s_ptr<UIObject> pRenderer_;
             s_bool          bInherits_;
 
             s_bool          bVirtual_;
@@ -476,6 +501,7 @@ namespace Frost
             s_ctnr<s_str> lType_;
 
             s_map<AnchorPoint, Anchor> lAnchorList_;
+            s_ctnr< s_ptr<UIObject> >  lPreviousAnchorParentList_;
             s_array<s_bool, 4>         lDefinedBorderList_;
             s_array<s_int, 4>          lBorderList_;
 
@@ -494,6 +520,14 @@ namespace Frost
             s_bool bUpdateAnchors_;
             s_bool bUpdateBorders_;
             s_bool bUpdateDimensions_;
+
+            struct AnchorInfo
+            {
+                s_ptr<UIObject> pParent;
+                s_uint          uiCount;
+            };
+
+            s_map< s_uint, s_ptr<UIObject> > lAnchoredObjectList_;
         };
 
         /** \cond NOT_REMOVE_FROM_DOC

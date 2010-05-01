@@ -7,6 +7,8 @@ if (GetLocale() == "frFR") then
         ["YesNoDialogCancel"] = "Annuler",
         ["YesNoDialogNo"] = "Non",
         ["YesNoDialogYes"] = "Oui",
+        ["ErrorDialogTitle"] = "Erreur",
+        ["ErrorDialogOK"] = "OK",
     });
 else
     AddOns.Templates:SetLocale({
@@ -17,5 +19,7 @@ else
         ["YesNoDialogCancel"] = "Cancel",
         ["YesNoDialogNo"] = "No",
         ["YesNoDialogYes"] = "Yes",
+        ["ErrorDialogTitle"] = "Error",
+        ["ErrorDialogOK"] = "OK",
     });
 end

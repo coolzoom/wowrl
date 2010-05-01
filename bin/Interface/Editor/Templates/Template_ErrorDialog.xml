@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="FrameTemplate_ConfirmDialog" virtual="true" inherits="FrameTemplate_ResizableDialog" hidden="true" frameStrata="TOOLTIP">
+    <Frame name="FrameTemplate_ErrorDialog" virtual="true" inherits="FrameTemplate_ResizableDialog" hidden="true" frameStrata="TOOLTIP">
         <Size>
             <AbsDimension x="250" y="128"/>
         </Size>
@@ -28,7 +28,7 @@
                     self.Content:SetTextColor(newColor:Unpack());
                 end);
 
-                this.Title.TitleString:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogTitle"));
+                this.Title.TitleString:SetText(AddOns.Templates:GetLocalizedString("ErrorDialogTitle"));
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
@@ -48,7 +48,7 @@
             </OnEvent>
         </Scripts>
         <Frames>
-            <Button name="$parentCancelButton" inherits="ButtonTemplate_Button">
+            <Button name="$parentOkButton" inherits="ButtonTemplate_Button">
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT">
                         <Offset>
@@ -59,25 +59,7 @@
                 <Scripts>
                     <OnLoad>
                         this:GetBase():GetBase():OnLoad();
-                        this:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogCancel"));
-                    </OnLoad>
-                    <OnClick>
-                        this:GetParent():Hide();
-                    </OnClick>
-                </Scripts>
-            </Button>
-            <Button name="$parentOkButton" inherits="ButtonTemplate_Button">
-                <Anchors>
-                    <Anchor point="RIGHT" relativeTo="$parentCancelButton" relativePoint="LEFT">
-                        <Offset>
-                            <AbsDimension x="-3"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnLoad>
-                        this:GetBase():GetBase():OnLoad();
-                        this:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogOK"));
+                        this:SetText(AddOns.Templates:GetLocalizedString("ErrorDialogOK"));
                     </OnLoad>
                     <OnClick>
                         this:GetParent():Hide();
@@ -97,7 +79,7 @@
                                 <AbsDimension x="12" y="30"/>
                             </Offset>
                         </Anchor>
-                        <Anchor point="BOTTOMRIGHT" relativeTo="$parentCancelButton" relativePoint="TOPRIGHT"/>
+                        <Anchor point="BOTTOMRIGHT" relativeTo="$parentOkButton" relativePoint="TOPRIGHT"/>
                     </Anchors>
                     <Color r="1" g="1" b="1"/>
                 </FontString>

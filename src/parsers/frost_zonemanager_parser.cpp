@@ -94,17 +94,14 @@ namespace Frost
                         if (iEntityID < 0)
                             iEntityID = -1;
 
-                        if (lMatList.Find(iID))
+                        if (lMatList.Find(iID) && lMatList[iID].Find(iEntityID))
                         {
-                            if (lMatList[iID].Find(iEntityID))
-                            {
-                                Warning(pMaterialBlock->GetFile()+":"+pMaterialBlock->GetLineNbr(),
-                                    "A material has already been defined for \""+sModel+"\""+
-                                    (iID < 0 ? "." : ("'s submesh "+iID+
-                                    (iEntityID < 0 ? "." : ("(subentity "+iEntityID+")."))))
-                                );
-                                continue;
-                            }
+                            Warning(pMaterialBlock->GetFile()+":"+pMaterialBlock->GetLineNbr(),
+                                "A material has already been defined for \""+sModel+"\""+
+                                (iID < 0 ? "." : ("'s submesh "+iID+
+                                (iEntityID < 0 ? "." : ("(subentity "+iEntityID+")."))))
+                            );
+                            continue;
                         }
 
                         MaterialInfo mInfo;

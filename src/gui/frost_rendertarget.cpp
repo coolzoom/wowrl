@@ -25,6 +25,14 @@ namespace Frost
 
     RenderTarget::RenderTarget( const s_uint& uiID, const s_uint& uiWidth, const s_uint& uiHeight, const PixelType& mType, const Usage& mUsage )
     {
+        if (!uiWidth.IsValid() || !uiHeight.IsValid())
+        {
+            Error(CLASS_NAME,
+                "Can't create a RenderTarget with invalid dimensions : "+uiWidth+" x "+uiHeight+"."
+            );
+            return;
+        }
+
         uiID_ = uiID;
         sName_ = "_AutoNamedTarget:"+uiID_;
         uiWidth_ = uiWidth;
@@ -61,6 +69,14 @@ namespace Frost
 
     RenderTarget::RenderTarget( const s_uint& uiID, const s_str& sName, const s_uint& uiWidth, const s_uint& uiHeight, const PixelType& mType, const Usage& mUsage )
     {
+        if (!uiWidth.IsValid() || !uiHeight.IsValid())
+        {
+            Error(CLASS_NAME,
+                "Can't create a RenderTarget with invalid dimensions : "+uiWidth+" x "+uiHeight+"."
+            );
+            return;
+        }
+
         uiID_ = uiID;
         sName_ = sName;
         uiWidth_ = uiWidth;
@@ -136,6 +152,14 @@ namespace Frost
 
     s_bool RenderTarget::SetDimensions( const s_uint& uiWidth, const s_uint& uiHeight )
     {
+        if (!uiWidth.IsValid() || !uiHeight.IsValid())
+        {
+            Error(CLASS_NAME,
+                "Can't create a RenderTarget with invalid dimensions : "+uiWidth+" x "+uiHeight+"."
+            );
+            return;
+        }
+
         s_uint uiNewWidth = uiWidth.GetNearestPowerOfTwo();
         s_uint uiNewHeight = uiHeight.GetNearestPowerOfTwo();
         if ((uiRealWidth_ < uiNewWidth) ||
