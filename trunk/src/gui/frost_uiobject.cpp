@@ -56,6 +56,8 @@ s_str UIObject::Serialize( const s_str& sTab ) const
     sStr << sTab << "  # Lua name    : " << sLuaName_ << "\n";
     sStr << sTab << "  # ID          : " << uiID_ << "\n";
     sStr << sTab << "  # Type        : " << lType_.Back() << "\n";
+    if (bManuallyRendered_)
+    sStr << sTab << "  # Man. Render : " << (pRenderer_ ? pRenderer_->GetName() : "none") << "\n";
     if (pParent_)
     sStr << sTab << "  # Parent      : " << pParent_->GetName() << "\n";
     else
@@ -552,7 +554,9 @@ void UIObject::SetRelPoint( AnchorPoint mPoint, const s_str& sParentName, Anchor
 void UIObject::SetPoint( const Anchor& mAnchor )
 {
     GUIManager::GetSingleton()->NotifyObjectMoved();
+
     lAnchorList_[mAnchor.GetPoint()] = mAnchor;
+
     switch (mAnchor.GetPoint())
     {
         case ANCHOR_TOPLEFT :
@@ -657,6 +661,22 @@ void UIObject::SetID( const s_uint& uiID )
     }
 }
 
+void UIObject::NotifyAnchoredObject( s_ptr<UIObject> pObj, const s_bool& bAnchored )
+{
+    if (!pObj)
+        return;
+
+    if (bAnchored)
+    {
+        if (!lAnchoredObjectList_.Find(pObj->GetID()))
+            lAnchoredObjectList_[pObj->GetID()] = pObj;
+    }
+    else
+    {
+        lAnchoredObjectList_.Erase(pObj->GetID());
+    }
+}
+
 void UIObject::UpdateDimensions_()
 {
     if (pParent_)
@@ -739,6 +759,63 @@ void UIObject::MakeBorders_( s_int& iMin, s_int& iMax, const s_int& iCenter, con
         bReady_ = false;
 }
 
+void UIObject::ReadAnchors_( s_int& iLeft, s_int& iRight, s_int& iTop, s_int& iBottom, s_int& iXCenter, s_int& iYCenter ) const
+{
+    iLeft   = s_int::INFPLUS;
+    iRight  = s_int::INFMINUS;
+    iTop    = s_int::INFPLUS;
+    iBottom = s_int::INFMINUS;
+
+    s_map<AnchorPoint, Anchor>::const_iterator iterAnchor;
+    foreach (iterAnchor, lAnchorList_)
+    {
+        // Make sure the anchored object has its borders updated
+        s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
+        if (pObj)
+            pObj->UpdateBorders_();
+
+        switch (iterAnchor->second.GetPoint())
+        {
+            case ANCHOR_TOPLEFT :
+                iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
+                iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
+                break;
+            case ANCHOR_TOP :
+                iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
+                iXCenter = iterAnchor->second.GetAbsX();
+                break;
+            case ANCHOR_TOPRIGHT :
+                iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
+                iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
+                break;
+            case ANCHOR_RIGHT :
+                iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
+                iYCenter = iterAnchor->second.GetAbsY();
+                break;
+            case ANCHOR_BOTTOMRIGHT :
+                iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
+                iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
+                break;
+            case ANCHOR_BOTTOM :
+                iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
+                iXCenter = iterAnchor->second.GetAbsX();
+                break;
+            case ANCHOR_BOTTOMLEFT :
+                iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
+                iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
+                break;
+            case ANCHOR_LEFT :
+                iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
+                iYCenter = iterAnchor->second.GetAbsY();
+                break;
+            case ANCHOR_CENTER :
+                iXCenter = iterAnchor->second.GetAbsX();
+                iYCenter = iterAnchor->second.GetAbsY();
+                break;
+        }
+    }
+}
+
 void UIObject::UpdateBorders_()
 {
     if (!bUpdateBorders_)
@@ -748,68 +825,16 @@ void UIObject::UpdateBorders_()
 
     if (bUpdateDimensions_)
     {
-        this->UpdateDimensions_();
+        UpdateDimensions_();
         bUpdateDimensions_ = false;
     }
 
     if (!lAnchorList_.IsEmpty())
     {
-        s_int iLeft   = s_int::INFPLUS;
-        s_int iRight  = s_int::INFMINUS;
-        s_int iTop    = s_int::INFPLUS;
-        s_int iBottom = s_int::INFMINUS;
+        s_int iLeft, iRight, iTop, iBottom;
+        s_int iXCenter, iYCenter;
 
-        s_int iXCenter;
-        s_int iYCenter;
-
-        s_map<AnchorPoint, Anchor>::iterator iterAnchor;
-        foreach (iterAnchor, lAnchorList_)
-        {
-            // Make sure the anchored object has its borders updated
-            s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
-            if (pObj && pObj->bUpdateBorders_)
-                pObj->UpdateBorders_();
-
-            switch (iterAnchor->second.GetPoint())
-            {
-                case ANCHOR_TOPLEFT :
-                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
-                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_TOP :
-                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
-                    iXCenter = iterAnchor->second.GetAbsX();
-                    break;
-                case ANCHOR_TOPRIGHT :
-                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
-                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_RIGHT :
-                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
-                    iYCenter = iterAnchor->second.GetAbsY();
-                    break;
-                case ANCHOR_BOTTOMRIGHT :
-                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
-                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_BOTTOM :
-                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
-                    iXCenter = iterAnchor->second.GetAbsX();
-                    break;
-                case ANCHOR_BOTTOMLEFT :
-                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
-                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_LEFT :
-                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
-                    iYCenter = iterAnchor->second.GetAbsY();
-                    break;
-                case ANCHOR_CENTER :
-                    iXCenter = iterAnchor->second.GetAbsX();
-                    iYCenter = iterAnchor->second.GetAbsY();
-                    break;
-            }
-        }
+        ReadAnchors_(iLeft, iRight, iTop, iBottom, iXCenter, iYCenter);
 
         MakeBorders_(iTop, iBottom, iYCenter, s_int(uiAbsHeight_));
         MakeBorders_(iLeft, iRight, iXCenter, s_int(uiAbsWidth_));
@@ -844,41 +869,65 @@ void UIObject::UpdateAnchors()
 {
     if (bUpdateAnchors_)
     {
+        s_ctnr<s_map<AnchorPoint, Anchor>::iterator> lEraseList;
         s_map<AnchorPoint, Anchor>::iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
-            iterAnchor->second.UpdateParent();
+            s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
+            if (pObj && pObj->DependsOn(this))
+            {
+                Error(CLASS_NAME, "Cyclic anchor dependency ! \""+sName_+"\" and \""+pObj->GetName()+"\"\n"
+                    "depends on eachothers (directly or indirectly). \""+Anchor::GetStringPoint(iterAnchor->first)+
+                    "\" anchor removed."
+                );
+                lEraseList.PushBack(iterAnchor);
+            }
         }
-    }
-}
 
-void UIObject::CheckAnchors_()
-{
-    s_ctnr<s_map<AnchorPoint, Anchor>::iterator> lEraseList;
-    s_map<AnchorPoint, Anchor>::iterator iterAnchor, iterTemp;
-    foreach (iterAnchor, lAnchorList_)
-    {
-        s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
-        if (pObj && pObj->DependsOn(this))
+        s_ctnr<s_map<AnchorPoint, Anchor>::iterator>::iterator iterErase;
+        foreach (iterErase, lEraseList)
         {
-            Error(CLASS_NAME, "Cyclic anchor dependency ! \""+sName_+"\" and \""+pObj->GetName()+"\"\n"
-                "depends on eachothers (directly or indirectly). \""+Anchor::GetStringPoint(iterAnchor->first)+
-                "\" anchor removed."
-            );
-            lEraseList.PushBack(iterAnchor);
+            lAnchorList_.Erase(*iterErase);
         }
-    }
 
-    s_ctnr<s_map<AnchorPoint, Anchor>::iterator>::iterator iterErase;
-    foreach (iterErase, lEraseList)
-    {
-        lAnchorList_.Erase(*iterErase);
+        s_ctnr< s_ptr<UIObject> > lAnchorParentList;
+        foreach (iterAnchor, lAnchorList_)
+        {
+            s_ptr<UIObject> pParent = iterAnchor->second.GetParent();
+            if (pParent && !lAnchorParentList.Find(pParent))
+                lAnchorParentList.PushBack(pParent);
+        }
+
+        s_ctnr< s_ptr<UIObject> >::iterator iterOldParent;
+        foreach (iterOldParent, lPreviousAnchorParentList_)
+        {
+            s_ptr<UIObject> pParent = *iterOldParent;
+            if (!lAnchorParentList.Find(pParent))
+                pParent->NotifyAnchoredObject(this, false);
+        }
+
+        s_ctnr< s_ptr<UIObject> >::iterator iterParent;
+        foreach (iterParent, lAnchorParentList)
+        {
+            s_ptr<UIObject> pParent = *iterParent;
+            if (!lPreviousAnchorParentList_.Find(pParent))
+                pParent->NotifyAnchoredObject(this, true);
+        }
+
+        lPreviousAnchorParentList_ = lAnchorParentList;
+        bUpdateAnchors_ = false;
     }
 }
 
 void UIObject::FireUpdateBorders()
 {
     bUpdateBorders_ = true;
+
+    s_map< s_uint, s_ptr<UIObject> >::iterator iterAnchored;
+    foreach (iterAnchored, lAnchoredObjectList_)
+    {
+        iterAnchored->second->FireUpdateBorders();
+    }
 }
 
 void UIObject::FireUpdateDimensions()
@@ -889,8 +938,10 @@ void UIObject::FireUpdateDimensions()
 
 void UIObject::Update()
 {
-    CheckAnchors_();
     UpdateBorders_();
+
+    if (bNewlyCreated_)
+        bNewlyCreated_ = false;
 }
 
 void UIObject::UpdateMaterial( const s_bool& bForceUpdate )
@@ -919,14 +970,41 @@ const s_bool& UIObject::IsSpecial() const
     return bSpecial_;
 }
 
-void UIObject::SetManuallyRendered( const s_bool& bManuallyRendered )
+void UIObject::SetManuallyRendered( const s_bool& bManuallyRendered, s_ptr<UIObject> pRenderer )
 {
+    s_ptr<UIObject> pOldRenderer = pRenderer_;
+
+    if (pOldRenderer && pOldRenderer != pRenderer)
+        pOldRenderer->NotifyManuallyRenderedObject_(this, false);
+
     bManuallyRendered_ = bManuallyRendered;
+    if (bManuallyRendered_)
+        pRenderer_ = pRenderer;
+    else
+        pRenderer_ = nullptr;
+
+    if (pRenderer_ && pRenderer_ != pOldRenderer && bManuallyRendered_)
+        pRenderer_->NotifyManuallyRenderedObject_(this, true);
 }
 
 const s_bool& UIObject::IsManuallyRendered() const
 {
     return bManuallyRendered_;
+}
+
+void UIObject::SetNewlyCreated()
+{
+    bNewlyCreated_ = true;
+}
+
+const s_bool& UIObject::IsNewlyCreated() const
+{
+    return bNewlyCreated_;
+}
+
+void UIObject::NotifyManuallyRenderedObject_(s_ptr<UIObject> pObject, const s_bool& bManuallyRendered)
+{
+
 }
 
 void UIObject::MarkForCopy( const s_str& sVariable )

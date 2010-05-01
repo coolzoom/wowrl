@@ -11,3 +11,4 @@ Template_Dropdown.xml
 Template_Button.xml
 Template_ConfirmDialog.xml
 Template_YesNoDialog.xml
+Template_ErrorDialog.xml

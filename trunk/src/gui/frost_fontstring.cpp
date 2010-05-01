@@ -392,67 +392,23 @@ void FontString::SetText( const s_str& sText )
 
 void FontString::UpdateBorders_()
 {
+    if (!bUpdateBorders_)
+        return;
+
     bReady_ = true;
 
     if (bUpdateDimensions_)
     {
-        this->UpdateDimensions_();
+        UpdateDimensions_();
         bUpdateDimensions_ = false;
     }
 
     if (!lAnchorList_.IsEmpty())
     {
-        s_int iLeft   = s_int::INFPLUS;
-        s_int iRight  = s_int::INFMINUS;
-        s_int iTop    = s_int::INFPLUS;
-        s_int iBottom = s_int::INFMINUS;
+        s_int iLeft, iRight, iTop, iBottom;
+        s_int iXCenter, iYCenter;
 
-        s_int iXCenter;
-        s_int iYCenter;
-
-        s_map<AnchorPoint, Anchor>::iterator iterAnchor;
-        foreach (iterAnchor, lAnchorList_)
-        {
-            switch (iterAnchor->second.GetPoint())
-            {
-                case ANCHOR_TOPLEFT :
-                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
-                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_TOP :
-                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
-                    iXCenter = iterAnchor->second.GetAbsX();
-                    break;
-                case ANCHOR_TOPRIGHT :
-                    iTop = s_int::Min(iTop, iterAnchor->second.GetAbsY());
-                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_RIGHT :
-                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
-                    iYCenter = iterAnchor->second.GetAbsY();
-                    break;
-                case ANCHOR_BOTTOMRIGHT :
-                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
-                    iRight = s_int::Max(iRight, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_BOTTOM :
-                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
-                    iXCenter = iterAnchor->second.GetAbsX();
-                    break;
-                case ANCHOR_BOTTOMLEFT :
-                    iBottom = s_int::Max(iBottom, iterAnchor->second.GetAbsY());
-                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
-                    break;
-                case ANCHOR_LEFT :
-                    iLeft = s_int::Min(iLeft, iterAnchor->second.GetAbsX());
-                    iYCenter = iterAnchor->second.GetAbsY();
-                    break;
-                case ANCHOR_CENTER :
-                    iXCenter = iterAnchor->second.GetAbsX();
-                    iYCenter = iterAnchor->second.GetAbsY();
-                    break;
-            }
-        }
+        ReadAnchors_(iLeft, iRight, iTop, iBottom, iXCenter, iYCenter);
 
         if (uiAbsWidth_.IsValid() && !uiAbsWidth_.IsNull())
         {

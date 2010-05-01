@@ -196,6 +196,8 @@ int Frost::l_CreateFrame( lua_State* pLua )
             }
         }
 
+        pNewFrame->SetNewlyCreated();
+
         pNewFrame->On("Load");
 
         pNewFrame->PushOnLua(mFunc.GetState());

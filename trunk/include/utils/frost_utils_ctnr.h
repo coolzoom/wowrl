@@ -255,6 +255,43 @@ namespace Frost
             return std::find(iterStart, mContainer_.end(), mElem);
         }
 
+        /// Inserts an element before mIter.
+        /** \param mIter  The reference iterator
+        *   \param mValue The value to insert
+        *   \return An iterator pointing to the inserted value
+        */
+        iterator Insert(const iterator& mIter, const T& mValue)
+        {
+            return mContainer_.insert(mIter, mValue);
+        }
+
+        /// Inserts all values in a range before mIter.
+        /** \param mIter  The reference iterator
+        *   \param mRange The range containing values to insert
+        *   \return An iterator pointing to the last inserted value
+        *   \note The last element of the range will not be inserted.
+        */
+        iterator Insert(const iterator& mIter, const range& mRange)
+        {
+            iterator mTempIter = mIter;
+            --mTempIter;
+            mContainer_.insert(mIter, mRange.Begin(), mRange.End());
+            return mTempIter + (mRange.End() - mRange.Begin());
+        }
+
+        /// Inserts the content of a container before mIter.
+        /** \param mIter      The reference iterator
+        *   \param mContainer The container to insert
+        *   \return An iterator pointing to the last inserted value
+        */
+        iterator Insert(const iterator& mIter, const s_ctnr_t& mContainer)
+        {
+            iterator mTempIter = mIter;
+            --mTempIter;
+            mContainer_.insert(mIter, mContainer.Begin(), mContainer.End());
+            return mTempIter + mContainer.mContainer_.size();
+        }
+
         /// Erases an element from the container.
         /** \param uiPos The position of the element to erase
         */

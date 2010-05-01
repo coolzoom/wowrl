@@ -30,27 +30,44 @@ Anchor::Anchor( s_ptr<UIObject> pObj, AnchorPoint mPoint, const s_str& sParent, 
     mType_ = ANCHOR_ABS;
 }
 
-void Anchor::UpdateParent()
+void Anchor::UpdateParent() const
 {
-    if (!sParent_.IsEmpty())
+    if (!bParentUpdated_)
     {
-        s_ptr<UIObject> pObjParent = pObj_->GetParent();
-        if (pObjParent)
-            sParent_.Replace("$parent", pObjParent->GetLuaName());
-        else
-            sParent_.Replace("$parent", "");
+        if (!sParent_.IsEmpty())
+        {
+            s_ptr<UIObject> pObjParent = pObj_->GetParent();
 
-        if (sParent_.IsEmpty())
-            pParent_ = nullptr;
+            if (pObjParent)
+            {
+                sParent_.Replace("$parent", pObjParent->GetLuaName());
+                pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sParent_);
+            }
+            else if (sParent_.Find("$parent"))
+            {
+                pParent_ = nullptr;
+                Warning(pObj_->GetObjectType(),
+                    "UIObject \""+pObj_->GetName()+"\" has no parent but uses $parent in its anchors."
+                );
+            }
+            else
+            {
+                pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sParent_);
+            }
+        }
         else
-            pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sParent_);
+            pParent_ = nullptr;
+
+        bParentUpdated_ = true;
     }
 }
 
-const s_int& Anchor::GetAbsX()
+const s_int& Anchor::GetAbsX() const
 {
     if (pObj_)
     {
+        UpdateParent();
+
         s_int iParentX;
         if (pParent_)
             iParentX = pParent_->GetLeft();
@@ -81,10 +98,12 @@ const s_int& Anchor::GetAbsX()
     return iAbsX_;
 }
 
-const s_int& Anchor::GetAbsY()
+const s_int& Anchor::GetAbsY() const
 {
     if (pObj_)
     {
+        UpdateParent();
+
         s_int iParentY;
         if (pParent_)
             iParentY = pParent_->GetTop();
@@ -122,6 +141,7 @@ s_ptr<UIObject> Anchor::GetObject() const
 
 s_ptr<UIObject> Anchor::GetParent() const
 {
+    UpdateParent();
     return pParent_;
 }
 

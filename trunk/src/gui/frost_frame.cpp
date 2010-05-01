@@ -68,7 +68,7 @@ void Frame::Render()
                 foreach (iterRegion, mLayer.lRegionList)
                 {
                     s_ptr<LayeredRegion> pRegion = iterRegion->second;
-                    if (pRegion->IsShown() && !pRegion->IsManuallyRendered())
+                    if (pRegion->IsShown() && !pRegion->IsManuallyRendered() && !pRegion->IsNewlyCreated())
                         pRegion->Render();
                 }
             }
@@ -587,26 +587,6 @@ void Frame::FireBuildLayerList_()
     bBuildLayerList_ = true;
 }
 
-void Frame::FireUpdateBorders()
-{
-    bUpdateBorders_ = true;
-
-    if (pTitleRegion_)
-        pTitleRegion_->FireUpdateBorders();
-
-    s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
-    foreach (iterRegion, lRegionList_)
-    {
-        iterRegion->second->FireUpdateBorders();
-    }
-
-    s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
-    foreach (iterChild, lChildList_)
-    {
-        iterChild->second->FireUpdateBorders();
-    }
-}
-
 s_bool Frame::HasScript( const s_str& sScriptName ) const
 {
     return lDefinedScriptList_.Find(sScriptName);
@@ -675,6 +655,8 @@ void Frame::AddChild( s_ptr<Frame> pChild )
 
             if (pTopLevelParent_)
                 pChild->NotifyTopLevelParent_(true, pTopLevelParent_);
+
+            pChild->SetManuallyRendered(bManuallyRendered_, pRenderer_);
 
             lChildList_[pChild->GetID()] = pChild;
             GUIManager::GetSingleton()->FireBuildStrataList();
@@ -1336,17 +1318,17 @@ void Frame::StopSizing()
     GUIManager::GetSingleton()->StopSizing(this);
 }
 
-void Frame::SetManuallyRendered( const s_bool& bManuallyRendered )
+void Frame::SetManuallyRendered( const s_bool& bManuallyRendered, s_ptr<UIObject> pRenderer )
 {
     if (bManuallyRendered_ != bManuallyRendered)
         NotifyStrataChanged_();
 
-    UIObject::SetManuallyRendered(bManuallyRendered);
+    UIObject::SetManuallyRendered(bManuallyRendered, pRenderer);
 
     s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList_)
     {
-        iterChild->second->SetManuallyRendered(bManuallyRendered);
+        iterChild->second->SetManuallyRendered(bManuallyRendered, pRenderer);
     }
 }
 

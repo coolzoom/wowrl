@@ -101,9 +101,6 @@ namespace Frost
             */
             void                EnableMouseWheel(const s_bool& bIsMouseWheelEnabled);
 
-            /// Tells this widget to update its borders.
-            virtual void        FireUpdateBorders();
-
             /// Checks if this Frame has a script defined.
             /** \param sScriptName The name of the script to check
             *   \return 'true' if this script is defined
@@ -453,13 +450,15 @@ namespace Frost
 
             /// Flags this object as "manually rendered".
             /** \param bManuallyRendered 'true' to flag it as manually rendered
+            *   \param pRenderer         The UIObject that will take care of
+            *                            rendering this widget
             *   \note Manually rendered objects are not automatically rendered
             *         by their parent (for LayeredRegions) or the GUIManager
             *         (for Frames). They also don't receive automatic input.
             *   \note This function propagates the manually rendered flag to
             *         this Frame's children.
             */
-            virtual void        SetManuallyRendered(const s_bool& bManuallyRendered);
+            virtual void        SetManuallyRendered(const s_bool& bManuallyRendered, s_ptr<UIObject> pRenderer = nullptr);
 
             /// Changes this widget's absolute width (in pixels).
             /** \param uiAbsWidth The new width

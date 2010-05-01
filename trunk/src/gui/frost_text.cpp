@@ -696,7 +696,6 @@ namespace Frost
                 fX0 = 0.0f;
             }
 
-            s_float fYOffset;
             if (fBoxH_.IsValid())
             {
                 switch (mVertAlign_)

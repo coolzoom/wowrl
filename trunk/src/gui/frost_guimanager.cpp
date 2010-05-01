@@ -539,7 +539,8 @@ namespace Frost
                 foreach (iterFrame, mLevel.lFrameList)
                 {
                     s_ptr<GUI::Frame> pFrame = *iterFrame;
-                    pFrame->Render();
+                    if (!pFrame->IsNewlyCreated())
+                        pFrame->Render();
                 }
             }
         }
@@ -624,13 +625,15 @@ namespace Frost
         s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
         foreach (iterObj, lObjectList_)
         {
-            iterObj->second->UpdateAnchors();
+            if (!iterObj->second->IsVirtual())
+                iterObj->second->UpdateAnchors();
         }
 
         // ... then update logics on main widgets from parent to childs.
         foreach (iterObj, lMainObjectList_)
         {
-            iterObj->second->Update();
+            if (!iterObj->second->IsVirtual())
+                iterObj->second->Update();
         }
 
         if (bBuildStrataList_)
@@ -920,9 +923,9 @@ namespace Frost
                         {
                             pFrame->SetAddOn(GUIManager::GetSingleton()->GetCurrentAddOn());
 
-                            pUIObject->ParseBlock(pElemBlock);
+                            pFrame->ParseBlock(pElemBlock);
 
-                            if (!pUIObject->IsVirtual() && pFrame)
+                            if (!pFrame->IsVirtual())
                                 pFrame->On("Load");
                         }
                         else

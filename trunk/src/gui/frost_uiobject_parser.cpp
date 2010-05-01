@@ -60,10 +60,18 @@ void UIObject::ParseAnchorsBlock_( s_ptr<XML::Block> pBlock )
                 if (sRelativePoint.IsEmpty())
                     sRelativePoint = sPoint;
 
+                if (sParent.IsEmpty(true))
+                {
+                    if (pParent_ || IsVirtual())
+                        sParent = "$parent";
+                    else
+                        sParent = "";
+                }
+
                 GUI::Anchor mAnchor(
                     this,
                     GUI::Anchor::GetAnchorPoint(sPoint),
-                    sParent.IsEmpty(true) && !pAnchorBlock->IsProvided("relativeTo") ? "$parent" : sParent,
+                    sParent,
                     GUI::Anchor::GetAnchorPoint(sRelativePoint)
                 );
 
