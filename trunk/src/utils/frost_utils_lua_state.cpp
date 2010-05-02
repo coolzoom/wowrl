@@ -894,6 +894,15 @@ void State::GetField( const s_str& sName, const s_int& iIndex )
     lua_getfield(pLua_, iIndex.Get(), sName.GetASCII().c_str());
 }
 
+void State::GetField( const s_int& iID, const s_int& iIndex )
+{
+    lua_pushnumber(pLua_, iID.Get());
+    if (iIndex >= 0)
+        lua_gettable(pLua_, iIndex.Get());
+    else
+        lua_gettable(pLua_, iIndex.Get() - 1);
+}
+
 s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue, const s_bool& bSetValue )
 {
     s_int i;

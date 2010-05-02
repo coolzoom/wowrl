@@ -55,10 +55,10 @@ void Texture::ParseColorBlock_( s_ptr<XML::Block> pBlock )
     if (pColorBlock)
     {
         SetColor(Color(
-            s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
-            s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
-            s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
-            s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+            s_float(pColorBlock->GetAttribute("a")),
+            s_float(pColorBlock->GetAttribute("r")),
+            s_float(pColorBlock->GetAttribute("g")),
+            s_float(pColorBlock->GetAttribute("b"))
         ));
     }
 }
@@ -85,17 +85,17 @@ void Texture::ParseGradientBlock_( s_ptr<XML::Block> pBlock )
 
         Color mMinColor, mMaxColor;
         s_ptr<XML::Block> pMinColorBlock = pGradientBlock->GetBlock("MinColor");
-        mMinColor.SetA(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("a"))));
-        mMinColor.SetR(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("r"))));
-        mMinColor.SetG(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("g"))));
-        mMinColor.SetB(s_uchar(255.0f*s_float(pMinColorBlock->GetAttribute("b"))));
+        mMinColor.SetA(s_float(pMinColorBlock->GetAttribute("a")));
+        mMinColor.SetR(s_float(pMinColorBlock->GetAttribute("r")));
+        mMinColor.SetG(s_float(pMinColorBlock->GetAttribute("g")));
+        mMinColor.SetB(s_float(pMinColorBlock->GetAttribute("b")));
 
 
         s_ptr<XML::Block> pMaxColorBlock = pGradientBlock->GetBlock("MaxColor");
-        mMaxColor.SetA(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("a"))));
-        mMaxColor.SetR(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("r"))));
-        mMaxColor.SetG(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("g"))));
-        mMaxColor.SetB(s_uchar(255.0f*s_float(pMaxColorBlock->GetAttribute("b"))));
+        mMaxColor.SetA(s_float(pMaxColorBlock->GetAttribute("a")));
+        mMaxColor.SetR(s_float(pMaxColorBlock->GetAttribute("r")));
+        mMaxColor.SetG(s_float(pMaxColorBlock->GetAttribute("g")));
+        mMaxColor.SetB(s_float(pMaxColorBlock->GetAttribute("b")));
 
         SetGradient(GUI::Gradient(mOrient, mMinColor, mMaxColor));
     }

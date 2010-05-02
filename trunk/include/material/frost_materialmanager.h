@@ -38,13 +38,13 @@ namespace Frost
 
         /// Creates a new Material (for 2D rendering).
         /** \param sName The name of the new Material
-        *   \param ucR   The red component
-        *   \param ucG   The green component
-        *   \param ucB   The blue component
+        *   \param fR    The red component
+        *   \param fG    The green component
+        *   \param fB    The blue component
         *   \return The new Material
         *   \note Creates a blank Material filled with a color
         */
-        s_refptr<Material> CreateMaterial2D(const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB);
+        s_refptr<Material> CreateMaterial2D(const s_str& sName, const s_float& fR, const s_float& fG, const s_float& fB);
 
         /// Creates a new Material (for 2D rendering).
         /** \param sName  The name of the new Material
@@ -81,14 +81,14 @@ namespace Frost
 
         /// Creates a new Material (for 3D rendering).
         /** \param sName The name of the new Material
-        *   \param ucR   The red component
-        *   \param ucG   The green component
-        *   \param ucB   The blue component
-        *   \param ucA   The alpha component
+        *   \param fR    The red component
+        *   \param fG    The green component
+        *   \param fB    The blue component
+        *   \param fA    The alpha component
         *   \return The new Material
         *   \note Creates a blank Material filled with a color
         */
-        s_refptr<Material> CreateMaterial3D(const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB, const s_uchar& ucA = 255);
+        s_refptr<Material> CreateMaterial3D(const s_str& sName, const s_float& fR, const s_float& fG, const s_float& fB, const s_float& fA = 1.0f);
 
         /// Creates a new Material (for 3D rendering).
         /** \param sName  The name of the new Material
@@ -99,14 +99,14 @@ namespace Frost
         s_refptr<Material> CreateMaterial3D(const s_str& sName, const Color& mColor);
 
         /// Creates a new Material (for 3D rendering).
-        /** \param ucR   The red component
-        *   \param ucG   The green component
-        *   \param ucB   The blue component
-        *   \param ucA   The alpha component
+        /** \param fR   The red component
+        *   \param fG   The green component
+        *   \param fB   The blue component
+        *   \param fA   The alpha component
         *   \return The new Material
         *   \note Creates a blank Material filled with a color
         */
-        s_refptr<Material> CreateMaterial3D(const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB, const s_uchar& ucA = 255);
+        s_refptr<Material> CreateMaterial3D(const s_float& fR, const s_float& fG, const s_float& fB, const s_float& fA = 1.0f);
 
         /// Creates a new Material (for 3D rendering).
         /** \param mColor The color to apply

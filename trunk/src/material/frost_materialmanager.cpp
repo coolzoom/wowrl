@@ -85,7 +85,7 @@ namespace Frost
         return pMat;
     }
 
-    s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB )
+    s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sName, const s_float& fR, const s_float& fG, const s_float& fB )
     {
         s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
             sName.Get(), "Frost"
@@ -99,7 +99,7 @@ namespace Frost
 
         pPass = pOgreMat->getTechnique(0)->createPass();*/
         pPass->setDiffuse(
-            Ogre::ColourValue(ucR.Get()/255.0f, ucG.Get()/255.0f, ucB.Get()/255.0f)
+            Ogre::ColourValue(fR.Get(), fG.Get(), fB.Get())
         );
         pPass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_PASS);
         pPass->setCullingMode(Ogre::CULL_NONE);
@@ -142,7 +142,7 @@ namespace Frost
 
             pPass = pOgreMat->getTechnique(0)->createPass();*/
 
-            pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
+            pPass->setDiffuse(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
             pPass->createTextureUnitState()->setTextureName(sFileName.Get());
             pPass->setTextureFiltering(Ogre::TFO_NONE);
             pPass->setSeparateSceneBlending(
@@ -224,7 +224,7 @@ namespace Frost
         return pDefault2D_;
     }
 
-    s_refptr<Material> MaterialManager::CreateMaterial3D( const s_str& sName, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB, const s_uchar& ucA )
+    s_refptr<Material> MaterialManager::CreateMaterial3D( const s_str& sName, const s_float& fR, const s_float& fG, const s_float& fB, const s_float& fA )
     {
         s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
             sName.Get(), "Frost"
@@ -233,7 +233,7 @@ namespace Frost
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D_PLAIN, pOgreMat));
         ++uiCounter_;
 
-        pMat->SetDiffuse(Color(ucA, ucR, ucG, ucB));
+        pMat->SetDiffuse(Color(fA, fR, fG, fB));
 
         return pMat;
     }
@@ -243,9 +243,9 @@ namespace Frost
         return CreateMaterial3D(sName, mColor.GetR(), mColor.GetG(), mColor.GetB(), mColor.GetA());
     }
 
-    s_refptr<Material> MaterialManager::CreateMaterial3D( const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB, const s_uchar& ucA )
+    s_refptr<Material> MaterialManager::CreateMaterial3D( const s_float& fR, const s_float& fG, const s_float& fB, const s_float& fA )
     {
-        return CreateMaterial3D("3D_"+uiCounter_, ucR, ucG, ucB, ucA);
+        return CreateMaterial3D("3D_"+uiCounter_, fR, fG, fB, fA);
     }
 
     s_refptr<Material> MaterialManager::CreateMaterial3D( const Color& mColor )

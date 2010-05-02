@@ -206,10 +206,10 @@ namespace Frost
                     pParam->setNamedConstant(
                         sName.Get(),
                         Ogre::Vector4(
-                            mColor.GetR().Get()/255.0f,
-                            mColor.GetG().Get()/255.0f,
-                            mColor.GetB().Get()/255.0f,
-                            mColor.GetA().Get()/255.0f
+                            mColor.GetR().Get(),
+                            mColor.GetG().Get(),
+                            mColor.GetB().Get(),
+                            mColor.GetA().Get()
                         )
                     );
                 }

@@ -44,7 +44,7 @@
 
 </Texture>
 
-<d[Region]:Frame n:alpha="1.0" parent="" b:topLevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" b:enableMouse="false" b:enableKeyboard="false" b:clampedToScreen="false">
+<d[Region]:Frame n:alpha="1.0" parent="" b:topLevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" b:enableMouse="false" b:enableMouseWheel="false" b:enableKeyboard="false" b:clampedToScreen="false">
 
     <n[.,1]:ResizeBounds>
         <n[.,1]:Min>

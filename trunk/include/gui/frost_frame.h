@@ -649,6 +649,7 @@ namespace Frost
             int _IsTopLevel(lua_State*);
             int _IsUserPlaced(lua_State*);
             int _Lower(lua_State*);
+            int _On(lua_State*);
             int _Raise(lua_State*);
             int _RegisterAllEvents(lua_State*);
             int _RegisterEvent(lua_State*);

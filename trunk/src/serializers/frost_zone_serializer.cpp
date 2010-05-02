@@ -15,17 +15,17 @@ namespace Frost
 {
     s_str SerializeColorRGB( const Color& mColor, const s_str& sTag )
     {
-        return "<"+sTag+" r=\""+s_float(mColor.GetR())/255.0f+"\""
-                        " g=\""+s_float(mColor.GetG())/255.0f+"\""
-                        " b=\""+s_float(mColor.GetB())/255.0f+"\"/>";
+        return "<"+sTag+" r=\""+mColor.GetR()+"\""
+                        " g=\""+mColor.GetG()+"\""
+                        " b=\""+mColor.GetB()+"\"/>";
     }
 
     s_str SerializeColorARGB( const Color& mColor, const s_str& sTag )
     {
-        return "<"+sTag+" a=\""+s_float(mColor.GetA())/255.0f+"\""
-                        " r=\""+s_float(mColor.GetR())/255.0f+"\""
-                        " g=\""+s_float(mColor.GetG())/255.0f+"\""
-                        " b=\""+s_float(mColor.GetB())/255.0f+"\"/>";
+        return "<"+sTag+" a=\""+mColor.GetA()+"\""
+                        " r=\""+mColor.GetR()+"\""
+                        " g=\""+mColor.GetG()+"\""
+                        " b=\""+mColor.GetB()+"\"/>";
     }
 
     s_str SerializeVector( const Vector& mVector, const s_str& sTag )

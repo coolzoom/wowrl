@@ -130,7 +130,6 @@ void Texture::CopyFrom( s_ptr<UIObject> pObj )
         this->SetBlendMode(pTexture->GetBlendMode());
         this->SetTexCoord(pTexture->GetTexCoord());
         this->SetTexCoordModifiesRect(pTexture->GetTexCoordModifiesRect());
-        this->SetVertexColor(pTexture->GetVertexColor());
         this->SetDesaturated(pTexture->IsDesaturated());
     }
 }

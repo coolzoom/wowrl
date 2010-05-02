@@ -109,6 +109,12 @@ namespace Frost
         */
         void                 ClearAddOnDirectoryList();
 
+        /// Checks the provided string is suitable for naming a widget.
+        /** \param sName The string to test
+        *   \return 'true' if the provided string can be the name of a widget
+        */
+        s_bool               CheckUIObjectName(const s_str& sName);
+
         /// Creates a new UIObject.
         /** \param sClassName The class of the UIObject (Frame, FontString, Button, ...)
         *   \return The new UIObject
@@ -281,6 +287,17 @@ namespace Frost
         */
         s_uint               GetHighestLevel(FrameStrata mFrameStrata) const;
 
+        /// Sets the "this" Lua variable.
+        /** \param pFrame The Frame to use as "this"
+        *   \note Keeps track of the previous "this" values to allow nested calls.
+        */
+        void                 ThisStackPush(s_ptr<GUI::Frame> pFrame);
+
+        /// Sets the previous value of the "this" Lua variable.
+        /** \note Sett ThisStackPush() for more informations.
+        */
+        void                 ThisStackPop();
+
         /// Updates this manager and its widgets.
         /** \param fDelta The time elapsed since the last call
         */
@@ -369,6 +386,8 @@ namespace Frost
         s_bool               bResizeHeight_;
         s_bool               bResizeFromRight_;
         s_bool               bResizeFromBottom_;
+
+        s_int iThisStackSize_;
     };
 }
 

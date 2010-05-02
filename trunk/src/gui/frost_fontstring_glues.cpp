@@ -56,10 +56,10 @@ int LuaFontString::_GetShadowColor( lua_State* pLua )
 
     const Color& mShadowColor = pFontStringParent_->GetShadowColor();
 
-    mFunc.Push(s_float(mShadowColor.GetR())/255.0f);
-    mFunc.Push(s_float(mShadowColor.GetG())/255.0f);
-    mFunc.Push(s_float(mShadowColor.GetB())/255.0f);
-    mFunc.Push(s_float(mShadowColor.GetA())/255.0f);
+    mFunc.Push(mShadowColor.GetR());
+    mFunc.Push(mShadowColor.GetG());
+    mFunc.Push(mShadowColor.GetB());
+    mFunc.Push(mShadowColor.GetA());
 
     return mFunc.Return();
 }
@@ -89,10 +89,10 @@ int LuaFontString::_GetTextColor( lua_State* pLua )
 
     const Color& mTextColor = pFontStringParent_->GetTextColor();
 
-    mFunc.Push(s_float(mTextColor.GetR())/255.0f);
-    mFunc.Push(s_float(mTextColor.GetG())/255.0f);
-    mFunc.Push(s_float(mTextColor.GetB())/255.0f);
-    mFunc.Push(s_float(mTextColor.GetA())/255.0f);
+    mFunc.Push(mTextColor.GetR());
+    mFunc.Push(mTextColor.GetG());
+    mFunc.Push(mTextColor.GetB());
+    mFunc.Push(mTextColor.GetA());
 
     return mFunc.Return();
 }
@@ -169,18 +169,18 @@ int LuaFontString::_SetShadowColor( lua_State* pLua )
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                mFunc.Get(3)->GetNumber(),
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
             );
         }
         else
         {
             mColor = Color(
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
             );
         }
 
@@ -234,18 +234,18 @@ int LuaFontString::_SetTextColor( lua_State* pLua )
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                mFunc.Get(3)->GetNumber(),
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
             );
         }
         else
         {
             mColor = Color(
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
             );
         }
 

@@ -95,10 +95,10 @@ void FontString::ParseColorBlock_( s_ptr<XML::Block> pBlock )
     if (pColorBlock)
     {
         SetTextColor(Color(
-            s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
-            s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
-            s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
-            s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+            s_float(pColorBlock->GetAttribute("a")),
+            s_float(pColorBlock->GetAttribute("r")),
+            s_float(pColorBlock->GetAttribute("g")),
+            s_float(pColorBlock->GetAttribute("b"))
         ));
     }
 }
@@ -113,10 +113,10 @@ void FontString::ParseShadowBlock_( s_ptr<XML::Block> pBlock )
         if (pColorBlock)
         {
             SetShadowColor(Color(
-                s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
-                s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
-                s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
-                s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+                s_float(pColorBlock->GetAttribute("a")),
+                s_float(pColorBlock->GetAttribute("r")),
+                s_float(pColorBlock->GetAttribute("g")),
+                s_float(pColorBlock->GetAttribute("b"))
             ));
         }
 

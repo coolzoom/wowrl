@@ -96,32 +96,32 @@ namespace Frost
 
     void Material::SetDiffuse( const Color& mColor )
     {
-        if (mColor.GetA() != 255)
+        if (mColor.GetA() != 1.0f)
             pDefaultPass_->pPass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
 
         pDefaultPass_->pPass->setDiffuse(
-            mColor.GetR().Get()/255.0f,
-            mColor.GetG().Get()/255.0f,
-            mColor.GetB().Get()/255.0f,
-            mColor.GetA().Get()/255.0f
+            mColor.GetR().Get(),
+            mColor.GetG().Get(),
+            mColor.GetB().Get(),
+            mColor.GetA().Get()
         );
     }
 
     void Material::SetSelfIllumination( const Color& mColor )
     {
         pDefaultPass_->pPass->setSelfIllumination(
-            mColor.GetR().Get()/255.0f,
-            mColor.GetG().Get()/255.0f,
-            mColor.GetB().Get()/255.0f
+            mColor.GetR().Get(),
+            mColor.GetG().Get(),
+            mColor.GetB().Get()
         );
     }
 
     void Material::SetAmbient( const Color& mColor )
     {
         pDefaultPass_->pPass->setAmbient(
-            mColor.GetR().Get()/255.0f,
-            mColor.GetG().Get()/255.0f,
-            mColor.GetB().Get()/255.0f
+            mColor.GetR().Get(),
+            mColor.GetG().Get(),
+            mColor.GetB().Get()
         );
     }
 

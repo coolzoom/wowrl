@@ -1164,6 +1164,27 @@ namespace Frost
             return sCopy;
         }
 
+        /// Checks if the provided character is a number.
+        /** \param cValue The character to test
+        *   \return 'true' if the provided character is a number
+        */
+        static s_bool IsNumber(const s_char& cValue)
+        {
+            string_stream mTemp(s_str_t(cValue).Get());
+            double dValue;
+            mTemp >> dValue;
+            return !mTemp.fail();
+        }
+
+        /// Checks if the provided character is a letter or a number.
+        /** \param cValue The character to test
+        *   \return 'true' if the provided character is a letter or a number
+        */
+        static s_bool IsAlphaNumeric(const s_char& cValue)
+        {
+            return isalnum(cValue.Get());
+        }
+
         iterator begin()
         {
             return sValue_.begin();

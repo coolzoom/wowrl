@@ -40,6 +40,13 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
         {
             s_ptr<GUI::UIObject> pParent = GUIManager::GetSingleton()->GetUIObjectByName(sParent);
             s_str sName = pBlock->GetAttribute("name");
+            if (!GUIManager::GetSingleton()->CheckUIObjectName(sName))
+            {
+                throw GUIException(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
+                    "Can't create an UIObject with an incorrect name. Skipped."
+                );
+            }
+
             if (!sName.IsEmpty(true))
             {
                 if (pParent)
@@ -159,6 +166,8 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
         SetFrameStrata(pBlock->GetAttribute("frameStrata"));
     if (pBlock->IsProvided("enableMouse") || !bInherits_)
         EnableMouse(s_bool(pBlock->GetAttribute("enableMouse")));
+    if (pBlock->IsProvided("enableMouseWheel") || !bInherits_)
+        EnableMouseWheel(s_bool(pBlock->GetAttribute("enableMouseWheel")));
     if (pBlock->IsProvided("enableKeyboard") || !bInherits_)
         EnableKeyboard(s_bool(pBlock->GetAttribute("enableKeyboard")));
     if (pBlock->IsProvided("clampedToScreen") || !bInherits_)
@@ -273,10 +282,10 @@ void Frame::ParseBackdropBlock_( s_ptr<XML::Block> pBlock )
         if (pColorBlock)
         {
             pBackdrop->SetBackgroundColor(Color(
-                s_uchar(s_float(pColorBlock->GetAttribute("a"))*255.0f),
-                s_uchar(s_float(pColorBlock->GetAttribute("r"))*255.0f),
-                s_uchar(s_float(pColorBlock->GetAttribute("g"))*255.0f),
-                s_uchar(s_float(pColorBlock->GetAttribute("b"))*255.0f)
+                s_float(pColorBlock->GetAttribute("a")),
+                s_float(pColorBlock->GetAttribute("r")),
+                s_float(pColorBlock->GetAttribute("g")),
+                s_float(pColorBlock->GetAttribute("b"))
             ));
         }
 

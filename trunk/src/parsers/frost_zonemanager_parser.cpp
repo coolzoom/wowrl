@@ -28,17 +28,17 @@ namespace Frost
                 if (pElemBlock->GetName() == "AmbientColor")
                 {
                     pCurrentZone->SetAmbientColor(Color(
-                        s_uchar(s_float(pElemBlock->GetAttribute("r"))*255),
-                        s_uchar(s_float(pElemBlock->GetAttribute("g"))*255),
-                        s_uchar(s_float(pElemBlock->GetAttribute("b"))*255)
+                        s_float(pElemBlock->GetAttribute("r")),
+                        s_float(pElemBlock->GetAttribute("g")),
+                        s_float(pElemBlock->GetAttribute("b"))
                     ));
                 }
                 else if (pElemBlock->GetName() == "SunColor")
                 {
                     pCurrentZone->SetSunColor(Color(
-                        s_uchar(s_float(pElemBlock->GetAttribute("r"))*255),
-                        s_uchar(s_float(pElemBlock->GetAttribute("g"))*255),
-                        s_uchar(s_float(pElemBlock->GetAttribute("b"))*255)
+                        s_float(pElemBlock->GetAttribute("r")),
+                        s_float(pElemBlock->GetAttribute("g")),
+                        s_float(pElemBlock->GetAttribute("b"))
                     ));
                 }
                 else if (pElemBlock->GetName() == "Script")
@@ -110,10 +110,10 @@ namespace Frost
                         {
                             mInfo.bDiffuseColor = true;
                             mInfo.mDiffuseColor = Color(
-                                s_uchar(s_float(pDiffuseBlock->GetAttribute("a"))*255),
-                                s_uchar(s_float(pDiffuseBlock->GetAttribute("r"))*255),
-                                s_uchar(s_float(pDiffuseBlock->GetAttribute("g"))*255),
-                                s_uchar(s_float(pDiffuseBlock->GetAttribute("b"))*255)
+                                s_float(pDiffuseBlock->GetAttribute("a")),
+                                s_float(pDiffuseBlock->GetAttribute("r")),
+                                s_float(pDiffuseBlock->GetAttribute("g")),
+                                s_float(pDiffuseBlock->GetAttribute("b"))
                             );
                         }
                         else

@@ -56,10 +56,10 @@ void StatusBar::ParseBlock( s_ptr<XML::Block> pBlock )
         else
         {
             SetBarColor(Color(
-                s_uchar(s_float(pBarBlock->GetAttribute("a"))*255.0f),
-                s_uchar(s_float(pBarBlock->GetAttribute("r"))*255.0f),
-                s_uchar(s_float(pBarBlock->GetAttribute("g"))*255.0f),
-                s_uchar(s_float(pBarBlock->GetAttribute("b"))*255.0f)
+                s_float(pBarBlock->GetAttribute("a")),
+                s_float(pBarBlock->GetAttribute("r")),
+                s_float(pBarBlock->GetAttribute("g")),
+                s_float(pBarBlock->GetAttribute("b"))
             ));
         }
     }
