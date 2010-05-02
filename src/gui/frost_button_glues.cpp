@@ -90,10 +90,10 @@ int LuaButton::_GetDisabledTextColor( lua_State* pLua )
     if (pFontString)
     {
         const Color& mColor = pFontString->GetTextColor();
-        mFunc.Push(s_float(mColor.GetR())/255.0f);
-        mFunc.Push(s_float(mColor.GetG())/255.0f);
-        mFunc.Push(s_float(mColor.GetB())/255.0f);
-        mFunc.Push(s_float(mColor.GetA())/255.0f);
+        mFunc.Push(mColor.GetR());
+        mFunc.Push(mColor.GetG());
+        mFunc.Push(mColor.GetB());
+        mFunc.Push(mColor.GetA());
     }
     else
         mFunc.PushNil(4);
@@ -141,10 +141,10 @@ int LuaButton::_GetHighlightTextColor( lua_State* pLua )
     if (pFontString)
     {
         const Color& mColor = pFontString->GetTextColor();
-        mFunc.Push(s_float(mColor.GetR())/255.0f);
-        mFunc.Push(s_float(mColor.GetG())/255.0f);
-        mFunc.Push(s_float(mColor.GetB())/255.0f);
-        mFunc.Push(s_float(mColor.GetA())/255.0f);
+        mFunc.Push(mColor.GetR());
+        mFunc.Push(mColor.GetG());
+        mFunc.Push(mColor.GetB());
+        mFunc.Push(mColor.GetA());
     }
     else
         mFunc.PushNil(4);
@@ -354,18 +354,18 @@ int LuaButton::_SetDisabledTextColor( lua_State* pLua )
             if (mFunc.IsProvided(3))
             {
                 pFontString->SetTextColor(Color(
-                    s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(3)->GetNumber(),
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
             else
             {
                 pFontString->SetTextColor(Color(
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
         }
@@ -423,18 +423,18 @@ int LuaButton::_SetHighlightTextColor( lua_State* pLua )
             if (mFunc.IsProvided(3))
             {
                 pFontString->SetTextColor(Color(
-                    s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(3)->GetNumber(),
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
             else
             {
                 pFontString->SetTextColor(Color(
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
         }
@@ -493,18 +493,18 @@ int LuaButton::_SetNormalTextColor( lua_State* pLua )
             if (mFunc.IsProvided(3))
             {
                 pFontString->SetTextColor(Color(
-                    s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(3)->GetNumber(),
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
             else
             {
                 pFontString->SetTextColor(Color(
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
             }
         }

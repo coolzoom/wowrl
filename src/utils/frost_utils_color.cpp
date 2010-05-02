@@ -15,35 +15,35 @@ namespace Frost
 {
     const s_str Color::CLASS_NAME = "Color";
 
-    const Color Color::BLACK = Color(0  , 0  ,0   );
-    const Color Color::WHITE = Color(255, 255, 255);
-    const Color Color::RED   = Color(255, 0  , 0  );
-    const Color Color::GREEN = Color(0  , 255, 0  );
-    const Color Color::BLUE  = Color(0  , 0  , 255);
+    const Color Color::BLACK = Color(0.0f, 0.0f, 0.0f);
+    const Color Color::WHITE = Color(1.0f, 1.0f, 1.0f);
+    const Color Color::RED   = Color(1.0f, 0.0f, 0.0f);
+    const Color Color::GREEN = Color(0.0f, 1.0f, 0.0f);
+    const Color Color::BLUE  = Color(0.0f, 0.0f, 1.0f);
     const Color Color::VOID  = Color(0);
     const Color Color::NaN   = Color(s_uint::NaN);
 
     Color::Color()
     {
-        ucA_ = 255;
+        fA_ = 1.0f;
         BuildUIColor_();
     }
 
-    Color::Color( const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB )
+    Color::Color( const s_float& fR, const s_float& fG, const s_float& fB )
     {
-        ucA_ = 255;
-        ucR_ = ucR;
-        ucG_ = ucG;
-        ucB_ = ucB;
+        fA_ = 1.0f;
+        fR_ = fR;
+        fG_ = fG;
+        fB_ = fB;
         BuildUIColor_();
     }
 
-    Color::Color( const s_uchar& ucA, const s_uchar& ucR, const s_uchar& ucG, const s_uchar& ucB )
+    Color::Color( const s_float& fA, const s_float& fR, const s_float& fG, const s_float& fB )
     {
-        ucA_ = ucA;
-        ucR_ = ucR;
-        ucG_ = ucG;
-        ucB_ = ucB;
+        fA_ = fA;
+        fR_ = fR;
+        fG_ = fG;
+        fB_ = fB;
         BuildUIColor_();
     }
 
@@ -53,24 +53,24 @@ namespace Frost
         BuildABGRColor_();
     }
 
-    const s_uchar& Color::GetA() const
+    const s_float& Color::GetA() const
     {
-        return ucA_;
+        return fA_;
     }
 
-    const s_uchar& Color::GetR() const
+    const s_float& Color::GetR() const
     {
-        return ucR_;
+        return fR_;
     }
 
-    const s_uchar& Color::GetG() const
+    const s_float& Color::GetG() const
     {
-        return ucG_;
+        return fG_;
     }
 
-    const s_uchar& Color::GetB() const
+    const s_float& Color::GetB() const
     {
-        return ucB_;
+        return fB_;
     }
 
     const s_uint& Color::GetPacked() const
@@ -78,27 +78,27 @@ namespace Frost
         return uiColor_;
     }
 
-    void Color::SetA( const s_uchar& ucA )
+    void Color::SetA( const s_float& fA )
     {
-        ucA_ = ucA;
+        fA_ = fA;
         BuildUIColor_();
     }
 
-    void Color::SetR( const s_uchar& ucR )
+    void Color::SetR( const s_float& fR )
     {
-        ucR_ = ucR;
+        fR_ = fR;
         BuildUIColor_();
     }
 
-    void Color::SetG( const s_uchar& ucG )
+    void Color::SetG( const s_float& fG )
     {
-        ucG_ = ucG;
+        fG_ = fG;
         BuildUIColor_();
     }
 
-    void Color::SetB( const s_uchar& ucB )
+    void Color::SetB( const s_float& fB )
     {
-        ucB_ = ucB;
+        fB_ = fB;
         BuildUIColor_();
     }
 
@@ -115,12 +115,12 @@ namespace Frost
 
     void Color::BuildUIColor_()
     {
-        if (!ucA_.IsNaN() && !ucB_.IsNaN() && !ucG_.IsNaN() && !ucR_.IsNaN())
+        if (!fA_.IsNaN() && !fB_.IsNaN() && !fG_.IsNaN() && !fR_.IsNaN())
         {
-            uiColor_  = ucA_.Get() << 24;
-            uiColor_ += ucB_.Get() << 16;
-            uiColor_ += ucG_.Get() << 8;
-            uiColor_ += ucR_.Get();
+            uiColor_  = uint(fA_.Get()*255.0f) << 24;
+            uiColor_ += uint(fB_.Get()*255.0f) << 16;
+            uiColor_ += uint(fG_.Get()*255.0f) << 8;
+            uiColor_ += uint(fR_.Get());
         }
         else
             uiColor_ = s_uint::NaN;
@@ -130,14 +130,14 @@ namespace Frost
     {
         if (!uiColor_.IsNaN())
         {
-            ucA_ = (uiColor_.Get() >> 24) & 0xFF;
-            ucB_ = (uiColor_.Get() >> 16) & 0xFF;
-            ucG_ = (uiColor_.Get() >> 8)  & 0xFF;
-            ucR_ =  uiColor_.Get()        & 0xFF;
+            fA_ = ((uiColor_.Get() >> 24) & 0xFF)/255.0f;
+            fB_ = ((uiColor_.Get() >> 16) & 0xFF)/255.0f;
+            fG_ = ((uiColor_.Get() >> 8)  & 0xFF)/255.0f;
+            fR_ = ( uiColor_.Get()        & 0xFF)/255.0f;
         }
         else
         {
-            ucA_ = ucB_ = ucG_ = ucR_ = s_uchar::NaN;
+            fA_ = fB_ = fG_ = fR_ = s_float::NaN;
         }
     }
 
@@ -145,16 +145,16 @@ namespace Frost
     {
         if (bRandomAlpha)
             return Color(
-                s_uchar::Random(0, 255),
-                s_uchar::Random(0, 255),
-                s_uchar::Random(0, 255),
-                s_uchar::Random(0, 255)
+                s_float::Random(0, 1.0f),
+                s_float::Random(0, 1.0f),
+                s_float::Random(0, 1.0f),
+                s_float::Random(0, 1.0f)
             );
         else
             return Color(
-                s_uchar::Random(0, 255),
-                s_uchar::Random(0, 255),
-                s_uchar::Random(0, 255)
+                s_float::Random(0, 1.0f),
+                s_float::Random(0, 1.0f),
+                s_float::Random(0, 1.0f)
             );
     }
 
@@ -162,110 +162,107 @@ namespace Frost
     Ogre::ColourValue Color::FrostToOgre( const Color& mColor )
     {
         return Ogre::ColourValue(
-            mColor.GetR().Get()/255.0f,
-            mColor.GetG().Get()/255.0f,
-            mColor.GetB().Get()/255.0f,
-            mColor.GetA().Get()/255.0f
+            mColor.GetR().Get(),
+            mColor.GetG().Get(),
+            mColor.GetB().Get(),
+            mColor.GetA().Get()
         );
     }
 
     Color Color::OgreToFrost( const Ogre::ColourValue& mOgreColor )
     {
         return Color(
-            (uchar)mOgreColor.a*255,
-            (uchar)mOgreColor.r*255,
-            (uchar)mOgreColor.g*255,
-            (uchar)mOgreColor.b*255
+            mOgreColor.a,
+            mOgreColor.r,
+            mOgreColor.g,
+            mOgreColor.b
         );
     }
     #endif
 
     s_bool Color::operator == ( const Color& mColor ) const
     {
-        return (ucA_ == mColor.ucA_) && (ucR_ == mColor.ucR_) && (ucG_ == mColor.ucG_) && (ucB_ == mColor.ucB_);
+        return (fA_ == mColor.fA_) && (fR_ == mColor.fR_) && (fG_ == mColor.fG_) && (fB_ == mColor.fB_);
     }
 
     s_bool Color::operator != ( const Color& mColor ) const
     {
-        return (ucA_ != mColor.ucA_) || (ucR_ != mColor.ucR_) || (ucG_ != mColor.ucG_) || (ucB_ != mColor.ucB_);
+        return (fA_ != mColor.fA_) || (fR_ != mColor.fR_) || (fG_ != mColor.fG_) || (fB_ != mColor.fB_);
     }
 
     Color Color::operator * (const Color& mColor) const
     {
         return Color(
-            s_uchar(s_float(ucA_)*s_float(mColor.ucA_)/255.0f),
-            s_uchar(s_float(ucR_)*s_float(mColor.ucR_)/255.0f),
-            s_uchar(s_float(ucG_)*s_float(mColor.ucG_)/255.0f),
-            s_uchar(s_float(ucB_)*s_float(mColor.ucB_)/255.0f)
+            fA_*mColor.fA_, fR_*mColor.fR_, fG_*mColor.fG_, fB_*mColor.fB_
         );
     }
 
     Color Color::operator / (const Color& mColor) const
     {
         return Color(
-            s_uchar(s_float(ucA_)/s_float(mColor.ucA_)*255.0f),
-            s_uchar(s_float(ucR_)/s_float(mColor.ucR_)*255.0f),
-            s_uchar(s_float(ucG_)/s_float(mColor.ucG_)*255.0f),
-            s_uchar(s_float(ucB_)/s_float(mColor.ucB_)*255.0f)
+            s_float::Min(fA_/mColor.fA_, 1.0f),
+            s_float::Min(fR_/mColor.fR_, 1.0f),
+            s_float::Min(fG_/mColor.fG_, 1.0f),
+            s_float::Min(fB_/mColor.fB_, 1.0f)
         );
     }
 
     Color Color::operator + (const Color& mColor) const
     {
         return Color(
-            s_uchar(s_uint::Min(s_uint(ucA_) + s_uint(mColor.ucA_), 255)),
-            s_uchar(s_uint::Min(s_uint(ucR_) + s_uint(mColor.ucR_), 255)),
-            s_uchar(s_uint::Min(s_uint(ucG_) + s_uint(mColor.ucG_), 255)),
-            s_uchar(s_uint::Min(s_uint(ucB_) + s_uint(mColor.ucB_), 255))
+            s_float::Min(fA_ + mColor.fA_, 1.0f),
+            s_float::Min(fR_ + mColor.fR_, 1.0f),
+            s_float::Min(fG_ + mColor.fG_, 1.0f),
+            s_float::Min(fB_ + mColor.fB_, 1.0f)
         );
     }
 
     Color Color::operator - (const Color& mColor) const
     {
         return Color(
-            s_uchar(s_int::Max(s_int(ucA_) - s_int(mColor.ucA_), 0)),
-            s_uchar(s_int::Max(s_int(ucR_) - s_int(mColor.ucR_), 0)),
-            s_uchar(s_int::Max(s_int(ucG_) - s_int(mColor.ucG_), 0)),
-            s_uchar(s_int::Max(s_int(ucB_) - s_int(mColor.ucB_), 0))
+            s_float::Max(fA_ - mColor.fA_, 0.0f),
+            s_float::Max(fR_ - mColor.fR_, 0.0f),
+            s_float::Max(fG_ - mColor.fG_, 0.0f),
+            s_float::Max(fB_ - mColor.fB_, 0.0f)
         );
     }
 
     Color& Color::operator *= (const Color& mColor)
     {
-        ucA_ = s_uchar(s_float(ucA_*mColor.ucA_)/255.0f);
-        ucR_ = s_uchar(s_float(ucR_*mColor.ucR_)/255.0f);
-        ucG_ = s_uchar(s_float(ucG_*mColor.ucG_)/255.0f);
-        ucB_ = s_uchar(s_float(ucB_*mColor.ucB_)/255.0f);
+        fA_ *= mColor.fA_;
+        fR_ *= mColor.fR_;
+        fG_ *= mColor.fG_;
+        fB_ *= mColor.fB_;
 
         return *this;
     }
 
     Color& Color::operator /= (const Color& mColor)
     {
-        ucA_ = s_uchar(s_float(ucA_)/s_float(mColor.ucA_)*255.0f);
-        ucR_ = s_uchar(s_float(ucR_)/s_float(mColor.ucR_)*255.0f);
-        ucG_ = s_uchar(s_float(ucG_)/s_float(mColor.ucG_)*255.0f);
-        ucB_ = s_uchar(s_float(ucB_)/s_float(mColor.ucB_)*255.0f);
+        fA_ = s_float::Min(fA_/mColor.fA_, 1.0f);
+        fR_ = s_float::Min(fR_/mColor.fR_, 1.0f);
+        fG_ = s_float::Min(fG_/mColor.fG_, 1.0f);
+        fB_ = s_float::Min(fB_/mColor.fB_, 1.0f);
 
         return *this;
     }
 
     Color& Color::operator += (const Color& mColor)
     {
-        ucA_ = s_uchar(s_uint::Min(s_uint(ucA_) + s_uint(mColor.ucA_), 255));
-        ucR_ = s_uchar(s_uint::Min(s_uint(ucR_) + s_uint(mColor.ucR_), 255));
-        ucG_ = s_uchar(s_uint::Min(s_uint(ucG_) + s_uint(mColor.ucG_), 255));
-        ucB_ = s_uchar(s_uint::Min(s_uint(ucB_) + s_uint(mColor.ucB_), 255));
+        fA_ = s_float::Min(fA_ + mColor.fA_, 1.0f);
+        fR_ = s_float::Min(fR_ + mColor.fR_, 1.0f);
+        fG_ = s_float::Min(fG_ + mColor.fG_, 1.0f);
+        fB_ = s_float::Min(fB_ + mColor.fB_, 1.0f);
 
         return *this;
     }
 
     Color& Color::operator -= (const Color& mColor)
     {
-        ucA_ = s_uchar(s_int::Max(s_int(ucA_) - s_int(mColor.ucA_), 0));
-        ucR_ = s_uchar(s_int::Max(s_int(ucR_) - s_int(mColor.ucR_), 0));
-        ucG_ = s_uchar(s_int::Max(s_int(ucG_) - s_int(mColor.ucG_), 0));
-        ucB_ = s_uchar(s_int::Max(s_int(ucB_) - s_int(mColor.ucB_), 0));
+        fA_ = s_float::Max(fA_ - mColor.fA_, 0.0f);
+        fR_ = s_float::Max(fR_ - mColor.fR_, 0.0f);
+        fG_ = s_float::Max(fG_ - mColor.fG_, 0.0f);
+        fB_ = s_float::Max(fB_ - mColor.fB_, 0.0f);
 
         return *this;
     }
@@ -278,11 +275,10 @@ namespace Frost
     s_str operator+ (const s_str& sLeft, const Color& mRight)
     {
         s_str sTemp;
-        sTemp += "(a:"+s_uint(mRight.GetA());
-        sTemp += ", r:"+s_uint(mRight.GetR());
-        sTemp += ", g:"+s_uint(mRight.GetG());
-        sTemp += ", b:"+s_uint(mRight.GetB());
-        sTemp += ", packed:"+mRight.GetPacked()+")";
+        sTemp += "(a:"+s_uint(mRight.GetA()*255.0f);
+        sTemp += ", r:"+s_uint(mRight.GetR()*255.0f);
+        sTemp += ", g:"+s_uint(mRight.GetG()*255.0f);
+        sTemp += ", b:"+s_uint(mRight.GetB()*255.0f)+")";
         return sLeft + sTemp;
     }
 }

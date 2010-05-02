@@ -173,16 +173,16 @@ namespace Frost
         *pBuffer = mV.fTY.Get(); // v
         ++pBuffer;
 
-        *pBuffer = mV.mColor.GetR().Get()/255.0f;  // r
+        *pBuffer = mV.mColor.GetR().Get();  // r
         ++pBuffer;
 
-        *pBuffer = mV.mColor.GetG().Get()/255.0f;  // g
+        *pBuffer = mV.mColor.GetG().Get();  // g
         ++pBuffer;
 
-        *pBuffer = mV.mColor.GetB().Get()/255.0f;  // b
+        *pBuffer = mV.mColor.GetB().Get();  // b
         ++pBuffer;
 
-        *pBuffer = mV.mColor.GetA().Get()/255.0f;  // a
+        *pBuffer = mV.mColor.GetA().Get();  // a
         ++pBuffer;
     }
     /** \endcond

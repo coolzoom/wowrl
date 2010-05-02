@@ -68,6 +68,42 @@ namespace Frost
         lGUIDirectoryList_.Clear();
     }
 
+    s_bool GUIManager::CheckUIObjectName( const s_str& sName )
+    {
+        if (s_str::IsNumber(sName[0]))
+        {
+            Error(CLASS_NAME,
+                "A widget's name can't start by a number : \""+sName+"\" is forbidden."
+            );
+            return false;
+        }
+
+        s_uint iPos = sName.FindPos("$");
+        if (iPos.IsValid() && iPos != 0)
+        {
+            Error(CLASS_NAME,
+                "A widget's name can't contain the character '$' except at the begining : \""+sName+"\" is forbidden."
+            );
+            return false;
+        }
+
+        s_str::const_iterator iterName; s_uint i;
+        foreach (iterName, sName)
+        {
+            s_char c = *iterName;
+            if (!s_str::IsAlphaNumeric(c) && c != '_' && c != '$')
+            {
+                Error(CLASS_NAME,
+                    "A widget's name can only contain alpha numeric symbols, or underscores : \""+sName+"\" is forbidden."
+                );
+                return false;
+            }
+            ++i;
+        }
+
+        return true;
+    }
+
     s_ptr<GUI::UIObject> GUIManager::CreateUIObject( const s_str& sClassName )
     {
         if (sClassName == "Frame")
@@ -474,6 +510,8 @@ namespace Frost
             if ((*iterAddOn)->bEnabled)
                 this->LoadAddOnFiles_(*iterAddOn);
         }
+
+        pCurrentAddOn_ = nullptr;
     }
 
     void GUIManager::SaveVariables_( s_ptr<AddOn> pAddOn )
@@ -503,6 +541,11 @@ namespace Frost
                 Lua::RegisterEngineClass(pLua_);
                 Engine::GetSingleton()->CreateGlue(pLua_);
             }
+
+            // Create the "this" stack
+            iThisStackSize_ = 0u;
+            pLua_->NewTable();
+            pLua_->SetGlobal("_this_stack");
 
             s_ctnr<s_str>::iterator iterDirectory;
             foreach (iterDirectory, lGUIDirectoryList_)
@@ -929,6 +972,34 @@ namespace Frost
         }
 
         return 0;
+    }
+
+    void GUIManager::ThisStackPush(s_ptr<GUI::Frame> pFrame)
+    {
+        pLua_->GetGlobal("_this_stack");
+        pLua_->GetGlobal("this");
+        pLua_->SetField(iThisStackSize_);
+        pLua_->Pop();
+
+        pFrame->PushOnLua(pLua_);
+        pLua_->SetGlobal("this");
+
+        ++iThisStackSize_;
+    }
+
+    void GUIManager::ThisStackPop()
+    {
+        if (iThisStackSize_ != 0)
+        {
+            --iThisStackSize_;
+
+            pLua_->GetGlobal("_this_stack");
+            pLua_->GetField(iThisStackSize_);
+            pLua_->SetGlobal("this");
+            pLua_->PushNil();
+            pLua_->SetField(iThisStackSize_);
+            pLua_->Pop();
+        }
     }
 
     void GUIManager::ParseXMLFile_( const s_str& sFile, s_ptr<AddOn> pAddOn )

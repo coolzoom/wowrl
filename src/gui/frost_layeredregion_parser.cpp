@@ -23,6 +23,13 @@ void LayeredRegion::ParseBlock( s_ptr<XML::Block> pBlock )
 void LayeredRegion::ParseAttributes_( s_ptr<XML::Block> pBlock )
 {
     s_str sName = pBlock->GetAttribute("name");
+    if (!GUIManager::GetSingleton()->CheckUIObjectName(sName))
+    {
+        throw GUIException(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
+            "Can't create an UIObject with an incorrect name. Skipped."
+        );
+    }
+
     s_bool bVirtual = s_bool(pBlock->GetAttribute("virtual"));
     s_ptr<GUI::Frame> pFrameParent = s_ptr<GUI::Frame>::DynamicCast(pParent_);
     if (!sName.IsEmpty(true))

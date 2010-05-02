@@ -50,10 +50,10 @@ int LuaStatusBar::_GetStatusBarColor( lua_State* pLua )
 
     const Color& mColor = pStatusBarParent_->GetBarColor();
 
-    mFunc.Push(s_float(mColor.GetR())/255.0f);
-    mFunc.Push(s_float(mColor.GetG())/255.0f);
-    mFunc.Push(s_float(mColor.GetB())/255.0f);
-    mFunc.Push(s_float(mColor.GetA())/255.0f);
+    mFunc.Push(mColor.GetR());
+    mFunc.Push(mColor.GetG());
+    mFunc.Push(mColor.GetB());
+    mFunc.Push(mColor.GetA());
 
     return mFunc.Return();
 }
@@ -132,18 +132,18 @@ int LuaStatusBar::_SetStatusBarColor( lua_State* pLua )
         if (mFunc.IsProvided(3))
         {
             mColor = Color(
-                s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                mFunc.Get(3)->GetNumber(),
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
             );
         }
         else
         {
             mColor = Color(
-                s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
             );
         }
 

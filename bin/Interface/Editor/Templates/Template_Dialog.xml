@@ -40,12 +40,12 @@
                 this.normalTextColor  = Color(1, 1, 1);
                 this.normalBgColor    = Color(0.75, 0.75, 0.75);
                 this.normalTitleColor = Color(0.5, 0.5, 0.5);
-                
+
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
                     local newColor = self.normalBgColor*color;
                     self:SetBackdropColor(newColor:Unpack());
-                    
+
                     newColor = self.normalTitleColor*color;
                     newColor.a = self.normalTitleColor.a;
                     self.Title:SetBackdropColor(newColor:Unpack());
@@ -63,12 +63,12 @@
                 if (event == "ADDON_LOADED") then
                     local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
                     this:SetBackdropColor(newColor:Unpack());
-                    
+
                     newColor = this.normalTitleColor*AddOns.Editor.Config.UIBackgroundColor;
                     newColor.a = this.normalTitleColor.a;
                     this.Title:SetBackdrop({});
                     this.Title:SetBackdropColor(newColor:Unpack());
-                
+
                     newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
                     this.Title.TitleString:SetTextColor(newColor:Unpack());
                     this.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
@@ -132,6 +132,9 @@
                         <Scripts>
                             <OnClick>
                                 this:GetParent():GetParent():Hide();
+                                if (this:GetParent():GetParent().OnClose) then
+                                    this:GetParent():GetParent():OnClose();
+                                end
                             </OnClick>
                         </Scripts>
                     </Button>

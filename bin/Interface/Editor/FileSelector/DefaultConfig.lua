@@ -1,0 +1,1 @@
+AddOns.FileSelector = AddOn("FileSelector");

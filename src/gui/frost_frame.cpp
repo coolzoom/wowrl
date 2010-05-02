@@ -866,6 +866,7 @@ void Frame::DefineScript( const s_str& sScriptName, const s_str& sContent )
     sStr += "function " + sLuaName_ + ":" + sScriptName + "()\n";
     sStr += sContent + "\n";
     sStr += "end";
+
     GUIManager::GetSingleton()->GetLua()->DoString(sStr);
 }
 
@@ -972,8 +973,7 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
 
-        this->PushOnLua(pLua);
-        pLua->SetGlobal("this");
+        GUIManager::GetSingleton()->ThisStackPush(this);
 
         if ((sScriptName == "KeyDown") ||
             (sScriptName == "KeyUp"))
@@ -1024,6 +1024,8 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
         }
 
         pLua->CallFunction(sName_+":On"+sScriptName);
+
+        GUIManager::GetSingleton()->ThisStackPop();
     }
 }
 

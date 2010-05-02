@@ -73,20 +73,20 @@ namespace Frost
             mInfo.pOgrePass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
             mInfo.pOgrePass->setDepthBias(1.0f, 0.1f);
             mInfo.pOgrePass->setDiffuse(
-                mDiffuse_.GetR().Get()/255.0f,
-                mDiffuse_.GetG().Get()/255.0f,
-                mDiffuse_.GetB().Get()/255.0f,
-                mDiffuse_.GetA().Get()/255.0f
+                mDiffuse_.GetR().Get(),
+                mDiffuse_.GetG().Get(),
+                mDiffuse_.GetB().Get(),
+                mDiffuse_.GetA().Get()
             );
             mInfo.pOgrePass->setSelfIllumination(
-                mSelfIllum_.GetR().Get()/255.0f,
-                mSelfIllum_.GetG().Get()/255.0f,
-                mSelfIllum_.GetB().Get()/255.0f
+                mSelfIllum_.GetR().Get(),
+                mSelfIllum_.GetG().Get(),
+                mSelfIllum_.GetB().Get()
             );
             mInfo.pOgrePass->setAmbient(
-                mAmbient_.GetR().Get()/255.0f,
-                mAmbient_.GetG().Get()/255.0f,
-                mAmbient_.GetB().Get()/255.0f
+                mAmbient_.GetR().Get(),
+                mAmbient_.GetG().Get(),
+                mAmbient_.GetB().Get()
             );
             mInfo.pOgrePass->setAlphaRejectFunction(Ogre::CMPF_ALWAYS_FAIL);
 
@@ -162,10 +162,10 @@ namespace Frost
         foreach (iter, lMaterialList_)
         {
             iter->second.pOgrePass->setDiffuse(
-                mDiffuse_.GetR().Get()/255.0f,
-                mDiffuse_.GetG().Get()/255.0f,
-                mDiffuse_.GetB().Get()/255.0f,
-                mDiffuse_.GetA().Get()/255.0f
+                mDiffuse_.GetR().Get(),
+                mDiffuse_.GetG().Get(),
+                mDiffuse_.GetB().Get(),
+                mDiffuse_.GetA().Get()
             );
         }
     }
@@ -182,9 +182,9 @@ namespace Frost
         foreach (iter, lMaterialList_)
         {
             iter->second.pOgrePass->setSelfIllumination(
-                mSelfIllum_.GetR().Get()/255.0f,
-                mSelfIllum_.GetG().Get()/255.0f,
-                mSelfIllum_.GetB().Get()/255.0f
+                mSelfIllum_.GetR().Get(),
+                mSelfIllum_.GetG().Get(),
+                mSelfIllum_.GetB().Get()
             );
         }
     }
@@ -201,9 +201,9 @@ namespace Frost
         foreach (iter, lMaterialList_)
         {
             iter->second.pOgrePass->setAmbient(
-                mAmbient_.GetR().Get()/255.0f,
-                mAmbient_.GetG().Get()/255.0f,
-                mAmbient_.GetB().Get()/255.0f
+                mAmbient_.GetR().Get(),
+                mAmbient_.GetG().Get(),
+                mAmbient_.GetB().Get()
             );
         }
     }

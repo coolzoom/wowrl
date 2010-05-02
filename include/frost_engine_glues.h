@@ -44,6 +44,11 @@ namespace Frost
         int _ToggleShading(lua_State*);
         int _UnloadZone(lua_State*);
 
+        int _GetFolderList(lua_State*);
+        int _GetFileList(lua_State*);
+        int _FileExists(lua_State*);
+        int _CutFilePath(lua_State*);
+
         // Lunar function
         int GetDataTable(lua_State *L);
 

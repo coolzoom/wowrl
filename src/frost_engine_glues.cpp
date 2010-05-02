@@ -105,17 +105,16 @@ namespace Frost
                 if (mFunc.IsProvided(5))
                 {
                     pDecal->SetSelfIllumination(Color(
-                        s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                        s_uchar(255.0f*mFunc.Get(4)->GetNumber()),
-                        s_uchar(255.0f*mFunc.Get(5)->GetNumber())
+                        mFunc.Get(3)->GetNumber(),
+                        mFunc.Get(4)->GetNumber(),
+                        mFunc.Get(5)->GetNumber()
                     ));
                 }
 
                 if (mFunc.IsProvided(6))
                 {
                     pDecal->SetDiffuse(Color(
-                        s_uchar(255.0f*mFunc.Get(6)->GetNumber()),
-                        255, 255, 255
+                        mFunc.Get(6)->GetNumber(), 1, 1, 1
                     ));
                 }
 
@@ -284,10 +283,10 @@ namespace Frost
         if (s_refptr<Decal> pLocked = pDecal.Lock())
         {
             Color mColor = pLocked->GetSelfIllumination();
-            mFunc.Push(s_float(mColor.GetR())/255.0f);
-            mFunc.Push(s_float(mColor.GetG())/255.0f);
-            mFunc.Push(s_float(mColor.GetB())/255.0f);
-            mFunc.Push(s_float(pLocked->GetDiffuse().GetA())/255.0f);
+            mFunc.Push(mColor.GetR());
+            mFunc.Push(mColor.GetG());
+            mFunc.Push(mColor.GetB());
+            mFunc.Push(pLocked->GetDiffuse().GetA());
         }
 
         return mFunc.Return();
@@ -323,16 +322,15 @@ namespace Frost
             if (mFunc.Check())
             {
                 pLocked->SetSelfIllumination(Color(
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 ));
 
                 if (mFunc.IsProvided(3))
                 {
                     pLocked->SetDiffuse(Color(
-                        s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                        255, 255, 255
+                        mFunc.Get(3)->GetNumber(), 1, 1, 1
                     ));
                 }
             }
@@ -364,10 +362,10 @@ namespace Frost
 
         Color mColor = CameraManager::GetSingleton()->GetBackgroundColor();
 
-        mFunc.Push(s_float(mColor.GetR())/255.0f);
-        mFunc.Push(s_float(mColor.GetG())/255.0f);
-        mFunc.Push(s_float(mColor.GetB())/255.0f);
-        mFunc.Push(s_float(mColor.GetA())/255.0f);
+        mFunc.Push(mColor.GetR());
+        mFunc.Push(mColor.GetG());
+        mFunc.Push(mColor.GetB());
+        mFunc.Push(mColor.GetA());
 
         return mFunc.Return();
     }
@@ -386,18 +384,18 @@ namespace Frost
             if (mFunc.IsProvided(3))
             {
                 mColor = Color(
-                    s_uchar(255.0f*mFunc.Get(3)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(3)->GetNumber(),
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 );
             }
             else
             {
                 mColor = Color(
-                    s_uchar(255.0f*mFunc.Get(0)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(1)->GetNumber()),
-                    s_uchar(255.0f*mFunc.Get(2)->GetNumber())
+                    mFunc.Get(0)->GetNumber(),
+                    mFunc.Get(1)->GetNumber(),
+                    mFunc.Get(2)->GetNumber()
                 );
             }
 
@@ -412,6 +410,114 @@ namespace Frost
         Lua::Function mFunc("Engine:UnloadZone", pLua);
 
         ZoneManager::GetSingleton()->UnloadZone();
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_GetFolderList( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:GetFolderList", pLua);
+        mFunc.Add(0, "folder", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            Directory mDir(mFunc.Get(0)->GetString());
+
+            s_wptr<Directory> pSubDir;
+            foreach_dir (pSubDir, mDir)
+            {
+                mFunc.Push(pSubDir->GetName());
+            }
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_GetFileList( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:GetFileList", pLua);
+        mFunc.Add(0, "folder", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            Directory mDir(mFunc.Get(0)->GetString());
+            s_ctnr<s_str> lFileList = mDir.GetFileList();
+
+            s_ctnr<s_str>::iterator iterFile;
+            foreach (iterFile, lFileList)
+            {
+                mFunc.Push(*iterFile);
+            }
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_FileExists( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:FileExists", pLua, 1);
+        mFunc.Add(0, "file", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            mFunc.Push(File::Exists(mFunc.Get(0)->GetString()));
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEngine::_CutFilePath( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:CutFilePath", pLua, 1);
+        mFunc.Add(0, "path", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            s_str sPath = mFunc.Get(0)->GetString();
+            s_ctnr<s_str> lWords = sPath.Cut("/");
+
+            s_ctnr<s_str>::iterator iter;
+            foreach (iter, lWords)
+            {
+                s_ctnr<s_str> lSubWords = iter->Cut("\\");
+                if (lSubWords.GetSize() > 1)
+                {
+                    iter = lWords.Erase(iter);
+                    iter = lWords.Insert(iter, lSubWords);
+                }
+            }
+
+            s_str sFile = lWords.Back();
+            lWords.PopBack();
+
+            s_str sFolder;
+            foreach (iter, lWords)
+            {
+                if (sFolder.IsEmpty())
+                    sFolder += *iter;
+                else
+                    sFolder += "/" + *iter;
+            }
+
+            s_ptr<Lua::State> pState = mFunc.GetState();
+            pState->NewTable();
+            pState->SetFieldString("file", sFile);
+            pState->SetFieldString("folder", sFolder);
+            pState->NewTable();
+            pState->SetField("folders");
+            pState->GetField("folders");
+
+            s_int i = 1;
+            foreach (iter, lWords)
+            {
+                pState->SetFieldString(i, *iter);
+                ++i;
+            }
+
+            pState->Pop();
+
+            mFunc.NotifyPushed();
+        }
 
         return mFunc.Return();
     }
@@ -448,6 +554,12 @@ namespace Frost
         method(Engine, SetMouseDecalColor),
         method(Engine, SetMouseDecalTexture),
         method(Engine, UnloadZone),
+
+        method(Engine, GetFolderList),
+        method(Engine, GetFileList),
+        method(Engine, FileExists),
+        method(Engine, CutFilePath),
+
         {0,0}
     };
 }
