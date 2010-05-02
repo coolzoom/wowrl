@@ -35,6 +35,11 @@ namespace Frost
         */
         void UnregisterEvent(s_ptr<EventReceiver> pReceiver, const s_str& sEvent);
 
+        /// Disables all events connected to the provided EventReceiver.
+        /** \param pReceiver The EventReceiver to disable
+        */
+        void UnregisterReceiver(s_ptr<EventReceiver> pReceiver);
+
         /// Tells this manager an Event as occured.
         /** \param mEvent The Event which has occured
         *   \note All EventReceivers registred to react to this Event

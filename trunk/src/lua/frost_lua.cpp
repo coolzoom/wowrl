@@ -71,6 +71,7 @@ void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
     RegisterKeyCodes(pLua);
     pLua->Register("SetKeyBinding", l_SetKeyBinding);
     pLua->Register("CreateFrame",   l_CreateFrame);
+    pLua->Register("DeleteFrame",   l_DeleteFrame);
 }
 
 void Lua::RegisterUnitClass( s_ptr<Lua::State> pLua )

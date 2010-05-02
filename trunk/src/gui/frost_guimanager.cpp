@@ -220,6 +220,39 @@ namespace Frost
         }
     }
 
+    void GUIManager::RemoveUIObject( s_ptr<GUI::UIObject> pObj )
+    {
+        if (!pObj)
+            return;
+
+        lObjectList_.Erase(pObj->GetID());
+
+        if (pObj->IsVirtual())
+        {
+            lNamedVirtualObjectList_.Erase(pObj->GetName());
+        }
+        else
+        {
+            lNamedObjectList_.Erase(pObj->GetName());
+
+            if (!pObj->GetParent())
+                lMainObjectList_.Erase(pObj->GetID());
+
+            s_ptr<GUI::Frame> pFrame = s_ptr<GUI::Frame>::DynamicCast(pObj);
+            if (pFrame)
+                lFrameList_.Erase(pObj->GetID());
+        }
+
+        if (!pObj->IsManuallyRendered())
+            FireBuildStrataList();
+
+        if (pMovedObject_ == pObj)
+            StopMoving(pObj);
+
+        if (pSizedObject_ == pObj)
+            StopSizing(pObj);
+    }
+
     s_ptr<GUI::UIObject> GUIManager::GetUIObject( const s_uint& uiID )
     {
         if (lObjectList_.Find(uiID))
@@ -749,7 +782,10 @@ namespace Frost
     void GUIManager::StopMoving( s_ptr<GUI::UIObject> pObj )
     {
         if (pMovedObject_ == pObj)
+        {
             pMovedObject_ = nullptr;
+            pMovedAnchor_ = nullptr;
+        }
     }
 
     s_bool GUIManager::IsMoving( s_ptr<GUI::UIObject> pObj ) const

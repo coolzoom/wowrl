@@ -447,6 +447,13 @@ namespace Frost
             */
             void            MarkForCopy(const s_str& sVariable);
 
+            /// Removes all anchors that point to this widget and all other kind of links.
+            /** \return The list of all widgets that have been cleared
+            *   \note Also clears children objects (see Frame::ClearLinks()).
+            *   \note Must be called before deleting the widget, except when closing the whole UI.
+            */
+            virtual s_ctnr< s_ptr<UIObject> > ClearLinks();
+
             /// Creates the associated Lua glue.
             /** \note This method is pure virtual : it must be overriden.
             */
@@ -520,12 +527,6 @@ namespace Frost
             s_bool bUpdateAnchors_;
             s_bool bUpdateBorders_;
             s_bool bUpdateDimensions_;
-
-            struct AnchorInfo
-            {
-                s_ptr<UIObject> pParent;
-                s_uint          uiCount;
-            };
 
             s_map< s_uint, s_ptr<UIObject> > lAnchoredObjectList_;
         };

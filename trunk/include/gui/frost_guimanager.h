@@ -139,6 +139,13 @@ namespace Frost
         */
         s_bool               AddUIObject(s_ptr<GUI::UIObject> pObj);
 
+        /// Removes an UIObject from this manager.
+        /** \param pObj The object to remove
+        *   \note Only call this function if you have to delete an object
+        *         manually (instead of waiting for the UI to close).
+        */
+        void                 RemoveUIObject(s_ptr<GUI::UIObject> pObj);
+
         /// Returns the UIObject associated with the given ID.
         /** \param uiID The unique ID representing the widget
         *   \return The UIObject associated with the given ID

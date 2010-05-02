@@ -112,7 +112,7 @@ namespace Frost
     }
 
     const char  LuaGameplay::className[] = "Gameplay";
-    const char* LuaGameplay::classList[] = {"Gampeplay", 0};
+    const char* LuaGameplay::classList[] = {"Gameplay", 0};
     Lunar<LuaGameplay>::RegType LuaGameplay::methods[] = {
         {"dt", &LuaGameplay::GetDataTable},
 

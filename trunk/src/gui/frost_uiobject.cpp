@@ -6,6 +6,7 @@
 #include "gui/frost_uiobject.h"
 
 #include "gui/frost_frame.h"
+#include "gui/frost_layeredregion.h"
 #include "gui/frost_guimanager.h"
 #include "material/frost_material.h"
 #include "gui/frost_spritemanager.h"
@@ -383,6 +384,9 @@ void UIObject::ClearAllPoints()
     lDefinedBorderList_[BORDER_TOP]    =
     lDefinedBorderList_[BORDER_RIGHT]  =
     lDefinedBorderList_[BORDER_BOTTOM] = false;
+
+    bUpdateAnchors_ = true;
+    FireUpdateBorders();
 }
 
 void UIObject::SetAllPoints( const s_str& sObjName )
@@ -401,9 +405,6 @@ void UIObject::SetAllPoints( const s_str& sObjName )
         lDefinedBorderList_[BORDER_TOP]    =
         lDefinedBorderList_[BORDER_RIGHT]  =
         lDefinedBorderList_[BORDER_BOTTOM] = true;
-
-        bUpdateAnchors_ = true;
-        FireUpdateBorders();
     }
     else
     {
@@ -1017,5 +1018,118 @@ void UIObject::MarkForCopy( const s_str& sVariable )
             "\""+sName_+"."+sVariable+"\" has already been marked for copy. Ignoring."
         );
     }
+}
+
+s_ctnr< s_ptr<UIObject> > UIObject::ClearLinks()
+{
+    // Remove this widget from its parent's children
+    if (pParent_)
+    {
+        s_ptr<Frame> pParentFrame = s_ptr<Frame>::DynamicCast(pParent_);
+        s_ptr<Frame> pThisFrame = s_ptr<Frame>::DynamicCast(this);
+        if (pThisFrame)
+            pParentFrame->RemoveChild(pThisFrame);
+        else
+        {
+            s_ptr<LayeredRegion> pThisRegion = s_ptr<LayeredRegion>::DynamicCast(this);
+            if (pThisRegion)
+                pParentFrame->RemoveRegion(pThisRegion);
+        }
+        pParent_ = nullptr;
+    }
+
+    // Tell the renderer to no longer render this widget
+    if (bManuallyRendered_ && pRenderer_)
+        pRenderer_->NotifyManuallyRenderedObject_(this, false);
+
+    // Tell this widget's anchor parents that it is no longer anchored to them
+    s_map<AnchorPoint, Anchor>::const_iterator iterAnchor;
+    foreach (iterAnchor, lAnchorList_)
+    {
+        if (iterAnchor->second.GetParent())
+            iterAnchor->second.GetParent()->NotifyAnchoredObject(this, false);
+    }
+
+    lAnchorList_.Clear();
+
+    // Replace anchors pointing to this widget by absolute anchors
+    s_map< s_uint, s_ptr<UIObject> >::iterator iterAnchored;
+    s_map< s_uint, s_ptr<UIObject> > lTempAnchoredObjectList = lAnchoredObjectList_;
+    foreach (iterAnchored, lTempAnchoredObjectList)
+    {
+        s_ptr<UIObject> pObj = iterAnchored->second;
+        s_ctnr<AnchorPoint> lAnchoredPointList;
+        const s_map<AnchorPoint, Anchor>& lAnchorList = pObj->GetPointList();
+        s_map<AnchorPoint, Anchor>::const_iterator iterAnchor;
+        foreach (iterAnchor, lAnchorList)
+        {
+            if (iterAnchor->second.GetParent() == this)
+                lAnchoredPointList.PushBack(iterAnchor->first);
+        }
+
+        s_ctnr<AnchorPoint>::iterator iterAnchorPoint;
+        foreach (iterAnchorPoint, lAnchoredPointList)
+        {
+            s_ptr<Anchor> pAnchor = pObj->GetPoint(*iterAnchorPoint);
+            Anchor mNewAnchor = Anchor(pObj, *iterAnchorPoint, "", ANCHOR_TOPLEFT);
+
+            s_int iX = pAnchor->GetAbsOffsetX();
+            s_int iY = pAnchor->GetAbsOffsetY();
+
+            switch (pAnchor->GetParentPoint())
+            {
+                case ANCHOR_TOPLEFT :
+                    iX += lBorderList_[BORDER_LEFT];
+                    iY += lBorderList_[BORDER_TOP];
+                    break;
+
+                case ANCHOR_TOP :
+                    iY += lBorderList_[BORDER_TOP];
+                    break;
+
+                case ANCHOR_TOPRIGHT :
+                    iX += lBorderList_[BORDER_RIGHT];
+                    iY += lBorderList_[BORDER_TOP];
+                    break;
+
+                case ANCHOR_RIGHT :
+                    iX += lBorderList_[BORDER_RIGHT];
+                    break;
+
+                case ANCHOR_BOTTOMRIGHT :
+                    iX += lBorderList_[BORDER_RIGHT];
+                    iY += lBorderList_[BORDER_BOTTOM];
+                    break;
+
+                case ANCHOR_BOTTOM :
+                    iY += lBorderList_[BORDER_BOTTOM];
+                    break;
+
+                case ANCHOR_BOTTOMLEFT :
+                    iX += lBorderList_[BORDER_LEFT];
+                    iY += lBorderList_[BORDER_BOTTOM];
+                    break;
+
+                case ANCHOR_LEFT :
+                    iX += lBorderList_[BORDER_LEFT];
+                    break;
+
+                case ANCHOR_CENTER :
+                    iX += (lBorderList_[BORDER_LEFT] + lBorderList_[BORDER_RIGHT])/2;
+                    iY += (lBorderList_[BORDER_TOP] + lBorderList_[BORDER_BOTTOM])/2;
+            }
+
+            mNewAnchor.SetAbsOffset(iX, iY);
+
+            pObj->SetPoint(mNewAnchor);
+        }
+
+        pObj->UpdateAnchors();
+    }
+
+    s_ctnr< s_ptr<UIObject> > lList;
+    lList.PushBack(this);
+
+    return lList;
 }
 

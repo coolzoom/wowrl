@@ -207,5 +207,44 @@ int Frost::l_CreateFrame( lua_State* pLua )
     return mFunc.Return();
 }
 
+int Frost::l_DeleteFrame( lua_State* pLua )
+{
+    Lua::Function mFunc("DeleteFrame", pLua);
+    mFunc.Add(0, "frame", Lua::TYPE_USERDATA);
+
+    if (mFunc.Check())
+    {
+        s_ptr<GUI::LuaUIObject> pLuaObj = mFunc.Get(0)->Get<GUI::LuaUIObject>();
+        if (pLuaObj)
+        {
+            s_ptr<GUI::Frame> pFrame = s_ptr<GUI::Frame>::DynamicCast(pLuaObj->GetParent());
+            if (pFrame)
+            {
+                s_ctnr< s_ptr<GUI::UIObject> > lList = pFrame->ClearLinks();
+
+                s_ctnr< s_ptr<GUI::UIObject> >::iterator iterObject;
+                foreach (iterObject, lList)
+                {
+                    s_ptr<GUI::UIObject> pObj = *iterObject;
+                    GUIManager::GetSingleton()->RemoveUIObject(pObj);
+                    pObj.Delete();
+                }
+            }
+            else
+            {
+                Error(mFunc.GetName(), "Argument 1 must be a Frame.");
+                return mFunc.Return();
+            }
+        }
+        else
+        {
+            Error(mFunc.GetName(), "Argument 1 must be a Frame.");
+            return mFunc.Return();
+        }
+    }
+
+    return mFunc.Return();
+}
+
 /** \endcond
 */
