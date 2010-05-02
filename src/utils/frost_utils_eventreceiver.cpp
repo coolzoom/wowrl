@@ -20,6 +20,7 @@ namespace Frost
 
     EventReceiver::~EventReceiver()
     {
+        EventManager::GetSingleton()->UnregisterReceiver(this);
     }
 
     void EventReceiver::RegisterEvent( const s_str& sEventName )

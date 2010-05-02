@@ -77,6 +77,24 @@ namespace Frost
         );
     }
 
+    void EventManager::UnregisterReceiver( s_ptr<EventReceiver> pReceiver )
+    {
+        s_ctnr<s_multimap< s_str, s_ptr<EventReceiver> >::iterator> lDeleteList;
+
+        s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
+        foreach (iterReceiver, lReceiverList_)
+        {
+            if (iterReceiver->second == pReceiver)
+                lDeleteList.PushBack(iterReceiver);
+        }
+
+        s_ctnr<s_multimap< s_str, s_ptr<EventReceiver> >::iterator>::iterator iterDelete;
+        foreach (iterDelete, lDeleteList)
+        {
+            lReceiverList_.Erase(*iterDelete);
+        }
+    }
+
     void EventManager::FireEvent( const Event& mEvent )
     {
         if (lReceiverList_.Find(mEvent.GetName()))

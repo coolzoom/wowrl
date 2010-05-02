@@ -30,14 +30,18 @@ Function::Function( const s_str& sName, s_ptr<Lua::State> pLua, const s_uint& ui
 
 Function::~Function()
 {
-    s_map< s_uint, s_ptr<Argument> >::iterator iter;
-    foreach (iter, pArgList_->lOptional_)
+    s_ctnr<ArgumentList>::iterator iterArgList;
+    foreach (iterArgList, lArgListStack_)
     {
-        iter->second.Delete();
-    }
-    foreach (iter, pArgList_->lArg_)
-    {
-        iter->second.Delete();
+        s_map< s_uint, s_ptr<Argument> >::iterator iter;
+        foreach (iter, iterArgList->lOptional_)
+        {
+            iter->second.Delete();
+        }
+        foreach (iter, iterArgList->lArg_)
+        {
+            iter->second.Delete();
+        }
     }
 }
 

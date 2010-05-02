@@ -43,7 +43,7 @@ namespace Frost
         mFunc.Add(0, "x", Lua::TYPE_NUMBER);
         mFunc.Add(1, "y", Lua::TYPE_NUMBER);
         mFunc.Add(2, "z", Lua::TYPE_NUMBER);
-        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, true);
+        mFunc.Add(3, "local", Lua::TYPE_BOOLEAN, true);
         if (mFunc.Check())
         {
             if (mFunc.GetParamSetRank() == 0)
@@ -127,7 +127,7 @@ namespace Frost
         mFunc.Add(0, "x", Lua::TYPE_NUMBER);
         mFunc.Add(1, "y", Lua::TYPE_NUMBER);
         mFunc.Add(2, "z", Lua::TYPE_NUMBER);
-        mFunc.Add(1, "local", Lua::TYPE_BOOLEAN, true);
+        mFunc.Add(3, "local", Lua::TYPE_BOOLEAN, true);
         if (mFunc.Check())
         {
             if (mFunc.GetParamSetRank() == 0)

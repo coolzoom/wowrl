@@ -104,7 +104,6 @@ namespace Frost
 
                     // Check for collisions
                     uiRecursionCounter_ = 0;
-                    Log("#1");
                     UpdateMovement_();
 
                     // Try to remain on the ground
@@ -114,7 +113,6 @@ namespace Frost
 
                     bGravityCheck_ = true;
                     uiRecursionCounter_ = PhysicsManager::GetSingleton()->GetMaxCollisionRecursion() - 1;
-                    Log("#2");
                     UpdateMovement_();
                     bGravityCheck_ = false;
 

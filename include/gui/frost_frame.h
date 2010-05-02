@@ -504,6 +504,13 @@ namespace Frost
             */
             s_ptr<AddOn>        GetAddOn() const;
 
+            /// Removes all anchors that point to this widget and all other kind of links.
+            /** \return The list of all widgets that have been cleared
+            *   \note Also clears children objects (see Frame::ClearLinks()).
+            *   \note Must be called before deleting the widget, except when closing the whole UI.
+            */
+            virtual s_ctnr< s_ptr<UIObject> > ClearLinks();
+
             /// Creates the associated Lua glue.
             virtual void        CreateGlue();
 

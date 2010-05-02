@@ -157,7 +157,7 @@ namespace Frost
             Error(CLASS_NAME,
                 "Can't create a RenderTarget with invalid dimensions : "+uiWidth+" x "+uiHeight+"."
             );
-            return;
+            return false;
         }
 
         s_uint uiNewWidth = uiWidth.GetNearestPowerOfTwo();

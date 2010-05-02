@@ -66,6 +66,7 @@ namespace Frost
     int l_Exit(lua_State* pLua);
     int l_SetKeyBinding(lua_State* pLua);
     int l_CreateFrame(lua_State* pLua);
+    int l_DeleteFrame(lua_State* pLua);
 }
 
 #endif

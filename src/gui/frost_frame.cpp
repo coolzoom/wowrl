@@ -1519,3 +1519,26 @@ void Frame::UpdateMaterial( const s_bool& bForceUpdate )
 {
     UIObject::UpdateMaterial(bForceUpdate);
 }
+
+s_ctnr< s_ptr<UIObject> > Frame::ClearLinks()
+{
+    s_ctnr< s_ptr<UIObject> > lList = UIObject::ClearLinks();
+
+    s_map< s_uint, s_ptr<LayeredRegion> > lTempRegionList = lRegionList_;
+    s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+    foreach (iterRegion, lTempRegionList)
+    {
+        s_ctnr< s_ptr<UIObject> > lTempList = iterRegion->second->ClearLinks();
+        lList.PushBack(lTempList);
+    }
+
+    s_map< s_uint, s_ptr<Frame> > lTempChildList = lChildList_;
+    s_map< s_uint, s_ptr<Frame> >::iterator iterChild;
+    foreach (iterChild, lTempChildList)
+    {
+        s_ctnr< s_ptr<UIObject> > lTempList = iterChild->second->ClearLinks();
+        lList.PushBack(lTempList);
+    }
+
+    return lList;
+}
