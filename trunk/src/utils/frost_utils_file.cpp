@@ -21,25 +21,25 @@ namespace Frost
             case IO :
             {
                 if (bBinary)
-                    mFile_.open(sName.GetASCII().c_str(), ios_base::in | ios_base::out | ios::binary);
+                    mFile_.open(sName.c_str(), ios_base::in | ios_base::out | ios::binary);
                 else
-                    mFile_.open(sName.GetASCII().c_str(), ios_base::in | ios_base::out);
+                    mFile_.open(sName.c_str(), ios_base::in | ios_base::out);
                 break;
             }
             case I :
             {
                 if (bBinary)
-                    mFile_.open(sName.GetASCII().c_str(), ios::in | ios::binary);
+                    mFile_.open(sName.c_str(), ios::in | ios::binary);
                 else
-                    mFile_.open(sName.GetASCII().c_str(), ios::in);
+                    mFile_.open(sName.c_str(), ios::in);
                 break;
             }
             case O :
             {
                 if (bBinary)
-                    mFile_.open(sName.GetASCII().c_str(), ios::out | ios::binary);
+                    mFile_.open(sName.c_str(), ios::out | ios::binary);
                 else
-                    mFile_.open(sName.GetASCII().c_str(), ios::out);
+                    mFile_.open(sName.c_str(), ios::out);
                 break;
             }
         }
@@ -185,7 +185,7 @@ namespace Frost
             return false;
 
         fstream mFile;
-        mFile.open(sFileName.GetASCII().c_str(), ios::in);
+        mFile.open(sFileName.c_str(), ios::in);
         return mFile.is_open();
     }
 

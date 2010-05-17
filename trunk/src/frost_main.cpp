@@ -114,6 +114,11 @@ s_bool EditorFrameFunc()
         GUIManager::GetSingleton()->PrintUI();
     }
 
+    if (pInputMgr->KeyIsPressed(KEY_C))
+    {
+        GUIManager::GetSingleton()->ToggleCaching();
+    }
+
     if (pInputMgr->KeyIsPressed(KEY_F))
     {
         s_wptr<AnimManager> pAM = ZoneManager::GetSingleton()->GetCurrentZone()->GetDoodadByName("TestDoodad")->GetModel()->GetAnimMgr();
@@ -155,7 +160,6 @@ s_bool EditorRenderFunc()
     pSpriteMgr->Begin();
 
         Engine::GetSingleton()->RenderScene();
-
         GUIManager::GetSingleton()->RenderUI();
 
     pSpriteMgr->End();
@@ -167,7 +171,7 @@ s_bool EditorRenderFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = false;
+    s_bool bEditor = true;
 
     // Read commands
     if (argc > 1)
@@ -252,17 +256,21 @@ int main(int argc, char* argv[])
         // Enter the main loop
         pFrost->Loop();
     }
-    catch (Ogre::Exception  e)
+    catch (Ogre::Exception&  e)
     {
         Log("Fatal exception : "+e.getFullDescription());
     }
-    catch (std::exception   e)
+    catch (std::exception&   e)
     {
         Log("Fatal exception : "+s_str(e.what()));
     }
-    catch (Frost::Exception e)
+    catch (Frost::Exception& e)
     {
         Log("Fatal exception : "+e.GetDescription());
+    }
+    catch (...)
+    {
+        Log("Fatal exception.");
     }
 
     // Close the engine

@@ -237,10 +237,10 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 int LuaTexture::_SetTexCoord( lua_State* pLua )
 {
     Lua::Function mFunc("Texture:SetTexCoord", pLua);
-    mFunc.Add(0, "top-left X", Lua::TYPE_NUMBER);
-    mFunc.Add(1, "top-left Y", Lua::TYPE_NUMBER);
-    mFunc.Add(2, "bottom-right X", Lua::TYPE_NUMBER);
-    mFunc.Add(3, "bottom-right Y", Lua::TYPE_NUMBER);
+    mFunc.Add(0, "left", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "right", Lua::TYPE_NUMBER);
+    mFunc.Add(2, "top", Lua::TYPE_NUMBER);
+    mFunc.Add(3, "bottom", Lua::TYPE_NUMBER);
     mFunc.NewParamSet();
     mFunc.Add(0, "top-left X", Lua::TYPE_NUMBER);
     mFunc.Add(1, "top-left Y", Lua::TYPE_NUMBER);

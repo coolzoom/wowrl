@@ -11,7 +11,8 @@
 #include "scene/frost_doodad.h"
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
-#include "xml/frost_xml_document.h"
+#include <xml/frost_xml_document.h>
+#include <utils/frost_utils_file.h>
 
 using namespace std;
 
@@ -43,7 +44,14 @@ namespace Frost
                 }
                 else if (pElemBlock->GetName() == "Script")
                 {
-                    pLua_->DoFile(pElemBlock->GetAttribute("file"));
+                    try
+                    {
+                        pLua_->DoFile(pElemBlock->GetAttribute("file"));
+                    }
+                    catch (LuaException& e)
+                    {
+                        Warning(CLASS_NAME, e.GetDescription());
+                    }
                 }
                 else if (pElemBlock->GetName() == "Terrain")
                 {

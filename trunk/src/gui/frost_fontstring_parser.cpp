@@ -13,10 +13,8 @@ using namespace Frost::GUI;
 
 void FontString::ParseBlock( s_ptr<XML::Block> pBlock )
 {
-    ParseAttributes_(pBlock);
+    LayeredRegion::ParseBlock(pBlock);
 
-    ParseSizeBlock_(pBlock);
-    ParseAnchorsBlock_(pBlock);
     ParseColorBlock_(pBlock);
     ParseShadowBlock_(pBlock);
 }

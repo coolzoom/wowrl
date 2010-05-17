@@ -45,7 +45,7 @@ int Lua::l_ConcTable( lua_State* pLua )
     s_str t = lua_tostring(pLua, 1);
     s_str s = LuaManager::GetSingleton()->GetState(pLua)->ConcTable(lua_tostring(pLua, 2));
     s = t+s;
-    lua_pushstring(pLua, s.GetASCII().c_str());
+    lua_pushstring(pLua, s.Get().c_str());
 
     return 1;
 }
@@ -76,11 +76,6 @@ int Lua::l_ThrowInternalError( lua_State* pLua )
         s_str sError = lua_tostring(pLua, -1);
         Error("", sError);
         lua_pop(pLua, 1);
-
-        Event e("LUA_ERROR");
-        e.Add(sError);
-
-        EventManager::GetSingleton()->FireEvent(e);
     }
     else
         Error("Lua", "Unhandled error.");
@@ -186,7 +181,7 @@ int Lua::l_GetGlobal( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sName = mFunc.Get(0)->GetString();
-        lua_getglobal(pLua, sName.GetASCII().c_str());
+        lua_getglobal(pLua, sName.c_str());
         mFunc.NotifyPushed();
     }
 
@@ -200,13 +195,19 @@ int Lua::l_DoString( lua_State* pLua )
     if (mFunc.Check())
     {
         s_str sScript = mFunc.Get(0)->GetString();
-        int iError = luaL_dostring(pLua, sScript.GetASCII().c_str());
-        if (iError == LUA_ERRRUN)
-            l_ThrowInternalError(pLua);
-        else if (iError == LUA_ERRMEM)
-            Error("Lua", "Memory error.");
-        else
-            Error("Lua", "Unhandled error.");
+        int iError = luaL_dostring(pLua, sScript.c_str());
+        if (iError != 0)
+        {
+            if (iError == LUA_ERRRUN)
+            {
+                l_ThrowInternalError(pLua);
+            }
+            else
+            {
+                Error("Lua", "Unhandled error.");
+                lua_pop(pLua, 1);
+            }
+        }
     }
 
     return mFunc.Return();

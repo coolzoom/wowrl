@@ -18,16 +18,16 @@ namespace Frost
         */
         s_wptr()
         {
-            pValue_    = NULL;
-            pCounter_  = NULL;
-            pWCounter_ = NULL;
+            pValue_    = nullptr;
+            pCounter_  = nullptr;
+            pWCounter_ = nullptr;
         }
 
         /// Copy constructor.
         s_wptr(const s_wptr& pPtr)
         {
-            pValue_ = pPtr.pValue_;
-            pCounter_ = pPtr.pCounter_;
+            pValue_    = pPtr.pValue_;
+            pCounter_  = pPtr.pCounter_;
             pWCounter_ = pPtr.pWCounter_;
 
             Increment_();
@@ -36,9 +36,9 @@ namespace Frost
         /// Conversion from nullptr.
         s_wptr(const s_nullptr& pNull)
         {
-            pValue_ = NULL;
-            pCounter_  = NULL;
-            pWCounter_ = NULL;
+            pValue_    = nullptr;
+            pCounter_  = nullptr;
+            pWCounter_ = nullptr;
         }
 
         /// Destructor.
@@ -53,8 +53,8 @@ namespace Frost
         /// s_refptr conversion.
         s_wptr(const s_refptr<N>& pRefPtr)
         {
-            pValue_ = pRefPtr.pValue_;
-            pCounter_ = pRefPtr.pCounter_;
+            pValue_    = pRefPtr.pValue_;
+            pCounter_  = pRefPtr.pCounter_;
             pWCounter_ = pRefPtr.pWCounter_;
 
             Increment_();
@@ -64,8 +64,8 @@ namespace Frost
         /// s_wptr conversion.
         s_wptr(const s_wptr<N>& pPtr)
         {
-            pValue_ = pPtr.Lock().pValue_;
-            pCounter_ = pPtr.pCounter_;
+            pValue_    = pPtr.Lock().pValue_;
+            pCounter_  = pPtr.pCounter_;
             pWCounter_ = pPtr.pWCounter_;
 
             Increment_();
@@ -113,9 +113,9 @@ namespace Frost
         {
             Decrement_();
 
-            pValue_    = NULL;
-            pCounter_  = NULL;
-            pWCounter_ = NULL;
+            pValue_    = nullptr;
+            pCounter_  = nullptr;
+            pWCounter_ = nullptr;
         }
 
         /// Creates a s_refptr pointing to the object (if any).
@@ -152,9 +152,9 @@ namespace Frost
         */
         s_wptr& operator = (const s_nullptr& pPtr)
         {
-            pValue_ = NULL;
-            pCounter_ = NULL;
-            pWCounter_ = NULL;
+            pValue_    = nullptr;
+            pCounter_  = nullptr;
+            pWCounter_ = nullptr;
 
             return *this;
         }
@@ -210,7 +210,7 @@ namespace Frost
         {
             return (pValue_ == pValue.pValue_);
         }
-        
+
         /// Checks if this pointer equals another
         /** \param pValue The pointer to test
         */
@@ -235,7 +235,7 @@ namespace Frost
         */
         s_bool operator == (s_nullptr pValue) const
         {
-            return pValue_;
+            return (pValue_ == 0);
         }
 
         /// Checks if this pointer is different from another
@@ -247,7 +247,7 @@ namespace Frost
         {
             return (pValue_ != pValue.pValue_);
         }
-        
+
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
         *   \return 'true' if this pointer is different from another
@@ -274,7 +274,7 @@ namespace Frost
         */
         s_bool operator != (s_nullptr pValue) const
         {
-            return pValue_;
+            return (pValue_ != 0);
         }
 
         /// Checks if this pointer's value is lower than the other
@@ -286,7 +286,7 @@ namespace Frost
         {
             return (pValue_ < pValue.pValue_);
         }
-        
+
         /// Checks if this pointer's value is lower than the other
         /** \param pValue The pointer to test
         *   \return 'true' if this pointer's value is lower than the other
@@ -316,7 +316,7 @@ namespace Frost
         {
             return (pValue_ <= pValue.pValue_);
         }
-        
+
         /// Checks if this pointer's value is lower or equal than the other
         /** \param pValue The pointer to test
         *   \return 'true' if this pointer's value is lower or equal than the other
@@ -346,7 +346,7 @@ namespace Frost
         {
             return (pValue_ > pValue.pValue_);
         }
-        
+
         /// Checks if this pointer's value is greater than the other
         /** \param pValue The pointer to test
         *   \return 'true' if this pointer's value is greater than the other
@@ -376,7 +376,7 @@ namespace Frost
         {
             return (pValue_ >= pValue.pValue_);
         }
-        
+
         /// Checks if this pointer's value is greater or equal than the other
         /** \param pValue The pointer to test
         *   \return 'true' if this pointer's value is greater or equal than the other
@@ -400,7 +400,7 @@ namespace Frost
         /// Allows : "if (!pPointer)".
         bool operator ! () const
         {
-            return (pCounter_ == NULL ? true : *pCounter_ == 0u);
+            return (pCounter_ == 0 ? true : *pCounter_ == 0u);
         }
 
         typedef void (s_wptr::*MemberFn)();
@@ -410,7 +410,7 @@ namespace Frost
             if (pCounter_ && *pCounter_ != 0u)
                 return &s_wptr::SetNull;
             else
-                return NULL;
+                return 0;
         }
 
         s_ctnr< s_wptr<T> > operator , (const s_wptr<T>& pValue) const
@@ -439,9 +439,9 @@ namespace Frost
                 if (*pWCounter_ == 0u && *pCounter_ == 0u)
                 {
                     delete pCounter_;
-                    pCounter_ = NULL;
+                    pCounter_ = nullptr;
                     delete pWCounter_;
-                    pWCounter_ = NULL;
+                    pWCounter_ = nullptr;
                 }
             }
         }

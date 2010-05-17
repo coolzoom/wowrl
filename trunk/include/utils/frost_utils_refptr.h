@@ -20,9 +20,9 @@ namespace Frost
         */
         s_refptr()
         {
-            pValue_    = NULL;
-            pCounter_  = NULL;
-            pWCounter_ = NULL;
+            pValue_    = nullptr;
+            pCounter_  = nullptr;
+            pWCounter_ = nullptr;
         }
 
         /// Copy constructor.
@@ -40,9 +40,9 @@ namespace Frost
         /// Conversion from nullptr.
         s_refptr(const s_nullptr& pNull)
         {
-            pValue_ = NULL;
-            pCounter_  = NULL;
-            pWCounter_ = NULL;
+            pValue_    = nullptr;
+            pCounter_  = nullptr;
+            pWCounter_ = nullptr;
         }
 
         /// Constructor.
@@ -94,7 +94,7 @@ namespace Frost
         */
         s_bool IsValid() const
         {
-            return (pValue_ != NULL);
+            return (pValue_ != 0);
         }
 
         /// Returns the number of s_refptr pointing to the object.
@@ -129,9 +129,9 @@ namespace Frost
         {
             Decrement_();
 
-            pValue_    = NULL;
-            pCounter_  = NULL;
-            pWCounter_ = NULL;
+            pValue_    = nullptr;
+            pCounter_  = nullptr;
+            pWCounter_ = nullptr;
         }
 
         /// Creates a s_wptr pointing at the same object.
@@ -216,6 +216,15 @@ namespace Frost
             return (pValue_ == pValue);
         }
 
+        /// Checks if this pointer is null
+        /** \param pValue The null pointer
+        *   \return 'true' if this pointer is null
+        */
+        s_bool operator == (s_nullptr pValue) const
+        {
+            return (pValue_ == 0);
+        }
+
         template<class N>
         /// Checks if this pointer is different from another
         /** \param mValue The pointer to test
@@ -233,20 +242,29 @@ namespace Frost
             return (pValue_ != pValue);
         }
 
+        /// Checks if this pointer is not null
+        /** \param pValue The null pointer
+        *   \return 'true' if this pointer is not null
+        */
+        s_bool operator != (s_nullptr pValue) const
+        {
+            return (pValue_ != 0);
+        }
+
         /// Allows : "if (!pPointer)".
         bool operator ! () const
         {
-            return (pValue_ == NULL);
+            return (pValue_ == 0);
         }
 
         typedef void (s_refptr::*MemberFn)();
         /// Allows : "if (pPointer)".
         operator MemberFn() const
         {
-            if (pValue_ != NULL)
+            if (pValue_ != 0)
                 return &s_refptr::SetNull;
             else
-                return NULL;
+                return 0;
         }
 
         /// Allows limited implicit inheritance conversion.
@@ -325,14 +343,14 @@ namespace Frost
                 if (*pCounter_ == 0u)
                 {
                     delete pValue_;
-                    pValue_ = NULL;
+                    pValue_ = nullptr;
 
                     if (*pWCounter_ == 0u)
                     {
                         delete pCounter_;
-                        pCounter_ = NULL;
+                        pCounter_ = nullptr;
                         delete pWCounter_;
-                        pWCounter_ = NULL;
+                        pWCounter_ = nullptr;
                     }
                 }
             }

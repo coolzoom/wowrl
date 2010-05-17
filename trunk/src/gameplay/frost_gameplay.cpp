@@ -97,7 +97,14 @@ namespace Frost
                 pLua->SetGlobal("arg1");
             }
 
-            pLua->CallFunction(sName_+":On"+sScriptName);
+            try
+            {
+                pLua->CallFunction(sName_+":On"+sScriptName);
+            }
+            catch (LuaException& e)
+            {
+                Error("", e.GetDescription());
+            }
         }
     }
 
@@ -118,24 +125,34 @@ namespace Frost
 
         s_ptr<Lua::State> pLua = GameplayManager::GetSingleton()->GetLua();
 
-        // Lua handlers do not need direct arguments.
-        // Instead, we set the value of some global variables
-        // (event : event name, arg1, arg2, ... arg9 : arguments)
-        // that the user can use however he wants in his handler.
-
-        // Set event name
-        pLua->PushString(mEvent.GetName());
-        pLua->SetGlobal("event");
-
-        // Set arguments
-        for (s_uint i; i < mEvent.GetNumParam(); ++i)
+        if (lDefinedScriptList_.Find("Event"))
         {
-            s_ptr<const s_var> pArg = mEvent.Get(i);
-            pLua->PushVar(*pArg);
-            pLua->SetGlobal("arg"+(i+1));
-        }
+            // Lua handlers do not need direct arguments.
+            // Instead, we set the value of some global variables
+            // (event : event name, arg1, arg2, ... arg9 : arguments)
+            // that the user can use however he wants in his handler.
 
-        pLua->CallFunction(sName_+":OnEvent");
+            // Set event name
+            pLua->PushString(mEvent.GetName());
+            pLua->SetGlobal("event");
+
+            // Set arguments
+            for (s_uint i; i < mEvent.GetNumParam(); ++i)
+            {
+                s_ptr<const s_var> pArg = mEvent.Get(i);
+                pLua->PushVar(*pArg);
+                pLua->SetGlobal("arg"+(i+1));
+            }
+
+            try
+            {
+                pLua->CallFunction(sName_+":OnEvent");
+            }
+            catch (LuaException& e)
+            {
+                Error("", e.GetDescription());
+            }
+        }
     }
 
     void Gameplay::SetFriendlySelection( const SelectionType& mSelection )

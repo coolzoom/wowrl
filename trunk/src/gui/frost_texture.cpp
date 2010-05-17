@@ -11,6 +11,8 @@
 #include "material/frost_material.h"
 #include "gui/frost_spritemanager.h"
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
@@ -184,11 +186,17 @@ const s_bool& Texture::IsDesaturated() const
 
 void Texture::SetBlendMode( BlendMode mBlendMode )
 {
-    mBlendMode_ = mBlendMode;
+    if (mBlendMode_ != mBlendMode)
+    {
+        mBlendMode_ = mBlendMode;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void Texture::SetBlendMode( const s_str& sBlendMode )
 {
+    BlendMode mOldBlendMode = mBlendMode_;
+
     Warning(lType_.Back(),
         "Texture::SetBlendMode is not yet implemented."
     );
@@ -209,23 +217,32 @@ void Texture::SetBlendMode( const s_str& sBlendMode )
         );
         mBlendMode_ = BLEND_BLEND;
     }
+
+    if (mOldBlendMode != mBlendMode_)
+    {
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void Texture::SetDesaturated( const s_bool& bIsDesaturated )
 {
-    if (pSprite_)
+    if (!pSprite_)
+    {
+        Error(lType_.Back(),
+            "Trying to desaturate an uninitialized Texture : "+sName_+"."
+        );
+        return;
+    }
+
+    if (bIsDesaturated_ != bIsDesaturated)
     {
         bIsDesaturated_ = bIsDesaturated;
         if (bIsDesaturated_)
             pSprite_->GetMaterial()->SetPixelShader("GUI_Desaturation");
         else
             pSprite_->GetMaterial()->RemovePixelShader();
-    }
-    else
-    {
-        Error(lType_.Back(),
-            "Trying to desaturate an uninitialized Texture : "+sName_+"."
-        );
+
+        NotifyRendererNeedRedraw();
     }
 }
 
@@ -251,6 +268,8 @@ void Texture::SetGradient( const Gradient& mGradient )
         pSprite_->SetColor(mGradient_.GetMaxColor(), 2);
         pSprite_->SetColor(mGradient_.GetMaxColor(), 3);
     }
+
+    NotifyRendererNeedRedraw();
 }
 
 void Texture::SetTexCoord( const s_array<s_float,4>& lCoordinates )
@@ -264,6 +283,7 @@ void Texture::SetTexCoord( const s_array<s_float,4>& lCoordinates )
         lSortedCoordinates[3] = lCoordinates[3];
         pSprite_->SetTextureRect(lSortedCoordinates, true);
         lTexCoord_ = pSprite_->GetTextureCoords(true);
+        NotifyRendererNeedRedraw();
     }
     else
     {
@@ -279,6 +299,7 @@ void Texture::SetTexCoord( const s_array<s_float,8>& lCoordinates )
     {
         pSprite_->SetTextureCoords(lCoordinates, true);
         lTexCoord_ = lCoordinates;
+        NotifyRendererNeedRedraw();
     }
     else
     {
@@ -290,7 +311,11 @@ void Texture::SetTexCoord( const s_array<s_float,8>& lCoordinates )
 
 void Texture::SetTexCoordModifiesRect( const s_bool& bTexCoordModifiesRect )
 {
-    bTexCoordModifiesRect_ = bTexCoordModifiesRect;
+    if (bTexCoordModifiesRect_ != bTexCoordModifiesRect)
+    {
+        bTexCoordModifiesRect_ = bTexCoordModifiesRect;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void Texture::SetTexture( const s_str& sFile )
@@ -305,6 +330,7 @@ void Texture::SetTexture( const s_str& sFile )
     {
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sTextureFile_);
         pSprite_ = s_refptr<Sprite>(new Sprite(pMat));
+        pSprite_->SetTextureCoords(lTexCoord_, true);
     }
     else
     {
@@ -314,6 +340,8 @@ void Texture::SetTexture( const s_str& sFile )
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
         pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
     }
+
+    NotifyRendererNeedRedraw();
 }
 
 void Texture::SetTexture( s_ptr<RenderTarget> pRenderTarget )
@@ -328,7 +356,7 @@ void Texture::SetTexture( s_ptr<RenderTarget> pRenderTarget )
     {
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(pRenderTarget);
         pSprite_ = s_refptr<Sprite>(new Sprite(
-            pMat, 0, 0, s_float(pRenderTarget->GetWidth()), s_float(pRenderTarget->GetHeight())
+            pMat, s_float(pRenderTarget->GetWidth()), s_float(pRenderTarget->GetHeight())
         ));
     }
     else
@@ -339,6 +367,8 @@ void Texture::SetTexture( s_ptr<RenderTarget> pRenderTarget )
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2D(sName_+"_texture", 255, 255, 255);
         pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
     }
+
+    NotifyRendererNeedRedraw();
 }
 
 void Texture::SetColor( const Color& mColor )
@@ -352,6 +382,21 @@ void Texture::SetColor( const Color& mColor )
     pSprite_ = s_refptr<Sprite>(new Sprite(pMat, 256, 256));
     pSprite_->SetColor(mColor);
     mColor_ = mColor;
+
+    NotifyRendererNeedRedraw();
+}
+
+void Texture::SetMaterial( s_refptr<Material> pMat )
+{
+    mGradient_ = Gradient();
+    sTextureFile_ = "";
+
+    pSprite_ = nullptr; // Deletes the old sprite and its material
+
+    pSprite_ = s_refptr<Sprite>(new Sprite(pMat));
+    pSprite_->SetTextureCoords(lTexCoord_, true);
+
+    NotifyRendererNeedRedraw();
 }
 
 void Texture::SetVertexColor( const Color& mColor )
@@ -359,6 +404,7 @@ void Texture::SetVertexColor( const Color& mColor )
     if (pSprite_)
     {
         pSprite_->SetColor(mColor);
+        NotifyRendererNeedRedraw();
     }
     else
     {

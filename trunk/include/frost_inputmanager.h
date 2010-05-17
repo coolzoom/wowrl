@@ -12,6 +12,8 @@
 #include "frost.h"
 #include "utils/frost_utils_manager.h"
 
+#include <OISPrereqs.h>
+
 #define INPUT_MOUSE_BUTTON_NUMBER 3
 
 namespace Frost
@@ -183,8 +185,6 @@ namespace Frost
         void            Initialize(s_ptr<Ogre::RenderWindow> pWindow);
 
         /// Reads configuration.
-        /** \return 'false' if something went wrong
-        */
         void            ReadConfig();
 
         /// Updates input (keyboard and mouse).
@@ -259,9 +259,24 @@ namespace Frost
         /// Returns the string associated with a key.
         /** \param mKey   The ID code of the key you're interested in
         *   \return The string associated with a key
-        *   \note Untested function...
+        *   \note This functions takes modifier keys into account.
         */
         s_str           GetKeyString(KeyCode mKey) const;
+
+        /// Returns the string corresponding to the association of two keys.
+        /** \param sComboKey The combo key ("^", "`", ...)
+        *   \param mKey      The ID code of the key you're interested in
+        *   \return The string associated with a key
+        *   \note This functions takes modifier keys into account.
+        *   \note See LocaleManager::GetKeyComboString().
+        */
+        s_str           GetKeyComboString(const s_str& sComboKey, KeyCode mKey) const;
+
+        /// Returns the name of the provided key, as it appears on your keyboard.
+        /** \param mKey The key
+        *   \return The name of the provided key, as it appears on your keyboard
+        */
+        s_str           GetKeyName(KeyCode mKey) const;
 
         /// Returns the list of keys that have been released during this frame.
         /** \return The list of keys that have been released during this frame.
@@ -290,17 +305,15 @@ namespace Frost
 
         /// Checks if a mouse button is being pressed.
         /** \param mID    The ID code of the mouse button you're interested in
-        *   \param bForce 'true' to bypass focus (see SetFocus())
         *   \return 'true' if the mouse button is being pressed
         */
-        s_bool          MouseIsDown(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsDown(MouseButton mID) const;
 
         /// Checks if a mouse button is being pressed for a long time.
         /** \param mID    The ID code of the mouse button you're interested in
-        *   \param bForce 'true' to bypass focus (see SetFocus())
         *   \return 'true' if the mouse button is being pressed for a long time
         */
-        s_bool          MouseIsDownLong(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsDownLong(MouseButton mID) const;
 
         /// Returns elapsed time since the mouse button has been pressed.
         /** \param mKey The ID code of the mouse button you're interested in
@@ -310,32 +323,28 @@ namespace Frost
 
         /// Checks if a mouse button has been pressed.
         /** \param mID    The ID code of the mouse button you're interested in
-        *   \param bForce 'true' to bypass focus (see SetFocus())
         *   \return 'true' if the mouse button has been pressed
         *   \note Happens just when the mouse button is pressed.
         */
-        s_bool          MouseIsPressed(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsPressed(MouseButton mID) const;
 
         /// Checks if a mouse button has been released.
         /** \param mID    The ID code of the mouse button you're interested in
-        *   \param bForce 'true' to bypass focus (see SetFocus())
         *   \return 'true' if the mouse button has been released
         *   \note Happens just when the mouse button is released.
         */
-        s_bool          MouseIsReleased(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsReleased(MouseButton mID) const;
 
         /// Checks if a mouse button has been double clicked.
         /** \param mID    The ID code of the mouse button you're interested in
-        *   \param bForce 'true' to bypass focus (see SetFocus())
         *   \return 'true' if the mouse button has been double clicked
         */
-        s_bool          MouseIsDoubleClicked(MouseButton mID, s_bool bForce = false) const;
+        s_bool          MouseIsDoubleClicked(MouseButton mID) const;
 
         /// Checks if the mouse wheel has been rolled.
-        /** \param bForce 'true' to bypass focus (see SetFocus())
-        *   \return 'true' if the mouse wheel has been rolled
+        /** \return 'true' if the mouse wheel has been rolled
         */
-        s_bool          WheelIsRolled(s_bool bForce = false) const;
+        s_bool          WheelIsRolled() const;
 
         /// Checks if the mouse has just started beeing dragged.
         /** \return 'true' if the mouse has just started beeing dragged
@@ -458,7 +467,8 @@ namespace Frost
         const s_float&  GetMouseSensibility() const;
 
         /// Sets whether input should be stopped.
-        /** \param bFocus 'true' to stop inputs
+        /** \param bFocus    'true' to stop inputs
+        *   \param pReceiver The event receiver that requires focus (if any)
         *   \note This function is usefull if you need to implement
         *         an edit box : the user can type letters binded to
         *         actions in the game, and you should prevent them
@@ -466,7 +476,7 @@ namespace Frost
         *         and use the second argument of all input functions to
         *         force focus in your edit box.
         */
-        void            SetFocus(s_bool bFocus);
+        void            SetFocus(s_bool bFocus, s_ptr<EventReceiver> pReceiver = nullptr);
 
         static const s_str CLASS_NAME;
 
@@ -501,7 +511,8 @@ namespace Frost
 
     private :
 
-        s_bool bFocus_;
+        s_bool               bFocus_;
+        s_ptr<EventReceiver> pFocusReceiver_;
 
         // Keyboard
         s_array<s_double,256> lKeyDelay_;

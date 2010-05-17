@@ -15,6 +15,8 @@
 
 #include <OgreMeshManager.h>
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 
 namespace Frost
@@ -34,7 +36,7 @@ namespace Frost
             // Load mesh from file
             pMesh_ = Ogre::MeshManager::getSingleton().load(sFile.Get(), "Frost").get();
         }
-        catch (Ogre::Exception e)
+        catch (Ogre::Exception& e)
         {
             throw ModelLoadingException(CLASS_NAME, e.getDescription());
         }

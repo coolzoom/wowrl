@@ -105,7 +105,9 @@
                 </Anchors>
                 <Layers>
                     <Layer>
-                        <Texture name="$parentFolder" file="|FileSelectorFolder.png" setAllPoints="true"/>
+                        <Texture name="$parentFolder" file="|FileSelectorIcons.png" setAllPoints="true">
+                            <TexCoords left="0.25" right="0.375" top="0.0" bottom="1.0"/>
+                        </Texture>
                     </Layer>
                 </Layers>
             </Frame>
@@ -118,8 +120,12 @@
                 </Anchors>
                 <Layers>
                     <Layer>
-                        <Texture name="$parentPlus" file="|FileSelectorPlus.png" setAllPoints="true"/>
-                        <Texture name="$parentMinus" file="|FileSelectorMinus.png" hidden="true" setAllPoints="true"/>
+                        <Texture name="$parentPlus" file="|FileSelectorIcons.png" setAllPoints="true">
+                            <TexCoords left="0" right="0.125" top="0.0" bottom="1.0"/>
+                        </Texture>
+                        <Texture name="$parentMinus" file="|FileSelectorIcons.png" hidden="true" setAllPoints="true">
+                            <TexCoords left="0.125" right="0.25" top="0.0" bottom="1.0"/>
+                        </Texture>
                     </Layer>
                 </Layers>
                 <Scripts>

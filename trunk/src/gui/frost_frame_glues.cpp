@@ -464,7 +464,7 @@ int LuaFrame::_GetHitRectInsets(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:GetHitRectInsets", pLua, 4);
 
-    s_array<s_int,4> lInsets = pFrameParent_->GetAbsHitRectInsets();
+    const s_array<s_int,4>& lInsets = pFrameParent_->GetAbsHitRectInsets();
 
     for (uint i = 0; i < 4; ++i)
         mFunc.Push(lInsets[i]);

@@ -29,6 +29,7 @@ UIObject::UIObject()
     fRelWidth_ = s_float::NaN;
     fRelHeight_ = s_float::NaN;
     bIsShown_ = true;
+    bIsVisible_ = true;
     bUpdateBorders_ = true;
     uiID_ = s_uint::NaN;
     bReady_ = true;
@@ -41,11 +42,6 @@ UIObject::~UIObject()
     {
         iter->Delete();
     }
-}
-
-s_wptr<Material> UIObject::GetMaterial()
-{
-    return pMaterial_;
 }
 
 s_str UIObject::Serialize( const s_str& sTab ) const
@@ -208,7 +204,11 @@ const s_float& UIObject::GetAlpha() const
 
 void UIObject::SetAlpha( const s_float& fAlpha )
 {
-    fAlpha_ = fAlpha;
+    if (fAlpha_ != fAlpha)
+    {
+        fAlpha_ = fAlpha;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void UIObject::Show()
@@ -233,31 +233,31 @@ const s_bool& UIObject::IsShown() const
 
 s_bool UIObject::IsVisible() const
 {
-    if (pParent_)
-    {
-        if (!IsShown())
-            return false;
-        else
-            return pParent_->IsVisible();
-    }
-    else
-        return IsShown();
+    return bIsVisible_;
 }
 
 void UIObject::SetAbsWidth( const s_uint& uiAbsWidth )
 {
-    GUIManager::GetSingleton()->NotifyObjectMoved();
-    bIsWidthAbs_ = true;
-    uiAbsWidth_ = uiAbsWidth;
-    FireUpdateDimensions();
+    if (uiAbsWidth_ != uiAbsWidth || !bIsWidthAbs_ || !uiAbsWidth_.IsValid())
+    {
+        GUIManager::GetSingleton()->NotifyObjectMoved();
+        bIsWidthAbs_ = true;
+        uiAbsWidth_ = uiAbsWidth;
+        FireUpdateDimensions();
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void UIObject::SetAbsHeight( const s_uint& uiAbsHeight )
 {
-    GUIManager::GetSingleton()->NotifyObjectMoved();
-    bIsHeightAbs_ = true;
-    uiAbsHeight_ = uiAbsHeight;
-    FireUpdateDimensions();
+    if (uiAbsHeight_ != uiAbsHeight || !bIsWidthAbs_ || !uiAbsHeight_.IsValid())
+    {
+        GUIManager::GetSingleton()->NotifyObjectMoved();
+        bIsHeightAbs_ = true;
+        uiAbsHeight_ = uiAbsHeight;
+        FireUpdateDimensions();
+        NotifyRendererNeedRedraw();
+    }
 }
 
 const s_bool& UIObject::IsWidthAbsolute() const
@@ -272,18 +272,26 @@ const s_bool& UIObject::IsHeightAbsolute() const
 
 void UIObject::SetRelWidth( const s_float& fRelWidth )
 {
-    GUIManager::GetSingleton()->NotifyObjectMoved();
-    bIsWidthAbs_ = false;
-    fRelWidth_ = fRelWidth;
-    FireUpdateDimensions();
+    if (fRelWidth_ != fRelWidth || bIsWidthAbs_ || !fRelWidth_.IsValid())
+    {
+        GUIManager::GetSingleton()->NotifyObjectMoved();
+        bIsWidthAbs_ = false;
+        fRelWidth_ = fRelWidth;
+        FireUpdateDimensions();
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void UIObject::SetRelHeight( const s_float& fRelHeight )
 {
-    GUIManager::GetSingleton()->NotifyObjectMoved();
-    bIsHeightAbs_ = false;
-    fRelHeight_ = fRelHeight;
-    FireUpdateDimensions();
+    if (fRelHeight_ != fRelHeight || bIsHeightAbs_ || !fRelHeight_.IsValid())
+    {
+        GUIManager::GetSingleton()->NotifyObjectMoved();
+        bIsHeightAbs_ = false;
+        fRelHeight_ = fRelHeight;
+        FireUpdateDimensions();
+        NotifyRendererNeedRedraw();
+    }
 }
 
 const s_uint& UIObject::GetAbsWidth() const
@@ -320,7 +328,7 @@ const s_float& UIObject::GetRelHeight() const
 
 void UIObject::SetParent( s_ptr<UIObject> pParent )
 {
-    if (pParent != this)
+    if (pParent != this && pParent_ != pParent)
     {
         pParent_ = pParent;
         FireUpdateDimensions();
@@ -378,22 +386,26 @@ const s_array<s_int,4> UIObject::GetBorders() const
 
 void UIObject::ClearAllPoints()
 {
-    lAnchorList_.Clear();
+    if (lAnchorList_.GetSize() != 0)
+    {
+        lAnchorList_.Clear();
 
-    lDefinedBorderList_[BORDER_LEFT]   =
-    lDefinedBorderList_[BORDER_TOP]    =
-    lDefinedBorderList_[BORDER_RIGHT]  =
-    lDefinedBorderList_[BORDER_BOTTOM] = false;
+        lDefinedBorderList_[BORDER_LEFT]   =
+        lDefinedBorderList_[BORDER_TOP]    =
+        lDefinedBorderList_[BORDER_RIGHT]  =
+        lDefinedBorderList_[BORDER_BOTTOM] = false;
 
-    bUpdateAnchors_ = true;
-    FireUpdateBorders();
+        bUpdateAnchors_ = true;
+        FireUpdateBorders();
+        NotifyRendererNeedRedraw();
+        GUIManager::GetSingleton()->NotifyObjectMoved();
+    }
 }
 
 void UIObject::SetAllPoints( const s_str& sObjName )
 {
     if (sObjName != sName_)
     {
-        GUIManager::GetSingleton()->NotifyObjectMoved();
         ClearAllPoints();
         Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, sObjName, ANCHOR_TOPLEFT);
         lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
@@ -405,6 +417,11 @@ void UIObject::SetAllPoints( const s_str& sObjName )
         lDefinedBorderList_[BORDER_TOP]    =
         lDefinedBorderList_[BORDER_RIGHT]  =
         lDefinedBorderList_[BORDER_BOTTOM] = true;
+
+        bUpdateAnchors_ = true;
+        FireUpdateBorders();
+        NotifyRendererNeedRedraw();
+        GUIManager::GetSingleton()->NotifyObjectMoved();
     }
     else
     {
@@ -418,7 +435,6 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 {
     if (pObj != this)
     {
-        GUIManager::GetSingleton()->NotifyObjectMoved();
         ClearAllPoints();
         Anchor mAnchor = Anchor(this, ANCHOR_TOPLEFT, pObj ? pObj->GetName() : "", ANCHOR_TOPLEFT);
         lAnchorList_[ANCHOR_TOPLEFT] = mAnchor;
@@ -433,6 +449,8 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 
         bUpdateAnchors_ = true;
         FireUpdateBorders();
+        NotifyRendererNeedRedraw();
+        GUIManager::GetSingleton()->NotifyObjectMoved();
     }
     else
     {
@@ -444,7 +462,6 @@ void UIObject::SetAllPoints( s_ptr<UIObject> pObj )
 
 void UIObject::SetAbsPoint( AnchorPoint mPoint, const s_str& sParentName, AnchorPoint mRelativePoint, const s_int& iX, const s_int& iY )
 {
-    GUIManager::GetSingleton()->NotifyObjectMoved();
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
@@ -495,11 +512,12 @@ void UIObject::SetAbsPoint( AnchorPoint mPoint, const s_str& sParentName, Anchor
 
     bUpdateAnchors_ = true;
     FireUpdateBorders();
+    NotifyRendererNeedRedraw();
+    GUIManager::GetSingleton()->NotifyObjectMoved();
 }
 
 void UIObject::SetRelPoint( AnchorPoint mPoint, const s_str& sParentName, AnchorPoint mRelativePoint, const s_float& fX, const s_float& fY )
 {
-    GUIManager::GetSingleton()->NotifyObjectMoved();
     s_map<AnchorPoint, Anchor>::iterator iterAnchor = lAnchorList_.Get(mPoint);
     if (iterAnchor == lAnchorList_.End())
     {
@@ -550,12 +568,12 @@ void UIObject::SetRelPoint( AnchorPoint mPoint, const s_str& sParentName, Anchor
 
     bUpdateAnchors_ = true;
     FireUpdateBorders();
+    NotifyRendererNeedRedraw();
+    GUIManager::GetSingleton()->NotifyObjectMoved();
 }
 
 void UIObject::SetPoint( const Anchor& mAnchor )
 {
-    GUIManager::GetSingleton()->NotifyObjectMoved();
-
     lAnchorList_[mAnchor.GetPoint()] = mAnchor;
 
     switch (mAnchor.GetPoint())
@@ -593,6 +611,8 @@ void UIObject::SetPoint( const Anchor& mAnchor )
 
     bUpdateAnchors_ = true;
     FireUpdateBorders();
+    NotifyRendererNeedRedraw();
+    GUIManager::GetSingleton()->NotifyObjectMoved();
 }
 
 s_bool UIObject::DependsOn( s_ptr<UIObject> pObj ) const
@@ -619,13 +639,23 @@ s_uint UIObject::GetNumPoint() const
     return lAnchorList_.GetSize();
 }
 
-s_ptr<Anchor> UIObject::GetPoint( AnchorPoint mPoint )
+s_ptr<Anchor> UIObject::ModifyPoint( AnchorPoint mPoint )
 {
     GUIManager::GetSingleton()->NotifyObjectMoved();
+
     FireUpdateBorders();
 
     if (lAnchorList_.Find(mPoint))
         return &lAnchorList_[mPoint];
+    else
+        return nullptr;
+}
+
+s_ptr<const Anchor> UIObject::GetPoint( AnchorPoint mPoint ) const
+{
+    s_map<AnchorPoint, Anchor>::const_iterator iterAnchor = lAnchorList_.Get(mPoint);
+    if (iterAnchor != lAnchorList_.End())
+        return &iterAnchor->second;
     else
         return nullptr;
 }
@@ -822,6 +852,7 @@ void UIObject::UpdateBorders_()
     if (!bUpdateBorders_)
         return;
 
+    s_bool bOldReady = bReady_;
     bReady_ = true;
 
     if (bUpdateDimensions_)
@@ -864,6 +895,11 @@ void UIObject::UpdateBorders_()
     }
     else
         bReady_ = false;
+
+    if (bReady_ || (!bReady_ && bOldReady))
+    {
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void UIObject::UpdateAnchors()
@@ -942,11 +978,10 @@ void UIObject::Update()
     UpdateBorders_();
 
     if (bNewlyCreated_)
+    {
         bNewlyCreated_ = false;
-}
-
-void UIObject::UpdateMaterial( const s_bool& bForceUpdate )
-{
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void UIObject::PushOnLua( s_ptr<Lua::State> pLua ) const
@@ -978,6 +1013,8 @@ void UIObject::SetManuallyRendered( const s_bool& bManuallyRendered, s_ptr<UIObj
     if (pOldRenderer && pOldRenderer != pRenderer)
         pOldRenderer->NotifyManuallyRenderedObject_(this, false);
 
+    NotifyRendererNeedRedraw();
+
     bManuallyRendered_ = bManuallyRendered;
     if (bManuallyRendered_)
         pRenderer_ = pRenderer;
@@ -986,6 +1023,8 @@ void UIObject::SetManuallyRendered( const s_bool& bManuallyRendered, s_ptr<UIObj
 
     if (pRenderer_ && pRenderer_ != pOldRenderer && bManuallyRendered_)
         pRenderer_->NotifyManuallyRenderedObject_(this, true);
+
+    NotifyRendererNeedRedraw();
 }
 
 const s_bool& UIObject::IsManuallyRendered() const
@@ -1001,6 +1040,16 @@ void UIObject::SetNewlyCreated()
 const s_bool& UIObject::IsNewlyCreated() const
 {
     return bNewlyCreated_;
+}
+
+void UIObject::NotifyRendererNeedRedraw()
+{
+
+}
+
+void UIObject::FireRedraw()
+{
+
 }
 
 void UIObject::NotifyManuallyRenderedObject_(s_ptr<UIObject> pObject, const s_bool& bManuallyRendered)
@@ -1038,6 +1087,8 @@ s_ctnr< s_ptr<UIObject> > UIObject::ClearLinks()
         pParent_ = nullptr;
     }
 
+    NotifyRendererNeedRedraw();
+
     // Tell the renderer to no longer render this widget
     if (bManuallyRendered_ && pRenderer_)
         pRenderer_->NotifyManuallyRenderedObject_(this, false);
@@ -1070,7 +1121,7 @@ s_ctnr< s_ptr<UIObject> > UIObject::ClearLinks()
         s_ctnr<AnchorPoint>::iterator iterAnchorPoint;
         foreach (iterAnchorPoint, lAnchoredPointList)
         {
-            s_ptr<Anchor> pAnchor = pObj->GetPoint(*iterAnchorPoint);
+            s_ptr<const Anchor> pAnchor = pObj->GetPoint(*iterAnchorPoint);
             Anchor mNewAnchor = Anchor(pObj, *iterAnchorPoint, "", ANCHOR_TOPLEFT);
 
             s_int iX = pAnchor->GetAbsOffsetX();

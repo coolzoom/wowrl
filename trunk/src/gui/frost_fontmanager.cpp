@@ -14,6 +14,7 @@
 #include "gui/frost_fontmanager.h"
 
 #include <OgreFontManager.h>
+#include <utils/frost_utils_file.h>
 
 using namespace std;
 

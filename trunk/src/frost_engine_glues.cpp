@@ -15,6 +15,8 @@
 #include "frost_inputmanager.h"
 
 #include <OgreCamera.h>
+#include <utils/frost_utils_directory.h>
+#include <utils/frost_utils_file.h>
 
 #define method(widget, function) {#function, &Lua##widget::_##function}
 
@@ -172,12 +174,13 @@ namespace Frost
 
     int LuaEngine::_LoadZone( lua_State* pLua )
     {
-        Lua::Function mFunc("Engine:LoadZone", pLua);
+        Lua::Function mFunc("Engine:LoadZone", pLua, 1);
         mFunc.Add(0, "name", Lua::TYPE_STRING);
 
         if (mFunc.Check())
         {
-            ZoneManager::GetSingleton()->LoadZone(mFunc.Get(0)->GetString());
+            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone(mFunc.Get(0)->GetString());
+            mFunc.Push(pZone != nullptr);
         }
 
         return mFunc.Return();
@@ -185,12 +188,13 @@ namespace Frost
 
     int LuaEngine::_LoadZoneFile( lua_State* pLua )
     {
-        Lua::Function mFunc("Engine:LoadZoneFile", pLua);
+        Lua::Function mFunc("Engine:LoadZoneFile", pLua, 1);
         mFunc.Add(0, "name", Lua::TYPE_STRING);
 
         if (mFunc.Check())
         {
-            ZoneManager::GetSingleton()->LoadZoneFile(mFunc.Get(0)->GetString());
+            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZoneFile(mFunc.Get(0)->GetString());
+            mFunc.Push(pZone != nullptr);
         }
 
         return mFunc.Return();
@@ -488,7 +492,10 @@ namespace Frost
             }
 
             s_str sFile = lWords.Back();
-            lWords.PopBack();
+            if (sFile.Find("."))
+                lWords.PopBack();
+            else
+                sFile = "";
 
             s_str sFolder;
             foreach (iter, lWords)

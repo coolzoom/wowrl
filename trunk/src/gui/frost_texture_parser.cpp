@@ -13,10 +13,8 @@ using namespace Frost::GUI;
 
 void Texture::ParseBlock( s_ptr<XML::Block> pBlock )
 {
-    ParseAttributes_(pBlock);
+    LayeredRegion::ParseBlock(pBlock);
 
-    ParseSizeBlock_(pBlock);
-    ParseAnchorsBlock_(pBlock);
     ParseTexCoordsBlock_(pBlock);
     ParseColorBlock_(pBlock);
     ParseGradientBlock_(pBlock);

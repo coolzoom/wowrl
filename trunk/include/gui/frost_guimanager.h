@@ -82,7 +82,12 @@ namespace Frost
     /// Contains Level
     struct Strata
     {
+        s_uint               uiID;
         s_map<s_uint, Level> lLevelList;
+        s_bool               bRedraw;
+        s_ptr<RenderTarget>  pRenderTarget;
+        s_refptr<Sprite>     pSprite;
+        s_uint               uiRedrawCount;
 
         static const s_str CLASS_NAME;
     };
@@ -96,6 +101,9 @@ namespace Frost
 
         /// Initializes this manager.
         void                 Initialize();
+
+        /// Reads configuration.
+        void                 ReadConfig();
 
         /// Adds a new directory to be parsed for UI AddOns.
         /** \param sDirectory The new directory
@@ -168,6 +176,9 @@ namespace Frost
         /// Tells this manager it must rebuild its strata list.
         void                 FireBuildStrataList();
 
+        /// Prints in the log several performance statistics.
+        void                 PrintStatistics();
+
         /// Prints debug informations in the log file.
         /** \note Calls UIObject::Serialize().
         */
@@ -215,6 +226,11 @@ namespace Frost
 
         /// Renders the UI into the current render target.
         void                 RenderUI();
+
+        /// Checks if the UI is currently being loaded.
+        /** \return 'true' if the UI is currently being loaded
+        */
+        const s_bool&        IsLoadingUI() const;
 
         /// Ask this manager for movement management.
         /** \param pObj        The object to move
@@ -276,10 +292,24 @@ namespace Frost
         /// Tells this manager an object has moved.
         void                 NotifyObjectMoved();
 
+        /// Tells this manager to redraw the UI.
+        void                 FireRedraw(FrameStrata mStrata);
+
+        /// Toggles render caching.
+        /** \note Enabled by default.
+        *   \note Enabling this will most likely improve performances.
+        */
+        void                 ToggleCaching();
+
         /// Returns the Frame under the mouse.
         /** \return The Frame under the mouse (nullptr if none)
         */
         s_ptr<GUI::Frame>    GetOveredFrame() const;
+
+        /// Asks this manager for focus.
+        /** \param pEditBox The EditBox requesting focus
+        */
+        void                 RequestFocus(s_ptr<GUI::EditBox> pEditBox);
 
         /// Returns the highest level on the provided strata.
         /** \param mFrameStrata The strata to inspect
@@ -347,10 +377,14 @@ namespace Frost
 
         void SaveVariables_(s_ptr<AddOn> pAddOn);
 
+        void CreateStrataRenderTarget_(Strata& mStrata);
+        void RenderStrata_(Strata& mStrata);
+
         void ParseXMLFile_(const s_str& sFile, s_ptr<AddOn> pAddOn);
 
         s_ptr<Lua::State> pLua_;
         s_bool            bClosed_;
+        s_bool            bLoadingUI_;
 
         s_map<s_uint, s_str> lKeyBindingList_;
 
@@ -369,6 +403,7 @@ namespace Frost
         s_bool                             bBuildStrataList_;
         s_bool                             bObjectMoved_;
         s_ptr<GUI::Frame>                  pOveredFrame_;
+        s_ptr<GUI::EditBox>                pFocusedEditBox_;
 
         s_ptr<GUI::UIObject> pMovedObject_;
         s_ptr<GUI::UIObject> pSizedObject_;
@@ -388,6 +423,10 @@ namespace Frost
         s_bool               bResizeFromBottom_;
 
         s_int iThisStackSize_;
+
+        s_uint uiFrameNumber_;
+
+        s_bool bEnableCaching_;
     };
 }
 

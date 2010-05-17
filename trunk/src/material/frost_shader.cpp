@@ -225,7 +225,7 @@ namespace Frost
                     );
                 }
             }
-            catch (Ogre::Exception e)
+            catch (Ogre::Exception& e)
             {
                 Error(CLASS_NAME,
                     "Parameter \""+sName+"\" doesn't exist in \""+sName_+"\"."
@@ -337,13 +337,9 @@ namespace Frost
                     );
                 }
             }
-            catch (Ogre::Exception e)
+            catch (Ogre::Exception& e)
             {
                 Error(CLASS_NAME, e.getDescription());
-            }
-            catch (...)
-            {
-                Error(CLASS_NAME, "Unhandled exception.");
             }
 
             bIsLoaded_ = true;
@@ -427,10 +423,11 @@ namespace Frost
                     );
                 }
             }
-            catch (Ogre::Exception e)
+            catch (Ogre::Exception& e)
             {
                 Error(CLASS_NAME, e.getDescription());
             }
+
             bIsLoaded_ = true;
         }
     }

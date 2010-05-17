@@ -32,8 +32,13 @@ namespace Frost
         /** \param uiID     The unique ID associated to this Material
         *   \param mType    The underlying type of this Material
         *   \param pOgreMat The wrapped Ogre::Material
+        *   \param bVanilla 'true' if this Material uses a shared Ogre::Material
+        *   \note Materials flagged as "vanilla" use a pre-build Ogre::Material that
+        *         is shared by other Materials. When a changes occur to a vanilla
+        *         Material, it creates a new similar Ogre::Material and operates on it,
+        *         keeping the original Ogre::Material unchanged.
         */
-        Material(const s_uint& uiID, Type mType, s_ptr<Ogre::Material> pOgreMat);
+        Material(const s_uint& uiID, Type mType, s_ptr<Ogre::Material> pOgreMat, const s_bool& bVanilla = false);
 
         /// Destructor.
         ~Material();
@@ -185,6 +190,8 @@ namespace Frost
 
     private :
 
+        void CheckVanilla_();
+
         struct PassInfo
         {
             s_ptr<Ogre::Pass> pPass;
@@ -194,6 +201,7 @@ namespace Frost
             s_bool bAlphaReject;
             s_bool bHardwareSkinning;
             s_bool bIsDesaturated;
+            s_uint uiPassID;
         };
 
         s_uint  uiID_;
@@ -201,6 +209,7 @@ namespace Frost
         s_str   sName_;
         s_float fWidth_;
         s_float fHeight_;
+        s_bool  bVanilla_;
 
         s_ptr<Ogre::Material> pOgreMat_;
         s_ptr<PassInfo>       pDefaultPass_;

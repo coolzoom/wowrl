@@ -50,6 +50,25 @@ int LuaFontString::_GetJustifyH( lua_State* pLua )
     return mFunc.Return();
 }
 
+int LuaFontString::_GetJustifyV( lua_State* pLua )
+{
+    Lua::Function mFunc("FontString:GetJustifyV", pLua, 1);
+
+    Text::VerticalAlignment mAlignment = pFontStringParent_->GetJustifyV();
+    s_str sAligment;
+
+    switch (mAlignment)
+    {
+        case Text::ALIGN_TOP : sAligment = "TOP"; break;
+        case Text::ALIGN_MIDDLE : sAligment = "MIDDLE"; break;
+        case Text::ALIGN_BOTTOM : sAligment = "BOTTOM"; break;
+    }
+
+    mFunc.Push(sAligment);
+
+    return mFunc.Return();
+}
+
 int LuaFontString::_GetShadowColor( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:GetShadowColor", pLua, 4);
@@ -148,6 +167,31 @@ int LuaFontString::_SetJustifyH( lua_State* pLua )
         {
             Warning(mFunc.GetName(),
                 "Unknown justify behavior : \""+sJustifyH+"\"."
+            );
+        }
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFontString::_SetJustifyV( lua_State* pLua )
+{
+    Lua::Function mFunc("FontString:SetJustifyV", pLua);
+    mFunc.Add(0, "justify vertical", Lua::TYPE_STRING);
+
+    if (mFunc.Check())
+    {
+        s_str sJustifyV = mFunc.Get(0)->GetString();
+        if (sJustifyV == "TOP")
+            pFontStringParent_->SetJustifyV(Text::ALIGN_TOP);
+        else if (sJustifyV == "MIDDLE")
+            pFontStringParent_->SetJustifyV(Text::ALIGN_MIDDLE);
+        else if (sJustifyV == "BOTTOM")
+            pFontStringParent_->SetJustifyV(Text::ALIGN_BOTTOM);
+        else
+        {
+            Warning(mFunc.GetName(),
+                "Unknown justify behavior : \""+sJustifyV+"\"."
             );
         }
     }
@@ -264,6 +308,28 @@ int LuaFontString::_CanNonSpaceWrap( lua_State* pLua )
     return mFunc.Return();
 }
 
+int LuaFontString::_CanWordWrap( lua_State* pLua )
+{
+    Lua::Function mFunc("FontString:CanWordWrap", pLua, 1);
+
+    mFunc.Push(pFontStringParent_->CanWordWrap());
+
+    return mFunc.Return();
+}
+
+int LuaFontString::_EnableFormatting( lua_State* pLua )
+{
+    Lua::Function mFunc("FontString:EnableFormatting", pLua);
+    mFunc.Add(0, "formatting", Lua::TYPE_BOOLEAN);
+
+    if (mFunc.Check())
+    {
+        pFontStringParent_->EnableFormatting(mFunc.Get(0)->GetBool());
+    }
+
+    return mFunc.Return();
+}
+
 int LuaFontString::_GetStringHeight( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:GetStringHeight", pLua, 1);
@@ -291,6 +357,15 @@ int LuaFontString::_GetText( lua_State* pLua )
     return mFunc.Return();
 }
 
+int LuaFontString::_IsFormattingEnabled( lua_State* pLua )
+{
+    Lua::Function mFunc("FontString:IsFormattingEnabled", pLua, 1);
+
+    mFunc.Push(pFontStringParent_->IsFormattingEnabled());
+
+    return mFunc.Return();
+}
+
 int LuaFontString::_SetNonSpaceWrap( lua_State* pLua )
 {
     Lua::Function mFunc("FontString:SetNonSpaceWrap", pLua);
@@ -299,6 +374,24 @@ int LuaFontString::_SetNonSpaceWrap( lua_State* pLua )
     if (mFunc.Check())
     {
         pFontStringParent_->SetNonSpaceWrap(mFunc.Get(0)->GetBool());
+    }
+
+    return mFunc.Return();
+}
+
+int LuaFontString::_SetWordWrap( lua_State* pLua )
+{
+    Lua::Function mFunc("FontString:SetWordWrap", pLua);
+    mFunc.Add(0, "can word wrap", Lua::TYPE_BOOLEAN);
+    mFunc.Add(1, "add ellipsis", Lua::TYPE_BOOLEAN, true);
+
+    if (mFunc.Check())
+    {
+        s_bool bEllipsis = true;
+        if (mFunc.IsProvided(1))
+            bEllipsis = mFunc.Get(1)->GetBool();
+
+        pFontStringParent_->SetWordWrap(mFunc.Get(0)->GetBool(), bEllipsis);
     }
 
     return mFunc.Return();

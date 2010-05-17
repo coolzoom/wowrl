@@ -26,10 +26,14 @@
 #include "gui/frost_statusbar.h"
 #include "gui/frost_texture.h"
 #include "gui/frost_fontstring.h"
+#include "gui/frost_spritemanager.h"
+#include "material/frost_materialmanager.h"
 #include "lua/frost_lua.h"
 
 #include "frost_inputmanager.h"
-#include "xml/frost_xml_document.h"
+#include <xml/frost_xml_document.h>
+#include <utils/frost_utils_file.h>
+#include <utils/frost_utils_directory.h>
 
 using namespace std;
 
@@ -50,11 +54,26 @@ namespace Frost
     {
         Log("Closing "+CLASS_NAME+"...");
         CloseUI();
+
+        s_map<FrameStrata, Strata>::iterator iterStrata;
+        foreach (iterStrata, lStrataList_)
+        {
+            SpriteManager::GetSingleton()->DeleteRenderTarget(iterStrata->second.pRenderTarget);
+        }
     }
 
     void GUIManager::Initialize()
     {
         bClosed_ = true;
+        bEnableCaching_ = true;
+    }
+
+    void GUIManager::ReadConfig()
+    {
+        s_ptr<Engine> pEngine = Engine::GetSingleton();
+
+        if (pEngine->IsConstantDefined("EnableGUICaching"))
+            bEnableCaching_ = pEngine->GetBoolConstant("EnableGUICaching");
     }
 
     void GUIManager::AddAddOnDirectory( const s_str& sDirectory )
@@ -422,7 +441,20 @@ namespace Frost
         {
             if (iterFile->Find(".lua"))
             {
-                pLua_->DoFile(*iterFile);
+                try
+                {
+                    pLua_->DoFile(*iterFile);
+                }
+                catch (LuaException& e)
+                {
+                    s_str sError = e.GetDescription();
+
+                    Error("", sError);
+
+                    Event mEvent("LUA_ERROR");
+                    mEvent.Add(sError);
+                    EventManager::GetSingleton()->FireEvent(mEvent);
+                }
             }
             else if (iterFile->Find(".xml"))
             {
@@ -432,7 +464,22 @@ namespace Frost
 
         s_str sSavedVariablesFile = "Saves/Interface/"+pAddOn->sMainDirectory+"/"+pAddOn->sName+".lua";
         if (File::Exists(sSavedVariablesFile))
-            pLua_->DoFile(sSavedVariablesFile);
+        {
+            try
+            {
+                pLua_->DoFile(sSavedVariablesFile);
+            }
+            catch (LuaException& e)
+            {
+                s_str sError = e.GetDescription();
+
+                Error("", sError);
+
+                Event mEvent("LUA_ERROR");
+                mEvent.Add(sError);
+                EventManager::GetSingleton()->FireEvent(mEvent);
+            }
+        }
 
         Event mEvent("ADDON_LOADED");
         mEvent.Add(pAddOn->sName);
@@ -547,12 +594,14 @@ namespace Frost
             pLua_->NewTable();
             pLua_->SetGlobal("_this_stack");
 
+            bLoadingUI_ = true;
             s_ctnr<s_str>::iterator iterDirectory;
             foreach (iterDirectory, lGUIDirectoryList_)
             {
                 this->LoadAddOnDirectory_(*iterDirectory);
             }
 
+            bLoadingUI_ = false;
             bClosed_ = false;
         }
     }
@@ -601,25 +650,94 @@ namespace Frost
 
     void GUIManager::RenderUI()
     {
-        s_map<FrameStrata, Strata>::const_iterator iterStrata;
-        foreach (iterStrata, lStrataList_)
+        if (bEnableCaching_)
         {
-            const Strata& mStrata = iterStrata->second;
-
-            s_map<s_uint, Level>::const_iterator iterLevel;
-            foreach (iterLevel, mStrata.lLevelList)
+            s_map<FrameStrata, Strata>::const_iterator iterStrata;
+            foreach (iterStrata, lStrataList_)
             {
-                const Level& mLevel = iterLevel->second;
-
-                s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
-                foreach (iterFrame, mLevel.lFrameList)
-                {
-                    s_ptr<GUI::Frame> pFrame = *iterFrame;
-                    if (!pFrame->IsNewlyCreated())
-                        pFrame->Render();
-                }
+                if (iterStrata->second.pSprite)
+                    iterStrata->second.pSprite->Render(0, 0);
             }
         }
+        else
+        {
+            s_map<FrameStrata, Strata>::iterator iterStrata;
+            foreach (iterStrata, lStrataList_)
+            {
+                Strata& mStrata = iterStrata->second;
+                s_map<s_uint, Level>::const_iterator iterLevel;
+                foreach (iterLevel, mStrata.lLevelList)
+                {
+                    const Level& mLevel = iterLevel->second;
+
+                    s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
+                    foreach (iterFrame, mLevel.lFrameList)
+                    {
+                        s_ptr<GUI::Frame> pFrame = *iterFrame;
+                        if (!pFrame->IsNewlyCreated())
+                            pFrame->Render();
+                    }
+                }
+
+                ++mStrata.uiRedrawCount;
+            }
+        }
+    }
+
+    void GUIManager::CreateStrataRenderTarget_( Strata& mStrata )
+    {
+        mStrata.pRenderTarget = SpriteManager::GetSingleton()->CreateRenderTarget(
+            "StrataTarget_"+mStrata.uiID,
+            Engine::GetSingleton()->GetScreenWidth(),
+            Engine::GetSingleton()->GetScreenHeight()
+        );
+
+        if (!mStrata.pRenderTarget)
+        {
+            throw Exception(CLASS_NAME,
+                "Unable to create RenderTarget for strata : "+mStrata.uiID+"."
+            );
+        }
+
+        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(mStrata.pRenderTarget);
+
+        mStrata.pSprite = s_refptr<Sprite>(new Sprite(pMat,
+            s_float(mStrata.pRenderTarget->GetWidth()), s_float(mStrata.pRenderTarget->GetHeight())
+        ));
+    }
+
+    void GUIManager::RenderStrata_( Strata& mStrata )
+    {
+        s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
+
+        if (!mStrata.pRenderTarget)
+            CreateStrataRenderTarget_(mStrata);
+
+        pSpriteMgr->Begin(mStrata.pRenderTarget);
+        pSpriteMgr->Clear(Color::VOID);
+
+        s_map<s_uint, Level>::const_iterator iterLevel;
+        foreach (iterLevel, mStrata.lLevelList)
+        {
+            const Level& mLevel = iterLevel->second;
+
+            s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
+            foreach (iterFrame, mLevel.lFrameList)
+            {
+                s_ptr<GUI::Frame> pFrame = *iterFrame;
+                if (!pFrame->IsNewlyCreated())
+                    pFrame->Render();
+            }
+        }
+
+        pSpriteMgr->End();
+
+        ++mStrata.uiRedrawCount;
+    }
+
+    const s_bool& GUIManager::IsLoadingUI() const
+    {
+        return bLoadingUI_;
     }
 
     void GUIManager::FireBuildStrataList()
@@ -714,7 +832,12 @@ namespace Frost
 
         if (bBuildStrataList_)
         {
-            lStrataList_.Clear();
+            s_map<FrameStrata, Strata>::iterator iterStrata;
+            foreach (iterStrata, lStrataList_)
+            {
+                iterStrata->second.lLevelList.Clear();
+                iterStrata->second.bRedraw = true;
+            }
 
             s_map< s_uint, s_ptr<GUI::Frame> >::iterator iterFrame;
             foreach (iterFrame, lFrameList_)
@@ -722,10 +845,25 @@ namespace Frost
                 s_ptr<GUI::Frame> pFrame = iterFrame->second;
                 if (!pFrame->IsManuallyRendered())
                 {
-                    lStrataList_[pFrame->GetFrameStrata()].
-                        lLevelList[pFrame->GetFrameLevel()].
-                            lFrameList.PushBack(pFrame);
+                    Strata& mStrata = lStrataList_[pFrame->GetFrameStrata()];
+                    mStrata.lLevelList[pFrame->GetFrameLevel()].lFrameList.PushBack(pFrame);
+
+                    mStrata.uiID = pFrame->GetFrameStrata();
                 }
+            }
+        }
+
+        if (bEnableCaching_)
+        {
+            s_map<FrameStrata, Strata>::iterator iterStrata;
+            foreach (iterStrata, lStrataList_)
+            {
+                Strata& mStrata = iterStrata->second;
+
+                if (mStrata.bRedraw)
+                    RenderStrata_(mStrata);
+
+                mStrata.bRedraw = false;
             }
         }
 
@@ -788,6 +926,8 @@ namespace Frost
             EventManager::GetSingleton()->FireEvent(Event("ENTERING_WORLD"));
             bFirstIteration = false;
         }
+
+        ++uiFrameNumber_;
     }
 
     void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj, s_ptr<GUI::Anchor> pAnchor, Vector::Constraint mConstraint )
@@ -814,7 +954,7 @@ namespace Frost
                     GUI::ANCHOR_TOPLEFT, "", GUI::ANCHOR_TOPLEFT,
                     lBorders[GUI::BORDER_LEFT], lBorders[GUI::BORDER_TOP]
                 );
-                pMovedAnchor_ = pMovedObject_->GetPoint(GUI::ANCHOR_TOPLEFT);
+                pMovedAnchor_ = pMovedObject_->ModifyPoint(GUI::ANCHOR_TOPLEFT);
 
                 iMovementStartPositionX_ = lBorders[GUI::BORDER_LEFT];
                 iMovementStartPositionY_ = lBorders[GUI::BORDER_TOP];
@@ -942,9 +1082,46 @@ namespace Frost
         bObjectMoved_ = true;
     }
 
+    void GUIManager::FireRedraw( FrameStrata mStrata )
+    {
+        lStrataList_[mStrata].bRedraw = true;
+    }
+
+    void GUIManager::ToggleCaching()
+    {
+        bEnableCaching_ = !bEnableCaching_;
+
+        if (bEnableCaching_)
+        {
+            s_map<FrameStrata, Strata>::iterator iterStrata;
+            foreach (iterStrata, lStrataList_)
+            {
+                iterStrata->second.bRedraw = true;
+            }
+        }
+
+        Engine::GetSingleton()->SetConstant("EnableGUICaching", bEnableCaching_);
+    }
+
     s_ptr<GUI::Frame> GUIManager::GetOveredFrame() const
     {
         return pOveredFrame_;
+    }
+
+    void GUIManager::RequestFocus( s_ptr<GUI::EditBox> pEditBox )
+    {
+        if (pFocusedEditBox_)
+            pFocusedEditBox_->NotifyFocus(false);
+
+        pFocusedEditBox_ = pEditBox;
+
+        if (pFocusedEditBox_)
+        {
+            pFocusedEditBox_->NotifyFocus(true);
+            InputManager::GetSingleton()->SetFocus(true, pFocusedEditBox_);
+        }
+        else
+            InputManager::GetSingleton()->SetFocus(false);
     }
 
     void GUIManager::SetKeyBinding( const s_uint& uiKey, const s_str& sLuaString )
@@ -1012,7 +1189,20 @@ namespace Frost
             {
                 if (pElemBlock->GetName() == "Script")
                 {
-                    pLua_->DoFile(pAddOn->sDirectory + "/" + pElemBlock->GetAttribute("file"));
+                    try
+                    {
+                        pLua_->DoFile(pAddOn->sDirectory + "/" + pElemBlock->GetAttribute("file"));
+                    }
+                    catch (LuaException& e)
+                    {
+                        s_str sError = e.GetDescription();
+
+                        Error("", sError);
+
+                        Event mEvent("LUA_ERROR");
+                        mEvent.Add(sError);
+                        EventManager::GetSingleton()->FireEvent(mEvent);
+                    }
                 }
                 else if (pElemBlock->GetName() == "Include")
                 {
@@ -1078,11 +1268,33 @@ namespace Frost
     {
         if (mEvent.GetName() == "KEY_PRESSED")
         {
-            s_map<s_uint, s_str>::iterator iter = lKeyBindingList_.Get(mEvent.Get(0)->Get<s_uint>());
+            s_uint uiKey = mEvent.Get(0)->Get<s_uint>();
+            s_map<s_uint, s_str>::iterator iter = lKeyBindingList_.Get(uiKey);
             if (iter != lKeyBindingList_.End())
             {
-                pLua_->DoString(iter->second);
+                try
+                {
+                    pLua_->DoString(iter->second);
+                }
+                catch (LuaException& e)
+                {
+                    Error("Binded action : "+InputManager::GetSingleton()->GetKeyName((KeyCode)uiKey.Get()),
+                        e.GetDescription()
+                    );
+                }
             }
+        }
+    }
+
+    void GUIManager::PrintStatistics()
+    {
+        Log("GUI Statistics :");
+        Log("    Strata redraw percent :");
+        s_map<FrameStrata, Strata>::const_iterator iterStrata;
+        foreach (iterStrata, lStrataList_)
+        {
+            const Strata& mStrata = iterStrata->second;
+            Log("     - ["+mStrata.uiID+"] : "+s_str(100.0f*s_float(mStrata.uiRedrawCount)/s_float(uiFrameNumber_), 2, 1)+"%");
         }
     }
 

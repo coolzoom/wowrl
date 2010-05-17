@@ -9,6 +9,8 @@
 #include "scene/frost_doodad.h"
 #include "scene/frost_terrainchunk.h"
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 
 namespace Frost

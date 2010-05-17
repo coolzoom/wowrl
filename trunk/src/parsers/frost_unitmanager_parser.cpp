@@ -145,8 +145,7 @@ namespace Frost
 
     s_bool UnitManager::ParseHealthTypes_()
     {
-        if (!pLua_->DoFile("DB/HealthTypeScripts.lua"))
-            return false;
+        pLua_->DoFile("DB/HealthTypeScripts.lua");
 
         XML::Document mDoc("DB/HealthTypes.xml", "DB/HealthTypes.def");
         if (mDoc.Check())
@@ -200,7 +199,17 @@ namespace Frost
                         sStr += "function " + mHealthType.sName + ":" + pScript->GetName() + "()\n";
                         sStr += pScript->GetValue() + "\n";
                         sStr += "end";
-                        pLua_->DoString(sStr);
+
+                        try
+                        {
+                            pLua_->DoString(sStr);
+                        }
+                        catch (LuaException& e)
+                        {
+                            Error(CLASS_NAME, "Parsing health type \""+mHealthType.sName+"\", "
+                                "defining "+pScript->GetName()+" handler :\n"+e.GetDescription()
+                            );
+                        }
                     }
                 }
 
@@ -222,8 +231,7 @@ namespace Frost
 
     s_bool UnitManager::ParsePowerTypes_()
     {
-        if (!pLua_->DoFile("DB/PowerTypeScripts.lua"))
-            return false;
+        pLua_->DoFile("DB/PowerTypeScripts.lua");
 
         XML::Document mDoc("DB/PowerTypes.xml", "DB/PowerTypes.def");
         if (mDoc.Check())
@@ -277,7 +285,17 @@ namespace Frost
                         sStr += "function " + mPowerType.sName + ":" + pScript->GetName() + "()\n";
                         sStr += pScript->GetValue() + "\n";
                         sStr += "end";
-                        pLua_->DoString(sStr);
+
+                        try
+                        {
+                            pLua_->DoString(sStr);
+                        }
+                        catch (LuaException& e)
+                        {
+                            Error(CLASS_NAME, "Parsing power type \""+mPowerType.sName+"\", "
+                                "defining "+pScript->GetName()+" handler :\n"+e.GetDescription()
+                            );
+                        }
                     }
                 }
 

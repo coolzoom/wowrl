@@ -8,14 +8,11 @@ namespace Frost
     *   allow easy access to math/string functions and
     *   implements new functions that are not present
     *   in the standard libraries.<br>
-    *   This class can be compiled to use either Unicode
-    *   or ASCII characters.<br>
     *   <b>Note</b> : Most of Frost's base types are
     *   slower than C++ base types. The difference is
     *   negligible for small operations, but if you need
-    *   to do a lot of calculations (matrices, ...) it
-    *   can bloat your performances. Use prebuilt types
-    *   in this case.<br>
+    *   to do a lot of calculations it can bloat your
+    *   performances. Use prebuilt types in this case.<br>
     *   <b>Note 2</b> : This class is almost as efficient
     *   as the standard std::string.
     */
@@ -90,16 +87,6 @@ namespace Frost
                 sValue_ += sValue;
         }
 
-        /// Constructor.
-        /** \param sValue The string to use
-        *   \param uiSize The number of character to copy
-        */
-        s_str_t(const string_element* sValue, const s_uint& uiSize)
-        {
-            sValue_ = sValue;
-            sValue_.resize(uiSize.Get());
-        }
-
         /// s_int_t conversion constructor.
         /** \param iValue The s_int_t to convert
         */
@@ -119,10 +106,16 @@ namespace Frost
         explicit s_str_t(const s_int_t<N>& iValue, const s_uint& uiCharNbr)
         {
             sValue_ = "";
-            this->operator<<(iValue);
+            if (iValue >= 0)
+                this->operator<<(s_uint_t<N>(iValue));
+            else
+                this->operator<<(s_uint_t<N>(-iValue));
 
             while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
                 sValue_ = '0' + sValue_;
+
+            if (iValue < 0)
+                sValue_ = '-' + sValue_;
         }
 
         /// s_uint_t conversion constructor.
@@ -161,18 +154,29 @@ namespace Frost
         }
 
         /// s_float conversion constructor.
-        /** \param fValue    The s_float to convert
-        *   \param uiCharNbr The minimum number of character
-        *                    allowed (fills with zeros)
+        /** \param fValue         The s_float to convert
+        *   \param uiIntCharNbr   The minimum number of character allowed for the
+        *                         integer part (fills with zeros)
+        *   \param uinFracCharNbr The number of decimal to show (fills with zeros)
         */
         template<class N>
-        explicit s_str_t(const s_float_t<N>& fValue, const s_uint& uiCharNbr)
+        explicit s_str_t(const s_float_t<N>& fValue, const s_uint& uiIntCharNbr, const s_uint& uiFracCharNbr = 6u)
         {
             sValue_ = "";
-            this->operator<<(fValue);
 
-            while (sValue_.length() < uiCharNbr.Get() && uiCharNbr.IsValid())
-                sValue_ = '0' + sValue_;
+            if (fValue >= 0)
+                this->operator<<(s_str_t(s_int(s_float_t<N>::RoundDown(fValue)), uiIntCharNbr));
+            else
+                this->operator<<(s_str_t(s_int(s_float_t<N>::RoundUp(fValue)), uiIntCharNbr));
+
+            if (uiFracCharNbr > 0)
+            {
+                this->operator<<(".");
+                if (fValue >= 0)
+                    this->operator<<(s_uint((fValue - s_float_t<N>::RoundDown(fValue))*pow(s_float_t<N>(10.0f), s_float_t<N>(uiFracCharNbr))));
+                else
+                    this->operator<<(s_uint((s_float_t<N>::RoundUp(fValue) - fValue)*pow(s_float_t<N>(10.0f), s_float_t<N>(uiFracCharNbr))));
+            }
         }
 
         /// s_bool conversion constructor.
@@ -359,6 +363,25 @@ namespace Frost
             }
         }
 
+        /// Removes a character.
+        /** \param uiPos The character to erase
+        */
+        void Erase(const s_uint& uiPos)
+        {
+            if (uiPos.IsValid())
+            {
+                sValue_.erase(uiPos.Get(), 1);
+            }
+        }
+
+        /// Removes a character.
+        /** \param iter An iterator pointing at the caracter to erase
+        */
+        iterator Erase(iterator iter)
+        {
+            return sValue_.erase(iter);
+        }
+
         /// Removes a certain number of character from the end of the string.
         /** \param uiNbr The number of character to erase
         */
@@ -394,6 +417,23 @@ namespace Frost
                 else
                     sValue_.erase(uiStart.Get(), (uiEnd-uiStart).Get());
             }
+        }
+
+        /// Removes all characters between the provided positions.
+        /** \param iterStart From where to start erasing
+        *   \param iterEnd   From where to end (exclusive)
+        */
+        iterator EraseRange(iterator iterStart, iterator iterEnd)
+        {
+            return sValue_.erase(iterStart, iterEnd);
+        }
+
+        /// Removes all characters between the provided positions.
+        /** \param mRange The range to erase
+        */
+        iterator EraseRange(range mRange)
+        {
+            return sValue_.erase(mRange.Begin(), mRange.End());
         }
 
         /// Returns a certain number of character from a given position.
@@ -550,22 +590,6 @@ namespace Frost
         inline string_object& Get()
         {
             return sValue_;
-        }
-
-        /// Returns the string converted to ASCII.
-        /** \return The string converted to ASCII
-        */
-        std::string GetASCII() const
-        {
-            return sValue_;
-        }
-
-        /// Returns the string converted to Unicode.
-        /** \return The string converted to Unicode
-        */
-        std::wstring GetUnicode() const
-        {
-            return std::wstring(sValue_.c_str(), sValue_.c_str() + sValue_.size());
         }
 
         /// Returns a C-style string.
@@ -784,6 +808,48 @@ namespace Frost
                 sValue_.insert(uiPos.Get(), 1, cChar);
             else
                 sValue_.push_back(cChar);
+        }
+
+        /// Adds a new character somewhere in the string.
+        /** \param cChar The character to add
+        *   \param iter  The position at which to insert the char
+        *   \return An iterator pointing after the inserted char
+        */
+        iterator Insert(const string_element& cChar, iterator iter)
+        {
+            return sValue_.insert(iter, cChar)+1;
+        }
+
+        /// Adds another string somewhere in this string.
+        /** \param sValue The string to insert
+        *   \param uiPos The position at which to insert the char
+        */
+        void Insert(const s_str_t& sValue, const s_uint& uiPos)
+        {
+            if (uiPos.IsValid())
+                sValue_.insert(uiPos.Get(), sValue.Value_);
+            else
+                sValue_.append(sValue.Value_);
+        }
+
+        /// Adds another string somewhere in this string.
+        /** \param cChar The string to insert
+        *   \param iter  The position at which to insert the string
+        *   \return An iterator pointing at the end of the inserted string
+        */
+        iterator Insert(const s_str_t& sValue, iterator iter)
+        {
+            if (iter == sValue_.end())
+            {
+                sValue_.append(sValue.sValue_);
+                return sValue_.end();
+            }
+            else
+            {
+                size_t uiPos = iter - sValue_.begin();
+                sValue_.insert(uiPos, sValue.sValue_);
+                return sValue_.begin() + uiPos + sValue.sValue_.size();
+            }
         }
 
         /// Inverts the order of the letters in the string.
@@ -1240,6 +1306,10 @@ namespace Frost
     }
 
     typedef s_str_t<char> s_str;
+    typedef s_str_t<uint> s_ustr;
+
+    s_ustr UTF8ToUnicode(const s_str& sStr);
+    s_str  UnicodeToUTF8(const s_ustr& sUStr);
 
     /** \cond NOT_REMOVE_FROM_DOC
     */

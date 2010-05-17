@@ -169,10 +169,12 @@
 		<Unit filename="include\utils\frost_utils_float.h" />
 		<Unit filename="include\utils\frost_utils_int.h" />
 		<Unit filename="include\utils\frost_utils_log.h" />
+		<Unit filename="include\utils\frost_utils_lua.h" />
 		<Unit filename="include\utils\frost_utils_lua_function.h" />
 		<Unit filename="include\utils\frost_utils_lua_glues.h" />
 		<Unit filename="include\utils\frost_utils_lua_state.h" />
 		<Unit filename="include\utils\frost_utils_luamanager.h" />
+		<Unit filename="include\utils\frost_utils_makepair.h" />
 		<Unit filename="include\utils\frost_utils_manager.h" />
 		<Unit filename="include\utils\frost_utils_map.h" />
 		<Unit filename="include\utils\frost_utils_math.h" />
@@ -217,6 +219,7 @@
 		<Unit filename="src\utils\frost_utils_luamanager.cpp" />
 		<Unit filename="src\utils\frost_utils_math.cpp" />
 		<Unit filename="src\utils\frost_utils_profiler.cpp" />
+		<Unit filename="src\utils\frost_utils_str.cpp" />
 		<Unit filename="src\utils\frost_utils_timemanager.cpp">
 			<Option target="OgreRelease_Win32" />
 			<Option target="OgreDebug_Win32" />

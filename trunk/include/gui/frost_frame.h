@@ -19,8 +19,8 @@ namespace Frost
         /// Contains LayeredRegion
         struct Layer
         {
-            s_bool                                bDisabled;
-            s_map< s_uint, s_ptr<LayeredRegion> > lRegionList;
+            s_bool                         bDisabled;
+            s_ctnr< s_ptr<LayeredRegion> > lRegionList;
 
             static const s_str CLASS_NAME;
         };
@@ -44,11 +44,6 @@ namespace Frost
 
             /// Updates this widget's logic.
             virtual void        Update();
-
-            /// Updates this widget's graphics.
-            /** \param bForceUpdate Update everything
-            */
-            virtual void        UpdateMaterial(const s_bool& bForceUpdate = false);
 
             /// Prints all relevant information about this widget in a string.
             /** \param sTab The offset to give to all lines
@@ -76,14 +71,14 @@ namespace Frost
             void                CreateTitleRegion();
 
             /// Disables a Layer.
-            /** \param mLayer The layer to disable
+            /** \param mLayerID The id of the layer to disable
             */
-            void                DisableDrawLayer(LayerType mLayer);
+            void                DisableDrawLayer(LayerType mLayerID);
 
             /// Enables a Layer.
-            /** \param mLayer The layer to enable
+            /** \param mLayerID The id of the layer to enable
             */
-            void                EnableDrawLayer(LayerType mLayer);
+            void                EnableDrawLayer(LayerType mLayerID);
 
             /// Sets if this Frame can receive keyboard input.
             /** \param bIsKeyboardEnabled 'true' to enable
@@ -177,12 +172,12 @@ namespace Frost
             /// Returns this Frame's absolute hit rect insets.
             /** \return This Frame's absolute hit rect insets
             */
-            s_array<s_int,4>    GetAbsHitRectInsets() const;
+            const s_array<s_int,4>& GetAbsHitRectInsets() const;
 
             /// Returns this Frame's relative hit rect insets.
             /** \return This Frame's relative hit rect insets
             */
-            s_array<s_float,4>  GetRelHitRectInsets() const;
+            const s_array<s_float,4>& GetRelHitRectInsets() const;
 
             /// Returns this Frame's max dimensions.
             /** \return This Frame's max dimensions
@@ -440,13 +435,22 @@ namespace Frost
             /** \note Its parent must be shown for it to appear on
             *         the screen.
             */
-            void                Show();
+            virtual void        Show();
 
             /// Hides this widget.
             /** \note All its childs won't be visible on the screen
-            *   anymore, even if they are still marked as shown.
+            *         anymore, even if they are still marked as shown.
             */
-            void                Hide();
+            virtual void        Hide();
+
+            /// Shows/hides this widget.
+            /** \param bIsShown 'true' if you want to show this widget
+            *   \note See Show() and Hide() for more infos.
+            *   \note Contrary to Show() and Hide(), this function doesn't
+            *         trigger any event ("OnShow" or "OnHide"). It should
+            *         only be used to set the initial state of the widget.
+            */
+            virtual void    SetShown(const s_bool& bIsShown);
 
             /// Flags this object as "manually rendered".
             /** \param bManuallyRendered 'true' to flag it as manually rendered
@@ -483,6 +487,11 @@ namespace Frost
             *         notifies its parent.
             */
             virtual void        NotifyChildStrataChanged(s_ptr<Frame> pChild);
+
+            /// Notifies the renderer of this widget that it needs to be redrawn.
+            /** \note Automatically called by any shape changing function.
+            */
+            virtual void        NotifyRendererNeedRedraw();
 
             /// Tells the Frame not to react to all events.
             void                UnregisterAllEvents();
@@ -536,8 +545,8 @@ namespace Frost
             void FireBuildStrataList_();
             void FireBuildLayerList_();
 
-            void NotifyVisible_();
-            void NotifyInvisible_();
+            void NotifyVisible_(const s_bool& bTriggerEvents = true);
+            void NotifyInvisible_(const s_bool& bTriggerEvents = true);
             void NotifyStrataChanged_();
 
             void NotifyTopLevelParent_(const s_bool& bTopLevel, s_ptr<Frame> pParent);

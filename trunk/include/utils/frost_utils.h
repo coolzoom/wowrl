@@ -25,17 +25,11 @@
 #include "frost_utils_color.h"
 #include "frost_utils_vector.h"
 #include "frost_utils_axisalignedbox.h"
-#include "frost_utils_directory.h"
-#include "frost_utils_file.h"
 #include "frost_utils_point.h"
 
 #include "frost_utils_event.h"
 #include "frost_utils_eventreceiver.h"
 #include "frost_utils_eventmanager.h"
-
-#include "frost_utils_lua_state.h"
-#include "frost_utils_lua_function.h"
-#include "frost_utils_luamanager.h"
 
 #include "frost_utils_timers.h"
 #include "frost_utils_profiler.h"
@@ -43,6 +37,20 @@
 
 #include "frost_utils_stdhelper.h"
 
-#include "frost_utils_manager.h"
+namespace Frost
+{
+    class Directory;
+    class File;
+
+    namespace Lua
+    {
+        class State;
+        class Function;
+    }
+
+    class LuaManager;
+}
+
+struct lua_State;
 
 #endif

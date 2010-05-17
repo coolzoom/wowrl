@@ -28,6 +28,10 @@ FontString::FontString() : LayeredRegion()
 
     mJustifyH_ = Text::ALIGN_CENTER;
     mJustifyV_ = Text::ALIGN_MIDDLE;
+
+    bCanWordWrap_ = true;
+    bAddEllipsis_ = true;
+    bFormattingEnabled_ = true;
 }
 
 FontString::~FontString()
@@ -49,7 +53,7 @@ void FontString::Render()
             switch (mJustifyH_)
             {
                 case Text::ALIGN_LEFT   : fX = s_float(lBorderList_[BORDER_LEFT]); break;
-                case Text::ALIGN_CENTER : fX = s_float(lBorderList_[BORDER_LEFT] + lBorderList_[BORDER_RIGHT])/2.0f; break;
+                case Text::ALIGN_CENTER : fX = s_float((lBorderList_[BORDER_LEFT] + lBorderList_[BORDER_RIGHT])/2); break;
                 case Text::ALIGN_RIGHT  : fX = s_float(lBorderList_[BORDER_RIGHT]); break;
             }
         }
@@ -63,7 +67,7 @@ void FontString::Render()
             switch (mJustifyV_)
             {
                 case Text::ALIGN_TOP    : fY = s_float(lBorderList_[BORDER_TOP]); break;
-                case Text::ALIGN_MIDDLE : fY = s_float(lBorderList_[BORDER_TOP] + lBorderList_[BORDER_BOTTOM])/2.0f; break;
+                case Text::ALIGN_MIDDLE : fY = s_float((lBorderList_[BORDER_TOP] + lBorderList_[BORDER_BOTTOM])/2); break;
                 case Text::ALIGN_BOTTOM : fY = s_float(lBorderList_[BORDER_BOTTOM]); break;
             }
         }
@@ -89,12 +93,8 @@ void FontString::Render()
             }
         }
 
-        SpriteManager::GetSingleton()->EnablePreciseRendering();
-
         pText_->SetColor(mTextColor_);
         pText_->Render(fX, fY);
-
-        SpriteManager::GetSingleton()->DisablePreciseRendering();
     }
 }
 
@@ -162,11 +162,6 @@ void FontString::CopyFrom( s_ptr<UIObject> pObj )
 {
     UIObject::CopyFrom(pObj);
 
-    /*uiAbsWidth_ = s_uint::NaN;
-    uiAbsHeight_ = s_uint::NaN;
-    fRelWidth_ = s_float::NaN;
-    fRelHeight_ = s_float::NaN;*/
-
     s_ptr<FontString> pFontString = s_ptr<FontString>::DynamicCast(pObj);
 
     if (pFontString)
@@ -206,7 +201,11 @@ const s_uint& FontString::GetFontHeight() const
 
 void FontString::SetOutlined( const s_bool& bIsOutlined )
 {
-    bIsOutlined_ = bIsOutlined;
+    if (bIsOutlined_ != bIsOutlined)
+    {
+        bIsOutlined_ = bIsOutlined;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 const s_bool& FontString::IsOutlined() const
@@ -263,74 +262,124 @@ void FontString::SetFont( const s_str& sFontName, const s_uint& uiHeight )
 {
     sFontName_ = sFontName;
     uiHeight_ = uiHeight;
+
     pText_ = s_refptr<Text>(new Text(sFontName, s_float(uiHeight)));
     pText_->SetRemoveStartingSpaces(true);
     pText_->SetText(sText_);
     pText_->SetAlignment(mJustifyH_);
     pText_->SetVerticalAlignment(mJustifyV_);
     pText_->SetTracking(fSpacing_);
+    pText_->EnableWordWrap(bCanWordWrap_, bAddEllipsis_);
+    pText_->EnableFormatting(bFormattingEnabled_);
+
     FireUpdateBorders();
+    NotifyRendererNeedRedraw();
 }
 
 void FontString::SetJustifyH( Text::Alignment mJustifyH )
 {
-    mJustifyH_ = mJustifyH;
-    if (pText_)
-        pText_->SetAlignment(mJustifyH);
+    if (mJustifyH_ != mJustifyH)
+    {
+        mJustifyH_ = mJustifyH;
+        if (pText_)
+        {
+            pText_->SetAlignment(mJustifyH_);
+            NotifyRendererNeedRedraw();
+        }
+    }
 }
 
 void FontString::SetJustifyV( Text::VerticalAlignment mJustifyV )
 {
-    mJustifyV_ = mJustifyV;
-    if (pText_)
-        pText_->SetVerticalAlignment(mJustifyV);
+    if (mJustifyV_ != mJustifyV)
+    {
+        mJustifyV_ = mJustifyV;
+        if (pText_)
+        {
+            pText_->SetVerticalAlignment(mJustifyV_);
+            NotifyRendererNeedRedraw();
+        }
+    }
 }
 
 void FontString::SetShadowColor( const Color& mShadowColor )
 {
-    mShadowColor_ = mShadowColor;
+    if (mShadowColor_ != mShadowColor)
+    {
+        mShadowColor_ = mShadowColor;
+        if (bHasShadow_)
+        {
+            NotifyRendererNeedRedraw();
+        }
+    }
 }
 
 void FontString::SetShadowOffsets( const s_int& iShadowXOffset, const s_int& iShadowYOffset )
 {
-    iShadowXOffset_ = iShadowXOffset;
-    iShadowYOffset_ = iShadowYOffset;
+    if (iShadowXOffset_ != iShadowXOffset || iShadowYOffset_ != iShadowYOffset)
+    {
+        iShadowXOffset_ = iShadowXOffset;
+        iShadowYOffset_ = iShadowYOffset;
+        if (bHasShadow_)
+        {
+            NotifyRendererNeedRedraw();
+        }
+    }
 }
 
 void FontString::SetShadowOffsets( const s_array<s_int,2>& lShadowOffsets )
 {
-    iShadowXOffset_ = lShadowOffsets[0];
-    iShadowYOffset_ = lShadowOffsets[1];
+    if (iShadowXOffset_ != lShadowOffsets[0] || iShadowYOffset_ != lShadowOffsets[1])
+    {
+        iShadowXOffset_ = lShadowOffsets[0];
+        iShadowYOffset_ = lShadowOffsets[1];
+        if (bHasShadow_)
+        {
+            NotifyRendererNeedRedraw();
+        }
+    }
 }
 
 void FontString::SetOffsets( const s_int& iXOffset, const s_int& iYOffset )
 {
-    iXOffset_ = iXOffset;
-    iYOffset_ = iYOffset;
+    if (iXOffset_ != iXOffset || iYOffset_ != iYOffset)
+    {
+        iXOffset_ = iXOffset;
+        iYOffset_ = iYOffset;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void FontString::SetOffsets( const s_array<s_int,2>& lOffsets )
 {
-    iXOffset_ = lOffsets[0];
-    iYOffset_ = lOffsets[1];
+    if (iXOffset_ != lOffsets[0] || iYOffset_ != lOffsets[1])
+    {
+        iXOffset_ = lOffsets[0];
+        iYOffset_ = lOffsets[1];
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void FontString::SetSpacing( const s_float& fSpacing )
 {
-    fSpacing_ = fSpacing;
-    if (pText_)
-        pText_->SetTracking(fSpacing);
-    else
+    if (fSpacing_ != fSpacing)
     {
-        Error(lType_.Back(),
-            "Trying to call SetSpacing on an uninitialized Texture : "+sName_+"."
-        );
+        fSpacing_ = fSpacing;
+        if (pText_)
+        {
+            pText_->SetTracking(fSpacing_);
+            NotifyRendererNeedRedraw();
+        }
     }
 }
 
 void FontString::SetTextColor( const Color& mTextColor )
 {
-    mTextColor_ = mTextColor;
+    if (mTextColor_ != mTextColor)
+    {
+        mTextColor_ = mTextColor;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 const s_bool& FontString::CanNonSpaceWrap() const
@@ -359,9 +408,21 @@ const s_str& FontString::GetText() const
     return sText_;
 }
 
+const s_ustr& FontString::GetUnicodeText() const
+{
+    if (pText_)
+        return pText_->GetUnicodeText();
+    else
+        return s_ustr::EMPTY;
+}
+
 void FontString::SetNonSpaceWrap( const s_bool& bCanNonSpaceWrap )
 {
-    bCanNonSpaceWrap_ = bCanNonSpaceWrap;
+    if (bCanNonSpaceWrap_ != bCanNonSpaceWrap)
+    {
+        bCanNonSpaceWrap_ = bCanNonSpaceWrap;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 const s_bool& FontString::HasShadow() const
@@ -371,23 +432,58 @@ const s_bool& FontString::HasShadow() const
 
 void FontString::SetShadow( const s_bool& bHasShadow )
 {
-    bHasShadow_ = bHasShadow;
+    if (bHasShadow_ != bHasShadow)
+    {
+        bHasShadow_ = bHasShadow;
+        NotifyRendererNeedRedraw();
+    }
+}
+
+void FontString::SetWordWrap( const s_bool& bCanWordWrap, const s_bool& bAddEllipsis )
+{
+    bCanWordWrap_ = bCanWordWrap;
+    bAddEllipsis_ = bAddEllipsis;
+    if (pText_)
+    {
+        pText_->EnableWordWrap(bCanWordWrap_, bAddEllipsis_);
+    }
+}
+
+const s_bool& FontString::CanWordWrap() const
+{
+    return bCanWordWrap_;
+}
+
+void FontString::EnableFormatting( const s_bool& bFormatting )
+{
+    bFormattingEnabled_ = bFormatting;
+    if (pText_)
+    {
+        pText_->EnableFormatting(bFormattingEnabled_);
+    }
+}
+
+const s_bool& FontString::IsFormattingEnabled() const
+{
+    return bFormattingEnabled_;
 }
 
 void FontString::SetText( const s_str& sText )
 {
-    sText_ = sText;
-    if (pText_)
+    if (sText_ != sText)
     {
-        pText_->SetText(sText);
-        FireUpdateBorders();
+        sText_ = sText;
+        if (pText_)
+        {
+            pText_->SetText(sText_);
+            FireUpdateBorders();
+        }
     }
-    else
-    {
-        Error(lType_.Back(),
-            "Trying to call SetText on an uninitialized FontString : "+sName_+"."
-        );
-    }
+}
+
+s_wptr<Text> FontString::GetTextObject()
+{
+    return pText_;
 }
 
 void FontString::UpdateBorders_()
@@ -395,6 +491,7 @@ void FontString::UpdateBorders_()
     if (!bUpdateBorders_)
         return;
 
+    s_bool bOldReady = bReady_;
     bReady_ = true;
 
     if (bUpdateDimensions_)
@@ -470,4 +567,7 @@ void FontString::UpdateBorders_()
     }
     else
         bReady_ = false;
+
+    if (bReady_ || (!bReady_ && bOldReady))
+        NotifyRendererNeedRedraw();
 }

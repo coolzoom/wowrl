@@ -1,7 +1,7 @@
 <Ui>
     <Script file="FPSCounter.lua"/>
 
-    <Frame name="FPSCounter_Frame">
+    <Frame name="FPSCounter_Frame" frameStrata="FULLSCREEN">
         <Size>
             <RelDimension x="1.0" y="1.0"/>
         </Size>
@@ -10,7 +10,7 @@
         </Anchors>
         <Layers>
             <Layer>
-                <FontString name="FPSCounter_Text" font="Fonts/Vera.ttf" fontHeight="18" justifyH="LEFT" justifyV="BOTTOM" outline="NORMAL">
+                <FontString name="FPSCounter_Text" text="FPS : --" font="Fonts/Vera.ttf" fontHeight="18" justifyH="LEFT" justifyV="BOTTOM" outline="NORMAL">
                     <Anchors>
                         <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
                             <Offset>

@@ -9,6 +9,9 @@
 #include "gameplay/frost_gameplay.h"
 #include "lua/frost_lua.h"
 
+#include <utils/frost_utils_directory.h>
+#include <utils/frost_utils_lua.h>
+
 using namespace std;
 
 namespace Frost

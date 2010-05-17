@@ -29,6 +29,8 @@
 
 #include <algorithm>
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 
 namespace Frost
@@ -237,18 +239,21 @@ namespace Frost
                 TerrainHeader mHeader;
                 mFile.Read(mHeader);
 
-                if (s_str(mHeader.sID, 2) != "FT")
+                if (mHeader.sID[0] != 'F' || mHeader.sID[1] != 'T')
                 {
                     throw Exception(CLASS_NAME,
                         "\""+sTerrainFile_+"\" is not a terrain file."
                     );
                 }
 
-                if (s_str(mHeader.sVersion, 4) > "0001")
+                s_str sVersion;
+                for (int i = 0; i < 4; ++i)
+                    sVersion.PushBack(mHeader.sVersion[i]);
+
+                if (sVersion > "0001")
                 {
                     throw Exception(CLASS_NAME,
-                        "\""+sTerrainFile_+"\" uses a too high file version ("+
-                        s_str(mHeader.sVersion, 4)+" > 0001)."
+                        "\""+sTerrainFile_+"\" uses a too high file version ("+sVersion+" > 0001)."
                     );
                 }
 

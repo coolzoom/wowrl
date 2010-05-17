@@ -116,6 +116,12 @@ namespace Frost
         */
         const s_uint&             GetRealHeight() const;
 
+        /// Writes the content of this RenderTarget in a file.
+        /** \param sFileName The file to save into
+        *   \note File format is deduced from extension.
+        */
+        void                      SaveContentToFile(const s_str& sFileName) const;
+
         /// Returns the associated Ogre::RenderTarget.
         /** \return The associated Ogre::RenderTarget
         */

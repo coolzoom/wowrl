@@ -279,8 +279,6 @@ namespace Frost
         s_ptr<Ogre::RenderSystem> pRenderSystem_;
         s_ptr<Ogre::SceneManager> pOgreSceneMgr_;
         s_ptr<Ogre::RenderWindow> pRenderWindow_;
-
-        File mLog_;
     };
 }
 

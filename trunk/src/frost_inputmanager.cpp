@@ -5,6 +5,7 @@
 /*                                        */
 
 #include "frost_inputmanager.h"
+#include "frost_localemanager.h"
 
 #include <OIS.h>
 
@@ -140,6 +141,26 @@ namespace Frost
 
     s_str InputManager::GetKeyString( KeyCode mKey ) const
     {
+        if (bAltPressed_)
+            return LocaleManager::GetSingleton()->GetKeyAltString(mKey);
+        else if (bShiftPressed_)
+            return LocaleManager::GetSingleton()->GetKeyShiftString(mKey);
+        else
+            return LocaleManager::GetSingleton()->GetKeyString(mKey);
+    }
+
+    s_str InputManager::GetKeyComboString( const s_str& sComboKey, KeyCode mKey ) const
+    {
+        if (bAltPressed_)
+            return LocaleManager::GetSingleton()->GetKeyComboAltString(sComboKey, mKey);
+        else if (bShiftPressed_)
+            return LocaleManager::GetSingleton()->GetKeyComboShiftString(sComboKey, mKey);
+        else
+            return LocaleManager::GetSingleton()->GetKeyComboString(sComboKey, mKey);
+    }
+
+    s_str InputManager::GetKeyName( KeyCode mKey ) const
+    {
         return pKeyboard_->getAsString((OIS::KeyCode)mKey);
     }
 
@@ -191,20 +212,14 @@ namespace Frost
     }
 
 
-    s_bool InputManager::MouseIsDown( MouseButton mID, s_bool bForce ) const
+    s_bool InputManager::MouseIsDown( MouseButton mID ) const
     {
-        if (!bForce && bFocus_)
-            return false;
-        else
-            return lMouseBuf_[mID];
+        return lMouseBuf_[mID];
     }
 
-    s_bool InputManager::MouseIsDownLong( MouseButton mID, s_bool bForce ) const
+    s_bool InputManager::MouseIsDownLong( MouseButton mID ) const
     {
-        if (!bForce && bFocus_)
-            return false;
-        else
-            return (lMouseBuf_[mID] && lMouseLong_[mID]);
+        return (lMouseBuf_[mID] && lMouseLong_[mID]);
     }
 
     const s_double& InputManager::GetMouseDownDuration( MouseButton mID ) const
@@ -212,40 +227,24 @@ namespace Frost
         return lMouseDelay_[mID];
     }
 
-    s_bool InputManager::MouseIsPressed( MouseButton mID, s_bool bForce ) const
+    s_bool InputManager::MouseIsPressed( MouseButton mID ) const
     {
-        if (!bForce && bFocus_)
-            return false;
-        else
-            return (lMouseBuf_[mID] && !lMouseBufOld_[mID]);
+        return (lMouseBuf_[mID] && !lMouseBufOld_[mID]);
     }
 
-    s_bool InputManager::MouseIsReleased( MouseButton mID, s_bool bForce ) const
+    s_bool InputManager::MouseIsReleased( MouseButton mID ) const
     {
-        if (!bForce && bFocus_)
-            return false;
-        else
-            return (!lMouseBuf_[mID] && lMouseBufOld_[mID]);
+        return (!lMouseBuf_[mID] && lMouseBufOld_[mID]);
     }
 
-    s_bool InputManager::MouseIsDoubleClicked( MouseButton mID, s_bool bForce ) const
+    s_bool InputManager::MouseIsDoubleClicked( MouseButton mID ) const
     {
-        if (!bForce && bFocus_)
-            return false;
-        else
-        {
-            return (MouseIsPressed(mID) && lDoubleClickDelay_[mID] > 0.0);
-        }
+        return (MouseIsPressed(mID) && lDoubleClickDelay_[mID] > 0.0);
     }
 
-    s_bool InputManager::WheelIsRolled( s_bool bForce ) const
+    s_bool InputManager::WheelIsRolled() const
     {
-        if (!bForce && bFocus_)
-            return false;
-        else
-        {
-            return bWheelRolled_;
-        }
+        return bWheelRolled_;
     }
 
     void InputManager::Update()
@@ -308,34 +307,47 @@ namespace Frost
             }
 
             // Send events
-            if (!bFocus_)
+            if (lKeyBuf_[i])
             {
-                if (lKeyBuf_[i])
-                {
-                    mKeyboardEvent.SetName("KEY_DOWN");
-                    mKeyboardEvent[0] = s_uint(i);
-                    pEventMgr->FireEvent(mKeyboardEvent);
+                mKeyboardEvent.SetName("KEY_DOWN");
+                mKeyboardEvent[0] = s_uint(i);
 
-                    if (!lKeyBufOld_[i])
-                    {
-                        mKeyboardEvent.SetName("KEY_PRESSED");
-                        mKeyboardEvent[0] = s_uint(i);
-                        pEventMgr->FireEvent(mKeyboardEvent);
-                    }
-
-                    if (lKeyLong_[i])
-                    {
-                        mKeyboardEvent.SetName("KEY_DOWN_LONG");
-                        mKeyboardEvent[0] = s_uint(i);
-                        pEventMgr->FireEvent(mKeyboardEvent);
-                    }
-                }
-                else if (lKeyBufOld_[i])
-                {
-                    mKeyboardEvent.SetName("KEY_RELEASED");
-                    mKeyboardEvent[0] = s_uint(i);
+                if (!bFocus_)
                     pEventMgr->FireEvent(mKeyboardEvent);
+                else if (pFocusReceiver_)
+                    pFocusReceiver_->OnEvent(mKeyboardEvent);
+
+                if (!lKeyBufOld_[i])
+                {
+                    mKeyboardEvent.SetName("KEY_PRESSED");
+                    mKeyboardEvent[0] = s_uint(i);
+
+                    if (!bFocus_)
+                        pEventMgr->FireEvent(mKeyboardEvent);
+                    else if (pFocusReceiver_)
+                        pFocusReceiver_->OnEvent(mKeyboardEvent);
                 }
+
+                if (lKeyLong_[i])
+                {
+                    mKeyboardEvent.SetName("KEY_DOWN_LONG");
+                    mKeyboardEvent[0] = s_uint(i);
+
+                    if (!bFocus_)
+                        pEventMgr->FireEvent(mKeyboardEvent);
+                    else if (pFocusReceiver_)
+                        pFocusReceiver_->OnEvent(mKeyboardEvent);
+                }
+            }
+            else if (lKeyBufOld_[i])
+            {
+                mKeyboardEvent.SetName("KEY_RELEASED");
+                mKeyboardEvent[0] = s_uint(i);
+
+                if (!bFocus_)
+                    pEventMgr->FireEvent(mKeyboardEvent);
+                else if (pFocusReceiver_)
+                    pFocusReceiver_->OnEvent(mKeyboardEvent);
             }
         }
 
@@ -350,7 +362,7 @@ namespace Frost
         else
             bShiftPressed_ = false;
 
-        if (KeyIsDown(KEY_LMENU, true))
+        if (KeyIsDown(KEY_LMENU, true) || KeyIsDown(KEY_RMENU, true))
             bAltPressed_ = true;
         else
             bAltPressed_ = false;
@@ -432,37 +444,34 @@ namespace Frost
             }
 
             // Send events
-            if (!bFocus_)
+            mMouseEvent[0] = s_uint(i);
+            if (bMouseState)
             {
-                mMouseEvent[0] = s_uint(i);
-                if (bMouseState)
+                mMouseEvent.SetName("MOUSE_DOWN");
+                pEventMgr->FireEvent(mMouseEvent);
+
+                if (!bOldMouseState)
                 {
-                    mMouseEvent.SetName("MOUSE_DOWN");
+                    mMouseEvent.SetName("MOUSE_PRESSED");
                     pEventMgr->FireEvent(mMouseEvent);
 
-                    if (!bOldMouseState)
+                    if (lDoubleClickDelay_[i] > 0.0)
                     {
-                        mMouseEvent.SetName("MOUSE_PRESSED");
-                        pEventMgr->FireEvent(mMouseEvent);
-
-                        if (lDoubleClickDelay_[i] > 0.0)
-                        {
-                            mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
-                            pEventMgr->FireEvent(mMouseEvent);
-                        }
-                    }
-
-                    if (lMouseLong_[i])
-                    {
-                        mMouseEvent.SetName("MOUSE_DOWN_LONG");
+                        mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
                         pEventMgr->FireEvent(mMouseEvent);
                     }
                 }
-                else if (bOldMouseState)
+
+                if (lMouseLong_[i])
                 {
-                    mMouseEvent.SetName("MOUSE_RELEASED");
+                    mMouseEvent.SetName("MOUSE_DOWN_LONG");
                     pEventMgr->FireEvent(mMouseEvent);
                 }
+            }
+            else if (bOldMouseState)
+            {
+                mMouseEvent.SetName("MOUSE_RELEASED");
+                pEventMgr->FireEvent(mMouseEvent);
             }
         }
 
@@ -595,9 +604,10 @@ namespace Frost
         return dMouseHistoryMaxLength_;
     }
 
-    void InputManager::SetFocus( s_bool bFocus )
+    void InputManager::SetFocus( s_bool bFocus, s_ptr<EventReceiver> pReceiver )
     {
         bFocus_ = bFocus;
+        pFocusReceiver_ = pReceiver;
     }
 
     const s_bool& InputManager::AltPressed() const

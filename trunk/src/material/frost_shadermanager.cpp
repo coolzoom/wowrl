@@ -18,6 +18,8 @@
 #include <OgreRenderWindow.h>
 #include <OgreRenderSystem.h>
 
+#include <utils/frost_utils_directory.h>
+
 using namespace std;
 
 namespace Frost
