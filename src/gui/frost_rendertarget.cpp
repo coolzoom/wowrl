@@ -27,10 +27,9 @@ namespace Frost
     {
         if (!uiWidth.IsValid() || !uiHeight.IsValid())
         {
-            Error(CLASS_NAME,
+            throw Exception(CLASS_NAME,
                 "Can't create a RenderTarget with invalid dimensions : "+uiWidth+" x "+uiHeight+"."
             );
-            return;
         }
 
         uiID_ = uiID;
@@ -71,10 +70,9 @@ namespace Frost
     {
         if (!uiWidth.IsValid() || !uiHeight.IsValid())
         {
-            Error(CLASS_NAME,
+            throw Exception(CLASS_NAME,
                 "Can't create a RenderTarget with invalid dimensions : "+uiWidth+" x "+uiHeight+"."
             );
-            return;
         }
 
         uiID_ = uiID;
@@ -209,6 +207,12 @@ namespace Frost
     const s_uint& RenderTarget::GetRealHeight() const
     {
         return uiRealHeight_;
+    }
+
+    void RenderTarget::SaveContentToFile( const s_str& sFileName ) const
+    {
+        if (pOgreRenderTarget_)
+            pOgreRenderTarget_->writeContentsToFile(sFileName.Get());
     }
 
     s_ptr<Ogre::RenderTarget> RenderTarget::GetOgreRenderTarget()

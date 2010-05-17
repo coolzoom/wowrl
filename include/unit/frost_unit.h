@@ -11,6 +11,7 @@
 
 #include "frost.h"
 #include "frost_stats.h"
+#include <utils/frost_utils_lua.h>
 
 namespace Frost
 {

@@ -19,7 +19,7 @@ namespace Frost
         */
         s_ptr()
         {
-            pValue_ = NULL;
+            pValue_ = nullptr;
         }
 
         /// Constructor.
@@ -31,7 +31,7 @@ namespace Frost
         /// Conversion from nullptr.
         s_ptr(const s_nullptr& pNull)
         {
-            pValue_ = NULL;
+            pValue_ = nullptr;
         }
 
         /// Copy constructor.
@@ -60,20 +60,20 @@ namespace Frost
         */
         s_bool IsValid() const
         {
-            return (pValue_ != NULL);
+            return (pValue_ != 0);
         }
 
         /// Sets this pointer to NULL.
         void SetNull()
         {
-            pValue_ = NULL;
+            pValue_ = nullptr;
         }
 
         /// Deletes the content of the pointer;
         void Delete()
         {
             delete pValue_;
-            pValue_ = NULL;
+            pValue_ = nullptr;
         }
 
         /// Returns a reference to the contained value.
@@ -97,7 +97,7 @@ namespace Frost
         */
         s_ptr<T>& operator = (const s_nullptr& pPtr)
         {
-            pValue_ = NULL;
+            pValue_ = nullptr;
             return *this;
         }
 
@@ -138,6 +138,15 @@ namespace Frost
             return (pValue_ == pValue);
         }
 
+        /// Checks if this pointer is null
+        /** \param pValue The null pointer
+        *   \return 'true' if this pointer is null
+        */
+        s_bool operator == (s_nullptr pValue) const
+        {
+            return (pValue_ == 0);
+        }
+
         /// Checks if this pointer is different from another
         /** \param pValue The pointer to test
         *   \return 'true' if this pointer is different from another
@@ -156,6 +165,15 @@ namespace Frost
         s_bool operator != (N* pValue) const
         {
             return (pValue_ != pValue);
+        }
+
+        /// Checks if this pointer is not null
+        /** \param pValue The null pointer
+        *   \return 'true' if this pointer is not null
+        */
+        s_bool operator != (s_nullptr pValue) const
+        {
+            return (pValue_ != 0);
         }
 
         /// Checks if this pointer's value is lower than the other
@@ -241,17 +259,17 @@ namespace Frost
         /// Allows : "if (!pPointer)".
         bool operator ! () const
         {
-            return (pValue_ == NULL);
+            return (pValue_ == 0);
         }
 
         typedef void (s_ptr::*MemberFn)();
         /// Allows : "if (pPointer)".
         operator MemberFn() const
         {
-            if (pValue_ != NULL)
+            if (pValue_ != 0)
                 return &s_ptr::SetNull;
             else
-                return NULL;
+                return 0;
         }
 
         /// Allows limited implicit inheritance conversion.

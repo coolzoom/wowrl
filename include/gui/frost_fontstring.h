@@ -193,6 +193,11 @@ namespace Frost
             */
             const s_str&     GetText() const;
 
+            /// Returns the rendered text (with format tags, unicode character set).
+            /** \return The rendered text (with format tags, unicode character set)
+            */
+            const s_ustr&    GetUnicodeText() const;
+
             /// Sets whether large text is truncated or wrapped.
             /** \param bCanNonSpaceWrap 'true' to truncate the text
             *   \note This applies to large chunks of text with no
@@ -212,6 +217,29 @@ namespace Frost
             */
             void             SetShadow(const s_bool& bHasShadow);
 
+            /// Enables word wrap.
+            /** \param bCanWordWrap 'true' to enable word wrap
+            *   \param bAddEllipsis 'true' to put "..." at the end of a truncated line
+            *   \note Enabled by default.
+            */
+            void             SetWordWrap(const s_bool& bCanWordWrap, const s_bool& bAddEllipsis);
+
+            /// Checks if word wrap is enabled.
+            /** \return 'true' if word wrap is enabled
+            */
+            const s_bool&    CanWordWrap() const;
+
+            /// Enables color formatting.
+            /** \param bFormatting 'true' to enable color formatting
+            *   \note Enabled by default. See Text::EnableFormatting().
+            */
+            void             EnableFormatting(const s_bool& bFormatting);
+
+            /// Checks if color formatting is enabled.
+            /** \return 'true' if color formatting is enabled
+            */
+            const s_bool&    IsFormattingEnabled() const;
+
             /// Sets the rendered text.
             /** \param sText The rendered text
             *   \note See Text::SetText for more infos about formatting.
@@ -225,6 +253,11 @@ namespace Frost
             /** \param pBlock The FontString's XML::Block
             */
             void             ParseBlock(s_ptr<XML::Block> pBlock);
+
+            /// Returns the Text used to render this FontString.
+            /** \return The Text used to render this FontString
+            */
+            s_wptr<Text>     GetTextObject();
 
             static const s_str CLASS_NAME;
 
@@ -246,6 +279,9 @@ namespace Frost
             s_bool          bIsOutlined_;
             s_bool          bHasShadow_;
             s_bool          bCanNonSpaceWrap_;
+            s_bool          bCanWordWrap_;
+            s_bool          bAddEllipsis_;
+            s_bool          bFormattingEnabled_;
             Color           mTextColor_;
             Color           mShadowColor_;
             s_int           iShadowXOffset_;
@@ -268,7 +304,7 @@ namespace Frost
             int _GetFont(lua_State*);
             int _GetFontObject(lua_State*) { return 0; } // WBI
             int _GetJustifyH(lua_State*);
-            /**/ int _GetJustifyV(lua_State*) { return 0; }
+            int _GetJustifyV(lua_State*);
             int _GetShadowColor(lua_State*);
             int _GetShadowOffset(lua_State*);
             int _GetSpacing(lua_State*);
@@ -276,20 +312,24 @@ namespace Frost
             int _SetFont(lua_State*);
             int _SetFontObject(lua_State*) { return 0; } // WBI
             int _SetJustifyH(lua_State*);
-            /**/ int _SetJustifyV(lua_State*) { return 0; }
+            int _SetJustifyV(lua_State*);
             int _SetShadowColor(lua_State*);
             int _SetShadowOffset(lua_State*);
             int _SetSpacing(lua_State*);
             int _SetTextColor(lua_State*);
             // FontString
             int _CanNonSpaceWrap(lua_State*);
+            int _CanWordWrap(lua_State*);
+            int _EnableFormatting(lua_State*);
             int _GetStringHeight(lua_State*);
             int _GetStringWidth(lua_State*);
             int _GetText(lua_State*);
+            int _IsFormattingEnabled(lua_State*);
             /**/ int _SetAlphaGradient(lua_State*) { return 0; }
             int _SetNonSpaceWrap(lua_State*);
             int _SetText(lua_State*);
             /**/ int _SetTextHeight(lua_State*) { return 0; }
+            int _SetWordWrap(lua_State*);
 
             static const char className[];
             static const char* classList[];

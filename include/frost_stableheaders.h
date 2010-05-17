@@ -16,25 +16,6 @@
 // Ogre
 #include <OgrePrerequisites.h>
 
-// OIS
-#include <OISPrereqs.h>
-
-// S(T)L
-#include <cmath>
-#include <string>
-#include <map>
-#ifdef MSVC
-    #include <unordered_map>
-#else
-    #include <tr1/unordered_map>
-#endif
-#include <vector>
-#include <deque>
-#include <list>
-#include <sstream>
-#include <fstream>
-#include <ios>
-
 // Utils
 #include <frost_utils.h>
 

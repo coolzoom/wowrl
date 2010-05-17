@@ -12,6 +12,8 @@
 #include "gui/frost_sprite.h"
 #include "gui/frost_frame.h"
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;

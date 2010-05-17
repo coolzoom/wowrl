@@ -9,20 +9,21 @@ if (GetLocale() == "frFR") then
         ["FileExit"] = "Quiter",
         ["Edit"] = "Edition",
         ["EditUndo"] = "Annuler",
-        ["EditRedo"] = "Retablir",
+        ["EditRedo"] = "Rétablir",
         ["EditClone"] = "Dupliquer",
         ["EditDelete"] = "Supprimer",
         ["View"] = "Affichage",
-        ["ViewWireframe"] = "Activer/desactiver le mode fil de fer",
-        ["ViewShading"] = "Activer/desactiver l'eclairage",
-        ["ViewDecal"] = "Activer/desactiver le curseur 3D",
+        ["ViewWireframe"] = "Activer/désactiver le mode fil de fer",
+        ["ViewShading"] = "Activer/désactiver l'éclairage",
+        ["ViewDecal"] = "Activer/désactiver le curseur 3D",
         ["ViewDecalColor"] = "Couleur du curseur 3D...",
-        ["ViewBGColor"] = "Couleur d'arriere plan...",
-        ["Settings"] = "Parametres",
+        ["ViewBGColor"] = "Couleur d'arrière plan...",
+        ["Settings"] = "Paramètres",
         ["SettingsOptions"] = "Options...",
         ["Help"] = "Aide",
         ["HelpShow"] = "Montrer l'aide",
-        ["HelpAbout"] = "A propos"
+        ["HelpAbout"] = "À propos",
+        ["ZoneLoadingError"] = "Impossible d'ouvrir ce fichier de Zone : un problème est survenu pendant le chargement.\nVoir le fichier de log pour plus de détails."
     });
 else
     AddOns.MenuBar:SetLocale({
@@ -48,6 +49,7 @@ else
         ["SettingsOptions"] = "Options...",
         ["Help"] = "Help",
         ["HelpShow"] = "Show help",
-        ["HelpAbout"] = "About"
+        ["HelpAbout"] = "About",
+        ["ZoneLoadingError"] = "Impossible to open this Zone file : an error occured while loading.\nSee the log file for further details."
     });
 end

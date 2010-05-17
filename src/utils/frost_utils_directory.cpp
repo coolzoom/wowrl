@@ -29,9 +29,9 @@ namespace Frost
         else
         {
             s_ptr<Ogre::Archive> pFrostMain = Ogre::ArchiveManager::getSingleton().load("./", "FileSystem");
-            if (pFrostMain->exists(sRelPath_.GetASCII()))
+            if (pFrostMain->exists(sRelPath_.Get()))
             {
-                pArchive = Ogre::ArchiveManager::getSingleton().load(sRelPath_.GetASCII(), "FileSystem");
+                pArchive = Ogre::ArchiveManager::getSingleton().load(sRelPath_.Get(), "FileSystem");
             }
             else
             {

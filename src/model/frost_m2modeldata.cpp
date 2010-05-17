@@ -21,6 +21,8 @@
 #include <OgreSkeleton.h>
 #include <OgreAnimation.h>
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 
 const float SCALE = 1.0f;

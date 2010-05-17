@@ -192,16 +192,13 @@
 
 <d[Frame]:Cooldown/>
 
-<d[Frame]:EditBox n:letters="0" n:blinkSpeed="0.5" b:numeric="false" b:password="false" b:multiLine="false" n:historyLines="0" b:autoFocus="true" b:ignoreArrows="false">
+<d[Frame]:EditBox b:enableMouse="true" b:enableKeyboard="true" n:letters="0" n:blinkSpeed="0.5" b:numeric="false" b:password="false" b:multiLine="false" n:historyLines="0" b:autoFocus="false" b:ignoreArrows="false">
 
     <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
 
-    <n[.,1]:HighlightColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
+    <n[.,1]:HighlightColor n:a="1.0" n:r="0.5" n:g="0.5" n:b="0.5"/>
 
-    <n[.,1]:TextInsets>
-        <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
-        <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
-    </TextInsets>
+    <n[.,1]:TextInsets n:left="0" n:right="0" n:top="0" n:bottom="0"/>
 
     <n[.,1]:Scripts>
         <n[.,1]:OnChar/>
@@ -215,7 +212,6 @@
         <n[.,1]:OnEscapePressed/>
         <n[.,1]:OnEvent/>
         <n[.,1]:OnHide/>
-        <n[.,1]:OnInputLanguageChanged/>
         <n[.,1]:OnKeyDown/>
         <n[.,1]:OnKeyUp/>
         <n[.,1]:OnLeave/>
@@ -226,7 +222,7 @@
         <n[.,1]:OnReceiveDrag/>
         <n[.,1]:OnShow/>
         <n[.,1]:OnSizeChanged/>
-        <n[.,1]:OnSpaceChanged/>
+        <n[.,1]:OnSpacePressed/>
         <n[.,1]:OnTabPressed/>
         <n[.,1]:OnTextChanged/>
         <n[.,1]:OnTextSet/>

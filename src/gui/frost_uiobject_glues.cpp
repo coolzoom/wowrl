@@ -5,6 +5,8 @@
 
 #include "gui/frost_uiobject.h"
 #include "gui/frost_anchor.h"
+#include "gui/frost_frame.h"
+#include "gui/frost_layeredregion.h"
 
 #include "gui/frost_guimanager.h"
 
@@ -338,15 +340,6 @@ int LuaUIObject::_IsVisible( lua_State* pLua )
     return mFunc.Return();
 }
 
-int LuaUIObject::_RebuildCache( lua_State* pLua )
-{
-    Lua::Function mFunc("UIObject:RebuildCache", pLua);
-
-    pParent_->UpdateMaterial(true);
-
-    return mFunc.Return();
-}
-
 int LuaUIObject::_SetAllPoints( lua_State* pLua )
 {
     Lua::Function mFunc("UIObject:SetAllPoints", pLua);
@@ -402,16 +395,43 @@ int LuaUIObject::_SetParent( lua_State* pLua )
         if (pArg->IsProvided())
         {
             if (pArg->GetType() == Lua::TYPE_STRING)
+            {
                 pParent = GUIManager::GetSingleton()->GetUIObjectByName(pArg->GetString());
+                if (!pParent)
+                    return mFunc.Return();
+            }
             else
             {
                 s_ptr<LuaUIObject> pObj = pArg->Get<LuaUIObject>();
                 if (pObj)
                     pParent = pObj->GetParent();
+                else
+                    return mFunc.Return();
             }
         }
 
-        pParent_->SetParent(pParent);
+        s_ptr<Frame> pFrame = s_ptr<Frame>::DynamicCast(pParent);
+        if (pFrame)
+        {
+            s_ptr<Frame> pOldParent = s_ptr<Frame>::DynamicCast(pParent_->GetParent());
+            pParent_->SetParent(pParent);
+            if (pParent_->IsObjectType("Frame"))
+            {
+                s_ptr<Frame> pThisFrame = s_ptr<Frame>::DynamicCast(pParent_);
+                pOldParent->RemoveChild(pThisFrame);
+                pFrame->AddChild(pThisFrame);
+            }
+            else
+            {
+                s_ptr<LayeredRegion> pThisRegion = s_ptr<LayeredRegion>::DynamicCast(pParent_);
+                pOldParent->RemoveRegion(pThisRegion);
+                pFrame->AddRegion(pThisRegion);
+            }
+        }
+        else
+        {
+            Error(mFunc.GetName(), "Argument 1 must be a Frame.");
+        }
     }
 
     return mFunc.Return();

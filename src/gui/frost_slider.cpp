@@ -91,7 +91,7 @@ void Slider::OnEvent( const Event& mEvent )
             if (bMouseInThumb_)
             {
                 GUIManager::GetSingleton()->StartMoving(
-                    pThumbTexture_, pThumbTexture_->GetPoint(ANCHOR_CENTER),
+                    pThumbTexture_, pThumbTexture_->ModifyPoint(ANCHOR_CENTER),
                     mOrientation_ == ORIENT_HORIZONTAL ? Vector::CONSTRAINT_X : Vector::CONSTRAINT_Y
                 );
                 bThumbMoved_ = true;
@@ -116,14 +116,14 @@ void Slider::OnEvent( const Event& mEvent )
                 {
                     s_float fCoef = (fValue_ - fMinValue_)/(fMaxValue_ - fMinValue_);
 
-                    s_ptr<Anchor> pAnchor = pThumbTexture_->GetPoint(ANCHOR_CENTER);
+                    s_ptr<Anchor> pAnchor = pThumbTexture_->ModifyPoint(ANCHOR_CENTER);
                     if (mOrientation_ == ORIENT_HORIZONTAL)
                         pAnchor->SetAbsOffset(s_int(s_float(uiAbsWidth_)*fCoef), 0);
                     else
                         pAnchor->SetAbsOffset(0, s_int(s_float(uiAbsHeight_)*fCoef));
 
                     GUIManager::GetSingleton()->StartMoving(
-                        pThumbTexture_, pThumbTexture_->GetPoint(ANCHOR_CENTER),
+                        pThumbTexture_, pThumbTexture_->ModifyPoint(ANCHOR_CENTER),
                         mOrientation_ == ORIENT_HORIZONTAL ? Vector::CONSTRAINT_X : Vector::CONSTRAINT_Y
                     );
                     bThumbMoved_ = true;
@@ -198,6 +198,7 @@ void Slider::SetMinMaxValues( const s_float& fMin, const s_float& fMax )
             fValue_.Clamp(fMinValue_, fMaxValue_);
             lQueuedEventList_.PushBack("ValueChanged");
         }
+
         FireUpdateThumbTexture_();
     }
 }
@@ -211,6 +212,7 @@ void Slider::SetValue( const s_float& fValue, const s_bool& bSilent )
         StepValue(fValue_, fValueStep_);
         if (!bSilent)
             lQueuedEventList_.PushBack("ValueChanged");
+
         FireUpdateThumbTexture_();
     }
 }
@@ -228,6 +230,7 @@ void Slider::SetValueStep( const s_float& fValueStep )
         fValue_.Clamp(fMinValue_, fMaxValue_);
         if (fValue_ != fOldValue)
             lQueuedEventList_.PushBack("ValueChanged");
+
         FireUpdateThumbTexture_();
     }
 }
@@ -240,6 +243,7 @@ void Slider::SetThumbTexture( s_ptr<Texture> pTexture )
         pThumbTexture_, ANCHOR_CENTER, sName_,
         mOrientation_ == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_TOP
     ));
+
     FireUpdateThumbTexture_();
 }
 
@@ -255,6 +259,7 @@ void Slider::SetOrientation( Orientation mOrientation )
                 mOrientation_ == ORIENT_HORIZONTAL ? ANCHOR_LEFT : ANCHOR_TOP
             ));
         }
+
         FireUpdateThumbTexture_();
     }
 }
@@ -377,11 +382,12 @@ void Slider::Update()
 
         s_float fCoef = (fValue_ - fMinValue_)/(fMaxValue_ - fMinValue_);
 
-        s_ptr<Anchor> pAnchor = pThumbTexture_->GetPoint(ANCHOR_CENTER);
+        s_ptr<Anchor> pAnchor = pThumbTexture_->ModifyPoint(ANCHOR_CENTER);
         if (mOrientation_ == ORIENT_HORIZONTAL)
             pAnchor->SetAbsOffset(s_int(s_float(uiAbsWidth_)*fCoef), 0);
         else
             pAnchor->SetAbsOffset(0, s_int(s_float(uiAbsHeight_)*fCoef));
+
 
         bUpdateThumbTexture_ = false;
     }
@@ -389,9 +395,9 @@ void Slider::Update()
     Frame::Update();
 }
 
-void Slider::UpdateBorders_()
+void Slider::FireUpdateBorders()
 {
-    Frame::UpdateBorders_();
+    Frame::FireUpdateBorders();
     FireUpdateThumbTexture_();
 }
 

@@ -34,6 +34,9 @@
 #include <OgrePass.h>
 #include <OgreGpuCommandBufferFlush.h>
 
+#include <utils/frost_utils_lua.h>
+#include <utils/frost_utils_file.h>
+
 #undef VOID
 
 using namespace std;
@@ -42,7 +45,7 @@ namespace Frost
 {
     const s_str Engine::CLASS_NAME = "Engine";
 
-    Engine::Engine() : mLog_("Frost.log", File::O)
+    Engine::Engine()
     {
         mState_ = STATE_NONE;
         bGamePaused_ = false;
@@ -178,7 +181,10 @@ namespace Frost
         pSceneMgr_->Initialize();
         pLightMgr_->Initialize();
         pSpriteMgr_->Initialize();
+
         pGUIMgr_->Initialize();
+        pGUIMgr_->ReadConfig();
+
         pZoneMgr_->Initialize();
     }
 
@@ -279,10 +285,14 @@ namespace Frost
                 bRun_ = false;
             else
             {
-                Log("\nEngine shutdown.");
-                Log("Average FPS : "+ pTimeMgr_->GetAverageFPS());
-                Log("Best FPS : "+ pTimeMgr_->GetBestFPS());
-                Log("Worst FPS : "+ pTimeMgr_->GetWorstFPS()+"\n");
+                Log("\nEngine shutdown.\n\nGeneral statistics :");
+                Log("    Average FPS : "+ pTimeMgr_->GetAverageFPS());
+                Log("    Best FPS : "+ pTimeMgr_->GetBestFPS());
+                Log("    Worst FPS : "+ pTimeMgr_->GetWorstFPS()+"\n");
+
+                pGUIMgr_->PrintStatistics();
+
+                Log("");
 
                 SaveConfig();
 
@@ -446,8 +456,7 @@ namespace Frost
 
     void Engine::ReadConfig()
     {
-        if (!pLua_->DoFile("DefaultConfig.lua"))
-            throw Exception(CLASS_NAME, "Error reading DefaultConfig.lua.");
+        pLua_->DoFile("DefaultConfig.lua");
 
         pLua_->PushGlobal("GameOptions");
         pLua_->PushNil();
@@ -458,8 +467,14 @@ namespace Frost
         }
         pLua_->Pop();
 
-        if (!pLua_->DoFile("Saves/Config.lua"))
-            Warning(CLASS_NAME, "Error reading Saves/Config.lua.");
+        try
+        {
+            pLua_->DoFile("Saves/Config.lua");
+        }
+        catch (LuaException& e)
+        {
+            Warning(CLASS_NAME, e.GetDescription());
+        }
 
         pLua_->PushGlobal("GameOptions");
         pLua_->PushNil();
@@ -575,7 +590,8 @@ namespace Frost
 
     s_ptr<File> Engine::GetLog()
     {
-        return &mLog_;
+        static File mLog("Frost.log", File::O);
+        return &mLog;
     }
 
     s_ptr<Ogre::RenderSystem> Engine::GetRenderSystem()

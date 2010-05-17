@@ -15,13 +15,26 @@
 #define FROST_UTILS_LUASTATE_H
 
 #include "frost_utils_config.h"
-#include "frost_utils_manager.h"
 
 #include "frost_utils_types.h"
+#include "frost_utils_exception.h"
 
 namespace Frost
 {
     class s_var;
+
+    class LuaException : public Exception
+    {
+    public :
+
+        LuaException(const s_str& sMessage) : Exception(sMessage)
+        {
+        }
+
+        LuaException(const s_str& sClassName, const s_str& sMessage) : Exception(sClassName, sMessage)
+        {
+        }
+    };
 
     namespace Lua
     {
@@ -76,32 +89,32 @@ namespace Frost
 
             /// Executes a Lua file.
             /** \param sFile The name of the file
-            *   \return 'false' if there was an error in the file
-            *   \note This function prints the errors in the log file
+            *   \note This function wil throw an Exception if any error occurs.
+            *         Don't forget to catch them.
             */
-            s_bool  DoFile(const s_str& sFile);
+            void    DoFile(const s_str& sFile);
 
             /// Executes a string containing Lua instructions.
             /** \param sStr The string to execute
-            *   \return 'false' if there was an error in the string
-            *   \note This function prints the errors in the log file
+            *   \note This function wil throw an Exception if any error occurs.
+            *         Don't forget to catch them.
             */
-            s_bool  DoString(const s_str& sStr);
+            void    DoString(const s_str& sStr);
 
             /// Executes a Lua function.
             /** \param sFunctionName The name of the function to execute
-            *   \return 'false' if there was an error
-            *   \note This function prints the errors in the log file
+            *   \note This function wil throw an Exception if any error occurs.
+            *         Don't forget to catch them.
             */
-            s_bool  CallFunction(const s_str& sFunctionName);
+            void    CallFunction(const s_str& sFunctionName);
 
             /// Executes a Lua function with arguments.
             /** \param sFunctionName  The name of the function to execute
             *   \param lArgumentStack The agument stack (order matters)
-            *   \return 'false' if there was an error
-            *   \note This function prints the errors in the log file
+            *   \note This function wil throw an Exception if any error occurs.
+            *         Don't forget to catch them.
             */
-            s_bool  CallFunction(const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack);
+            void    CallFunction(const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack);
 
             /// Binds a C++ function to a Lua function.
             /** \param sFunctionName The name of the Lua function
@@ -211,6 +224,13 @@ namespace Frost
 
             /// Creates a new empty table and pushes it on the stack.
             void    NewTable();
+
+            /// Iterates over the table at the given index.
+            /** \param iIndex The index of the table to iterate on
+            *   \note Typical loop (with table at index i) :<br>
+            *         for (pLua->PushNil(); pLua->Next(i); pLua->Pop())
+            */
+            s_bool  Next(const s_int& iIndex = -2);
 
             /// Removes the value at the top of the stack.
             /** \param uiNumber The number of value to remove
@@ -475,12 +495,6 @@ namespace Frost
             *         If is has less, the stack will be filled with nil.
             */
             void    SetTop(const s_uint& uiSize);
-
-            /// Handles an error code returned from a call to Lua.
-            /** \param iError The error code
-            *   \return 'true' if everything went fine (no error)
-            */
-            s_bool  HandleError(int iError);
 
             static const s_str CLASS_NAME;
 

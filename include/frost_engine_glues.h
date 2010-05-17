@@ -9,6 +9,7 @@
 #define FROST_ENGINE_GLUES_H
 
 #include "frost.h"
+#include <utils/frost_utils_lua.h>
 
 namespace Frost
 {

@@ -23,7 +23,7 @@ namespace Frost
         /// Contains a string that will be drawn on a line
         struct Line
         {
-            s_str   sCaption;
+            s_ustr  sCaption;
             s_float fWidth;
         };
 
@@ -66,6 +66,7 @@ namespace Frost
             s_float fU1, fV1;
             s_float fU2, fV2;
             Color   mColor;
+            s_bool  bNoRender;
         };
 
         /// Constructor.
@@ -76,6 +77,21 @@ namespace Frost
 
         /// Destructor.
         ~Text();
+
+        /// Renders this Text at the given position.
+        /** \param fX The horizontal position of the top left corner
+        *   \param fY The vertical position of the top left corner
+        *   \note Must be called between SpriteManager::Begin() and
+        *         SpriteManager::End().
+        */
+        void           Render(const s_float& fX, const s_float& fY);
+
+        /// Updates this Text's cache.
+        /** \note Automatically done by Render().<br>
+        *         Only use this method if you need it to
+        *         be updated sooner.
+        */
+        void           Update();
 
         /// Returns the path to the .ttf file.
         /** \return The path to the .ttf file
@@ -106,6 +122,12 @@ namespace Frost
         *   \note This string contains format tags.
         */
         const s_str&   GetText() const;
+
+        /// Returns the text that will be rendered (unicode character set).
+        /** \return The text that will be rendered (unicode character set)
+        *   \note This string contains format tags.
+        */
+        const s_ustr&  GetUnicodeText() const;
 
         /// Sets this text's default color.
         /** \param mColor      The default color
@@ -171,11 +193,15 @@ namespace Frost
         */
         s_float        GetStringWidth(const s_str& sString) const;
 
+        /// Returns the lenght of a provided string.
+        /** \param sString The string to measure
+        *   \return The lenght of the provided string
+        */
+        s_float        GetStringWidth(const s_ustr& sString) const;
+
         /// Returns the length of a single character.
         /** \param uiChar The character to measure
         *   \return The lenght of this character
-        *   \note Thanks to <windows.h>, I can't name this function
-        *         "GetCharWidth"... Bloody macros !
         */
         s_float        GetCharacterWidth(const s_uint& uiChar) const;
 
@@ -257,6 +283,42 @@ namespace Frost
         */
         const s_bool&  GetRemoveStartingSpaces() const;
 
+        /// Allows word wrap when the line is too long for the text box.
+        /** \param bWrap        'true' to enable word wrap
+        *   \param bAddEllipsis 'true' to put "..." at the end of a truncated line
+        *   \note Enabled by default.
+        */
+        void           EnableWordWrap(const s_bool& bWrap, const s_bool& bAddEllipsis);
+
+        /// Checks if word wrap is enabled.
+        /** \return 'true' if word wrap is enabled
+        */
+        const s_bool&  IsWordWrapEnabled() const;
+
+        /// Enables color formatting.
+        /** \param bFormatting 'true' to enable color formatting
+        *   \note Enabled by default.
+        *   \note - "|cAARRGGBB" : sets text color (hexadecimal).<br>
+        *         - "|r" : sets text color to default.<br>
+        *         - "||" : writes "|".
+        */
+        void           EnableFormatting(const s_bool& bFormatting);
+
+        /// Creates a Quad that contains the provided character.
+        /** \param uiChar The character to draw
+        *   \note The Quad is positionned on the top-left border of
+        *         the screen. If you need to render it somewhere else,
+        *         just add your offsets to its coordinates.
+        *   \note Uses this Text's Ogre::Font's texture.
+        */
+        Quad           CreateQuad(const s_uint& uiChar) const;
+
+        /// Returns the cached letters (position, size, texture coordinates)
+        /** \return The cached letters
+        *   \note Updates the letter cache if needed.
+        */
+        const s_ctnr<Letter>& GetLetterCache();
+
         /// Returns this Text's font.
         /** \return This Text's font
         */
@@ -267,21 +329,6 @@ namespace Frost
         */
         s_wptr<Material> GetMaterial();
 
-        /// Renders this Text at the given position.
-        /** \param fX The horizontal position of the top left corner
-        *   \param fY The vertical position of the top left corner
-        *   \note Must be called between SpriteManager::Begin() and
-        *         SpriteManager::End().
-        */
-        void           Render(const s_float& fX, const s_float& fY);
-
-        /// Updates this Text's cache.
-        /** \note Automatically done by Render().<br>
-        *         Only use this method if you need it to
-        *         be updated sooner.
-        */
-        void           Update();
-
         static const s_str CLASS_NAME;
 
     private :
@@ -289,20 +336,24 @@ namespace Frost
         void UpdateLines_();
         void UpdateCache_();
 
-        s_str     sFileName_;
-        s_bool    bReady_;
-        s_float   fSize_;
-        s_float   fTracking_;
-        s_float   fLineSpacing_;
-        s_float   fSpaceWidth_;
-        s_bool    bRemoveStartingSpaces_;
-        Color     mColor_;
-        s_bool    bForceColor_;
-        s_float   fW_, fH_;
-        s_float   fX_, fY_;
-        s_float   fBoxW_, fBoxH_;
-        s_str     sText_;
-        Alignment mAlign_;
+        s_str             sFileName_;
+        s_bool            bReady_;
+        s_float           fSize_;
+        s_float           fTracking_;
+        s_float           fLineSpacing_;
+        s_float           fSpaceWidth_;
+        s_bool            bRemoveStartingSpaces_;
+        s_bool            bWordWrap_;
+        s_bool            bAddEllipsis_;
+        Color             mColor_;
+        s_bool            bForceColor_;
+        s_bool            bFormattingEnabled_;
+        s_float           fW_, fH_;
+        s_float           fX_, fY_;
+        s_float           fBoxW_, fBoxH_;
+        s_str             sText_;
+        s_ustr            sUnicodeText_;
+        Alignment         mAlign_;
         VerticalAlignment mVertAlign_;
 
         s_ctnr<Line>          lLineList_;

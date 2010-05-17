@@ -39,6 +39,29 @@ namespace Frost
             /// Creates the associated Lua glue.
             virtual void   CreateGlue();
 
+            /// Changes this widget's parent.
+            /** \param pParent The new parent
+            *   \note Default is nullptr.
+            */
+            virtual void   SetParent(s_ptr<UIObject> pParent);
+
+            /// Shows this widget.
+            /** \note Its parent must be shown for it to appear on
+            *         the screen.
+            */
+            virtual void   Show();
+
+            /// Hides this widget.
+            /** \note All its childs won't be visible on the screen
+            *   anymore, even if they are still marked as shown.
+            */
+            virtual void   Hide();
+
+            /// Checks if this widget can be seen on the screen.
+            /** \return 'true' if this widget can be seen on the screen
+            */
+            virtual s_bool IsVisible() const;
+
             /// Returns this LayeredRegion's draw layer.
             /** \return this LayeredRegion's draw layer
             */
@@ -54,6 +77,11 @@ namespace Frost
             */
             virtual void   SetDrawLayer(const s_str& sLayer);
 
+            /// Notifies the renderer of this widget that it needs to be redrawn.
+            /** \note Automatically called by any shape changing function.
+            */
+            virtual void   NotifyRendererNeedRedraw();
+
             /// Parses data from an XML::Block.
             /** \param pBlock The Frame's XML::Block
             */
@@ -65,7 +93,8 @@ namespace Frost
 
             virtual void ParseAttributes_(s_ptr<XML::Block> pBlock);
 
-            LayerType mLayer_;
+            LayerType    mLayer_;
+            s_ptr<Frame> pFrameParent_;
 
         };
 

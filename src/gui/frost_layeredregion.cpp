@@ -6,6 +6,7 @@
 #include "gui/frost_layeredregion.h"
 
 #include "gui/frost_uiobject.h"
+#include "gui/frost_frame.h"
 #include "gui/frost_guimanager.h"
 
 #include "material/frost_materialmanager.h"
@@ -55,17 +56,47 @@ void LayeredRegion::CreateGlue()
     pLua->SetGlobal(sName_);
 }
 
+void LayeredRegion::SetParent( s_ptr<UIObject> pParent )
+{
+    pFrameParent_ = s_ptr<Frame>::DynamicCast(pParent);
+
+    UIObject::SetParent(pParent);
+}
+
+void LayeredRegion::Show()
+{
+    if (!bIsShown_)
+    {
+        bIsShown_ = true;
+        NotifyRendererNeedRedraw();
+    }
+}
+
+void LayeredRegion::Hide()
+{
+    if (bIsShown_)
+    {
+        bIsShown_ = false;
+        NotifyRendererNeedRedraw();
+    }
+}
+
+s_bool LayeredRegion::IsVisible() const
+{
+    return pParent_->IsVisible() && bIsShown_;
+}
+
 LayerType LayeredRegion::GetDrawLayer()
 {
     return mLayer_;
 }
 
-void LayeredRegion::SetDrawLayer(LayerType mLayer)
+void LayeredRegion::SetDrawLayer( LayerType mLayer )
 {
     mLayer_ = mLayer;
 }
 
-void LayeredRegion::SetDrawLayer(const s_str& sLayer)
+void LayeredRegion::SetDrawLayer( const s_str& sLayer )
 {
     if (sLayer == "ARTWORK")
         mLayer_ = LAYER_ARTWORK;
@@ -83,5 +114,16 @@ void LayeredRegion::SetDrawLayer(const s_str& sLayer)
             "Uknown layer type : \""+sLayer+"\". Using \"ARTWORK\"."
         );
         mLayer_ = LAYER_ARTWORK;
+    }
+}
+
+void LayeredRegion::NotifyRendererNeedRedraw()
+{
+    if (!bVirtual_)
+    {
+        if (pRenderer_)
+            pRenderer_->FireRedraw();
+        else if (pFrameParent_)
+            GUIManager::GetSingleton()->FireRedraw(pFrameParent_->GetFrameStrata());
     }
 }

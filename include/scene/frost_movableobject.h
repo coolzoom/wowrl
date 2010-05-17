@@ -16,6 +16,8 @@
 #include <OgreUserDefinedObject.h>
 #include <OgreQuaternion.h>
 
+#include <utils/frost_utils_lua.h>
+
 namespace Frost
 {
     /// Abstract base class for mouse picking.

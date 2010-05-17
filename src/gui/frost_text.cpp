@@ -33,10 +33,12 @@ namespace Frost
         mVertAlign_ = ALIGN_MIDDLE;
         fLineSpacing_ = 1.5f;
         fTracking_ = 0.0f;
+        bWordWrap_ = true;
         sFileName_ = sFileName;
         fSize_ = fSize;
         mColor_ = Color(255, 255, 255);
         fX_ = fY_ = s_float::INFPLUS;
+
         pOgreFont_ = FontManager::GetSingleton()->GetFont(sFileName_, s_uint(fSize_));
         if (pOgreFont_)
         {
@@ -44,7 +46,7 @@ namespace Frost
 
             pFontMat_ = MaterialManager::GetSingleton()->CreateMaterial2D(pOgreFont_->getMaterial().get());
 
-            fSpaceWidth_ = GetCharacterWidth((uint)'0')*0.5f;
+            fSpaceWidth_ = GetCharacterWidth((uint)'_');
         }
         else
         {
@@ -78,6 +80,7 @@ namespace Frost
         if (sText_ != sText)
         {
             sText_ = sText;
+            sUnicodeText_ = UTF8ToUnicode(sText_);
             bUpdateCache_ = true;
         }
     }
@@ -85,6 +88,11 @@ namespace Frost
     const s_str& Text::GetText() const
     {
         return sText_;
+    }
+
+    const s_ustr& Text::GetUnicodeText() const
+    {
+        return sUnicodeText_;
     }
 
     void Text::SetColor( const Color& mColor, const s_bool& bForceColor )
@@ -176,11 +184,11 @@ namespace Frost
                 }
                 else
                 {
-                    fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
+                    fWidth += GetCharacterWidth((uint)(uchar)*iterChar) + fTracking_;
                     if (iterNext != sText_.End())
                     {
                         if (*iterNext != ' ' && *iterNext != '\n')
-                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                            fWidth += GetCharacterKerning((uint)(uchar)*iterChar, (uint)(uchar)*iterNext);
                     }
                 }
             }
@@ -203,11 +211,16 @@ namespace Frost
 
     s_float Text::GetStringWidth( const s_str& sString ) const
     {
+        return GetStringWidth(UTF8ToUnicode(sString));
+    }
+
+    s_float Text::GetStringWidth( const s_ustr& sString ) const
+    {
         s_float fWidth;
         s_float fMaxWidth = s_float::INFMINUS;
         if (bReady_)
         {
-            s_str::const_iterator iterChar, iterNext;
+            s_ustr::const_iterator iterChar, iterNext;
             foreach (iterChar, sString)
             {
                 iterNext = iterChar + 1;
@@ -221,11 +234,11 @@ namespace Frost
                 }
                 else
                 {
-                    fWidth += GetCharacterWidth((uint)*iterChar) + fTracking_;
+                    fWidth += GetCharacterWidth((uint)(uchar)*iterChar) + fTracking_;
                     if (iterNext != sString.End())
                     {
                         if (*iterNext != ' ' && *iterNext != '\n')
-                            fWidth += GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                            fWidth += GetCharacterKerning((uint)(uchar)*iterChar, (uint)(uchar)*iterNext);
                     }
                 }
             }
@@ -238,8 +251,15 @@ namespace Frost
     {
         if (bReady_)
         {
-            const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords(uiChar.Get());
-            return (mUVRect.right - mUVRect.left)*pFontMat_->GetWidth();
+            if (uiChar == 32) // Space
+                return fSpaceWidth_;
+            else if (uiChar == 9) // Tab
+                return 4.0f*fSpaceWidth_;
+            else
+            {
+                const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords(uiChar.Get());
+                return (mUVRect.right - mUVRect.left)*pFontMat_->GetWidth();
+            }
         }
         else
             return 0.0f;
@@ -247,8 +267,9 @@ namespace Frost
 
     s_float Text::GetCharacterKerning( const s_uint& uiChar1, const s_uint& uiChar2 ) const
     {
-        return pFontMat_->GetWidth()*pOgreFont_->getGlyphInfo(uiChar1.Get()).
-               kerningTable.find(uiChar2.Get())->second.x;
+        /*return pFontMat_->GetWidth()*pOgreFont_->getGlyphInfo(uiChar1.Get()).
+               kerningTable.find(uiChar2.Get())->second.x;*/
+        return 0;
     }
 
     void Text::SetAlignment( const Text::Alignment& mAlign )
@@ -321,6 +342,30 @@ namespace Frost
         return bRemoveStartingSpaces_;
     }
 
+    void Text::EnableWordWrap( const s_bool& bWrap, const s_bool& bAddEllipsis )
+    {
+        if (bWordWrap_ != bWrap || bAddEllipsis_ != bAddEllipsis)
+        {
+            bWordWrap_ = bWrap;
+            bAddEllipsis_ = bAddEllipsis;
+            bUpdateCache_ = true;
+        }
+    }
+
+    const s_bool& Text::IsWordWrapEnabled() const
+    {
+        return bWordWrap_;
+    }
+
+    void Text::EnableFormatting( const s_bool& bFormatting )
+    {
+        if (bFormattingEnabled_ != bFormatting)
+        {
+            bFormattingEnabled_ = bFormatting;
+            bUpdateCache_ = true;
+        }
+    }
+
     void Text::Render( const s_float& fX, const s_float& fY )
     {
         if (bReady_)
@@ -340,11 +385,17 @@ namespace Frost
                 Quad mQuad;
                 mQuad.pMat = pFontMat_;
 
+                if (!bFormattingEnabled_)
+                {
+                    mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                    mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = mColor_;
+                }
+
                 s_ctnr<Letter>::iterator iterLetter;
                 foreach (iterLetter, lLetterCache_)
                 {
-                    Quad mQuad;
-                    mQuad.pMat = pFontMat_;
+                    if (iterLetter->bNoRender)
+                        continue;
 
                     mQuad.lVertexArray[0].Set(iterLetter->fX1+fX, iterLetter->fY1+fY);
                     mQuad.lVertexArray[1].Set(iterLetter->fX2+fX, iterLetter->fY1+fY);
@@ -356,15 +407,18 @@ namespace Frost
                     mQuad.lVertexArray[2].SetUV(iterLetter->fU2, iterLetter->fV2);
                     mQuad.lVertexArray[3].SetUV(iterLetter->fU1, iterLetter->fV2);
 
-                    if (!iterLetter->mColor.IsNaN() && !bForceColor_)
+                    if (bFormattingEnabled_)
                     {
-                        mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-                        mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = iterLetter->mColor;
-                    }
-                    else
-                    {
-                        mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
-                        mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = mColor_;
+                        if (!iterLetter->mColor.IsNaN() && !bForceColor_)
+                        {
+                            mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                            mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = iterLetter->mColor;
+                        }
+                        else
+                        {
+                            mQuad.lVertexArray[0].mColor = mQuad.lVertexArray[1].mColor =
+                            mQuad.lVertexArray[2].mColor = mQuad.lVertexArray[3].mColor = mColor_;
+                        }
                     }
 
                     lQuadList_.PushBack(mQuad);
@@ -441,14 +495,25 @@ namespace Frost
 
         s_uint uiMaxLineNbr, uiCounter;
         if (fBoxH_.IsValid())
-            uiMaxLineNbr = s_uint(s_float::RoundDown(fBoxH_/(GetLineHeight()*fLineSpacing_)));
+        {
+            if (fBoxH_ < GetLineHeight())
+            {
+                uiMaxLineNbr = 0;
+                return;
+            }
+            else
+            {
+                s_float fRemaining = fBoxH_ - GetLineHeight();
+                uiMaxLineNbr = 1 + s_uint(s_float::RoundDown(fRemaining/(GetLineHeight()*fLineSpacing_)));
+            }
+        }
         else
             uiMaxLineNbr = s_uint::INF;
 
         if (uiMaxLineNbr >= 1)
         {
-            s_ctnr<s_str> lManualLineList = sText_.CutEach("\n");
-            s_ctnr<s_str>::iterator iterManual;
+            s_ctnr<s_ustr> lManualLineList = sUnicodeText_.CutEach("\n");
+            s_ctnr<s_ustr>::iterator iterManual;
             foreach (iterManual, lManualLineList)
             {
                 // Make a temporary line array
@@ -456,11 +521,11 @@ namespace Frost
                 Line mLine;
                 s_map<s_uint, Format> lTempFormatList;
 
-                s_str::iterator iterChar1;
+                s_ustr::iterator iterChar1;
                 foreach (iterChar1, *iterManual)
                 {
                     // Read format tags
-                    if (*iterChar1 == '|')
+                    if (*iterChar1 == '|' && bFormattingEnabled_)
                     {
                         ++iterChar1;
                         if (iterChar1 != iterManual->End())
@@ -482,12 +547,12 @@ namespace Frost
                         mLine.fWidth += fSpaceWidth_;
                     else
                     {
-                        mLine.fWidth += GetCharacterWidth(*iterChar1);
-                        s_str::iterator iterNext = iterChar1 + 1;
+                        mLine.fWidth += GetCharacterWidth((uint)(uchar)*iterChar1);
+                        s_ustr::iterator iterNext = iterChar1 + 1;
                         if (iterNext != iterManual->End())
                         {
                             if (*iterNext != ' ')
-                                mLine.fWidth += GetCharacterKerning((uint)*iterChar1, (uint)*iterNext);
+                                mLine.fWidth += GetCharacterKerning((uint)(uchar)*iterChar1, (uint)(uchar)*iterNext);
                         }
                     }
                     mLine.sCaption += *iterChar1;
@@ -495,12 +560,12 @@ namespace Frost
                     if (mLine.fWidth > fBoxW_)
                     {
                         // Whoops, the line is too long...
-                        if (mLine.sCaption.FindPos(" ").IsValid())
+                        if (mLine.sCaption.FindPos(" ").IsValid() && bWordWrap_)
                         {
                             // There are several words on this line, we'll
                             // be able to put the last one on the next line
-                            s_str::iterator iterChar2 = mLine.sCaption.End();
-                            s_str sErasedString;
+                            s_ustr::iterator iterChar2 = mLine.sCaption.End();
+                            s_ustr sErasedString;
                             s_uint uiCharToErase;
                             s_float fErasedWidth;
                             s_bool bLastWasWord;
@@ -523,7 +588,7 @@ namespace Frost
                                 }
                                 else
                                 {
-                                    fErasedWidth += GetCharacterWidth(*iterChar2);
+                                    fErasedWidth += GetCharacterWidth((uint)(uchar)*iterChar2) + fTracking_;
                                     sErasedString.PushFront(*iterChar2);
                                     ++uiCharToErase;
                                     bLastWasWord = true;
@@ -555,45 +620,76 @@ namespace Frost
                         }
                         else
                         {
-                            // There is only one word on this line, so this
-                            // word is just too long for the text box : our
-                            // only option is to truncate it.
-                            s_float fWordWidth = 3*(GetCharacterWidth((uint)'.') + fTracking_);
-                            s_str::iterator iterChar2 = mLine.sCaption.End();
-                            s_str sErasedWord;
-                            s_uint uiCharToErase;
-                            while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
+                            // There is only one word on this line, or word
+                            // wrap is disabled. Anyway, this line is just
+                            // too long for the text box : our only option
+                            // is to truncate it.
+                            if (bAddEllipsis_)
                             {
-                                --iterChar2;
-                                mLine.fWidth -= GetCharacterWidth(*iterChar2);
-                                ++uiCharToErase;
+                                s_float fWordWidth = 3*(GetCharacterWidth((uint)'.') + fTracking_);
+                                s_ustr::iterator iterChar2 = mLine.sCaption.End();
+                                s_uint uiCharToErase;
+                                while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
+                                {
+                                    --iterChar2;
+                                    mLine.fWidth -= GetCharacterWidth((uint)(uchar)*iterChar2) + fTracking_;
+                                    ++uiCharToErase;
+                                }
+                                mLine.sCaption.EraseFromEnd(uiCharToErase);
+                                mLine.sCaption << "...";
                             }
-                            mLine.sCaption.EraseFromEnd(uiCharToErase);
-                            mLine.sCaption << "...";
+                            else
+                            {
+                                s_ustr::iterator iterChar2 = mLine.sCaption.End();
+                                s_uint uiCharToErase;
+                                while ( (mLine.fWidth  > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )
+                                {
+                                    --iterChar2;
+                                    mLine.fWidth -= GetCharacterWidth((uint)(uchar)*iterChar2) + fTracking_;
+                                    ++uiCharToErase;
+                                }
+                                mLine.sCaption.EraseFromEnd(uiCharToErase);
+                            }
 
-                            s_str::iterator iterTemp = iterChar1;
+                            if (!bWordWrap_)
+                            {
+                                // Word wrap is disabled, so we can only display one line
+                                // anyway.
+                                lLineList_.PushBack(mLine);
+                                s_map<s_uint, Format>::iterator iterFormat;
+                                foreach (iterFormat, lTempFormatList)
+                                {
+                                    lFormatList_[iterFormat->first] = iterFormat->second;
+                                }
+                                return;
+                            }
+
+                            s_ustr::iterator iterTemp = iterChar1;
                             iterChar1 = iterManual->Get(" ", s_uint(s_ptrdiff(iterChar1 - iterManual->begin())));
 
                             if (iterChar1 != iterManual->End())
                             {
                                 // Read cutted format tags
-                                while (iterTemp != iterChar1)
+                                if (bFormattingEnabled_)
                                 {
-                                    if ((*iterTemp) == '|')
+                                    while (iterTemp != iterChar1)
                                     {
-                                        ++iterTemp;
-                                        if (iterTemp != iterChar1)
+                                        if ((*iterTemp) == '|')
                                         {
-                                            if ((*iterTemp) == '|')
+                                            ++iterTemp;
+                                            if (iterTemp != iterChar1)
                                             {
-                                            }
-                                            else
-                                            {
-                                                GetFormat(iterTemp, lTempFormatList[uiCounter+mLine.sCaption.GetLength()]);
+                                                if ((*iterTemp) == '|')
+                                                {
+                                                }
+                                                else
+                                                {
+                                                    GetFormat(iterTemp, lTempFormatList[uiCounter+mLine.sCaption.GetLength()]);
+                                                }
                                             }
                                         }
+                                        ++iterTemp;
                                     }
-                                    ++iterTemp;
                                 }
 
                                 // Look for the next word
@@ -684,7 +780,7 @@ namespace Frost
                         fX0 = 0.0f;
                         break;
                     case ALIGN_CENTER :
-                        fX0 = fBoxW_*0.5f;
+                        fX0 = s_float::RoundDown(fBoxW_*0.5f);
                         break;
                     case ALIGN_RIGHT :
                         fX0 = fBoxW_;
@@ -704,7 +800,7 @@ namespace Frost
                         fY = 0.0f;
                         break;
                     case ALIGN_MIDDLE :
-                        fY = (fBoxH_ - fH_)*0.5f;
+                        fY = s_float::RoundDown((fBoxH_ - fH_)*0.5f);
                         break;
                     case ALIGN_BOTTOM :
                         fY = (fBoxH_ - fH_);
@@ -719,7 +815,7 @@ namespace Frost
                         fY = 0.0f;
                         break;
                     case ALIGN_MIDDLE :
-                        fY = -fH_*0.5f;
+                        fY = -s_float::RoundDown(fH_*0.5f);
                         break;
                     case ALIGN_BOTTOM :
                         fY = -fH_;
@@ -742,18 +838,18 @@ namespace Frost
                         fX = fX0;
                         break;
                     case ALIGN_CENTER :
-                        fX = fX0 - iterLine->fWidth*0.5f;
+                        fX = fX0 - s_float::RoundDown(iterLine->fWidth*0.5f);
                         break;
                     case ALIGN_RIGHT :
                         fX = fX0 - iterLine->fWidth;
                         break;
                 }
 
-                s_str::iterator iterChar, iterNext;
+                s_ustr::iterator iterChar, iterNext;
                 foreach (iterChar, iterLine->sCaption)
                 {
                     // Format our text
-                    if (lFormatList_.Find(uiCounter))
+                    if (bFormattingEnabled_ && lFormatList_.Find(uiCounter))
                     {
                         const Format& mFormat = lFormatList_[uiCounter];
                         switch (mFormat.mColorAction)
@@ -771,16 +867,26 @@ namespace Frost
                     s_float fCharWidth, fCharHeight;
 
                     // Add the character to the cache
-                    if (*iterChar == ' ')
+                    if (*iterChar == ' ' || *iterChar == '	')
                     {
-                        fCharWidth = fSpaceWidth_;
+                        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)(uchar)'_');
+                        fCharWidth = GetCharacterWidth((uint)(uchar)*iterChar);
+                        fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
+                        s_float fYOffset = s_float::RoundDown(fSize_/2.0f - fCharHeight/2.0f);
+
+                        mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
+                        mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fSize_;
+
+                        mLetter.bNoRender = true;
+
+                        lLetterCache_.PushBack(mLetter);
                     }
                     else
                     {
-                        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)*iterChar);
-                        fCharWidth = GetCharacterWidth((uint)*iterChar);
+                        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)(uchar)*iterChar);
+                        fCharWidth = GetCharacterWidth((uint)(uchar)*iterChar);
                         fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
-                        s_float fYOffset = fSize_/2 - fCharHeight/2;
+                        s_float fYOffset = s_float::RoundDown(fSize_/2.0f - fCharHeight/2.0f);
 
                         mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
                         mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fCharHeight;
@@ -789,6 +895,8 @@ namespace Frost
                         mLetter.fU2 = mUVRect.right; mLetter.fV2 = mUVRect.bottom;
 
                         mLetter.mColor = mColor;
+
+                        mLetter.bNoRender = false;
 
                         lLetterCache_.PushBack(mLetter);
                     }
@@ -799,7 +907,7 @@ namespace Frost
                     {
                         if (*iterNext != ' ' && *iterChar != ' ')
                         {
-                            fKerning = GetCharacterKerning((uint)*iterChar, (uint)*iterNext);
+                            fKerning = GetCharacterKerning((uint)(uchar)*iterChar, (uint)(uchar)*iterNext);
                         }
                     }
 
@@ -816,4 +924,37 @@ namespace Frost
             fH_ = 0.0f;
         }
     }
+
+    Quad Text::CreateQuad( const s_uint& uiChar ) const
+    {
+        Quad mQuad;
+        mQuad.pMat = pFontMat_;
+
+        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords(uiChar.Get());
+
+        s_float fWidth = GetCharacterWidth(uiChar);
+        s_float fHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
+
+        mQuad.lVertexArray[0].Set(0,      0);
+        mQuad.lVertexArray[1].Set(fWidth, 0);
+        mQuad.lVertexArray[2].Set(fWidth, fHeight);
+        mQuad.lVertexArray[3].Set(0,      fHeight);
+
+        mQuad.lVertexArray[0].SetUV(mUVRect.left,  mUVRect.top);
+        mQuad.lVertexArray[1].SetUV(mUVRect.right, mUVRect.top);
+        mQuad.lVertexArray[2].SetUV(mUVRect.right, mUVRect.bottom);
+        mQuad.lVertexArray[3].SetUV(mUVRect.left,  mUVRect.bottom);
+
+        for (int i = 0; i < 4; ++i)
+            mQuad.lVertexArray[i].mColor = mColor_;
+
+        return mQuad;
+    }
+
+    const s_ctnr<Text::Letter>& Text::GetLetterCache()
+    {
+        Update();
+        return lLetterCache_;
+    }
 }
+

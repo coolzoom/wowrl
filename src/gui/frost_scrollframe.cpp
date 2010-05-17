@@ -95,14 +95,13 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
     if (pScrollChild_)
     {
         pScrollChild_->SetManuallyRendered(false);
-        pScrollChild_->GetPoint(ANCHOR_TOPLEFT)->SetAbsOffset(
+        pScrollChild_->ModifyPoint(ANCHOR_TOPLEFT)->SetAbsOffset(
             lBorderList_[BORDER_LEFT] - iHorizontalScroll_,
             lBorderList_[BORDER_TOP]  - iVerticalScroll_
         );
 
         lScrollChildList_.Clear();
         lScrollStrataList_.Clear();
-        bRebuildScrollStrataList_ = true;
     }
     else if (!IsVirtual() && !pScrollTexture_)
     {
@@ -155,8 +154,10 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
         On("ScrollRangeChanged");
 
         bUpdateScrollRange_ = false;
-        bRebuildScrollStrataList_ = true;
     }
+
+    bRebuildScrollStrataList_ = true;
+    FireRedraw();
 }
 
 s_ptr<Frame> ScrollFrame::GetScrollChild()
@@ -166,10 +167,14 @@ s_ptr<Frame> ScrollFrame::GetScrollChild()
 
 void ScrollFrame::SetHorizontalScroll( const s_int& iHorizontalScroll )
 {
-    iHorizontalScroll_ = iHorizontalScroll;
-    lQueuedEventList_.PushBack("HorizontalScroll");
+    if (iHorizontalScroll_ != iHorizontalScroll)
+    {
+        iHorizontalScroll_ = iHorizontalScroll;
+        lQueuedEventList_.PushBack("HorizontalScroll");
 
-    pScrollChild_->GetPoint(ANCHOR_TOPLEFT)->SetAbsOffset(-iHorizontalScroll_, -iVerticalScroll_);
+        pScrollChild_->ModifyPoint(ANCHOR_TOPLEFT)->SetAbsOffset(-iHorizontalScroll_, -iVerticalScroll_);
+        FireRedraw();
+    }
 }
 
 const s_int& ScrollFrame::GetHorizontalScroll() const
@@ -184,10 +189,14 @@ const s_int& ScrollFrame::GetHorizontalScrollRange() const
 
 void ScrollFrame::SetVerticalScroll( const s_int& iVerticalScroll )
 {
-    iVerticalScroll_ = iVerticalScroll;
-    lQueuedEventList_.PushBack("VerticalScroll");
+    if (iVerticalScroll_ != iVerticalScroll)
+    {
+        iVerticalScroll_ = iVerticalScroll;
+        lQueuedEventList_.PushBack("VerticalScroll");
 
-    pScrollChild_->GetPoint(ANCHOR_TOPLEFT)->SetAbsOffset(-iHorizontalScroll_, -iVerticalScroll_);
+        pScrollChild_->ModifyPoint(ANCHOR_TOPLEFT)->SetAbsOffset(-iHorizontalScroll_, -iVerticalScroll_);
+        FireRedraw();
+    }
 }
 
 const s_int& ScrollFrame::GetVerticalScroll() const
@@ -214,7 +223,10 @@ void ScrollFrame::Update()
     Frame::Update();
 
     if ( pScrollChild_ && (uiOldChildWidth != pScrollChild_->GetAbsWidth() || uiOldChildHeight != pScrollChild_->GetAbsHeight()) )
+    {
         bUpdateScrollRange_ = true;
+        FireRedraw();
+    }
 
     if (IsVisible())
     {
@@ -222,6 +234,7 @@ void ScrollFrame::Update()
         {
             RebuildScrollRenderTarget_();
             bRebuildScrollRenderTarget_ = false;
+            FireRedraw();
         }
 
         if (bUpdateScrollRange_)
@@ -234,6 +247,7 @@ void ScrollFrame::Update()
         {
             RebuildScrollStrataList_();
             bRebuildScrollStrataList_ = false;
+            FireRedraw();
         }
 
         if (pScrollChild_)
@@ -241,9 +255,10 @@ void ScrollFrame::Update()
             UpdateScrollChildInput_();
         }
 
-        if (pScrollChild_ && pScrollRenderTarget_)
+        if (pScrollChild_ && pScrollRenderTarget_ && bRedrawScrollRenderTarget_)
         {
             RenderScrollStrataList_();
+            bRedrawScrollRenderTarget_ = false;
         }
     }
 }
@@ -388,6 +403,11 @@ void ScrollFrame::NotifyMouseInFrame( const s_bool& bMouseInFrame, const s_int& 
     Frame::NotifyMouseInFrame(bMouseInFrame, iX, iY);
 
     bMouseInScrollTexture_ = (bMouseInFrame && pScrollTexture_ && pScrollTexture_->IsInRegion(iX, iY));
+}
+
+void ScrollFrame::FireRedraw()
+{
+    bRedrawScrollRenderTarget_ = true;
 }
 
 void ScrollFrame::NotifyChildStrataChanged( s_ptr<Frame> pChild )

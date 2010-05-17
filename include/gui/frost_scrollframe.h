@@ -109,6 +109,9 @@ namespace Frost
             */
             virtual void   NotifyMouseInFrame(const s_bool& bMouseInFrame, const s_int& iX, const s_int& iY);
 
+            /// Tells this widget that a manually rendered widget requires redraw.
+            virtual void   FireRedraw();
+
             /// Tells this ScrollFrame that at least one of its children has modified its strata or level.
             /** \param pChild The child that has changed its strata (can also be a child of this child)
             *   \note If pChild is the scroll child, it only rebuilds its internal strata list.
@@ -150,6 +153,7 @@ namespace Frost
             s_ptr<Frame>        pScrollChild_;
 
             s_bool              bRebuildScrollRenderTarget_;
+            s_bool              bRedrawScrollRenderTarget_;
             s_bool              bUpdateScrollRange_;
             s_ptr<RenderTarget> pScrollRenderTarget_;
 

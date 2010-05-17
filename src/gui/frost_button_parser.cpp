@@ -15,18 +15,7 @@ using namespace Frost::GUI;
 
 void Button::ParseBlock( s_ptr<XML::Block> pBlock )
 {
-    ParseAttributes_(pBlock);
-
-    ParseSizeBlock_(pBlock);
-    ParseResizeBoundsBlock_(pBlock);
-    ParseAnchorsBlock_(pBlock);
-    ParseTitleRegionBlock_(pBlock);
-    ParseBackdropBlock_(pBlock);
-    ParseHitRectInsetsBlock_(pBlock);
-
-    ParseLayersBlock_(pBlock);
-    ParseFramesBlock_(pBlock);
-    ParseScriptsBlock_(pBlock);
+    Frame::ParseBlock(pBlock);
 
     s_ptr<XML::Block> pSpecialBlock;
     pSpecialBlock = pBlock->GetBlock("NormalTexture");

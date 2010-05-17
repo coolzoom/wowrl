@@ -12,6 +12,7 @@
 #include "frost.h"
 #include "gui/frost_anchor.h"
 #include "gui/frost_guimanager.h"
+#include <utils/frost_utils_lua.h>
 
 namespace Frost
 {
@@ -66,11 +67,6 @@ namespace Frost
             /// Updates this widget's logic.
             virtual void    Update();
 
-            /// Updates this widget's graphics.
-            /** \param bForceUpdate Update everything
-            */
-            virtual void    UpdateMaterial(const s_bool& bForceUpdate = false);
-
             /// Prints all relevant information about this widget in a string.
             /** \param sTab The offset to give to all lines
             *   \return All relevant information about this widget
@@ -81,11 +77,6 @@ namespace Frost
             /** \param pObj The UIObject to copy
             */
             virtual void    CopyFrom(s_ptr<UIObject> pObj);
-
-            /// Returns this widget's material.
-            /** \return This widget's material (texture)
-            */
-            s_wptr<Material> GetMaterial();
 
             /// Tells this widget to update its borders.
             virtual void    FireUpdateBorders();
@@ -151,15 +142,18 @@ namespace Frost
 
             /// Hides this widget.
             /** \note All its childs won't be visible on the screen
-            *   anymore, even if they are still marked as shown.
+            *         anymore, even if they are still marked as shown.
             */
             virtual void    Hide();
 
             /// Shows/hides this widget.
             /** \param bIsShown 'true' if you want to show this widget
             *   \note See Show() and Hide() for more infos.
+            *   \note Contrary to Show() and Hide(), this function doesn't
+            *         trigger any event ("OnShow" or "OnHide"). It should
+            *         only be used to set the initial state of the widget.
             */
-            void            SetShown(const s_bool& bIsShown);
+            virtual void    SetShown(const s_bool& bIsShown);
 
             /// Checks if this widget is shown.
             /** \return 'true' if this widget is shown
@@ -169,7 +163,7 @@ namespace Frost
             /// Checks if this widget can be seen on the screen.
             /** \return 'true' if this widget can be seen on the screen
             */
-            s_bool          IsVisible() const;
+            virtual s_bool  IsVisible() const;
 
             /// Changes this widget's absolute width (in pixels).
             /** \param uiAbsWidth The new width
@@ -355,11 +349,17 @@ namespace Frost
             */
             s_uint          GetNumPoint() const;
 
+            /// Returns one of this widget's Anchor to modify it.
+            /** \param mPoint The anchor point
+            *   \return A pointer to the anchor, nullptr if none
+            */
+            s_ptr<Anchor>   ModifyPoint(AnchorPoint mPoint);
+
             /// Returns one of this widget's Anchor.
             /** \param mPoint The anchor point
             *   \return A pointer to the anchor, nullptr if none
             */
-            s_ptr<Anchor>   GetPoint(AnchorPoint mPoint);
+            s_ptr<const Anchor> GetPoint(AnchorPoint mPoint) const;
 
             /// Returns all of this widgets's anchors.
             /** \return All of this widgets's anchors
@@ -438,6 +438,16 @@ namespace Frost
             */
             const s_bool&   IsNewlyCreated() const;
 
+            /// Notifies the renderer of this widget that it needs to be redrawn.
+            /** \note Automatically called by any shape changing function.
+            */
+            virtual void    NotifyRendererNeedRedraw();
+
+            /// Tells this widget that a manually rendered widget requires redraw.
+            /** \note This function does nothing by default.
+            */
+            virtual void    FireRedraw();
+
             /// Adds a Lua variable to copy when derivating.
             /** \param sVariable The name of the variable
             *   \note The variable must be an element of the widget's Lua glue.<br>
@@ -514,6 +524,7 @@ namespace Frost
 
             s_float fAlpha_;
             s_bool  bIsShown_;
+            s_bool  bIsVisible_;
             s_uint  uiAbsWidth_;
             s_uint  uiAbsHeight_;
             s_float fRelWidth_;
@@ -522,7 +533,6 @@ namespace Frost
             s_bool  bIsHeightAbs_;
 
             s_ptr<RenderTarget> pTarget_;
-            s_refptr<Material>  pMaterial_;
 
             s_bool bUpdateAnchors_;
             s_bool bUpdateBorders_;
@@ -604,7 +614,6 @@ namespace Frost
             int _Hide(lua_State*);
             int _IsShown(lua_State*);
             int _IsVisible(lua_State*);
-            int _RebuildCache(lua_State*);
             int _SetAllPoints(lua_State*);
             int _SetHeight(lua_State*);
             int _SetParent(lua_State*);

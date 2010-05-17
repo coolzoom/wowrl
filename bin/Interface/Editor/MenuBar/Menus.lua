@@ -2,7 +2,18 @@
 MenuBar:AddMenu("File");
 MenuBar:AddMenuItem("File", "New", "Ctrl-N");
 MenuBar:AddMenuItem("File", "Open", "Ctrl-O"):SetScript("OnClick", function()
-    Frost:LoadZoneFile("Zones/Test/Test.xml");
+    FileSelector:Show();
+    FileSelector:SelectFolder("Zones");
+    FileSelector:SetOnOkFunc(function()
+        local result = Frost:LoadZoneFile(FileSelector:GetSelectedFile());
+        if (not result) then
+            FileSelector:Error(AddOns.MenuBar:GetLocalizedString("ZoneLoadingError"), 256, 100);
+            return false;
+        else
+            return true;
+        end
+    end
+    );
     MenuBar:CloseCurrentDropdown();
 end);
 MenuBar:AddMenuItem("File", "Save", "Ctrl-S"):SetScript("OnClick", function()

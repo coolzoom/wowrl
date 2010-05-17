@@ -177,6 +177,9 @@ namespace Frost
 
         s_refptr<Material> pDefault2D_;
         s_refptr<Material> pDefault3D_;
+
+        s_map< s_str, s_ptr<Ogre::Material> > l3DTextureMaterialList_;
+        s_map< s_str, s_ptr<Ogre::Material> > l2DTextureMaterialList_;
     };
 }
 

@@ -1,5 +1,4 @@
 // Warning : If you need to use this file, include frost_utils_types.h
-#ifndef CPP_0X
 namespace Frost
 {
     /// Null pointer
@@ -24,14 +23,14 @@ namespace Frost
         /// Allows : "if (pPointer)".
         operator MemberFn() const
         {
-            return NULL;
+            return 0;
         }
 
         /// Allows usage with raw pointers.
         template<class N>
         operator N*() const
         {
-            return NULL;
+            return 0;
         }
 
         static const s_str CLASS_NAME;
@@ -41,4 +40,3 @@ namespace Frost
     const s_str     s_nullptr::CLASS_NAME = "s_nullptr";
     const s_nullptr nullptr;
 }
-#endif

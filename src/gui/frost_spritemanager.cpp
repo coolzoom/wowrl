@@ -523,18 +523,6 @@ namespace Frost
     void SpriteManager::RenderQuad( const Quad& mQuad )
     {
         lQuadList_.PushBack(mQuad);
-        if (bPreciseRendering_)
-        {
-            Quad& q = lQuadList_.Back();
-            q.lVertexArray[0].fX.RoundDown();
-            q.lVertexArray[0].fY.RoundDown();
-            q.lVertexArray[1].fX.RoundDown();
-            q.lVertexArray[1].fY.RoundDown();
-            q.lVertexArray[2].fX.RoundDown();
-            q.lVertexArray[2].fY.RoundDown();
-            q.lVertexArray[3].fX.RoundDown();
-            q.lVertexArray[3].fY.RoundDown();
-        }
     }
 
     void SpriteManager::SetRenderFunction( Function pRenderFunc )
@@ -552,21 +540,6 @@ namespace Frost
         return mAxisType_;
     }
 
-    void SpriteManager::EnablePreciseRendering()
-    {
-        bPreciseRendering_ = true;
-    }
-
-    void SpriteManager::DisablePreciseRendering()
-    {
-        bPreciseRendering_ = false;
-    }
-
-    const s_bool& SpriteManager::IsPreciseRenderingEnabled() const
-    {
-        return bPreciseRendering_;
-    }
-
     void SpriteManager::EnableAutomaticRendering()
     {
         bAutoRenderingDisabled_ = false;
@@ -579,22 +552,38 @@ namespace Frost
 
     s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_str& sTargetName, const s_uint& uiWidth, const s_uint& uiHeight, const RenderTarget::PixelType& mType, const RenderTarget::Usage& mUsage )
     {
-        s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
-            uiTargetCounter_, sTargetName, uiWidth, uiHeight, mType, mUsage
-        );
-        ++uiTargetCounter_;
+        try
+        {
+            s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
+                uiTargetCounter_, sTargetName, uiWidth, uiHeight, mType, mUsage
+            );
 
-        return pRTarget;
+            ++uiTargetCounter_;
+            return pRTarget;
+        }
+        catch (const Exception& e)
+        {
+            Error("", e.GetDescription());
+            return nullptr;
+        }
     }
 
     s_ptr<RenderTarget> SpriteManager::CreateRenderTarget( const s_uint& uiWidth, const s_uint& uiHeight, const RenderTarget::PixelType& mType, const RenderTarget::Usage& mUsage )
     {
-        s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
-            uiTargetCounter_, uiWidth, uiHeight, mType, mUsage
-        );
-        ++uiTargetCounter_;
+        try
+        {
+            s_ptr<RenderTarget> pRTarget = lRenderTargetList_[uiTargetCounter_] = new RenderTarget(
+                uiTargetCounter_, uiWidth, uiHeight, mType, mUsage
+            );
 
-        return pRTarget;
+            ++uiTargetCounter_;
+            return pRTarget;
+        }
+        catch (const Exception& e)
+        {
+            Error("", e.GetDescription());
+            return nullptr;
+        }
     }
 
     void SpriteManager::DeleteRenderTarget( s_ptr<RenderTarget> pTarget )

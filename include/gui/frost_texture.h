@@ -132,8 +132,8 @@ namespace Frost
             *   \note The texture coordinates are arranged as a rectangle, which is made
             *         of four points : 1 (top left), 2 (top right), 3 (bottom right) and
             *         4 (bottom left).<br>
-            *         The array must be arranged like this : (x1, y1, x3, y3). Other
-            *         corners are calculated using these coordinates.
+            *         The array must be arranged like this : (x1, x3, y1, y3), or (left,
+            *         right, top, bottom). Other corners are calculated using these coordinates.
             *   \note This function only allows horizontal/rectangle texture coordinates.
             */
             void                      SetTexCoord(const s_array<s_float,4>& lCoordinates);
@@ -177,6 +177,15 @@ namespace Frost
             *         you have called will apply.
             */
             void                      SetColor(const Color& mColor);
+
+            /// Directly sets the Material to use for rendering.
+            /** \param pMat The Material to use
+            *   \note When possible, prefer the following functions over this one :<br>
+            *         - SetTexture(const s_str& sFile)<br>
+            *         - SetTexture(s_ptr<RenderTarget> pRenderTarget)<br>
+            *         - SetColor(const Color& mColor)
+            */
+            void                      SetMaterial(s_refptr<Material> pMat);
 
             /// Sets this Texture's vertex color.
             /** \param mColor This Textures's new vertex color

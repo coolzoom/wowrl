@@ -18,6 +18,8 @@
 #include <OgreRenderTarget.h>
 #include <OgreRenderTexture.h>
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 
 namespace Frost
@@ -32,11 +34,22 @@ namespace Frost
     MaterialManager::~MaterialManager()
     {
         Log("Closing "+CLASS_NAME+"...");
+
+        s_map< s_str, s_ptr<Ogre::Material> >::iterator iterMat;
+        foreach (iterMat, l3DTextureMaterialList_)
+        {
+            Ogre::MaterialManager::getSingleton().remove(iterMat->second->getHandle());
+        }
+        foreach (iterMat, l2DTextureMaterialList_)
+        {
+            Ogre::MaterialManager::getSingleton().remove(iterMat->second->getHandle());
+        }
     }
 
     void MaterialManager::Initialize()
     {
         pDefault2D_ = CreateMaterial2D("Default2D", 255, 255, 255);
+
         pDefault3D_ = CreateMaterial3D("Default3D", 255, 255, 255);
         pDefault3D_->SetShaders("SimpleColor");
         pDefault3D_->SetSelfIllumination(Color(128, 128, 128));
@@ -126,41 +139,51 @@ namespace Frost
 
     s_refptr<Material> MaterialManager::CreateMaterial2D( const s_str& sFileName )
     {
-        s_ptr<Ogre::Material> pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
-            (sFileName+"_2D_"+uiCounter_).Get(), "Frost"
-        ).get();
-
-        if (File::Exists(sFileName))
+        s_ptr<Ogre::Material> pOgreMat;
+        if (!l2DTextureMaterialList_.Find(sFileName))
         {
-            Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
+            pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
+                (sFileName+"_2D_"+uiCounter_).Get(), "Frost"
+            ).get();
 
-            s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
-            /*pPass->setSeparateSceneBlending(
-                Ogre::SBF_ZERO, Ogre::SBF_DEST_ALPHA, // color
-                Ogre::SBF_ZERO, Ogre::SBF_ONE         // alpha
-            );
+            if (File::Exists(sFileName))
+            {
+                Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
 
-            pPass = pOgreMat->getTechnique(0)->createPass();*/
+                s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
+                /*pPass->setSeparateSceneBlending(
+                    Ogre::SBF_ZERO, Ogre::SBF_DEST_ALPHA, // color
+                    Ogre::SBF_ZERO, Ogre::SBF_ONE         // alpha
+                );
 
-            pPass->setDiffuse(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
-            pPass->createTextureUnitState()->setTextureName(sFileName.Get());
-            pPass->setTextureFiltering(Ogre::TFO_NONE);
-            pPass->setSeparateSceneBlending(
-                Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, // color
-                Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA           // alpha
-            );
+                pPass = pOgreMat->getTechnique(0)->createPass();*/
+
+                pPass->setDiffuse(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+                pPass->createTextureUnitState()->setTextureName(sFileName.Get());
+                pPass->setTextureFiltering(Ogre::TFO_NONE);
+                pPass->setSeparateSceneBlending(
+                    Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, // color
+                    Ogre::SBF_ONE, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA           // alpha
+                );
+            }
+            else
+            {
+                Error(CLASS_NAME, "Couldn't load texture : \""+sFileName+"\".");
+            }
+
+            pOgreMat->load();
+            pOgreMat->setLightingEnabled(false);
+            pOgreMat->setDepthCheckEnabled(false);
+            pOgreMat->setCullingMode(Ogre::CULL_NONE);
+
+            l2DTextureMaterialList_[sFileName] = pOgreMat;
         }
         else
         {
-            Error(CLASS_NAME, "Couldn't load texture : \""+sFileName+"\".");
+            pOgreMat = l2DTextureMaterialList_[sFileName];
         }
 
-        pOgreMat->load();
-        pOgreMat->setLightingEnabled(false);
-        pOgreMat->setDepthCheckEnabled(false);
-        pOgreMat->setCullingMode(Ogre::CULL_NONE);
-
-        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D, pOgreMat));
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D, pOgreMat, true));
         ++uiCounter_;
 
         return pMat;
@@ -282,7 +305,38 @@ namespace Frost
 
     s_refptr<Material> MaterialManager::CreateMaterial3D( const s_str& sFileName )
     {
-        return CreateMaterial3D(sFileName+"_3D_"+uiCounter_, sFileName);
+        s_ptr<Ogre::Material> pOgreMat;
+        if (!l3DTextureMaterialList_.Find(sFileName))
+        {
+            pOgreMat = (Ogre::Material*)Ogre::MaterialManager::getSingleton().create(
+                (sFileName+"_3D").Get(), "Frost"
+            ).get();
+
+            if (File::Exists(sFileName))
+            {
+                Ogre::TextureManager::getSingleton().load(sFileName.Get(), "Frost");
+
+                s_ptr<Ogre::Pass> pPass = pOgreMat->getTechnique(0)->getPass(0);
+                pPass->setDiffuse(Ogre::ColourValue(1.0f,1.0f,1.0f));
+                pPass->createTextureUnitState()->setTextureName(sFileName.Get());
+            }
+            else
+            {
+                Error(CLASS_NAME, "Couldn't load texture : \""+sFileName+"\".");
+            }
+
+            pOgreMat->load();
+            l3DTextureMaterialList_[sFileName] = pOgreMat;
+        }
+        else
+        {
+            pOgreMat = l3DTextureMaterialList_[sFileName];
+        }
+
+        s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D, pOgreMat, true));
+        ++uiCounter_;
+
+        return pMat;
     }
 
     s_refptr<Material> MaterialManager::CreateMaterial3D()

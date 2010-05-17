@@ -166,6 +166,9 @@ namespace Frost
             */
             virtual void   ParseBlock(s_ptr<XML::Block> pBlock);
 
+            /// Tells this widget to update its borders.
+            virtual void   FireUpdateBorders();
+
             /// Updates this widget's logic.
             virtual void   Update();
 
@@ -175,8 +178,6 @@ namespace Frost
 
             s_ptr<Texture> CreateThumbTexture_();
             void           FireUpdateThumbTexture_();
-
-            virtual void UpdateBorders_();
 
             s_bool bUpdateThumbTexture_;
 

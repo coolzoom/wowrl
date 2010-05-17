@@ -44,7 +44,7 @@ namespace Frost
         s_str sZoneName = sZoneFile.Cut("/").Back().Cut("\\").Back();
         if (sZoneName.EndsWith(".xml"))
         {
-            pCurrentZone_.Delete();
+            UnloadZone();
 
             sZoneName.EraseFromEnd(4);
             pCurrentZone_ = new Zone(sZoneName);
@@ -70,7 +70,8 @@ namespace Frost
 
     s_ptr<Zone> ZoneManager::LoadZone( const s_str& sZoneName )
     {
-        pCurrentZone_.Delete();
+        UnloadZone();
+
         pCurrentZone_ = new Zone(sZoneName);
 
         ParseXMLFile_("Zones/"+sZoneName+"/"+sZoneName+".xml", pCurrentZone_);

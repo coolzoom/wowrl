@@ -1,27 +1,15 @@
 <Ui>
-    <Button name="ButtonTemplate_Button" virtual="true">
+    <EditBox name="EditBoxTemplate_EditBox" virtual="true">
         <Size>
             <AbsDimension y="18"/>
         </Size>
-        <Backdrop edgeFile="|Border2PX.png">
+        <Backdrop edgeFile="|Border1PX.png">
             <BackgroundInsets>
-                <AbsInset left="2" right="2" top="2" bottom="2"/>
+                <AbsInset left="1" right="1" top="1" bottom="1"/>
             </BackgroundInsets>
         </Backdrop>
-        <PushedTextOffset>
-            <AbsDimension x="1" y="1"/>
-        </PushedTextOffset>
-        <HighlightTexture file="|ButtonHighlight.png"/>
-        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
-            <Anchors>
-                <Anchor point="CENTER">
-                    <Offset>
-                        <AbsDimension y="1"/>
-                    </Offset>
-                </Anchor>
-            </Anchors>
-            <Color r="1" g="1" b="1"/>
-        </NormalText>
+        <FontString font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" justifyV="MIDDLE"/>
+        <TextInsets left="4" right="4" top="2" bottom="0"/>
         <Scripts>
             <OnLoad>
                 this.normalTextColor = Color(1,1,1);
@@ -33,21 +21,21 @@
                 end);
                 AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
                     local newColor = self.normalTextColor*color;
-                    self:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    self.FontString:SetTextColor(newColor:Unpack());
                 end);
             </OnLoad>
-            <OnShow>
-                this:SetWidth(this:GetTextWidth()+10, 18);
-            </OnShow>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
                     local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
                     this:SetBackdropColor(newColor:Unpack());
                 
                     newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    this.FontString:SetTextColor(newColor:Unpack());
                 end
             </OnEvent>
+            <OnEscapePressed>
+                this:ClearFocus();
+            </OnEscapePressed>
         </Scripts>
-    </Button>
+    </EditBox>
 </Ui>

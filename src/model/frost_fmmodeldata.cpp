@@ -21,6 +21,8 @@
 #include <OgreSkeleton.h>
 #include <OgreAnimation.h>
 
+#include <utils/frost_utils_file.h>
+
 using namespace std;
 
 /** \cond NOT_REMOVE_FROM_DOC

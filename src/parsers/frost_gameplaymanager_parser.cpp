@@ -23,7 +23,14 @@ namespace Frost
             {
                 if (pElemBlock->GetName() == "Script")
                 {
-                    pLua_->DoFile("Gameplays/" + pElemBlock->GetAttribute("file"));
+                    try
+                    {
+                        pLua_->DoFile("Gameplays/" + pElemBlock->GetAttribute("file"));
+                    }
+                    catch (LuaException& e)
+                    {
+                        Warning(CLASS_NAME, e.GetDescription());
+                    }
                 }
                 else if (pElemBlock->GetName() == "Gameplay")
                 {
@@ -91,7 +98,17 @@ namespace Frost
                     sStr += "function " + pGameplay->GetName() + ":" + pScriptBlock->GetName() + "()\n";
                     sStr += pScriptBlock->GetValue() + "\n";
                     sStr += "end";
-                    pLua_->DoString(sStr);
+
+                    try
+                    {
+                        pLua_->DoString(sStr);
+                    }
+                    catch (LuaException& e)
+                    {
+                        Error(CLASS_NAME, "Parsing gameplay \""+pGameplay->GetName()+"\", "
+                            "defining "+pScriptBlock->GetName()+" handler :\n"+e.GetDescription()
+                        );
+                    }
 
                     // Tell the Frame it can use it
                     pGameplay->NotifyScriptDefined(pScriptBlock->GetName());

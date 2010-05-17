@@ -6,7 +6,7 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
+			<Target title="No build">
 				<Option output="bin\FrostData" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
 				<Option type="1" />
@@ -15,162 +15,451 @@
 					<Add option="-g" />
 				</Compiler>
 			</Target>
-			<Target title="Release">
-				<Option output="bin\FrostData" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-O2" />
-				</Compiler>
-				<Linker>
-					<Add option="-s" />
-				</Linker>
-			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="bin\DB\Buffs.def" />
-		<Unit filename="bin\DB\Buffs.xml" />
-		<Unit filename="bin\DB\CharacterModels.def" />
-		<Unit filename="bin\DB\CharacterModels.xml" />
-		<Unit filename="bin\DB\ClassHelper.lua" />
-		<Unit filename="bin\DB\Classes.def" />
-		<Unit filename="bin\DB\Classes.xml" />
-		<Unit filename="bin\DB\CreatureModels.def" />
-		<Unit filename="bin\DB\CreatureModels.xml" />
-		<Unit filename="bin\DB\Creatures.def" />
-		<Unit filename="bin\DB\Creatures.xml" />
-		<Unit filename="bin\DB\Effects.def" />
-		<Unit filename="bin\DB\Effects.xml" />
-		<Unit filename="bin\DB\HealthTypeScripts.lua" />
-		<Unit filename="bin\DB\HealthTypes.def" />
-		<Unit filename="bin\DB\HealthTypes.xml" />
-		<Unit filename="bin\DB\ItemModels.def" />
-		<Unit filename="bin\DB\ItemModels.xml" />
-		<Unit filename="bin\DB\Items.def" />
-		<Unit filename="bin\DB\Items.xml" />
-		<Unit filename="bin\DB\KeyCodes.lua" />
-		<Unit filename="bin\DB\PowerTypeScripts.lua" />
-		<Unit filename="bin\DB\PowerTypes.def" />
-		<Unit filename="bin\DB\PowerTypes.xml" />
-		<Unit filename="bin\DB\Projectiles.def" />
-		<Unit filename="bin\DB\Projectiles.xml" />
-		<Unit filename="bin\DB\Races.def" />
-		<Unit filename="bin\DB\Races.xml" />
-		<Unit filename="bin\DB\SpellSchools.def" />
-		<Unit filename="bin\DB\SpellSchools.xml" />
-		<Unit filename="bin\DB\SpellScripts.lua" />
-		<Unit filename="bin\DB\Spells.def" />
-		<Unit filename="bin\DB\Spells.xml" />
-		<Unit filename="bin\DB\Vector.lua" />
-		<Unit filename="bin\DefaultConfig.lua" />
-		<Unit filename="bin\Gameplays\Editor.lua" />
-		<Unit filename="bin\Gameplays\Editor.xml" />
-		<Unit filename="bin\Gameplays\FirstPerson.lua" />
-		<Unit filename="bin\Gameplays\FirstPerson.xml" />
-		<Unit filename="bin\Gameplays\Free.lua" />
-		<Unit filename="bin\Gameplays\Free.xml" />
-		<Unit filename="bin\Gameplays\Gameplay.def" />
-		<Unit filename="bin\Gameplays\TopDown.lua" />
-		<Unit filename="bin\Gameplays\TopDown.xml" />
-		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.lua" />
-		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.toc" />
-		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.xml" />
-		<Unit filename="bin\Interface\AddOns\Templates\Template_Dialog.xml" />
-		<Unit filename="bin\Interface\AddOns\Templates\Templates.toc" />
-		<Unit filename="bin\Interface\BaseUI\Library\Library.toc" />
-		<Unit filename="bin\Interface\BaseUI\Library\Library_AddOn.lua" />
-		<Unit filename="bin\Interface\BaseUI\Library\Library_Color.lua" />
-		<Unit filename="bin\Interface\BaseUI\UIParent\UIParent.toc" />
-		<Unit filename="bin\Interface\BaseUI\UIParent\UIParent.xml" />
-		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector.lua" />
-		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector.toc" />
-		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector.xml" />
-		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector_Templates.xml" />
-		<Unit filename="bin\Interface\Editor\ColorSelector\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\ColorSelector\Localization.lua" />
-		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu.lua" />
-		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu.toc" />
-		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu.xml" />
-		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu_Templates.xml" />
-		<Unit filename="bin\Interface\Editor\ConfigMenu\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\ConfigMenu\Localization.lua" />
-		<Unit filename="bin\Interface\Editor\Editor\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\Editor\Editor.lua" />
-		<Unit filename="bin\Interface\Editor\Editor\Editor.toc" />
-		<Unit filename="bin\Interface\Editor\Editor\Editor.xml" />
-		<Unit filename="bin\Interface\Editor\EscMenu\Buttons.lua" />
-		<Unit filename="bin\Interface\Editor\EscMenu\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu.lua" />
-		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu.toc" />
-		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu.xml" />
-		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu_Templates.xml" />
-		<Unit filename="bin\Interface\Editor\EscMenu\Localization.lua" />
-		<Unit filename="bin\Interface\Editor\FPSCounter\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\FPSCounter\FPSCounter.lua" />
-		<Unit filename="bin\Interface\Editor\FPSCounter\FPSCounter.toc" />
-		<Unit filename="bin\Interface\Editor\FPSCounter\FPSCounter.xml" />
-		<Unit filename="bin\Interface\Editor\MenuBar\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\MenuBar\Localization.lua" />
-		<Unit filename="bin\Interface\Editor\MenuBar\MenuBar.lua" />
-		<Unit filename="bin\Interface\Editor\MenuBar\MenuBar.toc" />
-		<Unit filename="bin\Interface\Editor\MenuBar\MenuBar.xml" />
-		<Unit filename="bin\Interface\Editor\MenuBar\MenuBarTemplates.lua" />
-		<Unit filename="bin\Interface\Editor\MenuBar\MenuBarTemplates.xml" />
-		<Unit filename="bin\Interface\Editor\MenuBar\Menus.lua" />
-		<Unit filename="bin\Interface\Editor\PanelBar\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\PanelBar\Localization.lua" />
-		<Unit filename="bin\Interface\Editor\PanelBar\PanelBar.lua" />
-		<Unit filename="bin\Interface\Editor\PanelBar\PanelBar.toc" />
-		<Unit filename="bin\Interface\Editor\PanelBar\PanelBar.xml" />
-		<Unit filename="bin\Interface\Editor\PanelBar\PanelBarTemplates.xml" />
-		<Unit filename="bin\Interface\Editor\PanelBar\Panels.lua" />
-		<Unit filename="bin\Interface\Editor\Templates\DefaultConfig.lua" />
-		<Unit filename="bin\Interface\Editor\Templates\Localization.lua" />
-		<Unit filename="bin\Interface\Editor\Templates\Template_Button.xml" />
-		<Unit filename="bin\Interface\Editor\Templates\Template_ConfirmDialog.xml" />
-		<Unit filename="bin\Interface\Editor\Templates\Template_Dialog.xml" />
-		<Unit filename="bin\Interface\Editor\Templates\Template_Dropdown.xml" />
-		<Unit filename="bin\Interface\Editor\Templates\Template_YesNoDialog.xml" />
-		<Unit filename="bin\Interface\Editor\Templates\Templates.toc" />
-		<Unit filename="bin\Interface\UI.def" />
-		<Unit filename="bin\Locale\enGB\LocaleClass.lua" />
-		<Unit filename="bin\Locale\enGB\LocaleSpells.lua" />
-		<Unit filename="bin\Locale\frFR\LocaleClass.lua" />
-		<Unit filename="bin\Locale\frFR\LocaleSpells.lua" />
-		<Unit filename="bin\Shaders\Character\Character.xml" />
-		<Unit filename="bin\Shaders\Character\Character_Skinning_ps.glsl" />
-		<Unit filename="bin\Shaders\Character\Character_Skinning_ps.hlsl" />
-		<Unit filename="bin\Shaders\Character\Character_Skinning_vs.glsl" />
-		<Unit filename="bin\Shaders\Character\Character_Skinning_vs.hlsl" />
-		<Unit filename="bin\Shaders\GUI\GUI.xml" />
-		<Unit filename="bin\Shaders\GUI\GUI_Desaturation_ps.glsl" />
-		<Unit filename="bin\Shaders\GUI\GUI_Desaturation_ps.hlsl" />
-		<Unit filename="bin\Shaders\MotionBlur\MotionBlur.xml" />
-		<Unit filename="bin\Shaders\MotionBlur\MotionBlur_ps.glsl" />
-		<Unit filename="bin\Shaders\MotionBlur\MotionBlur_ps.hlsl" />
-		<Unit filename="bin\Shaders\Shader.def" />
-		<Unit filename="bin\Shaders\Simple\Simple.xml" />
-		<Unit filename="bin\Shaders\Simple\SimpleColor_ps.glsl" />
-		<Unit filename="bin\Shaders\Simple\SimpleColor_ps.hlsl" />
-		<Unit filename="bin\Shaders\Simple\SimpleColor_vs.glsl" />
-		<Unit filename="bin\Shaders\Simple\SimpleColor_vs.hlsl" />
-		<Unit filename="bin\Shaders\Simple\SimpleTexture_ps.glsl" />
-		<Unit filename="bin\Shaders\Simple\SimpleTexture_ps.hlsl" />
-		<Unit filename="bin\Shaders\Simple\SimpleTexture_vs.glsl" />
-		<Unit filename="bin\Shaders\Simple\SimpleTexture_vs.hlsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain.xml" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_ps.glsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_ps.hlsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_vs.glsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_vs.hlsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_ps.glsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_ps.hlsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_vs.glsl" />
-		<Unit filename="bin\Shaders\Terrain\Terrain_vs.hlsl" />
-		<Unit filename="bin\Zones\Zone.def" />
+		<Unit filename="bin\DB\Buffs.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Buffs.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\CharacterModels.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\CharacterModels.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\ClassHelper.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Classes.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Classes.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\CreatureModels.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\CreatureModels.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Creatures.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Creatures.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Effects.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Effects.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\HealthTypeScripts.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\HealthTypes.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\HealthTypes.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\ItemModels.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\ItemModels.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Items.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Items.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\KeyCodes.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\PowerTypeScripts.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\PowerTypes.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\PowerTypes.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Projectiles.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Projectiles.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Races.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Races.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\SpellSchools.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\SpellSchools.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\SpellScripts.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Spells.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Spells.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DB\Vector.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\Editor.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\Editor.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\FirstPerson.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\FirstPerson.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\Free.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\Free.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\Gameplay.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\TopDown.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Gameplays\TopDown.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\AddOns\AddOns.txt" />
+		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\AddOns\FPSCounter\FPSCounter.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\AddOns\Templates\Template_Dialog.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\AddOns\Templates\Templates.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\BaseUI\AddOns.txt" />
+		<Unit filename="bin\Interface\BaseUI\Library\Library.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\BaseUI\Library\Library_AddOn.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\BaseUI\Library\Library_Color.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\BaseUI\UIParent\UIParent.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\BaseUI\UIParent\UIParent.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\AddOns.txt" />
+		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ColorSelector\ColorSelector_Templates.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ColorSelector\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ColorSelector\Localization.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ConfigMenu\ConfigMenu_Templates.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ConfigMenu\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\ConfigMenu\Localization.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Editor\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Editor\Editor.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Editor\Editor.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Editor\Editor.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\EscMenu\Buttons.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\EscMenu\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\EscMenu\EscMenu_Templates.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\EscMenu\Localization.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FPSCounter\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FPSCounter\FPSCounter.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FPSCounter\FPSCounter.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FPSCounter\FPSCounter.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FileSelector\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FileSelector\FileSelector.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FileSelector\FileSelector.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FileSelector\FileSelector.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\FileSelector\FileSelector_Templates.xml" />
+		<Unit filename="bin\Interface\Editor\FileSelector\Localization.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\Localization.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\MenuBar.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\MenuBar.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\MenuBar.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\MenuBarTemplates.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\MenuBarTemplates.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\Menus.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\PanelBar\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\PanelBar\Localization.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\PanelBar\PanelBar.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\PanelBar\PanelBar.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\PanelBar\PanelBar.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\PanelBar\PanelBarTemplates.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\PanelBar\Panels.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\DefaultConfig.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Localization.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Template_Button.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Template_ConfirmDialog.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Template_Dialog.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Template_Dropdown.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Template_EditBox.xml" />
+		<Unit filename="bin\Interface\Editor\Templates\Template_ErrorDialog.xml" />
+		<Unit filename="bin\Interface\Editor\Templates\Template_YesNoDialog.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Templates.toc">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Interface\UI.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Locale\enGB\LocaleClass.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Locale\enGB\LocaleSpells.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Locale\frFR\LocaleClass.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Locale\frFR\LocaleSpells.lua">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Character\Character.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Character\Character_Skinning_ps.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Character\Character_Skinning_ps.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Character\Character_Skinning_vs.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Character\Character_Skinning_vs.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\GUI\GUI.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\GUI\GUI_Desaturation_ps.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\GUI\GUI_Desaturation_ps.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\MotionBlur\MotionBlur.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\MotionBlur\MotionBlur_ps.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\MotionBlur\MotionBlur_ps.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Shader.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\Simple.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleColor_ps.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleColor_ps.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleColor_vs.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleColor_vs.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleTexture_ps.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleTexture_ps.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleTexture_vs.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Simple\SimpleTexture_vs.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain.xml">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_ps.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_ps.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_vs.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_Splatting_vs.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_ps.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_ps.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_vs.glsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Shaders\Terrain\Terrain_vs.hlsl">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="bin\Zones\Zone.def">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

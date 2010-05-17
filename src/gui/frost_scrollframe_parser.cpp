@@ -13,20 +13,9 @@ using namespace Frost::GUI;
 
 void ScrollFrame::ParseBlock( s_ptr<XML::Block> pBlock )
 {
-    ParseAttributes_(pBlock);
-
-    ParseSizeBlock_(pBlock);
-    ParseResizeBoundsBlock_(pBlock);
-    ParseAnchorsBlock_(pBlock);
-    ParseTitleRegionBlock_(pBlock);
-    ParseBackdropBlock_(pBlock);
-    ParseHitRectInsetsBlock_(pBlock);
+    Frame::ParseBlock(pBlock);
 
     ParseScrollChildBlock_(pBlock);
-
-    ParseLayersBlock_(pBlock);
-    ParseFramesBlock_(pBlock);
-    ParseScriptsBlock_(pBlock);
 }
 
 void ScrollFrame::ParseScrollChildBlock_( s_ptr<XML::Block> pBlock )

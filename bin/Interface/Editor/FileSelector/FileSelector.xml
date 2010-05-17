@@ -16,7 +16,6 @@
 
                 AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
                     local newColor = self.normalTextColor*color;
-                    self.File:SetTextColor(newColor:Unpack());
                     self.Title.TitleString:SetTextColor(newColor:Unpack());
                     self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
                 end);
@@ -30,34 +29,22 @@
                 this.Splitter.FolderFrame:On("SizeChanged");
                 this.Splitter.FileFrame:On("SizeChanged");
             </OnShow>
-            <OnEvent>
-                this:GetBase():OnEvent();
-
-                if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this.File:SetTextColor(newColor:Unpack());
-                end
-            </OnEvent>
         </Scripts>
-        <Layers>
-            <Layer>
-                <FontString name="$parentFile" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" justifyV="BOTTOM">
-                    <Anchors>
-                        <Anchor point="BOTTOMLEFT">
-                            <Offset>
-                                <AbsDimension x="15" y="-15"/>
-                            </Offset>
-                        </Anchor>
-                        <Anchor point="RIGHT" relativeTo="$parentOkButton" relativePoint="LEFT">
-                            <Offset>
-                                <AbsDimension x="-5"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </FontString>
-            </Layer>
-        </Layers>
         <Frames>
+            <EditBox name="$parentFile" inherits="EditBoxTemplate_EditBox">
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="12" y="-12"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentOkButton" relativePoint="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </EditBox>
             <Button name="$parentCancelButton" inherits="ButtonTemplate_Button">
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT">
@@ -91,8 +78,9 @@
                         this:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogOK"));
                     </OnLoad>
                     <OnClick>
-                        FileSelector:Hide();
-                        FileSelector:OnOk();
+                        if (FileSelector:OnOk()) then
+                            FileSelector:Hide();
+                        end
                     </OnClick>
                 </Scripts>
             </Button>
@@ -144,9 +132,16 @@
                             </Frame>
                         </ScrollChild>
                         <Scripts>
+                            <OnShow>
+                                this:OnSizeChanged();
+                            </OnShow>
                             <OnSizeChanged>
-                                this.Slider:SetMinMaxValues(0, math.max(0, this.Scroll:GetHeight() - this:GetHeight()));
-                                this.Scroll:SetWidth(this:GetWidth());
+                                if (this.Scroll:GetHeight() and this:GetHeight()) then
+                                    this.Slider:SetMinMaxValues(0, math.max(0, this.Scroll:GetHeight() - this:GetHeight()));
+                                end
+                                if (this:GetWidth()) then
+                                    this.Scroll:SetWidth(this:GetWidth());
+                                end
                             </OnSizeChanged>
                             <OnMouseWheel>
                                 this.Slider:SetValue(this.Slider:GetValue()-18*arg1);
@@ -207,6 +202,9 @@
                             </Frame>
                         </ScrollChild>
                         <Scripts>
+                            <OnShow>
+                                this:OnSizeChanged();
+                            </OnShow>
                             <OnSizeChanged>
                                 this.Slider:SetMinMaxValues(0, math.max(0, this.Scroll:GetHeight() - this:GetHeight()));
                                 this.Scroll:SetWidth(this:GetWidth());
@@ -265,9 +263,6 @@
                 this:SetMinHeight(85);
                 this:SetHeight(85);
             </OnLoad>
-            <OnShow>
-                this.Content:SetText(AddOns.FileSelector:GetLocalizedString("NotFoundError")..FileSelector.error);
-            </OnShow>
         </Scripts>
     </Frame>
 </Ui>

@@ -37,7 +37,15 @@ namespace Frost
             s_ptr<Lua::State> pLua = UnitManager::GetSingleton()->GetLua();
 
             pUnit_->PushOnLua(pLua);
-            pLua->CallFunction(pParent_->sName+":On"+sScriptName);
+
+            try
+            {
+                pLua->CallFunction(pParent_->sName+":On"+sScriptName);
+            }
+            catch (LuaException& e)
+            {
+                Error("", e.GetDescription());
+            }
         }
     }
 

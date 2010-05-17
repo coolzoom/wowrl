@@ -52,7 +52,7 @@ Frame::~Frame()
 
 void Frame::Render()
 {
-    if (IsVisible())
+    if (bIsVisible_)
     {
         if (pBackdrop_)
             pBackdrop_->Render();
@@ -64,12 +64,14 @@ void Frame::Render()
             Layer& mLayer = iterLayer->second;
             if (!mLayer.bDisabled)
             {
-                s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
+                s_ctnr< s_ptr<LayeredRegion> >::iterator iterRegion;
                 foreach (iterRegion, mLayer.lRegionList)
                 {
-                    s_ptr<LayeredRegion> pRegion = iterRegion->second;
+                    s_ptr<LayeredRegion> pRegion = *iterRegion;
                     if (pRegion->IsShown() && !pRegion->IsManuallyRendered() && !pRegion->IsNewlyCreated())
+                    {
                         pRegion->Render();
+                    }
                 }
             }
         }
@@ -516,14 +518,24 @@ void Frame::CheckPosition()
     }
 }
 
-void Frame::DisableDrawLayer( LayerType mLayer )
+void Frame::DisableDrawLayer( LayerType mLayerID )
 {
-    lLayerList_[mLayer].bDisabled = true;
+    Layer& mLayer = lLayerList_[mLayerID];
+    if (!mLayer.bDisabled)
+    {
+        mLayer.bDisabled = true;
+        NotifyRendererNeedRedraw();
+    }
 }
 
-void Frame::EnableDrawLayer( LayerType mLayer )
+void Frame::EnableDrawLayer( LayerType mLayerID )
 {
-    lLayerList_[mLayer].bDisabled = false;
+    Layer& mLayer = lLayerList_[mLayerID];
+    if (!mLayer.bDisabled)
+    {
+        mLayer.bDisabled = false;
+        NotifyRendererNeedRedraw();
+    }
 }
 
 void Frame::EnableKeyboard( const s_bool& bIsKeyboardEnabled )
@@ -534,11 +546,13 @@ void Frame::EnableKeyboard( const s_bool& bIsKeyboardEnabled )
         {
             EventReceiver::RegisterEvent("KEY_PRESSED");
             EventReceiver::RegisterEvent("KEY_RELEASED");
+            EventReceiver::RegisterEvent("KEY_DOWN_LONG");
         }
         else if (!bIsKeyboardEnabled && bIsKeyboardEnabled_)
         {
             EventReceiver::UnregisterEvent("KEY_PRESSED");
             EventReceiver::UnregisterEvent("KEY_RELEASED");
+            EventReceiver::UnregisterEvent("KEY_DOWN_LONG");
         }
     }
 
@@ -600,6 +614,7 @@ void Frame::AddRegion( s_ptr<LayeredRegion> pRegion )
         {
             lRegionList_[pRegion->GetID()] = pRegion;
             FireBuildLayerList_();
+            NotifyRendererNeedRedraw();
 
             if (!bVirtual_)
             {
@@ -633,6 +648,7 @@ void Frame::RemoveRegion( s_ptr<LayeredRegion> pRegion )
         {
             lRegionList_.Erase(iter);
             FireBuildLayerList_();
+            NotifyRendererNeedRedraw();
         }
         else
         {
@@ -656,10 +672,16 @@ void Frame::AddChild( s_ptr<Frame> pChild )
             if (pTopLevelParent_)
                 pChild->NotifyTopLevelParent_(true, pTopLevelParent_);
 
+            if (IsVisible() && pChild->IsShown())
+                pChild->NotifyVisible_(!GUIManager::GetSingleton()->IsLoadingUI());
+            else
+                pChild->NotifyInvisible_(!GUIManager::GetSingleton()->IsLoadingUI());
+
             pChild->SetManuallyRendered(bManuallyRendered_, pRenderer_);
 
             lChildList_[pChild->GetID()] = pChild;
-            GUIManager::GetSingleton()->FireBuildStrataList();
+
+            NotifyStrataChanged_();
 
             if (!bVirtual_)
             {
@@ -691,7 +713,7 @@ void Frame::RemoveChild( s_ptr<Frame> pChild )
         if (iter != lChildList_.End())
         {
             lChildList_.Erase(iter);
-            GUIManager::GetSingleton()->FireBuildStrataList();
+            NotifyStrataChanged_();
         }
         else
         {
@@ -752,12 +774,12 @@ const s_str& Frame::GetFrameType() const
     return lType_.Back();
 }
 
-s_array<s_int,4> Frame::GetAbsHitRectInsets() const
+const s_array<s_int,4>& Frame::GetAbsHitRectInsets() const
 {
     return lAbsHitRectInsetList_;
 }
 
-s_array<s_float,4> Frame::GetRelHitRectInsets() const
+const s_array<s_float,4>& Frame::GetRelHitRectInsets() const
 {
     return lRelHitRectInsetList_;
 }
@@ -860,14 +882,37 @@ void Frame::DefineScript( const s_str& sScriptName, const s_str& sContent )
 {
     s_str sCutScriptName = sScriptName;
     sCutScriptName.EraseFromStart(2);
-    lDefinedScriptList_[sCutScriptName] = sContent;
+
+    s_str sAdjustedContent;
+    if (!sContent.StartsWith("\n"))
+        sAdjustedContent = "\n" + sContent;
+    else
+        sAdjustedContent = sContent;
+
+    if (!sContent.EndsWith("\n"))
+        sAdjustedContent += "\n";
+
+    lDefinedScriptList_[sCutScriptName] = sAdjustedContent;
 
     s_str sStr;
-    sStr += "function " + sLuaName_ + ":" + sScriptName + "()\n";
-    sStr += sContent + "\n";
+    sStr += "function " + sLuaName_ + ":" + sScriptName + "()";
+    sStr += sAdjustedContent;
     sStr += "end";
 
-    GUIManager::GetSingleton()->GetLua()->DoString(sStr);
+    try
+    {
+        GUIManager::GetSingleton()->GetLua()->DoString(sStr);
+    }
+    catch (LuaException& e)
+    {
+        s_str sError = sName_+"::DefineScript(\""+sScriptName+"\") :\n"+e.GetDescription();
+
+        Error("", sError);
+
+        Event mEvent("LUA_ERROR");
+        mEvent.Add(sError);
+        EventManager::GetSingleton()->FireEvent(mEvent);
+    }
 }
 
 void Frame::NotifyScriptDefined( const s_str& sScriptName, const s_bool& bDefined )
@@ -965,6 +1010,24 @@ void Frame::OnEvent( const Event& mEvent )
                 On("MouseWheel");
         }
     }
+
+    if (bIsKeyboardEnabled_)
+    {
+        if (mEvent.GetName() == "KEY_PRESSED")
+        {
+            Event mKeyEvent;
+            mKeyEvent.Add(InputManager::GetSingleton()->GetKeyString((KeyCode)mEvent[0].Get<s_uint>().Get()));
+
+            On("KeyDown", &mKeyEvent);
+        }
+        else if (mEvent.GetName() == "KEY_RELEASED")
+        {
+            Event mKeyEvent;
+            mKeyEvent.Add(InputManager::GetSingleton()->GetKeyString((KeyCode)mEvent[0].Get<s_uint>().Get()));
+
+            On("KeyUp", &mKeyEvent);
+        }
+    }
 }
 
 void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
@@ -1023,7 +1086,20 @@ void Frame::On( const s_str& sScriptName, s_ptr<Event> pEvent )
             }
         }
 
-        pLua->CallFunction(sName_+":On"+sScriptName);
+        try
+        {
+            pLua->CallFunction(sName_+":On"+sScriptName);
+        }
+        catch (LuaException& e)
+        {
+            s_str sError = e.GetDescription();
+
+            Error("", sError);
+
+            Event mEvent("LUA_ERROR");
+            mEvent.Add(sError);
+            EventManager::GetSingleton()->FireEvent(mEvent);
+        }
 
         GUIManager::GetSingleton()->ThisStackPop();
     }
@@ -1070,7 +1146,7 @@ void Frame::SetFrameStrata( FrameStrata mStrata )
     }
 
     if ( (mStrata_ != mStrata) && !bVirtual_ )
-        GUIManager::GetSingleton()->FireBuildStrataList();
+        NotifyStrataChanged_();
 
     mStrata_ = mStrata;
 }
@@ -1121,6 +1197,7 @@ void Frame::SetFrameStrata( const s_str& sStrata )
 void Frame::SetBackdrop( s_refptr<Backdrop> pBackdrop )
 {
     pBackdrop_ = pBackdrop;
+    NotifyRendererNeedRedraw();
 }
 
 void Frame::SetAbsHitRectInsets( const s_int& iLeft, const s_int& iRight, const s_int& iTop, const s_int& iBottom )
@@ -1140,28 +1217,20 @@ void Frame::SetLevel( const s_uint& uiLevel )
         uiLevel_ = uiLevel;
 
         if (!bVirtual_)
-            GUIManager::GetSingleton()->FireBuildStrataList();
+            NotifyStrataChanged_();
     }
 }
 
 void Frame::SetMaxResize( const s_uint& uiMaxWidth, const s_uint& uiMaxHeight )
 {
-    if (uiMaxWidth >= uiMinWidth_)
-        uiMaxWidth_ = uiMaxWidth;
-    if (uiMaxHeight >= uiMinHeight_)
-        uiMaxHeight_ = uiMaxHeight;
-
-    FireUpdateDimensions();
+    SetMaxHeight(uiMaxHeight);
+    SetMaxWidth(uiMaxWidth);
 }
 
 void Frame::SetMinResize( const s_uint& uiMinWidth, const s_uint& uiMinHeight )
 {
-    if (uiMinWidth <= uiMaxWidth_)
-        uiMinWidth_ = uiMinWidth;
-    if (uiMinHeight <= uiMaxHeight_)
-        uiMinHeight_ = uiMinHeight;
-
-    FireUpdateDimensions();
+    SetMinHeight(uiMinHeight);
+    SetMinWidth(uiMinWidth);
 }
 
 void Frame::SetMaxHeight( const s_uint& uiMaxHeight )
@@ -1169,7 +1238,8 @@ void Frame::SetMaxHeight( const s_uint& uiMaxHeight )
     if (uiMaxHeight >= uiMinHeight_)
         uiMaxHeight_ = uiMaxHeight;
 
-    FireUpdateDimensions();
+    if (uiMaxHeight_ != uiMaxHeight || !uiMaxHeight_.IsValid())
+        FireUpdateDimensions();
 }
 
 void Frame::SetMaxWidth( const s_uint& uiMaxWidth )
@@ -1177,7 +1247,8 @@ void Frame::SetMaxWidth( const s_uint& uiMaxWidth )
     if (uiMaxWidth >= uiMinWidth_)
         uiMaxWidth_ = uiMaxWidth;
 
-    FireUpdateDimensions();
+    if (uiMaxWidth_ != uiMaxWidth || !uiMaxWidth_.IsValid())
+        FireUpdateDimensions();
 }
 
 void Frame::SetMinHeight( const s_uint& uiMinHeight )
@@ -1185,7 +1256,8 @@ void Frame::SetMinHeight( const s_uint& uiMinHeight )
     if (uiMinHeight <= uiMaxHeight_)
         uiMinHeight_ = uiMinHeight;
 
-    FireUpdateDimensions();
+    if (uiMinHeight_ != uiMinHeight || !uiMinHeight_.IsValid())
+        FireUpdateDimensions();
 }
 
 void Frame::SetMinWidth( const s_uint& uiMinWidth )
@@ -1193,7 +1265,8 @@ void Frame::SetMinWidth( const s_uint& uiMinWidth )
     if (uiMinWidth <= uiMaxWidth_)
         uiMinWidth_ = uiMinWidth;
 
-    FireUpdateDimensions();
+    if (uiMinWidth_ != uiMinWidth || !uiMinWidth_.IsValid())
+        FireUpdateDimensions();
 }
 
 void Frame::SetMovable( const s_bool& bIsMovable )
@@ -1230,6 +1303,8 @@ void Frame::SetResizable( const s_bool& bIsResizable )
 void Frame::SetScale( const s_float& fScale )
 {
     fScale_ = fScale;
+    if (fScale_ != fScale)
+        NotifyRendererNeedRedraw();
 }
 
 void Frame::SetTopLevel( const s_bool& bIsTopLevel )
@@ -1273,7 +1348,7 @@ void Frame::Raise()
                 iterChild->second->AddLevel_(uiAmount);
             }
 
-            GUIManager::GetSingleton()->FireBuildStrataList();
+            NotifyStrataChanged_();
         }
     }
 }
@@ -1287,6 +1362,8 @@ void Frame::AddLevel_( const s_uint& uiAmount )
     {
         iterChild->second->AddLevel_(uiAmount);
     }
+
+    NotifyStrataChanged_();
 }
 
 void Frame::SetUserPlaced( const s_bool& bIsUserPlaced )
@@ -1350,25 +1427,37 @@ void Frame::NotifyStrataChanged_()
         GUIManager::GetSingleton()->FireBuildStrataList();
 }
 
-void Frame::NotifyVisible_()
+void Frame::NotifyVisible_( const s_bool& bTriggerEvents )
 {
-    lQueuedEventList_.PushBack("Show");
+    bIsVisible_ = true;
     s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList_)
     {
         if (iterChild->second->IsShown())
-            iterChild->second->NotifyVisible_();
+            iterChild->second->NotifyVisible_(bTriggerEvents);
+    }
+
+    if (bTriggerEvents)
+    {
+        lQueuedEventList_.PushBack("Show");
+        NotifyRendererNeedRedraw();
     }
 }
 
-void Frame::NotifyInvisible_()
+void Frame::NotifyInvisible_( const s_bool& bTriggerEvents )
 {
-    lQueuedEventList_.PushBack("Hide");
+    bIsVisible_ = false;
     s_map<s_uint, s_ptr<Frame> >::iterator iterChild;
     foreach (iterChild, lChildList_)
     {
         if (iterChild->second->IsShown())
-            iterChild->second->NotifyInvisible_();
+            iterChild->second->NotifyInvisible_(bTriggerEvents);
+    }
+
+    if (bTriggerEvents)
+    {
+        lQueuedEventList_.PushBack("Hide");
+        NotifyRendererNeedRedraw();
     }
 }
 
@@ -1386,24 +1475,48 @@ void Frame::NotifyTopLevelParent_( const s_bool& bTopLevel, s_ptr<Frame> pParent
     }
 }
 
+void Frame::NotifyRendererNeedRedraw()
+{
+    if (!bVirtual_)
+    {
+        if (pRenderer_)
+            pRenderer_->FireRedraw();
+        else
+            GUIManager::GetSingleton()->FireRedraw(mStrata_);
+    }
+}
+
 void Frame::Show()
 {
-    s_bool bWasShown = bIsShown_;
+    if (!bIsShown_)
+    {
+        UIObject::Show();
 
-    UIObject::Show();
-
-    if (IsVisible() && !bWasShown)
-        NotifyVisible_();
+        if (!pParent_ || pParent_->IsVisible())
+            NotifyVisible_();
+    }
 }
 
 void Frame::Hide()
 {
-    s_bool bWasVisible = IsVisible();
+    if (bIsShown_)
+    {
+        UIObject::Hide();
 
-    UIObject::Hide();
+        if (bIsVisible_)
+            NotifyInvisible_();
+    }
+}
 
-    if (bWasVisible)
-        NotifyInvisible_();
+void Frame::SetShown( const s_bool& bIsShown )
+{
+    if (bIsShown_ != bIsShown)
+    {
+        bIsShown_ = bIsShown;
+
+        if (!bIsShown_)
+            NotifyInvisible_(false);
+    }
 }
 
 void Frame::UnregisterAllEvents()
@@ -1485,12 +1598,19 @@ void Frame::Update()
             iterLayer->second.lRegionList.Clear();
         }
 
-        // Fill layers with regions
+        // Fill layers with regions (with FontString rendered last withing the same Layer)
         s_map< s_uint, s_ptr<LayeredRegion> >::iterator iterRegion;
         foreach (iterRegion, lRegionList_)
         {
             s_ptr<LayeredRegion> pRegion = iterRegion->second;
-            lLayerList_[pRegion->GetDrawLayer()].lRegionList[pRegion->GetID()] = pRegion;
+            if (pRegion->GetObjectType() != "FontString")
+                lLayerList_[pRegion->GetDrawLayer()].lRegionList.PushBack(pRegion);
+        }
+        foreach (iterRegion, lRegionList_)
+        {
+            s_ptr<LayeredRegion> pRegion = iterRegion->second;
+            if (pRegion->GetObjectType() == "FontString")
+                lLayerList_[pRegion->GetDrawLayer()].lRegionList.PushBack(pRegion);
         }
 
         bBuildLayerList_ = false;
@@ -1515,11 +1635,6 @@ void Frame::Update()
     {
         iterChild->second->Update();
     }
-}
-
-void Frame::UpdateMaterial( const s_bool& bForceUpdate )
-{
-    UIObject::UpdateMaterial(bForceUpdate);
 }
 
 s_ctnr< s_ptr<UIObject> > Frame::ClearLinks()

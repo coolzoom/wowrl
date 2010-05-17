@@ -146,9 +146,8 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
         }
     }
 
-    if ((pBlock->IsProvided("hidden") || !bInherits_) &&
-        (s_bool(pBlock->GetAttribute("hidden"))))
-        Hide();
+    if (pBlock->IsProvided("hidden") || !bInherits_)
+        SetShown(!s_bool(pBlock->GetAttribute("hidden")));
 
     if ((pBlock->IsProvided("setAllPoints") || !bInherits_) &&
         (s_bool(pBlock->GetAttribute("setAllPoints"))))

@@ -3,11 +3,19 @@ function FileSelector:SetOnOkFunc(func)
 end
 
 function FileSelector:OnOk()
-    if (self.onOK) then
-        self.onOK();
+    if (self.onOk) then
+        local result = self.onOk();
+        if (result ~= nil) then
+            if (result) then
+                self.onOk = nil;
+            end
+            return result;
+        else
+            return true;
+        end
     end
 
-    self.onOK = nil;
+    return true;
 end
 
 function FileSelector:SetOnCancelFunc(func)
@@ -22,7 +30,14 @@ function FileSelector:OnCancel()
     self.onCancel = nil;
 end
 
-function FileSelector:Error()
+function FileSelector:Error(message, width, height)
+    if (width) then
+        FileSelectorNotFoundErrorDialog:SetWidth(width);
+    end
+    if (height) then
+        FileSelectorNotFoundErrorDialog:SetHeight(height);
+    end
+    FileSelectorNotFoundErrorDialogContent:SetText(message);
     FileSelectorNotFoundErrorDialog:Show();
 end
 
@@ -86,6 +101,7 @@ function FileSelector:InitRootFolder()
                 folderButton.folderNum = 0;
 
                 folderButton:SetText(folder);
+                folderButton:GetNormalFontObject():SetWordWrap(false);
 
                 if (rootFolder.lastFolder) then
                     rootFolder.lastFolder.nextFolder = folderButton;
@@ -105,9 +121,9 @@ function FileSelector:InitRootFolder()
         rootFolder.folderNum = #rootFolder.folders;
 
         self.Splitter.FolderFrame.Scroll:SetHeight(self.folderScrollChildHeight);
-        self.Splitter.FolderFrame.Slider:SetMinMaxValues(
+        --[[self.Splitter.FolderFrame.Slider:SetMinMaxValues(
             0, math.max(0, self.folderScrollChildHeight - self.Splitter.FolderFrame:GetHeight())
-        );
+        );]]--
 
         self.initialized = true;
     end
@@ -150,6 +166,7 @@ function FileSelector:DevelopFolder(id, toggle)
                     folderButton.folderNum = 0;
 
                     folderButton:SetText(folder);
+                    folderButton:GetNormalFontObject():SetWordWrap(false);
 
                     if (parentFolder.lastFolder) then
                         parentFolder.lastFolder.nextFolder = folderButton;
@@ -173,9 +190,11 @@ function FileSelector:DevelopFolder(id, toggle)
 
             self.folderScrollChildHeight = self.folderScrollChildHeight + 18*parentFolder.folderNum;
             self.Splitter.FolderFrame.Scroll:SetHeight(self.folderScrollChildHeight);
-            self.Splitter.FolderFrame.Slider:SetMinMaxValues(
-                0, math.max(0, self.folderScrollChildHeight - self.Splitter.FolderFrame:GetHeight())
-            );
+            if (self.Splitter.FolderFrame:GetHeight()) then            
+                self.Splitter.FolderFrame.Slider:SetMinMaxValues(
+                    0, math.max(0, self.folderScrollChildHeight - self.Splitter.FolderFrame:GetHeight())
+                );
+            end
 
             if (parentFolder.nextFolder) then
                 parentFolder.nextFolder:SetPoint(
@@ -291,6 +310,7 @@ function FileSelector:SetFolder(id)
 
         for i, file in pairs(fileList) do
             local adjustedName = string.gsub(file, "%.", "");
+            adjustedName = string.gsub(adjustedName, " ", "_");
             local dotPos = string.find(file, ".", 0, true);
             local extension;
             if (dotPos) then
@@ -307,27 +327,30 @@ function FileSelector:SetFolder(id)
                     fileButton.file = file;
                 end
                 fileButton:SetText(file);
+                fileButton:GetNormalFontObject():SetWordWrap(false);
 
                 if (self.lastFile) then
                     fileButton:SetPoint("TOPLEFT", self.lastFile, "BOTTOMLEFT");
                 else
                     fileButton:SetPoint("TOPLEFT", self.Splitter.FileFrame.Scroll, "TOPLEFT", 5, 5);
                 end
+                
+                fileButton.IconFrame.Icon:SetTexture("Interface/Editor/FileSelector/FileSelectorIcons.png");
 
                 if (extension) then
                     if (extension == "lua" or extension == "xml" or extension == "toc" or extension == "def"
                         or extension == "txt" or extension == "glsl" or extension == "hlsl") then
-                        fileButton.IconFrame.Icon:SetTexture("Interface/Editor/FileSelector/FileSelectorFileText.png");
+                        fileButton.IconFrame.Icon:SetTexCoord(0.625, 0.75, 0, 1);
                     elseif (extension == "png" or extension == "jpg" or extension == "tga" or extension == "bmp"
                             or extension == "gif") then
-                        fileButton.IconFrame.Icon:SetTexture("Interface/Editor/FileSelector/FileSelectorFilePicture.png");
+                        fileButton.IconFrame.Icon:SetTexCoord(0.75, 0.875, 0, 1);
                     elseif (extension == "fm" or extension == "ft" or extension == "mesh") then
-                        fileButton.IconFrame.Icon:SetTexture("Interface/Editor/FileSelector/FileSelectorFile.png");
+                        fileButton.IconFrame.Icon:SetTexCoord(0.375, 0.5, 0, 1);
                     else
-                        fileButton.IconFrame.Icon:SetTexture("Interface/Editor/FileSelector/FileSelectorFileUnknown.png");
+                        fileButton.IconFrame.Icon:SetTexCoord(0.5, 0.625, 0, 1);
                     end
                 else
-                    fileButton.IconFrame.Icon:SetTexture("Interface/Editor/FileSelector/FileSelectorFileUnknown.png");
+                    fileButton.IconFrame.Icon:SetTexCoord(0.5, 0.625, 0, 1);
                 end
 
                 self.files[fileID] = fileButton;
@@ -384,6 +407,41 @@ function FileSelector:SetFile(id)
     end
 end
 
+function FileSelector:SelectFolder(folderName)
+    self:InitRootFolder();
+    local info = Frost:CutFilePath(folderName);
+
+    self.error = nil;
+    local currentFolder = self.folders[1];
+    for i, folder in pairs(info.folders) do
+        self:DevelopFolder(currentFolder.id, false);
+        local nextFolder = nil;
+        for j, subFolder in pairs(currentFolder.folders) do
+            if (subFolder.name == folder) then
+                nextFolder = subFolder;
+                break;
+            end
+        end
+        if (nextFolder) then
+            currentFolder = nextFolder;
+        else
+            local location;
+            if (#currentFolder.folder == 0) then
+                location = folder;
+            else
+                location = currentFolder.folder.."/"..folder;
+            end
+            self:Error(AddOns.FileSelector:GetLocalizedString("NotFoundError")..location, 250, 128);
+            break;
+        end
+    end
+
+    if (not self.error) then
+        self:SetFolder(currentFolder.id);
+        self:DevelopFolder(currentFolder.id, false);
+    end
+end
+
 function FileSelector:SelectFile(fileName)
     self:InitRootFolder();
     local info = Frost:CutFilePath(fileName);
@@ -402,12 +460,13 @@ function FileSelector:SelectFile(fileName)
         if (nextFolder) then
             currentFolder = nextFolder;
         else
+            local location;
             if (#currentFolder.folder == 0) then
-                self.error = folder;
+                location = folder;
             else
-                self.error = currentFolder.folder.."/"..folder;
+                location = currentFolder.folder.."/"..folder;
             end
-            self:Error();
+            self:Error(AddOns.FileSelector:GetLocalizedString("NotFoundError")..location, 250, 128);
             break;
         end
     end
@@ -425,12 +484,13 @@ function FileSelector:SelectFile(fileName)
         end
 
         if (not found) then
+            local location;
             if (#self.currentFolder.folder == 0) then
-                self.error = info.file;
+                location = info.file;
             else
-                self.error = self.currentFolder.folder.."/"..info.file;
+                location = self.currentFolder.folder.."/"..info.file;
             end
-            self:Error();
+            self:Error(AddOns.FileSelector:GetLocalizedString("NotFoundError")..location, 250, 128);
         end
     end
 end
@@ -448,5 +508,3 @@ function FileSelector:Reset()
         end
     end
 end
-
-SetKeyBinding(KEY_T, "FileSelector:SelectFile(\"Interface/Editor/FileSelector/FileSelector.lua\"); FileSelector:Show();");
