@@ -546,13 +546,11 @@ void Frame::EnableKeyboard( const s_bool& bIsKeyboardEnabled )
         {
             EventReceiver::RegisterEvent("KEY_PRESSED");
             EventReceiver::RegisterEvent("KEY_RELEASED");
-            EventReceiver::RegisterEvent("KEY_DOWN_LONG");
         }
         else if (!bIsKeyboardEnabled && bIsKeyboardEnabled_)
         {
             EventReceiver::UnregisterEvent("KEY_PRESSED");
             EventReceiver::UnregisterEvent("KEY_RELEASED");
-            EventReceiver::UnregisterEvent("KEY_DOWN_LONG");
         }
     }
 
