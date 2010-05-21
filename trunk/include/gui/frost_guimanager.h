@@ -427,6 +427,9 @@ namespace Frost
         s_uint uiFrameNumber_;
 
         s_bool bEnableCaching_;
+
+        s_ptr<RenderTarget> pRenderTarget_;
+        s_refptr<Sprite>    pSprite_;
     };
 }
 
