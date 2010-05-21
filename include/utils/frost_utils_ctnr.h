@@ -51,15 +51,15 @@ namespace Frost
             }
         #endif
 
-        template<uint N>
         /// Constructor.
         /** \param lElemArray The array to use to initialize this s_ctnr_t
         *   \note Takes every elements contained by the s_array and puts them
         *         inside this s_ctnr_t.
         */
+        template<default_uint N>
         s_ctnr_t(const s_array<ValueType,N>& lElemArray)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
                 mContainer_.push_back(lElemArray[i]);
         }
 
@@ -111,13 +111,13 @@ namespace Frost
         /// Removes values from the end of the container.
         /** \param uiNbr The number of value to remove
         */
-        void PopBack(const s_uint& uiNbr)
+        void PopBack(const s_uint_t<default_uint>& uiNbr)
         {
             if (uiNbr >= mContainer_.size())
                 mContainer_.clear();
             else
             {
-                for (uint ui; ui < uiNbr.Get(); ++ui)
+                for (default_uint ui = 0; ui < uiNbr.Get(); ++ui)
                     mContainer_.pop_back();
             }
         }
@@ -173,13 +173,13 @@ namespace Frost
         /// Removes values from the beginning of the container.
         /** \param uiNbr The number of value to remove
         */
-        void PopFront(const s_uint& uiNbr)
+        void PopFront(const s_uint_t<default_uint>& uiNbr)
         {
             if (uiNbr >= mContainer_.size())
                 mContainer_.clear();
             else
             {
-                for (uint ui; ui < uiNbr.Get(); ++ui)
+                for (default_uint ui = 0; ui < uiNbr.Get(); ++ui)
                     mContainer_.pop_front();
             }
         }
@@ -198,9 +198,18 @@ namespace Frost
         *         mElem is appended as many time as neccessary to fit the
         *         new size. Else, elements are erased.
         */
-        void Resize(const s_uint& uiSize, const ValueType& mElem = ValueType())
+        void Resize(const s_uint_t<default_uint>& uiSize, const ValueType& mElem = ValueType())
         {
             mContainer_.resize(uiSize.Get(), mElem);
+        }
+
+        /// Searches the container for the provided element.
+        /** \param mElem   The element to search for
+        *   \return 'true' if the element has been found
+        */
+        s_bool Find(const ValueType& mElem) const
+        {
+            return (std::find(mContainer_.begin(), mContainer_.end(), mElem) != mContainer_.end());
         }
 
         /// Searches the container for the provided element.
@@ -208,9 +217,24 @@ namespace Frost
         *   \param uiStart The position from which to start searching
         *   \return 'true' if the element has been found
         */
-        s_bool Find(const ValueType& mElem, const s_uint& uiStart = 0u) const
+        s_bool Find(const ValueType& mElem, const s_uint_t<default_uint>& uiStart) const
         {
             return (std::find(mContainer_.begin() + uiStart.Get(), mContainer_.end(), mElem) != mContainer_.end());
+        }
+
+        /// Searches the container for the provided element.
+        /** \param mElem   The element to search for
+        *   \return The position of the element in the container
+        *   \note If the element is not present in the container, this function
+        *         returns s_uint::NaN.
+        */
+        s_uint_t<default_uint> FindPos(const ValueType& mElem) const
+        {
+            const_iterator iterPos = std::find(mContainer_.begin(), mContainer_.end(), mElem);
+            if (iterPos == mContainer_.end())
+                return s_uint_t<default_uint>::NaN;
+            else
+                return iterPos - mContainer_.begin();
         }
 
         /// Searches the container for the provided element.
@@ -220,13 +244,23 @@ namespace Frost
         *   \note If the element is not present in the container, this function
         *         returns s_uint::NaN.
         */
-        s_uint FindPos(const ValueType& mElem, const s_uint& uiStart = 0u) const
+        s_uint_t<default_uint> FindPos(const ValueType& mElem, const s_uint_t<default_uint>& uiStart) const
         {
             const_iterator iterPos = std::find(mContainer_.begin() + uiStart.Get(), mContainer_.end(), mElem);
             if (iterPos == mContainer_.end())
-                return s_uint::NaN;
+                return s_uint_t<default_uint>::NaN;
             else
-                return s_uint((uint)(iterPos - mContainer_.begin()));
+                return (default_uint)(iterPos - mContainer_.begin());
+        }
+
+        /// Searches the container for the provided element.
+        /** \param mElem   The element to search for
+        *   \note If the element is not present in the container, this function
+        *         returns End().
+        */
+        iterator Get(const ValueType& mElem)
+        {
+            return std::find(mContainer_.begin(), mContainer_.end(), mElem);
         }
 
         /// Searches the container for the provided element.
@@ -236,7 +270,7 @@ namespace Frost
         *   \note If the element is not present in the container, this function
         *         returns End().
         */
-        iterator Get(const ValueType& mElem, const s_uint& uiStart = 0u)
+        iterator Get(const ValueType& mElem, const s_uint_t<default_uint>& uiStart)
         {
             iterator iterStart = mContainer_.begin() + uiStart.Get();
             return std::find(iterStart, mContainer_.end(), mElem);
@@ -244,12 +278,23 @@ namespace Frost
 
         /// Searches the container for the provided element.
         /** \param mElem   The element to search for
+        *   \return An iterator pointing to this element
+        *   \note If the element is not present in the container, this function
+        *         returns End().
+        */
+        const_iterator Get(const ValueType& mElem) const
+        {
+            return std::find(mContainer_.begin(), mContainer_.end(), mElem);
+        }
+
+        /// Searches the container for the provided element.
+        /** \param mElem   The element to search for
         *   \param uiStart The position from which to start searching
         *   \return An iterator pointing to this element
         *   \note If the element is not present in the container, this function
         *         returns End().
         */
-        const_iterator Get(const ValueType& mElem, const s_uint& uiStart = 0u) const
+        const_iterator Get(const ValueType& mElem, const s_uint_t<default_uint>& uiStart = 0u) const
         {
             const_iterator iterStart = mContainer_.begin() + uiStart.Get();
             return std::find(iterStart, mContainer_.end(), mElem);
@@ -295,7 +340,7 @@ namespace Frost
         /// Erases an element from the container.
         /** \param uiPos The position of the element to erase
         */
-        void Erase(const s_uint& uiPos)
+        void Erase(const s_uint_t<default_uint>& uiPos)
         {
             if (uiPos.IsValid() && uiPos < mContainer_.size())
                 mContainer_.erase(mContainer_.begin() + uiPos.Get());
@@ -315,7 +360,7 @@ namespace Frost
         /// Returns the number of elements in this container.
         /** \return The number of elements in this container
         */
-        s_uint GetSize() const
+        s_uint_t<default_uint> GetSize() const
         {
             return mContainer_.size();
         }
@@ -354,25 +399,35 @@ namespace Frost
             return mContainer;
         }
 
-        template<uint N>
+        template<default_uint N>
         s_ctnr_t& operator = (const s_array<ValueType,N>& lElemArray)
         {
             mContainer_.clear();
 
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
                 mContainer_.push_back(lElemArray[i]);
 
             return *this;
         }
 
-        ValueType& operator[] (const s_uint& uiIndex)
+        ValueType& operator[] (const s_uint_t<default_uint>& uiIndex)
         {
             return mContainer_[uiIndex.Get()];
         }
 
-        const ValueType& operator[] (const s_uint& uiIndex) const
+        const ValueType& operator[] (const s_uint_t<default_uint>& uiIndex) const
         {
             return mContainer_[uiIndex.Get()];
+        }
+
+        ValueType& operator[] (const default_uint& uiIndex)
+        {
+            return mContainer_[uiIndex];
+        }
+
+        const ValueType& operator[] (const default_uint& uiIndex) const
+        {
+            return mContainer_[uiIndex];
         }
 
         iterator Begin()
@@ -441,7 +496,7 @@ namespace Frost
             s_ctnr(std::initializer_list<ValueType> mList) : ParentContainerType(mList) {}
         #endif
 
-        template<uint N>
+        template<default_uint N>
         s_ctnr(const s_array<ValueType,N>& lElemArray) : ParentContainerType(lElemArray) {}
     };
 
@@ -472,7 +527,7 @@ namespace Frost
             s_array(std::initializer_list<ValueType> mList) : ParentContainerType(mList) {}
         #endif
 
-        template<uint N>
+        template<default_uint N>
         s_array(const s_array<ValueType,N>& lElemArray) : ParentContainerType(lElemArray) {}
 
 
@@ -489,13 +544,13 @@ namespace Frost
         *   \note Can be used to reduce the number of allocations
         *         and improve performances.
         */
-        void Reserve(const s_uint& uiSize)
+        void Reserve(const s_uint_t<default_uint>& uiSize)
         {
             mContainer_.reserve(uiSize.Get());
         }
     };
 
-    template<class T, class N, class C>
+    template<class T, class C, class N>
     s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_ctnr_t<T,C>& mRight)
     {
         s_str_t<N> sTemp = "(";
@@ -512,7 +567,7 @@ namespace Frost
         return sLeft + sTemp;
     }
 
-    template<class T, class N, class C>
+    template<class T, class C, class N>
     s_str_t<N> operator + (const N* sLeft, const s_ctnr_t<T,C>& mRight)
     {
         return s_str_t<N>(sLeft) + mRight;

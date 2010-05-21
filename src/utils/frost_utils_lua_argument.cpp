@@ -72,9 +72,9 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
             if (bPrintError && !bSeveralChoices)
             {
                 pLua->PrintError(
-                    "Argument "+s_str(iIndex)+" of \""+pParent_->GetName()+"\" "
-                    "must be a "+s_str(pLua->GetTypeName(iterData->GetType()))+" "
-                    "("+iterData->GetName()+") (got a "+s_str(pLua->GetTypeName(mType))+")."
+                    "Argument "+iIndex+" of \""+pParent_->GetName()+"\" "
+                    "must be a "+pLua->GetTypeName(iterData->GetType())+" "
+                    "("+iterData->GetName()+") (got a "+pLua->GetTypeName(mType)+")."
                 );
             }
         }
@@ -103,13 +103,12 @@ s_bool Argument::Test( s_ptr<Lua::State> pLua, const s_int& iIndex, const s_bool
                         sEnum += ", a ";
                 }
 
-                sEnum += s_str(pLua->GetTypeName(iterData->GetType()))+
-                    " ("+iterData->GetName()+")";
+                sEnum += pLua->GetTypeName(iterData->GetType())+" ("+iterData->GetName()+")";
                 ++i;
             }
             pLua->PrintError(
-                "Argument "+s_str(iIndex)+" of \""+pParent_->GetName()+"\" "
-                "must be "+sEnum+" (got a "+s_str(pLua->GetTypeName(mType))+")."
+                "Argument "+iIndex+" of \""+pParent_->GetName()+"\" "
+                "must be "+sEnum+" (got a "+pLua->GetTypeName(mType)+")."
             );
         }
     }

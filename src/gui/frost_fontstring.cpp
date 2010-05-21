@@ -141,7 +141,7 @@ s_str FontString::Serialize(const s_str& sTab) const
     sStr << sTab << "  # NonSpaceW.  : " << bCanNonSpaceWrap_ << "\n";
     if (bHasShadow_)
     {
-    sStr << sTab << "  # Shadow off. : " << (iShadowXOffset_, iShadowYOffset_) << "\n";
+    sStr << sTab << "  # Shadow off. : " + (iShadowXOffset_, iShadowYOffset_) << "\n";
     sStr << sTab << "  # Shadow col. : " +  mShadowColor_ << "\n";
     }
 

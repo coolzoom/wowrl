@@ -8,23 +8,28 @@
 
 namespace Frost
 {
-    s_ustr UTF8ToUnicode( const s_str& sStr )
+    s_ustr UTF8ToUnicode( const s_str& s )
+    {
+        return UTF8ToUnicode(s.Get());
+    }
+
+    s_ustr::string UTF8ToUnicode( const s_str::string& s )
     {
         static uchar MAX_ANSI = 127;
         static uchar ESC_C2   = 194;
         static uchar ESC_C3   = 195;
 
-        s_ustr sResult;
+        s_ustr::string sResult;
 
-        s_str::const_iterator iter;
-        s_uchar cEscape = s_uchar::NaN;
+        s_str::string::const_iterator iter;
+        uchar cEscape = 0;
 
-        foreach (iter, sStr)
+        foreach (iter, s)
         {
             uchar c = *iter;
             if (c <= MAX_ANSI)
             {
-                sResult.PushBack(c);
+                sResult.push_back(c);
             }
             else
             {
@@ -34,19 +39,19 @@ namespace Frost
                     continue;
                 }
 
-                if (cEscape.IsValid())
+                if (cEscape != 0)
                 {
                     if (cEscape == ESC_C3)
                     {
                         // 192 : offset of for "c3" (195) escaped characters (accentuated)
                         // 128 : start offset for these characters (the first one is "c3 80")
-                        sResult.PushBack(192 + *iter - 128);
+                        sResult.push_back(192 + c - 128);
                     }
                     else if (cEscape == ESC_C2)
                     {
                         // 192 : offset of for "c2" (194) escaped characters (misc)
                         // 128 : start offset for these characters (the first one is "c2 80")
-                        sResult.PushBack(128 + *iter - 128);
+                        sResult.push_back(128 + c - 128);
                     }
                 }
             }
@@ -55,38 +60,74 @@ namespace Frost
         return sResult;
     }
 
-    s_str UnicodeToUTF8( const s_ustr& sUStr )
+    s_uint UTF8ToUnicode( const s_char& c )
+    {
+        return UTF8ToUnicode(c.Get());
+    }
+
+    uint UTF8ToUnicode( const char& c )
     {
         static uchar MAX_ANSI = 127;
-        static uchar ESC_C2   = 194;
-        static uchar ESC_C3   = 195;
 
-        s_str sResult;
+        uchar uc = (uchar)c;
 
-        s_ustr::const_iterator iter;
+        if (uc <= MAX_ANSI)
+            return uc;
+        else
+            return 0u;
+    }
 
-        foreach (iter, sUStr)
+    s_str UnicodeToUTF8( const s_ustr& s )
+    {
+        return UnicodeToUTF8(s.Get());
+    }
+
+    s_str::string UnicodeToUTF8( const s_ustr::string& s )
+    {
+        static uint MAX_ANSI = 127;
+        static uint ESC_C2   = 194;
+        static uint ESC_C3   = 195;
+
+        s_str::string sResult;
+
+        s_ustr::string::const_iterator iter;
+
+        foreach (iter, s)
         {
-            uint c = (uchar)*iter;
+            uint c = *iter;
             if (c <= MAX_ANSI)
             {
-                sResult.PushBack(c);
+                sResult.push_back(c);
             }
             else
             {
-                if (c <= 191)
+                if (c < 192)
                 {
-                    sResult.PushBack(ESC_C2);
-                    sResult.PushBack(128 + c - 128);
+                    sResult.push_back((uchar)ESC_C2);
+                    sResult.push_back((uchar)(128 + c - 128));
                 }
                 else
                 {
-                    sResult.PushBack(ESC_C3);
-                    sResult.PushBack(128 + c - 192);
+                    sResult.push_back((uchar)ESC_C3);
+                    sResult.push_back((uchar)(128 + c - 192));
                 }
             }
         }
 
         return sResult;
+    }
+
+    s_char UnicodeToUTF8( const s_uint& c )
+    {
+        return UnicodeToUTF8(c.Get());
+    }
+
+    char UnicodeToUTF8( const uint& c )
+    {
+        static uint MAX_ANSI = 127;
+        if (c <= MAX_ANSI)
+            return (uchar)c;
+        else
+            return '\0';
     }
 }

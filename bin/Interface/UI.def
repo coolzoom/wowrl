@@ -196,7 +196,7 @@
 
     <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
 
-    <n[.,1]:HighlightColor n:a="1.0" n:r="0.5" n:g="0.5" n:b="0.5"/>
+    <n[.,1]:HighlightColor n:a="0.5" n:r="1" n:g="1" n:b="1"/>
 
     <n[.,1]:TextInsets n:left="0" n:right="0" n:top="0" n:bottom="0"/>
 

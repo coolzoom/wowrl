@@ -636,7 +636,26 @@ namespace Frost
             }
             lNamedVirtualObjectList_.Clear();
 
+            lFrameList_.Clear();
+
+            s_map<FrameStrata, Strata>::iterator iterStrata;
+            foreach (iterStrata, lStrataList_)
+            {
+                iterStrata->second.lLevelList.Clear();
+                iterStrata->second.bRedraw = true;
+            }
+
+            lAddOnList_.Clear();
+
             LuaManager::GetSingleton()->CloseLua(pLua_);
+
+            pOveredFrame_ = nullptr;
+            pFocusedEditBox_ = nullptr;
+            pMovedObject_ = nullptr;
+            pSizedObject_ = nullptr;
+            pMovedAnchor_ = nullptr;
+            bObjectMoved_ = false;
+            iThisStackSize_ = 0;
 
             bClosed_ = true;
         }
@@ -644,8 +663,11 @@ namespace Frost
 
     void GUIManager::ReloadUI()
     {
+        Log("Closing UI...");
         CloseUI();
+        Log("Done. Loading UI...");
         LoadUI();
+        Log("Done.");
     }
 
     void GUIManager::RenderUI()
@@ -1294,7 +1316,7 @@ namespace Frost
         foreach (iterStrata, lStrataList_)
         {
             const Strata& mStrata = iterStrata->second;
-            Log("     - ["+mStrata.uiID+"] : "+s_str(100.0f*s_float(mStrata.uiRedrawCount)/s_float(uiFrameNumber_), 2, 1)+"%");
+            Log("     - ["+mStrata.uiID+"] : "+s_str::Convert(100.0f*s_float(mStrata.uiRedrawCount)/s_float(uiFrameNumber_), 2, 1)+"%");
         }
     }
 

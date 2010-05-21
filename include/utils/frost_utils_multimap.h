@@ -82,11 +82,11 @@ namespace Frost
         *   \note If the key is not present in the multimap, this function
         *         returns s_uint::NaN.
         */
-        s_uint FindPos(const Key& mKey) const
+        s_uint_t<default_uint> FindPos(const Key& mKey) const
         {
             const_iterator mIter = mMulMap_.find(mKey);
             if (mIter == End())
-                return s_uint::NaN;
+                return s_uint_t<default_uint>::NaN;
             else
                 return mIter - Begin();
         }
@@ -173,7 +173,7 @@ namespace Frost
         /** \param mKey The key to search for
         *   \return The number of elements whith the provided key
         */
-        s_uint Count(const Key& mKey) const
+        s_uint_t<default_uint> Count(const Key& mKey) const
         {
             return mMulMap_.count(mKey);
         }
@@ -253,7 +253,7 @@ namespace Frost
         /// Returns the number of elements in this multimap.
         /** \return The number of elements in this multimap
         */
-        s_uint GetSize() const
+        s_uint_t<default_uint> GetSize() const
         {
             return mMulMap_.size();
         }

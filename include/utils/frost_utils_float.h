@@ -1,9 +1,4 @@
 // Warning : If you need to use this file, include frost_utils_types.h
-#ifdef MSVC
-    #include <cfloat>
-#endif
-#include <limits>
-
 namespace Frost
 {
     /// Base type : float
@@ -198,18 +193,18 @@ namespace Frost
         /// Returns the power of two just above the value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-        s_uint_t<uint> GetNearestPowerOfTwo() const
+        s_uint_t<default_uint> GetNearestPowerOfTwo() const
         {
             if (IsValid())
             {
-                uint i = 1;
+                default_uint i = 1;
                 while (fValue_ > i)
                     i = i << 1;
 
                 return i;
             }
             else
-                return s_uint_t<uint>::NaN;
+                return s_uint_t<default_uint>::NaN;
         }
 
         /// Returns the type of this float.
@@ -518,12 +513,12 @@ namespace Frost
             return mContainer;
         }
 
-        static const s_float_t NaN;
-        static const s_float_t INFPLUS;
-        static const s_float_t INFMINUS;
-        static const T         EPS;
-        static const s_float_t PI;
-        static const uint      DIGIT;
+        static const s_float_t    NaN;
+        static const s_float_t    INFPLUS;
+        static const s_float_t    INFMINUS;
+        static const T            EPS;
+        static const s_float_t    PI;
+        static const default_uint DIGIT;
 
         /// Converts a float to an angle in radian.
         /** \note It is assumed that the value was a non dimensionnal angle
@@ -670,7 +665,7 @@ namespace Frost
     template <class T>
     const s_float_t<T> s_float_t<T>::PI = 3.1415;
     template <class T>
-    const uint s_float_t<T>::DIGIT = 1;
+    const default_uint s_float_t<T>::DIGIT = 1;
 
     template <class T>
     s_float_t<T> operator + (const T& fLeft, const s_float_t<T>& fRight)
@@ -726,27 +721,61 @@ namespace Frost
         return s_str_t<N>(sLeft) << fRight;
     }
 
-    typedef s_float_t<float>       s_float;
-    typedef s_float_t<double>      s_double;
-    typedef s_float_t<long double> s_ldouble;
-
-    template<> const float s_float::EPS  = std::numeric_limits<float>::epsilon();
-    template<> const s_float s_float::PI = 3.141592f;
-    template<> const uint s_float::DIGIT = std::numeric_limits<float>::digits10;
-
-    template<> const double s_double::EPS  = std::numeric_limits<double>::epsilon();
-    template<> const s_double s_double::PI = 3.141592653589793;
-    template<> const uint s_double::DIGIT  = std::numeric_limits<double>::digits10;
-
-    template<> const long double s_ldouble::EPS = std::numeric_limits<long double>::epsilon();
-    template<> const s_ldouble s_ldouble::PI    = 3.141592653589793238;
-    template<> const uint s_ldouble::DIGIT      = std::numeric_limits<long double>::digits10;
-
     /** \cond NOT_REMOVE_FROM_DOC
     */
-    template<> class TypeTraits<float>       { public : typedef s_float   Type; };
-    template<> class TypeTraits<double>      { public : typedef s_double  Type; };
-    template<> class TypeTraits<long double> { public : typedef s_ldouble Type; };
+    template<> class TypeTraits<float>
+    {
+    public :
+        typedef float            Type;
+        typedef float            BaseType;
+        typedef s_float_t<float> FrostType;
+        typedef float&           RefType;
+        typedef const float&     CRefType;
+        typedef float*           PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<double>
+    {
+    public :
+        typedef double            Type;
+        typedef double            BaseType;
+        typedef s_float_t<double> FrostType;
+        typedef double&           RefType;
+        typedef const double&     CRefType;
+        typedef double*           PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<long double>
+    {
+    public :
+        typedef long double            Type;
+        typedef long double            BaseType;
+        typedef s_float_t<long double> FrostType;
+        typedef long double&           RefType;
+        typedef const long double&     CRefType;
+        typedef long double*           PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+
+    template<class T> class TypeTraits< s_float_t<T> >
+    {
+    public :
+        typedef s_float_t<T>        Type;
+        typedef T                   BaseType;
+        typedef s_float_t<T>        FrostType;
+        typedef s_float_t<T>&       RefType;
+        typedef const s_float_t<T>& CRefType;
+        typedef s_float_t<T>*       PointerType;
+
+        static inline typename TypeTraits<BaseType>::RefType  GetValue(RefType m)  { return m.GetR(); }
+        static inline typename TypeTraits<BaseType>::CRefType GetValue(CRefType m) { return m.Get(); }
+    };
     /** \endcond
     */
 }

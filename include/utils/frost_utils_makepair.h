@@ -12,20 +12,20 @@ namespace Frost
     // See : http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#181
 
     template<class T, class N>
-    s_pair<typename TypeTraits<T>::Type, typename TypeTraits<N>::Type> MakePair(const T& mFirst, const N& mSecond)
+    s_pair<typename TypeTraits<T>::FrostType, typename TypeTraits<N>::FrostType> MakePair(const T& mFirst, const N& mSecond)
     {
-        return s_pair<typename TypeTraits<T>::Type, typename TypeTraits<N>::Type>(mFirst, mSecond);
+        return s_pair<typename TypeTraits<T>::FrostType, typename TypeTraits<N>::FrostType>(mFirst, mSecond);
     }
 
     template<class N>
-    s_pair<s_str, typename TypeTraits<N>::Type> MakePair(const char* mFirst, const N& mSecond)
+    s_pair<s_str_t<char>, typename TypeTraits<N>::FrostType> MakePair(const char* mFirst, const N& mSecond)
     {
-        return s_pair<s_str, typename TypeTraits<N>::Type>(mFirst, mSecond);
+        return s_pair<s_str_t<char>, typename TypeTraits<N>::FrostType>(mFirst, mSecond);
     }
 
     template<class T>
-    s_pair<typename TypeTraits<T>::Type, s_str> MakePair(const T& mFirst, const char* mSecond)
+    s_pair< typename TypeTraits<T>::FrostType, s_str_t<char> > MakePair(const T& mFirst, const char* mSecond)
     {
-        return s_pair<typename TypeTraits<T>::Type, s_str>(mFirst, mSecond);
+        return s_pair< typename TypeTraits<T>::FrostType, s_str_t<char> >(mFirst, mSecond);
     }
 }

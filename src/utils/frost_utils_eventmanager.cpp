@@ -41,7 +41,7 @@ namespace Frost
                 {
                     Warning(CLASS_NAME,
                         "Event \""+sEventName+"\" is already registered to this EventReceiver "+
-                        "(EventReceiver : "+s_str(pReceiver)+")."
+                        "(EventReceiver : "+pReceiver+")."
                     );
                     return;
                 }
@@ -73,7 +73,7 @@ namespace Frost
 
         Warning(CLASS_NAME,
             "Event \""+sEventName+"\" is not registered to this EventReceiver "+
-            "(EventReceiver : "+s_str(pReceiver)+")."
+            "(EventReceiver : "+pReceiver+")."
         );
     }
 

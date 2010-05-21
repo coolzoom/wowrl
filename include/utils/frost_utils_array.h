@@ -6,7 +6,7 @@ namespace Frost
     *   It comes with a few features that make it simpler
     *   to use.
     */
-    template<class T, uint N = 0>
+    template<class T, default_uint N = 0>
     class s_array
     {
     public :
@@ -22,7 +22,7 @@ namespace Frost
 
         s_array(const T& mInitValue)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
             {
                 lArray_[i] = mInitValue;
             }
@@ -31,7 +31,7 @@ namespace Frost
         template<class U, class C>
         s_array(const s_ctnr_t<U, C>& mContainer)
         {
-            uint i;
+            default_uint i;
             for (i = 0; i < N; ++i)
             {
                 if (i >= mContainer.GetSize().Get())
@@ -57,7 +57,7 @@ namespace Frost
             */
             s_array(std::initializer_list<T> mList)
             {
-                uint i = 0;
+                default_uint i = 0;
                 for (const T* p = mList.begin(); (p != mList.end()) && (i < N); ++p, ++i)
                     lArray_[i] = *p;
                 for (; i < N; ++i)
@@ -69,7 +69,7 @@ namespace Frost
 
         s_array(const s_array& mValue)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
                 lArray_[i] = mValue.lArray_[i];
         }
 
@@ -83,7 +83,7 @@ namespace Frost
 
         void Set(const T& mValue)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
             {
                 lArray_[i] = mValue;
             }
@@ -91,7 +91,7 @@ namespace Frost
 
         void Set(const T (&lArray)[N])
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
             {
                 lArray_[i] = lArray[i];
             }
@@ -99,7 +99,7 @@ namespace Frost
 
         void Set(const T* lArray)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
             {
                 lArray_[i] = lArray[i];
             }
@@ -107,15 +107,20 @@ namespace Frost
 
         void Set(const s_nullptr& pPtr)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
             {
                 lArray_[i] = pPtr;
             }
         }
 
-        s_uint GetSize() const
+        s_uint_t<default_uint> GetSize() const
         {
             return N;
+        }
+
+        const T& Get(const s_uint_t<default_uint>& uiIndex) const
+        {
+            return lArray_[uiIndex.Get()];
         }
 
         iterator Begin()
@@ -158,49 +163,29 @@ namespace Frost
             return lArray_ + N;
         }
 
-        const T& Get(const s_uint& uiIndex) const
+        T& operator [] (const s_uint_t<default_uint>& uiIndex)
         {
-            if (uiIndex < N)
-                return lArray_[uiIndex.Get()];
-            else
-                return mDummy;
+            return lArray_[uiIndex.Get()];
         }
 
-        T& operator [] (const uint& uiIndex)
+        const T& operator [] (const s_uint_t<default_uint>& uiIndex) const
         {
-            if (uiIndex < N)
-                return lArray_[uiIndex];
-            else
-                return mDummy;
+            return lArray_[uiIndex.Get()];
         }
 
-        const T& operator [] (const uint& uiIndex) const
+        T& operator [] (const default_uint& uiIndex)
         {
-            if (uiIndex < N)
-                return lArray_[uiIndex];
-            else
-                return mDummy;
+            return lArray_[uiIndex];
         }
 
-        T& operator [] (const s_uint& uiIndex)
+        const T& operator [] (const default_uint& uiIndex) const
         {
-            if (uiIndex < N)
-                return lArray_[uiIndex.Get()];
-            else
-                return mDummy;
-        }
-
-        const T& operator [] (const s_uint& uiIndex) const
-        {
-            if (uiIndex < N)
-                return lArray_[uiIndex.Get()];
-            else
-                return mDummy;
+            return lArray_[uiIndex];
         }
 
         s_bool operator == (const s_array& mValue)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
             {
                 if (lArray_[i] != mValue[i])
                     return false;
@@ -211,7 +196,7 @@ namespace Frost
 
         s_bool operator != (const s_array& mValue)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
             {
                 if (lArray_[i] != mValue[i])
                     return true;
@@ -222,7 +207,7 @@ namespace Frost
 
         s_array& operator = (const s_array& mValue)
         {
-            for (uint i = 0; i < N; ++i)
+            for (default_uint i = 0; i < N; ++i)
                 lArray_[i] = mValue.lArray_[i];
 
             return *this;
@@ -231,7 +216,7 @@ namespace Frost
         template<class U, class C>
         s_array& operator = (const s_ctnr_t<U, C>& mContainer)
         {
-            uint i;
+            default_uint i;
             for (i = 0; (i < N) && (i < mContainer.GetSize().Get()); ++i)
             {
                 lArray_[i] = mContainer[i];
@@ -244,20 +229,16 @@ namespace Frost
             return *this;
         }
 
-        static T mDummy;
-
     private :
 
         T lArray_[N];
     };
 
-    template<class T, uint N> T s_array<T, N>::mDummy;
-
-    template<class T, uint N, class M>
+    template<class T, default_uint N, class M>
     s_str_t<M> operator + (const s_str_t<M>& sLeft, const s_array<T, N>& mRight)
     {
         s_str_t<M> sTemp = "(";
-        for (uint i = 0; i < N; ++i)
+        for (default_uint i = 0; i < N; ++i)
         {
             if (i != 0)
                 sTemp << ", " << mRight[i];
@@ -269,7 +250,7 @@ namespace Frost
         return sLeft + sTemp;
     }
 
-    template<class T, uint N, class M>
+    template<class T, default_uint N, class M>
     s_str_t<M> operator + (const M* sLeft, const s_array<T, N>& mRight)
     {
         return s_str_t<M>(sLeft) + mRight;

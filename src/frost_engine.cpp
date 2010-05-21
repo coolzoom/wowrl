@@ -414,7 +414,7 @@ namespace Frost
         // NOTE : 32bit is required for A8R8G8B8 format
         lOptions.insert(Ogre::NameValuePairList::value_type("colourDepth", "32"));
         lOptions.insert(Ogre::NameValuePairList::value_type("vsync", (bVSync ? "yes" : "no")));
-        lOptions.insert(Ogre::NameValuePairList::value_type("FSAA", s_str(uiFSAA).Get()));
+        lOptions.insert(Ogre::NameValuePairList::value_type("FSAA", s_str::Convert(uiFSAA).Get()));
 
         pRenderWindow_ = pRoot_->createRenderWindow(
             #ifdef _DEBUG
@@ -508,9 +508,9 @@ namespace Frost
                 if (iterChanged->second.IsOfType<s_str>())
                     sChanged = "\""+iterChanged->second.Get<s_str>()+"\"";
                 else if (iterChanged->second.IsOfType<s_float>())
-                    sChanged = s_str(iterChanged->second.Get<s_float>());
+                    sChanged = s_str::Convert(iterChanged->second.Get<s_float>());
                 else if (iterChanged->second.IsOfType<s_bool>())
-                    sChanged = s_str(iterChanged->second.Get<s_bool>());
+                    sChanged = s_str::Convert(iterChanged->second.Get<s_bool>());
                 else if (iterChanged->second.IsOfType<void>())
                     sChanged = "nil";
                 else
@@ -633,11 +633,11 @@ namespace Frost
     {
         s_str sFileName = "Screenshots/scr";
         sFileName += "_"+pTimeMgr_->GetYear();
-        sFileName += "_"+s_str(pTimeMgr_->GetMonth(), 2);
-        sFileName += "_"+s_str(pTimeMgr_->GetDay(), 2);
-        sFileName += "_"+s_str(pTimeMgr_->GetHour(), 2);
-        sFileName += "_"+s_str(pTimeMgr_->GetMinutes(), 2);
-        sFileName += "_"+s_str(pTimeMgr_->GetSeconds(), 2);
+        sFileName += "_"+s_str::Convert(pTimeMgr_->GetMonth(), 2);
+        sFileName += "_"+s_str::Convert(pTimeMgr_->GetDay(), 2);
+        sFileName += "_"+s_str::Convert(pTimeMgr_->GetHour(), 2);
+        sFileName += "_"+s_str::Convert(pTimeMgr_->GetMinutes(), 2);
+        sFileName += "_"+s_str::Convert(pTimeMgr_->GetSeconds(), 2);
         sFileName += ".png";
         pRenderWindow_->writeContentsToFile(sFileName.Get());
     }

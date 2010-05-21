@@ -32,11 +32,7 @@ namespace Frost
         {
             return 0;
         }
-
-        static const s_str CLASS_NAME;
-
     };
 
-    const s_str     s_nullptr::CLASS_NAME = "s_nullptr";
     const s_nullptr nullptr;
 }
