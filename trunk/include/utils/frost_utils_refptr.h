@@ -53,8 +53,8 @@ namespace Frost
         explicit s_refptr(T* pValue)
         {
             pValue_    = pValue;
-            pCounter_  = new uint(0);
-            pWCounter_ = new uint(0);
+            pCounter_  = new default_uint(0);
+            pWCounter_ = new default_uint(0);
 
             Increment_();
         }
@@ -101,7 +101,7 @@ namespace Frost
         /** \return The number of s_refptr pointing to the object
         *   \note This function returns 0 if the pointer is NULL.
         */
-        s_uint GetCount() const
+        s_uint_t<default_uint> GetCount() const
         {
             if (pCounter_)
                 return *pCounter_;
@@ -113,7 +113,7 @@ namespace Frost
         /** \return The number of s_wptr pointing to the object
         *   \note This function returns 0 if the pointer is NULL.
         */
-        s_uint GetWeakCount() const
+        s_uint_t<default_uint> GetWeakCount() const
         {
             if (pWCounter_)
                 return *pWCounter_;
@@ -318,7 +318,7 @@ namespace Frost
         *         by anyone else than itself (and other
         *         template specializations).
         */
-        explicit s_refptr(T* pValue, uint* pCounter, uint* pWCounter)
+        explicit s_refptr(T* pValue, default_uint* pCounter, default_uint* pWCounter)
         {
             pValue_    = pValue;
             pCounter_  = pCounter;
@@ -357,25 +357,7 @@ namespace Frost
         }
 
         T*    pValue_;
-        uint* pCounter_;
-        uint* pWCounter_;
+        default_uint* pCounter_;
+        default_uint* pWCounter_;
     };
-
-    template<class T>
-    s_str operator+ (const s_str& sLeft, const s_refptr<T>& pRight)
-    {
-        return s_str(sLeft) << static_cast<void*>(pRight.Get());
-    }
-
-    template<class T>
-    s_str& operator<< (s_str& sLeft, const s_refptr<T>& pRight)
-    {
-        return sLeft << static_cast<void*>(pRight.Get());
-    }
-
-    template<class T>
-    s_str operator+ (const char* sLeft, const s_refptr<T>& pRight)
-    {
-        return s_str(sLeft) << static_cast<void*>(pRight.Get());
-    }
 }

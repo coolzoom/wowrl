@@ -1,6 +1,6 @@
 if (GetLocale() == "frFR") then
     AddOns.ColorSelector:SetLocale({
-        ["Title"]   = "Selecteur de couleur",
+        ["Title"]   = "Sélecteur de couleur",
         ["SliderA"] = "Alpha",
         ["SliderR"] = "Rouge",
         ["SliderG"] = "Vert",

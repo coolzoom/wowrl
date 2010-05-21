@@ -718,19 +718,87 @@ namespace Frost
         return s_str_t<N>(sLeft) << uiRight;
     }
 
-    typedef s_uint_t<uchar>              s_uchar;
-    typedef s_uint_t<ushort>             s_ushort;
-    typedef s_uint_t<uint>               s_uint;
-    typedef s_uint_t<ulong>              s_ulong;
-    typedef s_uint_t<unsigned long long> s_ullong;
-
     /** \cond NOT_REMOVE_FROM_DOC
     */
-    template<> class TypeTraits<uchar>              { public : typedef s_uchar  Type; };
-    template<> class TypeTraits<ushort>             { public : typedef s_ushort Type; };
-    template<> class TypeTraits<uint>               { public : typedef s_uint   Type; };
-    template<> class TypeTraits<ulong>              { public : typedef s_ulong  Type; };
-    template<> class TypeTraits<unsigned long long> { public : typedef s_ullong Type; };
+    template<> class TypeTraits<uchar>
+    {
+    public :
+        typedef uchar           Type;
+        typedef uchar           BaseType;
+        typedef s_uint_t<uchar> FrostType;
+        typedef uchar&          RefType;
+        typedef uchar           CRefType;
+        typedef uchar*          PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<ushort>
+    {
+    public :
+        typedef ushort           Type;
+        typedef ushort           BaseType;
+        typedef s_uint_t<ushort> FrostType;
+        typedef ushort&          RefType;
+        typedef ushort           CRefType;
+        typedef ushort*          PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<uint>
+    {
+    public :
+        typedef uint           Type;
+        typedef uint           BaseType;
+        typedef s_uint_t<uint> FrostType;
+        typedef uint&          RefType;
+        typedef const uint&    CRefType;
+        typedef uint*          PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<ulong>
+    {
+    public :
+        typedef ulong           Type;
+        typedef ulong           BaseType;
+        typedef s_uint_t<ulong> FrostType;
+        typedef ulong&          RefType;
+        typedef const ulong&    CRefType;
+        typedef ulong*          PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<unsigned long long>
+    {
+    public :
+        typedef unsigned long long           Type;
+        typedef unsigned long long           BaseType;
+        typedef s_uint_t<unsigned long long> FrostType;
+        typedef unsigned long long&          RefType;
+        typedef const unsigned long long&    CRefType;
+        typedef unsigned long long*          PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+
+    template<class T> class TypeTraits< s_uint_t<T> >
+    {
+    public :
+        typedef s_uint_t<T>        Type;
+        typedef T                  BaseType;
+        typedef s_uint_t<T>        FrostType;
+        typedef s_uint_t<T>&       RefType;
+        typedef const s_uint_t<T>& CRefType;
+        typedef s_uint_t<T>*       PointerType;
+
+        static inline typename TypeTraits<BaseType>::RefType  GetValue(RefType m)  { return m.Get(); }
+        static inline typename TypeTraits<BaseType>::CRefType GetValue(CRefType m) { return m.Get(); }
+    };
     /** \endcond
     */
 }

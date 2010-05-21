@@ -86,7 +86,7 @@ namespace Frost
         *         been deleted and this pointer is invalid, or it
         *         is simply NULL.
         */
-        s_uint GetCount() const
+        s_uint_t<default_uint> GetCount() const
         {
             if (pCounter_)
                 return *pCounter_;
@@ -98,7 +98,7 @@ namespace Frost
         /** \return The number of s_wptr pointing to the object
         *   \note This function returns 0 if the pointer is NULL.
         */
-        s_uint GetWeakCount() const
+        s_uint_t<default_uint> GetWeakCount() const
         {
             if (pWCounter_)
                 return *pWCounter_;
@@ -447,25 +447,7 @@ namespace Frost
         }
 
         T*    pValue_;
-        uint* pCounter_;
-        uint* pWCounter_;
+        default_uint* pCounter_;
+        default_uint* pWCounter_;
     };
-
-    template<class T>
-    s_str operator+ (const s_str& sLeft, const s_wptr<T>& pRight)
-    {
-        return s_str(sLeft) << pRight.Lock();
-    }
-
-    template<class T>
-    s_str& operator<< (s_str& sLeft, const s_wptr<T>& pRight)
-    {
-        return sLeft << pRight.Lock();
-    }
-
-    template<class T>
-    s_str operator+ (const char* sLeft, const s_wptr<T>& pRight)
-    {
-        return s_str(sLeft) << pRight.Lock();
-    }
 }

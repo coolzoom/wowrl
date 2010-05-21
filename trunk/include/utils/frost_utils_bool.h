@@ -8,6 +8,10 @@ namespace Frost
     *   allow easy access to math/string functions and
     *   implements new functions that are not present
     *   in the standard libraries.
+    *   \note This class doesn't need to be a template,
+    *         as there is only one boolean type in C++.
+    *         But it is delays the compilation of the
+    *         class, allo
     */
     template<class T>
     class s_bool_t
@@ -154,4 +158,36 @@ namespace Frost
     }
 
     typedef s_bool_t<bool> s_bool;
+
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
+    template<> class TypeTraits<bool>
+    {
+    public :
+        typedef bool        Type;
+        typedef bool        BaseType;
+        typedef s_bool      FrostType;
+        typedef bool&       RefType;
+        typedef const bool& CRefType;
+        typedef bool*       PointerType;
+
+        static inline RefType  GetValue(RefType  m) { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+
+    template<> class TypeTraits<s_bool>
+    {
+    public :
+        typedef s_bool        Type;
+        typedef bool          BaseType;
+        typedef s_bool        FrostType;
+        typedef s_bool&       RefType;
+        typedef const s_bool& CRefType;
+        typedef s_bool*       PointerType;
+
+        static inline bool&       GetValue(RefType m)  { return m.GetR(); }
+        static inline const bool& GetValue(CRefType m) { return m.Get(); }
+    };
+    /** \endcond
+    */
 }

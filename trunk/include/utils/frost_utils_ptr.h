@@ -79,7 +79,7 @@ namespace Frost
         /// Returns a reference to the contained value.
         /** \return A reference to the contained value
         */
-        T& operator * () const
+        typename TypeTraits<T>::RefType operator * () const
         {
             return *pValue_;
         }
@@ -331,23 +331,55 @@ namespace Frost
             return dynamic_cast<T*>(pValue);
         }
 
-        static const s_str CLASS_NAME;
-
     private :
 
         T* pValue_;
     };
 
-    template<class T>
-    const s_str s_ptr<T>::CLASS_NAME = "s_ptr";
-
     /** \cond NOT_REMOVE_FROM_DOC
     */
-    template<class T> class TypeTraits<T*>  { public : typedef s_ptr<T> Type; };
+    template<class T> class TypeTraits<T*>
+    {
+    public :
+        typedef T*         Type;
+        typedef T*         BaseType;
+        typedef s_ptr<T>   FrostType;
+        typedef T*&        RefType;
+        typedef T* const & CRefType;
+        typedef T**        PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+
+    template<> class TypeTraits<void>
+    {
+    public :
+        typedef void  Type;
+        typedef void  BaseType;
+        typedef void  FrostType;
+        typedef void  RefType;
+        typedef void  CRefType;
+        typedef void* PointerType;
+    };
+
+    template<class T> class TypeTraits< s_ptr<T> >
+    {
+    public :
+        typedef s_ptr<T>        Type;
+        typedef T*              BaseType;
+        typedef s_ptr<T>        FrostType;
+        typedef s_ptr<T>&       RefType;
+        typedef const s_ptr<T>& CRefType;
+        typedef s_ptr<T>*       PointerType;
+
+        static inline typename TypeTraits::BaseType GetValue(RefType m)  { return m.Get(); }
+        static inline typename TypeTraits::BaseType GetValue(CRefType m) { return m.Get(); }
+    };
     /** \endcond
     */
 
-    template<class T>
+    /*template<class T>
     s_str operator+ (const s_str& sLeft, const s_ptr<T>& pRight)
     {
         return s_str(sLeft) << static_cast<void*>(pRight.Get());
@@ -357,12 +389,6 @@ namespace Frost
     s_str& operator<< (s_str& sLeft, const s_ptr<T>& pRight)
     {
         return sLeft << static_cast<void*>(pRight.Get());
-    }
-
-    template<class T>
-    s_str operator+ (const char* sLeft, const s_ptr<T>& pRight)
-    {
-        return s_str(sLeft) << static_cast<void*>(pRight.Get());
-    }
+    }*/
 }
 

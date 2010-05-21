@@ -139,10 +139,10 @@ namespace Frost
         s_uint uiMilliseconds(s_double::RoundDown(dTime*1000));
 
         s_str sTime = "[";
-        sTime += s_str(uiHours, 2) + ":";
-        sTime += s_str(uiMinutes, 2) + ":";
-        sTime += s_str(uiSeconds, 2) + ":";
-        sTime += s_str(uiMilliseconds, 3) + "]";
+        sTime += s_str::Convert(uiHours, 2) + ":";
+        sTime += s_str::Convert(uiMinutes, 2) + ":";
+        sTime += s_str::Convert(uiSeconds, 2) + ":";
+        sTime += s_str::Convert(uiMilliseconds, 3) + "]";
 
         return sTime;
     }

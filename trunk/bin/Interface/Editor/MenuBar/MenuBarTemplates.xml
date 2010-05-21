@@ -2,11 +2,7 @@
     <Button name="ButtonTemplate_Menu" virtual="true">
         <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
             <Anchors>
-                <Anchor point="CENTER">
-                    <Offset>
-                        <AbsDimension y="1"/>
-                    </Offset>
-                </Anchor>
+                <Anchor point="CENTER"/>
             </Anchors>
         </NormalText>
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>

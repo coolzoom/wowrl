@@ -19,8 +19,6 @@ using namespace Frost::GUI;
 
 const s_str EditBox::CLASS_NAME = "GUI::EditBox";
 
-// TODO : Implement EditBox
-
 EditBox::EditBox() : Frame()
 {
     lType_.PushBack("EditBox");
@@ -31,6 +29,13 @@ EditBox::EditBox() : Frame()
     ));
 
     iterCarretPos_ = sUnicodeText_.Begin();
+
+    uiSelectionStartPos_ = s_uint::NaN;
+    uiSelectionEndPos_ = s_uint::NaN;
+
+    mHighlightColor_ = Color(0.5f, 1.0f, 1.0f, 1.0f);
+
+    RegisterForDrag((s_str("LeftButton")));
 }
 
 EditBox::~EditBox()
@@ -106,6 +111,31 @@ void EditBox::Update()
 {
     Frame::Update();
 
+    if (bMouseDragged_ && uiSelectionStartPos_.IsValid())
+    {
+        s_int iX = s_int(InputManager::GetSingleton()->GetMousePosX());
+        s_int iY = s_int(InputManager::GetSingleton()->GetMousePosY());
+
+        s_uint uiPos = GetLetterIDAt_(iX, iY);
+        if (uiSelectionEndPos_.IsValid() != uiPos.IsValid() || uiPos != uiSelectionEndPos_)
+        {
+            if (uiPos.IsValid())
+            {
+                HighlightText(uiSelectionStartPos_, uiPos);
+                iterCarretPos_ = sUnicodeText_.Begin() + uiPos.Get();
+                UpdateCarretPosition_();
+            }
+            else
+            {
+                s_uint uiTemp = uiSelectionStartPos_;
+                UnlightText();
+                uiSelectionStartPos_ = uiTemp;
+                iterCarretPos_ = sUnicodeText_.Begin() + uiSelectionStartPos_.Get();
+                UpdateCarretPosition_();
+            }
+        }
+    }
+
     if (bFocus_ && pCarretTimer_->Ticks())
     {
         if (!pCarret_)
@@ -128,6 +158,12 @@ void EditBox::OnEvent( const Event& mEvent )
     if (mEvent.GetName() == "MOUSE_PRESSED" && bMouseInFrame_)
     {
         SetFocus(true);
+        UnlightText();
+
+        s_int iX = s_int(mEvent.Get(1)->Get<s_float>());
+        s_int iY = s_int(mEvent.Get(2)->Get<s_float>());
+
+        MoveCarretAt_(iX, iY);
     }
 
     if (mEvent.GetName() == "KEY_PRESSED" && bFocus_)
@@ -153,8 +189,16 @@ void EditBox::OnEvent( const Event& mEvent )
         }
         else if (uiChar == KEY_BACK)
         {
-            if (MoveCarretHorizontally_(false))
+            if (bSelectedText_)
+            {
                 RemoveChar_();
+            }
+            else
+            {
+                if (MoveCarretHorizontally_(false))
+                    RemoveChar_();
+            }
+
         }
         else if (uiChar == KEY_DELETE)
         {
@@ -162,13 +206,37 @@ void EditBox::OnEvent( const Event& mEvent )
         }
         else if (uiChar == KEY_END)
         {
+            s_uint uiPreviousCarretPos = iterCarretPos_ - sUnicodeText_.Begin();
+
             iterCarretPos_ = sUnicodeText_.End();
             UpdateCarretPosition_();
+
+            if (InputManager::GetSingleton()->ShiftPressed())
+            {
+                if (bSelectedText_)
+                    HighlightText(uiSelectionStartPos_, iterCarretPos_ - sUnicodeText_.Begin());
+                else
+                    HighlightText(uiPreviousCarretPos, iterCarretPos_ - sUnicodeText_.Begin());
+            }
+            else
+                UnlightText();
         }
         else if (uiChar == KEY_HOME)
         {
+            s_uint uiPreviousCarretPos = iterCarretPos_ - sUnicodeText_.Begin();
+
             iterCarretPos_ = sUnicodeText_.Begin();
             UpdateCarretPosition_();
+
+            if (InputManager::GetSingleton()->ShiftPressed())
+            {
+                if (bSelectedText_)
+                    HighlightText(uiSelectionStartPos_, iterCarretPos_ - sUnicodeText_.Begin());
+                else
+                    HighlightText(uiPreviousCarretPos, iterCarretPos_ - sUnicodeText_.Begin());
+            }
+            else
+                UnlightText();
         }
         else
         {
@@ -176,6 +244,8 @@ void EditBox::OnEvent( const Event& mEvent )
             {
                 if (!bArrowsIgnored_)
                 {
+                    s_uint uiPreviousCarretPos = iterCarretPos_ - sUnicodeText_.Begin();
+
                     if (uiChar == KEY_LEFT)
                         MoveCarretHorizontally_(false);
                     else if (uiChar == KEY_RIGHT)
@@ -184,6 +254,17 @@ void EditBox::OnEvent( const Event& mEvent )
                         MoveCarretVertically_(false);
                     else if (uiChar == KEY_DOWN)
                         MoveCarretVertically_(true);
+
+                    if (InputManager::GetSingleton()->ShiftPressed())
+                    {
+                        if (bSelectedText_)
+                            HighlightText(uiSelectionStartPos_, iterCarretPos_ - sUnicodeText_.Begin());
+                        else
+                            HighlightText(uiPreviousCarretPos, iterCarretPos_ - sUnicodeText_.Begin());
+                    }
+
+                    else
+                        UnlightText();
                 }
 
                 return;
@@ -261,6 +342,14 @@ void EditBox::On( const s_str& sScriptName, s_ptr<Event> pEvent )
         UpdateFontString_();
         UpdateCarretPosition_();
     }
+
+    if (sScriptName == "DragStart")
+    {
+        s_int iX = s_int(InputManager::GetSingleton()->GetMousePosX());
+        s_int iY = s_int(InputManager::GetSingleton()->GetMousePosY());
+
+        uiSelectionEndPos_ = uiSelectionStartPos_ = GetLetterIDAt_(iX, iY);
+    }
 }
 
 void EditBox::CreateGlue()
@@ -289,6 +378,7 @@ void EditBox::SetText( const s_str& sText )
 {
     if (sText != sText_)
     {
+        UnlightText();
         sText_ = sText;
         CheckText_();
         UpdateDisplayedText_();
@@ -304,18 +394,85 @@ const s_str& EditBox::GetText() const
     return sText_;
 }
 
-void EditBox::HighlightText( const s_uint& uiStart, const s_uint& uiEnd )
+void EditBox::UnlightText()
+{
+    uiSelectionStartPos_ = s_uint::NaN;
+    uiSelectionEndPos_   = s_uint::NaN;
+    bSelectedText_ = false;
+
+    if (pHighlight_)
+        pHighlight_->Hide();
+}
+
+void EditBox::HighlightText( const s_uint& uiStart, const s_uint& uiEnd, const s_bool& bForceUpdate )
 {
     if (!pHighlight_)
         CreateHighlight_();
+
+    if (!pHighlight_)
+        return;
+
+    s_uint uiLeft  = s_uint::Min(uiStart, uiEnd);
+    s_uint uiRight = s_uint::Max(uiStart, uiEnd);
+
+    if (uiLeft == uiRight || uiRight < uiDisplayPos_)
+        pHighlight_->Hide();
+    else
+        pHighlight_->Show();
+
+    if (!uiSelectionStartPos_.IsValid() || !uiSelectionEndPos_.IsValid() ||
+        (uiSelectionStartPos_ != uiStart) || (uiSelectionEndPos_ != uiEnd) ||
+        bForceUpdate)
+    {
+        if (uiLeft != uiRight && uiRight >= uiDisplayPos_ &&
+            pFontString_ && pFontString_->GetTextObject())
+        {
+            bSelectedText_ = true;
+
+            s_int iLeftPos;
+            s_int iRightPos = s_int(pFontString_->GetAbsWidth());
+
+            s_wptr<Text> pText = pFontString_->GetTextObject();
+            const s_ctnr<Text::Letter>& lLetters = pText->GetLetterCache();
+
+            s_ctnr<Text::Letter>::const_iterator iter;
+            foreach (iter, lLetters)
+            {
+                s_uint uiPos = iter - lLetters.Begin() + uiDisplayPos_;
+
+                if (uiPos == uiLeft)
+                    iLeftPos = s_int(iter->fX1) + lTextInsets_[BORDER_LEFT];
+
+                if (uiPos == uiRight - 1)
+                {
+                    iRightPos = s_int(iter->fX2) + lTextInsets_[BORDER_LEFT];
+                    break;
+                }
+            }
+
+            pHighlight_->SetAbsPoint(ANCHOR_LEFT,  sName_, ANCHOR_LEFT, iLeftPos,  0);
+            pHighlight_->SetAbsPoint(ANCHOR_RIGHT, sName_, ANCHOR_LEFT, iRightPos, 0);
+        }
+    }
+
+    uiSelectionStartPos_ = uiStart;
+    uiSelectionEndPos_   = uiEnd;
 }
 
 void EditBox::SetHighlightColor( const Color& mColor )
 {
-    if (!pHighlight_)
-        CreateHighlight_();
+    if (mHighlightColor_ != mColor)
+    {
+        mHighlightColor_ = mColor;
 
-    pHighlight_->SetColor(mColor);
+        if (!pHighlight_)
+            CreateHighlight_();
+
+        if (!pHighlight_)
+            return;
+
+        pHighlight_->SetColor(mHighlightColor_);
+    }
 }
 
 void EditBox::InsertAfterCursor( const s_str& sText )
@@ -328,6 +485,7 @@ void EditBox::InsertAfterCursor( const s_str& sText )
         s_ustr sUStr = UTF8ToUnicode(sText);
         if (sUnicodeText_.GetSize() + sUStr.GetSize() <= uiMaxLetters_)
         {
+            UnlightText();
             iterCarretPos_ = sUnicodeText_.Insert(sUStr, iterCarretPos_);
             sText_ = UnicodeToUTF8(sUnicodeText_);
             uiNumLetters_ = sUnicodeText_.GetSize();
@@ -614,6 +772,8 @@ void EditBox::CreateHighlight_()
     pHighlight_->SetAbsPoint(
         ANCHOR_BOTTOM, sName_, ANCHOR_BOTTOM, 0, -lTextInsets_[BORDER_BOTTOM]
     );
+
+    pHighlight_->SetColor(mHighlightColor_);
 }
 
 void EditBox::CreateCarret_()
@@ -704,6 +864,9 @@ void EditBox::UpdateFontString_()
         return;
 
     pFontString_->SetText(UnicodeToUTF8(sDisplayedText_));
+
+    if (bSelectedText_)
+        HighlightText(uiSelectionStartPos_, uiSelectionEndPos_, true);
 }
 
 void EditBox::UpdateCarretPosition_()
@@ -786,18 +949,10 @@ void EditBox::UpdateCarretPosition_()
         s_ustr::const_iterator iter;
         for (iter = sDisplayedText_.Begin(); iter != iterDisplayCarret; ++iter)
         {
-            if (*iter == '\n')
-            {
-                if (iterLetter == lLetters.Begin() || iterLetter == lLetters.End())
-                    fYOffset += pText->GetLineHeight()*pText->GetLineSpacing();
-            }
-            else
-            {
-                s_float fLastY = iterLetter->fY1;
-                ++iterLetter;
-                if (iterLetter != lLetters.End() && fLastY != iterLetter->fY1)
-                    fYOffset += iterLetter->fY1 - fLastY;
-            }
+            s_float fLastY = iterLetter->fY1;
+            ++iterLetter;
+            if (iterLetter != lLetters.End() && fLastY != iterLetter->fY1)
+                fYOffset += iterLetter->fY1 - fLastY;
         }
 
         if (iterLetter == lLetters.Begin())
@@ -818,9 +973,15 @@ void EditBox::UpdateCarretPosition_()
 
 s_bool EditBox::AddChar_( const s_str& sChar )
 {
+    if (sChar.IsEmpty())
+        return false;
+
+    if (bSelectedText_)
+        RemoveChar_();
+
     s_ustr sUnicode = UTF8ToUnicode(sChar);
 
-    if (sChar.IsEmpty() || uiNumLetters_ + sUnicode.GetSize() >= uiMaxLetters_)
+    if (uiNumLetters_ + sUnicode.GetSize() >= uiMaxLetters_)
         return false;
 
     s_ustr::iterator iter;
@@ -846,20 +1007,98 @@ s_bool EditBox::AddChar_( const s_str& sChar )
 
 s_bool EditBox::RemoveChar_()
 {
-    if (iterCarretPos_ != sUnicodeText_.End())
+    if (bSelectedText_)
     {
+        if (uiSelectionStartPos_ != uiSelectionEndPos_)
+        {
+            s_uint uiLeft = s_uint::Min(uiSelectionStartPos_, uiSelectionEndPos_);
+            s_uint uiRight = s_uint::Max(uiSelectionStartPos_, uiSelectionEndPos_);
+
+            sUnicodeText_.EraseRange(uiLeft, uiRight);
+            sText_ = UnicodeToUTF8(sUnicodeText_);
+            uiNumLetters_ = sUnicodeText_.GetSize();
+
+            iterCarretPos_ = sUnicodeText_.Begin() + uiLeft.Get();
+        }
+
+        UnlightText();
+    }
+    else
+    {
+        if (iterCarretPos_ == sUnicodeText_.End())
+            return false;
+
         iterCarretPos_ = sUnicodeText_.Erase(iterCarretPos_);
         sText_ = UnicodeToUTF8(sUnicodeText_);
         --uiNumLetters_;
+    }
 
-        UpdateDisplayedText_();
-        UpdateFontString_();
+    UpdateDisplayedText_();
+    UpdateFontString_();
+    UpdateCarretPosition_();
+
+    if (pCarret_)
+        pCarret_->Show();
+
+    pCarretTimer_->Zero();
+
+    return true;
+}
+
+s_uint EditBox::GetLetterIDAt_( const s_int& iX, const s_int& iY )
+{
+    if (pFontString_ && pFontString_->GetTextObject())
+    {
+        s_wptr<Text> pText = pFontString_->GetTextObject();
+        const s_ctnr<Text::Letter>& lLetters = pText->GetLetterCache();
+
+        if (lLetters.IsEmpty())
+            return uiDisplayPos_;
+
+        s_float fX = s_float(iX - lBorderList_[BORDER_LEFT] - lTextInsets_[BORDER_LEFT]);
+        s_float fY = s_float(iY - lBorderList_[BORDER_TOP]  - lTextInsets_[BORDER_TOP]);
+
+        s_uint uiLastChar;
+
+        if (!bMultiLine_)
+        {
+            if (iX < lBorderList_[BORDER_LEFT] + lTextInsets_[BORDER_LEFT])
+                return uiDisplayPos_;
+            else if (iX > lBorderList_[BORDER_RIGHT] - lTextInsets_[BORDER_RIGHT])
+                return lLetters.GetSize() + uiDisplayPos_;
+
+            s_ctnr<Text::Letter>::const_iterator iter;
+            foreach (iter, lLetters)
+            {
+                uiLastChar = iter - lLetters.Begin();
+
+                if (fX.IsInRange(iter->fX1, iter->fX2))
+                {
+                    if (fX > (iter->fX1 + iter->fX2)/2.0f)
+                        ++uiLastChar;
+
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // TODO : # Implement multi line EditBox
+        }
+
+        return uiLastChar + uiDisplayPos_;
+    }
+
+    return s_uint::NaN;
+}
+
+s_bool EditBox::MoveCarretAt_( const s_int& iX, const s_int& iY )
+{
+    s_uint uiPos = GetLetterIDAt_(iX, iY);
+    if (uiPos.IsValid())
+    {
+        iterCarretPos_ = sUnicodeText_.Begin() + uiPos.Get();
         UpdateCarretPosition_();
-
-        if (pCarret_)
-            pCarret_->Show();
-
-        pCarretTimer_->Zero();
 
         return true;
     }

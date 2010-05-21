@@ -1,11 +1,11 @@
 if (GetLocale() == "frFR") then
     AddOns.ConfigMenu:SetLocale({
         ["Title"]                            = "Configuration",
-        ["PanelGeneral"]                     = "General",
+        ["PanelGeneral"]                     = "Général",
         ["PanelInterface"]                   = "Interface",
         ["PanelInterfaceTextColor"]          = "Couleur du texte :",
         ["PanelInterfaceSecondaryTextColor"] = "Couleur du texte secondaire :",
-        ["PanelInterfaceBackgroundColor"]    = "Couleur de l'arriere plan :",
+        ["PanelInterfaceBackgroundColor"]    = "Couleur de l'arrière plan :",
     });
 else
     AddOns.ConfigMenu:SetLocale({

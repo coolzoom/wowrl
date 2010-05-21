@@ -270,12 +270,12 @@ namespace Frost
 
     s_str operator + (const s_str& sLeft, const Vector& mRight)
     {
-        return sLeft+"("+s_str(mRight.X())+", "+s_str(mRight.Y())+", "+s_str(mRight.Z())+")";
+        return sLeft+"("+mRight.X()+", "+mRight.Y()+", "+mRight.Z()+")";
     }
 
     s_str& operator << (s_str& sLeft, const Vector& mRight)
     {
-        return sLeft << "("+s_str(mRight.X())+", "+s_str(mRight.Y())+", "+s_str(mRight.Z())+")";
+        return sLeft << "("+mRight.X()+", "+mRight.Y()+", "+mRight.Z()+")";
     }
 
     Vector operator * (const s_float& fLeft, const Vector& mRight)

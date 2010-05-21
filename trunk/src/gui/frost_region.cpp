@@ -36,6 +36,6 @@ void Region::CreateGlue()
 
 s_bool Region::IsInRegion( const s_int& iX, const s_int& iY )
 {
-    return (iX.IsInRange(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_RIGHT]-1) &&
-            iY.IsInRange(lBorderList_[BORDER_TOP],  lBorderList_[BORDER_BOTTOM]-1));
+    return (iX.IsInRange(lBorderList_[BORDER_LEFT], lBorderList_[BORDER_RIGHT]  - 1) &&
+            iY.IsInRange(lBorderList_[BORDER_TOP],  lBorderList_[BORDER_BOTTOM] - 1));
 }

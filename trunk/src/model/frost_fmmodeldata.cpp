@@ -98,7 +98,7 @@ namespace Frost
                 float fLength = mMA.timeEnd - mMA.timeStart;
 
                 // Create the main animation sequence
-                mA.sName = "anim_" + s_str(s_uint(i));
+                mA.sName = "anim_" + s_str::Convert(s_uint(i));
                 mA.pAnim = pSkel->createAnimation(mA.sName.Get(), fLength/1000.0f);
 
                 lAnimList_[i] = mA;
@@ -172,7 +172,7 @@ namespace Frost
             ModelSubMesh mMSM;
             mFile.Read(mMSM);
 
-            Ogre::SubMesh* pSub = pMesh_->createSubMesh(s_str(s_uint(mMSM.id), 4).Get());
+            Ogre::SubMesh* pSub = pMesh_->createSubMesh(s_str::Convert(s_uint(mMSM.id), 4).Get());
 
             if (!lModelPartList_.Find(mMSM.id))
                 lModelPartList_[mMSM.id] = new ModelPart(nullptr, mMSM.id);

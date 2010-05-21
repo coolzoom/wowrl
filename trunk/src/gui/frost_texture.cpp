@@ -39,10 +39,10 @@ s_str Texture::Serialize( const s_str& sTab ) const
         sStr << sTab << "  # File        : " << sTextureFile_ << "\n";
         sStr << sTab << "  # Tex. coord. :\n";
         sStr << sTab << "  #-###\n";
-        sStr << sTab << "  |   # top-left     : " << (lTexCoord_[0], lTexCoord_[1])  << "\n";
-        sStr << sTab << "  |   # top-right    : " << (lTexCoord_[2], lTexCoord_[3]) << "\n";
-        sStr << sTab << "  |   # bottom-right : " << (lTexCoord_[4], lTexCoord_[5]) << "\n";
-        sStr << sTab << "  |   # bottom-left  : " << (lTexCoord_[6], lTexCoord_[7]) << "\n";
+        sStr << sTab << "  |   # top-left     : " + (lTexCoord_[0], lTexCoord_[1])  << "\n";
+        sStr << sTab << "  |   # top-right    : " + (lTexCoord_[2], lTexCoord_[3]) << "\n";
+        sStr << sTab << "  |   # bottom-right : " + (lTexCoord_[4], lTexCoord_[5]) << "\n";
+        sStr << sTab << "  |   # bottom-left  : " + (lTexCoord_[6], lTexCoord_[7]) << "\n";
         sStr << sTab << "  #-###\n";
         sStr << sTab << "  # TexCModRect : " << bTexCoordModifiesRect_ << "\n";
     }

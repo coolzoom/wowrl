@@ -108,20 +108,20 @@ void Block::CheckAttributesDef( const s_ctnr<s_str>& lAttribs )
         s_bool bAdd = true;
         foreach (iterCommand, lCommands)
         {
-            s_str sLetterCode = s_str((*iterCommand)[0]);
-            if (sLetterCode == "s")
+            char cLetterCode = (*iterCommand)[0];
+            if (cLetterCode == 's')
             {
                 mType = ATTR_TYPE_STRING;
             }
-            else if (sLetterCode == "n")
+            else if (cLetterCode == 'n')
             {
                 mType = ATTR_TYPE_NUMBER;
             }
-            else if (sLetterCode == "b")
+            else if (cLetterCode == 'b')
             {
                 mType = ATTR_TYPE_BOOL;
             }
-            else if (sLetterCode == "-")
+            else if (cLetterCode == '-')
             {
                 RemoveAttribute(sAttr);
                 bAdd = false;

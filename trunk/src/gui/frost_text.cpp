@@ -169,13 +169,11 @@ namespace Frost
 
         if (bReady_)
         {
-            s_str::const_iterator iterChar, iterNext;
-            foreach (iterChar, sText_)
+            s_ustr::const_iterator iterChar, iterNext;
+            foreach (iterChar, sUnicodeText_)
             {
                 iterNext = iterChar + 1;
-                if (*iterChar == ' ')
-                    fWidth += fSpaceWidth_;
-                else if (*iterChar == '\n')
+                if (*iterChar == '\n')
                 {
                     if (fWidth > fMaxWidth)
                         fMaxWidth = fWidth;
@@ -185,11 +183,8 @@ namespace Frost
                 else
                 {
                     fWidth += GetCharacterWidth((uint)(uchar)*iterChar) + fTracking_;
-                    if (iterNext != sText_.End())
-                    {
-                        if (*iterNext != ' ' && *iterNext != '\n')
-                            fWidth += GetCharacterKerning((uint)(uchar)*iterChar, (uint)(uchar)*iterNext);
-                    }
+                    if (iterNext != sUnicodeText_.End() && *iterChar != ' ' && *iterNext != ' ' && *iterNext != '\n')
+                        fWidth += GetCharacterKerning((uint)(uchar)*iterChar, (uint)(uchar)*iterNext);
                 }
             }
         }
@@ -456,7 +451,7 @@ namespace Frost
         return pFontMat_;
     }
 
-    void GetFormat( s_str::iterator& iterChar, Text::Format& mFormat )
+    void GetFormat( s_ustr::iterator& iterChar, Text::Format& mFormat )
     {
         if (*iterChar == 'r')
         {
@@ -724,6 +719,9 @@ namespace Frost
                         }
                     }
                 }
+
+                mLine.sCaption += "\n";
+
                 lLines.PushBack(mLine);
                 s_map<s_uint, Format>::iterator iterFormat;
                 foreach (iterFormat, lTempFormatList)
@@ -731,7 +729,7 @@ namespace Frost
                     lFormatList_[iterFormat->first] = iterFormat->second;
                 }
                 lTempFormatList.Clear();
-                uiCounter += mLine.sCaption.GetLength();
+                uiCounter += mLine.sCaption.GetLength() - 1;
 
                 // Add the maximum number of line to this Text
                 s_ctnr<Line>::iterator iterLine;
@@ -867,15 +865,30 @@ namespace Frost
                     s_float fCharWidth, fCharHeight;
 
                     // Add the character to the cache
-                    if (*iterChar == ' ' || *iterChar == '	')
+                    if (*iterChar == '\n')
+                    {
+                        const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)(uchar)'_');
+                        fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
+                        s_float fYOffset = s_float::RoundDown(fSize_/2.0f + fSize_/8.0f - fCharHeight/2.0f);
+
+                        mLetter.fX1 = fX; mLetter.fY1 = fY+fYOffset;
+                        mLetter.fX2 = fX; mLetter.fY2 = fY+fYOffset+fCharHeight;
+
+                        mLetter.bNoRender = true;
+
+                        lLetterCache_.PushBack(mLetter);
+
+                        continue; // Don't increase the uiCounter
+                    }
+                    else if (*iterChar == ' ' || *iterChar == '	')
                     {
                         const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)(uchar)'_');
                         fCharWidth = GetCharacterWidth((uint)(uchar)*iterChar);
                         fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
-                        s_float fYOffset = s_float::RoundDown(fSize_/2.0f - fCharHeight/2.0f);
+                        s_float fYOffset = s_float::RoundDown(fSize_/2.0f + fSize_/8.0f - fCharHeight/2.0f);
 
                         mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
-                        mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fSize_;
+                        mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fCharHeight;
 
                         mLetter.bNoRender = true;
 
@@ -886,7 +899,7 @@ namespace Frost
                         const Ogre::Font::UVRect& mUVRect = pOgreFont_->getGlyphTexCoords((uint)(uchar)*iterChar);
                         fCharWidth = GetCharacterWidth((uint)(uchar)*iterChar);
                         fCharHeight = (mUVRect.bottom - mUVRect.top)*pFontMat_->GetHeight();
-                        s_float fYOffset = s_float::RoundDown(fSize_/2.0f - fCharHeight/2.0f);
+                        s_float fYOffset = s_float::RoundDown(fSize_/2.0f + fSize_/8.0f - fCharHeight/2.0f);
 
                         mLetter.fX1 = fX;            mLetter.fY1 = fY+fYOffset;
                         mLetter.fX2 = fX+fCharWidth; mLetter.fY2 = fY+fYOffset+fCharHeight;

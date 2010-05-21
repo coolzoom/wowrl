@@ -1,6 +1,6 @@
 if (GetLocale() == "frFR") then
     AddOns.FileSelector:SetLocale({
-        ["Title"] = "Selecteur de fichier",
+        ["Title"] = "Sélecteur de fichier",
         ["NotFoundError"] = "Impossible d\'ouvrir le dossier :\n",
     });
 else

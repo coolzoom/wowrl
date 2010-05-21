@@ -258,7 +258,7 @@ int LuaEditBox::_SetNumber( lua_State* pLua )
     mFunc.Add(0, "number", Lua::TYPE_NUMBER);
     if (mFunc.Check())
     {
-        pEditBoxParent_->SetText(s_str(mFunc.Get(0)->GetNumber()));
+        pEditBoxParent_->SetText(s_str::Convert(mFunc.Get(0)->GetNumber()));
     }
 
     return mFunc.Return();

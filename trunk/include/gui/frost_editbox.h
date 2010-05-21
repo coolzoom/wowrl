@@ -62,11 +62,17 @@ namespace Frost
             const s_str&            GetText() const;
 
             /// Selects a portion of the content.
-            /** \param uiStart The first character to select
-            *   \param uiEnd   The last character to select
+            /** \param uiStart      The first character to select
+            *   \param uiEnd        The last character to select
+            *   \param bForceUpdate 'true' to bypass all redundancy checks
             *   \note Will select (uiEnd - uiStart) characters
             */
-            void                    HighlightText(const s_uint& uiStart = 0u, const s_uint& uiEnd = s_uint::INF);
+            void                    HighlightText(
+                const s_uint& uiStart = 0u, const s_uint& uiEnd = s_uint::INF, const s_bool& bForceUpdate = false
+            );
+
+            /// Deselects the selected text, if any.
+            void                    UnlightText();
 
             /// Sets the color of the highlight quad.
             /** \param mColor The color
@@ -245,6 +251,8 @@ namespace Frost
 
             s_bool AddChar_(const s_str& sChar);
             s_bool RemoveChar_();
+            s_uint GetLetterIDAt_(const s_int& iX, const s_int& iY);
+            s_bool MoveCarretAt_(const s_int& iX, const s_int& iY);
             s_bool MoveCarretHorizontally_(const s_bool& bForward = true);
             s_bool MoveCarretVertically_(const s_bool& bDown = true);
 
@@ -265,6 +273,10 @@ namespace Frost
             s_str sComboKey_;
 
             s_ptr<Texture> pHighlight_;
+            Color          mHighlightColor_;
+            s_uint         uiSelectionStartPos_;
+            s_uint         uiSelectionEndPos_;
+            s_bool         bSelectedText_;
 
             s_ptr<Texture>          pCarret_;
             s_refptr<PeriodicTimer> pCarretTimer_;

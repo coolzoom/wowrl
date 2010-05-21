@@ -82,12 +82,12 @@ namespace Frost
         *   \note If the key is not present in the map, this function
         *         returns s_uint::NaN.
         */
-        s_uint FindPos(const Key& mKey) const
+        s_uint_t<default_uint> FindPos(const Key& mKey) const
         {
             const_iterator mIter;
             mIter = mMap_.find(mKey);
             if (mIter == End())
-                return s_uint::NaN;
+                return s_uint_t<default_uint>::NaN;
             else
                 return mIter - Begin();
         }
@@ -179,7 +179,7 @@ namespace Frost
         /// Returns the number of elements in this map.
         /** \return The number of elements in this map
         */
-        s_uint GetSize() const
+        s_uint_t<default_uint> GetSize() const
         {
             return mMap_.size();
         }

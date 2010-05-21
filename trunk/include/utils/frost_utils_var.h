@@ -198,13 +198,13 @@ namespace Frost
         s_str ToString() const
         {
             const s_type& mType = GetType();
-            if (mType == VALUE_INT) return s_str(Get<s_int>());
-            else if (mType == VALUE_UINT) return s_str(Get<s_uint>())+"u";
-            else if (mType == VALUE_FLOAT) return s_str(Get<s_float>())+"f";
-            else if (mType == VALUE_DOUBLE) return s_str(Get<s_double>());
-            else if (mType == VALUE_BOOL) return s_str(Get<s_bool>());
+            if (mType == VALUE_INT) return s_str::Convert(Get<s_int>());
+            else if (mType == VALUE_UINT) return s_str::Convert(Get<s_uint>())+"u";
+            else if (mType == VALUE_FLOAT) return s_str::Convert(Get<s_float>())+"f";
+            else if (mType == VALUE_DOUBLE) return s_str::Convert(Get<s_double>());
+            else if (mType == VALUE_BOOL) return s_str::Convert(Get<s_bool>());
             else if (mType == VALUE_STRING) return "\""+Get<s_str>()+"\"";
-            else if (mType == VALUE_POINTER) return s_str() << Get<void*>();
+            else if (mType == VALUE_POINTER) return s_str::Convert(s_ptr<void>(Get<void*>()));
             else return "<none>";
         }
 

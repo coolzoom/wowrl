@@ -1,10 +1,10 @@
 if (GetLocale() == "frFR") then
     AddOns.EscMenu:SetLocale({
         ["Title"]          = "Menu",
-        ["GeneralOptions"] = "Options generales",
-        ["EditorOptions"]  = "Options de l'editeur",
+        ["GeneralOptions"] = "Options générales",
+        ["EditorOptions"]  = "Options de l'éditeur",
         ["Exit"]           = "Quitter",
-        ["ConfirmExit"]    = "Vous etes sur le point de quitter le programme, mais une partie de votre travail n'a pas ete sauvegardee.\nVoulez-vous sauvegarder maintenant ?",
+        ["ConfirmExit"]    = "Vous êtes sur le point de quitter le programme, mais une partie de votre travail n'a pas étée sauvegardée.\nVoulez-vous sauvegarder maintenant ?",
     });
 else
     AddOns.EscMenu:SetLocale({

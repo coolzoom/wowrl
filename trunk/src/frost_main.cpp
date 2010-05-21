@@ -119,6 +119,11 @@ s_bool EditorFrameFunc()
         GUIManager::GetSingleton()->ToggleCaching();
     }
 
+    if (pInputMgr->KeyIsPressed(KEY_R))
+    {
+        GUIManager::GetSingleton()->ReloadUI();
+    }
+
     if (pInputMgr->KeyIsPressed(KEY_F))
     {
         s_wptr<AnimManager> pAM = ZoneManager::GetSingleton()->GetCurrentZone()->GetDoodadByName("TestDoodad")->GetModel()->GetAnimMgr();

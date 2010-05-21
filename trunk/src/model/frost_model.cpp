@@ -84,7 +84,7 @@ namespace Frost
         else
         {
             Warning(CLASS_NAME,
-                "ModelPart "+s_str(uiID, 4)+" doesn't seem to exist for \""+sOgreModelName_+"\"."
+                "ModelPart "+s_str::Convert(uiID, 4)+" doesn't seem to exist for \""+sOgreModelName_+"\"."
             );
             return nullptr;
         }
@@ -94,7 +94,6 @@ namespace Frost
     {
         return pEntity_;
     }
-
 
     s_ptr<Ogre::Mesh> Model::GetMesh()
     {
