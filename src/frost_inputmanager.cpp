@@ -309,28 +309,9 @@ namespace Frost
             // Send events
             if (lKeyBuf_[i])
             {
-                mKeyboardEvent.SetName("KEY_DOWN");
-                mKeyboardEvent[0] = s_uint(i);
-
-                if (!bFocus_)
-                    pEventMgr->FireEvent(mKeyboardEvent);
-                else if (pFocusReceiver_)
-                    pFocusReceiver_->OnEvent(mKeyboardEvent);
-
                 if (!lKeyBufOld_[i])
                 {
                     mKeyboardEvent.SetName("KEY_PRESSED");
-                    mKeyboardEvent[0] = s_uint(i);
-
-                    if (!bFocus_)
-                        pEventMgr->FireEvent(mKeyboardEvent);
-                    else if (pFocusReceiver_)
-                        pFocusReceiver_->OnEvent(mKeyboardEvent);
-                }
-
-                if (lKeyLong_[i])
-                {
-                    mKeyboardEvent.SetName("KEY_DOWN_LONG");
                     mKeyboardEvent[0] = s_uint(i);
 
                     if (!bFocus_)
@@ -447,9 +428,6 @@ namespace Frost
             mMouseEvent[0] = s_uint(i);
             if (bMouseState)
             {
-                mMouseEvent.SetName("MOUSE_DOWN");
-                pEventMgr->FireEvent(mMouseEvent);
-
                 if (!bOldMouseState)
                 {
                     mMouseEvent.SetName("MOUSE_PRESSED");
@@ -460,12 +438,6 @@ namespace Frost
                         mMouseEvent.SetName("MOUSE_DOUBLE_CLICKED");
                         pEventMgr->FireEvent(mMouseEvent);
                     }
-                }
-
-                if (lMouseLong_[i])
-                {
-                    mMouseEvent.SetName("MOUSE_DOWN_LONG");
-                    pEventMgr->FireEvent(mMouseEvent);
                 }
             }
             else if (bOldMouseState)
@@ -484,11 +456,6 @@ namespace Frost
 
         fMX_ = mMouseState.X.abs;
         fMY_ = mMouseState.Y.abs;
-
-        // Note : relative input seems bugged (1.333 times larger
-        // values than absolute input...)
-        /*fRawDMX_ = fDMX_ = mMouseState.X.rel;
-        fRawDMY_ = fDMY_ = mMouseState.Y.rel;*/
 
         fDMX_ *= fMouseSensibility_;
         fDMY_ *= fMouseSensibility_;
@@ -530,7 +497,6 @@ namespace Frost
                 fSmoothMWheel_ += iterHistory->Second()[2]*fWeight;
 
                 fHistoryWeight += fWeight;
-                //fWeight -= 1.0f/s_float(lMouseHistory_.GetSize());
             }
 
             fSmoothDMX_    /= fHistoryWeight;

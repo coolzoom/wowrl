@@ -256,6 +256,8 @@ namespace Frost
             s_bool MoveCarretHorizontally_(const s_bool& bForward = true);
             s_bool MoveCarretVertically_(const s_bool& bDown = true);
 
+            void ProcessKey_(const s_uint& uiKey);
+
             s_str            sText_;
             s_ustr           sUnicodeText_;
             s_ustr           sDisplayedText_;
@@ -288,6 +290,9 @@ namespace Frost
             s_ptr<FontString> pFontString_;
             s_array<s_int,4>  lTextInsets_;
 
+            s_uint                  uiLastKeyPressed_;
+            s_refptr<PeriodicTimer> pKeyRepeatTimer_;
+            s_double                dKeyRepeatSpeed_;
         };
 
         /** \cond NOT_REMOVE_FROM_DOC

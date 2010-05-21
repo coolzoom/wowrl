@@ -112,9 +112,7 @@ namespace Frost
     {
         if ((mEvent.GetName() == "MOUSE_PRESSED") ||
             (mEvent.GetName() == "MOUSE_RELEASED") ||
-            (mEvent.GetName() == "MOUSE_DOUBLE_CLICKED") ||
-            (mEvent.GetName() == "MOUSE_DOWN") ||
-            (mEvent.GetName() == "MOUSE_DOWN_LONG"))
+            (mEvent.GetName() == "MOUSE_DOUBLE_CLICKED"))
         {
             if (!InputManager::GetSingleton()->CanGroupReceiveClicks("WORLD"))
             {

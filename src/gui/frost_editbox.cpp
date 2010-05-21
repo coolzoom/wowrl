@@ -35,6 +35,9 @@ EditBox::EditBox() : Frame()
 
     mHighlightColor_ = Color(0.5f, 1.0f, 1.0f, 1.0f);
 
+    dKeyRepeatSpeed_ = 0.05;
+    uiLastKeyPressed_ = s_uint::NaN;
+
     RegisterForDrag((s_str("LeftButton")));
 }
 
@@ -149,6 +152,22 @@ void EditBox::Update()
                 pCarret_->Show();
         }
     }
+
+    if (bFocus_ && uiLastKeyPressed_.IsValid() &&
+        InputManager::GetSingleton()->KeyIsDownLong((KeyCode)uiLastKeyPressed_.Get(), true))
+    {
+        if (!pKeyRepeatTimer_)
+        {
+            pKeyRepeatTimer_ = s_refptr<PeriodicTimer>(new PeriodicTimer(
+                dKeyRepeatSpeed_, PeriodicTimer::START_FIRST_TICK, true
+            ));
+        }
+
+        if (pKeyRepeatTimer_->Ticks())
+        {
+            ProcessKey_(uiLastKeyPressed_);
+        }
+    }
 }
 
 void EditBox::OnEvent( const Event& mEvent )
@@ -172,37 +191,11 @@ void EditBox::OnEvent( const Event& mEvent )
         if (uiChar == KEY_ESCAPE)
         {
             On("EscapePressed");
+            return;
         }
         else if (uiChar == KEY_RETURN || uiChar == KEY_NUMPADENTER)
         {
             On("EnterPressed");
-
-            if (bMultiLine_)
-            {
-                if (AddChar_("\n"))
-                {
-                    Event mKeyEvent;
-                    mKeyEvent.Add(s_str("\n"));
-                    On("OnChar", &mKeyEvent);
-                }
-            }
-        }
-        else if (uiChar == KEY_BACK)
-        {
-            if (bSelectedText_)
-            {
-                RemoveChar_();
-            }
-            else
-            {
-                if (MoveCarretHorizontally_(false))
-                    RemoveChar_();
-            }
-
-        }
-        else if (uiChar == KEY_DELETE)
-        {
-            RemoveChar_();
         }
         else if (uiChar == KEY_END)
         {
@@ -220,6 +213,8 @@ void EditBox::OnEvent( const Event& mEvent )
             }
             else
                 UnlightText();
+
+            return;
         }
         else if (uiChar == KEY_HOME)
         {
@@ -237,76 +232,29 @@ void EditBox::OnEvent( const Event& mEvent )
             }
             else
                 UnlightText();
+
+            return;
         }
-        else
+        else if (uiChar == KEY_TAB)
         {
-            if (uiChar == KEY_LEFT || uiChar == KEY_RIGHT || uiChar == KEY_UP || uiChar == KEY_DOWN)
-            {
-                if (!bArrowsIgnored_)
-                {
-                    s_uint uiPreviousCarretPos = iterCarretPos_ - sUnicodeText_.Begin();
+            On("TabPressed");
+        }
+        else if (uiChar == KEY_SPACE)
+        {
+            On("SpacePressed");
+        }
 
-                    if (uiChar == KEY_LEFT)
-                        MoveCarretHorizontally_(false);
-                    else if (uiChar == KEY_RIGHT)
-                        MoveCarretHorizontally_(true);
-                    else if (uiChar == KEY_UP)
-                        MoveCarretVertically_(false);
-                    else if (uiChar == KEY_DOWN)
-                        MoveCarretVertically_(true);
+        uiLastKeyPressed_ = uiChar;
 
-                    if (InputManager::GetSingleton()->ShiftPressed())
-                    {
-                        if (bSelectedText_)
-                            HighlightText(uiSelectionStartPos_, iterCarretPos_ - sUnicodeText_.Begin());
-                        else
-                            HighlightText(uiPreviousCarretPos, iterCarretPos_ - sUnicodeText_.Begin());
-                    }
-
-                    else
-                        UnlightText();
-                }
-
-                return;
-            }
-
-            if (uiChar == KEY_TAB)
-            {
-                On("TabPressed");
-            }
-            else if (uiChar == KEY_SPACE)
-            {
-                On("SpacePressed");
-            }
-
-            if (sComboKey_.IsEmpty())
-            {
-                s_str sChar = InputManager::GetSingleton()->GetKeyString((KeyCode)uiChar.Get());
-
-                if (LocaleManager::GetSingleton()->IsComboKey(sChar))
-                {
-                    sComboKey_ = sChar;
-                }
-                else if (AddChar_(sChar))
-                {
-                    Event mKeyEvent;
-                    mKeyEvent.Add(sChar);
-                    On("OnChar", &mKeyEvent);
-                }
-            }
-            else
-            {
-                s_str sChar = InputManager::GetSingleton()->GetKeyComboString(sComboKey_, (KeyCode)uiChar.Get());
-
-                if (AddChar_(sChar))
-                {
-                    Event mKeyEvent;
-                    mKeyEvent.Add(sChar);
-                    On("OnChar", &mKeyEvent);
-                }
-
-                sComboKey_ = "";
-            }
+        ProcessKey_(uiChar);
+    }
+    else if (mEvent.GetName() == "KEY_RELEASED")
+    {
+        s_uint uiChar = mEvent[0].Get<s_uint>();
+        if (uiChar == uiLastKeyPressed_)
+        {
+            uiLastKeyPressed_ = s_uint::NaN;
+            pKeyRepeatTimer_ = nullptr;
         }
     }
 }
@@ -1173,5 +1121,98 @@ s_bool EditBox::MoveCarretVertically_( const s_bool& bDown )
         }
         else
             return false;
+    }
+}
+
+void EditBox::ProcessKey_( const s_uint& uiKey )
+{
+    if (uiKey == KEY_RETURN || uiKey == KEY_NUMPADENTER)
+    {
+        if (bMultiLine_)
+        {
+            if (AddChar_("\n"))
+            {
+                Event mKeyEvent;
+                mKeyEvent.Add(s_str("\n"));
+                On("OnChar", &mKeyEvent);
+            }
+        }
+    }
+    else if (uiKey == KEY_BACK)
+    {
+        if (bSelectedText_)
+        {
+            RemoveChar_();
+        }
+        else
+        {
+            if (MoveCarretHorizontally_(false))
+                RemoveChar_();
+        }
+    }
+    else if (uiKey == KEY_DELETE)
+    {
+        RemoveChar_();
+    }
+    else
+    {
+        if (uiKey == KEY_LEFT || uiKey == KEY_RIGHT || uiKey == KEY_UP || uiKey == KEY_DOWN)
+        {
+            if (!bArrowsIgnored_)
+            {
+                s_uint uiPreviousCarretPos = iterCarretPos_ - sUnicodeText_.Begin();
+
+                if (uiKey == KEY_LEFT)
+                    MoveCarretHorizontally_(false);
+                else if (uiKey == KEY_RIGHT)
+                    MoveCarretHorizontally_(true);
+                else if (uiKey == KEY_UP)
+                    MoveCarretVertically_(false);
+                else if (uiKey == KEY_DOWN)
+                    MoveCarretVertically_(true);
+
+                if (InputManager::GetSingleton()->ShiftPressed())
+                {
+                    if (bSelectedText_)
+                        HighlightText(uiSelectionStartPos_, iterCarretPos_ - sUnicodeText_.Begin());
+                    else
+                        HighlightText(uiPreviousCarretPos, iterCarretPos_ - sUnicodeText_.Begin());
+                }
+
+                else
+                    UnlightText();
+            }
+
+            return;
+        }
+
+        if (sComboKey_.IsEmpty())
+        {
+            s_str sChar = InputManager::GetSingleton()->GetKeyString((KeyCode)uiKey.Get());
+
+            if (LocaleManager::GetSingleton()->IsComboKey(sChar))
+            {
+                sComboKey_ = sChar;
+            }
+            else if (AddChar_(sChar))
+            {
+                Event mKeyEvent;
+                mKeyEvent.Add(sChar);
+                On("OnChar", &mKeyEvent);
+            }
+        }
+        else
+        {
+            s_str sChar = InputManager::GetSingleton()->GetKeyComboString(sComboKey_, (KeyCode)uiKey.Get());
+
+            if (AddChar_(sChar))
+            {
+                Event mKeyEvent;
+                mKeyEvent.Add(sChar);
+                On("OnChar", &mKeyEvent);
+            }
+
+            sComboKey_ = "";
+        }
     }
 }
