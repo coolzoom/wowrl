@@ -674,12 +674,8 @@ namespace Frost
     {
         if (bEnableCaching_)
         {
-            s_map<FrameStrata, Strata>::const_iterator iterStrata;
-            foreach (iterStrata, lStrataList_)
-            {
-                if (iterStrata->second.pSprite)
-                    iterStrata->second.pSprite->Render(0, 0);
-            }
+            if (pSprite_)
+                pSprite_->Render(0, 0);
         }
         else
         {
@@ -708,17 +704,53 @@ namespace Frost
 
     void GUIManager::CreateStrataRenderTarget_( Strata& mStrata )
     {
-        mStrata.pRenderTarget = SpriteManager::GetSingleton()->CreateRenderTarget(
-            "StrataTarget_"+mStrata.uiID,
-            Engine::GetSingleton()->GetScreenWidth(),
-            Engine::GetSingleton()->GetScreenHeight()
-        );
-
-        if (!mStrata.pRenderTarget)
+        if (!pRenderTarget_)
         {
-            throw Exception(CLASS_NAME,
-                "Unable to create RenderTarget for strata : "+mStrata.uiID+"."
+            try
+            {
+                pRenderTarget_ = SpriteManager::GetSingleton()->CreateRenderTarget(
+                    "GUIMainTarget",
+                    Engine::GetSingleton()->GetScreenWidth(),
+                    Engine::GetSingleton()->GetScreenHeight()
+                );
+            }
+            catch (Exception& e)
+            {
+                Error(CLASS_NAME,
+                    "Unable to create RenderTarget for GUI caching :\n"+e.GetDescription()
+                );
+
+                bEnableCaching_ = false;
+                Engine::GetSingleton()->SetConstant("EnableGUICaching", s_bool(false));
+
+                return;
+            }
+
+            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(pRenderTarget_);
+
+            pSprite_ = s_refptr<Sprite>(new Sprite(pMat,
+                s_float(pRenderTarget_->GetWidth()), s_float(pRenderTarget_->GetHeight())
+            ));
+        }
+
+        try
+        {
+            mStrata.pRenderTarget = SpriteManager::GetSingleton()->CreateRenderTarget(
+                "StrataTarget_"+mStrata.uiID,
+                Engine::GetSingleton()->GetScreenWidth(),
+                Engine::GetSingleton()->GetScreenHeight()
             );
+        }
+        catch (Exception& e)
+        {
+            Error(CLASS_NAME,
+                "Unable to create RenderTarget for strata "+mStrata.uiID+" :\n"+e.GetDescription()
+            );
+
+            bEnableCaching_ = false;
+            Engine::GetSingleton()->SetConstant("EnableGUICaching", s_bool(false));
+
+            return;
         }
 
         s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(mStrata.pRenderTarget);
@@ -735,26 +767,29 @@ namespace Frost
         if (!mStrata.pRenderTarget)
             CreateStrataRenderTarget_(mStrata);
 
-        pSpriteMgr->Begin(mStrata.pRenderTarget);
-        pSpriteMgr->Clear(Color::VOID);
-
-        s_map<s_uint, Level>::const_iterator iterLevel;
-        foreach (iterLevel, mStrata.lLevelList)
+        if (mStrata.pRenderTarget)
         {
-            const Level& mLevel = iterLevel->second;
+            pSpriteMgr->Begin(mStrata.pRenderTarget);
+            pSpriteMgr->Clear(Color::VOID);
 
-            s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
-            foreach (iterFrame, mLevel.lFrameList)
+            s_map<s_uint, Level>::const_iterator iterLevel;
+            foreach (iterLevel, mStrata.lLevelList)
             {
-                s_ptr<GUI::Frame> pFrame = *iterFrame;
-                if (!pFrame->IsNewlyCreated())
-                    pFrame->Render();
+                const Level& mLevel = iterLevel->second;
+
+                s_ctnr< s_ptr<GUI::Frame> >::const_iterator iterFrame;
+                foreach (iterFrame, mLevel.lFrameList)
+                {
+                    s_ptr<GUI::Frame> pFrame = *iterFrame;
+                    if (!pFrame->IsNewlyCreated())
+                        pFrame->Render();
+                }
             }
+
+            pSpriteMgr->End();
+
+            ++mStrata.uiRedrawCount;
         }
-
-        pSpriteMgr->End();
-
-        ++mStrata.uiRedrawCount;
     }
 
     const s_bool& GUIManager::IsLoadingUI() const
@@ -877,15 +912,36 @@ namespace Frost
 
         if (bEnableCaching_)
         {
+            s_bool bRedraw;
             s_map<FrameStrata, Strata>::iterator iterStrata;
             foreach (iterStrata, lStrataList_)
             {
                 Strata& mStrata = iterStrata->second;
 
                 if (mStrata.bRedraw)
+                {
                     RenderStrata_(mStrata);
+                    bRedraw = true;
+                }
 
                 mStrata.bRedraw = false;
+            }
+
+            if (bRedraw && pRenderTarget_)
+            {
+                s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
+
+                pSpriteMgr->Begin(pRenderTarget_);
+                pSpriteMgr->Clear(Color::VOID);
+
+                s_map<FrameStrata, Strata>::const_iterator iterStrata;
+                foreach (iterStrata, lStrataList_)
+                {
+                    if (iterStrata->second.pSprite)
+                        iterStrata->second.pSprite->Render(0, 0);
+                }
+
+                pSpriteMgr->End();
             }
         }
 

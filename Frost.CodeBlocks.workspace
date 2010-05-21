@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Frost">
-		<Project filename="Frost.cbp" />
+		<Project filename="Frost.cbp" active="1" />
 		<Project filename="FrostData.cbp" />
 		<Project filename="ModelConverter/ModelConverter.cbp" />
 		<Project filename="TerrainGenerator/TerrainGenerator.cbp" />
 		<Project filename="Frost - XML.cbp" />
-		<Project filename="Frost - Utils.cbp" active="1" />
+		<Project filename="Frost - Utils.cbp" />
 		<Project filename="../temp/temp.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
