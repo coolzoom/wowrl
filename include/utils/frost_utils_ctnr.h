@@ -27,6 +27,21 @@ namespace Frost
         {
         }
 
+        /// Copy constructor.
+        s_ctnr_t(const s_ctnr_t& mCtnr)
+        {
+            mContainer_ = mCtnr.mContainer_;
+        }
+
+        /// Conversion constructor.
+        template<class N, class M>
+        s_ctnr_t(const s_ctnr_t<N, M>& mCtnr)
+        {
+            typename s_ctnr_t<N, M>::const_iterator iter;
+            for (iter = mCtnr.Begin(); iter != mCtnr.End(); ++iter)
+                mContainer_.push_back(*iter);
+        }
+
         /// Constructor.
         /** \param mElem The first element of the sequence
         *   \note You can use this constructor, but it's main use is to build
@@ -498,6 +513,8 @@ namespace Frost
 
         template<default_uint N>
         s_ctnr(const s_array<ValueType,N>& lElemArray) : ParentContainerType(lElemArray) {}
+
+        s_ctnr(const ParentContainerType& mCtnr) : ParentContainerType(mCtnr) {}
     };
 
     /// Dynamic array.
@@ -530,6 +547,9 @@ namespace Frost
         template<default_uint N>
         s_array(const s_array<ValueType,N>& lElemArray) : ParentContainerType(lElemArray) {}
 
+        s_array(const ParentContainerType& mCtnr) : ParentContainerType(mCtnr) {}
+
+        s_array(const s_ctnr_t< T, std::deque<T> >& mCtnr) : ParentContainerType(mCtnr) {}
 
         /// Returns the underlying C array.
         /** \return The underlying C array
@@ -550,26 +570,72 @@ namespace Frost
         }
     };
 
-    template<class T, class C, class N>
-    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_ctnr_t<T,C>& mRight)
+    template<class T, class C> class StringConverter< string_element, s_ctnr_t<T,C> >
     {
-        s_str_t<N> sTemp = "(";
-        typename s_ctnr_t<T,C>::const_iterator iter;
-        for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const s_ctnr_t<T,C>& mCtnr)
         {
-            if (iter != mRight.Begin())
-                sTemp << ", " << *iter;
-            else
-                sTemp << *iter;
+            string sTemp = "(";
+            typename s_ctnr_t<T,C>::const_iterator iter;
+            for (iter = mCtnr.Begin(); iter != mCtnr.End(); ++iter)
+            {
+                if (iter != mCtnr.Begin())
+                    sTemp += ", " + StringConverter<string_element, T>::Convert(*iter);
+                else
+                    sTemp += StringConverter<string_element, T>::Convert(*iter);
+            }
+            sTemp += ")";
+
+            return sTemp;
         }
-        sTemp << ")";
+    };
 
-        return sLeft + sTemp;
-    }
-
-    template<class T, class C, class N>
-    s_str_t<N> operator + (const N* sLeft, const s_ctnr_t<T,C>& mRight)
+    template<class T> class StringConverter< string_element, s_ctnr<T> >
     {
-        return s_str_t<N>(sLeft) + mRight;
-    }
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const s_ctnr<T>& mCtnr)
+        {
+            string sTemp = "(";
+            typename s_ctnr<T>::const_iterator iter;
+            for (iter = mCtnr.Begin(); iter != mCtnr.End(); ++iter)
+            {
+                if (iter != mCtnr.Begin())
+                    sTemp += ", " + StringConverter<string_element, T>::Convert(*iter);
+                else
+                    sTemp += StringConverter<string_element, T>::Convert(*iter);
+            }
+            sTemp += ")";
+
+            return sTemp;
+        }
+    };
+
+    template<class T> class StringConverter< string_element, s_array<T,0> >
+    {
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const s_array<T,0>& mCtnr)
+        {
+            string sTemp = "(";
+            typename s_array<T,0>::const_iterator iter;
+            for (iter = mCtnr.Begin(); iter != mCtnr.End(); ++iter)
+            {
+                if (iter != mCtnr.Begin())
+                    sTemp += ", " + StringConverter<string_element, T>::Convert(*iter);
+                else
+                    sTemp += StringConverter<string_element, T>::Convert(*iter);
+            }
+            sTemp += ")";
+
+            return sTemp;
+        }
+    };
 }

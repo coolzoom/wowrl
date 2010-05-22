@@ -267,18 +267,11 @@ namespace Frost
         return *this;
     }
 
-    s_str operator+ ( const string_element* sLeft, const Color& mRight )
+    string_object StringConverter<string_element, Color>::Convert( const Color& mColor )
     {
-        return s_str(sLeft) + mRight;
-    }
-
-    s_str operator+ (const s_str& sLeft, const Color& mRight)
-    {
-        s_str sTemp;
-        sTemp += "(a:"+s_uint(mRight.GetA()*255.0f);
-        sTemp += ", r:"+s_uint(mRight.GetR()*255.0f);
-        sTemp += ", g:"+s_uint(mRight.GetG()*255.0f);
-        sTemp += ", b:"+s_uint(mRight.GetB()*255.0f)+")";
-        return sLeft + sTemp;
+        return  "(a:"+StringConverter<string_element, s_uint>::Convert(s_uint(mColor.GetA()*255.0f))+
+               ", r:"+StringConverter<string_element, s_uint>::Convert(s_uint(mColor.GetR()*255.0f))+
+               ", g:"+StringConverter<string_element, s_uint>::Convert(s_uint(mColor.GetG()*255.0f))+
+               ", b:"+StringConverter<string_element, s_uint>::Convert(s_uint(mColor.GetB()*255.0f))+")";
     }
 }

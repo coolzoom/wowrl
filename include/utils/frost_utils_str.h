@@ -21,11 +21,13 @@ namespace Frost
     {
     public :
 
-        typedef typename std::basic_string<T>   string;
-        typedef typename string::iterator       iterator;
-        typedef typename string::const_iterator const_iterator;
-        typedef s_range<iterator>               range;
-        typedef s_range<const_iterator>         const_range;
+        typedef T                                 character;
+        typedef typename TypeTraits<T>::FrostType frost_character;
+        typedef typename std::basic_string<T>     string;
+        typedef typename string::iterator         iterator;
+        typedef typename string::const_iterator   const_iterator;
+        typedef s_range<iterator>                 range;
+        typedef s_range<const_iterator>           const_range;
 
         /// Constructor.
         s_str_t()
@@ -51,7 +53,7 @@ namespace Frost
         /// Constructor.
         /** \param s The character array to copy
         */
-        s_str_t(const T* s)
+        s_str_t(const character* s)
         {
             sValue_ = s;
         }
@@ -59,7 +61,7 @@ namespace Frost
         /// Constructor.
         /** \param s The character array to copy
         */
-        s_str_t(T* s)
+        s_str_t(character* s)
         {
             sValue_ = s;
         }
@@ -67,15 +69,15 @@ namespace Frost
         /// Constructor.
         /** \param s The character array to copy
         */
-        s_str_t(const T& c)
+        s_str_t(const character& c)
         {
             sValue_.push_back(c);
         }
 
-                /// Constructor.
+        /// Constructor.
         /** \param s The character array to copy
         */
-        s_str_t(const typename TypeTraits<T>::FrostType& c)
+        s_str_t(const frost_character& c)
         {
             sValue_.push_back(c.Get());
         }
@@ -87,7 +89,11 @@ namespace Frost
         */
         s_str_t(const s_str_t& s, const s_uint_t<default_uint>& uiNbr)
         {
-            sValue_ = StringConverter<T>::Convert(s, uiNbr);
+            if (uiNbr.IsValid())
+            {
+                for (default_uint uiCounter = 0; uiCounter < uiNbr.Get(); ++uiCounter)
+                    sValue_ += s.Get();
+            }
         }
 
         /// Creates "uiNbr" copies of the provided character.
@@ -95,9 +101,10 @@ namespace Frost
         *   \param uiNbr The number of times to copy the character
         *   \note If uiNbr equals 0, creates an empty string.
         */
-        s_str_t(const T& c, const s_uint_t<default_uint>& uiNbr)
+        s_str_t(const character& c, const s_uint_t<default_uint>& uiNbr)
         {
-            sValue_ = StringConverter<T>::Convert(c, uiNbr);
+            if (uiNbr.IsValid())
+                sValue_ = string(uiNbr.Get(), c);
         }
 
         /// Creates "uiNbr" copies of the provided character.
@@ -105,19 +112,20 @@ namespace Frost
         *   \param uiNbr The number of times to copy the character
         *   \note If uiNbr equals 0, creates an empty string.
         */
-        s_str_t(const typename TypeTraits<T>::FrostType& c, const s_uint_t<default_uint>& uiNbr)
+        s_str_t(const frost_character& c, const s_uint_t<default_uint>& uiNbr)
         {
-            sValue_ = StringConverter<T>::Convert(c, uiNbr);
+            if (uiNbr.IsValid())
+                sValue_ = string(uiNbr.Get(), c.Get());
         }
 
-        /// Generic explicit constructor.
+        /// Generic constructor (only supports string -> string conversion).
         /** \param mValue The value to convert
         *   \note Calls StringConverter::Convert().
         */
         template<class N>
-        s_str_t(const N& mValue, typename StringConverter<T>::template IsDefined<N>::Type* mEnableIf = 0)
+        s_str_t(const N& mValue, typename StringConverter<character, N>::IsDefined* mEnableIf = 0)
         {
-            sValue_ = StringConverter<T>::Construct(mValue);
+            sValue_ = StringConverter<character, N>::Construct(mValue);
         }
 
         /// Changes the case of the first character.
@@ -687,7 +695,7 @@ namespace Frost
         */
         s_bool IsNumber() const
         {
-            string_stream mTemp(StringConverter<T>::ConvertToStandard(sValue_));
+            string_stream mTemp(StringConverter<string_element, string>::Convert(sValue_));
             double dValue;
             mTemp >> dValue;
             return !mTemp.fail();
@@ -722,20 +730,24 @@ namespace Frost
         /// Makes this string completely lower case.
         void ToLower()
         {
-            std::transform(sValue_.begin(), sValue_.end(), sValue_.begin(), ::tolower);
+            string_object sTemp = StringConverter<string_element, string>::Convert(sValue_);
+            std::transform(sTemp.begin(), sTemp.end(), sTemp.begin(), ::tolower);
+            sValue_ = StringConverter<character, string_object>::Convert(sTemp);
         }
 
         /// Makes this string completely UPPER CASE.
         void ToUpper()
         {
-            std::transform(sValue_.begin(), sValue_.end(), sValue_.begin(), ::toupper);
+            string_object sTemp = StringConverter<string_element, string>::Convert(sValue_);
+            std::transform(sTemp.begin(), sTemp.end(), sTemp.begin(), ::toupper);
+            sValue_ = StringConverter<character, string_object>::Convert(sTemp);
         }
 
         /// Removes the surrounding characters matching the provided pattern.
         /** \param cPattern The character to remove
         *   \return The number of character erased
         */
-        s_uint_t<default_uint> Trim(const T& cPattern)
+        s_uint_t<default_uint> Trim(const character& cPattern)
         {
             default_uint uiCount = 0;
             while (!IsEmpty() && (*this)[0] == cPattern)
@@ -774,7 +786,7 @@ namespace Frost
         /// Adds a new character at the end of the string.
         /** \param cChar The character to add
         */
-        void PushBack(const T& cChar)
+        void PushBack(const character& cChar)
         {
             sValue_.push_back(cChar);
         }
@@ -805,7 +817,7 @@ namespace Frost
         /// Adds a new character at the beginning of the string.
         /** \param cChar The character to add
         */
-        void PushFront(const T& cChar)
+        void PushFront(const character& cChar)
         {
             sValue_.insert(0, 1, cChar);
         }
@@ -837,7 +849,7 @@ namespace Frost
         /** \param cChar The character to add
         *   \param uiPos The position at which to insert the char
         */
-        void Insert(const T& cChar, const s_uint_t<default_uint>& uiPos)
+        void Insert(const character& cChar, const s_uint_t<default_uint>& uiPos)
         {
             if (uiPos.IsValid())
                 sValue_.insert(uiPos.Get(), 1, cChar);
@@ -850,7 +862,7 @@ namespace Frost
         *   \param iter  The position at which to insert the char
         *   \return An iterator pointing after the inserted char
         */
-        iterator Insert(const T& cChar, iterator iter)
+        iterator Insert(const character& cChar, iterator iter)
         {
             return sValue_.insert(iter, cChar)+1;
         }
@@ -1003,19 +1015,19 @@ namespace Frost
         template<class N>
         s_str_t operator + (const N& mValue) const
         {
-            return sValue_ + StringConverter<T>::Convert(mValue);
+            return sValue_ + StringConverter<T, N>::Convert(mValue);
         }
 
         template<class N>
         void operator += (const N& mValue)
         {
-            sValue_ += StringConverter<T>::Convert(mValue);
+            sValue_ += StringConverter<T, N>::Convert(mValue);
         }
 
         template<class N>
         s_str_t& operator << (const N& mValue)
         {
-            sValue_ += StringConverter<T>::Convert(mValue);
+            sValue_ += StringConverter<T, N>::Convert(mValue);
             return *this;
         }
 
@@ -1099,7 +1111,7 @@ namespace Frost
         template<class N>
         static s_str_t Convert(const N& mValue)
         {
-            return StringConverter<T>::Convert(mValue);
+            return StringConverter<T, N>::Convert(mValue);
         }
 
         /// Generic conversion function.
@@ -1109,7 +1121,7 @@ namespace Frost
         template<class N, class M>
         static s_str_t Convert(const N& mValue, const M& mParam1)
         {
-            return StringConverter<T>::Convert(mValue, mParam1);
+            return StringConverter<T, N>::Convert(mValue, mParam1);
         }
 
         /// Generic conversion function.
@@ -1120,16 +1132,16 @@ namespace Frost
         template<class N, class M, class O>
         static s_str_t Convert(const N& mValue, const M& mParam1, const O& mParam2)
         {
-            return StringConverter<T>::Convert(mValue, mParam1, mParam2);
+            return StringConverter<T, N>::Convert(mValue, mParam1, mParam2);
         }
 
         /// Checks if the provided character is a number.
         /** \param cValue The character to test
         *   \return 'true' if the provided character is a number
         */
-        static s_bool IsNumber(const T& cValue)
+        static s_bool IsNumber(const character& cValue)
         {
-            string_stream mTemp(string_object(1, StringConverter<T>::ConvertToStandard(cValue)));
+            string_stream mTemp(string_object(1, StringConverter<string_element, character>::ConvertChar(cValue)));
             double dValue;
             mTemp >> dValue;
             return !mTemp.fail();
@@ -1139,9 +1151,9 @@ namespace Frost
         /** \param cValue The character to test
         *   \return 'true' if the provided character is a number
         */
-        static s_bool IsNumber(const typename TypeTraits<T>::FrostType& cValue)
+        static s_bool IsNumber(const frost_character& cValue)
         {
-            string_stream mTemp(string_object(1, StringConverter<T>::ConvertToStandard(cValue).Get()));
+            string_stream mTemp(string_object(1, StringConverter<string_element, character>::ConvertChar(cValue).Get()));
             double dValue;
             mTemp >> dValue;
             return !mTemp.fail();
@@ -1151,18 +1163,18 @@ namespace Frost
         /** \param cValue The character to test
         *   \return 'true' if the provided character is a letter or a number
         */
-        static s_bool IsAlphaNumeric(const T& cValue)
+        static s_bool IsAlphaNumeric(const character& cValue)
         {
-            return isalnum(StringConverter<T>::ConvertToStandard(cValue));
+            return isalnum(StringConverter<string_element, character>::ConvertChar(cValue));
         }
 
         /// Checks if the provided character is a letter or a number.
         /** \param cValue The character to test
         *   \return 'true' if the provided character is a letter or a number
         */
-        static s_bool IsAlphaNumeric(const typename TypeTraits<T>::FrostType& cValue)
+        static s_bool IsAlphaNumeric(const frost_character& cValue)
         {
-            return isalnum(StringConverter<T>::ConvertToStandard(cValue).Get());
+            return isalnum(StringConverter<string_element, frost_character>::ConvertChar(cValue).Get());
         }
 
     private :
@@ -1180,6 +1192,24 @@ namespace Frost
         return s_str_t<T>(sLeft) + sRight;
     }
 
+    template<class T>
+    s_str_t<T> operator + (const std::basic_string<T>* sLeft, const s_str_t<T>& sRight)
+    {
+        return s_str_t<T>(sLeft) + sRight;
+    }
+
+    template<class T, class N>
+    s_str_t<T> operator + (const T* sLeft, const N& mRight)
+    {
+        return s_str_t<T>(sLeft) + s_str_t<T>::Convert(mRight);
+    }
+
+    template<class T, class N>
+    s_str_t<T> operator + (const std::basic_string<T>* sLeft, const N& mRight)
+    {
+        return s_str_t<T>(sLeft) + s_str_t<T>::Convert(mRight);
+    }
+
     /** \cond NOT_REMOVE_FROM_DOC
     */
     template<> class TypeTraits<string_object>
@@ -1188,6 +1218,7 @@ namespace Frost
         typedef string_object           Type;
         typedef string_object           BaseType;
         typedef s_str_t<string_element> FrostType;
+        typedef string_element          CharType;
         typedef string_object&          RefType;
         typedef const string_object&    CRefType;
         typedef string_object*          PointerType;
@@ -1201,6 +1232,35 @@ namespace Frost
         typedef const string_element*          Type;
         typedef const string_element*          BaseType;
         typedef s_str_t<string_element>        FrostType;
+        typedef string_element                 CharType;
+        typedef const string_element*&         RefType;
+        typedef string_element const * const & CRefType;
+        typedef const string_element**         PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<string_element*>
+    {
+    public :
+        typedef string_element*          Type;
+        typedef string_element*          BaseType;
+        typedef s_str_t<string_element>  FrostType;
+        typedef string_element           CharType;
+        typedef string_element*&         RefType;
+        typedef string_element * const & CRefType;
+        typedef string_element**         PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<int N> class TypeTraits<const string_element[N]>
+    {
+    public :
+        typedef const string_element*          Type;
+        typedef const string_element*          BaseType;
+        typedef s_str_t<string_element>        FrostType;
+        typedef string_element                 CharType;
         typedef const string_element*&         RefType;
         typedef string_element const * const & CRefType;
         typedef const string_element**         PointerType;
@@ -1214,9 +1274,81 @@ namespace Frost
         typedef string_element*         Type;
         typedef string_element*         BaseType;
         typedef s_str_t<string_element> FrostType;
+        typedef string_element          CharType;
         typedef string_element*&        RefType;
         typedef string_element* const & CRefType;
-        typedef string_element**         PointerType;
+        typedef string_element**        PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+
+    template<> class TypeTraits< std::basic_string<uint> >
+    {
+    public :
+        typedef std::basic_string<uint>        Type;
+        typedef std::basic_string<uint>        BaseType;
+        typedef s_str_t<uint>                  FrostType;
+        typedef uint                           CharType;
+        typedef std::basic_string<uint>&       RefType;
+        typedef const std::basic_string<uint>& CRefType;
+        typedef std::basic_string<uint>*       PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<const uint*>
+    {
+    public :
+        typedef const uint*          Type;
+        typedef const uint*          BaseType;
+        typedef s_str_t<uint>        FrostType;
+        typedef uint                 CharType;
+        typedef const uint*&         RefType;
+        typedef uint const * const & CRefType;
+        typedef const uint**         PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<> class TypeTraits<uint*>
+    {
+    public :
+        typedef uint*          Type;
+        typedef uint*          BaseType;
+        typedef s_str_t<uint>  FrostType;
+        typedef uint           CharType;
+        typedef uint*&         RefType;
+        typedef uint * const & CRefType;
+        typedef uint**         PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<int N> class TypeTraits<const uint[N]>
+    {
+    public :
+        typedef const uint*          Type;
+        typedef const uint*          BaseType;
+        typedef s_str_t<uint>        FrostType;
+        typedef uint                 CharType;
+        typedef const uint*&         RefType;
+        typedef uint const * const & CRefType;
+        typedef const uint**         PointerType;
+
+        static inline RefType  GetValue(RefType m)  { return m; }
+        static inline CRefType GetValue(CRefType m) { return m; }
+    };
+    template<int N> class TypeTraits<uint[N]>
+    {
+    public :
+        typedef uint*         Type;
+        typedef uint*         BaseType;
+        typedef s_str_t<uint> FrostType;
+        typedef uint          CharType;
+        typedef uint*&        RefType;
+        typedef uint* const & CRefType;
+        typedef uint**        PointerType;
 
         static inline RefType  GetValue(RefType m)  { return m; }
         static inline CRefType GetValue(CRefType m) { return m; }
@@ -1228,6 +1360,7 @@ namespace Frost
         typedef s_str_t<T>           Type;
         typedef std::basic_string<T> BaseType;
         typedef s_str_t<T>           FrostType;
+        typedef T                    CharType;
         typedef s_str_t<T>&          RefType;
         typedef const s_str_t<T>&    CRefType;
         typedef s_str_t<T>*          PointerType;

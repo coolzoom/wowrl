@@ -48,7 +48,12 @@ namespace Frost
         static inline CRefType GetValue(CRefType m) { return m; }
     };
 
-    template<class T> class StringConverter;
+    /// Allows explicit string conversion and operator overloading.
+    /** This class is used for explicit constructors and +, += and <<
+    *   operators. It is specialized for most commonly used string
+    *   types : s_str and s_ustr.<br>
+    */
+    template<class T, class N> class StringConverter;
 
     typedef char string_element;
     typedef std::string string_object;
@@ -110,24 +115,6 @@ namespace Frost
 
     typedef s_str_t<string_element> s_str;
     typedef s_str_t<uint>           s_ustr;
-
-    template<class T>
-    s_str operator+ (const char* sLeft, const s_ptr<T>& pRight)
-    {
-        return s_str(sLeft) + s_str(pRight.Get());
-    }
-
-    template<class T>
-    s_str operator+ (const char* sLeft, const s_refptr<T>& pRight)
-    {
-        return s_str(sLeft) + s_str(pRight.Get());
-    }
-
-    template<class T>
-    s_str operator+ (const char* sLeft, const s_wptr<T>& pRight)
-    {
-        return s_str(sLeft) + s_str(pRight.Lock());
-    }
 }
 
 #endif

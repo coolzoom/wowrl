@@ -114,9 +114,14 @@ namespace Frost
 
     };
 
-    s_str  operator + (const char* sLeft, const AxisAlignedBox& mRight);
-    s_str  operator + (const s_str& sLeft, const AxisAlignedBox& mRight);
-    s_str& operator << (s_str& sLeft, const AxisAlignedBox& mRight);
+    template<> class StringConverter<string_element, AxisAlignedBox>
+    {
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const AxisAlignedBox& mBox);
+    };
 }
 
 #endif
