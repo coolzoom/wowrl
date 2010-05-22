@@ -165,8 +165,14 @@ namespace Frost
         s_uint uiColor_;
     };
 
-    s_str operator + (const char* sLeft, const Color& mRight);
-    s_str operator + (const s_str& sLeft, const Color& mRight);
+    template<> class StringConverter<string_element, Color>
+    {
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const Color& mColor);
+    };
 }
 
 #endif

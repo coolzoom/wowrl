@@ -263,21 +263,6 @@ namespace Frost
     }
     #endif
 
-    s_str operator + (const string_element* sLeft, const Vector& mRight)
-    {
-        return s_str(sLeft)+mRight;
-    }
-
-    s_str operator + (const s_str& sLeft, const Vector& mRight)
-    {
-        return sLeft+"("+mRight.X()+", "+mRight.Y()+", "+mRight.Z()+")";
-    }
-
-    s_str& operator << (s_str& sLeft, const Vector& mRight)
-    {
-        return sLeft << "("+mRight.X()+", "+mRight.Y()+", "+mRight.Z()+")";
-    }
-
     Vector operator * (const s_float& fLeft, const Vector& mRight)
     {
         return mRight*fLeft;
@@ -298,4 +283,11 @@ namespace Frost
         return mR;
     }
     #endif
+
+    string_object StringConverter<string_element, Vector>::Convert( const Vector& mVector )
+    {
+        return "("+StringConverter<string_element, s_float>::Convert(mVector.X())+
+              ", "+StringConverter<string_element, s_float>::Convert(mVector.Y())+
+              ", "+StringConverter<string_element, s_float>::Convert(mVector.Z())+")";
+    }
 }

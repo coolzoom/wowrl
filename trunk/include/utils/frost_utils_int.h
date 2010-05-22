@@ -878,6 +878,7 @@ namespace Frost
         typedef char          Type;
         typedef char          BaseType;
         typedef s_int_t<char> FrostType;
+        typedef char          CharType;
         typedef char&         RefType;
         typedef const char&   CRefType;
         typedef char*         PointerType;

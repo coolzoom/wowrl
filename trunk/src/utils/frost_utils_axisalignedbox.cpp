@@ -226,18 +226,9 @@ namespace Frost
     }
     #endif
 
-    s_str operator + (const string_element* sLeft, const AxisAlignedBox& mRight)
+    string_object StringConverter<string_element, AxisAlignedBox>::Convert( const AxisAlignedBox& mBox )
     {
-        return s_str(sLeft)+mRight;
-    }
-
-    s_str operator + (const s_str& sLeft, const AxisAlignedBox& mRight)
-    {
-        return sLeft+"(min : "+mRight.GetMin()+", max : "+mRight.GetMax()+")";
-    }
-
-    s_str& operator << (s_str& sLeft, const AxisAlignedBox& mRight)
-    {
-        return sLeft << "(min : "+mRight.GetMin()+", max : "+mRight.GetMax()+")";
+        return "(min : "+StringConverter<string_element, Vector>::Convert(mBox.GetMin())+
+              ", max : "+StringConverter<string_element, Vector>::Convert(mBox.GetMax())+")";
     }
 }

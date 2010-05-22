@@ -726,6 +726,7 @@ namespace Frost
         typedef uchar           Type;
         typedef uchar           BaseType;
         typedef s_uint_t<uchar> FrostType;
+        typedef uchar           CharType;
         typedef uchar&          RefType;
         typedef uchar           CRefType;
         typedef uchar*          PointerType;
@@ -752,6 +753,7 @@ namespace Frost
         typedef uint           Type;
         typedef uint           BaseType;
         typedef s_uint_t<uint> FrostType;
+        typedef uint           CharType;
         typedef uint&          RefType;
         typedef const uint&    CRefType;
         typedef uint*          PointerType;

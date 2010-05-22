@@ -426,7 +426,7 @@ void State::PrintError( const s_str& sError )
     if (i != 0)
     {
         lua_getinfo(pLua_, "Sl" , &d);
-        sDebugStr = s_str(d.short_src) + ":" + s_str(s_int(d.currentline)) + " : " + sError;
+        sDebugStr = s_str(d.short_src) + ":" + s_int(d.currentline) + " : " + sError;
     }
     else
         sDebugStr = sError;

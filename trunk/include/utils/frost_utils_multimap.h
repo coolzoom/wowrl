@@ -320,26 +320,28 @@ namespace Frost
 
     };
 
-    template<class Key, class Value, class N>
-    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_multimap<Key, Value>& mRight)
+    template<class Key, class Value> class StringConverter< string_element, s_multimap<Key, Value> >
     {
-        s_str_t<N> sTemp = "( ";
-        typename s_multimap<Key, Value>::const_iterator iter;
-        for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const s_multimap<Key, Value>& mMap)
         {
-            if (iter != mRight.Begin())
-                sTemp << ", [" << iter->first << "] = " << iter->second;
-            else
-                sTemp << "[" << iter->first << "] = " << iter->second;
+            string sTemp = "(";
+            typename s_multimap<Key, Value>::const_iterator iter;
+            for (iter = mMap.Begin(); iter != mMap.End(); ++iter)
+            {
+                if (iter != mMap.Begin())
+                    sTemp += ", [" + StringConverter<string_element, Key>::Convert(iter->first)
+                          + "] = " + StringConverter<string_element, Value>::Convert(iter->second);
+                else
+                    sTemp +=   "[" + StringConverter<string_element, Key>::Convert(iter->first)
+                          + "] = " + StringConverter<string_element, Value>::Convert(iter->second);
+            }
+            sTemp += ")";
+
+            return sTemp;
         }
-        sTemp << " )";
-
-        return sLeft + sTemp;
-    }
-
-    template<class Key, class Value, class N>
-    s_str_t<N> operator + (const N* sLeft, const s_multimap<Key, Value>& mRight)
-    {
-        return s_str_t<N>(sLeft) + mRight;
-    }
+    };
 }

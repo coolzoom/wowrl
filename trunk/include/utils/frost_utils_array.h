@@ -234,26 +234,26 @@ namespace Frost
         T lArray_[N];
     };
 
-    template<class T, default_uint N, class M>
-    s_str_t<M> operator + (const s_str_t<M>& sLeft, const s_array<T, N>& mRight)
+    template<class T, default_uint N> class StringConverter< string_element, s_array<T, N> >
     {
-        s_str_t<M> sTemp = "(";
-        for (default_uint i = 0; i < N; ++i)
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const s_array<T, N>& mArray)
         {
-            if (i != 0)
-                sTemp << ", " << mRight[i];
-            else
-                sTemp << mRight[i];
+            string sTemp = "(";
+            for (default_uint i = 0; i < N; ++i)
+            {
+                if (i != 0)
+                    sTemp += ", " + StringConverter<string_element, T>::Convert(mArray[i]);
+                else
+                    sTemp += StringConverter<string_element, T>::Convert(mArray[i]);
+            }
+            sTemp += ")";
+
+            return sTemp;
         }
-        sTemp << ")";
-
-        return sLeft + sTemp;
-    }
-
-    template<class T, default_uint N, class M>
-    s_str_t<M> operator + (const M* sLeft, const s_array<T, N>& mRight)
-    {
-        return s_str_t<M>(sLeft) + mRight;
-    }
+    };
 }
 

@@ -34,6 +34,20 @@ namespace Frost
             }
         #endif
 
+        /// Inserts the provided pair in the map.
+        /** \param mPair The pair to insert
+        *   \return An iterator pointing at the inserted value, and a bool
+        *           that equals 'true' if no element with the same key was
+        *           present in the map.
+        *   \note If the provided key is already present in the map, the value
+        *         is not inserted.
+        */
+        s_pair<iterator, s_bool> Insert(const pair& mPair)
+        {
+            std::pair<iterator, bool> mResult = mMap_.insert(std::make_pair(mPair.First(), mPair.Second()));
+            return s_pair<iterator, s_bool>(mResult.first, mResult.second);
+        }
+
         /// Erases an element from the map.
         /** \param mKey The key of the element to erase
         */
@@ -256,26 +270,28 @@ namespace Frost
 
     };
 
-    template<class Key, class Value, class N>
-    s_str_t<N> operator + (const s_str_t<N>& sLeft, const s_map<Key, Value>& mRight)
+    template<class Key, class Value> class StringConverter< string_element, s_map<Key, Value> >
     {
-        s_str_t<N> sTemp = "( ";
-        typename s_map<Key, Value>::const_iterator iter;
-        for (iter = mRight.Begin(); iter != mRight.End(); ++iter)
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const s_map<Key, Value>& mMap)
         {
-            if (iter != mRight.Begin() )
-                sTemp << ", [" << iter->first << "] = " << iter->second;
-            else
-                sTemp << "[" << iter->first << "] = " << iter->second;
+            string sTemp = "(";
+            typename s_map<Key, Value>::const_iterator iter;
+            for (iter = mMap.Begin(); iter != mMap.End(); ++iter)
+            {
+                if (iter != mMap.Begin())
+                    sTemp += ", [" + StringConverter<string_element, Key>::Convert(iter->first)
+                          + "] = " + StringConverter<string_element, Value>::Convert(iter->second);
+                else
+                    sTemp +=   "[" + StringConverter<string_element, Key>::Convert(iter->first)
+                          + "] = " + StringConverter<string_element, Value>::Convert(iter->second);
+            }
+            sTemp += ")";
+
+            return sTemp;
         }
-        sTemp << " )";
-
-        return sLeft + sTemp;
-    }
-
-    template<class Key, class Value, class N>
-    s_str_t<N> operator + (const N* sLeft, const s_map<Key, Value>& mRight)
-    {
-        return s_str_t<N>(sLeft) + mRight;
-    }
+    };
 }

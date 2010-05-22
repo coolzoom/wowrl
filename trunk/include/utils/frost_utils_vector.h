@@ -224,14 +224,20 @@ namespace Frost
         s_float fZ_;
     };
 
-    s_str  operator + (const char* sLeft, const Vector& mRight);
-    s_str  operator + (const s_str& sLeft, const Vector& mRight);
-    s_str& operator << (s_str& sLeft, const Vector& mRight);
     Vector operator * (const s_float& fLeft, const Vector& mRight);
 
     #ifdef USING_OGRE
     Vector operator * (const Ogre::Matrix4& mLeft, const Vector& mRight);
     #endif
+
+    template<> class StringConverter<string_element, Vector>
+    {
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const Vector& mVector);
+    };
 }
 
 #endif
