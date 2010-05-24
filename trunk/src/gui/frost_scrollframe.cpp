@@ -127,6 +127,9 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
 
         pScrollTexture_->SetAllPoints(this);
 
+        if (pScrollRenderTarget_)
+            pScrollTexture_->SetTexture(pScrollRenderTarget_);
+
         bRebuildScrollRenderTarget_ = true;
     }
 
@@ -342,7 +345,7 @@ void ScrollFrame::RebuildScrollRenderTarget_()
         }
     }
 
-    if (pScrollRenderTarget_)
+    if (pScrollTexture_ && pScrollRenderTarget_)
         pScrollTexture_->SetTexture(pScrollRenderTarget_);
 }
 

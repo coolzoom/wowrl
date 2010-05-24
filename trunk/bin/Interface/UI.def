@@ -8,7 +8,7 @@
         <n[*]:AbsDimension n:x="0"   n:y="0"/>
         <n[*]:RelDimension n:x="1.0" n:y="1.0"/>
     </Size>
-    
+
     <n[.,1]:Anchors>
         <Anchor point="TOPLEFT" relativeTo="" relativePoint="">
             <n[.,1]:Offset>
@@ -17,7 +17,7 @@
             </Offset>
         </Anchor>
     </Anchors>
-    
+
 </Region>
 
 <d[Region]:FontString n:fontHeight="0" text="" n:spacing="0.0" outline="NONE" b:monochrome="false" b:nonspacewrap="false" justifyV="MIDDLE" justifyH="CENTER" n:maxLines="0" font="" n:bytes="255">
@@ -64,7 +64,7 @@
             <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
             <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
         </BackgroundInsets>
-        
+
         <n[.,1]:BackgroundColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
 
         <n[.,1]:TileSize>
@@ -158,7 +158,7 @@
 
     <n[.,1]:c[Texture]:CheckedTexture         name="$parentCheckedTexture" b:hidden="true"/>
     <n[.,1]:c[Texture]:DisabledCheckedTexture name="$parentDisabledCheckedTexture"/>
-    
+
 </CheckButton>
 
 <d[Frame]:ColorSelect>
@@ -167,7 +167,7 @@
     <n[.,1]:c[Texture]:ColorWheelThumbTexture/>
     <n[.,1]:c[Texture]:ColorValueTexture/>
     <n[.,1]:c[Texture]:ColorValueThumbTexture/>
-    
+
     <n[.,1]:Scripts>
         <n[.,1]:OnColorSelect/>
         <n[.,1]:OnDragStart/>
@@ -187,7 +187,7 @@
         <n[.,1]:OnSizeChanged/>
         <n[.,1]:OnUpdate/>
     </Scripts>
-    
+
 </ColorSelect>
 
 <d[Frame]:Cooldown/>
@@ -234,20 +234,31 @@
 <d[Frame]:MessageFrame n:fadeDuration="3.0" insertMode>
 
     <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
-    
+
     <n[.,1]:TextInsets>
         <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
-        <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>     
+        <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
     </TextInsets>
-        
+
 </MessageFrame>
+
+<d[Frame]:ModelFrame file="" n:scale="1.0">
+
+    <n[.,1]:Materials>
+        <Material n:subMeshID="-1" n:subEntityID="-1">
+            <n[*]:DiffuseColor n:r="0" n:g="0" n:b="0" n:a="0"/>
+            <n[*]:DiffuseTexture file b:alphaReject="false"/>
+        </Material>
+    </Materials>
+
+</ModelFrame>
 
 <d[Frame]:ScrollFrame>
 
     <n[.,1]:ScrollChild>
         <n[1,1]:l:Frame/>
     </ScrollChild>
-    
+
     <n[.,1]:Scripts>
         <n[.,1]:OnDragStart/>
         <n[.,1]:OnDragStop/>
@@ -269,7 +280,7 @@
         <n[.,1]:OnUpdate/>
         <n[.,1]:OnVerticalScroll/>
     </Scripts>
-    
+
 </ScrollFrame>
 
 <d[Frame]:ScrollingMessageFrame b:fade="true" n:fadeDuration="3.0" n:displayDuration="10.0" n:maxLines="8">

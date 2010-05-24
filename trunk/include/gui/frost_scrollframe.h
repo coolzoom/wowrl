@@ -49,7 +49,7 @@ namespace Frost
             /** \param sScriptName The name of the script
             *   \param pEvent      Stores scripts arguments
             */
-            virtual void      On(const s_str& sScriptName, s_ptr<Event> pEvent = nullptr);
+            virtual void   On(const s_str& sScriptName, s_ptr<Event> pEvent = nullptr);
 
             /// Sets this ScrollFrame's scroll child.
             /** \param pFrame The scroll child

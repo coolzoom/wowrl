@@ -22,10 +22,11 @@ namespace Frost
     public :
 
         /// Default constructor.
-        /** \note You shouldn't have to call this. Use the
-        *         CameraManager instead.
+        /** \param pSceneManager The scene manager in which to create the camera
+        *   \note If no scene manager is provided, the default one is used.
+        *   \note You shouldn't have to call this. Use the CameraManager instead.
         */
-        Camera();
+        Camera(s_ptr<Ogre::SceneManager> pSceneManager = nullptr);
 
         /// Destructor.
         ~Camera();

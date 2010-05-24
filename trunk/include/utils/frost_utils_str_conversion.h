@@ -1,4 +1,6 @@
 // Warning : If you need to use this file, include frost_utils_types.h
+/** \cond NOT_REMOVE_FROM_DOC
+*/
 namespace Frost
 {
     s_str_t<uint>           UTF8ToUnicode(const s_str_t<char>& s);
@@ -855,3 +857,5 @@ namespace Frost
         }
     };
 }
+/** \endcond
+*/

@@ -137,6 +137,12 @@ namespace Frost
         */
         s_ptr<File>         GetLog();
 
+        /// Returns the Ogre::Root object.
+        /** \return The Ogre::Root object
+        *   \note Only use this when you don't have a choice.
+        */
+        s_ptr<Ogre::Root>   GetOgreRoot();
+
         /// Returns the Ogre::SceneManager used for the main scene.
         /** \return The Ogre::SceneManager used for the main scene
         */

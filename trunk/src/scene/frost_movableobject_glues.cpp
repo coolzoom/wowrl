@@ -194,10 +194,6 @@ namespace Frost
             }
             else
             {
-                s_bool bLocal = false;
-                if (mFunc.IsProvided(3))
-                    bLocal = mFunc.Get(3)->GetBool();
-
                 pParent_->OrbitAround(Vector(
                     mFunc.Get(0)->GetNumber(),
                     mFunc.Get(1)->GetNumber(),

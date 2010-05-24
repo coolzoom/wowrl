@@ -495,6 +495,8 @@ void Button::Disable()
 
             pCurrentFontString_ = pNormalText_;
         }
+
+        Unlight();
     }
 }
 

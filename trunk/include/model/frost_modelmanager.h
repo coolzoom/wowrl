@@ -34,25 +34,35 @@ namespace Frost
     public :
 
         /// Creates/loads a Model.
-        /** \param sModelName  The name of the model you want to use. This name
-        *                      is associated with a unique file at loading time
-        *   \param sEntityName The name of the Ogre::Entity that will be created
+        /** \param sModelName    The name of the model you want to use. This name
+        *                        is associated with a unique file at loading time
+        *   \param sEntityName   The name of the Ogre::Entity that will be created
+        *   \param pSceneManager The scene manager on which to create the model
         *   \return The new Model
         *   \note This function takes care of loading the Model if needed.
         *         If it has already been loaded, it just returns a copy of it.
+        *   \note If no scene manager is provided, the default one is used
         */
-        s_refptr<Model> CreateModel(const s_str& sModelName, const s_str& sEntityName);
+        s_refptr<Model> CreateModel(
+            const s_str& sModelName, const s_str& sEntityName,
+            s_ptr<Ogre::SceneManager> pSceneManager = nullptr
+        );
 
         /// Creates/loads a Model.
-        /** \param sCategory   The category into which this model is located
-        *   \param sModelName  The name of the model you want to use. This name
-        *                      is associated with a unique file at loading time
-        *   \param sEntityName The name of the Ogre::Entity that will be created
+        /** \param sCategory     The category into which this model is located
+        *   \param sModelName    The name of the model you want to use. This name
+        *                        is associated with a unique file at loading time
+        *   \param sEntityName   The name of the Ogre::Entity that will be created
+        *   \param pSceneManager The scene manager on which to create the model
         *   \return The new Model
         *   \note This function takes care of loading the Model if needed.
         *         If it has already been loaded, it just returns a copy of it.
+        *   \note If no scene manager is provided, the default one is used
         */
-        s_refptr<Model> CreateModel(const s_str& sCategory, const s_str& sModelName, const s_str& sEntityName);
+        s_refptr<Model> CreateModel(
+            const s_str& sCategory, const s_str& sModelName, const s_str& sEntityName,
+            s_ptr<Ogre::SceneManager> pSceneManager = nullptr
+        );
 
         /// Links a model name to a file.
         /** \param sModelName The model name to link

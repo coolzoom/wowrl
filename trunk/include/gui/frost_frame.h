@@ -89,12 +89,12 @@ namespace Frost
             /** \param bIsMouseEnabled 'true' to enable
             *   \param bAllowWorldInput 'true' to allow world input
             */
-            void                EnableMouse(const s_bool& bIsMouseEnabled, const s_bool& bAllowWorldInput = false);
+            virtual void        EnableMouse(const s_bool& bIsMouseEnabled, const s_bool& bAllowWorldInput = false);
 
             /// Sets if this Frame can receive mouse wheel input.
             /** \param bIsMouseWheelEnabled 'true' to enable
             */
-            void                EnableMouseWheel(const s_bool& bIsMouseWheelEnabled);
+            virtual void        EnableMouseWheel(const s_bool& bIsMouseWheelEnabled);
 
             /// Checks if this Frame has a script defined.
             /** \param sScriptName The name of the script to check

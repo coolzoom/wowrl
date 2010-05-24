@@ -28,14 +28,13 @@ namespace Frost
 {
     const s_str Model::CLASS_NAME = "Model";
 
-    Model::Model( const ModelData& mData, const s_str& sEntityName ) : MovableObject()
+    Model::Model( const ModelData& mData, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(pSceneManager)
     {
         pMesh_ = mData.pMesh_;
         sOgreModelName_ = mData.sModelName_;
         sEntityName_ = sEntityName;
 
-        s_ptr<Ogre::SceneManager> pSceneMgr = Engine::GetSingleton()->GetOgreSceneManager();
-        pEntity_ = pSceneMgr->createEntity(sEntityName_.Get(), sOgreModelName_.Get());
+        pEntity_ = pSceneManager_->createEntity(sEntityName_.Get(), sOgreModelName_.Get());
 
         pNode_->attachObject(pEntity_.Get());
 
@@ -45,6 +44,11 @@ namespace Frost
         foreach (iterMP, mData.lModelPartList_)
         {
             lModelPartList_[iterMP->first] = new ModelPart(*iterMP->second, this);
+        }
+
+        if (pMesh_)
+        {
+            mBoundingBox_ = AxisAlignedBox::OgreToFrost(pMesh_->getBounds());
         }
     }
 
@@ -172,6 +176,11 @@ namespace Frost
         {
             pEntity_->getSubEntity(i)->setCustomParameter(uiID.Get(), mVec);
         }
+    }
+
+    const AxisAlignedBox& Model::GetBoundingBox() const
+    {
+        return mBoundingBox_;
     }
 
     s_wptr<Material> Model::GetMaterial()

@@ -28,7 +28,11 @@ namespace Frost
         };
 
         /// Constructor.
-        Light(Type mType);
+        /** \param mType         The type of this light, see Type
+        *   \param pSceneManager The scene manager on which to create this light
+        *   \note If no scene manager is provided, the default one is used
+        */
+        Light(Type mType, s_ptr<Ogre::SceneManager> pSceneManager = nullptr );
 
         /// Destructor.
         ~Light();

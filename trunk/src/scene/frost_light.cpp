@@ -16,11 +16,9 @@ namespace Frost
 {
     const s_str Light::CLASS_NAME = "Light";
 
-    Light::Light(Type mType) : mType_(mType)
+    Light::Light( Type mType, s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(pSceneManager), mType_(mType)
     {
-        pOgreLight_ = Engine::GetSingleton()->GetOgreSceneManager()->createLight(
-            ("Light_"+uiID_).Get()
-        );
+        pOgreLight_ = pSceneManager_->createLight(("Light_"+uiID_).Get());
 
         pNode_->attachObject(pOgreLight_.Get());
 
@@ -49,9 +47,7 @@ namespace Frost
 
     Light::~Light()
     {
-        Engine::GetSingleton()->GetOgreSceneManager()->destroyLight(
-            pOgreLight_.Get()
-        );
+        pSceneManager_->destroyLight(pOgreLight_.Get());
     }
 
     void Light::SetColor( const Color& mDiffuse )

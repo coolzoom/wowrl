@@ -94,10 +94,17 @@ namespace Frost
     public :
 
         /// Default constructor.
-        MovableObject();
+        /** \param pSceneManager The scene manager in which to create the object
+        *   \note If no scene manager is provided, the default one is used.
+        */
+        MovableObject(s_ptr<Ogre::SceneManager> pSceneManager = nullptr);
 
         /// Constructor.
-        MovableObject(const Vector& mPosition);
+        /** \param mPosition     The initial position to give to this object
+        *   \param pSceneManager The scene manager in which to create the object
+        *   \note If no scene manager is provided, the default one is used.
+        */
+        MovableObject(const Vector& mPosition, s_ptr<Ogre::SceneManager> pSceneManager = nullptr);
 
         /// Copy constructor.
         MovableObject(const MovableObject& mObject);
@@ -354,9 +361,10 @@ namespace Frost
 
         s_ctnr< s_ptr<MovableObject> > lLookingAtList_;
 
-        s_ptr<Ogre::Entity>     pEntity_;
-        s_ptr<Ogre::SceneNode>  pNode_;
-        s_ptr<Ogre::SceneNode>  pTargetNode_;
+        s_ptr<Ogre::SceneManager> pSceneManager_;
+        s_ptr<Ogre::Entity>       pEntity_;
+        s_ptr<Ogre::SceneNode>    pNode_;
+        s_ptr<Ogre::SceneNode>    pTargetNode_;
 
         Vector mOrbitCenter_;
         Vector mTrackedPoint_;

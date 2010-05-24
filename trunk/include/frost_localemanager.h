@@ -76,7 +76,7 @@ namespace Frost
 
         /// Checks if the provided string is a combo key ("^", "`", ...).
         /** \param sComboKey The string to test
-        *   \reurn 'true' if the provided string is a combo key
+        *   \return 'true' if the provided string is a combo key
         */
         s_bool       IsComboKey(const s_str& sComboKey) const;
 

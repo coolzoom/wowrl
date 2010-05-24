@@ -67,7 +67,7 @@ namespace Frost
         }
 
         /// Constructor.
-        /** \param s The character array to copy
+        /** \param c The character to copy
         */
         s_str_t(const character& c)
         {
@@ -75,7 +75,7 @@ namespace Frost
         }
 
         /// Constructor.
-        /** \param s The character array to copy
+        /** \param c The character to copy
         */
         s_str_t(const frost_character& c)
         {
@@ -119,7 +119,9 @@ namespace Frost
         }
 
         /// Generic constructor (only supports string -> string conversion).
-        /** \param mValue The value to convert
+        /** \param mValue    The value to convert
+        *   \param mEnableIf Template trick to enable this constructor for convertible
+        *                    types only, don't bother with it
         *   \note Calls StringConverter::Convert().
         */
         template<class N>
@@ -537,7 +539,6 @@ namespace Frost
 
         /// Returns all positions of the pattern in the string.
         /** \param sPattern The string to search for
-        *   \param uiStart  From where to start searching
         *   \return All positions of the pattern (empty if not found)
         */
         template<class N>
@@ -880,8 +881,8 @@ namespace Frost
         }
 
         /// Adds another string somewhere in this string.
-        /** \param cChar The string to insert
-        *   \param iter  The position at which to insert the string
+        /** \param sValue The string to insert
+        *   \param iter   The position at which to insert the string
         *   \return An iterator pointing at the end of the inserted string
         */
         iterator Insert(const s_str_t& sValue, iterator iter)

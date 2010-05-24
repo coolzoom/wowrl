@@ -599,6 +599,11 @@ namespace Frost
         return pRenderSystem_;
     }
 
+    s_ptr<Ogre::Root> Engine::GetOgreRoot()
+    {
+        return pRoot_;
+    }
+
     s_ptr<Ogre::SceneManager> Engine::GetOgreSceneManager()
     {
         return pOgreSceneMgr_;

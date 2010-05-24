@@ -16,6 +16,7 @@
 #include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
 #include "gui/frost_messageframe.h"
+#include "gui/frost_modelframe.h"
 #include "gui/frost_scrollframe.h"
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
@@ -60,6 +61,7 @@ void Lua::RegisterGUIClasses( s_ptr<Lua::State> pLua )
     pLua->Register<GUI::LuaCooldown>();
     pLua->Register<GUI::LuaEditBox>();
     pLua->Register<GUI::LuaMessageFrame>();
+    pLua->Register<GUI::LuaModelFrame>();
     pLua->Register<GUI::LuaScrollFrame>();
     pLua->Register<GUI::LuaScrollingMessageFrame>();
     pLua->Register<GUI::LuaSlider>();

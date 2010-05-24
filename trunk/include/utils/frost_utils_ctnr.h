@@ -570,6 +570,8 @@ namespace Frost
         }
     };
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<class T, class C> class StringConverter< string_element, s_ctnr_t<T,C> >
     {
     public :
@@ -638,4 +640,6 @@ namespace Frost
             return sTemp;
         }
     };
+    /** \endcond
+    */
 }

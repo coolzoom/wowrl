@@ -278,7 +278,7 @@ int LuaFrame::_EnableMouse(lua_State* pLua)
 {
     Lua::Function mFunc("Frame:EnableMouse", pLua);
     mFunc.Add(0, "is mouse enabled", Lua::TYPE_BOOLEAN);
-    mFunc.Add(1, "is world input allowed", Lua::TYPE_BOOLEAN, false);
+    mFunc.Add(1, "is world input allowed", Lua::TYPE_BOOLEAN, true);
     if (mFunc.Check())
     {
         if (mFunc.IsProvided(0))

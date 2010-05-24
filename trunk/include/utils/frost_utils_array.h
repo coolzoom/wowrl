@@ -234,6 +234,8 @@ namespace Frost
         T lArray_[N];
     };
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<class T, default_uint N> class StringConverter< string_element, s_array<T, N> >
     {
     public :
@@ -255,5 +257,7 @@ namespace Frost
             return sTemp;
         }
     };
+    /** \endcond
+    */
 }
 
