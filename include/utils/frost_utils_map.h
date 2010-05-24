@@ -270,6 +270,8 @@ namespace Frost
 
     };
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<class Key, class Value> class StringConverter< string_element, s_map<Key, Value> >
     {
     public :
@@ -294,4 +296,6 @@ namespace Frost
             return sTemp;
         }
     };
+    /** \endcond
+    */
 }

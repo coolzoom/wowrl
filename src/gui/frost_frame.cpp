@@ -272,7 +272,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
         this->SetTopLevel(pFrame->IsTopLevel());
 
         this->EnableKeyboard(pFrame->IsKeyboardEnabled());
-        this->EnableMouse(pFrame->IsMouseEnabled());
+        this->EnableMouse(pFrame->IsMouseEnabled(), pFrame->IsWorldInputAllowed());
         this->EnableMouseWheel(pFrame->IsMouseWheelEnabled());
 
         this->SetMovable(pFrame->IsMovable());
@@ -942,7 +942,9 @@ void Frame::OnEvent( const Event& mEvent )
 
     if (bIsMouseEnabled_)
     {
-        if (mEvent.GetName() == "MOUSE_MOVED_RAW")
+        if (mEvent.GetName() == "MOUSE_MOVED_RAW" ||
+            mEvent.GetName() == "MOUSE_MOVED" ||
+            mEvent.GetName() == "MOUSE_MOVED_SMOOTH")
         {
             if (!lMouseButtonList_.IsEmpty() && !bMouseDragged_)
             {
@@ -1002,7 +1004,7 @@ void Frame::OnEvent( const Event& mEvent )
 
             bMouseDragged_ = false;
         }
-        else if (mEvent.GetName() == "MOUSE_WHEEL")
+        else if (mEvent.GetName() == "MOUSE_WHEEL" || mEvent.GetName() == "MOUSE_WHEEL_SMOOTH")
         {
             if (bMouseInFrame_)
                 On("MouseWheel");

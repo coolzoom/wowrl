@@ -230,6 +230,8 @@ namespace Frost
     Vector operator * (const Ogre::Matrix4& mLeft, const Vector& mRight);
     #endif
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class StringConverter<string_element, Vector>
     {
     public :
@@ -238,6 +240,8 @@ namespace Frost
 
         static string Convert(const Vector& mVector);
     };
+    /** \endcond
+    */
 }
 
 #endif

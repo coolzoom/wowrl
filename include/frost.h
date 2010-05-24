@@ -82,6 +82,10 @@ namespace Frost
         class  MessageFrame;
         class  LuaMessageFrame;
 
+        // gui/frost_modelframe.h
+        class  ModelFrame;
+        class  LuaModelFrame;
+
         // gui/frost_scrollframe.h
         class  ScrollFrame;
         class  LuaScrollFrame;

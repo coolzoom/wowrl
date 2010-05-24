@@ -39,7 +39,7 @@ namespace Frost
         Color(const s_float& fR, const s_float& fG, const s_float& fB);
 
         /// Constructor.
-        /** \param ucA The alpha component
+        /** \param fA The alpha component
         *   \param fR The green component
         *   \param fG The green component
         *   \param fB The blue component
@@ -77,7 +77,7 @@ namespace Frost
         const s_uint& GetPacked() const;
 
         /// Sets the alpha component.
-        /** \param ucA The alpha component
+        /** \param fA The alpha component
         */
         void          SetA(const s_float& fA);
 
@@ -165,6 +165,8 @@ namespace Frost
         s_uint uiColor_;
     };
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class StringConverter<string_element, Color>
     {
     public :
@@ -173,6 +175,8 @@ namespace Frost
 
         static string Convert(const Color& mColor);
     };
+    /** \endcond
+    */
 }
 
 #endif

@@ -110,9 +110,7 @@ namespace Frost
 
     void Gameplay::OnEvent( const Event& mEvent )
     {
-        if ((mEvent.GetName() == "MOUSE_PRESSED") ||
-            (mEvent.GetName() == "MOUSE_RELEASED") ||
-            (mEvent.GetName() == "MOUSE_DOUBLE_CLICKED"))
+        if (mEvent.GetName().StartsWith("MOUSE_"))
         {
             if (!InputManager::GetSingleton()->CanGroupReceiveClicks("WORLD"))
             {

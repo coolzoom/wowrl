@@ -114,6 +114,8 @@ namespace Frost
 
     };
 
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
     template<> class StringConverter<string_element, AxisAlignedBox>
     {
     public :
@@ -122,6 +124,8 @@ namespace Frost
 
         static string Convert(const AxisAlignedBox& mBox);
     };
+    /** \endcond
+    */
 }
 
 #endif

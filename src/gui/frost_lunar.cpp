@@ -12,6 +12,7 @@
 #include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
 #include "gui/frost_messageframe.h"
+#include "gui/frost_modelframe.h"
 #include "gui/frost_scrollframe.h"
 #include "gui/frost_scrollingmessageframe.h"
 #include "gui/frost_slider.h"
@@ -51,7 +52,7 @@ namespace GUI
     const char LuaUIObject::className[] = "UIObject";
     const char* LuaUIObject::classList[] = {"UIObject",
         "Frame", "Button", "CheckButton", "ColorSelect", "Cooldown", "EditBox", "MessageFrame",
-        "ScrollFrame", "ScrollingMessageFrame", "Slider", "StatusBar", "LayeredRegion",
+        "ModelFrame", "ScrollFrame", "ScrollingMessageFrame", "Slider", "StatusBar", "LayeredRegion",
         "Texture", "FontString", 0
     };
     Lunar<LuaUIObject>::RegType LuaUIObject::methods[] = {
@@ -91,7 +92,7 @@ namespace GUI
     const char  LuaFrame::className[] = "Frame";
     const char* LuaFrame::classList[] = {"Frame",
         "Button", "CheckButton", "ColorSelect", "Cooldown", "EditBox", "MessageFrame",
-        "ScrollFrame", "ScrollingMessageFrame", "Slider", "StatusBar", 0
+        "ModelFrame", "ScrollFrame", "ScrollingMessageFrame", "Slider", "StatusBar", 0
     };
     Lunar<LuaFrame>::RegType LuaFrame::methods[] = {
         {"dt", &LuaFrame::GetDataTable},
@@ -609,6 +610,131 @@ namespace GUI
     const char* LuaMessageFrame::classList[] = {"MessageFrame", 0};
     Lunar<LuaMessageFrame>::RegType LuaMessageFrame::methods[] = {
         {"dt", &LuaMessageFrame::GetDataTable},
+        {0,0}
+    };
+
+    const char  LuaModelFrame::className[] = "ModelFrame";
+    const char* LuaModelFrame::classList[] = {"ModelFrame", 0};
+    Lunar<LuaModelFrame>::RegType LuaModelFrame::methods[] = {
+        {"dt", &LuaModelFrame::GetDataTable},
+
+        // UIObject (inherited)
+        method(ModelFrame, GetAlpha),
+        method(ModelFrame, GetName),
+        method(ModelFrame, GetObjectType),
+        method(ModelFrame, IsObjectType),
+        method(ModelFrame, SetAlpha),
+
+        method(ModelFrame, ClearAllPoints),
+        method(ModelFrame, GetBase),
+        method(ModelFrame, GetBottom),
+        method(ModelFrame, GetCenter),
+        method(ModelFrame, GetHeight),
+        method(ModelFrame, GetLeft),
+        method(ModelFrame, GetNumPoint),
+        method(ModelFrame, GetParent),
+        method(ModelFrame, GetPoint),
+        method(ModelFrame, GetRight),
+        method(ModelFrame, GetTop),
+        method(ModelFrame, GetWidth),
+        method(ModelFrame, Hide),
+        method(ModelFrame, IsShown),
+        method(ModelFrame, IsVisible),
+        method(ModelFrame, SetAllPoints),
+        method(ModelFrame, SetHeight),
+        method(ModelFrame, SetParent),
+        method(ModelFrame, SetPoint),
+        method(ModelFrame, SetWidth),
+        method(ModelFrame, Show),
+
+        // Frame
+        method(ModelFrame, CreateFontString),
+        method(ModelFrame, CreateTexture),
+        method(ModelFrame, CreateTitleRegion),
+        method(ModelFrame, DisableDrawLayer),
+        method(ModelFrame, EnableDrawLayer),
+        method(ModelFrame, EnableKeyboard),
+        method(ModelFrame, EnableMouse),
+        method(ModelFrame, EnableMouseWheel),
+        method(ModelFrame, GetBackdrop),
+        method(ModelFrame, GetBackdropBorderColor),
+        method(ModelFrame, GetBackdropColor),
+        method(ModelFrame, GetChildren),
+        method(ModelFrame, GetEffectiveAlpha),
+        method(ModelFrame, GetEffectiveScale),
+        method(ModelFrame, GetFrameLevel),
+        method(ModelFrame, GetFrameStrata),
+        method(ModelFrame, GetFrameType),
+        method(ModelFrame, GetHitRectInsets),
+        method(ModelFrame, GetID),
+        method(ModelFrame, GetMaxResize),
+        method(ModelFrame, GetMinResize),
+        method(ModelFrame, SetMaxWidth),
+        method(ModelFrame, SetMaxHeight),
+        method(ModelFrame, SetMinWidth),
+        method(ModelFrame, SetMinHeight),
+        method(ModelFrame, GetNumChildren),
+        method(ModelFrame, GetNumRegions),
+        method(ModelFrame, GetScale),
+        method(ModelFrame, GetScript),
+        method(ModelFrame, GetTitleRegion),
+        method(ModelFrame, HasScript),
+        method(ModelFrame, IsClampedToScreen),
+        method(ModelFrame, IsFrameType),
+        method(ModelFrame, IsKeyboardEnabled),
+        method(ModelFrame, IsMouseEnabled),
+        method(ModelFrame, IsMouseWheelEnabled),
+        method(ModelFrame, IsMovable),
+        method(ModelFrame, IsResizable),
+        method(ModelFrame, IsTopLevel),
+        method(ModelFrame, IsUserPlaced),
+        method(ModelFrame, Lower),
+        method(ModelFrame, On),
+        method(ModelFrame, Raise),
+        method(ModelFrame, RegisterAllEvents),
+        method(ModelFrame, RegisterEvent),
+        method(ModelFrame, RegisterForDrag),
+        method(ModelFrame, SetBackdrop),
+        method(ModelFrame, SetBackdropBorderColor),
+        method(ModelFrame, SetBackdropColor),
+        method(ModelFrame, SetClampedToScreen),
+        method(ModelFrame, SetFrameStrata),
+        method(ModelFrame, SetHitRectInsets),
+        method(ModelFrame, SetMaxResize),
+        method(ModelFrame, SetMinResize),
+        method(ModelFrame, SetMovable),
+        method(ModelFrame, SetResizable),
+        method(ModelFrame, SetScale),
+        method(ModelFrame, SetScript),
+        method(ModelFrame, SetTopLevel),
+        method(ModelFrame, SetUserPlaced),
+        method(ModelFrame, StartMoving),
+        method(ModelFrame, StartSizing),
+        method(ModelFrame, StopMovingOrSizing),
+        method(ModelFrame, UnregisterAllEvents),
+        method(ModelFrame, UnregisterEvent),
+
+        // ModelFrame
+        method(ModelFrame, AdvanceTime),
+        method(ModelFrame, ClearModel),
+        method(ModelFrame, GetFacing),
+        method(ModelFrame, GetLight),
+        method(ModelFrame, GetModel),
+        method(ModelFrame, GetModelScale),
+        method(ModelFrame, GetPosition),
+        method(ModelFrame, GetAvailableSubMeshes),
+        method(ModelFrame, GetSubEntityNumber),
+        method(ModelFrame, SetFacing),
+        method(ModelFrame, SetLight),
+        method(ModelFrame, SetModel),
+        method(ModelFrame, SetModelScale),
+        method(ModelFrame, SetModelTexture),
+        method(ModelFrame, SetPosition),
+        method(ModelFrame, SetSequence),
+        method(ModelFrame, SetSequenceTime),
+        method(ModelFrame, SetSubMeshTexture),
+        method(ModelFrame, SetSubEntityTexture),
+
         {0,0}
     };
 

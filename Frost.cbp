@@ -165,6 +165,7 @@
 		<Unit filename="include\gui\frost_guistructs.h" />
 		<Unit filename="include\gui\frost_layeredregion.h" />
 		<Unit filename="include\gui\frost_messageframe.h" />
+		<Unit filename="include\gui\frost_modelframe.h" />
 		<Unit filename="include\gui\frost_region.h" />
 		<Unit filename="include\gui\frost_rendertarget.h" />
 		<Unit filename="include\gui\frost_scrollframe.h" />
@@ -273,6 +274,9 @@
 		<Unit filename="src\gui\frost_messageframe.cpp" />
 		<Unit filename="src\gui\frost_messageframe_glues.cpp" />
 		<Unit filename="src\gui\frost_messageframe_parser.cpp" />
+		<Unit filename="src\gui\frost_modelframe.cpp" />
+		<Unit filename="src\gui\frost_modelframe_glues.cpp" />
+		<Unit filename="src\gui\frost_modelframe_parser.cpp" />
 		<Unit filename="src\gui\frost_region.cpp" />
 		<Unit filename="src\gui\frost_region_parser.cpp" />
 		<Unit filename="src\gui\frost_rendertarget.cpp" />

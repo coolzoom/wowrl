@@ -17,8 +17,6 @@
 #include "unit/frost_unitmanager.h"
 #include "unit/frost_movableunithandler.h"
 
-#include <OgreMesh.h>
-
 using namespace std;
 
 namespace Frost
@@ -102,20 +100,20 @@ namespace Frost
         pBodyModel_->AttachTo(pNode_);
         pBodyModel_->SetOgreInterface(&mOgreInterface_);
 
-        const Ogre::AxisAlignedBox& mBox = pBodyModel_->GetMesh()->getBounds();
-        const Ogre::Vector3& mMin = mBox.getMinimum();
-        const Ogre::Vector3& mMax = mBox.getMaximum();
+        const AxisAlignedBox& mBox = pBodyModel_->GetBoundingBox();
+        const Vector& mMin = mBox.GetMin();
+        const Vector& mMax = mBox.GetMax();
 
         // Supposing :
         //  - the model is centered for its X and Z axis
         //  - the model's feet are on (0, 0, 0)
         //  - the model is approximately as large in X and Z.
         pHandler_->SetEllipsoidRadius(Vector(
-            (mMax.z - mMin.z)/2.0f,
-            mMax.y/2.0f,
-            (mMax.z - mMin.z)/2.0f
+            (mMax.Z() - mMin.Z())/2.0f,
+            mMax.Y()/2.0f,
+            (mMax.Z() - mMin.Z())/2.0f
         ));
-        pHandler_->SetHotSpot(Vector(0.0f, -mMax.y/2.0f, 0.0f));
+        pHandler_->SetHotSpot(Vector(0.0f, -mMax.Y()/2.0f, 0.0f));
     }
 
     Character::~Character()

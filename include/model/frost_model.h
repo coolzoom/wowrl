@@ -57,6 +57,9 @@ namespace Frost
         /// Default constructor.
         Model(const ModelData& mData, const s_str& sEntityName);
 
+        /// Default constructor.
+        Model(const ModelData& mData, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager);
+
         /// Destructor.
         ~Model();
 
@@ -76,7 +79,7 @@ namespace Frost
         s_wptr<Material>  GetMaterial();
         void              SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
-        const Vector&     GetEllipsoidRadius() const;
+        const AxisAlignedBox& GetBoundingBox() const;
 
         void              Update(const s_float& fDelta);
 
@@ -85,6 +88,7 @@ namespace Frost
     private :
 
         s_ptr<Ogre::Mesh>   pMesh_;
+        AxisAlignedBox      mBoundingBox_;
 
         s_refptr<Material> pMaterial_;
 

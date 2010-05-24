@@ -62,9 +62,9 @@
                 <-- Material : how to render the submesh -->
                 <Material n:subMeshID="-1" n:subEntityID="-1">
                     <-- DiffuseColor : a plain color -->
-                    <n[*,1]:DiffuseColor n:r="0" n:g="0" n:b="0" n:a="0"/>
+                    <n[*]:DiffuseColor n:r="0" n:g="0" n:b="0" n:a="0"/>
                     <-- DiffuseTexture : a texture file -->
-                    <n[*,1]:DiffuseTexture file b:alphaReject="false"/>
+                    <n[*]:DiffuseTexture file b:alphaReject="false"/>
                 </Material>
             </Materials>
         </Model>

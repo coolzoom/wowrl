@@ -255,7 +255,7 @@ namespace Frost
             mRenderOp_.vertexData->vertexCount = itCurrChunk->uiVertexCount;
             s_ptr<Ogre::Technique> pTech = itCurrChunk->pMat->GetOgreMaterial()->getTechnique(0);
 
-            for (uint i = 0; i < pTech->getNumPasses(); i++)
+            for (uint i = 0; i < pTech->getNumPasses(); ++i)
             {
                 Ogre::Pass* pPass = pTech->getPass(i);
                 pSceneMgr_->_setPass(pPass);
@@ -412,6 +412,7 @@ namespace Frost
 
             pRS_->_setViewport(pRenderTarget_->GetOgreRenderTarget()->getViewport(0));
 
+            PrepareForRender_(true);
             PrepareForRender_(false);
 
             bFrameStarted_ = true;
@@ -472,8 +473,6 @@ namespace Frost
         if (pRenderFunc_)
         {
             // Set up...
-            PrepareForRender_(true);
-
             return (*pRenderFunc_)();
         }
 

@@ -18,11 +18,9 @@ namespace Frost
 {
     const s_str Camera::CLASS_NAME = "Camera";
 
-    Camera::Camera() : MovableObject()
+    Camera::Camera( s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(pSceneManager)
     {
-        pOgreCamera_ = Frost::Engine::GetSingleton()->GetOgreSceneManager()->createCamera(
-            ("Camera_"+uiID_).Get()
-        );
+        pOgreCamera_ = pSceneManager_->createCamera(("Camera_"+uiID_).Get());
         pOgreCamera_->setNearClipDistance(1);
         pOgreCamera_->setFarClipDistance(200);
         pOgreCamera_->setFixedYawAxis(true);
@@ -31,9 +29,7 @@ namespace Frost
 
     Camera::~Camera()
     {
-        Frost::Engine::GetSingleton()->GetOgreSceneManager()->destroyCamera(
-            pOgreCamera_.Get()
-        );
+        pSceneManager_->destroyCamera(pOgreCamera_.Get());
     }
 
     s_bool Camera::IsVisible( const Vector& mPoint ) const

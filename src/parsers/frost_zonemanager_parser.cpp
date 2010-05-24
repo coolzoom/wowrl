@@ -113,7 +113,7 @@ namespace Frost
                         }
 
                         MaterialInfo mInfo;
-                        s_ptr<XML::Block> pDiffuseBlock = pMaterialBlock->GetRadioBlock(1);
+                        s_ptr<XML::Block> pDiffuseBlock = pMaterialBlock->GetRadioBlock();
                         if (pDiffuseBlock->GetName() == "DiffuseColor")
                         {
                             mInfo.bDiffuseColor = true;

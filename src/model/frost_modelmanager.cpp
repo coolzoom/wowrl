@@ -37,12 +37,12 @@ namespace Frost
         }
     }
 
-    s_refptr<Model> ModelManager::CreateModel( const s_str& sModelName, const s_str& sEntityName )
+    s_refptr<Model> ModelManager::CreateModel( const s_str& sModelName, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager )
     {
-        return CreateModel("", sModelName, sEntityName);
+        return CreateModel("", sModelName, sEntityName, pSceneManager);
     }
 
-    s_refptr<Model> ModelManager::CreateModel( const s_str& sCategory, const s_str& sModelName, const s_str& sEntityName )
+    s_refptr<Model> ModelManager::CreateModel( const s_str& sCategory, const s_str& sModelName, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager )
     {
         s_refptr<Model> pModel;
         s_map<s_str, s_str>& lCategory = lModelNameToFileMap_[sCategory];
@@ -58,7 +58,7 @@ namespace Frost
             }
 
             if (mInfo.pData)
-                pModel = s_refptr<Model>(new Model(*mInfo.pData, sEntityName));
+                pModel = s_refptr<Model>(new Model(*mInfo.pData, sEntityName, pSceneManager));
         }
         else
         {

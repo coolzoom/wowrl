@@ -20,16 +20,40 @@ namespace Frost
 {
     const s_str MovableObject::CLASS_NAME = "MovableObject";
 
-    MovableObject::MovableObject() : mInitialDirection_(-Vector::UNIT_Z)
+    MovableObject::MovableObject( s_ptr<Ogre::SceneManager> pSceneManager ) :
+        mInitialDirection_(-Vector::UNIT_Z)
     {
         uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
-        pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
+
+        if (!pSceneManager)
+            pSceneManager = Engine::GetSingleton()->GetOgreSceneManager();
+
+        pSceneManager_ = pSceneManager;
+
+        pNode_ = pSceneManager_->getRootSceneNode()->createChildSceneNode(
             Ogre::Vector3::ZERO
         );
         pNode_->setFixedYawAxis(true);
     }
 
-    MovableObject::MovableObject( const MovableObject& mObject ) : mInitialDirection_(-Vector::UNIT_Z)
+    MovableObject::MovableObject( const Vector& mPosition, s_ptr<Ogre::SceneManager> pSceneManager ) :
+        mInitialDirection_(-Vector::UNIT_Z)
+    {
+        uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
+
+        if (!pSceneManager)
+            pSceneManager = Engine::GetSingleton()->GetOgreSceneManager();
+
+        pSceneManager_ = pSceneManager;
+
+        pNode_ = pSceneManager_->getRootSceneNode()->createChildSceneNode(
+            Vector::FrostToOgre(mPosition)
+        );
+        pNode_->setFixedYawAxis(true);
+    }
+
+    MovableObject::MovableObject( const MovableObject& mObject ) :
+        mInitialDirection_(-Vector::UNIT_Z)
     {
         uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
 
@@ -40,11 +64,13 @@ namespace Frost
         bTracks_ = mObject.bTracks_;
         bTrackedPointRelative_ = mObject.bTrackedPointRelative_;
 
+        pSceneManager_ = mObject.pSceneManager_;
+
         if (!bOrbits_)
             pNode_ = mObject.pNode_->getParentSceneNode()->createChildSceneNode(mObject.pNode_->getPosition());
         else
         {
-            pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
+            pNode_ = pSceneManager_->getRootSceneNode()->createChildSceneNode(
                 mObject.pNode_->getPosition()
             );
         }
@@ -61,15 +87,6 @@ namespace Frost
         }
     }
 
-    MovableObject::MovableObject( const Vector& mPosition ) : mInitialDirection_(-Vector::UNIT_Z)
-    {
-        uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
-        pNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode(
-            Vector::FrostToOgre(mPosition)
-        );
-        pNode_->setFixedYawAxis(true);
-    }
-
     MovableObject::~MovableObject()
     {
         SceneManager::GetSingleton()->UnregisterObject(this);
@@ -83,7 +100,7 @@ namespace Frost
             pObj->UnlockTracking();
         }
 
-        Engine::GetSingleton()->GetOgreSceneManager()->destroySceneNode(pNode_.Get());
+        pSceneManager_->destroySceneNode(pNode_.Get());
 
         s_ctnr< s_ptr<LuaMovableObject> >::iterator iterGlue;
         foreach (iterGlue, lGlueList_)
@@ -130,12 +147,12 @@ namespace Frost
             if (bOrbits_)
             {
                 pParent_->GetOgreNode()->removeChild(pTargetNode_.Get());
-                Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->addChild(pTargetNode_.Get());
+                pSceneManager_->getRootSceneNode()->addChild(pTargetNode_.Get());
             }
             else
             {
                 pParent_->GetOgreNode()->removeChild(pNode_.Get());
-                Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->addChild(pNode_.Get());
+                pSceneManager_->getRootSceneNode()->addChild(pNode_.Get());
             }
 
             pParent_ = nullptr;
@@ -149,7 +166,7 @@ namespace Frost
         Vector mPosition = GetPosition();
 
         // - Create target orbiting node
-        pTargetNode_ = Engine::GetSingleton()->GetOgreSceneManager()->getRootSceneNode()->createChildSceneNode();
+        pTargetNode_ = pSceneManager_->getRootSceneNode()->createChildSceneNode();
         pTargetNode_->setPosition(Vector::FrostToOgre(mOrbitCenter_));
         pTargetNode_->setFixedYawAxis(true);
         pTargetNode_->lookAt(-Vector::FrostToOgre(mPosition), Ogre::SceneNode::TS_WORLD);
@@ -167,9 +184,7 @@ namespace Frost
     {
         pTargetNode_->removeChild(pNode_.Get());
         pTargetNode_->getParent()->addChild(pNode_.Get());
-        Engine::GetSingleton()->GetOgreSceneManager()->destroySceneNode(
-            pTargetNode_.Get()
-        );
+        pSceneManager_->destroySceneNode(pTargetNode_.Get());
     }
 
     void MovableObject::LookAt( const Vector& mTrackedPoint, const s_bool& bTrackedPointRelative )

@@ -19,6 +19,7 @@
 #include "gui/frost_cooldown.h"
 #include "gui/frost_editbox.h"
 #include "gui/frost_messageframe.h"
+#include "gui/frost_modelframe.h"
 #include "gui/frost_scrollframe.h"
 #include "gui/frost_frame.h"
 #include "gui/frost_scrollingmessageframe.h"
@@ -139,6 +140,8 @@ namespace Frost
             return new GUI::EditBox();
         else if (sClassName == "MessageFrame")
             return new GUI::MessageFrame();
+        else if (sClassName == "ModelFrame")
+            return new GUI::ModelFrame();
         else if (sClassName == "ScrollFrame")
             return new GUI::ScrollFrame();
         else if (sClassName == "ScrollingMessageFrame")
@@ -174,6 +177,8 @@ namespace Frost
             return new GUI::EditBox();
         else if (sClassName == "MessageFrame")
             return new GUI::MessageFrame();
+        else if (sClassName == "ModelFrame")
+            return new GUI::ModelFrame();
         else if (sClassName == "ScrollFrame")
             return new GUI::ScrollFrame();
         else if (sClassName == "ScrollingMessageFrame")
