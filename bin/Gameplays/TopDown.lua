@@ -35,7 +35,7 @@ function TopDownGameplay.OnLoad()
     this:RegisterEvent("MOUSE_WHEEL_SMOOTH");
     
     TopDownGameplay.camera = this:CreateCamera(2, 8, 2);
-    TopDownGameplay.camera:OrbitAround(0, 0, 0, true);
+    TopDownGameplay.camera:OrbitAround(0, 0, 0);
     this:SetCamera(TopDownGameplay.camera);
 end
 

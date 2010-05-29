@@ -18,13 +18,13 @@ public:
     lua_newtable(L);
     int methods = lua_gettop(L);
 
-    luaL_newmetatable(L, T::className);
+    luaL_newmetatable(L, ("Lunar_" + std::string(T::className)).c_str());
     int metatable = lua_gettop(L);
 
     // store method table in globals so that
     // scripts can add functions written in Lua.
     lua_pushvalue(L, methods);
-    set(L, LUA_GLOBALSINDEX, T::className);
+    set(L, LUA_GLOBALSINDEX, ("Lunar_" + std::string(T::className)).c_str());
 
     // hide metatable from Lua getmetatable()
     lua_pushvalue(L, methods);
@@ -32,23 +32,23 @@ public:
 
     // Creating _index and _newindex functions
     std::string class_funcs = "";
-    class_funcs += "function " + std::string(T::className) + "_index(t, k)\n";
-    class_funcs += "  local r = rawget(" + std::string(T::className) + ", k)\n";
+    class_funcs += "function Lunar_" + std::string(T::className) + "_index(t, k)\n";
+    class_funcs += "  local r = rawget(Lunar_" + std::string(T::className) + ", k)\n";
     class_funcs += "  if r ~= nil then return r end\n";
     class_funcs += "  local dt = t:dt()\n";
     class_funcs += "  return rawget(dt, k)\n";
     class_funcs += "end\n";
-    class_funcs += "function " + std::string(T::className) + "_newindex(t, k, v)\n";
+    class_funcs += "function Lunar_" + std::string(T::className) + "_newindex(t, k, v)\n";
     class_funcs += "  local dt = t:dt()\n";
     class_funcs += "  dt[k] = v\n";
     class_funcs += "end\n";
 
     luaL_dostring(L, class_funcs.c_str());
 
-    lua_getglobal(L, std::string(std::string(T::className) + "_index").c_str());
+    lua_getglobal(L, ("Lunar_" + std::string(T::className) + "_index").c_str());
     set(L, metatable, "__index");
 
-    lua_getglobal(L, std::string(std::string(T::className) + "_newindex").c_str());
+    lua_getglobal(L, ("Lunar_" + std::string(T::className) + "_newindex").c_str());
     set(L, metatable, "__newindex");
 
     lua_pushcfunction(L, tostring_T);
@@ -80,7 +80,7 @@ public:
                   int nargs=0, int nresults=LUA_MULTRET, int errfunc=0)
   {
     int base = lua_gettop(L) - nargs;  // userdata index
-    if (!luaL_checkudata(L, base, T::className)) {
+    if (!luaL_checkudata(L, base, ("Lunar_" + std::string(T::className)).c_str())) {
       lua_settop(L, base-1);           // drop userdata and args
       lua_pushfstring(L, "not a valid %s userdata", T::className);
       return -1;
@@ -110,7 +110,7 @@ public:
   // push onto the Lua stack a userdata containing a pointer to T object
   static int push(lua_State *L, T *obj, bool gc=false) {
     if (!obj) { lua_pushnil(L); return 0; }
-    luaL_getmetatable(L, T::className);  // lookup metatable in Lua registry
+    luaL_getmetatable(L, ("Lunar_" + std::string(T::className)).c_str());  // lookup metatable in Lua registry
     if (lua_isnil(L, -1)) luaL_error(L, "%s missing metatable", T::className);
     int mt = lua_gettop(L);
     subtable(L, mt, "userdata", "v");
@@ -137,8 +137,8 @@ public:
   // get userdata from Lua stack and return pointer to T object
   static T *check(lua_State *L, int narg) {
     userdataType *ud =
-      static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
-    if(!ud) luaL_typerror(L, narg, T::className);
+      static_cast<userdataType*>(luaL_checkudata(L, narg, ("Lunar_" + std::string(T::className)).c_str()));
+    if(!ud) luaL_typerror(L, narg, ("Lunar_" + std::string(T::className)).c_str());
     return ud->pT;  // pointer to T object
   }
 
@@ -151,7 +151,7 @@ public:
           const char* className = T::classList[0];
           while (className)
           {
-            lua_getfield(L, LUA_REGISTRYINDEX, className);  /* get possible metatable */
+            lua_getfield(L, LUA_REGISTRYINDEX, ("Lunar_" + std::string(className)).c_str());  /* get possible metatable */
             if (lua_rawequal(L, -1, -2)) {  /* is it the same as the current one? */
               lua_pop(L, 2);  /* remove both metatables */
               return static_cast<userdataType*>(p)->pT;
@@ -162,7 +162,7 @@ public:
             className = T::classList[i];
           }
         } else {
-          lua_getfield(L, LUA_REGISTRYINDEX, T::className);  /* get correct metatable */
+          lua_getfield(L, LUA_REGISTRYINDEX, ("Lunar_" + std::string(T::className)).c_str());  /* get correct metatable */
           if (lua_rawequal(L, -1, -2)) {  /* does it have the correct mt? */
             lua_pop(L, 2);  /* remove both metatables */
             return static_cast<userdataType*>(p)->pT;
@@ -174,6 +174,13 @@ public:
       }
     }
     return NULL;
+  }
+  
+  static T* PushNew(lua_State *L)
+  {
+    T *obj = new T(L);
+    push(L, obj, true);
+    return obj;
   }
 
 private:

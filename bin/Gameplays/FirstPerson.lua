@@ -160,9 +160,9 @@ function FirstPersonGameplay.OnEvent()
             elseif (arg1 == MOUSE_LEFT) then
                 FirstPersonGameplay.mouse.leftPressed = false;
             end
+            Frost:ForceWorldClicksAllowed(false);
         elseif (event == "MOUSE_WHEEL_SMOOTH") then
             FirstPersonGameplay.unit:ZoomCamera(-arg1);
-            Frost:ForceWorldClicksAllowed(false);
         end
     end
 end

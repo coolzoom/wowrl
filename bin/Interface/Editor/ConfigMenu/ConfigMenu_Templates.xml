@@ -52,8 +52,7 @@
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
             <OnClick>
@@ -66,6 +65,18 @@
         <Size>
             <AbsDimension y="18"/>
         </Size>
+        <Anchors>
+            <Anchor point="LEFT">
+                <Offset>
+                    <AbsDimension x="5"/>
+                </Offset>
+            </Anchor>
+            <Anchor point="RIGHT">
+                <Offset>
+                    <AbsDimension x="-5"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
         <Scripts>
             <OnLoad>
                 this.normalTextColor = Color(1,1,1);
@@ -77,8 +88,7 @@
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this.Caption:SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
         </Scripts>
@@ -133,7 +143,11 @@
                                 ConfigMenu.currentColorItem.onColorChange(color);
                             end
                         end);
-                        ColorSelector:Show();
+                        if (ColorSelector:IsShown()) then
+                            ColorSelector:Raise();
+                        else
+                            ColorSelector:Show();
+                        end
                     </OnClick>
                 </Scripts>
             </Button>

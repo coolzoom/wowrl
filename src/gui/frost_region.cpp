@@ -28,9 +28,7 @@ void Region::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    lGlueList_.PushBack(
-        pLua->Push<LuaUIObject>(new LuaUIObject(pLua->GetState()))
-    );
+    lGlueList_.PushBack(pLua->PushNew<LuaUIObject>());
     pLua->SetGlobal(sName_);
 }
 

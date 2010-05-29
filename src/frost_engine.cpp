@@ -657,9 +657,7 @@ namespace Frost
 
     void Engine::CreateGlue( s_ptr<Lua::State> pLua )
     {
-        lGlueList_.PushBack(
-            pLua->Push<LuaEngine>(new LuaEngine(pLua->GetState()))
-        );
+        pLua->PushNew<LuaEngine>();
         pLua->SetGlobal("Frost");
     }
 

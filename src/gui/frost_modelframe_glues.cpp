@@ -27,6 +27,9 @@ LuaModelFrame::LuaModelFrame(lua_State* pLua) : LuaFrame(pLua)
 
 int LuaModelFrame::_AdvanceTime( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:AdvanceTime", pLua);
     mFunc.Add(0, "time", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -40,6 +43,9 @@ int LuaModelFrame::_AdvanceTime( lua_State* pLua )
 
 int LuaModelFrame::_ClearModel( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:ClearModel", pLua);
 
     pModelFrameParent_->RemoveModel();
@@ -49,6 +55,9 @@ int LuaModelFrame::_ClearModel( lua_State* pLua )
 
 int LuaModelFrame::_GetFacing( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:GetFacing", pLua, 3);
 
     const Vector& mDirection = pModelFrameParent_->GetModelDirection();
@@ -61,6 +70,9 @@ int LuaModelFrame::_GetFacing( lua_State* pLua )
 
 int LuaModelFrame::_GetLight( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:GetLight", pLua, 1);
 
     mFunc.Push(pModelFrameParent_->IsLightingEnabled());
@@ -85,6 +97,9 @@ int LuaModelFrame::_GetLight( lua_State* pLua )
 
 int LuaModelFrame::_GetModel( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:GetModel", pLua, 1);
 
     mFunc.Push(pModelFrameParent_->GetModelFile());
@@ -94,6 +109,9 @@ int LuaModelFrame::_GetModel( lua_State* pLua )
 
 int LuaModelFrame::_GetModelScale( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:GetModelScale", pLua, 1);
 
     mFunc.Push(pModelFrameParent_->GetModelScale());
@@ -103,6 +121,9 @@ int LuaModelFrame::_GetModelScale( lua_State* pLua )
 
 int LuaModelFrame::_GetPosition( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:GetPosition", pLua, 1);
 
     const Vector& mPosition = pModelFrameParent_->GetModelPosition();
@@ -115,6 +136,9 @@ int LuaModelFrame::_GetPosition( lua_State* pLua )
 
 int LuaModelFrame::_GetAvailableSubMeshes( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:GetAvailableSubMeshes", pLua);
 
     s_wptr<Model> pModel = pModelFrameParent_->GetModel();
@@ -133,6 +157,9 @@ int LuaModelFrame::_GetAvailableSubMeshes( lua_State* pLua )
 
 int LuaModelFrame::_GetSubEntityNumber( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:GetSubEntityNumber", pLua, 1);
     mFunc.Add(0, "sub mesh ID", Lua::TYPE_NUMBER);
 
@@ -149,6 +176,9 @@ int LuaModelFrame::_GetSubEntityNumber( lua_State* pLua )
 
 int LuaModelFrame::_SetFacing( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetFacing", pLua);
     mFunc.Add(0, "x", Lua::TYPE_NUMBER);
     mFunc.Add(1, "y", Lua::TYPE_NUMBER);
@@ -168,6 +198,9 @@ int LuaModelFrame::_SetFacing( lua_State* pLua )
 
 int LuaModelFrame::_SetLight( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetLight", pLua);
     mFunc.Add(0, "enabled", Lua::TYPE_BOOLEAN);
     mFunc.Add(1, "ambient R", Lua::TYPE_NUMBER, true);
@@ -216,6 +249,9 @@ int LuaModelFrame::_SetLight( lua_State* pLua )
 
 int LuaModelFrame::_SetModel( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetModel", pLua, 1);
     mFunc.Add(0, "model file", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -228,6 +264,9 @@ int LuaModelFrame::_SetModel( lua_State* pLua )
 
 int LuaModelFrame::_SetModelScale( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetModelScale", pLua);
     mFunc.Add(0, "scale", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -240,6 +279,9 @@ int LuaModelFrame::_SetModelScale( lua_State* pLua )
 
 int LuaModelFrame::_SetPosition( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetPosition", pLua);
     mFunc.Add(0, "x", Lua::TYPE_NUMBER);
     mFunc.Add(1, "y", Lua::TYPE_NUMBER);
@@ -258,6 +300,9 @@ int LuaModelFrame::_SetPosition( lua_State* pLua )
 
 int LuaModelFrame::_SetSequence( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetSequence", pLua);
     mFunc.Add(0, "animID", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -270,6 +315,9 @@ int LuaModelFrame::_SetSequence( lua_State* pLua )
 
 int LuaModelFrame::_SetSequenceTime( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetSequenceTime", pLua);
     mFunc.Add(0, "animID", Lua::TYPE_NUMBER);
     mFunc.Add(1, "time", Lua::TYPE_NUMBER);
@@ -284,6 +332,9 @@ int LuaModelFrame::_SetSequenceTime( lua_State* pLua )
 
 int LuaModelFrame::_SetModelTexture( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetModelTexture", pLua);
     mFunc.Add(0, "file", Lua::TYPE_STRING);
     mFunc.Add(1, "alpha reject", Lua::TYPE_BOOLEAN, true);
@@ -317,6 +368,9 @@ int LuaModelFrame::_SetModelTexture( lua_State* pLua )
 
 int LuaModelFrame::_SetSubMeshTexture( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetSubMeshTexture", pLua);
     mFunc.Add(0, "sub mesh ID", Lua::TYPE_NUMBER);
     mFunc.Add(1, "file", Lua::TYPE_STRING);
@@ -355,6 +409,9 @@ int LuaModelFrame::_SetSubMeshTexture( lua_State* pLua )
 
 int LuaModelFrame::_SetSubEntityTexture( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ModelFrame:SetSubEntityTexture", pLua);
     mFunc.Add(0, "sub mesh ID", Lua::TYPE_NUMBER);
     mFunc.Add(1, "sub entity ID", Lua::TYPE_NUMBER);

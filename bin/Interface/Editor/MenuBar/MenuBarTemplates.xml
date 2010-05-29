@@ -17,8 +17,7 @@
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
             <OnClick>
@@ -39,6 +38,17 @@
             </Anchors>
             <Color r="1" g="1" b="1"/>
         </NormalText>
+        <DisabledText font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" setAllPoints="false">
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="16"/>
+                    </Offset>
+                </Anchor>
+                <Anchor point="BOTTOMRIGHT"/>
+            </Anchors>
+            <Color r="0.5" g="0.5" b="0.5"/>
+        </DisabledText>
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
         <Scripts>
             <OnLoad>
@@ -53,15 +63,12 @@
                     if (self.Key) then
                         self.Key:SetTextColor(color:Unpack());
                     end
+                    self.DisabledText:SetTextColor(color:Unpack());
                 end);
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
-                    if (this.Key) then
-                        this.Key:SetTextColor(AddOns.Editor.Config.UISecondaryTextColor:Unpack());
-                    end
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
         </Scripts>

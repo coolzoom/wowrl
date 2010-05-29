@@ -278,7 +278,6 @@ namespace Frost
 
         // Lua
         s_ptr<Lua::State>          pLua_;
-        s_ctnr< s_ptr<LuaEngine> > lGlueList_;
 
         // OGRE variables
         s_ptr<Ogre::Root>         pRoot_;

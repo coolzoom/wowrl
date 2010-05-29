@@ -38,18 +38,32 @@ namespace Frost
 
     int LuaEngine::_AddDoodad( lua_State* pLua )
     {
-        Lua::Function mFunc("Engine:AddDoodad", pLua);
+        Lua::Function mFunc("Engine:AddDoodad", pLua, 1);
         mFunc.Add(0, "name", Lua::TYPE_STRING);
         mFunc.Add(1, "model", Lua::TYPE_STRING);
 
         if (mFunc.Check())
         {
             s_ptr<Zone> pZone = ZoneManager::GetSingleton()->GetCurrentZone();
-            s_ptr<Doodad> pDoodad = pZone->AddDoodad(
-                mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString()
-            );
+            if (pZone)
+            {
+                s_ptr<Doodad> pDoodad = pZone->AddDoodad(
+                    mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString()
+                );
 
-            SceneManager::GetSingleton()->StartMoving(pDoodad, Vector::CONSTRAINT_NONE, true);
+                if (pDoodad)
+                {
+                    SceneManager::GetSingleton()->StartMoving(pDoodad, Vector::CONSTRAINT_NONE, true);
+                    mFunc.Push(s_bool(true));
+                }
+                else
+                    mFunc.Push(s_bool(false));
+            }
+            else
+            {
+                Warning(mFunc.GetName(), "No Zone loaded, can't create doodad.");
+                mFunc.Push(s_bool(false));
+            }
         }
 
         return mFunc.Return();
@@ -200,6 +214,26 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEngine::_NewZone( lua_State* pLua )
+    {
+        Lua::Function mFunc("Engine:NewZone", pLua, 1);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            try
+            {
+                ZoneManager::GetSingleton()->CreateZone(mFunc.Get(0)->GetString());
+                mFunc.PushNil();
+            }
+            catch (Exception& e)
+            {
+                mFunc.Push(e.GetDescription());
+            }
+        }
+
+        return mFunc.Return();
+    }
 
     int LuaEngine::_NotifyDoodadPositioned( lua_State* pLua )
     {
@@ -552,6 +586,7 @@ namespace Frost
         method(Engine, GetMouseDecalPosition),
         method(Engine, LoadZone),
         method(Engine, LoadZoneFile),
+        method(Engine, NewZone),
         method(Engine, NotifyDoodadPositioned),
         method(Engine, ToggleWireframeView),
         method(Engine, ToggleShading),

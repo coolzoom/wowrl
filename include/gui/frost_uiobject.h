@@ -552,6 +552,8 @@ namespace Frost
             LuaGlue(lua_State* luaVM);
             virtual ~LuaGlue();
 
+            virtual void NotifyDeleted() = 0;
+
             int GetDataTable(lua_State *L);
 
         protected :
@@ -568,6 +570,8 @@ namespace Frost
             LuaVirtualGlue(lua_State* luaVM);
             virtual ~LuaVirtualGlue();
 
+            virtual void NotifyDeleted();
+
             int _MarkForCopy(lua_State*);
             int _GetBase(lua_State*);
             int _GetName(lua_State*);
@@ -579,6 +583,7 @@ namespace Frost
 
         protected :
 
+            s_uint          uiID_;
             s_ptr<UIObject> pParent_;
         };
 
@@ -589,6 +594,8 @@ namespace Frost
 
             LuaUIObject(lua_State* luaVM);
             virtual ~LuaUIObject();
+
+            virtual void NotifyDeleted();
 
             s_ptr<UIObject> GetParent();
 
@@ -628,6 +635,9 @@ namespace Frost
 
         protected :
 
+            s_bool CheckParent_();
+
+            s_str           sName_;
             s_ptr<UIObject> pParent_;
         };
 

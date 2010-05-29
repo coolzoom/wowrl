@@ -23,6 +23,8 @@ function EscMenu:AddButton(caption)
         -- Prevent the button to automatically resize itself on show
         button:SetScript("OnShow", nil);
         
+        AddOns.Editor:CallColorFunctions(this);
+        
         self.lastItem = button;
         self.buttons[caption] = button;
         self.buttonNbr = self.buttonNbr + 1;

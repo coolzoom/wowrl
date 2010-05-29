@@ -124,9 +124,7 @@ namespace Frost
     void Character::CreateGlue( s_ptr<Lua::State> pLua )
     {
         pLua->PushNumber(GetID());
-        lGlueList_.PushBack(
-            pLua->Push<LuaCharacter>(new LuaCharacter(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaCharacter>());
         pLua->SetGlobal(GetLuaID());
     }
 

@@ -42,11 +42,7 @@ function FileSelector:Error(message, width, height)
 end
 
 function FileSelector:GetSelectedFile()
-    if (self.currentFile) then
-        return self.currentFile.file;
-    else
-        return nil;
-    end
+    return self.File:GetText();
 end
 
 function FileSelector:InitRootFolder()
@@ -71,6 +67,8 @@ function FileSelector:InitRootFolder()
             rootFolder:SetPoint("TOPLEFT", self.Splitter.FolderFrame.Scroll, "TOPLEFT", 5, 5);
 
             rootFolder.Develop.Plus:Hide();
+            
+            AddOns.Editor:CallColorFunctions(rootFolder);
 
             self.folders[self.lastID] = rootFolder;
         else
@@ -88,7 +86,7 @@ function FileSelector:InitRootFolder()
         self.folderScrollChildHeight = 5 + 18 + 5;
 
         for i, folder in pairs(folderList) do
-            local folderButton = CreateFrame("Button", "$parent"..folder, rootFolder, "ButtonTemplate_FolderButton");
+            local folderButton = CreateFrame("Button", "$parentFolder"..(self.lastID + 1), rootFolder, "ButtonTemplate_FolderButton");
             if (folderButton) then
                 self.lastID = self.lastID + 1;
                 folderButton.id = self.lastID;
@@ -115,15 +113,14 @@ function FileSelector:InitRootFolder()
                 rootFolder.folderNum = rootFolder.folderNum + 1;
                 rootFolder.lastFolder = folderButton;
                 self.folderScrollChildHeight = self.folderScrollChildHeight + 18;
+            
+                AddOns.Editor:CallColorFunctions(folderButton);
             end
         end
 
         rootFolder.folderNum = #rootFolder.folders;
 
         self.Splitter.FolderFrame.Scroll:SetHeight(self.folderScrollChildHeight);
-        --[[self.Splitter.FolderFrame.Slider:SetMinMaxValues(
-            0, math.max(0, self.folderScrollChildHeight - self.Splitter.FolderFrame:GetHeight())
-        );]]--
 
         self.initialized = true;
     end
@@ -148,7 +145,7 @@ function FileSelector:DevelopFolder(id, toggle)
             parentFolder.Develop.Minus:Show();
 
             for i, folder in pairs(folderList) do
-                local folderButton = CreateFrame("Button", "$parent"..folder, parentFolder, "ButtonTemplate_FolderButton");
+                local folderButton = CreateFrame("Button", "$parentFolder"..(self.lastID + 1), parentFolder, "ButtonTemplate_FolderButton");
                 if (folderButton) then
                     self.lastID = self.lastID + 1;
                     folderButton.id = self.lastID;
@@ -179,6 +176,8 @@ function FileSelector:DevelopFolder(id, toggle)
                     parentFolder.folders[self.lastID] = folderButton;
                     parentFolder.folderNum = parentFolder.folderNum + 1;
                     parentFolder.lastFolder = folderButton;
+                    
+                    AddOns.Editor:CallColorFunctions(folderButton);
                 end
             end
 
@@ -241,6 +240,7 @@ function FileSelector:DevelopFolder(id, toggle)
             end
 
             for i, folder in pairs(parentFolder.folders) do
+                AddOns.Editor:UnregisterColorFunctions(folder);
                 DeleteFrame(folder);
             end
 
@@ -257,6 +257,7 @@ function FileSelector:SetFolder(id)
         self:SetFile(nil);
 
         for i, file in pairs(self.files) do
+            AddOns.Editor:UnregisterColorFunctions(file);
             DeleteFrame(file);
         end
 
@@ -280,11 +281,14 @@ function FileSelector:SetFolder(id)
         self:SetFile(nil);
 
         for i, file in pairs(self.files) do
+            AddOns.Editor:UnregisterColorFunctions(file);
             DeleteFrame(file);
         end
 
         self.lastFile = nil;
         self.files = {};
+        
+        self.File:SetText(parentFolder.folder);
 
         local fileList = {Frost:GetFileList(parentFolder.folder)};
 
@@ -309,14 +313,7 @@ function FileSelector:SetFolder(id)
         local fileID = 0;
 
         for i, file in pairs(fileList) do
-            local adjustedName = string.gsub(file, "%.", "");
-            adjustedName = string.gsub(adjustedName, " ", "_");
-            local dotPos = string.find(file, ".", 0, true);
-            local extension;
-            if (dotPos) then
-                extension = string.sub(file, dotPos+1);
-            end
-            local fileButton = CreateFrame("Button", "$parent"..adjustedName, self.Splitter.FileFrame.Scroll, "ButtonTemplate_FileButton");
+            local fileButton = CreateFrame("Button", "$parentFile"..(fileID + 1), self.Splitter.FileFrame.Scroll, "ButtonTemplate_FileButton");
             if (fileButton) then
                 fileID = fileID + 1;
                 fileButton.id = fileID;
@@ -356,6 +353,8 @@ function FileSelector:SetFolder(id)
                 self.files[fileID] = fileButton;
                 self.lastFile = fileButton;
                 self.fileScrollChildHeight = self.fileScrollChildHeight + 18;
+                
+                AddOns.Editor:CallColorFunctions(fileButton);
             end
         end
 
@@ -371,7 +370,6 @@ end
 function FileSelector:SetFile(id)
     if (not id and self.currentFile) then
         self.currentFile:SetBackdrop(nil);
-        self.File:SetText("");
         self.currentFile = nil;
     else
         local file;

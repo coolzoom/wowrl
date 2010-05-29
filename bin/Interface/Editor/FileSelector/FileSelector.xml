@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="FileSelector" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true" frameStrata="PARENT">
+    <Frame name="FileSelector" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
         <Size>
             <AbsDimension x="600" y="300"/>
         </Size>
@@ -11,7 +11,9 @@
                 this:GetBase():OnLoad();
 
                 this.OnClose = function (self)
-                    this:OnCancel();
+                    if (this.OnCancel ~= nil) then
+                        this:OnCancel();
+                    end
                 end;
 
                 AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
@@ -60,7 +62,9 @@
                     </OnLoad>
                     <OnClick>
                         FileSelector:Hide();
-                        FileSelector:OnCancel();
+                        if (this.OnCancel ~= nil) then
+                            FileSelector:OnCancel();
+                        end
                     </OnClick>
                 </Scripts>
             </Button>

@@ -36,18 +36,14 @@ void MessageFrame::CreateGlue()
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushNumber(uiID_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
     }
     else
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushString(sLuaName_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaMessageFrame>(new LuaMessageFrame(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaMessageFrame>());
         pLua->SetGlobal(sLuaName_);
     }
 }

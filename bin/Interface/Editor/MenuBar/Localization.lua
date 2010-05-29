@@ -23,7 +23,11 @@ if (GetLocale() == "frFR") then
         ["Help"] = "Aide",
         ["HelpShow"] = "Montrer l'aide",
         ["HelpAbout"] = "À propos",
-        ["ZoneLoadingError"] = "Impossible d'ouvrir ce fichier de Zone : un problème est survenu pendant le chargement.\nVoir le fichier de log pour plus de détails."
+        ["NewZoneDialogTitle"] = "Créer nouvelle zone...",
+        ["NewZoneDialogName"] = "Nom :",
+        ["NewZoneError"] = "|cFFFFB400Erreur lors de la création de la zone :|r\n",
+        ["ZoneLoadingError"] = "Impossible d'ouvrir ce fichier de zone : un problème est survenu pendant le chargement.\nVoir le fichier de log pour plus de détails.",
+        ["ConfirmClose"] = "Vous êtes sur le point de fermer la zone, mais une partie de votre travail n'a pas étée sauvegardée.\nVoulez-vous sauvegarder maintenant ?",
     });
 else
     AddOns.MenuBar:SetLocale({
@@ -50,6 +54,10 @@ else
         ["Help"] = "Help",
         ["HelpShow"] = "Show help",
         ["HelpAbout"] = "About",
-        ["ZoneLoadingError"] = "Impossible to open this Zone file : an error occured while loading.\nSee the log file for further details."
+        ["NewZoneDialogTitle"] = "Create new zone...",
+        ["NewZoneDialogName"] = "Name :",
+        ["NewZoneError"] = "Error creating new zone :\n",
+        ["ZoneLoadingError"] = "Impossible to open this zone file : an error occured while loading.\nSee the log file for further details.",
+        ["ConfirmClose"] = "You are about to close the zone, but some of your work has not been saved.\nDo you want to save it now ?",
     });
 end

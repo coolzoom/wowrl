@@ -24,6 +24,9 @@ LuaScrollFrame::LuaScrollFrame(lua_State* pLua) : LuaFrame(pLua)
 
 int LuaScrollFrame::_GetHorizontalScroll( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:GetHorizontalScroll", pLua, 1);
 
     mFunc.Push(pScrollFrameParent_->GetHorizontalScroll());
@@ -33,6 +36,9 @@ int LuaScrollFrame::_GetHorizontalScroll( lua_State* pLua )
 
 int LuaScrollFrame::_GetHorizontalScrollRange( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:GetHorizontalScrollRange", pLua, 1);
 
     mFunc.Push(pScrollFrameParent_->GetHorizontalScrollRange());
@@ -42,6 +48,9 @@ int LuaScrollFrame::_GetHorizontalScrollRange( lua_State* pLua )
 
 int LuaScrollFrame::_GetScrollChild( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:GetScrollChild", pLua, 1);
 
     if (pScrollFrameParent_->GetScrollChild())
@@ -57,6 +66,9 @@ int LuaScrollFrame::_GetScrollChild( lua_State* pLua )
 
 int LuaScrollFrame::_GetVerticalScroll( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:GetVerticalScroll", pLua, 1);
 
     mFunc.Push(pScrollFrameParent_->GetVerticalScroll());
@@ -66,6 +78,9 @@ int LuaScrollFrame::_GetVerticalScroll( lua_State* pLua )
 
 int LuaScrollFrame::_GetVerticalScrollRange( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:GetVerticalScrollRange", pLua, 1);
 
     mFunc.Push(pScrollFrameParent_->GetVerticalScrollRange());
@@ -75,6 +90,9 @@ int LuaScrollFrame::_GetVerticalScrollRange( lua_State* pLua )
 
 int LuaScrollFrame::_SetHorizontalScroll( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:SetHorizontalScroll", pLua);
     mFunc.Add(0, "horizontal scroll", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -87,6 +105,9 @@ int LuaScrollFrame::_SetHorizontalScroll( lua_State* pLua )
 
 int LuaScrollFrame::_SetScrollChild( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:SetScrollChild", pLua);
     mFunc.Add(0, "child name", Lua::TYPE_STRING, true);
     mFunc.Add(0, "child", Lua::TYPE_USERDATA, true);
@@ -133,6 +154,9 @@ int LuaScrollFrame::_SetScrollChild( lua_State* pLua )
 
 int LuaScrollFrame::_SetVerticalScroll( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("ScrollFrame:SetVerticalScroll", pLua);
     mFunc.Add(0, "vertical scroll", Lua::TYPE_NUMBER);
     if (mFunc.Check())

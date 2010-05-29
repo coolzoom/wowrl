@@ -23,11 +23,6 @@ namespace Frost
 
     Gameplay::~Gameplay()
     {
-        s_ctnr< s_ptr<LuaGameplay> >::iterator iter;
-        foreach (iter, lGlueList_)
-        {
-            iter->Delete();
-        }
     }
 
     void Gameplay::SetCamera( s_ptr<Camera> pCamera )
@@ -68,9 +63,7 @@ namespace Frost
     {
         s_ptr<Lua::State> pLua = GameplayManager::GetSingleton()->GetLua();
         pLua->PushString(sName_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaGameplay>(new LuaGameplay(pLua->GetState()))
-        );
+        pLua->PushNew<LuaGameplay>();
         pLua->SetGlobal(sName_);
     }
 

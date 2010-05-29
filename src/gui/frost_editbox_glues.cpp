@@ -24,6 +24,9 @@ LuaEditBox::LuaEditBox(lua_State* pLua) : LuaFrame(pLua)
 
 int LuaEditBox::_AddHistoryLine( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:AddHistoryLine", pLua);
     mFunc.Add(0, "line", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -36,6 +39,9 @@ int LuaEditBox::_AddHistoryLine( lua_State* pLua )
 
 int LuaEditBox::_ClearFocus( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:ClearFocus", pLua);
 
     pEditBoxParent_->SetFocus(false);
@@ -45,6 +51,9 @@ int LuaEditBox::_ClearFocus( lua_State* pLua )
 
 int LuaEditBox::_GetBlinkSpeed( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:GetBlinkSpeed", pLua, 1);
 
     mFunc.Push(pEditBoxParent_->GetBlinkSpeed());
@@ -55,6 +64,9 @@ int LuaEditBox::_GetBlinkSpeed( lua_State* pLua )
 int LuaEditBox::_GetHistoryLines( lua_State* pLua )
 {
     const s_ctnr<s_str>& lHistoryLine = pEditBoxParent_->GetHistoryLines();
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:GetHistoryLines", pLua, lHistoryLine.GetSize());
 
     s_ctnr<s_str>::const_iterator iterLine;
@@ -68,6 +80,9 @@ int LuaEditBox::_GetHistoryLines( lua_State* pLua )
 
 int LuaEditBox::_GetMaxLetters( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:GetMaxLetters", pLua, 1);
 
     mFunc.Push(pEditBoxParent_->GetMaxLetters());
@@ -77,6 +92,9 @@ int LuaEditBox::_GetMaxLetters( lua_State* pLua )
 
 int LuaEditBox::_GetNumLetters( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:GetNumLetters", pLua, 1);
 
     mFunc.Push(pEditBoxParent_->GetNumLetters());
@@ -86,6 +104,9 @@ int LuaEditBox::_GetNumLetters( lua_State* pLua )
 
 int LuaEditBox::_GetNumber( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:GetNumber", pLua, 1);
 
     mFunc.Push(s_float(pEditBoxParent_->GetText()));
@@ -95,6 +116,9 @@ int LuaEditBox::_GetNumber( lua_State* pLua )
 
 int LuaEditBox::_GetText( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:GetText", pLua, 1);
 
     mFunc.Push(pEditBoxParent_->GetText());
@@ -104,6 +128,9 @@ int LuaEditBox::_GetText( lua_State* pLua )
 
 int LuaEditBox::_GetTextInsets( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:GetTextInsets", pLua, 4);
 
     const s_array<s_int,4>& lInsets = pEditBoxParent_->GetTextInsets();
@@ -116,6 +143,9 @@ int LuaEditBox::_GetTextInsets( lua_State* pLua )
 
 int LuaEditBox::_HighlithtText( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:HighlithtText", pLua);
     mFunc.Add(0, "start", Lua::TYPE_NUMBER, true);
     mFunc.Add(1, "end", Lua::TYPE_NUMBER, true);
@@ -137,6 +167,9 @@ int LuaEditBox::_HighlithtText( lua_State* pLua )
 
 int LuaEditBox::_Insert( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:Insert", pLua);
     mFunc.Add(0, "text", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -149,6 +182,9 @@ int LuaEditBox::_Insert( lua_State* pLua )
 
 int LuaEditBox::_IsAutoFocus( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:IsAutoFocus", pLua);
 
     mFunc.Push(pEditBoxParent_->IsAutoFocusEnabled());
@@ -158,6 +194,9 @@ int LuaEditBox::_IsAutoFocus( lua_State* pLua )
 
 int LuaEditBox::_IsMultiLine( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:IsMultiLine", pLua);
 
     mFunc.Push(pEditBoxParent_->IsMultiLine());
@@ -167,6 +206,9 @@ int LuaEditBox::_IsMultiLine( lua_State* pLua )
 
 int LuaEditBox::_IsNumeric( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:IsNumeric", pLua);
 
     mFunc.Push(pEditBoxParent_->IsNumericOnly());
@@ -176,6 +218,9 @@ int LuaEditBox::_IsNumeric( lua_State* pLua )
 
 int LuaEditBox::_IsPassword( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:IsPassword", pLua);
 
     mFunc.Push(pEditBoxParent_->IsPasswordModeEnabled());
@@ -185,6 +230,9 @@ int LuaEditBox::_IsPassword( lua_State* pLua )
 
 int LuaEditBox::_SetAutoFocus( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetAutoFocus", pLua);
     mFunc.Add(0, "enabled", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -197,6 +245,9 @@ int LuaEditBox::_SetAutoFocus( lua_State* pLua )
 
 int LuaEditBox::_SetBlinkSpeed( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetBlinkSpeed", pLua);
     mFunc.Add(0, "blink speed", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -209,6 +260,9 @@ int LuaEditBox::_SetBlinkSpeed( lua_State* pLua )
 
 int LuaEditBox::_SetFocus( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetFocus", pLua);
 
     pEditBoxParent_->SetFocus(true);
@@ -218,6 +272,9 @@ int LuaEditBox::_SetFocus( lua_State* pLua )
 
 int LuaEditBox::_SetMaxHistoryLines( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetMaxHistoryLines", pLua);
     mFunc.Add(0, "max lines", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -230,6 +287,9 @@ int LuaEditBox::_SetMaxHistoryLines( lua_State* pLua )
 
 int LuaEditBox::_SetMaxLetters( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetMaxLetters", pLua);
     mFunc.Add(0, "max letters", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -242,6 +302,9 @@ int LuaEditBox::_SetMaxLetters( lua_State* pLua )
 
 int LuaEditBox::_SetMultiLine( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetMultiLine", pLua);
     mFunc.Add(0, "multiLine", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -254,6 +317,9 @@ int LuaEditBox::_SetMultiLine( lua_State* pLua )
 
 int LuaEditBox::_SetNumber( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetNumber", pLua);
     mFunc.Add(0, "number", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -266,6 +332,9 @@ int LuaEditBox::_SetNumber( lua_State* pLua )
 
 int LuaEditBox::_SetNumeric( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetNumeric", pLua);
     mFunc.Add(0, "numeric", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -278,6 +347,9 @@ int LuaEditBox::_SetNumeric( lua_State* pLua )
 
 int LuaEditBox::_SetPassword( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetPassword", pLua);
     mFunc.Add(0, "enable", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -290,6 +362,9 @@ int LuaEditBox::_SetPassword( lua_State* pLua )
 
 int LuaEditBox::_SetText( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetText", pLua);
     mFunc.Add(0, "text", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -302,6 +377,9 @@ int LuaEditBox::_SetText( lua_State* pLua )
 
 int LuaEditBox::_SetTextInsets( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("EditBox:SetTextInsets", pLua);
     mFunc.Add(0, "left", Lua::TYPE_NUMBER);
     mFunc.Add(1, "right", Lua::TYPE_NUMBER);

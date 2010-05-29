@@ -205,14 +205,13 @@ namespace Frost
             */
             void    PushGlobal(const s_str& sName);
 
-            /// Pushes a Lunar object on the stack.
-            /** \param pValue A pointer to the Lunar object
+            /// Pushes a new Lunar object on the stack.
+            /** \return A pointer to the Lunar object
             */
             template<class T>
-            s_ptr<T> Push(s_ptr<T> pValue)
+            s_ptr<T> PushNew()
             {
-                Lunar<T>::push(pLua_, pValue.Get());
-                return pValue;
+                return Lunar<T>::PushNew(pLua_);
             }
 
             /// Sets the value of a global Lua variable.

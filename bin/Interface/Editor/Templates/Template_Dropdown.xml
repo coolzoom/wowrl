@@ -21,23 +21,25 @@
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
-                    this:SetBackdropColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
             <OnShow>
                 if (not this.updated) then
-                    local children = { this:GetChildren() };
+                    if (not this.children) then
+                        this.children = { this:GetChildren() };
+                    end
+                
                     local maxWidth = 0;
                     local totalHeight = 0;
                     
-                    for k, child in pairs(children) do
+                    for k, child in pairs(this.children) do
                         maxWidth = math.max(child:GetWidth(), maxWidth);
                         totalHeight = totalHeight + child:GetHeight();
                     end
                     
                     if (maxWidth > 100) then
-                        for k, child in pairs(children) do
+                        for k, child in pairs(this.children) do
                             child:SetWidth(maxWidth);
                         end
                         

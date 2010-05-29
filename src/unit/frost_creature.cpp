@@ -35,9 +35,7 @@ namespace Frost
     void Creature::CreateGlue( s_ptr<Lua::State> pLua )
     {
         pLua->PushNumber(GetID());
-        lGlueList_.PushBack(
-            pLua->Push<LuaCreature>(new LuaCreature(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaCreature>());
         pLua->SetGlobal(GetLuaID());
     }
 

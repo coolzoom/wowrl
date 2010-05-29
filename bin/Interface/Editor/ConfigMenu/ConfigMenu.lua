@@ -26,6 +26,8 @@ function ConfigMenu:AddPanel(caption)
             else
                 header:SetPoint("BOTTOMLEFT", panel, "TOPLEFT", 0, 2);
             end
+            
+            AddOns.Editor:CallColorFunctions(header);
         end
     
         self.lastPanel = panel;
@@ -53,10 +55,12 @@ function ConfigMenu:AddColorItem(panelName, caption, color)
             item.Swatch.ColorZone:SetBackdropColor(color:Unpack());
             
             if (panel.lastItem) then
-                item:SetPoint("TOPLEFT", panel.lastItem, "BOTTOMLEFT");
+                item:SetPoint("TOP", panel.lastItem, "BOTTOM");
             else
-                item:SetPoint("TOPLEFT", panel, "TOPLEFT", 5, 5);
+                item:SetPoint("TOP", panel, "TOP", 0, 5);
             end
+            
+            AddOns.Editor:CallColorFunctions(item);
         
             panel.lastItem = item;
             panel.items[caption] = item;

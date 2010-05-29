@@ -19,17 +19,37 @@ namespace Frost
 
     LuaUnit::LuaUnit( lua_State* pLua )
     {
-        s_uint uiID = (uint)lua_tonumber(pLua, -1);
+        uiID_ = (uint)lua_tonumber(pLua, -1);
 
         lua_newtable(pLua);
         iRef_ = luaL_ref(pLua, LUA_REGISTRYINDEX);
         pLua_ = pLua;
 
-        pParent_ = UnitManager::GetSingleton()->GetUnitByID(uiID);
+        pParent_ = UnitManager::GetSingleton()->GetUnitByID(uiID_);
+        sName_ = pParent_->GetName();
+    }
+
+    void LuaUnit::NotifyDeleted()
+    {
+        pParent_ = nullptr;
+    }
+
+    s_bool LuaUnit::CheckParent_()
+    {
+        if (!pParent_)
+        {
+            Warning(sName_+" ("+uiID_+")", "This unit has been deleted and can no longer be used.");
+            return false;
+        }
+
+        return true;
     }
 
     int LuaUnit::_AddBuff( lua_State* pLua )
     {
+        if (!CheckParent_())
+            return 0;
+
         Lua::Function mFunc("Unit:AddBuff", pLua);
 
         if (mFunc.Check())

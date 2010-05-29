@@ -1,7 +1,7 @@
 <Ui>
     <Frame name="ConfigMenu" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
         <Size>
-            <AbsDimension x="400" y="400"/>
+            <AbsDimension x="280" y="350"/>
         </Size>
         <Anchors>
             <Anchor point="CENTER"/>

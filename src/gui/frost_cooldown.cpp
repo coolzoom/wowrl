@@ -36,18 +36,14 @@ void Cooldown::CreateGlue()
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushNumber(uiID_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
     }
     else
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushString(sLuaName_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaCooldown>(new LuaCooldown(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaCooldown>());
         pLua->SetGlobal(sLuaName_);
     }
 }

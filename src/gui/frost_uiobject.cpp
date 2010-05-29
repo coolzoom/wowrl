@@ -40,7 +40,7 @@ UIObject::~UIObject()
     s_ctnr< s_ptr<LuaGlue> >::iterator iter;
     foreach (iter, lGlueList_)
     {
-        iter->Delete();
+        (*iter)->NotifyDeleted();
     }
 }
 

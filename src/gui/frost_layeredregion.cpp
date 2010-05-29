@@ -50,9 +50,7 @@ void LayeredRegion::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    lGlueList_.PushBack(
-        pLua->Push<LuaLayeredRegion>(new LuaLayeredRegion(pLua->GetState()))
-    );
+    lGlueList_.PushBack(pLua->PushNew<LuaLayeredRegion>());
     pLua->SetGlobal(sName_);
 }
 
@@ -124,6 +122,8 @@ void LayeredRegion::NotifyRendererNeedRedraw()
         if (pRenderer_)
             pRenderer_->FireRedraw();
         else if (pFrameParent_)
-            GUIManager::GetSingleton()->FireRedraw(pFrameParent_->GetFrameStrata());
+        {
+            pFrameParent_->NotifyRendererNeedRedraw();
+        }
     }
 }

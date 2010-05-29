@@ -15,6 +15,8 @@ using namespace Frost::GUI;
 
 const s_str LuaFrame::CLASS_NAME  = "GUI::LuaFrame";
 
+// TODO : ## voir pk les titres ne prennent pas la couleur
+
 LuaFrame::LuaFrame(lua_State* pLua) : LuaUIObject(pLua)
 {
     pFrameParent_ = s_ptr<Frame>::DynamicCast(pParent_);
@@ -26,6 +28,9 @@ LuaFrame::LuaFrame(lua_State* pLua) : LuaUIObject(pLua)
 
 int LuaFrame::_CreateFontString(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame::CreateFontString", pLua, 1);
     mFunc.Add(0, "name", Lua::TYPE_STRING);
     mFunc.Add(1, "layer", Lua::TYPE_STRING, true);
@@ -104,6 +109,9 @@ int LuaFrame::_CreateFontString(lua_State* pLua)
 
 int LuaFrame::_CreateTexture(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame::CreateTexture", pLua, 1);
     mFunc.Add(0, "name", Lua::TYPE_STRING);
     mFunc.Add(1, "layer", Lua::TYPE_STRING, true);
@@ -183,6 +191,9 @@ int LuaFrame::_CreateTexture(lua_State* pLua)
 
 int LuaFrame::_CreateTitleRegion(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame::CreateTitleRegion", pLua);
 
     pFrameParent_->CreateTitleRegion();
@@ -192,6 +203,9 @@ int LuaFrame::_CreateTitleRegion(lua_State* pLua)
 
 int LuaFrame::_DisableDrawLayer(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:DisableDrawLayer", pLua);
     mFunc.Add(0, "layer", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -228,6 +242,9 @@ int LuaFrame::_DisableDrawLayer(lua_State* pLua)
 
 int LuaFrame::_EnableDrawLayer(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:EnableDrawLayer", pLua);
     mFunc.Add(0, "layer", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -264,6 +281,9 @@ int LuaFrame::_EnableDrawLayer(lua_State* pLua)
 
 int LuaFrame::_EnableKeyboard(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:EnableKeyboard", pLua);
     mFunc.Add(0, "is keyboard enable", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -276,6 +296,9 @@ int LuaFrame::_EnableKeyboard(lua_State* pLua)
 
 int LuaFrame::_EnableMouse(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:EnableMouse", pLua);
     mFunc.Add(0, "is mouse enabled", Lua::TYPE_BOOLEAN);
     mFunc.Add(1, "is world input allowed", Lua::TYPE_BOOLEAN, true);
@@ -292,6 +315,9 @@ int LuaFrame::_EnableMouse(lua_State* pLua)
 
 int LuaFrame::_EnableMouseWheel(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:EnableMouseWheel", pLua);
     mFunc.Add(0, "is mouse wheel enabled", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -304,6 +330,9 @@ int LuaFrame::_EnableMouseWheel(lua_State* pLua)
 
 int LuaFrame::_GetBackdrop(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetBackdrop", pLua, 1);
 
     if (s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock())
@@ -342,6 +371,9 @@ int LuaFrame::_GetBackdrop(lua_State* pLua)
 
 int LuaFrame::_GetBackdropBorderColor(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetBackdropBorderColor", pLua, 4);
 
     if (pFrameParent_->GetBackdrop())
@@ -362,6 +394,9 @@ int LuaFrame::_GetBackdropBorderColor(lua_State* pLua)
 
 int LuaFrame::_GetBackdropColor(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetBackdropColor", pLua, 4);
 
     if (pFrameParent_->GetBackdrop())
@@ -383,6 +418,9 @@ int LuaFrame::_GetBackdropColor(lua_State* pLua)
 int LuaFrame::_GetChildren(lua_State* pLua)
 {
     const s_map< s_uint, s_ptr<Frame> >& lChildList = pFrameParent_->GetChildren();
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetChildren", pLua, lChildList.GetSize());
 
     s_map< s_uint, s_ptr<Frame> >::const_iterator iterChild;
@@ -397,6 +435,9 @@ int LuaFrame::_GetChildren(lua_State* pLua)
 
 int LuaFrame::_GetEffectiveAlpha(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetEffectiveAlpha", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetEffectiveAlpha());
@@ -406,6 +447,9 @@ int LuaFrame::_GetEffectiveAlpha(lua_State* pLua)
 
 int LuaFrame::_GetEffectiveScale(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetEffectiveScale", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetEffectiveScale());
@@ -415,6 +459,9 @@ int LuaFrame::_GetEffectiveScale(lua_State* pLua)
 
 int LuaFrame::_GetFrameLevel(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetFrameLevel", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetFrameLevel());
@@ -424,6 +471,9 @@ int LuaFrame::_GetFrameLevel(lua_State* pLua)
 
 int LuaFrame::_GetFrameStrata(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetFrameStrata", pLua, 1);
 
     FrameStrata mStrata = pFrameParent_->GetFrameStrata();
@@ -453,6 +503,9 @@ int LuaFrame::_GetFrameStrata(lua_State* pLua)
 
 int LuaFrame::_GetFrameType(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetFrameType", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetFrameType());
@@ -462,6 +515,9 @@ int LuaFrame::_GetFrameType(lua_State* pLua)
 
 int LuaFrame::_GetHitRectInsets(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetHitRectInsets", pLua, 4);
 
     const s_array<s_int,4>& lInsets = pFrameParent_->GetAbsHitRectInsets();
@@ -474,6 +530,9 @@ int LuaFrame::_GetHitRectInsets(lua_State* pLua)
 
 int LuaFrame::_GetID(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetID", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetID());
@@ -483,6 +542,9 @@ int LuaFrame::_GetID(lua_State* pLua)
 
 int LuaFrame::_GetMaxResize(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetMaxResize", pLua, 2);
 
     s_array<s_uint,2> lMax = pFrameParent_->GetMaxResize();
@@ -495,6 +557,9 @@ int LuaFrame::_GetMaxResize(lua_State* pLua)
 
 int LuaFrame::_GetMinResize(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetMinResize", pLua, 2);
 
     s_array<s_uint,2> lMin = pFrameParent_->GetMinResize();
@@ -507,6 +572,9 @@ int LuaFrame::_GetMinResize(lua_State* pLua)
 
 int LuaFrame::_GetNumChildren(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetNumChildren", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetNumChildren());
@@ -516,6 +584,9 @@ int LuaFrame::_GetNumChildren(lua_State* pLua)
 
 int LuaFrame::_GetNumRegions(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetNumRegions", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetNumRegions());
@@ -525,6 +596,9 @@ int LuaFrame::_GetNumRegions(lua_State* pLua)
 
 int LuaFrame::_GetScale(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetScale", pLua, 1);
 
     mFunc.Push(pFrameParent_->GetScale());
@@ -534,6 +608,9 @@ int LuaFrame::_GetScale(lua_State* pLua)
 
 int LuaFrame::_GetScript(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetScript", pLua, 1);
     mFunc.Add(0, "script name", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -551,6 +628,9 @@ int LuaFrame::_GetScript(lua_State* pLua)
 
 int LuaFrame::_GetTitleRegion(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:GetTitleRegion", pLua, 1);
 
     if (pFrameParent_->GetTitleRegion())
@@ -568,6 +648,9 @@ int LuaFrame::_GetTitleRegion(lua_State* pLua)
 
 int LuaFrame::_HasScript(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:HasScript", pLua, 1);
     mFunc.Add(0, "script name", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -580,6 +663,9 @@ int LuaFrame::_HasScript(lua_State* pLua)
 
 int LuaFrame::_IsClampedToScreen(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsClampedToScreen", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsClampedToScreen());
@@ -589,6 +675,9 @@ int LuaFrame::_IsClampedToScreen(lua_State* pLua)
 
 int LuaFrame::_IsFrameType(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsFrameType", pLua, 1);
     mFunc.Add(0, "frame type", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -604,6 +693,9 @@ int LuaFrame::_IsFrameType(lua_State* pLua)
 
 int LuaFrame::_IsKeyboardEnabled(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsKeyboardEnabled", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsKeyboardEnabled());
@@ -613,6 +705,9 @@ int LuaFrame::_IsKeyboardEnabled(lua_State* pLua)
 
 int LuaFrame::_IsMouseEnabled(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsMouseEnabled", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsMouseEnabled());
@@ -622,6 +717,9 @@ int LuaFrame::_IsMouseEnabled(lua_State* pLua)
 
 int LuaFrame::_IsMouseWheelEnabled(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsMouseWheelEnabled", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsMouseWheelEnabled());
@@ -631,6 +729,9 @@ int LuaFrame::_IsMouseWheelEnabled(lua_State* pLua)
 
 int LuaFrame::_IsMovable(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsMovable", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsMovable());
@@ -640,6 +741,9 @@ int LuaFrame::_IsMovable(lua_State* pLua)
 
 int LuaFrame::_IsResizable(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsResizable", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsResizable());
@@ -649,6 +753,9 @@ int LuaFrame::_IsResizable(lua_State* pLua)
 
 int LuaFrame::_IsTopLevel(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsTopLevel", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsTopLevel());
@@ -658,6 +765,9 @@ int LuaFrame::_IsTopLevel(lua_State* pLua)
 
 int LuaFrame::_IsUserPlaced(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:IsUserPlaced", pLua, 1);
 
     mFunc.Push(pFrameParent_->IsUserPlaced());
@@ -668,6 +778,9 @@ int LuaFrame::_IsUserPlaced(lua_State* pLua)
 
 int LuaFrame::_Lower(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:Lower", pLua);
 
     pFrameParent_->Lower();
@@ -677,6 +790,9 @@ int LuaFrame::_Lower(lua_State* pLua)
 
 int LuaFrame::_On(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:On", pLua);
     mFunc.Add(0, "script", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -689,6 +805,9 @@ int LuaFrame::_On(lua_State* pLua)
 
 int LuaFrame::_Raise(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:Raise", pLua);
 
     pFrameParent_->Raise();
@@ -698,6 +817,9 @@ int LuaFrame::_Raise(lua_State* pLua)
 
 int LuaFrame::_RegisterAllEvents(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:RegisterAllEvents", pLua);
 
     pFrameParent_->RegisterAllEvents();
@@ -707,6 +829,9 @@ int LuaFrame::_RegisterAllEvents(lua_State* pLua)
 
 int LuaFrame::_RegisterEvent(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:RegisterEvent", pLua);
     mFunc.Add(0, "event name", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -719,6 +844,9 @@ int LuaFrame::_RegisterEvent(lua_State* pLua)
 
 int LuaFrame::_RegisterForDrag(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:RegisterForDrag", pLua);
     mFunc.Add(0, "button 1", Lua::TYPE_STRING, true);
     mFunc.Add(1, "button 2", Lua::TYPE_STRING, true);
@@ -741,6 +869,9 @@ int LuaFrame::_RegisterForDrag(lua_State* pLua)
 
 int LuaFrame::_SetBackdrop(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetBackdrop", pLua);
     mFunc.Add(0, "backdrop table", Lua::TYPE_TABLE);
     mFunc.Add(0, "nil", Lua::TYPE_NIL);
@@ -789,6 +920,9 @@ int LuaFrame::_SetBackdrop(lua_State* pLua)
 
 int LuaFrame::_SetBackdropBorderColor(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetBackdropBorderColor", pLua);
     mFunc.Add(0, "red", Lua::TYPE_NUMBER);
     mFunc.Add(1, "green", Lua::TYPE_NUMBER);
@@ -796,29 +930,33 @@ int LuaFrame::_SetBackdropBorderColor(lua_State* pLua)
     mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
     if (mFunc.Check())
     {
-        if (s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock())
+        s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock();
+        if (!pBackdrop)
         {
-            Color mColor;
-            if (mFunc.IsProvided(3))
-            {
-                mColor = Color(
-                    mFunc.Get(3)->GetNumber(),
-                    mFunc.Get(0)->GetNumber(),
-                    mFunc.Get(1)->GetNumber(),
-                    mFunc.Get(2)->GetNumber()
-                );
-            }
-            else
-            {
-                mColor = Color(
-                    mFunc.Get(0)->GetNumber(),
-                    mFunc.Get(1)->GetNumber(),
-                    mFunc.Get(2)->GetNumber()
-                );
-            }
-
-            pBackdrop->SetEdgeColor(mColor);
+            pBackdrop = s_refptr<Backdrop>(new Backdrop(pFrameParent_));
+            pFrameParent_->SetBackdrop(pBackdrop);
         }
+
+        Color mColor;
+        if (mFunc.IsProvided(3))
+        {
+            mColor = Color(
+                mFunc.Get(3)->GetNumber(),
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
+            );
+        }
+        else
+        {
+            mColor = Color(
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
+            );
+        }
+
+        pBackdrop->SetEdgeColor(mColor);
     }
 
     return mFunc.Return();
@@ -826,6 +964,9 @@ int LuaFrame::_SetBackdropBorderColor(lua_State* pLua)
 
 int LuaFrame::_SetBackdropColor(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetBackdropColor", pLua);
     mFunc.Add(0, "red", Lua::TYPE_NUMBER);
     mFunc.Add(1, "green", Lua::TYPE_NUMBER);
@@ -833,29 +974,33 @@ int LuaFrame::_SetBackdropColor(lua_State* pLua)
     mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
     if (mFunc.Check())
     {
-        if (s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock())
+        s_refptr<Backdrop> pBackdrop = pFrameParent_->GetBackdrop().Lock();
+        if (!pBackdrop)
         {
-            Color mColor;
-            if (mFunc.IsProvided(3))
-            {
-                mColor = Color(
-                    mFunc.Get(3)->GetNumber(),
-                    mFunc.Get(0)->GetNumber(),
-                    mFunc.Get(1)->GetNumber(),
-                    mFunc.Get(2)->GetNumber()
-                );
-            }
-            else
-            {
-                mColor = Color(
-                    mFunc.Get(0)->GetNumber(),
-                    mFunc.Get(1)->GetNumber(),
-                    mFunc.Get(2)->GetNumber()
-                );
-            }
-
-            pBackdrop->SetBackgroundColor(mColor);
+            pBackdrop = s_refptr<Backdrop>(new Backdrop(pFrameParent_));
+            pFrameParent_->SetBackdrop(pBackdrop);
         }
+
+        Color mColor;
+        if (mFunc.IsProvided(3))
+        {
+            mColor = Color(
+                mFunc.Get(3)->GetNumber(),
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
+            );
+        }
+        else
+        {
+            mColor = Color(
+                mFunc.Get(0)->GetNumber(),
+                mFunc.Get(1)->GetNumber(),
+                mFunc.Get(2)->GetNumber()
+            );
+        }
+
+        pBackdrop->SetBackgroundColor(mColor);
     }
 
     return mFunc.Return();
@@ -864,6 +1009,9 @@ int LuaFrame::_SetBackdropColor(lua_State* pLua)
 
 int LuaFrame::_SetClampedToScreen(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetClampedToScreen", pLua);
     mFunc.Add(0, "is clamped to screen", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -876,6 +1024,9 @@ int LuaFrame::_SetClampedToScreen(lua_State* pLua)
 
 int LuaFrame::_SetFrameLevel(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetFrameLevel", pLua);
     mFunc.Add(0, "level", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -888,6 +1039,9 @@ int LuaFrame::_SetFrameLevel(lua_State* pLua)
 
 int LuaFrame::_SetFrameStrata(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetFrameStrata", pLua);
     mFunc.Add(0, "strata", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -900,6 +1054,9 @@ int LuaFrame::_SetFrameStrata(lua_State* pLua)
 
 int LuaFrame::_SetHitRectInsets(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetHitRectInsets", pLua);
     mFunc.Add(0, "left", Lua::TYPE_NUMBER);
     mFunc.Add(1, "right", Lua::TYPE_NUMBER);
@@ -920,6 +1077,9 @@ int LuaFrame::_SetHitRectInsets(lua_State* pLua)
 
 int LuaFrame::_SetMaxResize(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetMaxResize", pLua);
     mFunc.Add(0, "width", Lua::TYPE_NUMBER);
     mFunc.Add(1, "height", Lua::TYPE_NUMBER);
@@ -936,6 +1096,9 @@ int LuaFrame::_SetMaxResize(lua_State* pLua)
 
 int LuaFrame::_SetMinResize(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetMinResize", pLua);
     mFunc.Add(0, "width", Lua::TYPE_NUMBER);
     mFunc.Add(1, "height", Lua::TYPE_NUMBER);
@@ -952,6 +1115,9 @@ int LuaFrame::_SetMinResize(lua_State* pLua)
 
 int LuaFrame::_SetMaxWidth(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetMaxWidth", pLua);
     mFunc.Add(0, "width", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -966,6 +1132,9 @@ int LuaFrame::_SetMaxWidth(lua_State* pLua)
 
 int LuaFrame::_SetMaxHeight(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetMaxHeight", pLua);
     mFunc.Add(0, "height", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -980,6 +1149,9 @@ int LuaFrame::_SetMaxHeight(lua_State* pLua)
 
 int LuaFrame::_SetMinWidth(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetMinWidth", pLua);
     mFunc.Add(0, "width", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -994,6 +1166,9 @@ int LuaFrame::_SetMinWidth(lua_State* pLua)
 
 int LuaFrame::_SetMinHeight(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetMinHeight", pLua);
     mFunc.Add(0, "height", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -1008,6 +1183,9 @@ int LuaFrame::_SetMinHeight(lua_State* pLua)
 
 int LuaFrame::_SetMovable(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetMovable", pLua);
     mFunc.Add(0, "is movable", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -1020,6 +1198,9 @@ int LuaFrame::_SetMovable(lua_State* pLua)
 
 int LuaFrame::_SetResizable(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetResizable", pLua);
     mFunc.Add(0, "is resizable", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -1032,6 +1213,9 @@ int LuaFrame::_SetResizable(lua_State* pLua)
 
 int LuaFrame::_SetScale(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetScale", pLua);
     mFunc.Add(0, "scale", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -1044,6 +1228,9 @@ int LuaFrame::_SetScale(lua_State* pLua)
 
 int LuaFrame::_SetScript(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetScript", pLua);
     mFunc.Add(0, "script name", Lua::TYPE_STRING);
     mFunc.Add(1, "function", Lua::TYPE_FUNCTION, true);
@@ -1081,6 +1268,9 @@ int LuaFrame::_SetScript(lua_State* pLua)
 
 int LuaFrame::_SetTopLevel(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetTopLevel", pLua);
     mFunc.Add(0, "is top level", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -1093,6 +1283,9 @@ int LuaFrame::_SetTopLevel(lua_State* pLua)
 
 int LuaFrame::_SetUserPlaced(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:SetUserPlaced", pLua);
     mFunc.Add(0, "is user placed", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -1105,6 +1298,9 @@ int LuaFrame::_SetUserPlaced(lua_State* pLua)
 
 int LuaFrame::_StartMoving(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:StartMoving", pLua);
 
     pFrameParent_->StartMoving();
@@ -1114,6 +1310,9 @@ int LuaFrame::_StartMoving(lua_State* pLua)
 
 int LuaFrame::_StartSizing(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:StartSizing", pLua);
     mFunc.Add(0, "point", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -1126,6 +1325,9 @@ int LuaFrame::_StartSizing(lua_State* pLua)
 
 int LuaFrame::_StopMovingOrSizing(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:StopMovingOrSizing", pLua);
 
     pFrameParent_->StopMoving();
@@ -1136,6 +1338,9 @@ int LuaFrame::_StopMovingOrSizing(lua_State* pLua)
 
 int LuaFrame::_UnregisterAllEvents(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:UnregisterAllEvents", pLua);
 
     pFrameParent_->UnregisterAllEvents();
@@ -1145,6 +1350,9 @@ int LuaFrame::_UnregisterAllEvents(lua_State* pLua)
 
 int LuaFrame::_UnregisterEvent(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Frame:UnregisterEvent", pLua);
     mFunc.Add(0, "event name", Lua::TYPE_STRING);
     if (mFunc.Check())

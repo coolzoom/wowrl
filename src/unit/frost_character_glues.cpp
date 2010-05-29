@@ -23,6 +23,9 @@ namespace Frost
 
     int LuaCharacter::_GetRace( lua_State* pLua )
     {
+        if (!CheckParent_())
+            return 0;
+        
         Lua::Function mFunc("Unit:GetRace", pLua, 1);
 
         if (mFunc.Check())
