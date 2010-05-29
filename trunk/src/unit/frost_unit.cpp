@@ -73,7 +73,9 @@ namespace Frost
 
         s_ctnr< s_ptr<LuaUnit> >::iterator iter;
         foreach (iter, lGlueList_)
-            iter->Delete();
+        {
+            (*iter)->NotifyDeleted();
+        }
     }
 
     void Unit::SetClass(const s_str& sClassName)
@@ -395,6 +397,11 @@ namespace Frost
         return bMotionBlurEnabled_;
     }
 
+    const s_str& Unit::GetName() const
+    {
+        return sName_;
+    }
+
     const s_uint& Unit::GetID() const
     {
         return uiID_;
@@ -418,9 +425,7 @@ namespace Frost
     void Unit::CreateGlue( s_ptr<Lua::State> pLua )
     {
         pLua->PushNumber(GetID());
-        lGlueList_.PushBack(
-            pLua->Push<LuaUnit>(new LuaUnit(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaUnit>());
         pLua->SetGlobal(GetLuaID());
     }
 

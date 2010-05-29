@@ -39,12 +39,6 @@ namespace Frost
             iterUnit->second.Delete();
         }
 
-        s_ctnr< s_ptr<LuaUnitManager> >::iterator iter;
-        foreach (iter, lGlueList_)
-        {
-            iter->Delete();
-        }
-
         LuaManager::GetSingleton()->CloseLua(pLua_);
     }
 
@@ -262,9 +256,7 @@ namespace Frost
 
     void UnitManager::CreateGlue( s_ptr<Lua::State> pLua )
     {
-        lGlueList_.PushBack(
-            pLua->Push<LuaUnitManager>(new LuaUnitManager(pLua->GetState()))
-        );
+        pLua->PushNew<LuaUnitManager>();
         pLua->SetGlobal("UnitManager");
     }
 }

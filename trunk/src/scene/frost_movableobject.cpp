@@ -101,12 +101,6 @@ namespace Frost
         }
 
         pSceneManager_->destroySceneNode(pNode_.Get());
-
-        s_ctnr< s_ptr<LuaMovableObject> >::iterator iterGlue;
-        foreach (iterGlue, lGlueList_)
-        {
-            iterGlue->Delete();
-        }
     }
 
     void MovableObject::SetOgreInterface( s_ptr<OgreInterface> pOgreInterface )
@@ -509,9 +503,7 @@ namespace Frost
     void MovableObject::CreateGlue( s_ptr<Lua::State> pLua )
     {
         pLua->PushNumber(uiID_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaMovableObject>(new LuaMovableObject(pLua->GetState()))
-        );
+        pLua->PushNew<LuaMovableObject>();
         pLua->SetGlobal("Movable_"+uiID_);
     }
 

@@ -24,6 +24,9 @@ LuaSlider::LuaSlider(lua_State* pLua) : LuaFrame(pLua)
 
 int LuaSlider::_GetMinMaxValues(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:GetMinMaxValues", pLua, 1);
 
     mFunc.Push(pSliderParent_->GetMinValue());
@@ -34,6 +37,9 @@ int LuaSlider::_GetMinMaxValues(lua_State* pLua)
 
 int LuaSlider::_GetOrientation(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:GetOrientation", pLua, 1);
 
     switch (pSliderParent_->GetOrientation())
@@ -47,6 +53,9 @@ int LuaSlider::_GetOrientation(lua_State* pLua)
 
 int LuaSlider::_GetThumbTexture(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:GetThumbTexture", pLua, 1);
 
     s_ptr<Texture> pTexture = pSliderParent_->GetThumbTexture();
@@ -61,6 +70,9 @@ int LuaSlider::_GetThumbTexture(lua_State* pLua)
 
 int LuaSlider::_GetValue(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:GetValue", pLua, 1);
 
     mFunc.Push(pSliderParent_->GetValue());
@@ -70,6 +82,9 @@ int LuaSlider::_GetValue(lua_State* pLua)
 
 int LuaSlider::_GetValueStep(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:GetValueStep", pLua, 1);
 
     mFunc.Push(pSliderParent_->GetValueStep());
@@ -79,6 +94,9 @@ int LuaSlider::_GetValueStep(lua_State* pLua)
 
 int LuaSlider::_SetMinMaxValues(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:SetMinMaxValues", pLua);
     mFunc.Add(0, "min", Lua::TYPE_NUMBER);
     mFunc.Add(1, "max", Lua::TYPE_NUMBER);
@@ -95,6 +113,9 @@ int LuaSlider::_SetMinMaxValues(lua_State* pLua)
 
 int LuaSlider::_SetOrientation(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:SetOrientation", pLua);
     mFunc.Add(0, "value", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -107,6 +128,9 @@ int LuaSlider::_SetOrientation(lua_State* pLua)
 
 int LuaSlider::_SetThumbTexture(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:SetThumbTexture", pLua);
     mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
     if (mFunc.Check())
@@ -124,6 +148,9 @@ int LuaSlider::_SetThumbTexture(lua_State* pLua)
 
 int LuaSlider::_SetValueStep(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:SetValueStep", pLua);
     mFunc.Add(0, "value step", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -136,6 +163,9 @@ int LuaSlider::_SetValueStep(lua_State* pLua)
 
 int LuaSlider::_SetValue(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Slider:SetValue", pLua);
     mFunc.Add(0, "value", Lua::TYPE_NUMBER);
     mFunc.Add(1, "silent", Lua::TYPE_BOOLEAN, true);

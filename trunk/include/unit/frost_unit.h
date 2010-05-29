@@ -263,6 +263,11 @@ namespace Frost
         */
         s_ptr<Camera>    GetCamera();
 
+        /// Returns this Unit's name.
+        /** \return This Unit's name
+        */
+        const s_str&     GetName() const;
+
         /// Returns this Unit's ID.
         /** \return This Unit's ID
         */
@@ -335,6 +340,8 @@ namespace Frost
 
         LuaUnit(lua_State* pLua);
 
+        void NotifyDeleted();
+
         int _AddBuff(lua_State*);
         int _AddHealth(lua_State*);
         int _AddPower(lua_State*);
@@ -369,6 +376,10 @@ namespace Frost
 
     protected :
 
+        s_bool CheckParent_();
+
+        s_uint      uiID_;
+        s_str       sName_;
         s_ptr<Unit> pParent_;
 
         lua_State*  pLua_;

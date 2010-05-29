@@ -21,10 +21,12 @@ function AddOns.Editor:SetWorldClickFunction(func)
 end
 
 function AddOns.Editor:NotifyDataChanged()
+    MenuBar.File.Save:Enable();
     self.dataSaved = false;
 end
 
 function AddOns.Editor:NotifyDataSaved()
+    MenuBar.File.Save:Disable();
     self.dataSaved = true;
 end
 
@@ -80,6 +82,39 @@ function AddOns.Editor:CloseCurrentDropdown()
     if (self.activeDropdown) then
         self.activeDropdown:Hide();
         self.activeDropdown = nil;
+    end
+end
+
+function AddOns.Editor:CallColorFunctions(object)
+    if (self.textColorFuncList) then
+        local f = self.textColorFuncList[object];
+        if (f) then
+            f(object, AddOns.Editor.Config.UITextColor);
+        end
+    end
+    if (self.sndTextColorFuncList) then
+        local f = self.sndTextColorFuncList[object];
+        if (f) then
+            f(object, AddOns.Editor.Config.UISecondaryTextColor);
+        end
+    end
+    if (self.bgColorFuncList) then
+        local f = self.bgColorFuncList[object];
+        if (f) then
+            f(object, AddOns.Editor.Config.UIBackgroundColor);
+        end
+    end
+end
+
+function AddOns.Editor:UnregisterColorFunctions(object)
+    if (self.textColorFuncList) then
+        self.textColorFuncList[object] = nil;
+    end
+    if (self.sndTextColorFuncList) then
+        self.sndTextColorFuncList[object] = nil;
+    end
+    if (self.bgColorFuncList) then
+        self.bgColorFuncList[object] = nil;
     end
 end
 

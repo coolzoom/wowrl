@@ -36,18 +36,14 @@ void ColorSelect::CreateGlue()
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushNumber(uiID_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
     }
     else
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushString(sLuaName_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaColorSelect>(new LuaColorSelect(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaColorSelect>());
         pLua->SetGlobal(sLuaName_);
     }
 }

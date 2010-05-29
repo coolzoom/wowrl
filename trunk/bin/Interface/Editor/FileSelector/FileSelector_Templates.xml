@@ -23,17 +23,15 @@
         </NormalText>
         <Scripts>
             <OnLoad>
-                this.normalTextColor = Color(1,1,1);
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
-                    local newColor = self.normalTextColor*color;
+                    local newColor = AddOns.FileSelector.normalTextColor*color;
                     self:GetNormalFontObject():SetTextColor(newColor:Unpack());
                 end);
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
             <OnClick>
@@ -77,17 +75,15 @@
         </NormalText>
         <Scripts>
             <OnLoad>
-                this.normalTextColor = Color(1,1,1);
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
-                    local newColor = self.normalTextColor*color;
+                    local newColor = AddOns.FileSelector.normalTextColor*color;
                     self:GetNormalFontObject():SetTextColor(newColor:Unpack());
                 end);
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
             <OnClick>

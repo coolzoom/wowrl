@@ -25,7 +25,7 @@
                 this.Content:SetText(AddOns.EscMenu:GetLocalizedString("ConfirmExit"));
                 
                 this.OnYes = function(self)
-                    -- Save
+                    MenuBar.File.Save:OnClick();
                     Exit();
                 end;
                 

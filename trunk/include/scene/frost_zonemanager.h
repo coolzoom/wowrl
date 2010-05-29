@@ -23,6 +23,14 @@ namespace Frost
         /// Initializes this manager.
         void Initialize();
 
+        /// Creates a new zone.
+        /** \param sZoneName The name of the new zone to create
+        *   \return A pointer to the new zone
+        *   \note Unloads the previous zone (if any).
+        *   \note Throws Exception if something goes wrong.
+        */
+        s_ptr<Zone> CreateZone(const s_str& sZoneName);
+
         /// Loads a new zone.
         /** \param sZoneName The name of the new zone to load
         *   \return A pointer to the new zone

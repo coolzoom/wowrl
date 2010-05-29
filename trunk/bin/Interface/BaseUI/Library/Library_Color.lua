@@ -44,7 +44,7 @@ function Color.__div(c1, c2)
 end
 
 function Color.__concat(str, c)
-    return str.."a : "..c.a..", r : "..c.r..", g : "..c.g..", b : "..c.b.." (h : "..c.h..", s : "..c.s..", l : "..c.l..")";
+    return str.."a:"..c.a..", r:"..c.r..", g:"..c.g..", b:"..c.b.." (h:"..c.h..", s:"..c.s..", l:"..c.l..")";
 end
 
 -- Member functions

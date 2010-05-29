@@ -23,6 +23,9 @@ LuaStatusBar::LuaStatusBar(lua_State* pLua) : LuaFrame(pLua)
 
 int LuaStatusBar::_GetMinMaxValues( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:GetMinMaxValues", pLua, 2);
 
     mFunc.Push(pStatusBarParent_->GetMinValue());
@@ -33,6 +36,9 @@ int LuaStatusBar::_GetMinMaxValues( lua_State* pLua )
 
 int LuaStatusBar::_GetOrientation( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:GetOrientation", pLua, 1);
 
     switch (pStatusBarParent_->GetOrientation())
@@ -46,6 +52,9 @@ int LuaStatusBar::_GetOrientation( lua_State* pLua )
 
 int LuaStatusBar::_GetStatusBarColor( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:GetStatusBarColor", pLua, 4);
 
     const Color& mColor = pStatusBarParent_->GetBarColor();
@@ -60,6 +69,9 @@ int LuaStatusBar::_GetStatusBarColor( lua_State* pLua )
 
 int LuaStatusBar::_GetStatusBarTexture( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:GetStatusBarTexture", pLua, 1);
 
     s_ptr<Texture> pTexture = pStatusBarParent_->GetBarTexture();
@@ -74,6 +86,9 @@ int LuaStatusBar::_GetStatusBarTexture( lua_State* pLua )
 
 int LuaStatusBar::_GetValue( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:GetValue", pLua, 1);
 
     mFunc.Push(pStatusBarParent_->GetValue());
@@ -83,6 +98,9 @@ int LuaStatusBar::_GetValue( lua_State* pLua )
 
 int LuaStatusBar::_SetMinMaxValues( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:SetMinMaxValues", pLua);
     mFunc.Add(0, "min", Lua::TYPE_NUMBER);
     mFunc.Add(1, "max", Lua::TYPE_NUMBER);
@@ -99,6 +117,9 @@ int LuaStatusBar::_SetMinMaxValues( lua_State* pLua )
 
 int LuaStatusBar::_SetOrientation( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:SetOrientation", pLua);
     mFunc.Add(0, "orientation", Lua::TYPE_STRING);
 
@@ -120,6 +141,9 @@ int LuaStatusBar::_SetOrientation( lua_State* pLua )
 
 int LuaStatusBar::_SetStatusBarColor( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:SetStatusBarColor", pLua);
     mFunc.Add(0, "red", Lua::TYPE_NUMBER);
     mFunc.Add(1, "green", Lua::TYPE_NUMBER);
@@ -155,6 +179,9 @@ int LuaStatusBar::_SetStatusBarColor( lua_State* pLua )
 
 int LuaStatusBar::_SetStatusBarTexture( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:SetStatusBarTexture", pLua);
     mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
     if (mFunc.Check())
@@ -172,6 +199,9 @@ int LuaStatusBar::_SetStatusBarTexture( lua_State* pLua )
 
 int LuaStatusBar::_SetValue( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("StatusBar:SetValue", pLua);
     mFunc.Add(0, "value", Lua::TYPE_NUMBER);
     if (mFunc.Check())

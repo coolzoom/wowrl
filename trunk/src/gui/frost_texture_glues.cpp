@@ -24,6 +24,9 @@ LuaTexture::LuaTexture(lua_State* pLua) : LuaLayeredRegion(pLua)
 
 int LuaTexture::_GetBlendMode( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:GetBlendMode", pLua, 1);
 
     Texture::BlendMode mBlend = pTextureParent_->GetBlendMode();
@@ -45,6 +48,9 @@ int LuaTexture::_GetBlendMode( lua_State* pLua )
 
 int LuaTexture::_GetTexCoord( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:GetTexCoord", pLua, 8);
 
     const s_array<s_float,8>& lCoords = pTextureParent_->GetTexCoord();
@@ -57,6 +63,9 @@ int LuaTexture::_GetTexCoord( lua_State* pLua )
 
 int LuaTexture::_GetTexCoordModifiesRect( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:GetTexCoordModifiesRect", pLua, 1);
 
     mFunc.Push(pTextureParent_->GetTexCoordModifiesRect());
@@ -66,6 +75,9 @@ int LuaTexture::_GetTexCoordModifiesRect( lua_State* pLua )
 
 int LuaTexture::_GetTexture( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:GetTexture", pLua, 1);
 
     mFunc.Push(pTextureParent_->GetTexture());
@@ -75,6 +87,9 @@ int LuaTexture::_GetTexture( lua_State* pLua )
 
 int LuaTexture::_GetVertexColor( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:GetVertexColor", pLua, 4);
 
     Color mColor = pTextureParent_->GetVertexColor();
@@ -89,6 +104,9 @@ int LuaTexture::_GetVertexColor( lua_State* pLua )
 
 int LuaTexture::_IsDesaturated( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:IsDesaturated", pLua, 1);
 
     mFunc.Push(pTextureParent_->IsDesaturated());
@@ -98,6 +116,9 @@ int LuaTexture::_IsDesaturated( lua_State* pLua )
 
 int LuaTexture::_SetBlendMode( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetBlendMode", pLua);
     mFunc.Add(0, "blend mode", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -130,6 +151,9 @@ int LuaTexture::_SetBlendMode( lua_State* pLua )
 
 int LuaTexture::_SetDesaturated( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetDesaturated", pLua, 1);
     mFunc.Add(0, "is desaturated", Lua::TYPE_BOOLEAN);
     if (mFunc.Check())
@@ -144,6 +168,9 @@ int LuaTexture::_SetDesaturated( lua_State* pLua )
 
 int LuaTexture::_SetGradient( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetGradient", pLua);
     mFunc.Add(0, "orientation", Lua::TYPE_STRING);
     mFunc.Add(1, "min red", Lua::TYPE_NUMBER);
@@ -188,6 +215,9 @@ int LuaTexture::_SetGradient( lua_State* pLua )
 
 int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetGradientAlpha", pLua);
     mFunc.Add(0, "orientation", Lua::TYPE_STRING);
     mFunc.Add(1, "min red", Lua::TYPE_NUMBER);
@@ -236,6 +266,9 @@ int LuaTexture::_SetGradientAlpha( lua_State* pLua )
 
 int LuaTexture::_SetTexCoord( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetTexCoord", pLua);
     mFunc.Add(0, "left", Lua::TYPE_NUMBER);
     mFunc.Add(1, "right", Lua::TYPE_NUMBER);
@@ -278,6 +311,9 @@ int LuaTexture::_SetTexCoord( lua_State* pLua )
 
 int LuaTexture::_SetTexCoordModifiesRect( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetTexCoordModifiesRect", pLua);
     mFunc.Add(0, "does SetTexCoord modifies size", Lua::TYPE_BOOLEAN);
 
@@ -291,6 +327,9 @@ int LuaTexture::_SetTexCoordModifiesRect( lua_State* pLua )
 
 int LuaTexture::_SetTexture( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetTexture", pLua);
     mFunc.Add(0, "texture", Lua::TYPE_STRING);
     mFunc.NewParamSet();
@@ -336,6 +375,9 @@ int LuaTexture::_SetTexture( lua_State* pLua )
 
 int LuaTexture::_SetVertexColor( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("Texture:SetVertexColor", pLua);
     mFunc.Add(0, "red", Lua::TYPE_NUMBER);
     mFunc.Add(1, "green", Lua::TYPE_NUMBER);

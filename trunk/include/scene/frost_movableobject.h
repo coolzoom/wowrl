@@ -374,8 +374,6 @@ namespace Frost
         s_bool bTrackedPointRelative_;
 
         s_refptr<Path::Iterator> pPathIterator_;
-
-        s_ctnr< s_ptr<LuaMovableObject> > lGlueList_;
     };
 
     /** \cond NOT_REMOVE_FROM_DOC

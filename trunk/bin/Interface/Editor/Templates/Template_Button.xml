@@ -37,11 +37,7 @@
             </OnShow>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
-                    this:SetBackdropColor(newColor:Unpack());
-                
-                    newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
         </Scripts>

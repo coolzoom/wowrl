@@ -19,9 +19,7 @@
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    local newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this.TitleString:SetTextColor(newColor:Unpack());
-                    this.ValueString:SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
         </Scripts>

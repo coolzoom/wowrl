@@ -31,17 +31,22 @@ LuaGlue::~LuaGlue()
 
 LuaVirtualGlue::LuaVirtualGlue( lua_State* pLua ) : LuaGlue(pLua)
 {
-    s_uint uiID = s_uint(s_float(lua_tonumber(pLua, -1)));
+    uiID_ = s_uint(s_float(lua_tonumber(pLua, -1)));
 
-    pParent_ = GUIManager::GetSingleton()->GetUIObject(uiID);
+    pParent_ = GUIManager::GetSingleton()->GetUIObject(uiID_);
     if (!pParent_)
     {
-        throw Exception(CLASS_NAME, "Glue missing its parent (\""+uiID+"\") !");
+        throw Exception(CLASS_NAME, "Glue missing its parent (\""+uiID_+"\") !");
     }
 }
 
 LuaVirtualGlue::~LuaVirtualGlue()
 {
+}
+
+void LuaVirtualGlue::NotifyDeleted()
+{
+    pParent_ = nullptr;
 }
 
 int LuaVirtualGlue::_MarkForCopy( lua_State* pLua )
@@ -82,12 +87,12 @@ int LuaVirtualGlue::_GetBase( lua_State* pLua )
 
 LuaUIObject::LuaUIObject( lua_State* pLua ) : LuaGlue(pLua)
 {
-    s_str sName = lua_tostring(pLua, -1);
+    sName_ = lua_tostring(pLua, -1);
 
-    pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sName);
+    pParent_ = GUIManager::GetSingleton()->GetUIObjectByName(sName_);
     if (!pParent_)
     {
-        throw Exception(CLASS_NAME, "Glue missing its parent (\""+sName+"\") !");
+        throw Exception(CLASS_NAME, "Glue missing its parent (\""+sName_+"\") !");
     }
 }
 
@@ -95,9 +100,25 @@ LuaUIObject::~LuaUIObject()
 {
 }
 
+void LuaUIObject::NotifyDeleted()
+{
+    pParent_ = nullptr;
+}
+
 s_ptr<UIObject> LuaUIObject::GetParent()
 {
     return pParent_;
+}
+
+s_bool LuaUIObject::CheckParent_()
+{
+    if (!pParent_)
+    {
+        Warning(sName_, "This widget has been deleted and can no longer be used.");
+        return false;
+    }
+
+    return true;
 }
 
 int LuaGlue::GetDataTable( lua_State * pLua )
@@ -108,6 +129,9 @@ int LuaGlue::GetDataTable( lua_State * pLua )
 
 int LuaUIObject::_GetAlpha( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetAlpha", pLua, 1);
 
     mFunc.Push(pParent_->GetAlpha());
@@ -117,6 +141,9 @@ int LuaUIObject::_GetAlpha( lua_State* pLua )
 
 int LuaUIObject::_GetName( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetName", pLua, 1);
 
     mFunc.Push(pParent_->GetName());
@@ -126,6 +153,9 @@ int LuaUIObject::_GetName( lua_State* pLua )
 
 int LuaUIObject::_GetObjectType( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetObjectType", pLua, 1);
 
     mFunc.Push(pParent_->GetObjectType());
@@ -135,6 +165,9 @@ int LuaUIObject::_GetObjectType( lua_State* pLua )
 
 int LuaUIObject::_IsObjectType( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:IsObjectType", pLua, 1);
     mFunc.Add(0, "object type", Lua::TYPE_STRING);
     if (mFunc.Check())
@@ -147,6 +180,9 @@ int LuaUIObject::_IsObjectType( lua_State* pLua )
 
 int LuaUIObject::_SetAlpha( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:SetAlpha", pLua);
     mFunc.Add(0, "alpha", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -159,6 +195,9 @@ int LuaUIObject::_SetAlpha( lua_State* pLua )
 
 int LuaUIObject::_ClearAllPoints( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:ClearAllPoints", pLua);
 
     pParent_->ClearAllPoints();
@@ -168,6 +207,9 @@ int LuaUIObject::_ClearAllPoints( lua_State* pLua )
 
 int LuaUIObject::_GetBottom( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetBottom", pLua, 1);
 
     mFunc.Push(pParent_->GetBottom());
@@ -177,6 +219,9 @@ int LuaUIObject::_GetBottom( lua_State* pLua )
 
 int LuaUIObject::_GetCenter( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetCenter", pLua, 2);
 
     Point<s_int> mP = pParent_->GetCenter();
@@ -188,6 +233,9 @@ int LuaUIObject::_GetCenter( lua_State* pLua )
 
 int LuaUIObject::_GetHeight( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetHeight", pLua, 1);
 
     mFunc.Push(pParent_->GetAbsHeight());
@@ -197,6 +245,9 @@ int LuaUIObject::_GetHeight( lua_State* pLua )
 
 int LuaUIObject::_GetLeft( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetLeft", pLua, 1);
 
     mFunc.Push(pParent_->GetLeft());
@@ -206,6 +257,9 @@ int LuaUIObject::_GetLeft( lua_State* pLua )
 
 int LuaUIObject::_GetNumPoint( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetNumPoint", pLua, 1);
 
     mFunc.Push(pParent_->GetNumPoint());
@@ -215,6 +269,9 @@ int LuaUIObject::_GetNumPoint( lua_State* pLua )
 
 int LuaUIObject::_GetParent( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetParent", pLua, 1);
 
     if (pParent_->GetParent())
@@ -230,6 +287,9 @@ int LuaUIObject::_GetParent( lua_State* pLua )
 
 int LuaUIObject::_GetBase( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetBase", pLua, 1);
 
     if (pParent_->GetBase())
@@ -245,6 +305,9 @@ int LuaUIObject::_GetBase( lua_State* pLua )
 
 int LuaUIObject::_GetPoint( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetPoint", pLua, 5);
     mFunc.Add(0, "point ID", Lua::TYPE_NUMBER, true);
     if (mFunc.Check())
@@ -288,6 +351,9 @@ int LuaUIObject::_GetPoint( lua_State* pLua )
 
 int LuaUIObject::_GetRight( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetRight", pLua, 1);
 
     mFunc.Push(pParent_->GetRight());
@@ -297,6 +363,9 @@ int LuaUIObject::_GetRight( lua_State* pLua )
 
 int LuaUIObject::_GetTop( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetTop", pLua, 1);
 
     mFunc.Push(pParent_->GetTop());
@@ -306,6 +375,9 @@ int LuaUIObject::_GetTop( lua_State* pLua )
 
 int LuaUIObject::_GetWidth( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:GetWidth", pLua, 1);
 
     mFunc.Push(pParent_->GetAbsWidth());
@@ -315,6 +387,9 @@ int LuaUIObject::_GetWidth( lua_State* pLua )
 
 int LuaUIObject::_Hide( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:Hide", pLua);
 
     pParent_->Hide();
@@ -324,6 +399,9 @@ int LuaUIObject::_Hide( lua_State* pLua )
 
 int LuaUIObject::_IsShown( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:IsShown", pLua, 1);
 
     mFunc.Push(pParent_->IsShown());
@@ -333,6 +411,9 @@ int LuaUIObject::_IsShown( lua_State* pLua )
 
 int LuaUIObject::_IsVisible( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:IsVisible", pLua, 1);
 
     mFunc.Push(pParent_->IsVisible());
@@ -342,6 +423,9 @@ int LuaUIObject::_IsVisible( lua_State* pLua )
 
 int LuaUIObject::_SetAllPoints( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:SetAllPoints", pLua);
     mFunc.Add(0, "frame name", Lua::TYPE_STRING, true);
     mFunc.Add(0, "frame", Lua::TYPE_USERDATA, true);
@@ -372,6 +456,9 @@ int LuaUIObject::_SetAllPoints( lua_State* pLua )
 
 int LuaUIObject::_SetHeight( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:SetHeight", pLua);
     mFunc.Add(0, "height", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -384,6 +471,9 @@ int LuaUIObject::_SetHeight( lua_State* pLua )
 
 int LuaUIObject::_SetParent( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:SetParent", pLua);
     mFunc.Add(0, "parent name", Lua::TYPE_STRING, true);
     mFunc.Add(0, "parent", Lua::TYPE_USERDATA, true);
@@ -439,6 +529,9 @@ int LuaUIObject::_SetParent( lua_State* pLua )
 
 int LuaUIObject::_SetPoint( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:SetPoint", pLua);
     mFunc.Add(0, "point", Lua::TYPE_STRING);
     mFunc.Add(1, "parent name", Lua::TYPE_STRING, true);
@@ -495,6 +588,9 @@ int LuaUIObject::_SetPoint( lua_State* pLua )
 
 int LuaUIObject::_SetWidth( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:SetWidth", pLua);
     mFunc.Add(0, "width", Lua::TYPE_NUMBER);
     if (mFunc.Check())
@@ -507,6 +603,9 @@ int LuaUIObject::_SetWidth( lua_State* pLua )
 
 int LuaUIObject::_Show( lua_State* pLua )
 {
+    if (!CheckParent_())
+        return 0;
+
     Lua::Function mFunc("UIObject:Show", pLua);
 
     pParent_->Show();

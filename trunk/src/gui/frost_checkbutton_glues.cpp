@@ -25,6 +25,9 @@ LuaCheckButton::LuaCheckButton(lua_State* pLua) : LuaButton(pLua)
 
 int LuaCheckButton::_IsChecked(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("CheckButton:IsChecked", pLua, 1);
 
     mFunc.Push(pCheckButtonParent_->IsChecked());
@@ -34,6 +37,9 @@ int LuaCheckButton::_IsChecked(lua_State* pLua)
 
 int LuaCheckButton::_GetCheckedTexture(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("CheckButton:GetCheckedTexture", pLua, 1);
 
     s_ptr<Texture> pTexture = pCheckButtonParent_->GetCheckedTexture();
@@ -50,6 +56,9 @@ int LuaCheckButton::_GetCheckedTexture(lua_State* pLua)
 
 int LuaCheckButton::_GetDisabledCheckedTexture(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("CheckButton:GetDisabledCheckedTexture", pLua, 1);
 
     s_ptr<Texture> pTexture = pCheckButtonParent_->GetDisabledCheckedTexture();
@@ -85,6 +94,9 @@ int LuaCheckButton::_SetChecked(lua_State* pLua)
 
 int LuaCheckButton::_SetCheckedTexture(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("CheckButton:SetCheckedTexture", pLua);
     mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
     if (mFunc.Check())
@@ -102,6 +114,9 @@ int LuaCheckButton::_SetCheckedTexture(lua_State* pLua)
 
 int LuaCheckButton::_SetDisabledCheckedTexture(lua_State* pLua)
 {
+    if (!CheckParent_())
+        return 0;
+        
     Lua::Function mFunc("CheckButton:SetDisabledCheckedTexture", pLua);
     mFunc.Add(0, "texture", Lua::TYPE_USERDATA);
     if (mFunc.Check())

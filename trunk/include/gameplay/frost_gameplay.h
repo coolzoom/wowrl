@@ -98,8 +98,6 @@ namespace Frost
         s_ctnr<s_str> lRegisteredEventList_;
         s_ctnr<s_str> lDefinedScriptList_;
 
-        s_ctnr< s_ptr<LuaGameplay> > lGlueList_;
-
     };
 
     /** \cond NOT_REMOVE_FROM_DOC

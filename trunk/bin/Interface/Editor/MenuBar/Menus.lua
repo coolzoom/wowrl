@@ -1,28 +1,97 @@
 
 MenuBar:AddMenu("File");
-MenuBar:AddMenuItem("File", "New", "Ctrl-N");
+MenuBar:AddMenuItem("File", "New", "Ctrl-N"):SetScript("OnClick", function()
+    if (AddOns.Editor:IsDataSaved()) then
+        NewZoneDialog:Show();
+    else
+        CloseConfirmDialog.Action = function ()
+            NewZoneDialog:Show();
+        end;
+        CloseConfirmDialog:Show();
+    end
+    MenuBar:CloseCurrentDropdown();
+end);
 MenuBar:AddMenuItem("File", "Open", "Ctrl-O"):SetScript("OnClick", function()
+    if (AddOns.Editor:IsDataSaved()) then
+        FileSelector:Show();
+        FileSelector:SelectFolder("Zones");
+        FileSelector:SetOnOkFunc(function()
+            local result = Frost:LoadZoneFile(FileSelector:GetSelectedFile());
+            if (not result) then
+                FileSelector:Error(AddOns.MenuBar:GetLocalizedString("ZoneLoadingError"), 256, 100);
+                return false;
+            else
+                Editor:NotifyDataChanged();
+                MenuBar.File.SaveAs:Enable();
+                MenuBar.File.Close:Enable();
+                Editor.currentZoneFile = FileSelector:GetSelectedFile();
+                return true;
+            end
+        end);
+    else
+        CloseConfirmDialog.Action = function ()
+            FileSelector:Show();
+            FileSelector:SelectFolder("Zones");
+            FileSelector:SetOnOkFunc(function()
+                local result = Frost:LoadZoneFile(FileSelector:GetSelectedFile());
+                if (not result) then
+                    FileSelector:Error(AddOns.MenuBar:GetLocalizedString("ZoneLoadingError"), 256, 100);
+                    return false;
+                else
+                    Editor:NotifyDataChanged();
+                    MenuBar.File.SaveAs:Enable();
+                    MenuBar.File.Close:Enable();
+                    Editor.currentZoneFile = FileSelector:GetSelectedFile();
+                    return true;
+                end
+            end);
+        end;
+        CloseConfirmDialog:Show();
+    end
+    MenuBar:CloseCurrentDropdown();
+end);
+MenuBar:AddMenuItem("File", "Save", "Ctrl-S", false):SetScript("OnClick", function()
+    if (Editor.currentZoneFile) then
+        Frost:SaveZone(Editor.currentZoneFile);
+        AddOns.Editor:NotifyDataSaved();
+    else
+        FileSelector:Show();
+        FileSelector:SelectFolder("Zones");
+        FileSelector:SetOnOkFunc(function()
+            Editor.currentZoneFile = FileSelector:GetSelectedFile();
+            Frost:SaveZone(Editor.currentZoneFile);
+            AddOns.Editor:NotifyDataSaved();
+        end);
+    end
+    MenuBar:CloseCurrentDropdown();
+end);
+MenuBar:AddMenuItem("File", "SaveAs", nil, false):SetScript("OnClick", function()
     FileSelector:Show();
     FileSelector:SelectFolder("Zones");
     FileSelector:SetOnOkFunc(function()
-        local result = Frost:LoadZoneFile(FileSelector:GetSelectedFile());
-        if (not result) then
-            FileSelector:Error(AddOns.MenuBar:GetLocalizedString("ZoneLoadingError"), 256, 100);
-            return false;
-        else
-            return true;
-        end
+        Editor.currentZoneFile = FileSelector:GetSelectedFile();
+        Frost:SaveZone(Editor.currentZoneFile);
+        AddOns.Editor:NotifyDataSaved();
+    end);
+    MenuBar:CloseCurrentDropdown();
+end);
+MenuBar:AddMenuItem("File", "Close", "Ctrl-W", false):SetScript("OnClick", function()
+    if (AddOns.Editor:IsDataSaved()) then
+        Frost:UnloadZone();
+        MenuBar.File.Save:Disable();
+        MenuBar.File.SaveAs:Disable();
+        MenuBar.File.Close:Disable();
+        AddOns.Editor:NotifyDataSaved();
+    else
+        CloseConfirmDialog.Action = function ()
+            Frost:UnloadZone();
+            MenuBar.File.Save:Disable();
+            MenuBar.File.SaveAs:Disable();
+            MenuBar.File.Close:Disable();
+            AddOns.Editor:NotifyDataSaved();
+        end;
+        CloseConfirmDialog:Show();
     end
-    );
-    MenuBar:CloseCurrentDropdown();
-end);
-MenuBar:AddMenuItem("File", "Save", "Ctrl-S"):SetScript("OnClick", function()
-    Frost:SaveZone("Zones/Test/Test.xml");
-    MenuBar:CloseCurrentDropdown();
-end);
-MenuBar:AddMenuItem("File", "SaveAs");
-MenuBar:AddMenuItem("File", "Close", "Ctrl-W"):SetScript("OnClick", function()
-    Frost:UnloadZone();
     MenuBar:CloseCurrentDropdown();
 end);
 MenuBar:AddMenuItem("File", "Exit", "Esc."):SetScript("OnClick", function()
@@ -35,10 +104,10 @@ MenuBar:AddMenuItem("File", "Exit", "Esc."):SetScript("OnClick", function()
 end);
 
 MenuBar:AddMenu("Edit");
-MenuBar:AddMenuItem("Edit", "Undo", "Ctrl-Z");
-MenuBar:AddMenuItem("Edit", "Redo", "Ctrl-Shift-Z");
-MenuBar:AddMenuItem("Edit", "Clone", "Ctrl-C");
-MenuBar:AddMenuItem("Edit", "Delete", "Del.");
+MenuBar:AddMenuItem("Edit", "Undo", "Ctrl-Z", false);
+MenuBar:AddMenuItem("Edit", "Redo", "Ctrl-Shift-Z", false);
+MenuBar:AddMenuItem("Edit", "Clone", "Ctrl-C", false);
+MenuBar:AddMenuItem("Edit", "Delete", "Del.", false);
 
 MenuBar:AddMenu("View");
 MenuBar:AddMenuCheckItem("View", "Wireframe", "F2", false):SetScript("OnClick", function ()

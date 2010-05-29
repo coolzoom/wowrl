@@ -84,18 +84,14 @@ void Frame::CreateGlue()
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushNumber(uiID_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
     }
     else
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushString(sName_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaFrame>(new LuaFrame(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaFrame>());
         pLua->SetGlobal(sLuaName_);
     }
 }
@@ -611,6 +607,7 @@ void Frame::AddRegion( s_ptr<LayeredRegion> pRegion )
         if (!lRegionList_.Find(pRegion->GetID()))
         {
             lRegionList_[pRegion->GetID()] = pRegion;
+
             FireBuildLayerList_();
             NotifyRendererNeedRedraw();
 

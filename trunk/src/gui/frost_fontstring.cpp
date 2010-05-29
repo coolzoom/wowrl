@@ -152,9 +152,7 @@ void FontString::CreateGlue()
 {
     s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
     pLua->PushString(sName_);
-    lGlueList_.PushBack(
-        pLua->Push<LuaFontString>(new LuaFontString(pLua->GetState()))
-    );
+    lGlueList_.PushBack(pLua->PushNew<LuaFontString>());
     pLua->SetGlobal(sLuaName_);
 }
 

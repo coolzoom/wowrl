@@ -339,9 +339,7 @@ namespace Frost
     void MovableUnit::CreateGlue( s_ptr<Lua::State> pLua )
     {
         pLua->PushNumber(GetID());
-        lGlueList_.PushBack(
-            pLua->Push<LuaMovableUnit>(new LuaMovableUnit(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaMovableUnit>());
         pLua->SetGlobal(GetLuaID());
     }
 }

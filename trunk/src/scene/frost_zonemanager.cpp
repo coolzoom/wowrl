@@ -39,6 +39,35 @@ namespace Frost
         Lua::RegisterGlobalFuncs(pLua_);
     }
 
+    s_ptr<Zone> ZoneManager::CreateZone( const s_str& sZoneName )
+    {
+        s_str::const_iterator iterName;
+        foreach (iterName, sZoneName)
+        {
+            s_char c = *iterName;
+            if (!s_str::IsAlphaNumeric(c) && c != '_' && c != ' ' && c != '\'')
+            {
+                throw Exception(
+                    "A zone's name can only contain alpha numeric symbols, spaces, underscores and apostrophes.\n"
+                    "\""+sZoneName+"\" is forbidden."
+                );
+            }
+        }
+
+        pCurrentZone_ = new Zone(sZoneName);
+
+        LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
+        LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());
+
+        s_ctnr< s_wptr<Decal> >::iterator iter;
+        foreach (iter, lDecalList_)
+        {
+            pCurrentZone_->AddDecal(*iter);
+        }
+
+        return pCurrentZone_;
+    }
+
     s_ptr<Zone> ZoneManager::LoadZoneFile( const s_str& sZoneFile )
     {
         s_str sZoneName = sZoneFile.Cut("/").Back().Cut("\\").Back();

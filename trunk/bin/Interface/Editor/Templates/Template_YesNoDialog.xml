@@ -31,22 +31,6 @@
                 this.Title.TitleString:SetText(AddOns.Templates:GetLocalizedString("YesNoDialogTitle"));
                 this:SetMinWidth(250);
             </OnLoad>
-            <OnEvent>
-                if (event == "ADDON_LOADED") then
-                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
-                    this:SetBackdropColor(newColor:Unpack());
-
-                    newColor = this.normalTitleColor*AddOns.Editor.Config.UIBackgroundColor;
-                    newColor.a = this.normalTitleColor.a;
-                    this.Title:SetBackdrop({});
-                    this.Title:SetBackdropColor(newColor:Unpack());
-
-                    newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this.Title.TitleString:SetTextColor(newColor:Unpack());
-                    this.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
-                    this.Content:SetTextColor(newColor:Unpack());
-                end
-            </OnEvent>
         </Scripts>
         <Frames>
             <Button name="$parentCancelButton" inherits="ButtonTemplate_Button">

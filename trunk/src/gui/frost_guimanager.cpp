@@ -488,10 +488,7 @@ namespace Frost
 
         Event mEvent("ADDON_LOADED");
         mEvent.Add(pAddOn->sName);
-
-        EventManager::GetSingleton()->FireEvent(Event(
-            mEvent
-        ));
+        EventManager::GetSingleton()->FireEvent(mEvent);
     }
 
     void GUIManager::LoadAddOnDirectory_( const s_str& sDirectory )

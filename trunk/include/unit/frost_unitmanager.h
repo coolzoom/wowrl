@@ -181,7 +181,6 @@ namespace Frost
         s_ctnr<s_str> lSchoolList_;
 
         s_ptr<Lua::State> pLua_;
-        s_ctnr< s_ptr<LuaUnitManager> > lGlueList_;
 
     };
 

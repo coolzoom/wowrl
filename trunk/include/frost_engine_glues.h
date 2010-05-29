@@ -35,6 +35,7 @@ namespace Frost
         int _GetMouseDecalPosition(lua_State*);
         int _LoadZone(lua_State*);
         int _LoadZoneFile(lua_State*);
+        int _NewZone(lua_State*);
         int _NotifyDoodadPositioned(lua_State*);
         int _SaveZone(lua_State*);
         int _SetBackgroundColor(lua_State*);

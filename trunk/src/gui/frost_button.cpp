@@ -36,18 +36,14 @@ void Button::CreateGlue()
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushNumber(uiID_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaVirtualGlue>(new LuaVirtualGlue(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
     }
     else
     {
         s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
         pLua->PushString(sName_);
-        lGlueList_.PushBack(
-            pLua->Push<LuaButton>(new LuaButton(pLua->GetState()))
-        );
+        lGlueList_.PushBack(pLua->PushNew<LuaButton>());
         pLua->SetGlobal(sLuaName_);
     }
 }
@@ -399,6 +395,8 @@ s_ptr<Texture> Button::GetHighlightTexture()
 {
     return pHighlightTexture_;
 }
+
+// TODO : ### fix lua glues delete
 
 s_ptr<FontString> Button::GetNormalText()
 {
