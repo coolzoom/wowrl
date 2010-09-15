@@ -14,10 +14,9 @@ uniform mat4 mWorldViewProj;
 uniform mat4 mWorld;
 
 uniform vec4 mLightPos[5];
+uniform vec4 mLightDir;
 uniform vec4 mLightDiffuseColor[5];
 uniform vec4 mLightAtten[5];
-uniform vec4 mSunDir;
-uniform vec4 mSunColor;
 uniform vec4 mAmbient;
 
 uniform mat4 mTexCoordMat;
@@ -32,7 +31,11 @@ void main()
     vec3 tPosition = (mWorld * vertex).xyz;
     vec3 tNormal = normalize((mWorld * vec4(normal, 0.0)).xyz);
     
-    for (int i = 0; i < 5; ++i)
+    // Handle directional light
+    vColor += mLightDiffuseColor[0].rgb * max(-dot(mLightDir.xyz, tNormal), 0.0) / mLightAtten[0].y;
+    
+    // Handle point lights
+    for (int i = 1; i < 5; ++i)
     {
         tLightDir = normalize(mLightPos[i].xyz - tPosition);
         tDistance = distance(mLightPos[i].xyz, tPosition);
@@ -41,7 +44,6 @@ void main()
         vColor += mLightDiffuseColor[i].rgb * max(dot(tLightDir, tNormal), 0.0) * tAtten;
     }
     
-    vColor += mSunColor.rgb * max(dot(mSunDir.xyz, tNormal), 0.0);
     vColor = clamp(vColor, 0.0, 1.0);
 
     // Apply position and camera projection

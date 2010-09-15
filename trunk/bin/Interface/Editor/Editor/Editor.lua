@@ -5,11 +5,11 @@ UIParent:SetScript("OnMouseUp", function ()
     if (AddOns.Editor.worldClickFunction ~= nil) then
         AddOns.Editor.worldClickFunction(arg1);
     end
-    
+
     if (arg1 == "LeftButton") then
-        if (this.activeDropdown) then
-            this.activeDropdown:Hide();
-            this.activeDropdown = nil;
+        if (this.activeDropDown) then
+            this.activeDropDown:Hide();
+            this.activeDropDown = nil;
         end
     elseif (arg1 == "RightButton") then
         -- Handle right clicking the 3D view
@@ -41,7 +41,7 @@ function AddOns.Editor:EnableMouseDecal(enabled)
     if (self.mouseDecalEnabled == nil) then
         self.mouseDecalEnabled = false;
     end
-    
+
     if (self.mouseDecalEnabled ~= enabled) then
         if (enabled) then
             Frost:EnableMouseDecal(true,
@@ -50,7 +50,7 @@ function AddOns.Editor:EnableMouseDecal(enabled)
         else
             Frost:EnableMouseDecal(false);
         end
-        
+
         self.mouseDecalEnabled = enabled;
     end
 end
@@ -62,26 +62,26 @@ function AddOns.Editor:IsMouseDecalEnabled()
     return self.mouseDecalEnabled;
 end
 
-function AddOns.Editor:SetCurrentDropdown(dropdown)
-    if (self.activeDropdown) then
-        if (self.activeDropdown ~= dropdown) then
-            self.activeDropdown:Hide();
-            self.activeDropdown = dropdown;
-            self.activeDropdown:Show();
+function AddOns.Editor:SetCurrentDropDown(dropdown)
+    if (self.activeDropDown) then
+        if (self.activeDropDown ~= dropdown) then
+            self.activeDropDown:Hide();
+            self.activeDropDown = dropdown;
+            self.activeDropDown:Show();
         else
-            self.activeDropdown:Hide();
-            self.activeDropdown = nil;
+            self.activeDropDown:Hide();
+            self.activeDropDown = nil;
         end
     else
-        self.activeDropdown = dropdown;
-        self.activeDropdown:Show();
+        self.activeDropDown = dropdown;
+        self.activeDropDown:Show();
     end
 end
 
-function AddOns.Editor:CloseCurrentDropdown()
-    if (self.activeDropdown) then
-        self.activeDropdown:Hide();
-        self.activeDropdown = nil;
+function AddOns.Editor:CloseCurrentDropDown()
+    if (self.activeDropDown) then
+        self.activeDropDown:Hide();
+        self.activeDropDown = nil;
     end
 end
 
@@ -122,7 +122,7 @@ function AddOns.Editor:RegisterTextColorFunction(object, func)
     if (self.textColorFuncList == nil) then
         self.textColorFuncList = {};
     end
-    
+
     self.textColorFuncList[object] = func;
 end
 
@@ -130,7 +130,7 @@ function AddOns.Editor:RegisterSecondaryTextColorFunction(object, func)
     if (self.sndTextColorFuncList == nil) then
         self.sndTextColorFuncList = {};
     end
-    
+
     self.sndTextColorFuncList[object] = func;
 end
 
@@ -138,6 +138,6 @@ function AddOns.Editor:RegisterBackgroundColorFunction(object, func)
     if (self.bgColorFuncList == nil) then
         self.bgColorFuncList = {};
     end
-    
+
     self.bgColorFuncList[object] = func;
 end

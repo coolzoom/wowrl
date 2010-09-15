@@ -28,7 +28,10 @@ namespace Frost
     public :
 
         /// Constructor.
-        /** \param sName This Zone's name
+        Zone();
+
+        /// Constructor.
+        /** \param sName The name of the Zone
         */
         Zone(const s_str& sName);
 
@@ -133,6 +136,14 @@ namespace Frost
         */
         const s_str& GetName();
 
+        /// Returns the list of all models registered to this Zone.
+        const s_map<s_str,s_str>& GetModelList() const;
+
+        /// Reads this Zone's data from an XML file.
+        /** \param sFile The file to read
+        */
+        void         ParseXMLFile(const s_str& sFile);
+
         /// Saves this Zone's data into an XML file.
         /** \param sFileName The file to write to
         */
@@ -141,6 +152,10 @@ namespace Frost
         static const s_str CLASS_NAME;
 
     private :
+
+        void ParseTerrain_(s_ptr<XML::Block> pTerrainBlock);
+        void ParseModels_(s_ptr<XML::Block> pTerrainBlock);
+        void ParseDoodads_(s_ptr<XML::Block> pTerrainBlock);
 
         void SerializeModels_(File& mFile) const;
         void SerializeDoodads_(File& mFile) const;

@@ -12,16 +12,24 @@
             <AbsDimension x="1" y="1"/>
         </PushedTextOffset>
         <HighlightTexture file="|ButtonHighlight.png"/>
-        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false">
             <Anchors>
                 <Anchor point="CENTER"/>
             </Anchors>
             <Color r="1" g="1" b="1"/>
         </NormalText>
+        <DisabledText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false">
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+            <Color r="0.5" g="0.5" b="0.5"/>
+        </DisabledText>
         <Scripts>
             <OnLoad>
-                this.normalTextColor = Color(1,1,1);
-                this.normalBgColor   = Color(0.5, 0.5, 0.5);
+                this.normalTextColor   = Color(1,1,1);
+                this.disabledTextColor = Color(1,1,1);
+                this.normalBgColor     = Color(0.5, 0.5, 0.5);
+                
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
                     local newColor = self.normalBgColor*color;
@@ -31,9 +39,13 @@
                     local newColor = self.normalTextColor*color;
                     self:GetNormalFontObject():SetTextColor(newColor:Unpack());
                 end);
+                AddOns.Editor:RegisterSecondaryTextColorFunction(this, function (self, color)
+                    local newColor = self.disabledTextColor*color;
+                    self:GetDisabledFontObject():SetTextColor(newColor:Unpack());
+                end);
             </OnLoad>
             <OnShow>
-                this:SetWidth(this:GetTextWidth()+10, 18);
+                this:SetWidth(this:GetTextWidth()+10);
             </OnShow>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
@@ -42,4 +54,21 @@
             </OnEvent>
         </Scripts>
     </Button>
+    
+    <CheckButton name="CheckButtonTemplate_SwitchButton" virtual="true">
+        <Size>
+            <AbsDimension x="16" y="16"/>
+        </Size>
+        <NormalTexture    file="|SwitchBase.png"/>
+        <CheckedTexture   file="|SwitchOn.png"/>
+        <DisabledTexture  file="|SwitchDisabled.png"/>
+        <HighlightTexture file="|SwitchHighlight.png" setAllPoints="false">
+            <Size>
+                <AbsDimension x="32" y="32"/>
+            </Size>
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+        </HighlightTexture>
+    </CheckButton>
 </Ui>

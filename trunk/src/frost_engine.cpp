@@ -6,25 +6,25 @@
 #include "frost_engine.h"
 
 #include "frost_engine_glues.h"
-#include "frost_inputmanager.h"
-#include "gui/frost_fontmanager.h"
-#include "gui/frost_guimanager.h"
-#include "frost_localemanager.h"
-#include "gui/frost_spritemanager.h"
-#include "gui/frost_guistructs.h"
-#include "gui/frost_sprite.h"
+#include <frost_inputmanager.h>
+#include <frost_fontmanager.h>
+#include <frost_guimanager.h>
+#include <impl/ogre/ogre_guimanager.h>
+#include <frost_localemanager.h>
 #include "model/frost_modelmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "scene/frost_scenemanager.h"
 #include "material/frost_shadermanager.h"
 #include "material/frost_shader.h"
 #include "material/frost_materialmanager.h"
+#include "material/frost_rendertarget.h"
 #include "scene/frost_lightmanager.h"
 #include "unit/frost_unitmanager.h"
 #include "gameplay/frost_gameplaymanager.h"
 #include "scene/frost_physicsmanager.h"
 #include "scene/frost_zonemanager.h"
 #include "camera/frost_camera.h"
+#include "gui/frost_modelframe.h"
 #include "lua/frost_lua.h"
 
 #include <OgreRoot.h>
@@ -51,7 +51,7 @@ namespace Frost
         bGamePaused_ = false;
         bShutDown_ = false;
 
-        SetConstant("GameVersion", s_str("0.045"));
+        SetConstant("GameVersion", s_str("0045"));
 
         pFrameFunc_ = nullptr;
 
@@ -67,15 +67,12 @@ namespace Frost
         pLocaleMgr_   = LocaleManager::GetSingleton();
         pShaderMgr_   = ShaderManager::GetSingleton();
         pMaterialMgr_ = MaterialManager::GetSingleton();
-        pFontMgr_     = FontManager::GetSingleton();
         pPhysicsMgr_  = PhysicsManager::GetSingleton();
         pSceneMgr_    = SceneManager::GetSingleton();
 
         pLightMgr_    = LightManager::GetSingleton();
         pCameraMgr_   = CameraManager::GetSingleton();
         pModelMgr_    = ModelManager::GetSingleton();
-        pSpriteMgr_   = SpriteManager::GetSingleton();
-        pGUIMgr_      = GUIManager::GetSingleton();
 
         pUnitMgr_     = UnitManager::GetSingleton();
         pGameplayMgr_ = GameplayManager::GetSingleton();
@@ -87,6 +84,22 @@ namespace Frost
     Engine::~Engine()
     {
         ShutDown(true);
+    }
+
+    s_double GetTime()
+    {
+        static Ogre::Timer t;
+        return t.getMilliseconds()/1000.0;
+    }
+
+    void Shutdown()
+    {
+        Engine::GetSingleton()->ShutDown();
+    }
+
+    void RenderQuad( const GUI::Quad& mQuad )
+    {
+        Engine::GetSingleton()->GetGUIManager()->GetImpl()->RenderQuad(mQuad);
     }
 
     void PrintInLog( const s_str& sMessage, const s_bool& bTimeStamps, const s_uint& uiOffset )
@@ -138,7 +151,6 @@ namespace Frost
         pLua_ = pLuaMgr_->CreateLua();
         pLuaMgr_->SetDefaultLua(pLua_);
         Lua::RegisterGlobalFuncs(pLua_);
-        Lua::RegisterEngineClass(pLua_);
         CreateGlue(pLua_);
 
         // Load configuration
@@ -151,10 +163,14 @@ namespace Frost
 
         ReadGraphicsConfig_();
 
-        pFontMgr_->ReadConfig();
-
         pLocaleMgr_->Initialize();
-        pLocaleMgr_->ReadConfig();
+
+        s_str sLocale = Engine::GetSingleton()->GetStringConstant("GameLocale");
+        if (sLocale == "")
+            throw Exception(CLASS_NAME, "No locale specified. Exiting.");
+
+        pLocaleMgr_->SetLocale(sLocale);
+        pLocaleMgr_->ReadLocale();
 
         // Create the root path
         Ogre::ResourceGroupManager::getSingleton().addResourceLocation("./", "FileSystem", "Frost");
@@ -174,16 +190,32 @@ namespace Frost
 
         pPhysicsMgr_->ReadConfig();
 
-        pInputMgr_->Initialize(pRenderWindow_);
-        pInputMgr_->ReadConfig();
+        size_t iWindowHnd = 0; pRenderWindow_->getCustomAttribute("WINDOW", &iWindowHnd);
+        ostringstream os;
+        os << iWindowHnd;
+        pInputMgr_->Initialize(os.str(), pRenderWindow_->getWidth(), pRenderWindow_->getHeight());
+
+        if (IsConstantDefined("DoubleClickTime"))
+            pInputMgr_->SetDoubleClickTime(s_double(GetFloatConstant("DoubleClickTime")));
+
+        if (IsConstantDefined("MouseBufferLength"))
+            pInputMgr_->SetMouseBufferDuration(s_double(GetFloatConstant("MouseBufferLength")));
+
+        if (IsConstantDefined("MouseSensibility"))
+            pInputMgr_->SetMouseSensibility(GetFloatConstant("MouseSensibility"));
 
         pMaterialMgr_->Initialize();
         pSceneMgr_->Initialize();
         pLightMgr_->Initialize();
-        pSpriteMgr_->Initialize();
 
-        pGUIMgr_->Initialize();
-        pGUIMgr_->ReadConfig();
+        s_map<s_str, s_var> lParams;
+        lParams["game_version"] = GetStringConstant("GameVersion");
+        lParams["scene_manager"] = s_str("FrostSceneMgr");
+        lParams["width"] = s_uint((uint)pRenderWindow_->getWidth());
+        lParams["height"] = s_uint((uint)pRenderWindow_->getHeight());
+        pGUIMgr_ = s_refptr<GUIManager>(new GUIManager(lParams));
+        pGUIMgr_->CreateLua();
+        pGUIMgr_->RegisterFrame<GUI::ModelFrame>("ModelFrame");
 
         pZoneMgr_->Initialize();
     }
@@ -258,15 +290,19 @@ namespace Frost
             pShaderMgr_->UpdateShaders(fDelta);
 
             // Update our own render targets
-            if (!pSpriteMgr_->RenderTargets())
-                bRun_ = false;
+            pGUIMgr_->Begin();
+
+                RenderScene();
+                pGUIMgr_->RenderUI();
+
+            pGUIMgr_->End();
 
             // Render everyting
             pRoot_->_updateAllRenderTargets();
 
             // Update inputs and timers
             pTimeMgr_->Update();
-            pInputMgr_->Update();
+            pInputMgr_->Update(fDelta);
 
             if (!pRoot_->_fireFrameEnded())
                 bRun_ = false;
@@ -305,21 +341,21 @@ namespace Frost
                 GameplayManager::Delete();
                 UnitManager::Delete();
                 ZoneManager::Delete();
-                GUIManager::Delete();
-                SpriteManager::Delete();
+                pGUIMgr_.SetNull();
                 ModelManager::Delete();
                 CameraManager::Delete();
                 LightManager::Delete();
 
                 SceneManager::Delete();
                 PhysicsManager::Delete();
-                FontManager::Delete();
                 MaterialManager::Delete();
                 ShaderManager::Delete();
                 LocaleManager::Delete();
                 InputManager::Delete();
                 EventManager::Delete();
                 LuaManager::Delete();
+
+                GUI::Close();
 
                 Log("Closing Ogre...");
 
@@ -629,6 +665,11 @@ namespace Frost
         return s_uint(s_float(pRenderWindow_->getHeight()));
     }
 
+    s_wptr<GUIManager> Engine::GetGUIManager()
+    {
+        return pGUIMgr_;
+    }
+
     void Engine::SetFrameFunction( Function pFrameFunc )
     {
         pFrameFunc_ = pFrameFunc;
@@ -652,11 +693,12 @@ namespace Frost
         if (pShaderMgr_->IsPostProcessingEnabled())
             pShaderMgr_->RenderPostProcessedScene();
         else
-            pSpriteMgr_->Clear(Color::VOID);
+            pRoot_->getRenderSystem()->clearFrameBuffer(Ogre::FBT_COLOUR, Ogre::ColourValue::ZERO);
     }
 
     void Engine::CreateGlue( s_ptr<Lua::State> pLua )
     {
+        pLua->Register<LuaEngine>();
         pLua->PushNew<LuaEngine>();
         pLua->SetGlobal("Frost");
     }

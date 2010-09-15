@@ -149,6 +149,7 @@
 			<Add directory="include\utils" />
 			<Add directory="dependencies\lua" />
 			<Add directory="..\ogre\OgreMain\include" />
+			<Add directory="..\boost_1_43_0" />
 		</Compiler>
 		<Linker>
 			<Add directory="lib" />
@@ -189,6 +190,7 @@
 		<Unit filename="include\utils\frost_utils_stdhelper.h" />
 		<Unit filename="include\utils\frost_utils_str.h" />
 		<Unit filename="include\utils\frost_utils_str_conversion.h" />
+		<Unit filename="include\utils\frost_utils_thread.h" />
 		<Unit filename="include\utils\frost_utils_timemanager.h" />
 		<Unit filename="include\utils\frost_utils_timers.h" />
 		<Unit filename="include\utils\frost_utils_types.h" />
@@ -199,12 +201,7 @@
 		<Unit filename="include\utils\frost_utilsmanager.h" />
 		<Unit filename="src\utils\frost_utils_axisalignedbox.cpp" />
 		<Unit filename="src\utils\frost_utils_color.cpp" />
-		<Unit filename="src\utils\frost_utils_directory.cpp">
-			<Option target="OgreRelease_Win32" />
-			<Option target="OgreDebug_Win32" />
-			<Option target="OgreRelease_Linux" />
-			<Option target="OgreDebug_Linux" />
-		</Unit>
+		<Unit filename="src\utils\frost_utils_directory.cpp" />
 		<Unit filename="src\utils\frost_utils_event.cpp" />
 		<Unit filename="src\utils\frost_utils_eventmanager.cpp" />
 		<Unit filename="src\utils\frost_utils_eventreceiver.cpp" />
@@ -221,18 +218,9 @@
 		<Unit filename="src\utils\frost_utils_math.cpp" />
 		<Unit filename="src\utils\frost_utils_profiler.cpp" />
 		<Unit filename="src\utils\frost_utils_str.cpp" />
-		<Unit filename="src\utils\frost_utils_timemanager.cpp">
-			<Option target="OgreRelease_Win32" />
-			<Option target="OgreDebug_Win32" />
-			<Option target="OgreRelease_Linux" />
-			<Option target="OgreDebug_Linux" />
-		</Unit>
-		<Unit filename="src\utils\frost_utils_timers.cpp">
-			<Option target="OgreRelease_Win32" />
-			<Option target="OgreDebug_Win32" />
-			<Option target="OgreRelease_Linux" />
-			<Option target="OgreDebug_Linux" />
-		</Unit>
+		<Unit filename="src\utils\frost_utils_thread.cpp" />
+		<Unit filename="src\utils\frost_utils_timemanager.cpp" />
+		<Unit filename="src\utils\frost_utils_timers.cpp" />
 		<Unit filename="src\utils\frost_utils_var.cpp" />
 		<Unit filename="src\utils\frost_utils_vector.cpp" />
 		<Unit filename="src\utils\frost_utilsmanager.cpp" />

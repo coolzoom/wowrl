@@ -33,6 +33,3 @@ namespace Frost
         EventManager::GetSingleton()->UnregisterEvent(this, sEventName);
     }
 }
-
-
-

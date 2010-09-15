@@ -284,6 +284,9 @@
 		<Unit filename="bin\Interface\Editor\MenuBar\DefaultConfig.lua">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\Edit.lua" />
+		<Unit filename="bin\Interface\Editor\MenuBar\File.lua" />
+		<Unit filename="bin\Interface\Editor\MenuBar\Help.lua" />
 		<Unit filename="bin\Interface\Editor\MenuBar\Localization.lua">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -302,9 +305,8 @@
 		<Unit filename="bin\Interface\Editor\MenuBar\MenuBarTemplates.xml">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="bin\Interface\Editor\MenuBar\Menus.lua">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
+		<Unit filename="bin\Interface\Editor\MenuBar\Settings.lua" />
+		<Unit filename="bin\Interface\Editor\MenuBar\View.lua" />
 		<Unit filename="bin\Interface\Editor\PanelBar\DefaultConfig.lua">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>

@@ -131,10 +131,7 @@ namespace Frost
             {
                 if (pParamBlock->GetName() == "LightParams")
                 {
-                    pShader->AddLightParams(
-                        s_uint(pParamBlock->GetAttribute("number")),
-                        s_bool(pParamBlock->GetAttribute("includeDirectional"))
-                    );
+                    pShader->AddLightParams(s_uint(pParamBlock->GetAttribute("number")));
                 }
                 else if (pParamBlock->GetName() == "AutoParam")
                 {

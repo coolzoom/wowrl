@@ -2,7 +2,7 @@
 GameOptions = {
 
     -- Generic
-    ["GameVersion"] = "0.045",
+    ["GameVersion"] = "0045",
     ["GameLocale"] = "enGB",
     
     -- Screen resolution
@@ -13,16 +13,16 @@ GameOptions = {
     ["ScreenHeight"] = 1024,
     
     -- Renderer
-    --["RenderSystem"] = "OpenGL",
-    ["RenderSystem"] = "DirectX",
+    ["RenderSystem"] = "OpenGL",
+    --["RenderSystem"] = "DirectX",
     
     -- Advanced graphics options
     ["TerrainTextureFiltering"] = "ANISOTROPIC";
     ["AntiAliasingLevel"] = 0,
-    ["EnableVSync"] = true,
+    ["EnableVSync"] = false,
     ["EnableSpecular"] = true,
     
-    ["EnablePostProcessing"] = true,
+    ["EnablePostProcessing"] = false,
     ["EnableMotionBlur"] = true,
     
     -- Defaults
@@ -33,5 +33,8 @@ GameOptions = {
     ["DoubleClickTime"] = 0.25,
     ["MouseBufferLength"] = 0.05,
     ["MouseSensibility"] = 1.0,
+    
+    -- GUI
+    ["EnableGUICaching"] = true,
     
 };

@@ -372,6 +372,40 @@ namespace Frost
             return mContainer_.erase(mIter);
         }
 
+        /// Erases a range of elements from the container.
+        /** \param uiStart The position from which to start erasing
+        *   \param uiEnd   The position at which to stop erasing (exclusive)
+        */
+        void EraseRange(const s_uint_t<default_uint>& uiStart, const s_uint_t<default_uint>& uiEnd)
+        {
+            if (uiStart.IsValid())
+            {
+                if (!uiEnd.IsValid())
+                    mContainer_.erase(mContainer_.begin() + uiStart.Get(), mContainer_.end());
+                else
+                    mContainer_.erase(mContainer_.begin() + uiStart.Get(), mContainer_.begin() + uiEnd.Get());
+            }
+        }
+
+        /// Erases a range of elements from the container.
+        /** \param mBegin The position from which to start erasing
+        *   \param mEnd   The position at which to stop erasing (exclusive)
+        *   \return The iterator pointing at the next element in the container
+        */
+        iterator EraseRange(const iterator& mBegin, const iterator& mEnd)
+        {
+            return mContainer_.erase(mBegin, mEnd);
+        }
+
+        /// Erases a range of elements from the container.
+        /** \param mRange The range to erase
+        *   \return The iterator pointing at the next element in the container
+        */
+        iterator EraseRange(const range& mRange)
+        {
+            return mContainer_.erase(mRange.Begin(), mRange.End());
+        }
+
         /// Returns the number of elements in this container.
         /** \return The number of elements in this container
         */

@@ -21,10 +21,9 @@ void main_vs(
               uniform float4x4 mTexCoordMat,
             
               uniform float4   mLightPos[5],
+              uniform float4   mLightDir,
               uniform float4   mLightDiffuseColor[5],
               uniform float4   mLightAtten[5],
-              uniform float4   mSunDir,
-              uniform float4   mSunColor,
               uniform float4   mAmbient
             )
 {
@@ -36,7 +35,11 @@ void main_vs(
     float3 tPosition = mul(mWorld, iPosition);
     float3 tNormal = normalize(mul(mWorld, iNormal));
 
-    for (int i = 0; i < 5; ++i)
+    // Handle directional light
+    oColor += mLightDiffuseColor[0].rgb * saturate(-dot(mLightDir.xyz, tNormal)) / mLightAtten[0].y;
+
+    // Handle point lights
+    for (int i = 1; i < 5; ++i)
     {
         tLightDir = normalize(mLightPos[i].xyz - tPosition);
         tDistance = distance(mLightPos[i].xyz, tPosition);
@@ -45,7 +48,6 @@ void main_vs(
         oColor += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, tNormal)) * tAtten;
     }
     
-    oColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
     oColor = saturate(oColor);
 
     // Apply position and camera projection

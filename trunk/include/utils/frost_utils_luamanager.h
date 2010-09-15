@@ -12,6 +12,7 @@
 #include "frost_utils_config.h"
 #include "frost_utils_manager.h"
 #include "frost_utils_lua_state.h"
+#include "frost_utils_thread.h"
 
 namespace Frost
 {
@@ -41,7 +42,7 @@ namespace Frost
         /** \param pLua The raw Lua state
         *   \return The associated wrapper (nullptr if none)
         */
-        s_ptr<Lua::State> GetState(lua_State* pLua);
+        s_ptr<Lua::State> GetState(lua_State* pLua) const;
 
         /// Returns the default Lua state.
         /** \return The default Lua state
@@ -89,6 +90,7 @@ namespace Frost
         s_ptr<Lua::State>                      pDefaultLua_;
         s_map< lua_State*, s_ptr<Lua::State> > lLuaStateList_;
 
+        Mutex mMutex_;
     };
 }
 

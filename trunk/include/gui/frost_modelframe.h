@@ -10,18 +10,25 @@
 #define FROST_GUI_MODELFRAME_H
 
 #include "frost.h"
-#include "gui/frost_frame.h"
+#include <frost_frame.h>
 
 namespace Frost
 {
     namespace GUI
     {
+        class RenderTarget;
+        class Texture;
+        class LuaModelFrame;
+
+        /// A widget that can display a 3D model.
         class ModelFrame : public Frame
         {
         public :
 
+            typedef LuaModelFrame Glue;
+
             /// Constructor.
-            ModelFrame();
+            ModelFrame(s_ptr<GUIManager> pManager);
 
             /// Destructor.
             virtual ~ModelFrame();
@@ -110,6 +117,20 @@ namespace Frost
             /** \return The animation being played
             */
             const s_uint&  GetModelAnimation() const;
+
+            /// Hides all the model's submeshes.
+            void           HideModel();
+
+            /// Hides a particular sub mesh and all its sub entities.
+            /** \param uiSubMeshID The ID of the submesh
+            */
+            void           HideSubMesh(const s_uint& uiSubMeshID);
+
+            /// Hides a particular sub mesh's sub entity.
+            /** \param uiSubMeshID   The ID of the submesh
+            *   \param uiSubEntityID The ID of the subentity
+            */
+            void           HideSubEntity(const s_uint& uiSubMeshID, const s_uint& uiSubEntityID);
 
             /// Sets the direction the model should face.
             /** \param mDirection The direction
@@ -223,6 +244,20 @@ namespace Frost
                 const s_uint& uiSubMeshID, const s_uint& uiSubEntityID, const Color& mColor
             );
 
+            /// Shows all the model's submeshes.
+            void           ShowModel();
+
+            /// Shows a particular sub mesh and all its sub entities.
+            /** \param uiSubMeshID The ID of the submesh
+            */
+            void           ShowSubMesh(const s_uint& uiSubMeshID);
+
+            /// Shows a particular sub mesh's sub entity.
+            /** \param uiSubMeshID   The ID of the submesh
+            *   \param uiSubEntityID The ID of the subentity
+            */
+            void           ShowSubEntity(const s_uint& uiSubMeshID, const s_uint& uiSubEntityID);
+
             /// Returns the Model object displayed by this ModelFrame.
             /** \return The Model object displayed by this ModelFrame
             */
@@ -258,11 +293,13 @@ namespace Frost
             s_bool       bLightingEnabled_;
             Color        mAmbientColor_;
             s_ptr<Light> pLight_;
+            Color        mLightColor_;
+            Vector       mLightDirection_;
 
-            s_ptr<RenderTarget> pRenderTarget_;
-            s_bool              bRedrawRenderTarget_;
-            s_bool              bUpdateRenderTarget_;
-            s_ptr<Texture>      pRenderTexture_;
+            s_refptr<RenderTarget> pRenderTarget_;
+            s_bool                 bRedrawRenderTarget_;
+            s_bool                 bUpdateRenderTarget_;
+            s_ptr<Texture>         pRenderTexture_;
 
         };
 
@@ -285,6 +322,9 @@ namespace Frost
             int _GetPosition(lua_State*);
             int _GetAvailableSubMeshes(lua_State*);
             int _GetSubEntityNumber(lua_State*);
+            int _HideModel(lua_State*);
+            int _HideSubMesh(lua_State*);
+            int _HideSubEntity(lua_State*);
             int _SetFacing(lua_State*);
             int _SetLight(lua_State*);
             int _SetModel(lua_State*);
@@ -295,6 +335,9 @@ namespace Frost
             int _SetSequenceTime(lua_State*);
             int _SetSubMeshTexture(lua_State*);
             int _SetSubEntityTexture(lua_State*);
+            int _ShowModel(lua_State*);
+            int _ShowSubMesh(lua_State*);
+            int _ShowSubEntity(lua_State*);
 
             static const char className[];
             static const char* classList[];

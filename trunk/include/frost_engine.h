@@ -17,6 +17,8 @@
 
 namespace Frost
 {
+    class GUIManager;
+
     /// Game manager
     /** A typical application using Frost :
     *   - create a new Engine by calling Engine::GetSingleton()
@@ -168,6 +170,11 @@ namespace Frost
         */
         s_uint              GetScreenHeight() const;
 
+        /// Returns the main GUI manager.
+        /** \return The main GUI manager
+        */
+        s_wptr<GUIManager>  GetGUIManager();
+
         /// Returns the name of the currently used renderer.
         /** \return The name of the currently used renderer
         *   \note Can be either "DirectX" or "OpenGL".
@@ -261,10 +268,8 @@ namespace Frost
         s_ptr<EventManager>    pEventMgr_;
         s_ptr<TimeManager>     pTimeMgr_;
         s_ptr<InputManager>    pInputMgr_;
-        s_ptr<FontManager>     pFontMgr_;
-        s_ptr<GUIManager>      pGUIMgr_;
+        s_refptr<GUIManager>   pGUIMgr_;
         s_ptr<LocaleManager>   pLocaleMgr_;
-        s_ptr<SpriteManager>   pSpriteMgr_;
         s_ptr<ModelManager>    pModelMgr_;
         s_ptr<CameraManager>   pCameraMgr_;
         s_ptr<SceneManager>    pSceneMgr_;

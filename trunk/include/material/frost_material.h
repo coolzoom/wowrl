@@ -28,6 +28,12 @@ namespace Frost
             TYPE_UNKNOWN
         };
 
+        enum GetMaterialFlag
+        {
+            FLAG_NONE,                /// Has no special effect (the function is a regular getter)
+            FLAG_TRANSFER_OWNERSHIP   /// Notifies the Material that it no longer has ownership of the Ogre::Material
+        };
+
         /// Constructor.
         /** \param uiID     The unique ID associated to this Material
         *   \param mType    The underlying type of this Material
@@ -107,9 +113,10 @@ namespace Frost
         const s_float&  GetHeight() const;
 
         /// Returns the wrapped Ogre::Material.
-        /** \return The wrapped Ogre::Material
+        /** \param mFlag See GetMaterialFlag
+        *   \return The wrapped Ogre::Material
         */
-        s_ptr<Ogre::Material> GetOgreMaterial();
+        s_ptr<Ogre::Material> GetOgreMaterial(GetMaterialFlag mFlag = FLAG_NONE);
 
         /// Sets vertex and pixel shaders to use for the default pass.
         /** \param sSName The shader name
@@ -166,9 +173,10 @@ namespace Frost
         s_ptr<Ogre::Pass> GetDefaultPass();
 
         /// Returns the name of the wrapped Ogre::Material.
-        /** \return The name of the wrapped Ogre::Material
+        /** \param mFlag See GetMaterialFlag
+        *   \return The name of the wrapped Ogre::Material
         */
-        const s_str&    GetOgreMaterialName() const;
+        const s_str&    GetOgreMaterialName(GetMaterialFlag mFlag = FLAG_NONE) const;
 
         /// Checks if this Material comes from a render target.
         /** \return 'true' if this Material comes from a
@@ -209,7 +217,9 @@ namespace Frost
         s_str   sName_;
         s_float fWidth_;
         s_float fHeight_;
-        s_bool  bVanilla_;
+
+        mutable s_bool bOwner_;
+        mutable s_bool bVanilla_;
 
         s_ptr<Ogre::Material> pOgreMat_;
         s_ptr<PassInfo>       pDefaultPass_;

@@ -28,10 +28,9 @@ void main_vs(
             #endif
             
               uniform float4   mLightPos[5],
+              uniform float4   mLightDir,
               uniform float4   mLightDiffuseColor[5],
               uniform float4   mLightAtten[5],
-              uniform float4   mSunDir,
-              uniform float4   mSunColor,
               uniform float4   mAmbient
             )
 {
@@ -39,6 +38,7 @@ void main_vs(
     float3 tLightDir;
     float  tDistance;
     float  tAtten;
+    float  tDot;
     
     float3 tPosition = mul(mWorld, iPosition);
     float3 tNormal = normalize(mul(mWorld, iNormal));
@@ -48,27 +48,32 @@ void main_vs(
         oSpecColor = float3(0.0, 0.0, 0.0);
         float3 tEyeDir = normalize(mCamPos.xyz - tPosition);
     #endif
+    
+    // Handle directional light
+    tDot = -dot(mLightDir.xyz, tNormal);
+    oColor += mLightDiffuseColor[0].rgb * saturate(tDot) / mLightAtten[0].y;        
+    #ifdef SPECULAR
+        tReflected = 2.0*tNormal*tDot + mLightDir.xyz;
+        oSpecColor += mLightDiffuseColor[0].rgb * saturate(dot(tReflected, tEyeDir)) / mLightAtten[0].y;
+    #endif
 
-    for (int i = 0; i < 5; ++i)
+    // Handle point lights
+    for (int i = 1; i < 5; ++i)
     {
         tLightDir = normalize(mLightPos[i].xyz - tPosition);
         tDistance = distance(mLightPos[i].xyz, tPosition);
+        tDot = dot(tLightDir, tNormal);
 
         tAtten = 1.0/(mLightAtten[i].y + tDistance*mLightAtten[i].z + tDistance*tDistance*mLightAtten[i].w);
-        oColor += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, tNormal)) * tAtten;
+        oColor += mLightDiffuseColor[i].rgb * saturate(tDot) * tAtten;
         
         #ifdef SPECULAR
-            tReflected = 2.0*tNormal*dot(tLightDir, tNormal) - tLightDir;
+            tReflected = 2.0*tNormal*tDot - tLightDir;
             oSpecColor += mLightDiffuseColor[i].rgb * saturate(dot(tReflected, tEyeDir)) * tAtten;
         #endif
     }
     
-    oColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
     oColor = saturate(oColor);
-    #ifdef SPECULAR
-        tReflected = 2.0*tNormal*dot(mSunDir.xyz, tNormal) - mSunDir.xyz;
-        oSpecColor += mSunColor.rgb * saturate(dot(tReflected, tEyeDir));
-    #endif
 
     // Apply position and camera projection
     oPosition = mul(mWorldViewProj, iPosition);

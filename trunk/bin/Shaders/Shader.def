@@ -4,7 +4,7 @@
 
 <d:Shader name file>
     <n[.,1]:Params>
-        <n[.,1]:LightParams number includeDirectional="false"/>
+        <n[.,1]:LightParams number/>
         <AutoParam name param="auto" n:data="0"/>
         <Param name value type="float"/>
     </Params>

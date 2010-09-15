@@ -146,6 +146,11 @@ namespace Frost
         return Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR;
     }
 
+    s_bool DoodadOgreInterface::IsMouseEnabled() const
+    {
+        return OgreInterface::IsMouseEnabled() && pDoodad_->IsShown();
+    }
+
     void DoodadOgreInterface::On( const s_str& sEvent )
     {
         if (sEvent == "Enter")

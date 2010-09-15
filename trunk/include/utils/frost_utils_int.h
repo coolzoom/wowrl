@@ -598,13 +598,13 @@ namespace Frost
         template<class N>
         s_str_t<N> operator + (const N* sValue) const
         {
-            return s_str_t<N>(*this) + sValue;
+            return s_str_t<N>::Convert(*this) + sValue;
         }
 
         template<class N>
         s_str_t<N> operator + (const s_str_t<N>& sValue) const
         {
-            return s_str_t<N>(*this) + sValue;
+            return s_str_t<N>::Convert(*this) + sValue;
         }
 
         template<class N>
@@ -867,7 +867,7 @@ namespace Frost
     template<class T, class N>
     s_str_t<N> operator + ( const N* sLeft, const s_int_t<T>& iRight )
     {
-        return s_str_t<N>(sLeft) << iRight;
+        return s_str_t<N>::Convert(sLeft) + s_str_t<N>::Convert(iRight);
     }
 
     /** \cond NOT_REMOVE_FROM_DOC

@@ -96,7 +96,7 @@
         </Frames>
         <Layers>
             <Layer>
-                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" justifyV="TOP">
+                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT" justifyV="TOP">
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>

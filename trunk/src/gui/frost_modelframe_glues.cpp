@@ -5,7 +5,7 @@
 
 #include "gui/frost_modelframe.h"
 
-#include "gui/frost_frame.h"
+#include <frost_frame.h>
 #include "model/frost_model.h"
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
@@ -168,7 +168,50 @@ int LuaModelFrame::_GetSubEntityNumber( lua_State* pLua )
     {
         s_ptr<ModelPart> pModelPart = pModel->GetModelPart(s_uint(mFunc.Get(0)->GetNumber()));
         if (pModelPart)
-            mFunc.Push(pModel->GetModelPartList().GetSize());
+            mFunc.Push(pModelPart->GetSubEntityList().GetSize());
+    }
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_HideModel( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:HideModel", pLua);
+
+    pModelFrameParent_->HideModel();
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_HideSubMesh( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:HideSubMesh", pLua);
+    mFunc.Add(0, "sub mesh ID", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pModelFrameParent_->HideSubMesh(s_uint(mFunc.Get(0)->GetNumber()));
+    }
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_HideSubEntity( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:HideSubEntity", pLua);
+    mFunc.Add(0, "sub mesh ID", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "sub entity ID", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pModelFrameParent_->HideSubEntity(s_uint(mFunc.Get(0)->GetNumber()), s_uint(mFunc.Get(1)->GetNumber()));
     }
 
     return mFunc.Return();
@@ -355,10 +398,10 @@ int LuaModelFrame::_SetModelTexture( lua_State* pLua )
         else
         {
             pModelFrameParent_->SetModelTexture(Color(
+                (mFunc.IsProvided(3) ? mFunc.Get(3)->GetNumber() : 1.0f),
                 mFunc.Get(0)->GetNumber(),
                 mFunc.Get(1)->GetNumber(),
-                mFunc.Get(2)->GetNumber(),
-                (mFunc.IsProvided(3) ? mFunc.Get(3)->GetNumber() : 1.0f)
+                mFunc.Get(2)->GetNumber()
             ));
         }
     }
@@ -398,8 +441,8 @@ int LuaModelFrame::_SetSubMeshTexture( lua_State* pLua )
         else
         {
             pModelFrameParent_->SetSubMeshTexture(s_uint(mFunc.Get(0)->GetNumber()), Color(
-                mFunc.Get(1)->GetNumber(), mFunc.Get(2)->GetNumber(),
-                mFunc.Get(3)->GetNumber(), (mFunc.IsProvided(4) ? mFunc.Get(4)->GetNumber() : 1.0f)
+                (mFunc.IsProvided(4) ? mFunc.Get(4)->GetNumber() : 1.0f),
+                mFunc.Get(1)->GetNumber(), mFunc.Get(2)->GetNumber(), mFunc.Get(3)->GetNumber()
             ));
         }
     }
@@ -443,10 +486,54 @@ int LuaModelFrame::_SetSubEntityTexture( lua_State* pLua )
         {
             pModelFrameParent_->SetSubEntityTexture(
                 s_uint(mFunc.Get(0)->GetNumber()), s_uint(mFunc.Get(1)->GetNumber()),
-                Color(mFunc.Get(1)->GetNumber(), mFunc.Get(2)->GetNumber(),
-                mFunc.Get(3)->GetNumber(), (mFunc.IsProvided(4) ? mFunc.Get(4)->GetNumber() : 1.0f))
+                Color((mFunc.IsProvided(5) ? mFunc.Get(5)->GetNumber() : 1.0f), mFunc.Get(2)->GetNumber(),
+                    mFunc.Get(3)->GetNumber(), mFunc.Get(4)->GetNumber()
+                )
             );
         }
+    }
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_ShowModel( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:ShowModel", pLua);
+
+    pModelFrameParent_->ShowModel();
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_ShowSubMesh( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:ShowSubMesh", pLua);
+    mFunc.Add(0, "sub mesh ID", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pModelFrameParent_->ShowSubMesh(s_uint(mFunc.Get(0)->GetNumber()));
+    }
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_ShowSubEntity( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:ShowSubEntity", pLua);
+    mFunc.Add(0, "sub mesh ID", Lua::TYPE_NUMBER);
+    mFunc.Add(1, "sub entity ID", Lua::TYPE_NUMBER);
+    if (mFunc.Check())
+    {
+        pModelFrameParent_->ShowSubEntity(s_uint(mFunc.Get(0)->GetNumber()), s_uint(mFunc.Get(1)->GetNumber()));
     }
 
     return mFunc.Return();

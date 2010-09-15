@@ -24,12 +24,17 @@ namespace Frost
         /** \param pGizmo The Gizmo
         *   \param cAxis  The letter of the axis
         */
-        void SetGizmo(s_ptr<Gizmo> pGizmo, const s_char& cAxis);
+        void   SetGizmo(s_ptr<Gizmo> pGizmo, const s_char& cAxis);
+
+        /// Checks if this object can react to mouse events.
+        /** \return 'true' if this object can react to mouse events
+        */
+        s_bool IsMouseEnabled() const;
 
         /// Callback to react to events.
         /** \param sEvent The name of the event
         */
-        void On(const s_str& sEvent);
+        void   On(const s_str& sEvent);
 
     private :
 

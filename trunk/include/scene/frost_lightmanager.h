@@ -22,7 +22,7 @@ namespace Frost
     public :
 
         /// Initializes this manager.
-        void         Initialize();
+        void           Initialize();
 
         /// Sets the sun's light direction.
         /** \param mSunDir The new direction
@@ -127,6 +127,8 @@ namespace Frost
         Color  mAmbient_;
         Color  mLockedAmbient_;
         s_bool bAmbientLocked_;
+
+        s_ptr<Light> pSun_;
 
         Vector mSunDir_;
         Color  mSunColor_;

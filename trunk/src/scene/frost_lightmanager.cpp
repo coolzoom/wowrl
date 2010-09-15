@@ -41,8 +41,13 @@ namespace Frost
 
     void LightManager::SetSunDirection(const Vector& mSunDir)
     {
+        if (!pSun_)
+            pSun_ = CreateLight(Light::DIRECTIONAL);
+
         mSunDir_ = mSunDir;
         mSunDir_.Normalize();
+
+        pSun_->SetDirection(mSunDir_);
     }
 
     const Vector& LightManager::GetSunDirection() const
@@ -52,7 +57,11 @@ namespace Frost
 
     void LightManager::SetSunColor(const Color& mSunColor)
     {
+        if (!pSun_)
+            pSun_ = CreateLight(Light::DIRECTIONAL);
+
         mSunColor_ = mSunColor;
+        pSun_->SetColor(mSunColor_);
     }
 
     const Color& LightManager::GetSunColor() const

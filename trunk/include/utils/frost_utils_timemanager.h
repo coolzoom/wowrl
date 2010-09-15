@@ -22,6 +22,9 @@ namespace Ogre
 namespace Frost
 {
     class Profiler;
+    class Timer;
+
+    s_double GetTime();
 
     /// Keeper of time :)
     /** This class manages everything that is related
@@ -176,8 +179,7 @@ namespace Frost
 
     private :
 
-        s_refptr<Ogre::Timer> pTimer_;
-        s_refptr<Ogre::Timer> pFPSTimer_;
+        s_refptr<Timer> pFPSTimer_;
 
         s_bool bProfiled_;
         s_bool bProfiling_;

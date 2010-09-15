@@ -32,116 +32,6 @@ namespace Frost
     // gameplay/frost_gameplaymanager.h
     class  GameplayManager;
 
-    /* GUI ***********************************************/
-    // gui/frost_fontmanager.h
-    class  FontManager;
-
-    namespace GUI
-    {
-        // gui/frost_anchor.h
-        class  Anchor;
-
-        // gui/frost_backdrop.h
-        class  Backdrop;
-
-        // gui/frost_gradient.h
-        class  Gradient;
-
-        // gui/frost_uiobject.h
-        class  UIObject;
-        class  LuaGlue;
-        class  LuaVirtualGlue;
-        class  LuaUIObject;
-
-        // gui/frost_frame.h
-        struct Layer;
-        class  Frame;
-        class  LuaFrame;
-
-        // gui/frost_button.h
-        class  Button;
-        class  LuaButton;
-
-        // gui/frost_checkbutton.h
-        class  CheckButton;
-        class  LuaCheckButton;
-
-        // gui/frost_colorselect.h
-        class  ColorSelect;
-        class  LuaColorSelect;
-
-        // gui/frost_cooldown.h
-        class  Cooldown;
-        class  LuaCooldown;
-
-        // frost_editbox.h
-        class  EditBox;
-        class  LuaEditBox;
-
-        // gui/frost_messageframe.h
-        class  MessageFrame;
-        class  LuaMessageFrame;
-
-        // gui/frost_modelframe.h
-        class  ModelFrame;
-        class  LuaModelFrame;
-
-        // gui/frost_scrollframe.h
-        class  ScrollFrame;
-        class  LuaScrollFrame;
-
-        // gui/frost_scrollingmessageframe.h
-        class  ScrollingMessageFrame;
-        class  LuaScrollingMessageFrame;
-
-        // gui/frost_slider.h
-        class  Slider;
-        class  LuaSlider;
-
-        // gui/frost_statusbar.h
-        class  StatusBar;
-        class  LuaStatusBar;
-
-        // gui/frost_layeredregion.h
-        class  LayeredRegion;
-        class  LuaLayeredRegion;
-
-        // gui/frost_fontstring.h
-        class  FontString;
-        class  LuaFontString;
-
-        // gui/frost_region.h
-        class  Region;
-
-        // gui/frost_texture.h
-        class  Texture;
-        class  LuaTexture;
-    }
-
-    // gui/frost_guimanager.h
-    struct AddOn;
-    struct Level;
-    struct Strata;
-    class  GUIManager;
-
-    // gui/frost_guistructs.h
-    struct Quad;
-    struct Vertex;
-
-    // gui/frost_rendertarget.h
-    class  RenderTarget;
-
-    // gui/frost_sprite.h
-    class  Sprite;
-
-    // gui/frost_spritemanager.h
-    class  SpriteManager;
-
-    // gui/frost_text.h
-    struct Line;
-    struct Format;
-    class  Text;
-
     /* MATERIAL ******************************************/
     // material/frost_decal.h
     class  Decal;
@@ -151,6 +41,9 @@ namespace Frost
 
     // material/frost_materialmanager.h
     class  MaterialManager;
+
+    // material/frost_rendertarget.h
+    class  RenderTarget;
 
     // material/frost_shader.h
     struct AutoParam;

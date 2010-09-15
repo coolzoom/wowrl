@@ -1,22 +1,10 @@
-<Zone>
-
-    <AmbientColor r="0.1" g="0.067" b="0.0"/>
-    <SunColor     r="1.0" g="0.85" b="0.55"/>
+<Zone name="Test">
     
-    <Fog>
-        <Color r="0.0" g="0.0" b="0.0"/>
-        <Distance min="50" max="80"/>
-    </Fog>
+    <AmbientColor r="0.1" g="0.067" b="0"/>
+    <SunColor r="1" g="0.85" b="0.55"/>
     
     <Models>
-        <!Model name="Chest" file="Models/World/Generic/Orc/BarrelsAndCrates/ChestActive01.fm">
-            <Materials>
-                <Material>
-                    <DiffuseTexture file="Textures/World/SkillActivated/Containers/ActiveChest01.png"/>
-                </Material>
-            </Materials>
-        </Model>
-        <!Model name="Tree" file="Models/World/Kalimdor/Azshara/AZR_Tree01.fm">
+        <Model name="Tree" file="Models/World/Kalimdor/Azshara/AZR_Tree01.fm">
             <Materials>
                 <Material subMeshID="0" subEntityID="0">
                     <DiffuseTexture file="Textures/World/Kalimdor/Azshara/NewAzsharaTrunk01.png"/>
@@ -35,31 +23,12 @@
     </Models>
     
     <Doodads>
-        <!Doodad name="TheBigChest" model="Chest">
-            <Position x="2"/>
-        </Doodad>
-        <!Doodad name="Tree" model="Tree">
-            <Position x="5" y="4" z="-10"/>
+        <Doodad name="Tree" model="Tree">
+            <Position x="-3.11682" y="-1.16752" z="-16.6649"/>
             <Scale x="0.2" y="0.2" z="0.2"/>
+            <Orientation x="0" y="0" z="0" w="1"/>
         </Doodad>
     </Doodads>
-    
-    <!Terrain>
-        <Chunks>
-            <Chunk>
-                <BoundingBox alwaysVisible="true"/>
-                <Data>
-                    <TerrainFile file="Zones/Test/Test1001.ft"/>
-                </Data>
-                <Textures>
-                    <Layer>
-                        <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png"/>
-                        <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
-                    </Layer>
-                </Textures>
-            </Chunk>
-        </Chunks>
-    </Terrain>
     
     <Terrain>
         <Chunks>
@@ -72,7 +41,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="1.0" y="1.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -87,7 +56,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="1.5" y="1.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -102,7 +71,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="2.0" y="2.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -117,13 +86,12 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="2.5" y="2.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
                 </Textures>
             </Chunk>
-            
             <Chunk>
                 <Position x="-50" y="10" z="-100"/>
                 <BoundingBox alwaysVisible="true"/>
@@ -133,7 +101,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="3.0" y="3.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -148,7 +116,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="3.5" y="3.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -163,7 +131,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="4.0" y="4.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -178,13 +146,12 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="4.5" y="4.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
                 </Textures>
             </Chunk>
-            
             <Chunk>
                 <Position x="0" y="10" z="-100"/>
                 <BoundingBox alwaysVisible="true"/>
@@ -194,7 +161,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="5.0" y="5.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -209,7 +176,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="5.5" y="5.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -224,7 +191,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="1.0" y="1.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -239,13 +206,12 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="1.5" y="1.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
                 </Textures>
             </Chunk>
-            
             <Chunk>
                 <Position x="50" y="10" z="-100"/>
                 <BoundingBox alwaysVisible="true"/>
@@ -255,7 +221,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="2.0" y="2.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -270,7 +236,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="2.5" y="2.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -285,7 +251,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="3.0" y="3.0"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -300,7 +266,7 @@
                 <Textures>
                     <Layer>
                         <Diffuse file="Textures/Tileset/Durotar/DurotarRoad.png">
-                            <Tilling x="3.5" y="3.5"/>
+                            <Tilling x="4" z="4"/>
                         </Diffuse>
                         <Specular file="Textures/Tileset/Durotar/DurotarRoad_s.png"/>
                     </Layer>
@@ -308,11 +274,5 @@
             </Chunk>
         </Chunks>
     </Terrain>
-    
-    <Lights>
-        <Point name="Torch">
-            <Position x="0" y="5" z="0"/>
-        </Point>
-    </Lights>
     
 </Zone>

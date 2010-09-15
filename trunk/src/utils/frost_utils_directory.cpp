@@ -7,8 +7,151 @@
 #include "frost_utils_stdhelper.h"
 #include "frost_utils_log.h"
 
-#include <OgreArchiveManager.h>
-#include <OgreStringVector.h>
+/*#include <OgreArchiveManager.h>
+#include <OgreStringVector.h>*/
+
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#ifdef FROST_LINUX
+    // Emulate directory and file listing windows functions
+    // Note : Taken directly from Ogre3D
+    // http://www.ogre3d.org/
+
+    // TODO : test me
+    #include <dirent.h>
+    #include <unistd.h>
+    #include <fnmatch.h>
+
+    struct _finddata_t
+    {
+        char *name;
+        int attrib;
+        unsigned long size;
+    };
+    struct _find_search_t
+    {
+        char *pattern;
+        char *curfn;
+        char *directory;
+        int dirlen;
+        DIR *dirfd;
+    };
+
+    #define _A_NORMAL 0x00  /* Normalfile-Noread/writerestrictions */
+    #define _A_RDONLY 0x01  /* Read only file */
+    #define _A_HIDDEN 0x02  /* Hidden file */
+    #define _A_SYSTEM 0x04  /* System file */
+    #define _A_SUBDIR 0x10  /* Subdirectory */
+    #define _A_ARCH   0x20  /* Archive file */
+
+    long _findfirst(const char *pattern, struct _finddata_t *data)
+    {
+        _find_search_t *fs = new _find_search_t;
+        fs->curfn = NULL;
+        fs->pattern = NULL;
+
+        const char *mask = strrchr(pattern, '/');
+        if (mask)
+        {
+            fs->dirlen = mask - pattern;
+            mask++;
+            fs->directory = (char *)malloc(fs->dirlen + 1);
+            memcpy(fs->directory, pattern, fs->dirlen);
+            fs->directory [fs->dirlen] = 0;
+        }
+        else
+        {
+            mask = pattern;
+            fs->directory = strdup(".");
+            fs->dirlen = 1;
+        }
+
+        fs->dirfd = opendir(fs->directory);
+        if (!fs->dirfd)
+        {
+            _findclose((long)fs);
+            return -1;
+        }
+
+        if (strcmp(mask, "*.*") == 0)
+            mask += 2;
+        fs->pattern = strdup(mask);
+
+        if (_findnext((long)fs, data) < 0)
+        {
+            _findclose((long)fs);
+            return -1;
+        }
+
+        return (long)fs;
+    }
+
+    int _findnext(long id, struct _finddata_t *data)
+    {
+        _find_search_t *fs = (_find_search_t*)id;
+
+        dirent *entry;
+        for (;;)
+        {
+            if (!(entry = readdir(fs->dirfd)))
+                return -1;
+
+            if (fnmatch(fs->pattern, entry->d_name, 0) == 0)
+                break;
+        }
+
+        if (fs->curfn)
+            free(fs->curfn);
+        data->name = fs->curfn = strdup(entry->d_name);
+
+        size_t namelen = strlen(entry->d_name);
+        char *xfn = new char [fs->dirlen + 1 + namelen + 1];
+        sprintf(xfn, "%s/%s", fs->directory, entry->d_name);
+
+        struct stat stat_buf;
+        if (stat(xfn, &stat_buf))
+        {
+            data->attrib = _A_NORMAL;
+            data->size = 0;
+        }
+        else
+        {
+            if (S_ISDIR(stat_buf.st_mode))
+                data->attrib = _A_SUBDIR;
+            else
+                data->attrib = _A_NORMAL;
+
+            data->size = stat_buf.st_size;
+        }
+
+        delete [] xfn;
+
+        if (data->name [0] == '.')
+            data->attrib |= _A_HIDDEN;
+
+        return 0;
+    }
+
+    int _findclose(long id)
+    {
+        int ret;
+        _find_search_t *fs = (_find_search_t *)id;
+
+        ret = fs->dirfd ? closedir(fs->dirfd) : 0;
+        free(fs->pattern);
+        free(fs->directory);
+        if (fs->curfn)
+            free(fs->curfn);
+        delete fs;
+
+        return ret;
+    }
+#else
+    #include <windows.h>
+    #include <direct.h>
+    #include <io.h>
+#endif
 
 using namespace std;
 
@@ -22,42 +165,49 @@ namespace Frost
         sRelPath_ = sRelPath;
         sName_ = sRelPath_.Cut("/").Back();
 
-        s_ptr<Ogre::Archive> pArchive;
+        s_ctnr<s_str> lDirList;
 
-        if (sRelPath_.IsEmpty())
-            pArchive = Ogre::ArchiveManager::getSingleton().load("./", "FileSystem");
+        long lHandle, res;
+        struct _finddata_t tagData;
+
+        s_str sPattern;
+        if (sRelPath.IsEmpty())
+            sPattern = "*";
         else
+            sPattern = sRelPath_ + "/*";
+
+        lHandle = _findfirst(sPattern.c_str(), &tagData);
+        res = 0;
+        while (lHandle != -1 && res != -1)
         {
-            s_ptr<Ogre::Archive> pFrostMain = Ogre::ArchiveManager::getSingleton().load("./", "FileSystem");
-            if (pFrostMain->exists(sRelPath_.Get()))
+            if ((tagData.attrib & _A_HIDDEN) != 0)
             {
-                pArchive = Ogre::ArchiveManager::getSingleton().load(sRelPath_.Get(), "FileSystem");
+                res = _findnext(lHandle, &tagData);
+                continue;
+            }
+
+            if ((tagData.attrib & _A_SUBDIR) != 0)
+            {
+                s_str s = tagData.name;
+                if (s != "." && s != "..")
+                    lDirList.PushBack(s);
             }
             else
-            {
-                Error(CLASS_NAME, "Couldn't find directory \""+sRelPath_+"\".");
-            }
+                lFileList_.PushBack(tagData.name);
+
+            res = _findnext(lHandle, &tagData);
         }
 
-        if (pArchive)
+        if(lHandle != -1)
+            _findclose(lHandle);
+
+        s_ctnr<s_str>::iterator iter;
+        foreach (iter, lDirList)
         {
-            Ogre::StringVectorPtr pSV = pArchive->list(false, true);
-            Ogre::StringVector::iterator iter;
-            foreach (iter, *pSV)
-            {
-                lSubDirectoryList_.PushBack(s_refptr<Directory>(new Directory(
-                    sRelPath_.IsEmpty() ? s_str(*iter) : (sRelPath_ + "/" + s_str(*iter))
-                )));
-            }
-
-            pSV = pArchive->list(false, false);
-            foreach (iter, *pSV)
-            {
-                lFileList_.PushBack(*iter);
-            }
+            lSubDirectoryList_.PushBack(s_refptr<Directory>(new Directory(
+                sRelPath_.IsEmpty() ? (*iter) : (sRelPath_ + "/" + (*iter))
+            )));
         }
-        else
-            Error(CLASS_NAME, "Couldn't create Archive for \""+sRelPath_+"\".");
     }
 
     s_wptr<Directory> Directory::GetNextSubDirectory()

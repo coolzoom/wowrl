@@ -6,6 +6,8 @@ FileSelector:1
 EscMenu:1
 ConfigMenu:1
 MenuBar:1
+ModelEditor:1
 PanelBar:1
 #Others
 FPSCounter:1
+Console:1

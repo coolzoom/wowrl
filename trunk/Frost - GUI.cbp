@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Frost - GUI" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release_SFML">
+				<Option output="lib\libGUI_SFML" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Release\SFML\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DFRONT_END_SFML" />
+					<Add directory="..\SFML-2.0\include" />
+					<Add directory="..\freetype-2.3.11\include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug_SFML">
+				<Option output="lib\libGUI_SFML_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Debug\SFML\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DFRONT_END_SFML" />
+					<Add directory="..\SFML-2.0\include" />
+					<Add directory="..\freetype-2.3.11\include" />
+				</Compiler>
+			</Target>
+			<Target title="Release_OGRE">
+				<Option output="lib\libGUI_OGRE" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Release\OGRE\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DFRONT_END_OGRE" />
+					<Add option="-DUSING_OGRE" />
+					<Add directory="..\ogre\OgreMain\include" />
+					<Add directory="..\freetype-2.3.11\include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug_OGRE">
+				<Option output="lib\libGUI_OGRE_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj\Debug\OGRE\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DFRONT_END_OGRE" />
+					<Add option="-DUSING_OGRE" />
+					<Add directory="..\ogre\OgreMain\include" />
+					<Add directory="..\freetype-2.3.11\include" />
+				</Compiler>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="OGRE" targets="Release_OGRE;Debug_OGRE;" />
+			<Add alias="SFML" targets="Release_SFML;Debug_SFML;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add directory="GUI\include" />
+			<Add directory="Input\include" />
+			<Add directory="include\xml" />
+			<Add directory="include\utils" />
+			<Add directory="..\boost_1_43_0" />
+			<Add directory="dependencies\lua" />
+			<Add directory="dependencies\OIS" />
+		</Compiler>
+		<Unit filename="GUI\include\frost_anchor.h" />
+		<Unit filename="GUI\include\frost_backdrop.h" />
+		<Unit filename="GUI\include\frost_button.h" />
+		<Unit filename="GUI\include\frost_checkbutton.h" />
+		<Unit filename="GUI\include\frost_editbox.h" />
+		<Unit filename="GUI\include\frost_font.h" />
+		<Unit filename="GUI\include\frost_fontmanager.h" />
+		<Unit filename="GUI\include\frost_fontstring.h" />
+		<Unit filename="GUI\include\frost_frame.h" />
+		<Unit filename="GUI\include\frost_gradient.h" />
+		<Unit filename="GUI\include\frost_guimanager.h" />
+		<Unit filename="GUI\include\frost_layeredregion.h" />
+		<Unit filename="GUI\include\frost_material.h" />
+		<Unit filename="GUI\include\frost_messageframe.h" />
+		<Unit filename="GUI\include\frost_region.h" />
+		<Unit filename="GUI\include\frost_rendertarget.h" />
+		<Unit filename="GUI\include\frost_scrollframe.h" />
+		<Unit filename="GUI\include\frost_scrollingmessageframe.h" />
+		<Unit filename="GUI\include\frost_slider.h" />
+		<Unit filename="GUI\include\frost_sprite.h" />
+		<Unit filename="GUI\include\frost_statusbar.h" />
+		<Unit filename="GUI\include\frost_text.h" />
+		<Unit filename="GUI\include\frost_texture.h" />
+		<Unit filename="GUI\include\frost_uiobject.h" />
+		<Unit filename="GUI\include\impl\SFML\sfml_font.h">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\include\impl\SFML\sfml_rendertarget.h">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\include\impl\SFML\sfml_sprite.h">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\include\impl\SFML\sfml_texturemanager.h">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\include\impl\ogre\ogre_font.h" />
+		<Unit filename="GUI\include\impl\ogre\ogre_guimanager.h" />
+		<Unit filename="GUI\include\impl\ogre\ogre_material.h" />
+		<Unit filename="GUI\include\impl\ogre\ogre_quad.h" />
+		<Unit filename="GUI\include\impl\ogre\ogre_rendertarget.h" />
+		<Unit filename="GUI\include\impl\ogre\ogre_sprite.h" />
+		<Unit filename="GUI\include\impl\ogre\ogre_spritemanager.h" />
+		<Unit filename="GUI\include\impl\sfml\sfml_guimanager.h">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\include\impl\sfml\sfml_material.h" />
+		<Unit filename="GUI\src\frost_anchor.cpp" />
+		<Unit filename="GUI\src\frost_backdrop.cpp" />
+		<Unit filename="GUI\src\frost_button.cpp" />
+		<Unit filename="GUI\src\frost_button_glues.cpp" />
+		<Unit filename="GUI\src\frost_button_parser.cpp" />
+		<Unit filename="GUI\src\frost_checkbutton.cpp" />
+		<Unit filename="GUI\src\frost_checkbutton_glues.cpp" />
+		<Unit filename="GUI\src\frost_checkbutton_parser.cpp" />
+		<Unit filename="GUI\src\frost_editbox.cpp" />
+		<Unit filename="GUI\src\frost_editbox_glues.cpp" />
+		<Unit filename="GUI\src\frost_editbox_parser.cpp" />
+		<Unit filename="GUI\src\frost_font.cpp" />
+		<Unit filename="GUI\src\frost_fontmanager.cpp" />
+		<Unit filename="GUI\src\frost_fontstring.cpp" />
+		<Unit filename="GUI\src\frost_fontstring_glues.cpp" />
+		<Unit filename="GUI\src\frost_fontstring_parser.cpp" />
+		<Unit filename="GUI\src\frost_frame.cpp" />
+		<Unit filename="GUI\src\frost_frame_glues.cpp" />
+		<Unit filename="GUI\src\frost_frame_parser.cpp" />
+		<Unit filename="GUI\src\frost_gradient.cpp" />
+		<Unit filename="GUI\src\frost_guimanager.cpp" />
+		<Unit filename="GUI\src\frost_layeredregion.cpp" />
+		<Unit filename="GUI\src\frost_layeredregion_glues.cpp" />
+		<Unit filename="GUI\src\frost_layeredregion_parser.cpp" />
+		<Unit filename="GUI\src\frost_lunar.cpp" />
+		<Unit filename="GUI\src\frost_material.cpp" />
+		<Unit filename="GUI\src\frost_messageframe.cpp" />
+		<Unit filename="GUI\src\frost_messageframe_glues.cpp" />
+		<Unit filename="GUI\src\frost_messageframe_parser.cpp" />
+		<Unit filename="GUI\src\frost_region.cpp" />
+		<Unit filename="GUI\src\frost_region_parser.cpp" />
+		<Unit filename="GUI\src\frost_rendertarget.cpp" />
+		<Unit filename="GUI\src\frost_scrollframe.cpp" />
+		<Unit filename="GUI\src\frost_scrollframe_glues.cpp" />
+		<Unit filename="GUI\src\frost_scrollframe_parser.cpp" />
+		<Unit filename="GUI\src\frost_scrollingmessageframe.cpp" />
+		<Unit filename="GUI\src\frost_scrollingmessageframe_glues.cpp" />
+		<Unit filename="GUI\src\frost_scrollingmessageframe_parser.cpp" />
+		<Unit filename="GUI\src\frost_slider.cpp" />
+		<Unit filename="GUI\src\frost_slider_glues.cpp" />
+		<Unit filename="GUI\src\frost_slider_parser.cpp" />
+		<Unit filename="GUI\src\frost_sprite.cpp" />
+		<Unit filename="GUI\src\frost_statusbar.cpp" />
+		<Unit filename="GUI\src\frost_statusbar_glues.cpp" />
+		<Unit filename="GUI\src\frost_statusbar_parser.cpp" />
+		<Unit filename="GUI\src\frost_text.cpp" />
+		<Unit filename="GUI\src\frost_texture.cpp" />
+		<Unit filename="GUI\src\frost_texture_glues.cpp" />
+		<Unit filename="GUI\src\frost_texture_parser.cpp" />
+		<Unit filename="GUI\src\frost_uiobject.cpp" />
+		<Unit filename="GUI\src\frost_uiobject_glues.cpp" />
+		<Unit filename="GUI\src\frost_uiobject_parser.cpp" />
+		<Unit filename="GUI\src\impl\SFML\sfml_font.cpp">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\src\impl\SFML\sfml_rendertarget.cpp">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\src\impl\SFML\sfml_sprite.cpp">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\src\impl\SFML\sfml_texturemanager.cpp">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\src\impl\ogre\ogre_font.cpp">
+			<Option target="Release_OGRE" />
+			<Option target="Debug_OGRE" />
+		</Unit>
+		<Unit filename="GUI\src\impl\ogre\ogre_guimanager.cpp">
+			<Option target="Release_OGRE" />
+			<Option target="Debug_OGRE" />
+		</Unit>
+		<Unit filename="GUI\src\impl\ogre\ogre_material.cpp">
+			<Option target="Release_OGRE" />
+			<Option target="Debug_OGRE" />
+		</Unit>
+		<Unit filename="GUI\src\impl\ogre\ogre_rendertarget.cpp">
+			<Option target="Release_OGRE" />
+			<Option target="Debug_OGRE" />
+		</Unit>
+		<Unit filename="GUI\src\impl\ogre\ogre_sprite.cpp">
+			<Option target="Release_OGRE" />
+			<Option target="Debug_OGRE" />
+		</Unit>
+		<Unit filename="GUI\src\impl\ogre\ogre_spritemanager.cpp">
+			<Option target="Release_OGRE" />
+			<Option target="Debug_OGRE" />
+		</Unit>
+		<Unit filename="GUI\src\impl\sfml\sfml_guimanager.cpp">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Unit filename="GUI\src\impl\sfml\sfml_material.cpp">
+			<Option target="Release_SFML" />
+			<Option target="Debug_SFML" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

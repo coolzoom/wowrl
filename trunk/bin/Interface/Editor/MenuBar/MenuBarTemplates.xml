@@ -1,6 +1,6 @@
 <Ui>
     <Button name="ButtonTemplate_Menu" virtual="true">
-        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false">
             <Anchors>
                 <Anchor point="CENTER"/>
             </Anchors>
@@ -21,13 +21,13 @@
                 end
             </OnEvent>
             <OnClick>
-                MenuBar:SetCurrentDropdown(this.Dropdown);
+                MenuBar:SetCurrentDropDown(this.DropDown);
             </OnClick>
         </Scripts>
     </Button>
-    
+
     <Button name="ButtonTemplate_MenuItem" virtual="true">
-        <NormalText font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" setAllPoints="false">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT" setAllPoints="false">
             <Anchors>
                 <Anchor point="TOPLEFT">
                     <Offset>
@@ -38,7 +38,7 @@
             </Anchors>
             <Color r="1" g="1" b="1"/>
         </NormalText>
-        <DisabledText font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" setAllPoints="false">
+        <DisabledText font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT" setAllPoints="false">
             <Anchors>
                 <Anchor point="TOPLEFT">
                     <Offset>
@@ -53,7 +53,7 @@
         <Scripts>
             <OnLoad>
                 this.normalTextColor = Color(1, 1, 1);
-                
+
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
                     local newColor = self.normalTextColor*color;
@@ -63,7 +63,7 @@
                     if (self.Key) then
                         self.Key:SetTextColor(color:Unpack());
                     end
-                    self.DisabledText:SetTextColor(color:Unpack());
+                    self:GetDisabledFontObject():SetTextColor(color:Unpack());
                 end);
             </OnLoad>
             <OnEvent>
@@ -73,9 +73,21 @@
             </OnEvent>
         </Scripts>
     </Button>
-    
+
     <CheckButton name="CheckButtonTemplate_MenuCheckItem" inherits="ButtonTemplate_MenuItem" virtual="true">
-        <CheckedTexture file="Interface/Editor/Templates/CheckButtonChecked.png">
+        <NormalTexture file="Interface/Editor/Templates/CheckButtonBackground.png" setAllPoints="false">
+            <Size>
+                <AbsDimension x="8" y="8"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOPLEFT">
+                    <Offset>
+                        <AbsDimension x="4" y="3"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </NormalTexture>
+        <CheckedTexture file="Interface/Editor/Templates/CheckButtonChecked.png" setAllPoints="false">
             <Size>
                 <AbsDimension x="8" y="8"/>
             </Size>
@@ -87,21 +99,5 @@
                 </Anchor>
             </Anchors>
         </CheckedTexture>
-        <Layers>
-            <Layer>
-                <Texture name="$parentBackground" file="Interface/Editor/Templates/CheckButtonBackground.png">
-                    <Size>
-                        <AbsDimension x="8" y="8"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="4" y="3"/>
-                            </Offset>
-                        </Anchor>
-                    </Anchors>
-                </Texture>
-            </Layer>
-        </Layers>
     </CheckButton>
 </Ui>

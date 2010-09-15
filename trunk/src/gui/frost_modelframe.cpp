@@ -5,17 +5,21 @@
 
 #include "gui/frost_modelframe.h"
 
-#include "gui/frost_frame.h"
-#include "gui/frost_texture.h"
-#include "gui/frost_guimanager.h"
-#include "gui/frost_spritemanager.h"
+#include <frost_frame.h>
+#include <frost_texture.h>
+#include <frost_guimanager.h>
+#include <frost_rendertarget.h>
+#include <impl/ogre/ogre_rendertarget.h>
 #include "camera/frost_camera.h"
 #include "scene/frost_light.h"
+#include "scene/frost_lightmanager.h"
 #include "model/frost_model.h"
 #include "model/frost_modelmanager.h"
 #include "model/frost_animmanager.h"
 #include "material/frost_materialmanager.h"
-#include "frost_inputmanager.h"
+#include "material/frost_material.h"
+
+#include <frost_inputmanager.h>
 
 #include <OgreRoot.h>
 #include <OgreRenderTarget.h>
@@ -26,7 +30,7 @@ using namespace Frost::GUI;
 
 const s_str ModelFrame::CLASS_NAME = "GUI::ModelFrame";
 
-ModelFrame::ModelFrame() : Frame()
+ModelFrame::ModelFrame( s_ptr<GUIManager> pManager ) : Frame(pManager)
 {
     lType_.PushBack("ModelFrame");
 
@@ -38,12 +42,13 @@ ModelFrame::ModelFrame() : Frame()
     uiModelAnimation_ = s_uint::NaN;
 
     RegisterForDrag((s_str("LeftButton"), s_str("RightButton")));
+
+    mLightColor_ = Color::WHITE;
+    mLightDirection_ = Vector(-1, -1, -1);
 }
 
 ModelFrame::~ModelFrame()
 {
-    SpriteManager::GetSingleton()->DeleteRenderTarget(pRenderTarget_);
-
     pModel_ = nullptr;
 
     pLight_.Delete();
@@ -255,36 +260,52 @@ void ModelFrame::SetAmbientColor( const Color& mAmbientColor )
     if (mAmbientColor_ != mAmbientColor)
     {
         mAmbientColor_ = mAmbientColor;
-        if (pModel_ && bLightingEnabled_)
+        if (pSceneManager_)
         {
             pSceneManager_->setAmbientLight(Color::FrostToOgre(mAmbientColor_));
-            NotifyRendererNeedRedraw();
-            bRedrawRenderTarget_ = true;
+
+            if (pModel_ && bLightingEnabled_)
+            {
+                NotifyRendererNeedRedraw();
+                bRedrawRenderTarget_ = true;
+            }
         }
     }
 }
 
 void ModelFrame::SetLightDirection( const Vector& mLightDirection )
 {
-    if (pLight_)
-        pLight_->SetDirection(mLightDirection);
-
-    if (pModel_ && bLightingEnabled_)
+    if (mLightDirection != mLightDirection_)
     {
-        NotifyRendererNeedRedraw();
-        bRedrawRenderTarget_ = true;
+        mLightDirection_ = mLightDirection;
+        if (pLight_)
+        {
+            pLight_->SetDirection(mLightDirection_);
+
+            if (pModel_ && bLightingEnabled_)
+            {
+                NotifyRendererNeedRedraw();
+                bRedrawRenderTarget_ = true;
+            }
+        }
     }
 }
 
 void ModelFrame::SetLightColor( const Color& mLightColor )
 {
-    if (pLight_)
-        pLight_->SetColor(mLightColor);
-
-    if (pModel_ && bLightingEnabled_)
+    if (mLightColor != mLightColor_)
     {
-        NotifyRendererNeedRedraw();
-        bRedrawRenderTarget_ = true;
+        mLightColor_ = mLightColor;
+        if (pLight_)
+        {
+            pLight_->SetColor(mLightColor_);
+
+            if (pModel_ && bLightingEnabled_)
+            {
+                NotifyRendererNeedRedraw();
+                bRedrawRenderTarget_ = true;
+            }
+        }
     }
 }
 
@@ -304,20 +325,27 @@ s_bool ModelFrame::SetModelFile( const s_str& sFile )
                 Ogre::ST_GENERIC, ("FrostModelFrameSceneMgr_"+uiID_).Get()
             );
 
+            if (bLightingEnabled_)
+                pSceneManager_->setAmbientLight(Color::FrostToOgre(mAmbientColor_));
+            else
+                pSceneManager_->setAmbientLight(Ogre::ColourValue::White);
+
             pCamera_ = new Camera(pSceneManager_);
             pLight_ = new Light(Light::DIRECTIONAL, pSceneManager_);
+            pLight_->SetDirection(mLightDirection_);
+            pLight_->SetColor(mLightColor_);
         }
 
         if (!pRenderTexture_)
         {
             // Create the scroll texture
-            pRenderTexture_ = new Texture();
+            pRenderTexture_ = new Texture(pManager_);
             pRenderTexture_->SetSpecial();
             pRenderTexture_->SetParent(this);
             pRenderTexture_->SetDrawLayer("ARTWORK");
             pRenderTexture_->SetName("$parentRenderTexture");
 
-            if (!GUIManager::GetSingleton()->AddUIObject(pRenderTexture_))
+            if (!pManager_->AddUIObject(pRenderTexture_))
             {
                 Warning(lType_.Back(),
                     "Trying to create render texture for \""+sName_+"\",\n"
@@ -333,7 +361,7 @@ s_bool ModelFrame::SetModelFile( const s_str& sFile )
             pRenderTexture_->SetAllPoints(this);
 
             if (pRenderTarget_)
-                pRenderTexture_->SetTexture(pRenderTarget_);
+                pRenderTexture_->SetTexture(pRenderTarget_.Get());
         }
 
         s_ptr<ModelManager> pModelMgr = ModelManager::GetSingleton();
@@ -347,11 +375,11 @@ s_bool ModelFrame::SetModelFile( const s_str& sFile )
             sModelFile_ = sFile;
             pModel_ = pModelMgr->CreateModel("Temporary", sModelFile_, "Model", pSceneManager_);
 
+            pModel_->SetMaterial(MaterialManager::GetSingleton()->CreateMaterial3D(Color::WHITE));
+
             pModel_->SetScale(fScale_*Vector::UNIT);
             pModel_->SetDirection(mModelDirection_);
             pModel_->SetPosition(mModelPosition_);
-
-            pModel_->GetOgreNode()->showBoundingBox(true);
 
             NotifyRendererNeedRedraw();
             bRedrawRenderTarget_ = true;
@@ -426,7 +454,7 @@ void ModelFrame::SetModelTexture( const s_str& sFile, const s_bool& bAlphaReject
 {
     if (pModel_)
     {
-        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sFile);
+        s_refptr<Frost::Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sFile);
         pMat->SetAlphaReject(bAlphaReject);
 
         pModel_->SetMaterial(pMat);
@@ -440,7 +468,8 @@ void ModelFrame::SetModelTexture( const Color& mColor )
 {
     if (pModel_)
     {
-        s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor);
+        s_refptr<Frost::Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor);
+        pMat->SetShaders("SimpleColorNoPP");
         pModel_->SetMaterial(pMat);
 
         NotifyRendererNeedRedraw();
@@ -455,7 +484,7 @@ void ModelFrame::SetSubMeshTexture( const s_uint& uiSubMeshID, const s_str& sFil
         s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
         if (pModelPart)
         {
-            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sFile);
+            s_refptr<Frost::Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sFile);
             pMat->SetAlphaReject(bAlphaReject);
 
             pModelPart->SetMaterial(pMat);
@@ -473,7 +502,8 @@ void ModelFrame::SetSubMeshTexture( const s_uint& uiSubMeshID, const Color& mCol
         s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
         if (pModelPart)
         {
-            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor);
+            s_refptr<Frost::Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor);
+            pMat->SetShaders("SimpleColorNoPP");
             pModelPart->SetMaterial(pMat);
 
             NotifyRendererNeedRedraw();
@@ -490,7 +520,7 @@ void ModelFrame::SetSubEntityTexture( const s_uint& uiSubMeshID, const s_uint& u
         s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
         if (pModelPart)
         {
-            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sFile);
+            s_refptr<Frost::Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sFile);
             pMat->SetAlphaReject(bAlphaReject);
 
             pModelPart->SetMaterial(pMat, uiSubEntityID);
@@ -508,8 +538,93 @@ void ModelFrame::SetSubEntityTexture( const s_uint& uiSubMeshID, const s_uint& u
         s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
         if (pModelPart)
         {
-            s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor);
+            s_refptr<Frost::Material> pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor);
+            pMat->SetShaders("SimpleColorNoPP");
             pModelPart->SetMaterial(pMat, uiSubEntityID);
+
+            NotifyRendererNeedRedraw();
+            bRedrawRenderTarget_ = true;
+        }
+    }
+}
+
+void ModelFrame::HideModel()
+{
+    if (pModel_)
+    {
+        pModel_->Hide(true);
+
+        NotifyRendererNeedRedraw();
+        bRedrawRenderTarget_ = true;
+    }
+}
+
+void ModelFrame::HideSubMesh( const s_uint& uiSubMeshID )
+{
+    if (pModel_)
+    {
+        s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
+        if (pModelPart)
+        {
+            pModelPart->Hide();
+
+            NotifyRendererNeedRedraw();
+            bRedrawRenderTarget_ = true;
+        }
+    }
+}
+
+void ModelFrame::HideSubEntity( const s_uint& uiSubMeshID, const s_uint& uiSubEntityID )
+{
+    if (pModel_)
+    {
+        s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
+        if (pModelPart)
+        {
+            pModelPart->Hide(uiSubEntityID);
+
+            NotifyRendererNeedRedraw();
+            bRedrawRenderTarget_ = true;
+        }
+    }
+}
+
+void ModelFrame::ShowModel()
+{
+    if (pModel_)
+    {
+        pModel_->Show(true);
+
+        NotifyRendererNeedRedraw();
+        bRedrawRenderTarget_ = true;
+    }
+}
+
+void ModelFrame::ShowSubMesh( const s_uint& uiSubMeshID )
+{
+    if (pModel_)
+    {
+        s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
+        if (pModelPart)
+        {
+            pModel_->Show();
+            pModelPart->Show();
+
+            NotifyRendererNeedRedraw();
+            bRedrawRenderTarget_ = true;
+        }
+    }
+}
+
+void ModelFrame::ShowSubEntity( const s_uint& uiSubMeshID, const s_uint& uiSubEntityID )
+{
+    if (pModel_)
+    {
+        s_ptr<ModelPart> pModelPart = pModel_->GetModelPart(uiSubMeshID);
+        if (pModelPart)
+        {
+            pModel_->Show();
+            pModelPart->Show(uiSubEntityID);
 
             NotifyRendererNeedRedraw();
             bRedrawRenderTarget_ = true;
@@ -557,7 +672,15 @@ void ModelFrame::Update()
         }
     }
 
-    if (bUpdateRenderTarget_)
+    s_float fDelta = s_float(TimeManager::GetSingleton()->GetDelta());
+
+    if (pLight_)
+        pLight_->Update(fDelta);
+
+    if (pCamera_)
+        pCamera_->Update(fDelta);
+
+    if (bUpdateRenderTarget_ && pCamera_)
     {
         UpdateRenderTarget_();
 
@@ -567,7 +690,8 @@ void ModelFrame::Update()
 
     if (bRedrawRenderTarget_ && pRenderTarget_ && IsVisible())
     {
-        pRenderTarget_->GetOgreRenderTarget()->update();
+        // Update the render target
+        pRenderTarget_->GetImpl()->GetOgreRenderTarget()->update();
         bRedrawRenderTarget_ = false;
     }
 }
@@ -576,14 +700,14 @@ void ModelFrame::CreateGlue()
 {
     if (bVirtual_)
     {
-        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        s_ptr<Lua::State> pLua = pManager_->GetLua();
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
     }
     else
     {
-        s_ptr<Lua::State> pLua = GUIManager::GetSingleton()->GetLua();
+        s_ptr<Lua::State> pLua = pManager_->GetLua();
         pLua->PushString(sLuaName_);
         lGlueList_.PushBack(pLua->PushNew<LuaModelFrame>());
         pLua->SetGlobal(sLuaName_);
@@ -592,7 +716,7 @@ void ModelFrame::CreateGlue()
 
 void ModelFrame::UpdateRenderTarget_()
 {
-    if (pCamera_ && uiAbsWidth_.IsValid() && uiAbsHeight_.IsValid())
+    if (uiAbsWidth_.IsValid() && uiAbsHeight_.IsValid())
     {
         pCamera_->GetOgreCamera()->setAspectRatio(
             Ogre::Real(uiAbsWidth_.Get()) /
@@ -604,8 +728,8 @@ void ModelFrame::UpdateRenderTarget_()
     {
         if (uiAbsWidth_.IsValid() && uiAbsHeight_.IsValid())
         {
-            pRenderTarget_ = SpriteManager::GetSingleton()->CreateRenderTarget(uiAbsWidth_, uiAbsHeight_);
-            s_ptr<Ogre::Viewport> pViewport = pRenderTarget_->GetOgreRenderTarget()->addViewport(
+            pRenderTarget_ = s_refptr<RenderTarget>(new RenderTarget(uiAbsWidth_, uiAbsHeight_));
+            s_ptr<Ogre::Viewport> pViewport = pRenderTarget_->GetImpl()->GetOgreRenderTarget()->addViewport(
                 pCamera_->GetOgreCamera().Get(), 1
             );
             pViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0, 0));
@@ -616,7 +740,7 @@ void ModelFrame::UpdateRenderTarget_()
             );
 
             if (pRenderTexture_ && pRenderTarget_)
-                pRenderTexture_->SetTexture(pRenderTarget_);
+                pRenderTexture_->SetTexture(pRenderTarget_.Get());
         }
     }
     else
@@ -627,7 +751,7 @@ void ModelFrame::UpdateRenderTarget_()
 
             if (bTargetRecreated)
             {
-                s_ptr<Ogre::Viewport> pViewport = pRenderTarget_->GetOgreRenderTarget()->addViewport(
+                s_ptr<Ogre::Viewport> pViewport = pRenderTarget_->GetImpl()->GetOgreRenderTarget()->addViewport(
                     pCamera_->GetOgreCamera().Get(), 1
                 );
                 pViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0, 0));
@@ -638,11 +762,13 @@ void ModelFrame::UpdateRenderTarget_()
                 );
 
                 if (pRenderTexture_ && pRenderTarget_)
-                    pRenderTexture_->SetTexture(pRenderTarget_);
+                    pRenderTexture_->SetTexture(pRenderTarget_.Get());
             }
         }
     }
 }
+
+// TODO : # finir modeleditor
 
 void ModelFrame::SetupCamera_()
 {
@@ -651,11 +777,144 @@ void ModelFrame::SetupCamera_()
 
     const AxisAlignedBox& mBox = pModel_->GetBoundingBox();
 
-    s_float fPitch = 0.125f;
     s_float fYFoV = 0.125f;
 
-    s_float fDist = 2.0f*(mBox.GetMax().Y() - mBox.GetMin().Y())*cos(fYFoV/2.0f);
+    s_float fDist = 0.5f*(mBox.GetMax().Y() - mBox.GetMin().Y())/tan(fYFoV/2.0f) +
+                    0.5f*(mBox.GetMax().Z() - mBox.GetMin().Z());
 
     pCamera_->SetPosition(Vector(0, (mBox.GetMax().Y() + mBox.GetMin().Y())/2.0f, -fDist));
     pCamera_->OrbitAround(Vector(0, (mBox.GetMax().Y() + mBox.GetMin().Y())/2.0f, 0));
 }
+
+#define method(widget, function) {#function, &Lua##widget::_##function}
+
+const char  LuaModelFrame::className[] = "ModelFrame";
+const char* LuaModelFrame::classList[] = {"ModelFrame", 0};
+Lunar<LuaModelFrame>::RegType LuaModelFrame::methods[] = {
+    {"dt", &LuaModelFrame::GetDataTable},
+
+    // UIObject (inherited)
+    method(ModelFrame, GetAlpha),
+    method(ModelFrame, GetName),
+    method(ModelFrame, GetObjectType),
+    method(ModelFrame, IsObjectType),
+    method(ModelFrame, SetAlpha),
+
+    method(ModelFrame, ClearAllPoints),
+    method(ModelFrame, GetBase),
+    method(ModelFrame, GetBottom),
+    method(ModelFrame, GetCenter),
+    method(ModelFrame, GetHeight),
+    method(ModelFrame, GetLeft),
+    method(ModelFrame, GetNumPoint),
+    method(ModelFrame, GetParent),
+    method(ModelFrame, GetPoint),
+    method(ModelFrame, GetRight),
+    method(ModelFrame, GetTop),
+    method(ModelFrame, GetWidth),
+    method(ModelFrame, Hide),
+    method(ModelFrame, IsShown),
+    method(ModelFrame, IsVisible),
+    method(ModelFrame, SetAllPoints),
+    method(ModelFrame, SetHeight),
+    method(ModelFrame, SetParent),
+    method(ModelFrame, SetPoint),
+    method(ModelFrame, SetWidth),
+    method(ModelFrame, Show),
+
+    // Frame
+    method(ModelFrame, CreateFontString),
+    method(ModelFrame, CreateTexture),
+    method(ModelFrame, CreateTitleRegion),
+    method(ModelFrame, DisableDrawLayer),
+    method(ModelFrame, EnableDrawLayer),
+    method(ModelFrame, EnableKeyboard),
+    method(ModelFrame, EnableMouse),
+    method(ModelFrame, EnableMouseWheel),
+    method(ModelFrame, GetBackdrop),
+    method(ModelFrame, GetBackdropBorderColor),
+    method(ModelFrame, GetBackdropColor),
+    method(ModelFrame, GetChildren),
+    method(ModelFrame, GetEffectiveAlpha),
+    method(ModelFrame, GetEffectiveScale),
+    method(ModelFrame, GetFrameLevel),
+    method(ModelFrame, GetFrameStrata),
+    method(ModelFrame, GetFrameType),
+    method(ModelFrame, GetHitRectInsets),
+    method(ModelFrame, GetID),
+    method(ModelFrame, GetMaxResize),
+    method(ModelFrame, GetMinResize),
+    method(ModelFrame, SetMaxWidth),
+    method(ModelFrame, SetMaxHeight),
+    method(ModelFrame, SetMinWidth),
+    method(ModelFrame, SetMinHeight),
+    method(ModelFrame, GetNumChildren),
+    method(ModelFrame, GetNumRegions),
+    method(ModelFrame, GetScale),
+    method(ModelFrame, GetScript),
+    method(ModelFrame, GetTitleRegion),
+    method(ModelFrame, HasScript),
+    method(ModelFrame, IsClampedToScreen),
+    method(ModelFrame, IsFrameType),
+    method(ModelFrame, IsKeyboardEnabled),
+    method(ModelFrame, IsMouseEnabled),
+    method(ModelFrame, IsMouseWheelEnabled),
+    method(ModelFrame, IsMovable),
+    method(ModelFrame, IsResizable),
+    method(ModelFrame, IsTopLevel),
+    method(ModelFrame, IsUserPlaced),
+    method(ModelFrame, Lower),
+    method(ModelFrame, On),
+    method(ModelFrame, Raise),
+    method(ModelFrame, RegisterAllEvents),
+    method(ModelFrame, RegisterEvent),
+    method(ModelFrame, RegisterForDrag),
+    method(ModelFrame, SetBackdrop),
+    method(ModelFrame, SetBackdropBorderColor),
+    method(ModelFrame, SetBackdropColor),
+    method(ModelFrame, SetClampedToScreen),
+    method(ModelFrame, SetFrameStrata),
+    method(ModelFrame, SetHitRectInsets),
+    method(ModelFrame, SetMaxResize),
+    method(ModelFrame, SetMinResize),
+    method(ModelFrame, SetMovable),
+    method(ModelFrame, SetResizable),
+    method(ModelFrame, SetScale),
+    method(ModelFrame, SetScript),
+    method(ModelFrame, SetTopLevel),
+    method(ModelFrame, SetUserPlaced),
+    method(ModelFrame, StartMoving),
+    method(ModelFrame, StartSizing),
+    method(ModelFrame, StopMovingOrSizing),
+    method(ModelFrame, UnregisterAllEvents),
+    method(ModelFrame, UnregisterEvent),
+
+    // ModelFrame
+    method(ModelFrame, AdvanceTime),
+    method(ModelFrame, ClearModel),
+    method(ModelFrame, GetFacing),
+    method(ModelFrame, GetLight),
+    method(ModelFrame, GetModel),
+    method(ModelFrame, GetModelScale),
+    method(ModelFrame, GetPosition),
+    method(ModelFrame, GetAvailableSubMeshes),
+    method(ModelFrame, GetSubEntityNumber),
+    method(ModelFrame, HideModel),
+    method(ModelFrame, HideSubMesh),
+    method(ModelFrame, HideSubEntity),
+    method(ModelFrame, SetFacing),
+    method(ModelFrame, SetLight),
+    method(ModelFrame, SetModel),
+    method(ModelFrame, SetModelScale),
+    method(ModelFrame, SetModelTexture),
+    method(ModelFrame, SetPosition),
+    method(ModelFrame, SetSequence),
+    method(ModelFrame, SetSequenceTime),
+    method(ModelFrame, SetSubMeshTexture),
+    method(ModelFrame, SetSubEntityTexture),
+    method(ModelFrame, ShowModel),
+    method(ModelFrame, ShowSubMesh),
+    method(ModelFrame, ShowSubEntity),
+
+    {0,0}
+};

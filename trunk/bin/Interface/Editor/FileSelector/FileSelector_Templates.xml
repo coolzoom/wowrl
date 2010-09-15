@@ -10,7 +10,7 @@
                 </Offset>
             </Anchor>
         </Anchors>
-        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false" justifyH="LEFT">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false" justifyH="LEFT">
             <Anchors>
                 <Anchor point="LEFT" relativeTo="$parentIconFrame" relativePoint="RIGHT">
                     <Offset>
@@ -62,7 +62,7 @@
         <Anchors>
             <Anchor point="RIGHT"/>
         </Anchors>
-        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false" justifyH="LEFT">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false" justifyH="LEFT">
             <Anchors>
                 <Anchor point="LEFT" relativeTo="$parentIconFrame" relativePoint="RIGHT">
                     <Offset>

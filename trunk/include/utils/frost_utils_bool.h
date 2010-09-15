@@ -103,13 +103,13 @@ namespace Frost
         template<class N>
         s_str_t<N> operator + (const N* sValue) const
         {
-            return s_str_t<N>(*this) + sValue;
+            return s_str_t<N>::Convert(*this) + sValue;
         }
 
         template<class N>
         s_str_t<N> operator + (const s_str_t<N>& sValue) const
         {
-            return s_str_t<N>(*this) + sValue;
+            return s_str_t<N>::Convert(*this) + sValue;
         }
 
         s_bool_t& operator =  (const s_bool_t& bValue)
@@ -154,7 +154,7 @@ namespace Frost
     template<class T, class N>
     s_str_t<N> operator+ ( const N* sLeft, const s_bool_t<T>& bRight )
     {
-        return s_str_t<N>(sLeft) << bRight;
+        return s_str_t<N>(sLeft) + s_str_t<N>::Convert(bRight);
     }
 
     typedef s_bool_t<bool> s_bool;

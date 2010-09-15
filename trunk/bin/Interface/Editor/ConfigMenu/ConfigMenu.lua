@@ -5,7 +5,7 @@ function ConfigMenu:AddPanel(caption)
         self.panelNumber = 0;
         self.panels = {};
     end
-    
+
     local panel = CreateFrame("Frame", "$parent"..caption.."Panel", self, "FrameTemplate_ConfigMenuPanel");
     if (panel) then
         panel.rank = self.panelNumber;
@@ -13,27 +13,27 @@ function ConfigMenu:AddPanel(caption)
         panel.lastItem = nil;
         panel.itemNumber = 0;
         panel.items = {};
-        
+
         local header = CreateFrame("Button", "$parent"..caption.."Header", self, "ButtonTemplate_ConfigMenuPanelHeader");
         if (header) then
             panel.header = header;
             header.panel = panel;
             header:SetText(AddOns.ConfigMenu:GetLocalizedString("Panel"..caption));
             header:SetWidth(math.max(header:GetTextWidth()+10, 18));
-            
+
             if (self.lastPanel) then
                 header:SetPoint("LEFT", self.lastPanel.header, "RIGHT", -2, 0);
             else
                 header:SetPoint("BOTTOMLEFT", panel, "TOPLEFT", 0, 2);
             end
-            
+
             AddOns.Editor:CallColorFunctions(header);
         end
-    
+
         self.lastPanel = panel;
         self.panels[caption] = panel;
         self.panelNumber = self.panelNumber + 1;
-        
+
         return panel;
     end
 end
@@ -44,24 +44,24 @@ function ConfigMenu:AddColorItem(panelName, caption, color)
         local item = CreateFrame("Frame", "$parent"..caption.."Item", panel, "FrameTemplate_ConfigMenuColorItem");
         if (item) then
             item.caption = caption;
-            item.color = color;
-            
+            item.Swatch.color = color;
+
             item.Caption:SetText(AddOns.ConfigMenu:GetLocalizedString("Panel"..panelName..caption));
             item:SetWidth(item.Caption:GetStringWidth() + 20);
-            
+
             if (not color) then
                 color = Color(1,1,1);
             end
             item.Swatch.ColorZone:SetBackdropColor(color:Unpack());
-            
+
             if (panel.lastItem) then
                 item:SetPoint("TOP", panel.lastItem, "BOTTOM");
             else
                 item:SetPoint("TOP", panel, "TOP", 0, 5);
             end
-            
+
             AddOns.Editor:CallColorFunctions(item);
-        
+
             panel.lastItem = item;
             panel.items[caption] = item;
             panel.itemNumber = panel.itemNumber + 1;
@@ -78,9 +78,9 @@ function ConfigMenu:SetCurrentPanel(caption)
         local newColor = self.currentPanel.header.normalTextColor*AddOns.Editor.Config.UITextColor;
         self.currentPanel.header:GetNormalFontObject():SetTextColor(newColor:Unpack());
     end
-    
+
     self.currentPanel = self.panels[caption];
-    
+
     if (self.currentPanel) then
         self.currentPanel:Show();
         self.currentPanel.header:SetBackdropColor(1, 1, 1, 0.2);
@@ -94,17 +94,17 @@ end
 
 ConfigMenu:AddPanel("General");
 ConfigMenu:AddPanel("Interface");
-ConfigMenu:AddColorItem("Interface", "TextColor", AddOns.Editor.Config.UITextColor).onColorChange = function (color)
+ConfigMenu:AddColorItem("Interface", "TextColor", AddOns.Editor.Config.UITextColor).Swatch.onColorChange = function (color)
     for obj, f in pairs(AddOns.Editor.textColorFuncList) do
         f(obj, color);
     end
 end;
-ConfigMenu:AddColorItem("Interface", "SecondaryTextColor", AddOns.Editor.Config.UISecondaryTextColor).onColorChange = function (color)
+ConfigMenu:AddColorItem("Interface", "SecondaryTextColor", AddOns.Editor.Config.UISecondaryTextColor).Swatch.onColorChange = function (color)
     for obj, f in pairs(AddOns.Editor.sndTextColorFuncList) do
         f(obj, color);
     end
 end;
-ConfigMenu:AddColorItem("Interface", "BackgroundColor", AddOns.Editor.Config.UIBackgroundColor).onColorChange = function (color)
+ConfigMenu:AddColorItem("Interface", "BackgroundColor", AddOns.Editor.Config.UIBackgroundColor).Swatch.onColorChange = function (color)
     for obj, f in pairs(AddOns.Editor.bgColorFuncList) do
         f(obj, color);
     end

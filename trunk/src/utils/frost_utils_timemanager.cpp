@@ -12,6 +12,7 @@
 #include "frost_utils_stdhelper.h"
 #include "frost_utils_log.h"
 #include "frost_utils_math.h"
+#include "frost_utils_timers.h"
 
 #include <OgreTimer.h>
 
@@ -29,9 +30,6 @@ namespace Frost
 
     TimeManager::TimeManager()
     {
-        pTimer_ = s_refptr<Ogre::Timer>(new Ogre::Timer());
-        pFPSTimer_ = s_refptr<Ogre::Timer>(new Ogre::Timer());
-
         dDelta_ = 0.017;
         uiWorstFPS_ = s_uint::INF;
     }
@@ -42,6 +40,7 @@ namespace Frost
 
     void TimeManager::Initialize()
     {
+        pFPSTimer_ = s_refptr<Timer>(new Timer(Timer::START_NOW));
         dLastTime_ = dCurTime_ = dStart_ = dLast_ = GetTime();
 
         dProfileTime_ = 0.0;
@@ -57,8 +56,8 @@ namespace Frost
     {
         // Get delta time
         dLastTime_ = dCurTime_;
-        dCurTime_ = pTimer_->getMicroseconds();
-        dDelta_ = (dCurTime_ - dLastTime_)/1000000.0;
+        dCurTime_ = GetTime();
+        dDelta_ = dCurTime_ - dLastTime_;
 
         // Update FPS
         static s_uint uiFrameRateCount = 0;
@@ -70,9 +69,9 @@ namespace Frost
         else
             uiFrameRateCount += s_uint(1.0/dDelta_);
 
-        if (pFPSTimer_->getMilliseconds() > 1000)
+        if (pFPSTimer_ && pFPSTimer_->GetElapsed() > 1.0)
         {
-            pFPSTimer_->reset();
+            pFPSTimer_->Zero();
 
             uiFPS_ = uiFrameRateCount/uiFrameCount;
             uiFrameRateCount = 0;
@@ -124,7 +123,7 @@ namespace Frost
 
     s_double TimeManager::GetTime() const
     {
-        return pTimer_->getMilliseconds()/1000.0;
+        return Frost::GetTime();
     }
 
     s_str TimeManager::GetPlayTime() const

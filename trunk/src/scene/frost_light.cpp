@@ -27,21 +27,23 @@ namespace Frost
             case POINT :
             {
                 pOgreLight_->setType(Ogre::Light::LT_POINT);
+                SetAttenuation(0.0f, 1.0f, 0.0f);
                 break;
             }
             case DIRECTIONAL :
             {
                 pOgreLight_->setType(Ogre::Light::LT_DIRECTIONAL);
+                SetAttenuation(1.0f, 0.0f, 0.0f);
                 break;
             }
             case SPOT :
             {
                 pOgreLight_->setType(Ogre::Light::LT_SPOTLIGHT);
+                SetAttenuation(0.0f, 1.0f, 0.0f);
                 break;
             }
         }
 
-        SetAttenuation(0.0f, 1.0f, 0.0f);
         SetRange(30.0f);
     }
 

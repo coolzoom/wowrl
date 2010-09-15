@@ -550,7 +550,7 @@ namespace Frost
         bMouseEnabled_ = bEnable;
     }
 
-    const s_bool& OgreInterface::IsMouseEnabled() const
+    s_bool OgreInterface::IsMouseEnabled() const
     {
         return bMouseEnabled_;
     }

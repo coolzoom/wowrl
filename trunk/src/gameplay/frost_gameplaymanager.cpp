@@ -36,9 +36,8 @@ namespace Frost
         Lua::RegisterUnitClass(pLua_);
         Lua::RegisterMovableObjectClass(pLua_);
         Lua::RegisterGameplayClass(pLua_);
-        Lua::RegisterVectorClass(pLua_);
-        Lua::RegisterKeyCodes(pLua_);
-        Lua::RegisterEngineClass(pLua_);
+        pLua_->DoFile("DB/Vector.lua");
+        pLua_->DoFile("KeyCodes.lua");
         Engine::GetSingleton()->CreateGlue(pLua_);
     }
 

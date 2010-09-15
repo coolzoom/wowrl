@@ -17,10 +17,9 @@ void main_vs(
               uniform float4x4 mWorld,
             
               uniform float4   mLightPos[5],
+              uniform float4   mLightDir,
               uniform float4   mLightDiffuseColor[5],
               uniform float4   mLightAtten[5],
-              uniform float4   mSunDir,
-              uniform float4   mSunColor,
               uniform float4   mAmbient,
               uniform float4   mDiffuse
             )
@@ -32,8 +31,12 @@ void main_vs(
     
     float3 tPosition = mul(mWorld, iPosition);
     float3 tNormal = normalize(mul(mWorld, iNormal));
+    
+    // Handle directional light
+    tLight += mLightDiffuseColor[0].rgb * saturate(-dot(mLightDir.xyz, tNormal)) / mLightAtten[0].y;
 
-    for (int i = 0; i < 5; ++i)
+    // Handle point lights
+    for (int i = 1; i < 5; ++i)
     {
         tLightDir = normalize(mLightPos[i].xyz - tPosition);
         tDistance = distance(mLightPos[i].xyz, tPosition);
@@ -42,7 +45,6 @@ void main_vs(
         tLight += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, tNormal)) * tAtten;
     }
     
-    tLight += mSunColor.rgb * saturate(dot(mSunDir.xyz, tNormal));
     tLight = saturate(tLight);
     
     oColor = mDiffuse;

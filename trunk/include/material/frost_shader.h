@@ -112,11 +112,10 @@ namespace Frost
 
         /// Adds lights automatic parameters.
         /** \param uiLightNbr   The maximum number of light sent to the shader
-        *   \param bDirectional 'true' to include one directional light
         *   \note For each light, Ogre will send its position, its attenuation
         *         factors and the color.
         */
-        void AddLightParams(const s_uint& uiLightNbr, const s_bool& bDirectional);
+        void AddLightParams(const s_uint& uiLightNbr);
 
         /// Sets the value of a parameter.
         /** \param sName  The name of the parameter
@@ -172,8 +171,6 @@ namespace Frost
         s_ctnr<Param>     lParamList_;
 
         s_ctnr< s_ptr<Ogre::Pass> > lBindedPassList_;
-
-        s_bool bSendSunParameters_;
     };
 
     /// Controls vertices in the graphics card

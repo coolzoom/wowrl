@@ -27,6 +27,7 @@ namespace Frost
 
     void EventManager::RegisterEvent( s_ptr<EventReceiver> pReceiver, const s_str& sEventName )
     {
+        Lock l(mMutex_);
         if (lReceiverList_.Find(sEventName))
         {
             // This event is already registered to one or more EventReceivers.
@@ -53,6 +54,7 @@ namespace Frost
 
     void EventManager::UnregisterEvent( s_ptr<EventReceiver> pReceiver, const s_str& sEventName )
     {
+        Lock l(mMutex_);
         if (lReceiverList_.Find(sEventName))
         {
             // This event is already registered to one or more EventReceivers.
@@ -79,6 +81,7 @@ namespace Frost
 
     void EventManager::UnregisterReceiver( s_ptr<EventReceiver> pReceiver )
     {
+        Lock l(mMutex_);
         s_ctnr<s_multimap< s_str, s_ptr<EventReceiver> >::iterator> lDeleteList;
 
         s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
@@ -97,30 +100,37 @@ namespace Frost
 
     void EventManager::FireEvent( const Event& mEvent )
     {
-        if (lReceiverList_.Find(mEvent.GetName()))
+        s_multimap< s_str, s_ptr<EventReceiver> >::range mRange(
+            lReceiverList_.End(), lReceiverList_.End()
+        );
+
         {
-            // This event is registered to one or more EventReceivers.
-            // Check if this event should only be fired once per frame.
-            if (!lFiredEventList_.Find(mEvent.GetName()))
+            Lock l(mMutex_);
+            if (lReceiverList_.Find(mEvent.GetName()))
             {
-                if (bDebugOutput_)
-                    Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" is being fired...");
-
-                // Now, tell all these EventReceivers that this Event has occured.
-                s_multimap< s_str, s_ptr<EventReceiver> >::range mRange;
-                mRange = lReceiverList_.EqualRange(mEvent.GetName());
-                s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
-                foreach (iterReceiver, mRange)
+                // This event is registered to one or more EventReceivers.
+                // Check if this event should only be fired once per frame.
+                if (!lFiredEventList_.Find(mEvent.GetName()))
                 {
-                    iterReceiver->second->OnEvent(mEvent);
+                    if (bDebugOutput_)
+                        Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" is being fired...");
+
+                    mRange = lReceiverList_.EqualRange(mEvent.GetName());
+
+                    if (mEvent.IsOncePerFrame())
+                        lFiredEventList_.PushBack(mEvent.GetName());
+
+                    if (bDebugOutput_)
+                        Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" has been fired.");
                 }
-
-                if (mEvent.IsOncePerFrame())
-                    lFiredEventList_.PushBack(mEvent.GetName());
-
-                if (bDebugOutput_)
-                    Log("# "+CLASS_NAME+" # : "+mEvent.GetName()+" has been fired.");
             }
+        }
+
+        // Now, tell all these EventReceivers that this Event has occured.
+        s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
+        foreach (iterReceiver, mRange)
+        {
+            iterReceiver->second->OnEvent(mEvent);
         }
     }
 

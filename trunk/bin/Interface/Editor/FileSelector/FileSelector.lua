@@ -333,6 +333,12 @@ function FileSelector:SetFolder(id)
                 end
                 
                 fileButton.IconFrame.Icon:SetTexture("Interface/Editor/FileSelector/FileSelectorIcons.png");
+                
+                local dotPos = string.find(file, ".", 0, true);
+                local extension;
+                if (dotPos) then
+                    extension = string.sub(file, dotPos+1);
+                end
 
                 if (extension) then
                     if (extension == "lua" or extension == "xml" or extension == "toc" or extension == "def"
