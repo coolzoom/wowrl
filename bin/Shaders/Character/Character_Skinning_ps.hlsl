@@ -25,10 +25,9 @@ void main_ps(
             #endif
               
               uniform float4    mLightPos[5],
+              uniform float4    mLightDir,
               uniform float4    mLightDiffuseColor[5],
               uniform float4    mLightAtten[5],
-              uniform float4    mSunDir,
-              uniform float4    mSunColor,
               uniform float4    mAmbient
               
             )
@@ -38,7 +37,11 @@ void main_ps(
     float  tDistance;
     float  tAtten;
 
-    for (int i = 0; i < 5; ++i)
+    // Handle directional light
+    tLightColor += mLightDiffuseColor[0].rgb * saturate(-dot(mLightDir.xyz, iNormal)) / mLightAtten[0].y;
+
+    // Handle point lights
+    for (int i = 1; i < 5; ++i)
     {
         tLightDir = normalize(mLightPos[i].xyz - iPosition);
         tDistance = distance(mLightPos[i].xyz, iPosition);
@@ -47,7 +50,6 @@ void main_ps(
         tLightColor += mLightDiffuseColor[i].rgb * saturate(dot(tLightDir, iNormal)) * tAtten;
     }
     
-    tLightColor += mSunColor.rgb * saturate(dot(mSunDir.xyz, iNormal));
     tLightColor = saturate(tLightColor);
 
     #ifdef MOTION_BLUR

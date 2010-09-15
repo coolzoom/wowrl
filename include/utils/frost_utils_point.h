@@ -89,6 +89,11 @@ namespace Frost
             mX_ += mPoint.mX_; mY_ += mPoint.mY_;
         }
 
+        Point operator - () const
+        {
+            return Point(-mX_, -mY_);
+        }
+
         Point operator - (const Point& mPoint) const
         {
             return Point(mX_ - mPoint.mX_, mY_ - mPoint.mY_);
@@ -151,7 +156,38 @@ namespace Frost
     };
 
     template<class T>
+    Point<typename TypeTraits<T>::FrostType> operator * (const T& mValue, const Point<typename TypeTraits<T>::FrostType>& mVec)
+    {
+        return Point<typename TypeTraits<T>::FrostType>(mVec.X()*mValue, mVec.Y()*mValue);
+    }
+
+    template<class T>
+    Point<typename TypeTraits<T>::FrostType> operator / (const T& mValue, const Point<typename TypeTraits<T>::FrostType>& mVec)
+    {
+        return Point<typename TypeTraits<T>::FrostType>(mVec.X()/mValue, mVec.Y()/mValue);
+    }
+
+    template<class T>
     const s_str Point<T>::CLASS_NAME = "Point";
+
+    typedef Point<s_float> Vector2D;
+
+    /** \cond NOT_REMOVE_FROM_DOC
+    */
+    template<class T> class StringConverter< string_element, Point<T> >
+    {
+    public :
+
+        typedef string_object string;
+
+        static string Convert(const Point<T>& mVector)
+        {
+            return "("+StringConverter<string_element, T>::Convert(mVector.X())+
+                  ", "+StringConverter<string_element, T>::Convert(mVector.Y())+")";
+        }
+    };
+    /** \endcond
+    */
 }
 
 #endif

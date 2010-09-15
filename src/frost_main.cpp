@@ -1,38 +1,16 @@
 #include "frost.h"
-#include "model/frost_model.h"
-#include "model/frost_modelmanager.h"
-#include "model/frost_animmanager.h"
-#include "gui/frost_fontmanager.h"
-#include "gui/frost_guimanager.h"
-#include "gui/frost_sprite.h"
-#include "gui/frost_text.h"
-#include "gui/frost_spritemanager.h"
-#include "gui/frost_uiobject.h"
-#include "gui/frost_frame.h"
-#include "gui/frost_fontstring.h"
-#include "frost_inputmanager.h"
-#include "camera/frost_cameramanager.h"
-#include "camera/frost_camera.h"
-#include "path/frost_directpath.h"
-#include "path/frost_smoothpath.h"
-#include "material/frost_materialmanager.h"
-#include "material/frost_material.h"
-#include "scene/frost_scenemanager.h"
-#include "scene/frost_plane.h"
-#include "scene/frost_node.h"
-#include "scene/frost_lightmanager.h"
-#include "scene/frost_light.h"
-#include "unit/frost_unitmanager.h"
-#include "unit/frost_character.h"
+#include "frost_editor.h"
+#include <frost_guimanager.h>
+#include <frost_uiobject.h>
+#include <frost_frame.h>
+#include <frost_fontstring.h>
+#include "gui/frost_modelframe.h"
+#include <frost_inputmanager.h>
 #include "gameplay/frost_gameplaymanager.h"
-#include "scene/frost_physicsmanager.h"
+#include "unit/frost_unitmanager.h"
 #include "scene/frost_zonemanager.h"
-#include "scene/frost_meshobstacle.h"
-#include "scene/frost_planeobstacle.h"
-#include "scene/frost_physicshandler.h"
-#include "scene/frost_zone.h"
-#include "scene/frost_doodad.h"
-#include "lua/frost_lua.h"
+#include "scene/frost_lightmanager.h"
+#include "scene/frost_physicsmanager.h"
 
 #include <OgreException.h>
 
@@ -56,7 +34,7 @@ s_bool GameFrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_Z) && pInputMgr->AltPressed())
     {
-        s_ptr<GUI::UIObject> pObj = GUIManager::GetSingleton()->GetUIObjectByName("UIParent");
+        s_ptr<GUI::UIObject> pObj = Engine::GetSingleton()->GetGUIManager()->GetUIObjectByName("UIParent");
         if (pObj->IsVisible())
             pObj->Hide();
         else
@@ -65,7 +43,7 @@ s_bool GameFrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_P))
     {
-        GUIManager::GetSingleton()->PrintUI();
+        Engine::GetSingleton()->GetGUIManager()->PrintUI();
     }
 
     if (pInputMgr->KeyIsPressed(KEY_G))
@@ -102,7 +80,7 @@ s_bool EditorFrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_Z) && pInputMgr->AltPressed())
     {
-        s_ptr<GUI::UIObject> pObj = GUIManager::GetSingleton()->GetUIObjectByName("UIParent");
+        s_ptr<GUI::UIObject> pObj = Engine::GetSingleton()->GetGUIManager()->GetUIObjectByName("UIParent");
         if (pObj->IsVisible())
             pObj->Hide();
         else
@@ -111,63 +89,22 @@ s_bool EditorFrameFunc()
 
     if (pInputMgr->KeyIsPressed(KEY_P))
     {
-        GUIManager::GetSingleton()->PrintUI();
-    }
-
-    if (pInputMgr->KeyIsPressed(KEY_C))
-    {
-        GUIManager::GetSingleton()->ToggleCaching();
+       Engine::GetSingleton()->GetGUIManager()->PrintUI();
     }
 
     if (pInputMgr->KeyIsPressed(KEY_R))
     {
-        GUIManager::GetSingleton()->ReloadUI();
+        s_wptr<GUIManager> pGUIMgr = Engine::GetSingleton()->GetGUIManager();
+        pGUIMgr->CloseUI();
+
+        pGUIMgr->CreateLua();
+
+        Engine::GetSingleton()->CreateGlue(pGUIMgr->GetLua());
+        Editor::GetSingleton()->CreateGlue(pGUIMgr->GetLua());
+        pGUIMgr->RegisterFrame<GUI::ModelFrame>("ModelFrame");
+
+        pGUIMgr->ReadFiles();
     }
-
-    if (pInputMgr->KeyIsPressed(KEY_F))
-    {
-        s_wptr<AnimManager> pAM = ZoneManager::GetSingleton()->GetCurrentZone()->GetDoodadByName("TestDoodad")->GetModel()->GetAnimMgr();
-        pAM->SetAnim(ANIM_CLOSE);
-        pAM->Play();
-    }
-
-    return true;
-}
-
-s_bool GameRenderFunc()
-{
-    static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
-
-    // Render in the main target
-    pSpriteMgr->Begin();
-
-        Engine::GetSingleton()->RenderScene();
-
-        // Debug output (replaces FPS counter)
-        /*s_ptr<GUI::FontString>::DynamicCast(
-            s_ptr<GUI::Frame>::DynamicCast(
-                GUIManager::GetSingleton()->GetUIObjectByName("FPSCounter_Frame")
-            )->GetRegion("FPSCounter_Text")
-        )->SetText("");*/
-
-        GUIManager::GetSingleton()->RenderUI();
-
-    pSpriteMgr->End();
-
-    return true;
-}
-
-s_bool EditorRenderFunc()
-{
-    static s_ptr<SpriteManager> pSpriteMgr = SpriteManager::GetSingleton();
-
-    // Render in the main target
-    pSpriteMgr->Begin();
-
-        Engine::GetSingleton()->RenderScene();
-        GUIManager::GetSingleton()->RenderUI();
-
-    pSpriteMgr->End();
 
     return true;
 }
@@ -202,15 +139,19 @@ int main(int argc, char* argv[])
             Log("Entering Editor mode...");
 
             pFrost->SetFrameFunction(&EditorFrameFunc);
-            SpriteManager::GetSingleton()->SetRenderFunction(&EditorRenderFunc);
 
             GameplayManager::GetSingleton()->SetCurrentGameplay("Editor");
 
-            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/BaseUI");
-            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/Editor");
-            GUIManager::GetSingleton()->LoadUI();
+            s_wptr<GUIManager> pGUIMgr = Engine::GetSingleton()->GetGUIManager();
+            Engine::GetSingleton()->CreateGlue(pGUIMgr->GetLua());
+            Editor::GetSingleton()->CreateGlue(pGUIMgr->GetLua());
+            pGUIMgr->AddAddOnDirectory("Interface/BaseUI");
+            pGUIMgr->AddAddOnDirectory("Interface/Editor");
+            pGUIMgr->ReadFiles();
 
             LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
+
+            Editor::GetSingleton()->Initialize();
         }
         else
         {
@@ -218,12 +159,13 @@ int main(int argc, char* argv[])
 
             // Set render and frame functions
             pFrost->SetFrameFunction(&GameFrameFunc);
-            SpriteManager::GetSingleton()->SetRenderFunction(&GameRenderFunc);
 
             // Load GUI
-            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/BaseUI");
-            GUIManager::GetSingleton()->AddAddOnDirectory("Interface/AddOns");
-            GUIManager::GetSingleton()->LoadUI();
+            s_wptr<GUIManager> pGUIMgr = Engine::GetSingleton()->GetGUIManager();
+            pGUIMgr->AddAddOnDirectory("Interface/BaseUI");
+            pGUIMgr->AddAddOnDirectory("Interface/AddOns");
+
+            pGUIMgr->ReadFiles();
 
             // Populate the world !
             ZoneManager::GetSingleton()->LoadZone("Test");
@@ -247,15 +189,14 @@ int main(int argc, char* argv[])
             pChar2->SetStat("SPIRIT", s_int(50));
             pChar2->SetStat("INTELLECT", s_int(50));*/
 
+            LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
 
             // Some light
-            /*s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(LIGHT_POINT);
+            /*s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(Light::POINT);
             pLight1->SetPosition(Vector(0, 5, 0));
-            pLight1->SetColor(Color(255, 255, 255));
+            pLight1->SetColor(Color(0.0f, 1.0f, 0.0f));
             pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
-            pLight1->SetRange(50.0f);*/
-
-            LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
+            pLight1->SetRange(100.0f);*/
         }
 
         // Enter the main loop
@@ -280,6 +221,8 @@ int main(int argc, char* argv[])
 
     // Close the engine
     Engine::Delete();
+    // Close the editor if needed
+    Editor::Delete();
 
     return 0;
 }

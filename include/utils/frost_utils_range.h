@@ -18,6 +18,14 @@ namespace Frost
         }
 
         /// Constructor.
+        /** \param mBegin The begin iterator
+        *   \param mEnd   The end iterator
+        */
+        s_range(const T& mBegin, const T& mEnd) : mPair_(mBegin, mEnd)
+        {
+        }
+
+        /// Constructor.
         /** \param mPair The pair to convert
         */
         s_range(const s_pair<T, T>& mPair) : mPair_(mPair)

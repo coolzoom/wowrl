@@ -22,12 +22,17 @@ namespace Frost
         /// Sets the Doodad linked to this interface.
         /** \param pDoodad The Doodad
         */
-        void   SetDoodad(s_ptr<Doodad> pDoodad);
+        void  SetDoodad(s_ptr<Doodad> pDoodad);
 
         /// Checks if this object can be selected or not.
         /** \return 'true' if this object can be selected
         */
         s_bool IsSelectable() const;
+
+        /// Checks if this object can react to mouse events.
+        /** \return 'true' if this object can react to mouse events
+        */
+        s_bool IsMouseEnabled() const;
 
         /// Callback to react to events.
         /** \param sEvent The name of the event

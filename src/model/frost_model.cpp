@@ -63,9 +63,7 @@ namespace Frost
         if (pEntity_)
         {
             pEntity_->detatchFromParent();
-            Engine::GetSingleton()->GetOgreSceneManager()->destroyEntity(
-                pEntity_.Get()
-            );
+            pSceneManager_->destroyEntity(pEntity_.Get());
         }
     }
 
@@ -104,8 +102,16 @@ namespace Frost
         return pMesh_;
     }
 
-    void Model::Show()
+    void Model::Show( s_bool bSubMeshes )
     {
+        if (bSubMeshes)
+        {
+            for (uint i = 0; i < pEntity_->getNumSubEntities(); i++)
+            {
+                pEntity_->getSubEntity(i)->setVisible(true);
+            }
+        }
+
         pEntity_->setVisible(true);
     }
 

@@ -8,7 +8,7 @@
                 <AbsInset left="1" right="1" top="1" bottom="1"/>
             </BackgroundInsets>
         </Backdrop>
-        <FontString font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" justifyV="MIDDLE"/>
+        <FontString font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT" justifyV="MIDDLE"/>
         <TextInsets left="4" right="4" top="2" bottom="2"/>
         <Scripts>
             <OnLoad>

@@ -37,14 +37,14 @@ function MenuBar:AddMenu(caption)
     end
 end
 
-function MenuBar:CreateMenuDropdown(caption)
+function MenuBar:CreateMenuDropDown(caption)
     local menu = MenuBar.menus[caption];
     if (menu) then
-        local dropdown = CreateFrame("Frame", "$parentDropdown", menu, "FrameTemplate_Dropdown");
+        local dropdown = CreateFrame("Frame", "$parentDropDown", menu, "FrameTemplate_DropDown");
         if (dropdown) then
             dropdown:SetPoint("TOPLEFT", menu, "BOTTOMLEFT", -8, -5);
             local backdrop = dropdown:GetBackdrop();
-            backdrop.edgeFile = "Interface/Editor/MenuBar/DropdownBorder.png";
+            backdrop.edgeFile = "Interface/Editor/MenuBar/DropDownBorder.png";
             dropdown:SetBackdrop(backdrop);
             dropdown.menu = menu;
             dropdown.children = {};
@@ -75,13 +75,13 @@ function MenuBar:CreateMenuDropdown(caption)
     end
 end
 
-function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode, enabled)
+function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
     local menu = MenuBar.menus[menuCaption];
     if (menu) then
-        if (not menu.Dropdown) then
-            MenuBar:CreateMenuDropdown(menuCaption);
+        if (not menu.DropDown) then
+            MenuBar:CreateMenuDropDown(menuCaption);
         end
-        if (menu.Dropdown) then
+        if (menu.DropDown) then
             local item = CreateFrame("Button", "$parent"..itemCaption, menu, "ButtonTemplate_MenuItem");
             if (item) then
                 item.caption = menuCaption..itemCaption;
@@ -92,7 +92,7 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode, enabled)
                 if (menu.lastItem) then
                     item:SetPoint("TOPLEFT", menu.lastItem, "BOTTOMLEFT");
                 else
-                    item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 9);
+                    item:SetPoint("TOPLEFT", menu.DropDown, "TOPLEFT", 8, 9);
                 end
 
                 if (keycode) then
@@ -114,15 +114,11 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode, enabled)
                 width = math.max(width, 100);
                 item:SetWidth(width);
 
-                if (enabled == false) then
-                    item:Disable();
-                end
-
                 AddOns.Editor:CallColorFunctions(item);
 
                 menu.itemNbr = menu.itemNbr + 1;
                 menu.items[menu.itemNbr] = item;
-                menu.Dropdown.children[menu.itemNbr] = item;
+                menu.DropDown.children[menu.itemNbr] = item;
                 menu.lastItem = item;
                 return item;
             end
@@ -130,13 +126,13 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode, enabled)
     end
 end
 
-function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultState, enabled)
+function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultState)
     local menu = MenuBar.menus[menuCaption];
     if (menu) then
-        if (not menu.Dropdown) then
-            MenuBar:CreateMenuDropdown(menuCaption);
+        if (not menu.DropDown) then
+            MenuBar:CreateMenuDropDown(menuCaption);
         end
-        if (menu.Dropdown) then
+        if (menu.DropDown) then
             local item = CreateFrame("CheckButton", "$parent"..itemCaption, menu, "CheckButtonTemplate_MenuCheckItem");
             if (item) then
                 item.caption = menuCaption..itemCaption;
@@ -148,7 +144,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                 if (menu.lastItem) then
                     item:SetPoint("TOPLEFT", menu.lastItem, "BOTTOMLEFT");
                 else
-                    item:SetPoint("TOPLEFT", menu.Dropdown, "TOPLEFT", 8, 8);
+                    item:SetPoint("TOPLEFT", menu.DropDown, "TOPLEFT", 8, 8);
                 end
 
                 item:SetText(AddOns.MenuBar:GetLocalizedString(item.caption));
@@ -171,15 +167,11 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
                 width = math.max(width, 100);
                 item:SetWidth(width);
 
-                if (enabled == false) then
-                    item:Disable();
-                end
-
                 AddOns.Editor:CallColorFunctions(item);
 
                 menu.itemNbr = menu.itemNbr + 1;
                 menu.items[menu.itemNbr] = item;
-                menu.Dropdown.children[menu.itemNbr] = item;
+                menu.DropDown.children[menu.itemNbr] = item;
                 menu.lastItem = item;
                 return item;
             end
@@ -187,33 +179,33 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
     end
 end
 
-function MenuBar:SetCurrentDropdown(dropdown)
-    if (self.activeDropdown) then
-        if (self.activeDropdown ~= dropdown) then
-            self.activeDropdown:Hide();
-            self.activeDropdown = dropdown;
-            self.activeDropdown:Show();
+function MenuBar:SetCurrentDropDown(dropdown)
+    if (self.activeDropDown) then
+        if (self.activeDropDown ~= dropdown) then
+            self.activeDropDown:Hide();
+            self.activeDropDown = dropdown;
+            self.activeDropDown:Show();
         else
-            self.activeDropdown:Hide();
-            self.activeDropdown = nil;
+            self.activeDropDown:Hide();
+            self.activeDropDown = nil;
         end
     else
-        self.activeDropdown = dropdown;
-        self.activeDropdown:Show();
+        self.activeDropDown = dropdown;
+        self.activeDropDown:Show();
     end
 end
 
-function MenuBar:CloseCurrentDropdown()
-    if (self.activeDropdown) then
-        self.activeDropdown:Hide();
-        self.activeDropdown = nil;
+function MenuBar:CloseCurrentDropDown()
+    if (self.activeDropDown) then
+        self.activeDropDown:Hide();
+        self.activeDropDown = nil;
     end
 end
 
 function MenuBar:UpdateHorizontalBorder()
-    if (self.activeDropdown) then
-        self.HorizontalBorderRight:SetPoint("TOPLEFT", self.activeDropdown:GetParent(), "BOTTOMRIGHT");
-        self.HorizontalBorderLeft:SetPoint("TOPRIGHT", self.activeDropdown:GetParent(), "BOTTOMLEFT");
+    if (self.activeDropDown) then
+        self.HorizontalBorderRight:SetPoint("TOPLEFT", self.activeDropDown:GetParent(), "BOTTOMRIGHT");
+        self.HorizontalBorderLeft:SetPoint("TOPRIGHT", self.activeDropDown:GetParent(), "BOTTOMLEFT");
     else
         self.HorizontalBorderLeft:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT");
     end

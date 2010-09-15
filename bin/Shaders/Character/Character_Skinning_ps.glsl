@@ -3,10 +3,9 @@
 // Provided by Ogre
 uniform sampler2D mTexture;
 uniform vec4      mLightPos[5];
+uniform vec4      mLightDir;
 uniform vec4      mLightDiffuseColor[5];
 uniform vec4      mLightAtten[5];
-uniform vec4      mSunDir;
-uniform vec4      mSunColor;
 uniform vec4      mAmbient;
 
 uniform vec4      mMotionBlurMask;
@@ -24,8 +23,12 @@ void main()
     vec3  tLightDir;
     float tDistance;
     float tAtten;
+    
+    // Handle directional light
+    tLightColor += mLightDiffuseColor[0].rgb * max(-dot(mLightDir.xyz, vBlendedNormal), 0.0) / mLightAtten[0].y;
 
-    for (int i = 0; i < 5; ++i)
+    // Handle point lights
+    for (int i = 1; i < 5; ++i)
     {
         tLightDir = normalize(mLightPos[i].xyz - vBlendedPosition);
         tDistance = distance(mLightPos[i].xyz, vBlendedPosition);
@@ -34,7 +37,6 @@ void main()
         tLightColor += mLightDiffuseColor[i].rgb * max(dot(tLightDir, vBlendedNormal), 0.0) * tAtten;
     }
     
-    tLightColor += mSunColor.rgb * max(dot(mSunDir.xyz, vBlendedNormal), 0.0);
     tLightColor = clamp(tLightColor, 0.0, 1.0);
 
     #ifdef MOTION_BLUR

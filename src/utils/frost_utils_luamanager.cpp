@@ -21,7 +21,7 @@ namespace Frost
 
     LuaManager::~LuaManager()
     {
-        map< lua_State*, s_ptr<Lua::State> >::iterator iter;
+        s_map< lua_State*, s_ptr<Lua::State> >::iterator iter;
         foreach (iter, lLuaStateList_)
         {
             iter->second.Delete();
@@ -30,6 +30,7 @@ namespace Frost
 
     s_ptr<Lua::State> LuaManager::CreateLua()
     {
+        Lock l(mMutex_);
         s_ptr<Lua::State> pLua = new Lua::State();
         lLuaStateList_[pLua->GetState()] = pLua;
         return pLua;
@@ -39,6 +40,7 @@ namespace Frost
     {
         if (pLua)
         {
+            Lock l(mMutex_);
             s_map< lua_State*, s_ptr<Lua::State> >::iterator iter;
             iter = lLuaStateList_.Get(pLua->GetState());
             if (iter != lLuaStateList_.End())
@@ -49,9 +51,9 @@ namespace Frost
         }
     }
 
-    s_ptr<Lua::State> LuaManager::GetState( lua_State* pLua )
+    s_ptr<Lua::State> LuaManager::GetState( lua_State* pLua ) const
     {
-        s_map< lua_State*, s_ptr<Lua::State> >::iterator iter;
+        s_map< lua_State*, s_ptr<Lua::State> >::const_iterator iter;
         iter = lLuaStateList_.Get(pLua);
         if (iter != lLuaStateList_.End())
         {

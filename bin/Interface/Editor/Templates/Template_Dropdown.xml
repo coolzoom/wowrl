@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="FrameTemplate_Dropdown" virtual="true" hidden="true">    
+    <Frame name="FrameTemplate_DropDown" virtual="true" hidden="true">
         <Size>
             <AbsDimension x="116" y="16"/>
         </Size>
@@ -12,7 +12,7 @@
             <OnLoad>
                 this.updated = false;
                 this.normalBgColor = Color(0.75, 0.75, 0.75);
-                
+
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
                     local newColor = self.normalBgColor*color;
@@ -29,25 +29,25 @@
                     if (not this.children) then
                         this.children = { this:GetChildren() };
                     end
-                
+
                     local maxWidth = 0;
                     local totalHeight = 0;
-                    
+
                     for k, child in pairs(this.children) do
                         maxWidth = math.max(child:GetWidth(), maxWidth);
                         totalHeight = totalHeight + child:GetHeight();
                     end
-                    
+
                     if (maxWidth > 100) then
                         for k, child in pairs(this.children) do
                             child:SetWidth(maxWidth);
                         end
-                        
+
                         this:SetWidth(maxWidth+16);
                     end
-                    
+
                     this:SetHeight(math.max(totalHeight, 16)+16);
-                    
+
                     this.updated = true;
                 end
             </OnShow>

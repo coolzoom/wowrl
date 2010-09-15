@@ -26,8 +26,11 @@ namespace Frost
 {
     const s_str Zone::CLASS_NAME = "Zone";
 
-    Zone::Zone( const s_str& sName ) :
-        sName_(sName)
+    Zone::Zone()
+    {
+    }
+
+    Zone::Zone(const s_str& sName) : sName_(sName)
     {
     }
 
@@ -269,5 +272,10 @@ namespace Frost
     const s_str& Zone::GetName()
     {
         return sName_;
+    }
+
+    const s_map<s_str,s_str>& Zone::GetModelList() const
+    {
+        return lModelList_;
     }
 }

@@ -34,19 +34,7 @@ namespace Frost
         // Calling srand(time(nullptr)) can result in similar results
         // because time()'s resolution is too low. Here we use a
         // high precision timer.
-        #ifdef USING_OGRE
         srand(TimeManager::GetSingleton()->GetMicroseconds().Get());
-        #else
-        #ifdef WIN32
-            timeb tb;
-            ftime(&tb);
-            srand((uint)tb.millitm*1000);
-        #else
-            timeval tv;
-            gettimeofday(&tv, nullptr);
-            srand(tv.tv_usec);
-        #endif
-        #endif
 
         // In GCC, the first rand() is round(3.25*seed) + 38
         // To get rid of this effect, we just call rand() several times.

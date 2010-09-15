@@ -67,7 +67,7 @@ namespace Frost
         /// Checks if this object can react to mouse events.
         /** \return 'true' if this object can react to mouse events
         */
-        const s_bool&        IsMouseEnabled() const;
+        virtual s_bool       IsMouseEnabled() const;
 
         /// Checks if this object can be selected or not.
         /** \return 'true' if this object can be selected

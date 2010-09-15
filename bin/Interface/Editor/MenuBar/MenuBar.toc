@@ -9,4 +9,8 @@ Localization.lua
 MenuBarTemplates.xml
 MenuBar.xml
 MenuBar.lua
-Menus.lua
+File.lua
+Edit.lua
+View.lua
+Settings.lua
+Help.lua

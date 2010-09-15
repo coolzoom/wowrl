@@ -107,6 +107,11 @@ namespace Frost
         */
         void          AddTime(const s_double& dAdditionnalTime);
 
+        /// Sets the current elapsed time for this Timer.
+        /** \param dTime The new elapsed time
+        */
+        void          SetTime(const s_double& dTime);
+
         /// Returns the total time elapsed.
         /** \return The total time elapsed.
         */

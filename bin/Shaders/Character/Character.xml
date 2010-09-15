@@ -12,7 +12,7 @@
     </VertexShader>
     <PixelShader name="Character_Skinning" file="Shaders/Character/Character_Skinning_ps">
         <Params>
-            <LightParams number="5" includeDirectional="true"/>
+            <LightParams number="5"/>
             <AutoParam name="mAmbient"/>
             <#[MOTION_BLUR]>
                 <AutoParam name="mMotionBlurMask" param="custom"/>

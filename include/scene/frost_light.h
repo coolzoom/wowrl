@@ -115,7 +115,6 @@ namespace Frost
 
     private:
 
-        s_uint  uiID_;
         Type    mType_;
         Color   mDiffuse_;
         Color   mSpecular_;

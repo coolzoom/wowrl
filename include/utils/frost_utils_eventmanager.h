@@ -11,6 +11,7 @@
 
 #include "frost_utils_config.h"
 #include "frost_utils_manager.h"
+#include "frost_utils_thread.h"
 
 namespace Frost
 {
@@ -91,6 +92,8 @@ namespace Frost
         s_ctnr<s_str>                             lFiredEventList_;
 
         s_bool bDebugOutput_;
+
+        Mutex mMutex_;
     };
 
 }

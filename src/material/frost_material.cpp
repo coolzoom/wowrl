@@ -39,7 +39,7 @@ namespace Frost
             s_ptr<Ogre::Technique> pTech = pOgreMat->getTechnique(0);
             if (pTech)
             {
-                for (uint i = 0; i < pTech->getNumPasses(); i++)
+                for (uint i = 0; i < pTech->getNumPasses(); ++i)
                 {
                     s_ptr<Ogre::Pass> pPass = pTech->getPass(i);
                     if (pPass)
@@ -63,13 +63,12 @@ namespace Frost
 
     Material::~Material()
     {
-        if (mType_ != TYPE_UNKNOWN)
+        if (bOwner_ && !bVanilla_)
         {
             RemoveVertexShader();
             RemovePixelShader();
 
-            if (!bVanilla_)
-                Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
+            Ogre::MaterialManager::getSingleton().remove(pOgreMat_->getHandle());
         }
     }
 
@@ -169,8 +168,14 @@ namespace Frost
         return fHeight_;
     }
 
-    s_ptr<Ogre::Material> Material::GetOgreMaterial()
+    s_ptr<Ogre::Material> Material::GetOgreMaterial( GetMaterialFlag mFlag )
     {
+        switch (mFlag)
+        {
+            case FLAG_NONE : break;
+            case FLAG_TRANSFER_OWNERSHIP : bOwner_ = false; break;
+        }
+
         return pOgreMat_;
     }
 
@@ -280,8 +285,14 @@ namespace Frost
         return pDefaultPass_->pPass;
     }
 
-    const s_str& Material::GetOgreMaterialName() const
+    const s_str& Material::GetOgreMaterialName( GetMaterialFlag mFlag ) const
     {
+        switch (mFlag)
+        {
+            case FLAG_NONE : break;
+            case FLAG_TRANSFER_OWNERSHIP : bOwner_ = false; break;
+        }
+
         return sName_;
     }
 

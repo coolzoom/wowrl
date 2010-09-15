@@ -9,7 +9,11 @@
             <OnLoad>
                 this.normalTextColor = Color(1,1,1);
                 this.normalBgColor   = Color(0.75, 0.75, 0.75);
-                
+
+                this:SetBackdrop({
+                    ["insets"] = { ["top"] = 3 }
+                });
+
                 this:RegisterEvent("ADDON_LOADED");
                 AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
                     local newColor = self.normalBgColor*color;
@@ -23,13 +27,7 @@
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    this:SetBackdrop({{["top"] = 3}});
-                    local newColor = this.normalBgColor*AddOns.Editor.Config.UIBackgroundColor;
-                    this:SetBackdropColor(newColor:Unpack());
-                    this.header.Background:SetVertexColor(newColor:Unpack());
-                    
-                    newColor = this.normalTextColor*AddOns.Editor.Config.UITextColor;
-                    this.Title:SetTextColor(newColor:Unpack());
+                    AddOns.Editor:CallColorFunctions(this);
                 end
             </OnEvent>
         </Scripts>
@@ -64,7 +62,7 @@
         </Frames>
         <Layers>
             <Layer>
-                <FontString name="$parentTitle" fontHeight="8" font="Fonts/Vera.ttf">
+                <FontString name="$parentTitle" fontHeight="10" font="Fonts/Vera.ttf">
                     <Anchors>
                         <Anchor point="TOP">
                             <Offset>
@@ -77,7 +75,7 @@
             </Layer>
         </Layers>
     </Frame>
-    
+
     <Button name="ButtonTemplate_PanelHeader" virtual="true">
         <Size>
             <AbsDimension x="45" y="52"/>

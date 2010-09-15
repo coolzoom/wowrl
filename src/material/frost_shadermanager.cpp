@@ -7,11 +7,16 @@
 
 #include "material/frost_shadermanager.h"
 #include "material/frost_shader.h"
+#include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
-#include "gui/frost_spritemanager.h"
-#include "gui/frost_sprite.h"
+#include "material/frost_rendertarget.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include <frost_material.h>
+#include <impl/ogre/ogre_material.h>
+#include <frost_sprite.h>
+#include <impl/ogre/ogre_quad.h>
+#include <impl/ogre/ogre_sprite.h>
 
 #include <OgreRenderTargetListener.h>
 #include <OgreSceneManager.h>
@@ -76,7 +81,6 @@ namespace Frost
     ShaderManager::~ShaderManager()
     {
         Log("Closing "+CLASS_NAME+"...");
-        pSceneSprite_.Delete();
     }
 
     s_ptr<VertexShader> ShaderManager::CreateVertexShader( const s_str& sName, const s_str& sFile )
@@ -173,12 +177,12 @@ namespace Frost
                 new RenderWindowListener()
             );
 
-            pSceneRenderTarget_ = SpriteManager::GetSingleton()->CreateRenderTarget(
+            pSceneRenderTarget_ = s_refptr<RenderTarget>(new RenderTarget(
                 "SceneTarget",
                 Engine::GetSingleton()->GetScreenWidth(),
                 Engine::GetSingleton()->GetScreenHeight(),
                 RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
-            );
+            ));
 
             pSceneMRT_ = Engine::GetSingleton()->GetRenderSystem()->createMultiRenderTarget(
                 "Scene_MRT"
@@ -191,7 +195,7 @@ namespace Frost
             Engine::GetSingleton()->GetOgreSceneManager()->addSpecialCaseRenderQueue(Ogre::RENDER_QUEUE_OVERLAY);
 
             s_refptr<Material> pMat = MaterialManager::GetSingleton()->CreateMaterial2DFromRT(
-                pSceneRenderTarget_
+                pSceneRenderTarget_.Get()
             );
             s_ptr<Ogre::Pass> pPass = pMat->GetDefaultPass();
             pPass->setSeparateSceneBlending(
@@ -204,12 +208,12 @@ namespace Frost
 
             if (IsMotionBlurEnabled())
             {
-                pMotionBlurMask_ = SpriteManager::GetSingleton()->CreateRenderTarget(
+                pMotionBlurMask_ = s_refptr<RenderTarget>(new RenderTarget(
                     "MotionBlurMask",
                     Engine::GetSingleton()->GetScreenWidth(),
                     Engine::GetSingleton()->GetScreenHeight(),
                     RenderTarget::PIXEL_ARGB, RenderTarget::USAGE_3D
-                );
+                ));
 
                 pSceneMRT_->bindSurface(1,
                     (Ogre::RenderTexture*)pMotionBlurMask_->GetOgreRenderTarget().Get()
@@ -221,7 +225,18 @@ namespace Frost
                 pMat->SetPixelShader("MotionBlur");
             }
 
-            pSceneSprite_ = new Sprite(pMat);
+            pSceneQuad_ = s_refptr<GUI::Quad>(new GUI::Quad());
+            pSceneQuad_->mMat = s_refptr<GUI::MaterialImpl>(new GUI::MaterialImpl(pMat->GetOgreMaterial(Material::FLAG_TRANSFER_OWNERSHIP)));
+
+            s_float fW = s_float(Engine::GetSingleton()->GetScreenWidth());
+            s_float fH = s_float(Engine::GetSingleton()->GetScreenHeight());
+            s_float fU = fW / s_float(pSceneRenderTarget_->GetRealWidth());
+            s_float fV = fH / s_float(pSceneRenderTarget_->GetRealHeight());
+
+            pSceneQuad_->lVertexArray[0] = GUI::Vertex(Vector2D(0.0f, 0.0f), Vector2D(0.0f, 0.0f), Color::WHITE);
+            pSceneQuad_->lVertexArray[1] = GUI::Vertex(Vector2D(fW,   0.0f), Vector2D(fU,   0.0f), Color::WHITE);
+            pSceneQuad_->lVertexArray[2] = GUI::Vertex(Vector2D(fW,   fH),   Vector2D(fU,   fV),   Color::WHITE);
+            pSceneQuad_->lVertexArray[3] = GUI::Vertex(Vector2D(0.0f, fH),   Vector2D(0.0f, fV),   Color::WHITE);
         }
     }
 
@@ -235,7 +250,8 @@ namespace Frost
 
         if (IsMotionBlurEnabled())
         {
-            Ogre::GpuProgramParametersSharedPtr pParam = pSceneSprite_->GetMaterial()->GetDefaultPass()->getFragmentProgramParameters();
+            s_ptr<Ogre::Material> pMat = pSceneQuad_->mMat.GetImpl()->GetOgreMaterial();
+            Ogre::GpuProgramParametersSharedPtr pParam = pMat->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
             s_ptr<Ogre::Camera> pCam = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera();
             Ogre::Matrix4 mViewProj = pCam->getProjectionMatrixWithRSDepth() * pCam->getViewMatrix(true);
             Ogre::Matrix4 mViewProjInverse = mViewProj.inverse();
@@ -262,8 +278,8 @@ namespace Frost
 
     void ShaderManager::RenderPostProcessedScene()
     {
-        if (pSceneSprite_)
-            pSceneSprite_->Render(0, 0);
+        if (pSceneQuad_)
+            RenderQuad(*pSceneQuad_);
     }
 
     s_bool ShaderManager::IsPostProcessingEnabled()
@@ -292,12 +308,12 @@ namespace Frost
         return pSceneMRT_;
     }
 
-    s_ptr<RenderTarget> ShaderManager::GetSceneRenderTarget()
+    s_wptr<RenderTarget> ShaderManager::GetSceneRenderTarget()
     {
         return pSceneRenderTarget_;
     }
 
-    s_ptr<RenderTarget> ShaderManager::GetMotionBlurMaskRenderTarget()
+    s_wptr<RenderTarget> ShaderManager::GetMotionBlurMaskRenderTarget()
     {
         return pMotionBlurMask_;
     }

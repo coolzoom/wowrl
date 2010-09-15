@@ -108,12 +108,17 @@ namespace Frost
         AddAutoParam(sName, mType);
     }
 
-    void Shader::AddLightParams( const s_uint& uiLightNbr, const s_bool& bDirectional )
+    void Shader::AddLightParams( const s_uint& uiLightNbr )
     {
         AddAutoParam(
             "mLightPos",
             Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_ARRAY,
             uiLightNbr.Get()
+        );
+        AddAutoParam(
+            "mLightDir",
+            Ogre::GpuProgramParameters::ACT_LIGHT_DIRECTION,
+            0
         );
         AddAutoParam(
             "mLightDiffuseColor",
@@ -125,11 +130,6 @@ namespace Frost
             Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION_ARRAY,
             uiLightNbr.Get()
         );
-
-        if (bDirectional)
-        {
-            bSendSunParameters_ = true;
-        }
     }
 
     const s_str& Shader::GetOgreName()
@@ -246,23 +246,7 @@ namespace Frost
     {
         if (bIsValid_)
         {
-            if (bSendSunParameters_)
-            {
-                Ogre::GpuProgramParametersSharedPtr pParam;
-                s_ctnr< s_ptr<Ogre::Pass> >::iterator iterPass;
-                foreach (iterPass, lBindedPassList_)
-                {
-                    SetParameter("mSunDir",
-                        -LightManager::GetSingleton()->GetSunDirection(),
-                        *iterPass
-                    );
 
-                    SetParameter("mSunColor",
-                        LightManager::GetSingleton()->GetSunColor(),
-                        *iterPass
-                    );
-                }
-            }
         }
     }
 

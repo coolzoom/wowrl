@@ -17,20 +17,12 @@
         <Scripts>
             <OnLoad>
                 this:GetBase():OnLoad();
-                this:RegisterEvent("ENTERING_WORLD");
-                
                 this.Title.TitleString:SetText(AddOns.ColorSelector:GetLocalizedString("Title"));
                 this.currentColor = Color(1,1,1,1);
-                this.currentColor.h = 0; 
+                this.currentColor.h = 0;
                 this.currentColor.s = 0;
                 this.currentColor.l = 1;
             </OnLoad>
-            <OnEvent>
-                this:GetBase():OnEvent();
-                if (event == "ENTERING_WORLD") then
-                    AddOns.ColorSelector:UnlockColorUpdate();
-                end
-            </OnEvent>
         </Scripts>
         <Frames>
             <Frame name="$parentSwatch">
@@ -174,13 +166,13 @@
                         this:GetBase():OnLoad();
                         this.TitleString:SetText(AddOns.ColorSelector:GetLocalizedString("SliderH"));
                         this.chanel = "h";
-                        
+
                         local backdrop = {
                             ["bgFile"] = "Interface/Editor/ColorSelector/Rainbow.png",
                             ["edgeFile"] = "Interface/Editor/Templates/Border1PX.png"
                         }
                         this.Slider:SetBackdrop(backdrop);
-                        
+
                         this.Slider:SetMinMaxValues(0, 360);
                         this.Slider:SetValue(0);
                     </OnLoad>
@@ -195,7 +187,7 @@
                         this:GetBase():OnLoad();
                         this.TitleString:SetText(AddOns.ColorSelector:GetLocalizedString("SliderS"));
                         this.chanel = "s";
-                        
+
                         this.Slider:SetMinMaxValues(0, 100);
                         this.Slider:SetValue(0);
                     </OnLoad>
@@ -210,7 +202,7 @@
                         this:GetBase():OnLoad();
                         this.TitleString:SetText(AddOns.ColorSelector:GetLocalizedString("SliderL"));
                         this.chanel = "l";
-                        
+
                         this.Slider:SetMinMaxValues(0, 100);
                         this.Slider:SetValue(100);
                     </OnLoad>

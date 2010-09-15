@@ -1,12 +1,12 @@
 <Ui>
-    <Frame name="Editor">
+    <Frame name="EditorMainFrame">
         <Scripts>
             <OnLoad>
                 this:RegisterEvent("ADDON_LOADED");
             </OnLoad>
             <OnEvent>
                 if (event == "ADDON_LOADED") then
-                    Frost:SetBackgroundColor(AddOns.Editor.Config.worldBackgroundColor:Unpack());
+                    Editor:SetBackgroundColor(AddOns.Editor.Config.worldBackgroundColor:Unpack());
                     AddOns.Editor:EnableMouseDecal(true);
                 end
             </OnEvent>

@@ -4,17 +4,11 @@
 /*                                        */
 
 #include "frost_engine_glues.h"
-#include "camera/frost_cameramanager.h"
-#include "camera/frost_camera.h"
-#include "scene/frost_lightmanager.h"
+
 #include "scene/frost_zonemanager.h"
 #include "scene/frost_zone.h"
-#include "scene/frost_doodad.h"
-#include "scene/frost_scenemanager.h"
 #include "material/frost_decal.h"
 #include "frost_inputmanager.h"
-
-#include <OgreCamera.h>
 #include <utils/frost_utils_directory.h>
 #include <utils/frost_utils_file.h>
 
@@ -35,40 +29,6 @@ namespace Frost
         pLua_ = pLua;
     }
 
-
-    int LuaEngine::_AddDoodad( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:AddDoodad", pLua, 1);
-        mFunc.Add(0, "name", Lua::TYPE_STRING);
-        mFunc.Add(1, "model", Lua::TYPE_STRING);
-
-        if (mFunc.Check())
-        {
-            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->GetCurrentZone();
-            if (pZone)
-            {
-                s_ptr<Doodad> pDoodad = pZone->AddDoodad(
-                    mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString()
-                );
-
-                if (pDoodad)
-                {
-                    SceneManager::GetSingleton()->StartMoving(pDoodad, Vector::CONSTRAINT_NONE, true);
-                    mFunc.Push(s_bool(true));
-                }
-                else
-                    mFunc.Push(s_bool(false));
-            }
-            else
-            {
-                Warning(mFunc.GetName(), "No Zone loaded, can't create doodad.");
-                mFunc.Push(s_bool(false));
-            }
-        }
-
-        return mFunc.Return();
-    }
-
     int LuaEngine::_AllowWorldClicks( lua_State* pLua )
     {
         Lua::Function mFunc("Engine:AllowWorldClicks", pLua);
@@ -86,7 +46,6 @@ namespace Frost
 
         return mFunc.Return();
     }
-
 
     int LuaEngine::_EnableMouseDecal( lua_State* pLua )
     {
@@ -185,103 +144,6 @@ namespace Frost
 
         return mFunc.Return();
     }
-
-    int LuaEngine::_LoadZone( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:LoadZone", pLua, 1);
-        mFunc.Add(0, "name", Lua::TYPE_STRING);
-
-        if (mFunc.Check())
-        {
-            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZone(mFunc.Get(0)->GetString());
-            mFunc.Push(pZone != nullptr);
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_LoadZoneFile( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:LoadZoneFile", pLua, 1);
-        mFunc.Add(0, "name", Lua::TYPE_STRING);
-
-        if (mFunc.Check())
-        {
-            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->LoadZoneFile(mFunc.Get(0)->GetString());
-            mFunc.Push(pZone != nullptr);
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_NewZone( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:NewZone", pLua, 1);
-        mFunc.Add(0, "name", Lua::TYPE_STRING);
-
-        if (mFunc.Check())
-        {
-            try
-            {
-                ZoneManager::GetSingleton()->CreateZone(mFunc.Get(0)->GetString());
-                mFunc.PushNil();
-            }
-            catch (Exception& e)
-            {
-                mFunc.Push(e.GetDescription());
-            }
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_NotifyDoodadPositioned( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:NotifyDoodadPositioned", pLua);
-
-        SceneManager::GetSingleton()->StopAllTransformations();
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_SaveZone( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:SaveZone", pLua);
-        mFunc.Add(0, "file", Lua::TYPE_STRING);
-
-        if (mFunc.Check())
-        {
-            ZoneManager::GetSingleton()->SaveZone(mFunc.Get(0)->GetString());
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_ToggleWireframeView( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:ToggleWireframeView", pLua);
-
-        s_ptr<Camera> pCam = CameraManager::GetSingleton()->GetMainCamera();
-        if (pCam->GetOgreCamera()->getPolygonMode() == Ogre::PM_WIREFRAME)
-            pCam->GetOgreCamera()->setPolygonMode(Ogre::PM_SOLID);
-        else
-            pCam->GetOgreCamera()->setPolygonMode(Ogre::PM_WIREFRAME);
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_ToggleShading( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:ToggleShading", pLua);
-
-        if (LightManager::GetSingleton()->IsAmbientLocked())
-            LightManager::GetSingleton()->UnlockAmbient();
-        else
-            LightManager::GetSingleton()->LockAmbient(Color::WHITE);
-
-        return mFunc.Return();
-    }
-
 
     int LuaEngine::_GetConstant( lua_State* pLua )
     {
@@ -390,64 +252,6 @@ namespace Frost
                 pLocked->SetTextureFile(mFunc.Get(0)->GetString());
             }
         }
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_GetBackgroundColor( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:GetBackgroundColor", pLua, 4);
-
-        Color mColor = CameraManager::GetSingleton()->GetBackgroundColor();
-
-        mFunc.Push(mColor.GetR());
-        mFunc.Push(mColor.GetG());
-        mFunc.Push(mColor.GetB());
-        mFunc.Push(mColor.GetA());
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_SetBackgroundColor( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:SetBackgroundColor", pLua);
-        mFunc.Add(0, "red", Lua::TYPE_NUMBER);
-        mFunc.Add(1, "green", Lua::TYPE_NUMBER);
-        mFunc.Add(2, "blue", Lua::TYPE_NUMBER);
-        mFunc.Add(3, "alpha", Lua::TYPE_NUMBER, true);
-
-        if (mFunc.Check())
-        {
-            Color mColor;
-            if (mFunc.IsProvided(3))
-            {
-                mColor = Color(
-                    mFunc.Get(3)->GetNumber(),
-                    mFunc.Get(0)->GetNumber(),
-                    mFunc.Get(1)->GetNumber(),
-                    mFunc.Get(2)->GetNumber()
-                );
-            }
-            else
-            {
-                mColor = Color(
-                    mFunc.Get(0)->GetNumber(),
-                    mFunc.Get(1)->GetNumber(),
-                    mFunc.Get(2)->GetNumber()
-                );
-            }
-
-            CameraManager::GetSingleton()->SetBackgroundColor(mColor);
-        }
-
-        return mFunc.Return();
-    }
-
-    int LuaEngine::_UnloadZone( lua_State* pLua )
-    {
-        Lua::Function mFunc("Engine:UnloadZone", pLua);
-
-        ZoneManager::GetSingleton()->UnloadZone();
 
         return mFunc.Return();
     }
@@ -574,28 +378,17 @@ namespace Frost
     Lunar<LuaEngine>::RegType LuaEngine::methods[] = {
         {"dt", &LuaEngine::GetDataTable},
 
-        method(Engine, AddDoodad),
         method(Engine, AllowWorldClicks),
         method(Engine, BlockWorldClicks),
         method(Engine, EnableMouseDecal),
         method(Engine, FireEvent),
         method(Engine, ForceWorldClicksAllowed),
-        method(Engine, GetBackgroundColor),
         method(Engine, GetConstant),
         method(Engine, GetMouseDecalColor),
         method(Engine, GetMouseDecalPosition),
-        method(Engine, LoadZone),
-        method(Engine, LoadZoneFile),
-        method(Engine, NewZone),
-        method(Engine, NotifyDoodadPositioned),
-        method(Engine, ToggleWireframeView),
-        method(Engine, ToggleShading),
-        method(Engine, SaveZone),
-        method(Engine, SetBackgroundColor),
         method(Engine, SetConstant),
         method(Engine, SetMouseDecalColor),
         method(Engine, SetMouseDecalTexture),
-        method(Engine, UnloadZone),
 
         method(Engine, GetFolderList),
         method(Engine, GetFileList),

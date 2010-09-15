@@ -22,7 +22,7 @@ namespace Frost
     {
         pOgreCamera_ = pSceneManager_->createCamera(("Camera_"+uiID_).Get());
         pOgreCamera_->setNearClipDistance(1);
-        pOgreCamera_->setFarClipDistance(200);
+        pOgreCamera_->setFarClipDistance(500);
         pOgreCamera_->setFixedYawAxis(true);
         pNode_->attachObject(pOgreCamera_.Get());
     }

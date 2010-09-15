@@ -138,11 +138,6 @@ namespace Frost
 
     private :
 
-        void ParseXMLFile_(const s_str& sFile, s_ptr<Zone> pCurrentZone);
-        void ParseTerrain_(s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pTerrainBlock);
-        void ParseModels_(s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pTerrainBlock);
-        void ParseDoodads_(s_ptr<Zone> pCurrentZone, s_ptr<XML::Block> pTerrainBlock);
-
         s_ptr<Zone> pCurrentZone_;
         s_ptr<Lua::State> pLua_;
 

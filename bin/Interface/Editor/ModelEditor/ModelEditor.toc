@@ -1,0 +1,12 @@
+## Interface: 0045
+## Title: ModelEditor
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+DefaultConfig.lua
+Localization.lua
+ModelEditor.xml
+ModelEditorOptions.xml
+ModelEditorModel.xml
+ModelEditor.lua

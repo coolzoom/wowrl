@@ -5,7 +5,7 @@
 
 #include "gui/frost_modelframe.h"
 
-#include "xml/frost_xml_document.h"
+#include <xml/frost_xml_document.h>
 
 using namespace std;
 using namespace Frost;

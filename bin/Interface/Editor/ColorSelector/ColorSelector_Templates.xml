@@ -25,7 +25,7 @@
         </Scripts>
         <Layers>
             <Layer>
-                <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT">
+                <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT">
                     <Size>
                         <AbsDimension x="40"/>
                     </Size>
@@ -37,7 +37,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentValueString" font="Fonts/Vera.ttf" fontHeight="8" justifyH="RIGHT" text="0">
+                <FontString name="$parentValueString" font="Fonts/Vera.ttf" fontHeight="10" justifyH="RIGHT" text="0">
                     <Size>
                         <AbsDimension x="24"/>
                     </Size>

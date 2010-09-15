@@ -70,15 +70,12 @@ namespace Frost
 
     s_ptr<Zone> ZoneManager::LoadZoneFile( const s_str& sZoneFile )
     {
-        s_str sZoneName = sZoneFile.Cut("/").Back().Cut("\\").Back();
-        if (sZoneName.EndsWith(".xml"))
+        if (sZoneFile.EndsWith(".xml"))
         {
             UnloadZone();
 
-            sZoneName.EraseFromEnd(4);
-            pCurrentZone_ = new Zone(sZoneName);
-
-            ParseXMLFile_(sZoneFile, pCurrentZone_);
+            pCurrentZone_ = new Zone();
+            pCurrentZone_->ParseXMLFile(sZoneFile);
 
             LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
             LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());
@@ -101,9 +98,8 @@ namespace Frost
     {
         UnloadZone();
 
-        pCurrentZone_ = new Zone(sZoneName);
-
-        ParseXMLFile_("Zones/"+sZoneName+"/"+sZoneName+".xml", pCurrentZone_);
+        pCurrentZone_ = new Zone();
+        pCurrentZone_->ParseXMLFile("Zones/"+sZoneName+"/"+sZoneName+".xml");
 
         LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
         LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());
@@ -135,9 +131,7 @@ namespace Frost
     void ZoneManager::SaveZone( const s_str& sZoneFile )
     {
         if (pCurrentZone_)
-        {
             pCurrentZone_->Serialize(sZoneFile);
-        }
     }
 
     void ZoneManager::EnableMouseDecal( s_wptr<Decal> pDecal )

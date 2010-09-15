@@ -10,7 +10,7 @@ function EscMenu:AddButton(caption)
     if (button) then
         button.caption = caption;
         
-        button:SetText(AddOns.EscMenu:GetLocalizedString(caption));       
+        button:SetText(AddOns.EscMenu:GetLocalizedString(caption));
         if (self.lastItem) then
             button:SetPoint("TOP", self.lastItem, "BOTTOM", 0, 3);
         else

@@ -31,21 +31,37 @@ namespace Frost
         lSubEntity_ = mMP.lSubEntity_;
     }
 
-    void ModelPart::Show()
+    void ModelPart::Show( const s_uint& uiSubEntity )
     {
-        s_ctnr<s_uint>::iterator iterSub;
-        foreach (iterSub, lSubEntity_)
+        if (uiSubEntity.IsValid())
         {
-            pParent_->GetEntity()->getSubEntity(iterSub->Get())->setVisible(true);
+            if (uiSubEntity < lSubEntity_.GetSize())
+                pParent_->GetEntity()->getSubEntity(uiSubEntity.Get())->setVisible(true);
+        }
+        else
+        {
+            s_ctnr<s_uint>::iterator iterSub;
+            foreach (iterSub, lSubEntity_)
+            {
+                pParent_->GetEntity()->getSubEntity(iterSub->Get())->setVisible(true);
+            }
         }
     }
 
-    void ModelPart::Hide()
+    void ModelPart::Hide( const s_uint& uiSubEntity )
     {
-        s_ctnr<s_uint>::iterator iterSub;
-        foreach (iterSub, lSubEntity_)
+        if (uiSubEntity.IsValid())
         {
-            pParent_->GetEntity()->getSubEntity(iterSub->Get())->setVisible(false);
+            if (uiSubEntity < lSubEntity_.GetSize())
+                pParent_->GetEntity()->getSubEntity(uiSubEntity.Get())->setVisible(false);
+        }
+        else
+        {
+            s_ctnr<s_uint>::iterator iterSub;
+            foreach (iterSub, lSubEntity_)
+            {
+                pParent_->GetEntity()->getSubEntity(iterSub->Get())->setVisible(false);
+            }
         }
     }
 

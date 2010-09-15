@@ -44,7 +44,7 @@
 
 </Texture>
 
-<d[Region]:Frame n:alpha="1.0" parent="" b:topLevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" b:enableMouse="false" b:enableMouseWheel="false" b:enableKeyboard="false" b:clampedToScreen="false">
+<d[Region]:Frame n:alpha="1.0" parent="" b:topLevel="false" b:movable="false" b:resizable="false" frameStrata="PARENT" frameLevel="PARENT" b:enableMouse="false" b:enableMouseWheel="false" b:enableKeyboard="false" b:clampedToScreen="false">
 
     <n[.,1]:ResizeBounds>
         <n[.,1]:Min>
@@ -64,7 +64,12 @@
             <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
             <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
         </BackgroundInsets>
-
+        
+        <n[.,1]:EdgeInsets>
+            <n[*]:AbsInset n:left="0"   n:right="0"   n:top="0"   n:bottom="0"/>
+            <n[*]:RelInset n:left="0.0" n:right="0.0" n:top="0.0" n:bottom="0.0"/>
+        </EdgeInsets>
+        
         <n[.,1]:BackgroundColor n:a="1.0" n:r="0.0" n:g="0.0" n:b="0.0"/>
 
         <n[.,1]:TileSize>
@@ -117,14 +122,14 @@
 
 <d[Frame]:Button text="" b:enableMouse="true">
 
-    <n[.,1]:c[Texture]:NormalTexture    name="$parentNormalTexture"    b:setAllPoints="true"/>
-    <n[.,1]:c[Texture]:PushedTexture    name="$parentPushedTexture"    b:setAllPoints="true" hidden="true"/>
-    <n[.,1]:c[Texture]:DisabledTexture  name="$parentDisabledTexture"  b:setAllPoints="true" hidden="true"/>
-    <n[.,1]:c[Texture]:HighlightTexture name="$parentHighlightTexture" b:setAllPoints="true" hidden="true"/>
+    <n[.,1]:c[Texture]:NormalTexture    name="$parentNormalTexture"    b:setAllPoints="true" layer="ARTWORK"/>
+    <n[.,1]:c[Texture]:PushedTexture    name="$parentPushedTexture"    b:setAllPoints="true" hidden="true" layer="BORDER"/>
+    <n[.,1]:c[Texture]:DisabledTexture  name="$parentDisabledTexture"  b:setAllPoints="true" hidden="true" layer="BORDER"/>
+    <n[.,1]:c[Texture]:HighlightTexture name="$parentHighlightTexture" b:setAllPoints="true" hidden="true" layer="HIGHLIGHT"/>
 
-    <n[.,1]:c[FontString]:NormalText    name="$parentNormalText"    b:setAllPoints="true"/>
-    <n[.,1]:c[FontString]:HighlightText name="$parentHighlightText" b:setAllPoints="true" hidden="true"/>
-    <n[.,1]:c[FontString]:DisabledText  name="$parentDisabledText"  b:setAllPoints="true" hidden="true"/>
+    <n[.,1]:c[FontString]:NormalText    name="$parentNormalText"    b:setAllPoints="true" layer="ARTWORK"/>
+    <n[.,1]:c[FontString]:HighlightText name="$parentHighlightText" b:setAllPoints="true" hidden="true" layer="HIGHLIGHT"/>
+    <n[.,1]:c[FontString]:DisabledText  name="$parentDisabledText"  b:setAllPoints="true" hidden="true" layer="BORDER"/>
 
     <n[.,1]:PushedTextOffset>
         <n[*]:AbsDimension n:x="0" n:y="0"/>
@@ -134,8 +139,10 @@
     <n[.,1]:Scripts>
         <n[.,1]:OnClick/>
         <n[.,1]:OnDoubleClick/>
+        <n[.,1]:OnDisable/>
         <n[.,1]:OnDragStart/>
         <n[.,1]:OnDragStop/>
+        <n[.,1]:OnEnable/>
         <n[.,1]:OnEnter/>
         <n[.,1]:OnEvent/>
         <n[.,1]:OnHide/>
@@ -156,8 +163,8 @@
 
 <d[Button]:CheckButton b:checked="false">
 
-    <n[.,1]:c[Texture]:CheckedTexture         name="$parentCheckedTexture" b:hidden="true"/>
-    <n[.,1]:c[Texture]:DisabledCheckedTexture name="$parentDisabledCheckedTexture"/>
+    <n[.,1]:c[Texture]:CheckedTexture         name="$parentCheckedTexture"         b:setAllPoints="true" b:hidden="true" layer="ARTWORK"/>
+    <n[.,1]:c[Texture]:DisabledCheckedTexture name="$parentDisabledCheckedTexture" b:setAllPoints="true" b:hidden="true" layer="ARTWORK"/>
 
 </CheckButton>
 
@@ -192,7 +199,7 @@
 
 <d[Frame]:Cooldown/>
 
-<d[Frame]:EditBox b:enableMouse="true" b:enableKeyboard="true" n:letters="0" n:blinkSpeed="0.5" b:numeric="false" b:password="false" b:multiLine="false" n:historyLines="0" b:autoFocus="false" b:ignoreArrows="false">
+<d[Frame]:EditBox b:enableMouse="true" b:enableKeyboard="true" n:letters="0" n:blinkSpeed="0.5" b:numeric="false" b:positive="false" b:integer="false" b:password="false" b:multiLine="false" n:historyLines="0" b:autoFocus="false" b:ignoreArrows="false">
 
     <n[.,1]:c[FontString]:FontString name="$parentFontString"/>
 

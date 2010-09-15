@@ -185,7 +185,7 @@ namespace Frost
         */
         s_refptr& operator = (const s_refptr<N>& mValue)
         {
-            if (&mValue != this)
+            if (mValue.pValue_ != pValue_)
             {
                 Decrement_();
 
@@ -342,9 +342,6 @@ namespace Frost
                 --(*pCounter_);
                 if (*pCounter_ == 0u)
                 {
-                    delete pValue_;
-                    pValue_ = nullptr;
-
                     if (*pWCounter_ == 0u)
                     {
                         delete pCounter_;
@@ -352,6 +349,9 @@ namespace Frost
                         delete pWCounter_;
                         pWCounter_ = nullptr;
                     }
+
+                    delete pValue_;
+                    pValue_ = nullptr;
                 }
             }
         }

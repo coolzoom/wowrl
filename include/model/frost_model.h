@@ -24,8 +24,8 @@ namespace Frost
         ModelPart(s_ptr<Model> pParent, const s_uint& uiID);
         ModelPart(const ModelPart &mMP, s_ptr<Model> pParent);
 
-        void             Show();
-        void             Hide();
+        void             Show(const s_uint& uiSubEntity = s_uint::NaN);
+        void             Hide(const s_uint& uiSubEntity = s_uint::NaN);
         void             Highlight();
         void             Unlight();
         void             SetMaterial(s_refptr<Material> pMat, const s_uint& uiSubEntity = s_uint::NaN);
@@ -55,9 +55,6 @@ namespace Frost
     public :
 
         /// Default constructor.
-        Model(const ModelData& mData, const s_str& sEntityName);
-
-        /// Default constructor.
         Model(const ModelData& mData, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager);
 
         /// Destructor.
@@ -71,7 +68,7 @@ namespace Frost
         s_ptr<Ogre::Entity> GetEntity();
         s_ptr<Ogre::Mesh>   GetMesh();
 
-        void              Show();
+        void              Show(s_bool bSubMeshes = false);
         void              Hide(s_bool bSubMeshes = false);
         void              Highlight();
         void              Unlight();

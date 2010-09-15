@@ -24,15 +24,15 @@ namespace Frost
 {
     const s_str Gizmo::CLASS_NAME = "Gizmo";
 
-    const Color Gizmo::X_BASE_COLOR = Color(255, 0, 0);
-    const Color Gizmo::Y_BASE_COLOR = Color(0, 255, 0);
-    const Color Gizmo::Z_BASE_COLOR = Color(0, 0, 255);
+    const Color Gizmo::X_BASE_COLOR = Color(1.0f, 0.0f, 0.0f);
+    const Color Gizmo::Y_BASE_COLOR = Color(0.0f, 1.0f, 0.0f);
+    const Color Gizmo::Z_BASE_COLOR = Color(0.0f, 0.0f, 1.0f);
 
-    const Color Gizmo::X_HIGHLIGHT_COLOR = Color(255, 100, 100);
-    const Color Gizmo::Y_HIGHLIGHT_COLOR = Color(100, 255, 100);
-    const Color Gizmo::Z_HIGHLIGHT_COLOR = Color(100, 100, 255);
+    const Color Gizmo::X_HIGHLIGHT_COLOR = Color(1.0f, 0.4f, 0.4f);
+    const Color Gizmo::Y_HIGHLIGHT_COLOR = Color(0.4f, 1.0f, 0.4f);
+    const Color Gizmo::Z_HIGHLIGHT_COLOR = Color(0.4f, 0.4f, 1.0f);
 
-    const Color Gizmo::ALPHA_MASK = Color(128, 255, 255, 255);
+    const Color Gizmo::ALPHA_MASK = Color(0.5f, 1.0f, 1.0f, 1.0f);
 
     Gizmo::Gizmo()
     {
@@ -391,5 +391,10 @@ namespace Frost
             pGizmo_->StartDrag(cAxis_);
         if (sEvent == "DragStop")
             pGizmo_->StopDrag(cAxis_);
+    }
+
+    s_bool GizmoOgreInterface::IsMouseEnabled() const
+    {
+        return OgreInterface::IsMouseEnabled() && pGizmo_->IsShown();
     }
 }

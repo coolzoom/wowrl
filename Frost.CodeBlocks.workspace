@@ -5,7 +5,9 @@
 		<Project filename="FrostData.cbp" />
 		<Project filename="ModelConverter/ModelConverter.cbp" />
 		<Project filename="TerrainGenerator/TerrainGenerator.cbp" />
+		<Project filename="Frost - GUI.cbp" />
 		<Project filename="Frost - XML.cbp" />
+		<Project filename="Frost - Input.cbp" />
 		<Project filename="Frost - Utils.cbp" />
 		<Project filename="../temp/temp.cbp" />
 	</Workspace>

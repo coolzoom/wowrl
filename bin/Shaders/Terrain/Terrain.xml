@@ -2,7 +2,7 @@
     
     <VertexShader name="Terrain" file="Shaders/Terrain/Terrain_vs">
         <Params>
-            <LightParams number="5" includeDirectional="true"/>
+            <LightParams number="5"/>
             <AutoParam name="mAmbient"/>
             <AutoParam name="mWorldViewProj"/>
             <AutoParam name="mWorld"/>
@@ -23,7 +23,7 @@
     
     <PixelShader name="Terrain" file="Shaders/Terrain/Terrain_ps">
         <TextureBinds>
-            <TextureBind name="mTexture"  id="0"/>
+            <TextureBind name="mTexture" id="0"/>
             <#[SPECULAR]>
                 <TextureBind name="mTextureS" id="1"/>
             </#>
@@ -40,7 +40,7 @@
     
     <VertexShader name="Terrain_Splatting_2" file="Shaders/Terrain/Terrain_Splatting_vs">
         <Params>
-            <LightParams number="5" includeDirectional="true"/>
+            <LightParams number="5"/>
             <AutoParam name="mAmbient"/>
             <AutoParam name="mWorldViewProj"/>
             <AutoParam name="mWorld"/>
@@ -91,7 +91,7 @@
     
     <VertexShader name="Terrain_Splatting_3" file="Shaders/Terrain/Terrain_Splatting_vs">
         <Params>
-            <LightParams number="5" includeDirectional="true"/>
+            <LightParams number="5"/>
             <AutoParam name="mAmbient"/>
             <AutoParam name="mWorldViewProj"/>
             <AutoParam name="mWorld"/>
@@ -147,7 +147,7 @@
     
     <VertexShader name="Terrain_Splatting_4" file="Shaders/Terrain/Terrain_Splatting_vs">
         <Params>
-            <LightParams number="5" includeDirectional="true"/>
+            <LightParams number="5"/>
             <AutoParam name="mAmbient"/>
             <AutoParam name="mWorldViewProj"/>
             <AutoParam name="mWorld"/>

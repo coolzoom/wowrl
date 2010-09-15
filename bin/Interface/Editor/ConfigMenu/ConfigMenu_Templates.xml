@@ -31,7 +31,7 @@
             <BackgroundColor a="0.2" r="0.3" g="0.3" b="0.3"/>
         </Backdrop>
         <HighlightTexture file="Interface/Editor/Templates/ButtonHighlight.png"/>
-        <NormalText font="Fonts/Vera.ttf" fontHeight="8" setAllPoints="false">
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false">
             <Anchors>
                 <Anchor point="CENTER">
                     <Offset>
@@ -94,7 +94,7 @@
         </Scripts>
         <Layers>
             <Layer>
-                <FontString name="$parentCaption" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT">
+                <FontString name="$parentCaption" font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT">
                     <Anchors>
                         <Anchor point="LEFT"/>
                     </Anchors>
@@ -102,54 +102,10 @@
             </Layer>
         </Layers>
         <Frames>
-            <Button name="$parentSwatch">
-                <Size>
-                    <AbsDimension x="16" y="16"/>
-                </Size>
+            <Button name="$parentSwatch" inherits="ButtonTemplate_ColorSwatch">
                 <Anchors>
                     <Anchor point="RIGHT"/>
                 </Anchors>
-                <Frames>
-                    <Frame name="$parentColorZone" setAllPoints="true">
-                        <Backdrop edgeFile="Interface/Editor/Templates/Border2PX.png">
-                            <BackgroundInsets>
-                                <AbsInset left="2" right="2" top="2" bottom="2"/>
-                            </BackgroundInsets>
-                            <BackgroundColor r="0" g="0" b="0"/>
-                        </Backdrop>
-                    </Frame>
-                </Frames>
-                <Backdrop bgFile="Interface/Editor/Templates/Checker4PX.png" tile="true">
-                    <BackgroundInsets>
-                        <AbsInset left="2" right="2" top="2" bottom="2"/>
-                    </BackgroundInsets>
-                </Backdrop>
-                <HighlightTexture file="|ColorSwatchHighlight.png" setAllPoints="false">
-                    <Size>
-                        <AbsDimension x="32" y="32"/>
-                    </Size>
-                    <Anchors>
-                        <Anchor point="CENTER"/>
-                    </Anchors>
-                </HighlightTexture>
-                <Scripts>
-                    <OnClick>
-                        ConfigMenu.currentColorItem = this:GetParent();
-                        ColorSelector:SetColor(this:GetParent().color);
-                        ColorSelector:SetOnColorUpdateFunc(function (color)
-                            ConfigMenu.currentColorItem.Swatch.ColorZone:SetBackdropColor(color:Unpack());
-                            ConfigMenu.currentColorItem.color:Assign(color);
-                            if (ConfigMenu.currentColorItem.onColorChange) then
-                                ConfigMenu.currentColorItem.onColorChange(color);
-                            end
-                        end);
-                        if (ColorSelector:IsShown()) then
-                            ColorSelector:Raise();
-                        else
-                            ColorSelector:Show();
-                        end
-                    </OnClick>
-                </Scripts>
             </Button>
         </Frames>
     </Frame>

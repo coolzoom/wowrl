@@ -14,6 +14,11 @@
 
 namespace Frost
 {
+    namespace GUI
+    {
+        class Quad;
+    }
+
     /// Manages vertex and pixel shaders
     class ShaderManager : public Manager<ShaderManager>
     {
@@ -99,7 +104,7 @@ namespace Frost
         *   \note Returns nullptr if post processing is disabled.
         *   \note This is the render target on which the scene is rendered.
         */
-        s_ptr<RenderTarget> GetSceneRenderTarget();
+        s_wptr<RenderTarget> GetSceneRenderTarget();
 
         /// Returns the motion blur mask render target.
         /** \return The motion blur mask render target
@@ -107,7 +112,7 @@ namespace Frost
         *   \note This is the render target on which depth and blur masking
         *         is rendered (depth : red, mask : alpha).
         */
-        s_ptr<RenderTarget> GetMotionBlurMaskRenderTarget();
+        s_wptr<RenderTarget> GetMotionBlurMaskRenderTarget();
 
         static const s_str CLASS_NAME;
 
@@ -152,10 +157,9 @@ namespace Frost
 
         // Render targets, for post processing
         s_ptr<Ogre::MultiRenderTarget> pSceneMRT_;
-        s_ptr<RenderTarget>            pSceneRenderTarget_;
-        s_ptr<RenderTarget>            pMotionBlurMask_;
-        s_ptr<Sprite>                  pSceneSprite_;
-
+        s_refptr<RenderTarget>         pSceneRenderTarget_;
+        s_refptr<RenderTarget>         pMotionBlurMask_;
+        s_refptr<GUI::Quad>            pSceneQuad_;
 
     };
 }
