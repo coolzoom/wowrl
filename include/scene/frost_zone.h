@@ -13,15 +13,6 @@
 
 namespace Frost
 {
-    /// Holds informations about a material
-    struct MaterialInfo
-    {
-        s_bool bDiffuseColor;
-        Color  mDiffuseColor;
-        s_str  sDiffuseFile;
-        s_bool bAlphaReject;
-    };
-
     /// Contains displayable objects.
     class Zone
     {
@@ -88,9 +79,9 @@ namespace Frost
 
         /// Sets a default material for a model.
         /** \param sModelName The name of the model
-        *   \param lMatInfo   Basic informations about the material
+        *   \param mMatInfo   Basic informations about the material
         */
-        void         SetMaterialInfo(const s_str& sModelName, const s_map<s_int, s_map<s_int, MaterialInfo> >& lMatInfo);
+        void         SetMaterialInfo(const s_str& sModelName, const ModelMaterial& mMatInfo);
 
         /// Adds a Doodad to the zone.
         /** \param sName      The name of the Doodad
@@ -170,7 +161,7 @@ namespace Frost
         s_map< s_str, s_str >                lModelList_;
         s_map< s_str, s_ptr<Doodad> >        lDoodadList_;
 
-        s_map< s_str, s_map<s_int, s_map<s_int, MaterialInfo> > > lMaterialInfoList_;
+        s_map<s_str, ModelMaterial> lMaterialInfoList_;
     };
 }
 

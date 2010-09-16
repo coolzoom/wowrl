@@ -251,7 +251,7 @@ namespace Frost
         char lTempBuff[256];
         pKeyboard_->copyKeyStates(lTempBuff);
 
-        for (uint i = 0; i < 256; i++)
+        for (uint i = 0; i < 256; ++i)
         {
             lKeyBufOld_[i] = lKeyBuf_[i];
 

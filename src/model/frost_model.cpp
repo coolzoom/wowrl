@@ -17,6 +17,8 @@
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
 
+#include <frost_utils_file.h>
+
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
@@ -106,7 +108,7 @@ namespace Frost
     {
         if (bSubMeshes)
         {
-            for (uint i = 0; i < pEntity_->getNumSubEntities(); i++)
+            for (uint i = 0; i < pEntity_->getNumSubEntities(); ++i)
             {
                 pEntity_->getSubEntity(i)->setVisible(true);
             }
@@ -119,7 +121,7 @@ namespace Frost
     {
         if (bSubMeshes)
         {
-            for (uint i = 0; i < pEntity_->getNumSubEntities(); i++)
+            for (uint i = 0; i < pEntity_->getNumSubEntities(); ++i)
             {
                 pEntity_->getSubEntity(i)->setVisible(false);
             }
@@ -170,15 +172,15 @@ namespace Frost
     void Model::SetMaterial( s_refptr<Material> pMat )
     {
         pMaterial_ = pMat;
-        for (uint i = 0; i < pEntity_->getNumSubEntities(); i++)
+        for (uint i = 0; i < pEntity_->getNumSubEntities(); ++i)
         {
             pEntity_->getSubEntity(i)->setMaterialName(pMat->GetOgreMaterialName().Get());
         }
     }
 
-    void Model::SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec)
+    void Model::SetCustomShaderParameter( const s_uint& uiID, const Ogre::Vector4& mVec )
     {
-        for (uint i = 0; i < pEntity_->getNumSubEntities(); i++)
+        for (uint i = 0; i < pEntity_->getNumSubEntities(); ++i)
         {
             pEntity_->getSubEntity(i)->setCustomParameter(uiID.Get(), mVec);
         }
@@ -202,5 +204,74 @@ namespace Frost
     void Model::Update(const s_float& fDelta)
     {
         pAnimMgr_->Update(fDelta);
+    }
+
+
+    ModelMaterial::ModelMaterial()
+    {
+    }
+
+    void ModelMaterial::AddMaterialDefinition( const MaterialDefinition& mMatDef, const s_int& iSubMesh, const s_int& iSubEntity )
+    {
+        lMaterialList_[iSubMesh][iSubEntity] = mMatDef;
+    }
+
+    void ModelMaterial::ApplyOn( s_wptr<Model> pModel ) const
+    {
+        if (s_refptr<Model> pLocked = pModel.Lock())
+        {
+            s_map< s_int, s_map<s_int, MaterialDefinition> >::const_iterator iterSubMesh;
+            foreach (iterSubMesh, lMaterialList_)
+            {
+                s_map<s_int, MaterialDefinition>::const_iterator iterSubEntity;
+                foreach (iterSubEntity, iterSubMesh->second)
+                {
+                    s_refptr<Material> pMat = iterSubEntity->second.CreateMaterial();
+
+                    if (iterSubMesh->first == -1)
+                    {
+                        pModel->SetMaterial(pMat);
+                    }
+                    else
+                    {
+                        s_ptr<ModelPart> pPart = pModel->GetModelPart(s_uint(iterSubMesh->first));
+                        if (pPart)
+                        {
+                            if (iterSubEntity->first == -1)
+                            {
+                                pPart->SetMaterial(pMat);
+                            }
+                            else
+                            {
+                                pPart->SetMaterial(pMat, s_uint(iterSubEntity->first));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void ModelMaterial::SerializeIn( File& mFile ) const
+    {
+        s_map< s_int, s_map<s_int, MaterialDefinition> >::const_iterator iterSubMesh;
+        mFile.WriteLine("<Materials>");
+            mFile.AddTab();
+            foreach (iterSubMesh, lMaterialList_)
+            {
+                s_map<s_int, MaterialDefinition>::const_iterator iterSubEntity;
+                foreach (iterSubEntity, iterSubMesh->second)
+                {
+                    const MaterialDefinition& mMatDef = iterSubEntity->second;
+                    mFile.WriteLine("<Material subMeshID=\""+iterSubMesh->first+
+                                    "\" subEntityID=\""+iterSubEntity->first+"\">");
+                    mFile.AddTab();
+                        mMatDef.SerializeIn(mFile);
+                    mFile.RemoveTab();
+                    mFile.WriteLine("</Material>");
+                }
+            }
+            mFile.RemoveTab();
+        mFile.WriteLine("</Materials>");
     }
 }

@@ -8,6 +8,7 @@
 #include "scene/frost_zone.h"
 #include "scene/frost_doodad.h"
 #include "scene/frost_terrainchunk.h"
+#include "model/frost_model.h"
 
 #include <utils/frost_utils_file.h>
 
@@ -188,10 +189,10 @@ namespace Frost
         mFile.AddTab();
 
         s_map<s_str, s_str>::const_iterator iterModel;
-        s_map< s_str, s_map<s_int, s_map<s_int, MaterialInfo> > >::const_iterator iterMap = lMaterialInfoList_.Begin();
+        s_map<s_str, ModelMaterial>::const_iterator iterModelMat = lMaterialInfoList_.Begin();
         foreach (iterModel, lModelList_)
         {
-            if (iterModel->first != iterMap->first)
+            if (iterModel->first != iterModelMat->first)
             {
                 mFile.WriteLine("<Model name=\""+iterModel->first+"\" file=\""+iterModel->second+"\"/>");
                 Warning(CLASS_NAME, "\""+sName_+"\" serialization : Model \""+iterModel->first+"\" doesn't have material info.");
@@ -200,38 +201,12 @@ namespace Frost
 
             mFile.WriteLine("<Model name=\""+iterModel->first+"\" file=\""+iterModel->second+"\">");
                 mFile.AddTab();
-                const s_map< s_int, s_map<s_int, MaterialInfo> >& mInfoMap = iterMap->second;
-                s_map< s_int, s_map<s_int, MaterialInfo> >::const_iterator iterSubMesh;
-                mFile.WriteLine("<Materials>");
-                    mFile.AddTab();
-                    foreach (iterSubMesh, mInfoMap)
-                    {
-                        s_map<s_int, MaterialInfo>::const_iterator iterSubEntity;
-                        foreach (iterSubEntity, iterSubMesh->second)
-                        {
-                            const MaterialInfo& mInfo = iterSubEntity->second;
-                            mFile.WriteLine("<Material subMeshID=\""+iterSubMesh->first+
-                                            "\" subEntityID=\""+iterSubEntity->first+"\">");
-                            mFile.AddTab();
-                            if (mInfo.bDiffuseColor)
-                            {
-                                mFile.WriteLine(SerializeColorRGB(mInfo.mDiffuseColor, "DiffuseColor"));
-                            }
-                            else
-                            {
-                                mFile.WriteLine("<DiffuseTexture file=\""+mInfo.sDiffuseFile+"\""
-                                                +(mInfo.bAlphaReject ? " alphaReject=\"true\"" : "")+"/>");
-                            }
-                            mFile.RemoveTab();
-                            mFile.WriteLine("</Material>");
-                        }
-                    }
-                    mFile.RemoveTab();
-                mFile.WriteLine("</Materials>");
+                const ModelMaterial& mModelMat = iterModelMat->second;
+                mModelMat.SerializeIn(mFile);
                 mFile.RemoveTab();
             mFile.WriteLine("</Model>");
 
-            ++iterMap;
+            ++iterModelMat;
         }
 
         mFile.RemoveTab();

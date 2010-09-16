@@ -82,7 +82,7 @@ void FontString::Render()
         if (bIsOutlined_)
         {
             pText_->SetColor(Color::BLACK, true);
-            for (int i = 0; i < OUTLINE_QUALITY; i++)
+            for (int i = 0; i < OUTLINE_QUALITY; ++i)
             {
                 pText_->Render(
                     fX + OUTLINE_THICKNESS*cos(s_float(i)/OUTLINE_QUALITY),

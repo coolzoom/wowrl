@@ -112,9 +112,9 @@ namespace Frost
         return true;
     }
 
-    void Zone::SetMaterialInfo( const s_str& sModelName, const s_map<s_int, s_map<s_int, MaterialInfo> >& lMatInfo )
+    void Zone::SetMaterialInfo( const s_str& sModelName, const ModelMaterial& mMatInfo )
     {
-        lMaterialInfoList_[sModelName] = lMatInfo;
+        lMaterialInfoList_[sModelName] = mMatInfo;
     }
 
     s_ptr<Doodad> Zone::AddDoodad( const s_str& sName, const s_str& sModelName )
@@ -126,55 +126,10 @@ namespace Frost
             pDoodad = new Doodad(sName, sModelName, this);
             lDoodadList_[sName] = pDoodad;
 
-            if (s_refptr<Model> pModel = pDoodad->GetModel().Lock())
+            s_map<s_str, ModelMaterial>::const_iterator iter = lMaterialInfoList_.Get(sModelName);
+            if (iter != lMaterialInfoList_.End())
             {
-                if (lMaterialInfoList_.Find(sModelName))
-                {
-                    const s_map<s_int, s_map<s_int, MaterialInfo> >& lMap = lMaterialInfoList_[sModelName];
-                    s_map<s_int, s_map<s_int, MaterialInfo> >::const_iterator iterMap;
-                    foreach (iterMap, lMap)
-                    {
-                        const s_map<s_int, MaterialInfo>& lSubMap = iterMap->second;
-                        s_map<s_int, MaterialInfo>::const_iterator iterMat;
-                        foreach (iterMat, lSubMap)
-                        {
-                            s_refptr<Material> pMat;
-                            if (iterMat->second.bDiffuseColor)
-                            {
-                                pMat = MaterialManager::GetSingleton()->CreateMaterial3D(iterMat->second.mDiffuseColor);
-                                pMat->SetShaders("SimpleColor");
-                            }
-                            else
-                            {
-                                pMat = MaterialManager::GetSingleton()->CreateMaterial3D(iterMat->second.sDiffuseFile);
-                                pMat->SetShaders("SimpleTexture");
-                            }
-
-                            if (iterMat->second.bAlphaReject)
-                                pMat->SetAlphaReject(true);
-
-                            if (iterMap->first == -1)
-                            {
-                                pModel->SetMaterial(pMat);
-                            }
-                            else
-                            {
-                                s_ptr<ModelPart> pPart = pModel->GetModelPart(s_uint(iterMap->first));
-                                if (pPart)
-                                {
-                                    if (iterMat->first == -1)
-                                    {
-                                        pPart->SetMaterial(pMat);
-                                    }
-                                    else
-                                    {
-                                        pPart->SetMaterial(pMat, s_uint(iterMat->first));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                iter->second.ApplyOn(pDoodad->GetModel());
             }
         }
 

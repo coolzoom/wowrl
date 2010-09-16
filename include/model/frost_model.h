@@ -16,6 +16,23 @@
 
 namespace Frost
 {
+
+    class ModelMaterial
+    {
+    public :
+
+        ModelMaterial();
+
+        void AddMaterialDefinition(const MaterialDefinition& mMatDef, const s_int& iSubMesh = -1, const s_int& iSubEntity = -1);
+        void ApplyOn(s_wptr<Model> pModel) const;
+        void SerializeIn(File& mFile) const;
+
+    private :
+
+        s_map< s_int, s_map<s_int, MaterialDefinition> > lMaterialList_;
+
+    };
+
     /// A sub-mesh
     class ModelPart
     {

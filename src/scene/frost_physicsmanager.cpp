@@ -18,7 +18,7 @@ namespace Frost
     const s_str PhysicsManager::CLASS_NAME = "PhysicsManager";
 
     PhysicsManager::PhysicsManager() :
-        mGravity_(0, -9.81f, 0), uiMaxCollisionRecursion_(5u)
+        mGravity_(0, -12.5f, 0), uiMaxCollisionRecursion_(5u)
     {
     }
 

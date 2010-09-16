@@ -9,7 +9,7 @@
 			<Target title="Release_SFML">
 				<Option output="lib\libGUI_SFML" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release\SFML\" />
+				<Option object_output="obj_GUI\Release\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -27,7 +27,7 @@
 			<Target title="Debug_SFML">
 				<Option output="lib\libGUI_SFML_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug\SFML\" />
+				<Option object_output="obj_GUI\Debug\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -42,7 +42,7 @@
 			<Target title="Release_OGRE">
 				<Option output="lib\libGUI_OGRE" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release\OGRE\" />
+				<Option object_output="obj_GUI\Release\OGRE\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -61,7 +61,7 @@
 			<Target title="Debug_OGRE">
 				<Option output="lib\libGUI_OGRE_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug\OGRE\" />
+				<Option object_output="obj_GUI\Debug\OGRE\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
