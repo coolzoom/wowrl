@@ -6,6 +6,9 @@
 /*                                        */
 
 #include "material/frost_material.h"
+#include "material/frost_materialmanager.h"
+
+#include <frost_utils_file.h>
 
 #include <OgreMaterialManager.h>
 #include <OgreMaterial.h>
@@ -336,6 +339,77 @@ namespace Frost
             }
 
             bVanilla_ = false;
+        }
+    }
+
+    MaterialDefinition::MaterialDefinition() : mType_(TYPE_COLOR), mColor_(Color::WHITE)
+    {
+    }
+
+    MaterialDefinition::MaterialDefinition( const s_str& sFile, const s_bool& bAlphaReject ) :
+        mType_(TYPE_TEXTURE), sTextureFile_(sFile), bAlphaReject_(bAlphaReject)
+    {
+    }
+
+    MaterialDefinition::MaterialDefinition( const Color& mColor ) :
+        mType_(TYPE_COLOR), mColor_(mColor)
+    {
+    }
+
+    void MaterialDefinition::SetTextureFile( const s_str& sFile )
+    {
+        sTextureFile_ = sFile;
+        mType_ = TYPE_TEXTURE;
+    }
+
+    void MaterialDefinition::SetColor( const Color& mColor )
+    {
+        mColor_ = mColor;
+        mType_ = TYPE_COLOR;
+    }
+
+    void MaterialDefinition::SetAlphaReject( const s_bool& bAlphaReject )
+    {
+        bAlphaReject_ = bAlphaReject;
+    }
+
+    s_refptr<Material> MaterialDefinition::CreateMaterial() const
+    {
+        s_refptr<Material> pMat;
+
+        switch (mType_)
+        {
+            case TYPE_COLOR :
+                pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor_);
+                pMat->SetShaders("SimpleColor");
+                break;
+
+            case TYPE_TEXTURE :
+                pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sTextureFile_);
+                pMat->SetShaders("SimpleTexture");
+                break;
+        }
+
+        if (bAlphaReject_)
+            pMat->SetAlphaReject(true);
+
+        return pMat;
+    }
+
+    s_str SerializeColorRGB(const Color& mColor, const s_str& sTag);
+
+    void MaterialDefinition::SerializeIn( File& mFile ) const
+    {
+        switch (mType_)
+        {
+            case TYPE_COLOR :
+                mFile.WriteLine(SerializeColorRGB(mColor_, "DiffuseColor"));
+                break;
+
+            case TYPE_TEXTURE :
+                mFile.WriteLine("<DiffuseTexture file=\""+sTextureFile_+"\""
+                            +(bAlphaReject_ ? " alphaReject=\"true\"" : "")+"/>");
+                break;
         }
     }
 }

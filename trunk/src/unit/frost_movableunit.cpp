@@ -39,7 +39,8 @@ namespace Frost
         {
             bFalling_ = true;
 
-            pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 4.4145f, 0));
+            //pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 4.4145f, 0));
+            pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 5.0f, 0));
 
             pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_START);
             pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);

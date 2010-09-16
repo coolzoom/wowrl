@@ -11,6 +11,7 @@
 #include "scene/frost_doodad.h"
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
+#include "model/frost_model.h"
 #include <xml/frost_xml_document.h>
 #include <utils/frost_utils_file.h>
 
@@ -92,7 +93,7 @@ namespace Frost
                 s_ptr<XML::Block> pMaterialsBlock = pModelBlock->GetBlock("Materials");
                 if (pMaterialsBlock)
                 {
-                    s_map< s_int, s_map<s_int, MaterialInfo> > lMatList;
+                    ModelMaterial mModelMat;
 
                     s_ptr<XML::Block> pMaterialBlock;
                     foreach_block (pMaterialBlock, pMaterialsBlock)
@@ -104,39 +105,27 @@ namespace Frost
                         if (iEntityID < 0)
                             iEntityID = -1;
 
-                        if (lMatList.Find(iID) && lMatList[iID].Find(iEntityID))
-                        {
-                            Warning(pMaterialBlock->GetFile()+":"+pMaterialBlock->GetLineNbr(),
-                                "A material has already been defined for \""+sModel+"\""+
-                                (iID < 0 ? "." : ("'s submesh "+iID+
-                                (iEntityID < 0 ? "." : ("(subentity "+iEntityID+")."))))
-                            );
-                            continue;
-                        }
-
-                        MaterialInfo mInfo;
+                        MaterialDefinition mMatDef;
                         s_ptr<XML::Block> pDiffuseBlock = pMaterialBlock->GetRadioBlock();
                         if (pDiffuseBlock->GetName() == "DiffuseColor")
                         {
-                            mInfo.bDiffuseColor = true;
-                            mInfo.mDiffuseColor = Color(
+                            mMatDef.SetColor(Color(
                                 s_float(pDiffuseBlock->GetAttribute("a")),
                                 s_float(pDiffuseBlock->GetAttribute("r")),
                                 s_float(pDiffuseBlock->GetAttribute("g")),
                                 s_float(pDiffuseBlock->GetAttribute("b"))
-                            );
+                            ));
                         }
                         else
                         {
-                            mInfo.bDiffuseColor = false;
-                            mInfo.sDiffuseFile = pDiffuseBlock->GetAttribute("file");
-                            mInfo.bAlphaReject = s_bool(pDiffuseBlock->GetAttribute("alphaReject"));
+                            mMatDef.SetTextureFile(pDiffuseBlock->GetAttribute("file"));
+                            mMatDef.SetAlphaReject(s_bool(pDiffuseBlock->GetAttribute("alphaReject")));
                         }
 
-                        lMatList[iID][iEntityID] = mInfo;
+                        mModelMat.AddMaterialDefinition(mMatDef, iID, iEntityID);
                     }
 
-                    SetMaterialInfo(sModel, lMatList);
+                    SetMaterialInfo(sModel, mModelMat);
                 }
             }
         }

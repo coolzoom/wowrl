@@ -226,6 +226,36 @@ namespace Frost
 
         s_ctnr<PassInfo> lPassList_;
     };
+
+    class MaterialDefinition
+    {
+    public :
+
+        MaterialDefinition();
+        explicit MaterialDefinition(const s_str& sFile, const s_bool& bAlphaReject = false);
+        explicit MaterialDefinition(const Color& mColor);
+
+        void SetTextureFile(const s_str& sFile);
+        void SetColor(const Color& mColor);
+        void SetAlphaReject(const s_bool& bAlphaReject);
+
+        s_refptr<Material> CreateMaterial() const;
+        void SerializeIn( File& mFile ) const;
+
+    private :
+
+        enum
+        {
+            TYPE_COLOR,
+            TYPE_TEXTURE
+        } mType_;
+
+        Color mColor_;
+
+        s_str sTextureFile_;
+        s_bool bAlphaReject_;
+
+    };
 }
 
 #endif

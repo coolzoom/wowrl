@@ -164,6 +164,7 @@ namespace Frost
         s_bool ParseHealthTypes_();
         s_bool ParsePowerTypes_();
         s_bool ParseCreatureModels_();
+        s_bool ParseCreatures_();
         s_bool ParseSpellSchools_();
 
         s_uint                       uiCounter_;

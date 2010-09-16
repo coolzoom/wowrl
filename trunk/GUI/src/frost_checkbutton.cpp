@@ -24,8 +24,6 @@ CheckButton::~CheckButton()
 {
 }
 
-// TODO : fix CheckButton
-
 s_str CheckButton::Serialize( const s_str& sTab ) const
 {
     return Button::Serialize(sTab);

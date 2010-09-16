@@ -32,12 +32,21 @@ namespace Frost
     // gameplay/frost_gameplaymanager.h
     class  GameplayManager;
 
+    /* GAMEPLAY ******************************************/
+    // gui/frost_modelframe.h
+    namespace GUI
+    {
+        class ModelFrame;
+        class LuaModelFrame;
+    }
+
     /* MATERIAL ******************************************/
     // material/frost_decal.h
     class  Decal;
 
     // material/frost_material.h
     class  Material;
+    class  MaterialDefinition;
 
     // material/frost_materialmanager.h
     class  MaterialManager;
@@ -71,6 +80,7 @@ namespace Frost
     // model/frost_model.h
     class  Model;
     class  ModelPart;
+    class  ModelMaterial;
 
     // model/frost_modeldata.h
     class  ModelData;
