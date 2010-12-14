@@ -182,8 +182,10 @@
                         this.onSelect = function (value)
                             if (value == nil) then return end;
                             local model = Editor:GetModelFile(value);
+                            local material = Editor:GetModelMaterial(value);
                             ModelEditor.Model.File:SetText(model);
                             ModelEditor.Model:SetModel(model);
+                            ModelEditor.Model:SetMaterial(material);
                             ModelEditor.Options.NameEditBox:SetText(value);
                             ModelEditor.Options.Add:Enable();
                             ModelEditor.Options.Save:Enable();
@@ -762,6 +764,8 @@
                         if (ModelEditor.modelName ~= "") then
                             if (not Editor:IsModelLoaded(ModelEditor.modelName)) then
                                 Editor:RegisterNewModel(ModelEditor.modelName, ModelEditor.Model.File:GetText());
+                                Editor:SetModelMaterial(ModelEditor.modelName, ModelEditor.Model:GetMaterial());
+                                AddOns.Editor:NotifyDataChanged();
                             else
                                 ModelEditor:Error(AddOns.ModelEditor:GetLocalizedString("ModelAlreadyExists"), 300, 110);
                             end
@@ -802,6 +806,9 @@
                             else
                                 Editor:EditModel(ModelEditor.modelName, ModelEditor.Model.File:GetText());
                             end
+                            
+                            Editor:SetModelMaterial(ModelEditor.modelName, ModelEditor.Model:GetMaterial());
+                            AddOns.Editor:NotifyDataChanged();
                         else
                             ModelEditor:Error(AddOns.ModelEditor:GetLocalizedString("ModelNoName"), 300, 100);
                         end

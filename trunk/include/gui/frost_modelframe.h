@@ -10,6 +10,8 @@
 #define FROST_GUI_MODELFRAME_H
 
 #include "frost.h"
+#include "model/frost_model.h"
+
 #include <frost_frame.h>
 
 namespace Frost
@@ -263,6 +265,16 @@ namespace Frost
             */
             s_wptr<Model>  GetModel();
 
+            /// Returns the ModelMaterial used to display the model.
+            /** \return The ModelMaterial used to display the model
+            */
+            const ModelMaterial& GetModelMaterial() const;
+
+            /// Sets the ModelMaterial used to display the model.
+            /** \param mModelMat The ModelMaterial used to display the model
+            */
+            void SetModelMaterial(const ModelMaterial& mModelMat);
+
             /// Returns this widget's Lua glue.
             virtual void   CreateGlue();
 
@@ -286,6 +298,7 @@ namespace Frost
             Vector          mModelDirection_;
             s_uint          uiModelAnimation_;
             s_refptr<Model> pModel_;
+            ModelMaterial   mModelMat_;
 
             s_ptr<Camera>             pCamera_;
             s_ptr<Ogre::SceneManager> pSceneManager_;
@@ -317,6 +330,7 @@ namespace Frost
             int _ClearModel(lua_State*);
             int _GetFacing(lua_State*);
             int _GetLight(lua_State*);
+            int _GetMaterial(lua_State*);
             int _GetModel(lua_State*);
             int _GetModelScale(lua_State*);
             int _GetPosition(lua_State*);
@@ -327,6 +341,7 @@ namespace Frost
             int _HideSubEntity(lua_State*);
             int _SetFacing(lua_State*);
             int _SetLight(lua_State*);
+            int _SetMaterial(lua_State*);
             int _SetModel(lua_State*);
             int _SetModelScale(lua_State*);
             int _SetModelTexture(lua_State*);

@@ -128,9 +128,15 @@ namespace Frost
         }
     }
 
-    s_wptr<Material> ModelPart::GetMaterial()
+    s_wptr<Material> ModelPart::GetMaterial( const s_uint& uiSubEntity )
     {
-        return pMaterial_;
+        if (uiSubEntity.IsValid())
+        {
+            if (lSubEntityMaterialList_.Find(uiSubEntity))
+                return lSubEntityMaterialList_[uiSubEntity];
+        }
+        else
+            return pMaterial_;
     }
 
     void ModelPart::SetCustomShaderParameter( const s_uint& uiID, const Ogre::Vector4& mVec )

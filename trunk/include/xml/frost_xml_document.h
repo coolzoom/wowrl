@@ -26,6 +26,12 @@ namespace XML
     public :
 
         /// Default constructor.
+        /** \param sDefFileName The path to the definition file to use
+        *   \note The definition file is parsed in this constructor.
+        */
+        Document(const s_str& sDefFileName);
+
+        /// File constructor.
         /** \param sFileName    The path to the file you want to parse
         *   \param sDefFileName The path to the definition file to use
         *   \note The definition file is parsed in this constructor.
@@ -34,6 +40,16 @@ namespace XML
 
         /// Destructor.
         ~Document();
+
+        /// Sets the file from which to read data from.
+        /** \param sFileName The path to the file you want to parse
+        */
+        void SetFileName(const s_str& sFileName);
+
+        /// Sets the string from which to read data from.
+        /** \param sString The string containing data to parse
+        */
+        void SetSourceString(const s_str& sString);
 
         /// Returns this file's main block.
         /** \return This file's main block
@@ -178,6 +194,7 @@ namespace XML
         void ReadEndingTag_(s_str& sTagContent);
 
         s_str  sFileName_;
+        s_str  sSourceString_;
         s_str  sDefFileName_;
         s_str  sCurrentFileName_;
         s_uint uiCurrentLineNbr_;

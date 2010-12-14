@@ -19,6 +19,34 @@ using namespace Frost::XML;
 
 const s_str Document::CLASS_NAME = "XML::Document";
 
+Document::Document( const s_str& sDefFileName ) :
+    sDefFileName_(sDefFileName)
+{
+    mXMLState_.SetDocument(this);
+    mDefState_.SetDocument(this);
+
+    if (File::Exists(sDefFileName_))
+    {
+        mMainBlock_.SetDocument(this);
+        bValid_ = true;
+
+        try
+        {
+            LoadDefinition_();
+        }
+        catch (const Exception& e)
+        {
+            Error("", e.GetDescription());
+            bValid_ = false;
+        }
+    }
+    else
+    {
+        Error(CLASS_NAME, "Can't find \""+sDefFileName_+"\".");
+        bValid_ = false;
+    }
+}
+
 Document::Document( const s_str& sFileName, const s_str& sDefFileName ) :
     sFileName_(sFileName), sDefFileName_(sDefFileName)
 {
@@ -56,6 +84,24 @@ Document::Document( const s_str& sFileName, const s_str& sDefFileName ) :
 
 Document::~Document()
 {
+}
+
+void Document::SetFileName( const s_str& sFileName )
+{
+    if (File::Exists(sFileName))
+    {
+        sFileName_ = sFileName;
+    }
+    else
+    {
+        Error(CLASS_NAME, "Can't find \""+sFileName+"\".");
+        bValid_ = false;
+    }
+}
+
+void Document::SetSourceString( const s_str& sString )
+{
+    sSourceString_ = sString;
 }
 
 s_ptr<Block> Document::GetMainBlock()
@@ -439,24 +485,55 @@ s_bool Document::Check( const s_str& sPreProcCommands )
     // Parse preprocessor commands given by the user
     lPreProcessorCommands_ = ReadPreProcessorCommands(sPreProcCommands);
 
-    // Open the XML file
-    File mFile(sFileName_, File::I);
-    sCurrentFileName_ = sFileName_;
-    uiCurrentLineNbr_ = 0u;
-    s_str sLine;
-    pState_ = &mXMLState_;
-    pState_->SetCurrentBlock(&mMainBlock_);
-
-    // Start parsing line by line
-    while (mFile.IsValid() && bValid_)
+    if (!sFileName_.IsEmpty())
     {
-        sLine += mFile.GetLine() + "\n";
-        ++uiCurrentLineNbr_;
+        // Open the XML file
+        File mFile(sFileName_, File::I);
+        sCurrentFileName_ = sFileName_;
+        uiCurrentLineNbr_ = 0u;
+        s_str sLine;
+        pState_ = &mXMLState_;
+        pState_->SetCurrentBlock(&mMainBlock_);
 
-        if (!sLine.IsEmpty(true))
+        // Start parsing line by line
+        while (mFile.IsValid() && bValid_)
         {
-            // Read all tags on this line
-            ReadTags_(sLine);
+            sLine += mFile.GetLine() + "\n";
+            ++uiCurrentLineNbr_;
+
+            if (!sLine.IsEmpty(true))
+            {
+                // Read all tags on this line
+                ReadTags_(sLine);
+            }
+        }
+    }
+    else
+    {
+        // Read the source string
+        sCurrentFileName_ = "source string";
+        uiCurrentLineNbr_ = 0u;
+        s_str sLine;
+        pState_ = &mXMLState_;
+        pState_->SetCurrentBlock(&mMainBlock_);
+
+        s_ctnr<s_str> lLines = sSourceString_.CutEach("\n");
+        s_ctnr<s_str>::iterator iterLine;
+
+        // Start parsing line by line
+        foreach (iterLine, lLines)
+        {
+            sLine += (*iterLine) + "\n";
+            ++uiCurrentLineNbr_;
+
+            if (!sLine.IsEmpty(true))
+            {
+                // Read all tags on this line
+                ReadTags_(sLine);
+            }
+
+            if (!bValid_)
+                break;
         }
     }
 

@@ -93,38 +93,7 @@ namespace Frost
                 s_ptr<XML::Block> pMaterialsBlock = pModelBlock->GetBlock("Materials");
                 if (pMaterialsBlock)
                 {
-                    ModelMaterial mModelMat;
-
-                    s_ptr<XML::Block> pMaterialBlock;
-                    foreach_block (pMaterialBlock, pMaterialsBlock)
-                    {
-                        s_int iID = s_int(pMaterialBlock->GetAttribute("subMeshID"));
-                        s_int iEntityID = s_int(pMaterialBlock->GetAttribute("subEntityID"));
-                        if (iID < 0)
-                            iID = -1;
-                        if (iEntityID < 0)
-                            iEntityID = -1;
-
-                        MaterialDefinition mMatDef;
-                        s_ptr<XML::Block> pDiffuseBlock = pMaterialBlock->GetRadioBlock();
-                        if (pDiffuseBlock->GetName() == "DiffuseColor")
-                        {
-                            mMatDef.SetColor(Color(
-                                s_float(pDiffuseBlock->GetAttribute("a")),
-                                s_float(pDiffuseBlock->GetAttribute("r")),
-                                s_float(pDiffuseBlock->GetAttribute("g")),
-                                s_float(pDiffuseBlock->GetAttribute("b"))
-                            ));
-                        }
-                        else
-                        {
-                            mMatDef.SetTextureFile(pDiffuseBlock->GetAttribute("file"));
-                            mMatDef.SetAlphaReject(s_bool(pDiffuseBlock->GetAttribute("alphaReject")));
-                        }
-
-                        mModelMat.AddMaterialDefinition(mMatDef, iID, iEntityID);
-                    }
-
+                    ModelMaterial mModelMat(pMaterialsBlock);
                     SetMaterialInfo(sModel, mModelMat);
                 }
             }

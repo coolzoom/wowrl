@@ -140,6 +140,12 @@ namespace Frost
         */
         s_refptr<Material> GetDefault3D();
 
+        /// Returns an already created Material using its ID number.
+        /** \param uiID The unique ID associated to this Material
+        *   \return The associated Material (nullptr if none)
+        */
+        s_wptr<Material> GetMaterial(const s_uint& uiID) const;
+
         static const s_str CLASS_NAME;
 
     protected :
@@ -180,6 +186,8 @@ namespace Frost
 
         s_map< s_str, s_ptr<Ogre::Material> > l3DTextureMaterialList_;
         s_map< s_str, s_ptr<Ogre::Material> > l2DTextureMaterialList_;
+
+        s_map< s_uint, s_wptr<Material> > lMaterialList_;
     };
 }
 

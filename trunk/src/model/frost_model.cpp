@@ -18,6 +18,7 @@
 #include "material/frost_materialmanager.h"
 
 #include <frost_utils_file.h>
+#include <xml/frost_xml_document.h>
 
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
@@ -39,6 +40,8 @@ namespace Frost
         pEntity_ = pSceneManager_->createEntity(sEntityName_.Get(), sOgreModelName_.Get());
 
         pNode_->attachObject(pEntity_.Get());
+
+        bHasAnimation_ = !mData.lAnimList_.IsEmpty();
 
         pAnimMgr_ = s_refptr<AnimManager>(new AnimManager(this, mData.lAnimList_));
 
@@ -164,6 +167,11 @@ namespace Frost
 
     }
 
+    const s_bool& Model::HasAnimation() const
+    {
+        return bHasAnimation_;
+    }
+
     s_wptr<AnimManager> Model::GetAnimMgr()
     {
         return pAnimMgr_;
@@ -211,12 +219,58 @@ namespace Frost
     {
     }
 
+    ModelMaterial::ModelMaterial( s_ptr<XML::Block> pBlock )
+    {
+        s_ptr<XML::Block> pMaterialBlock;
+        foreach_block (pMaterialBlock, pBlock)
+        {
+            s_int iID = s_int(pMaterialBlock->GetAttribute("subMeshID"));
+            s_int iEntityID = s_int(pMaterialBlock->GetAttribute("subEntityID"));
+            if (iID < 0)
+                iID = -1;
+            if (iEntityID < 0)
+                iEntityID = -1;
+
+            MaterialDefinition mMatDef;
+            s_ptr<XML::Block> pDiffuseBlock = pMaterialBlock->GetRadioBlock();
+            if (pDiffuseBlock->GetName() == "DiffuseColor")
+            {
+                mMatDef.SetColor(Color(
+                    s_float(pDiffuseBlock->GetAttribute("a")),
+                    s_float(pDiffuseBlock->GetAttribute("r")),
+                    s_float(pDiffuseBlock->GetAttribute("g")),
+                    s_float(pDiffuseBlock->GetAttribute("b"))
+                ));
+            }
+            else
+            {
+                mMatDef.SetTextureFile(pDiffuseBlock->GetAttribute("file"));
+                mMatDef.SetAlphaReject(s_bool(pDiffuseBlock->GetAttribute("alphaReject")));
+            }
+
+            AddMaterialDefinition(mMatDef, iID, iEntityID);
+        }
+    }
+
     void ModelMaterial::AddMaterialDefinition( const MaterialDefinition& mMatDef, const s_int& iSubMesh, const s_int& iSubEntity )
     {
         lMaterialList_[iSubMesh][iSubEntity] = mMatDef;
     }
 
-    void ModelMaterial::ApplyOn( s_wptr<Model> pModel ) const
+    void ModelMaterial::Clear( const s_int& iSubMesh, const s_int& iSubEntity )
+    {
+        if (iSubMesh == -1)
+            lMaterialList_.Clear();
+        else
+        {
+            if (iSubEntity == -1)
+                lMaterialList_.Erase(iSubMesh);
+            else
+                lMaterialList_[iSubMesh].Erase(iSubEntity);
+        }
+    }
+
+    void ModelMaterial::ApplyOn( s_wptr<Model> pModel, const s_bool& bPostProcess ) const
     {
         if (s_refptr<Model> pLocked = pModel.Lock())
         {
@@ -226,15 +280,15 @@ namespace Frost
                 s_map<s_int, MaterialDefinition>::const_iterator iterSubEntity;
                 foreach (iterSubEntity, iterSubMesh->second)
                 {
-                    s_refptr<Material> pMat = iterSubEntity->second.CreateMaterial();
+                    s_refptr<Material> pMat = iterSubEntity->second.CreateMaterial(bPostProcess);
 
                     if (iterSubMesh->first == -1)
                     {
-                        pModel->SetMaterial(pMat);
+                        pLocked->SetMaterial(pMat);
                     }
                     else
                     {
-                        s_ptr<ModelPart> pPart = pModel->GetModelPart(s_uint(iterSubMesh->first));
+                        s_ptr<ModelPart> pPart = pLocked->GetModelPart(s_uint(iterSubMesh->first));
                         if (pPart)
                         {
                             if (iterSubEntity->first == -1)
@@ -250,6 +304,27 @@ namespace Frost
                 }
             }
         }
+    }
+
+    s_str ModelMaterial::Serialize() const
+    {
+        s_map< s_int, s_map<s_int, MaterialDefinition> >::const_iterator iterSubMesh;
+        s_str sString = "<Materials>\n";
+        foreach (iterSubMesh, lMaterialList_)
+        {
+            s_map<s_int, MaterialDefinition>::const_iterator iterSubEntity;
+            foreach (iterSubEntity, iterSubMesh->second)
+            {
+                const MaterialDefinition& mMatDef = iterSubEntity->second;
+                sString += "<Material subMeshID=\""+iterSubMesh->first+"\""
+                           " subEntityID=\""+iterSubEntity->first+"\">\n";
+                sString += mMatDef.Serialize();
+                sString += "\n</Material>\n";
+            }
+        }
+        sString += "</Materials>";
+
+        return sString;
     }
 
     void ModelMaterial::SerializeIn( File& mFile ) const

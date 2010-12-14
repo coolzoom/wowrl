@@ -16,16 +16,20 @@
 
 namespace Frost
 {
-
     class ModelMaterial
     {
     public :
 
         ModelMaterial();
+        ModelMaterial(s_ptr<XML::Block> pBlock);
 
         void AddMaterialDefinition(const MaterialDefinition& mMatDef, const s_int& iSubMesh = -1, const s_int& iSubEntity = -1);
-        void ApplyOn(s_wptr<Model> pModel) const;
-        void SerializeIn(File& mFile) const;
+        void ApplyOn(s_wptr<Model> pModel, const s_bool& bPostProcess = true) const;
+
+        s_str Serialize() const;
+        void  SerializeIn(File& mFile) const;
+
+        void Clear(const s_int& iSubMesh = -1, const s_int& iSubEntity = -1);
 
     private :
 
@@ -46,7 +50,7 @@ namespace Frost
         void             Highlight();
         void             Unlight();
         void             SetMaterial(s_refptr<Material> pMat, const s_uint& uiSubEntity = s_uint::NaN);
-        s_wptr<Material> GetMaterial();
+        s_wptr<Material> GetMaterial(const s_uint& uiSubEntity = s_uint::NaN);
         void             SetCustomShaderParameter(const s_uint& uiID, const Ogre::Vector4& mVec);
 
         void             AddSubEntity(const s_uint& uiID);
@@ -77,6 +81,7 @@ namespace Frost
         /// Destructor.
         ~Model();
 
+        const s_bool&       HasAnimation() const;
         s_wptr<AnimManager> GetAnimMgr();
         const s_str&        GetOgreModelName() const;
         const s_str&        GetEntityName() const;
@@ -106,6 +111,7 @@ namespace Frost
 
         s_refptr<Material> pMaterial_;
 
+        s_bool                bHasAnimation_;
         s_refptr<AnimManager> pAnimMgr_;
 
         s_str sOgreModelName_;

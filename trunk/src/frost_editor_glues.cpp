@@ -11,6 +11,10 @@
 #include "scene/frost_scenemanager.h"
 #include "scene/frost_zonemanager.h"
 #include "scene/frost_zone.h"
+#include "material/frost_material.h"
+#include "model/frost_model.h"
+
+#include <xml/frost_xml_document.h>
 
 #include <OgreCamera.h>
 
@@ -95,6 +99,39 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_GetModelMaterial( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:GetModelMaterial", pLua, 1);
+        mFunc.Add(0, "model name", Lua::TYPE_STRING);
+        if (mFunc.Check())
+        {
+            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->GetCurrentZone();
+            if (pZone)
+            {
+                const s_map<s_str,ModelMaterial>& lMaterialList = pZone->GetMaterialInfoList();
+                s_map<s_str,ModelMaterial>::const_iterator iter = lMaterialList.Get(mFunc.Get(0)->GetString());
+                if (iter != lMaterialList.End())
+                {
+                    mFunc.Push(iter->second.Serialize());
+                }
+                else
+                {
+                    Warning(mFunc.GetName(),
+                        "No model with the name \""+mFunc.Get(0)->GetString()+"\"."
+                    );
+                }
+            }
+            else
+            {
+                Warning(mFunc.GetName(),
+                    "Can't get a model's file if no zone is loaded."
+                );
+            }
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_GetZoneModelList( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:GetZoneModelList", pLua);
@@ -132,6 +169,23 @@ namespace Frost
             else
             {
                 mFunc.Push(s_bool(false));
+            }
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEditor::_RegisterNewModel( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:RegisterNewModel", pLua, 1);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+        mFunc.Add(1, "file", Lua::TYPE_STRING);
+        if (mFunc.Check())
+        {
+            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->GetCurrentZone();
+            if (pZone)
+            {
+                pZone->RegisterModel(mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString());
             }
         }
 
@@ -325,6 +379,27 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_SetModelMaterial( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:RegisterNewModel", pLua, 1);
+        mFunc.Add(0, "name", Lua::TYPE_STRING);
+        mFunc.Add(1, "material", Lua::TYPE_STRING);
+        if (mFunc.Check())
+        {
+            s_ptr<Zone> pZone = ZoneManager::GetSingleton()->GetCurrentZone();
+            if (pZone)
+            {
+                XML::Document mDoc("DB/ModelMaterial.def");
+                mDoc.SetSourceString(mFunc.Get(1)->GetString());
+                mDoc.Check();
+
+                pZone->SetMaterialInfo(mFunc.Get(0)->GetString(), ModelMaterial(mDoc.GetMainBlock()));
+            }
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_UnloadZone( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:UnloadZone", pLua);
@@ -349,6 +424,7 @@ namespace Frost
         method(Editor, GetCurrentZoneFile),
         method(Editor, GetBackgroundColor),
         method(Editor, GetModelFile),
+        method(Editor, GetModelMaterial),
         method(Editor, GetZoneModelList),
         method(Editor, IsModelLoaded),
         method(Editor, IsZoneLoaded),
@@ -357,10 +433,12 @@ namespace Frost
         method(Editor, LoadZoneFile),
         method(Editor, NewZone),
         method(Editor, NotifyDoodadPositioned),
-        method(Editor, ToggleWireframeView),
-        method(Editor, ToggleShading),
+        method(Editor, RegisterNewModel),
         method(Editor, SaveZone),
         method(Editor, SetBackgroundColor),
+        method(Editor, SetModelMaterial),
+        method(Editor, ToggleShading),
+        method(Editor, ToggleWireframeView),
         method(Editor, UnloadZone),
 
         {0,0}

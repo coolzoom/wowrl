@@ -373,7 +373,7 @@ namespace Frost
         bAlphaReject_ = bAlphaReject;
     }
 
-    s_refptr<Material> MaterialDefinition::CreateMaterial() const
+    s_refptr<Material> MaterialDefinition::CreateMaterial( const s_bool& bPostProcess ) const
     {
         s_refptr<Material> pMat;
 
@@ -381,12 +381,18 @@ namespace Frost
         {
             case TYPE_COLOR :
                 pMat = MaterialManager::GetSingleton()->CreateMaterial3D(mColor_);
-                pMat->SetShaders("SimpleColor");
+                if (bPostProcess)
+                    pMat->SetShaders("SimpleColor");
+                else
+                    pMat->SetShaders("SimpleColorNoPP");
                 break;
 
             case TYPE_TEXTURE :
                 pMat = MaterialManager::GetSingleton()->CreateMaterial3D(sTextureFile_);
-                pMat->SetShaders("SimpleTexture");
+                if (bPostProcess)
+                    pMat->SetShaders("SimpleTexture");
+                else
+                    pMat->SetShaders("SimpleTextureNoPP");
                 break;
         }
 
@@ -397,6 +403,20 @@ namespace Frost
     }
 
     s_str SerializeColorRGB(const Color& mColor, const s_str& sTag);
+
+    s_str MaterialDefinition::Serialize() const
+    {
+        switch (mType_)
+        {
+            case TYPE_COLOR :
+                return SerializeColorRGB(mColor_, "DiffuseColor");
+
+            case TYPE_TEXTURE :
+                return "<DiffuseTexture file=\""+sTextureFile_+"\""
+                       +(bAlphaReject_ ? " alphaReject=\"true\"" : "")+"/>";
+            default : return "";
+        }
+    }
 
     void MaterialDefinition::SerializeIn( File& mFile ) const
     {
