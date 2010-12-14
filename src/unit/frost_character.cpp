@@ -50,8 +50,12 @@ namespace Frost
             pCharModelInfo->sModel,
             sName
         );
-        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
-        pBodyModel_->GetAnimMgr()->Play();
+
+        if (pBodyModel_->HasAnimation())
+        {
+            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
+            pBodyModel_->GetAnimMgr()->Play();
+        }
 
         // Apply a texture to the body
         if (!pCharModelInfo->lBodyTextureList.IsEmpty())
@@ -59,7 +63,11 @@ namespace Frost
             s_refptr<Material> pBodyMat = MaterialManager::GetSingleton()->CreateMaterial3D(
                 pCharModelInfo->lBodyTextureList.Back()
             );
-            pBodyMat->SetShaders("Character_Skinning");
+
+            if (pBodyModel_->HasAnimation())
+                pBodyMat->SetShaders("Character_Skinning");
+            else
+                pBodyMat->SetShaders("SimpleTexture");
 
             if (Engine::GetSingleton()->GetBoolConstant("EnableMotionBlur"))
             {

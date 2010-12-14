@@ -10,6 +10,8 @@
 #include "material/frost_material.h"
 #include "material/frost_materialmanager.h"
 
+#include <xml/frost_xml_document.h>
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
@@ -91,6 +93,19 @@ int LuaModelFrame::_GetLight( lua_State* pLua )
     mFunc.Push(mLightColor.GetR());
     mFunc.Push(mLightColor.GetG());
     mFunc.Push(mLightColor.GetB());
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_GetMaterial( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:GetMaterial", pLua, 1);
+
+    const ModelMaterial& mModelMat = pModelFrameParent_->GetModelMaterial();
+    mFunc.Push(mModelMat.Serialize());
 
     return mFunc.Return();
 }
@@ -285,6 +300,24 @@ int LuaModelFrame::_SetLight( lua_State* pLua )
                 mFunc.Get(9)->GetNumber()
             ));
         }
+    }
+
+    return mFunc.Return();
+}
+
+int LuaModelFrame::_SetMaterial( lua_State* pLua )
+{
+    if (!CheckParent_())
+        return 0;
+
+    Lua::Function mFunc("ModelFrame:SetMaterial", pLua, 0);
+    mFunc.Add(0, "material", Lua::TYPE_STRING);
+    if (mFunc.Check())
+    {
+        XML::Document mDoc("DB/ModelMaterial.def");
+        mDoc.SetSourceString(mFunc.Get(0)->GetString());
+        mDoc.Check();
+        pModelFrameParent_->SetModelMaterial(ModelMaterial(mDoc.GetMainBlock()));
     }
 
     return mFunc.Return();
@@ -539,3 +572,137 @@ int LuaModelFrame::_ShowSubEntity( lua_State* pLua )
     return mFunc.Return();
 }
 
+#define method(widget, function) {#function, &Lua##widget::_##function}
+
+const char  LuaModelFrame::className[] = "ModelFrame";
+const char* LuaModelFrame::classList[] = {"ModelFrame", 0};
+Lunar<LuaModelFrame>::RegType LuaModelFrame::methods[] = {
+    {"dt", &LuaModelFrame::GetDataTable},
+
+    // UIObject (inherited)
+    method(ModelFrame, GetAlpha),
+    method(ModelFrame, GetName),
+    method(ModelFrame, GetObjectType),
+    method(ModelFrame, IsObjectType),
+    method(ModelFrame, SetAlpha),
+
+    method(ModelFrame, ClearAllPoints),
+    method(ModelFrame, GetBase),
+    method(ModelFrame, GetBottom),
+    method(ModelFrame, GetCenter),
+    method(ModelFrame, GetHeight),
+    method(ModelFrame, GetLeft),
+    method(ModelFrame, GetNumPoint),
+    method(ModelFrame, GetParent),
+    method(ModelFrame, GetPoint),
+    method(ModelFrame, GetRight),
+    method(ModelFrame, GetTop),
+    method(ModelFrame, GetWidth),
+    method(ModelFrame, Hide),
+    method(ModelFrame, IsShown),
+    method(ModelFrame, IsVisible),
+    method(ModelFrame, SetAllPoints),
+    method(ModelFrame, SetHeight),
+    method(ModelFrame, SetParent),
+    method(ModelFrame, SetPoint),
+    method(ModelFrame, SetWidth),
+    method(ModelFrame, Show),
+
+    // Frame (inherited)
+    method(ModelFrame, CreateFontString),
+    method(ModelFrame, CreateTexture),
+    method(ModelFrame, CreateTitleRegion),
+    method(ModelFrame, DisableDrawLayer),
+    method(ModelFrame, EnableDrawLayer),
+    method(ModelFrame, EnableKeyboard),
+    method(ModelFrame, EnableMouse),
+    method(ModelFrame, EnableMouseWheel),
+    method(ModelFrame, GetBackdrop),
+    method(ModelFrame, GetBackdropBorderColor),
+    method(ModelFrame, GetBackdropColor),
+    method(ModelFrame, GetChildren),
+    method(ModelFrame, GetEffectiveAlpha),
+    method(ModelFrame, GetEffectiveScale),
+    method(ModelFrame, GetFrameLevel),
+    method(ModelFrame, GetFrameStrata),
+    method(ModelFrame, GetFrameType),
+    method(ModelFrame, GetHitRectInsets),
+    method(ModelFrame, GetID),
+    method(ModelFrame, GetMaxResize),
+    method(ModelFrame, GetMinResize),
+    method(ModelFrame, SetMaxWidth),
+    method(ModelFrame, SetMaxHeight),
+    method(ModelFrame, SetMinWidth),
+    method(ModelFrame, SetMinHeight),
+    method(ModelFrame, GetNumChildren),
+    method(ModelFrame, GetNumRegions),
+    method(ModelFrame, GetScale),
+    method(ModelFrame, GetScript),
+    method(ModelFrame, GetTitleRegion),
+    method(ModelFrame, HasScript),
+    method(ModelFrame, IsClampedToScreen),
+    method(ModelFrame, IsFrameType),
+    method(ModelFrame, IsKeyboardEnabled),
+    method(ModelFrame, IsMouseEnabled),
+    method(ModelFrame, IsMouseWheelEnabled),
+    method(ModelFrame, IsMovable),
+    method(ModelFrame, IsResizable),
+    method(ModelFrame, IsTopLevel),
+    method(ModelFrame, IsUserPlaced),
+    method(ModelFrame, Lower),
+    method(ModelFrame, On),
+    method(ModelFrame, Raise),
+    method(ModelFrame, RegisterAllEvents),
+    method(ModelFrame, RegisterEvent),
+    method(ModelFrame, RegisterForDrag),
+    method(ModelFrame, SetBackdrop),
+    method(ModelFrame, SetBackdropBorderColor),
+    method(ModelFrame, SetBackdropColor),
+    method(ModelFrame, SetClampedToScreen),
+    method(ModelFrame, SetFrameStrata),
+    method(ModelFrame, SetHitRectInsets),
+    method(ModelFrame, SetMaxResize),
+    method(ModelFrame, SetMinResize),
+    method(ModelFrame, SetMovable),
+    method(ModelFrame, SetResizable),
+    method(ModelFrame, SetScale),
+    method(ModelFrame, SetScript),
+    method(ModelFrame, SetTopLevel),
+    method(ModelFrame, SetUserPlaced),
+    method(ModelFrame, StartMoving),
+    method(ModelFrame, StartSizing),
+    method(ModelFrame, StopMovingOrSizing),
+    method(ModelFrame, UnregisterAllEvents),
+    method(ModelFrame, UnregisterEvent),
+
+    // ModelFrame
+    method(ModelFrame, AdvanceTime),
+    method(ModelFrame, ClearModel),
+    method(ModelFrame, GetFacing),
+    method(ModelFrame, GetLight),
+    method(ModelFrame, GetMaterial),
+    method(ModelFrame, GetModel),
+    method(ModelFrame, GetModelScale),
+    method(ModelFrame, GetPosition),
+    method(ModelFrame, GetAvailableSubMeshes),
+    method(ModelFrame, GetSubEntityNumber),
+    method(ModelFrame, HideModel),
+    method(ModelFrame, HideSubMesh),
+    method(ModelFrame, HideSubEntity),
+    method(ModelFrame, SetFacing),
+    method(ModelFrame, SetLight),
+    method(ModelFrame, SetMaterial),
+    method(ModelFrame, SetModel),
+    method(ModelFrame, SetModelScale),
+    method(ModelFrame, SetModelTexture),
+    method(ModelFrame, SetPosition),
+    method(ModelFrame, SetSequence),
+    method(ModelFrame, SetSequenceTime),
+    method(ModelFrame, SetSubMeshTexture),
+    method(ModelFrame, SetSubEntityTexture),
+    method(ModelFrame, ShowModel),
+    method(ModelFrame, ShowSubMesh),
+    method(ModelFrame, ShowSubEntity),
+
+    {0,0}
+};

@@ -133,6 +133,7 @@ namespace Frost
         int _GetCurrentZoneFile(lua_State*);
         int _GetBackgroundColor(lua_State*);
         int _GetModelFile(lua_State*);
+        int _GetModelMaterial(lua_State*);
         int _GetZoneModelList(lua_State*);
         int _IsModelLoaded(lua_State*);
         int _IsZoneLoaded(lua_State*);
@@ -141,8 +142,10 @@ namespace Frost
         int _LoadZoneFile(lua_State*);
         int _NewZone(lua_State*);
         int _NotifyDoodadPositioned(lua_State*);
+        int _RegisterNewModel(lua_State*);
         int _SaveZone(lua_State*);
         int _SetBackgroundColor(lua_State*);
+        int _SetModelMaterial(lua_State*);
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);
         int _UnloadZone(lua_State*);

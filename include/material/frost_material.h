@@ -239,8 +239,10 @@ namespace Frost
         void SetColor(const Color& mColor);
         void SetAlphaReject(const s_bool& bAlphaReject);
 
-        s_refptr<Material> CreateMaterial() const;
-        void SerializeIn( File& mFile ) const;
+        s_refptr<Material> CreateMaterial(const s_bool& bPostProcess = true) const;
+
+        s_str Serialize() const;
+        void  SerializeIn( File& mFile ) const;
 
     private :
 

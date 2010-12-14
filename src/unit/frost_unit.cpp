@@ -194,7 +194,8 @@ namespace Frost
             pHealthType_->On("UnitDeath");
             pPowerType_->On("UnitDeath");
 
-            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_DEATH, ANIM_PRIORITY_BACKGROUND);
+            if (pBodyModel_->HasAnimation())
+                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_DEATH, ANIM_PRIORITY_BACKGROUND);
         }
     }
 
@@ -209,8 +210,11 @@ namespace Frost
         {
             bDead_ = false;
 
-            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
-            pBodyModel_->GetAnimMgr()->Play();
+            if (pBodyModel_->HasAnimation())
+            {
+                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
+                pBodyModel_->GetAnimMgr()->Play();
+            }
         }
     }
 

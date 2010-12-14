@@ -42,8 +42,11 @@ namespace Frost
             //pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 4.4145f, 0));
             pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 5.0f, 0));
 
-            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_START);
-            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
+            if (pBodyModel_->HasAnimation())
+            {
+                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_START);
+                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
+            }
         }
     }
 
@@ -132,40 +135,45 @@ namespace Frost
         {
             bFalling_ = false;
 
-            if (!bWalk_)
+            if (pBodyModel_->HasAnimation())
             {
-                if (mMovementDirection_.Z().IsNull() && mMovementDirection_.X().IsNull())
-                    pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_END);
-                else if (mMovementDirection_.Z() < 0.0f || !mMovementDirection_.X().IsNull())
-                    pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_LAND_RUN);
-            }
-
-            if (mMovementDirection_.Z().IsNull())
-                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
-            else
-            {
-                if (mMovementDirection_.Z() < 0.0f)
+                if (!bWalk_)
                 {
-                    if (bWalk_)
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
-                    else
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
+                    if (mMovementDirection_.Z().IsNull() && mMovementDirection_.X().IsNull())
+                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_END);
+                    else if (mMovementDirection_.Z() < 0.0f || !mMovementDirection_.X().IsNull())
+                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP_LAND_RUN);
                 }
+
+                if (mMovementDirection_.Z().IsNull())
+                    pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
                 else
                 {
-                    if (bWalk_)
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
+                    if (mMovementDirection_.Z() < 0.0f)
+                    {
+                        if (bWalk_)
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
+                        else
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
+                    }
                     else
-                        pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
-                            fBackwardRunSpeed_/fBackwardWalkSpeed_
-                        );
+                    {
+                        if (bWalk_)
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
+                        else
+                            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
+                                fBackwardRunSpeed_/fBackwardWalkSpeed_
+                            );
+                    }
                 }
             }
         }
 
         if (mEvent.GetName() == "PHYSICS_START_FREE_FALL")
         {
-            pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
+            if (pBodyModel_->HasAnimation())
+                pBodyModel_->GetAnimMgr()->SetAnim(ANIM_JUMP, ANIM_PRIORITY_BACKGROUND);
+
             bFalling_ = true;
         }
     }
@@ -191,8 +199,7 @@ namespace Frost
 
         if (pHandler_->IsEnabled())
         {
-
-            if (pBodyModel_->GetAnimMgr()->GetAnimID() != ANIM_JUMP_END)
+            if ( !pBodyModel_->HasAnimation() || (pBodyModel_->GetAnimMgr()->GetAnimID() != ANIM_JUMP_END) )
             {
                 Vector mDir = mMovementDirection_;
                 mMovementSpeed_ = Vector::ZERO;
@@ -215,13 +222,13 @@ namespace Frost
                         mMovementSpeed_.Z() = 1.0f;
                         if (bWalk_)
                         {
-                            if (!bFalling_)
+                            if (!bFalling_ && pBodyModel_->HasAnimation())
                                 pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND);
                             fMovementSpeed *= fBackwardWalkSpeed_;
                         }
                         else
                         {
-                            if (!bFalling_)
+                            if (!bFalling_ && pBodyModel_->HasAnimation())
                                 pBodyModel_->GetAnimMgr()->SetAnim(
                                     ANIM_WALKBACKWARDS, ANIM_PRIORITY_BACKGROUND,
                                     fBackwardRunSpeed_/fBackwardWalkSpeed_
@@ -238,13 +245,13 @@ namespace Frost
                         mMovementSpeed_.Z() = -1.0f;
                         if (bWalk_)
                         {
-                            if (!bFalling_)
+                            if (!bFalling_ && pBodyModel_->HasAnimation())
                                 pBodyModel_->GetAnimMgr()->SetAnim(ANIM_WALK, ANIM_PRIORITY_BACKGROUND);
                             fMovementSpeed *= fForwardWalkSpeed_;
                         }
                         else
                         {
-                            if (!bFalling_)
+                            if (!bFalling_ && pBodyModel_->HasAnimation())
                                 pBodyModel_->GetAnimMgr()->SetAnim(ANIM_RUN, ANIM_PRIORITY_BACKGROUND);
                             fMovementSpeed *= fForwardRunSpeed_;
                         }
@@ -264,17 +271,20 @@ namespace Frost
                     if (bTurn_ && !mDir.X().IsNull())
                     {
                         Yaw_(-mDir.X()*fTurnRate_*fDelta);
-                        pBodyModel_->GetAnimMgr()->SetAnim(
-                            mDir.X() < 0.0f ? ANIM_SHUFFLE_LEFT : ANIM_SHUFFLE_RIGHT,
-                            ANIM_PRIORITY_BACKGROUND
-                        );
+                        if (pBodyModel_->HasAnimation())
+                        {
+                            pBodyModel_->GetAnimMgr()->SetAnim(
+                                mDir.X() < 0.0f ? ANIM_SHUFFLE_LEFT : ANIM_SHUFFLE_RIGHT,
+                                ANIM_PRIORITY_BACKGROUND
+                            );
+                        }
                     }
                     else
                     {
                         if (!bTurn_)
                             SetYaw_(0.0f);
 
-                        if (!bFalling_)
+                        if (!bFalling_ && pBodyModel_->HasAnimation())
                             pBodyModel_->GetAnimMgr()->SetAnim(ANIM_STAND, ANIM_PRIORITY_BACKGROUND);
                     }
                 }

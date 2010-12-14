@@ -233,4 +233,9 @@ namespace Frost
     {
         return lModelList_;
     }
+
+    const s_map<s_str, ModelMaterial>& Zone::GetMaterialInfoList() const
+    {
+        return lMaterialInfoList_;
+    }
 }

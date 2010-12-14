@@ -329,6 +329,7 @@ void EditBox::SetText( const s_str& sText )
         UpdateFontString_();
         UpdateCarretPosition_();
         On("TextSet");
+        On("TextChanged");
     }
 }
 
@@ -1030,6 +1031,8 @@ s_bool EditBox::AddChar_( const s_str& sChar )
 
     pCarretTimer_->Zero();
 
+    On("TextChanged");
+
     return true;
 }
 
@@ -1047,6 +1050,7 @@ s_bool EditBox::RemoveChar_()
             uiNumLetters_ = sUnicodeText_.GetSize();
 
             iterCarretPos_ = sUnicodeText_.Begin() + uiLeft.Get();
+            On("TextChanged");
         }
 
         UnlightText();
@@ -1059,6 +1063,7 @@ s_bool EditBox::RemoveChar_()
         iterCarretPos_ = sUnicodeText_.Erase(iterCarretPos_);
         sText_ = UnicodeToUTF8(sUnicodeText_);
         --uiNumLetters_;
+        On("TextChanged");
     }
 
     UpdateDisplayedText_();

@@ -123,7 +123,7 @@ void SpriteImpl::Render( const s_float& fX, const s_float& fY ) const
     mQuad_.SetVertexPosition(2, sf::Vector2f((fX-fHotSpotX_).Get(),         (fY-fHotSpotY_+fHeight_).Get()));
 
     if (pManager_)
-        pManager_->GetManagerImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
+        pManager_->GetImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
     else
         RenderQuad(mQuad_);
 }
@@ -155,7 +155,7 @@ void SpriteImpl::RenderEx( const s_float& fX, const s_float& fY, const s_float& 
     }
 
     if (pManager_)
-        pManager_->GetManagerImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
+        pManager_->GetImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
     else
         RenderQuad(mQuad_);
 }
@@ -168,7 +168,7 @@ void SpriteImpl::Render2V( const s_float& fX1, const s_float& fY1, const s_float
     mQuad_.SetVertexPosition(2, sf::Vector2f(fX1.Get(), fY3.Get()));
 
     if (pManager_)
-        pManager_->GetManagerImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
+        pManager_->GetImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
     else
         RenderQuad(mQuad_);
 }
@@ -184,7 +184,7 @@ void SpriteImpl::Render4V( const s_float& fX1, const s_float& fY1,
     mQuad_.SetVertexPosition(2, sf::Vector2f(fX4.Get(), fY4.Get()));
 
     if (pManager_)
-        pManager_->GetManagerImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
+        pManager_->GetImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
     else
         RenderQuad(mQuad_);
 }
@@ -192,7 +192,7 @@ void SpriteImpl::Render4V( const s_float& fX1, const s_float& fY1,
 void SpriteImpl::RenderStatic() const
 {
     if (pManager_)
-        pManager_->GetManagerImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
+        pManager_->GetImpl()->GetCurrentRenderTarget()->Draw(mQuad_);
     else
         RenderQuad(mQuad_);
 }

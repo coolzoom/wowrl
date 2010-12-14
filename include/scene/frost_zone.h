@@ -130,6 +130,9 @@ namespace Frost
         /// Returns the list of all models registered to this Zone.
         const s_map<s_str,s_str>& GetModelList() const;
 
+        /// Returns the list of ModelMaterials of this Zone.
+        const s_map<s_str, ModelMaterial>& GetMaterialInfoList() const;
+
         /// Reads this Zone's data from an XML file.
         /** \param sFile The file to read
         */

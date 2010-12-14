@@ -461,6 +461,9 @@ void ModelFrame::SetModelTexture( const s_str& sFile, const s_bool& bAlphaReject
 
         NotifyRendererNeedRedraw();
         bRedrawRenderTarget_ = true;
+
+        mModelMat_.Clear();
+        mModelMat_.AddMaterialDefinition(MaterialDefinition(sFile, bAlphaReject));
     }
 }
 
@@ -474,6 +477,9 @@ void ModelFrame::SetModelTexture( const Color& mColor )
 
         NotifyRendererNeedRedraw();
         bRedrawRenderTarget_ = true;
+
+        mModelMat_.Clear();
+        mModelMat_.AddMaterialDefinition(MaterialDefinition(mColor));
     }
 }
 
@@ -491,6 +497,9 @@ void ModelFrame::SetSubMeshTexture( const s_uint& uiSubMeshID, const s_str& sFil
 
             NotifyRendererNeedRedraw();
             bRedrawRenderTarget_ = true;
+
+            mModelMat_.Clear(s_int(uiSubMeshID));
+            mModelMat_.AddMaterialDefinition(MaterialDefinition(sFile, bAlphaReject), s_int(uiSubMeshID));
         }
     }
 }
@@ -508,6 +517,9 @@ void ModelFrame::SetSubMeshTexture( const s_uint& uiSubMeshID, const Color& mCol
 
             NotifyRendererNeedRedraw();
             bRedrawRenderTarget_ = true;
+
+            mModelMat_.Clear(s_int(uiSubMeshID));
+            mModelMat_.AddMaterialDefinition(MaterialDefinition(mColor), s_int(uiSubMeshID));
         }
     }
 }
@@ -527,6 +539,8 @@ void ModelFrame::SetSubEntityTexture( const s_uint& uiSubMeshID, const s_uint& u
 
             NotifyRendererNeedRedraw();
             bRedrawRenderTarget_ = true;
+
+            mModelMat_.AddMaterialDefinition(MaterialDefinition(sFile, bAlphaReject), s_int(uiSubMeshID), s_int(uiSubEntityID));
         }
     }
 }
@@ -544,8 +558,22 @@ void ModelFrame::SetSubEntityTexture( const s_uint& uiSubMeshID, const s_uint& u
 
             NotifyRendererNeedRedraw();
             bRedrawRenderTarget_ = true;
+
+            mModelMat_.AddMaterialDefinition(MaterialDefinition(mColor), s_int(uiSubMeshID), s_int(uiSubEntityID));
         }
     }
+}
+
+void ModelFrame::SetModelMaterial( const ModelMaterial& mModelMat )
+{
+    mModelMat_ = mModelMat;
+
+    if (pModel_)
+        mModelMat_.ApplyOn(pModel_, false);
+
+
+    NotifyRendererNeedRedraw();
+    bRedrawRenderTarget_ = true;
 }
 
 void ModelFrame::HideModel()
@@ -634,7 +662,12 @@ void ModelFrame::ShowSubEntity( const s_uint& uiSubMeshID, const s_uint& uiSubEn
 
 s_wptr<Model> ModelFrame::GetModel()
 {
-   return pModel_;
+    return pModel_;
+}
+
+const ModelMaterial& ModelFrame::GetModelMaterial() const
+{
+    return mModelMat_;
 }
 
 void ModelFrame::Update()
@@ -785,136 +818,3 @@ void ModelFrame::SetupCamera_()
     pCamera_->SetPosition(Vector(0, (mBox.GetMax().Y() + mBox.GetMin().Y())/2.0f, -fDist));
     pCamera_->OrbitAround(Vector(0, (mBox.GetMax().Y() + mBox.GetMin().Y())/2.0f, 0));
 }
-
-#define method(widget, function) {#function, &Lua##widget::_##function}
-
-const char  LuaModelFrame::className[] = "ModelFrame";
-const char* LuaModelFrame::classList[] = {"ModelFrame", 0};
-Lunar<LuaModelFrame>::RegType LuaModelFrame::methods[] = {
-    {"dt", &LuaModelFrame::GetDataTable},
-
-    // UIObject (inherited)
-    method(ModelFrame, GetAlpha),
-    method(ModelFrame, GetName),
-    method(ModelFrame, GetObjectType),
-    method(ModelFrame, IsObjectType),
-    method(ModelFrame, SetAlpha),
-
-    method(ModelFrame, ClearAllPoints),
-    method(ModelFrame, GetBase),
-    method(ModelFrame, GetBottom),
-    method(ModelFrame, GetCenter),
-    method(ModelFrame, GetHeight),
-    method(ModelFrame, GetLeft),
-    method(ModelFrame, GetNumPoint),
-    method(ModelFrame, GetParent),
-    method(ModelFrame, GetPoint),
-    method(ModelFrame, GetRight),
-    method(ModelFrame, GetTop),
-    method(ModelFrame, GetWidth),
-    method(ModelFrame, Hide),
-    method(ModelFrame, IsShown),
-    method(ModelFrame, IsVisible),
-    method(ModelFrame, SetAllPoints),
-    method(ModelFrame, SetHeight),
-    method(ModelFrame, SetParent),
-    method(ModelFrame, SetPoint),
-    method(ModelFrame, SetWidth),
-    method(ModelFrame, Show),
-
-    // Frame
-    method(ModelFrame, CreateFontString),
-    method(ModelFrame, CreateTexture),
-    method(ModelFrame, CreateTitleRegion),
-    method(ModelFrame, DisableDrawLayer),
-    method(ModelFrame, EnableDrawLayer),
-    method(ModelFrame, EnableKeyboard),
-    method(ModelFrame, EnableMouse),
-    method(ModelFrame, EnableMouseWheel),
-    method(ModelFrame, GetBackdrop),
-    method(ModelFrame, GetBackdropBorderColor),
-    method(ModelFrame, GetBackdropColor),
-    method(ModelFrame, GetChildren),
-    method(ModelFrame, GetEffectiveAlpha),
-    method(ModelFrame, GetEffectiveScale),
-    method(ModelFrame, GetFrameLevel),
-    method(ModelFrame, GetFrameStrata),
-    method(ModelFrame, GetFrameType),
-    method(ModelFrame, GetHitRectInsets),
-    method(ModelFrame, GetID),
-    method(ModelFrame, GetMaxResize),
-    method(ModelFrame, GetMinResize),
-    method(ModelFrame, SetMaxWidth),
-    method(ModelFrame, SetMaxHeight),
-    method(ModelFrame, SetMinWidth),
-    method(ModelFrame, SetMinHeight),
-    method(ModelFrame, GetNumChildren),
-    method(ModelFrame, GetNumRegions),
-    method(ModelFrame, GetScale),
-    method(ModelFrame, GetScript),
-    method(ModelFrame, GetTitleRegion),
-    method(ModelFrame, HasScript),
-    method(ModelFrame, IsClampedToScreen),
-    method(ModelFrame, IsFrameType),
-    method(ModelFrame, IsKeyboardEnabled),
-    method(ModelFrame, IsMouseEnabled),
-    method(ModelFrame, IsMouseWheelEnabled),
-    method(ModelFrame, IsMovable),
-    method(ModelFrame, IsResizable),
-    method(ModelFrame, IsTopLevel),
-    method(ModelFrame, IsUserPlaced),
-    method(ModelFrame, Lower),
-    method(ModelFrame, On),
-    method(ModelFrame, Raise),
-    method(ModelFrame, RegisterAllEvents),
-    method(ModelFrame, RegisterEvent),
-    method(ModelFrame, RegisterForDrag),
-    method(ModelFrame, SetBackdrop),
-    method(ModelFrame, SetBackdropBorderColor),
-    method(ModelFrame, SetBackdropColor),
-    method(ModelFrame, SetClampedToScreen),
-    method(ModelFrame, SetFrameStrata),
-    method(ModelFrame, SetHitRectInsets),
-    method(ModelFrame, SetMaxResize),
-    method(ModelFrame, SetMinResize),
-    method(ModelFrame, SetMovable),
-    method(ModelFrame, SetResizable),
-    method(ModelFrame, SetScale),
-    method(ModelFrame, SetScript),
-    method(ModelFrame, SetTopLevel),
-    method(ModelFrame, SetUserPlaced),
-    method(ModelFrame, StartMoving),
-    method(ModelFrame, StartSizing),
-    method(ModelFrame, StopMovingOrSizing),
-    method(ModelFrame, UnregisterAllEvents),
-    method(ModelFrame, UnregisterEvent),
-
-    // ModelFrame
-    method(ModelFrame, AdvanceTime),
-    method(ModelFrame, ClearModel),
-    method(ModelFrame, GetFacing),
-    method(ModelFrame, GetLight),
-    method(ModelFrame, GetModel),
-    method(ModelFrame, GetModelScale),
-    method(ModelFrame, GetPosition),
-    method(ModelFrame, GetAvailableSubMeshes),
-    method(ModelFrame, GetSubEntityNumber),
-    method(ModelFrame, HideModel),
-    method(ModelFrame, HideSubMesh),
-    method(ModelFrame, HideSubEntity),
-    method(ModelFrame, SetFacing),
-    method(ModelFrame, SetLight),
-    method(ModelFrame, SetModel),
-    method(ModelFrame, SetModelScale),
-    method(ModelFrame, SetModelTexture),
-    method(ModelFrame, SetPosition),
-    method(ModelFrame, SetSequence),
-    method(ModelFrame, SetSequenceTime),
-    method(ModelFrame, SetSubMeshTexture),
-    method(ModelFrame, SetSubEntityTexture),
-    method(ModelFrame, ShowModel),
-    method(ModelFrame, ShowSubMesh),
-    method(ModelFrame, ShowSubEntity),
-
-    {0,0}
-};

@@ -45,9 +45,9 @@ bool IsAnimated( char* sBuffer, ModelHeader mHeader )
     bool ind = false;
 
     ModelVertex *verts = (ModelVertex*)(sBuffer + mHeader.ofsVertices);
-    for (uint i = 0; i < mHeader.nVertices && !animGeometry; i++)
+    for (uint i = 0; i < mHeader.nVertices && !animGeometry; ++i)
     {
-        for (int b = 0; b < 4; b++)
+        for (int b = 0; b < 4; ++b)
         {
             if (verts[i].weights[b] > 0)
             {
@@ -70,7 +70,7 @@ bool IsAnimated( char* sBuffer, ModelHeader mHeader )
         animBones = true;
     else
     {
-        for (uint i = 0; i < mHeader.nBones; i++)
+        for (uint i = 0; i < mHeader.nBones; ++i)
         {
             ModelBoneDef &bb = bo[i];
             if (bb.translation.type || bb.rotation.type || bb.scaling.type)
@@ -95,7 +95,7 @@ bool IsAnimated( char* sBuffer, ModelHeader mHeader )
     if (mHeader.nColors)
     {
         ModelColorDef *cols = (ModelColorDef*)(sBuffer + mHeader.ofsColors);
-        for (uint i = 0; i < mHeader.nColors; i++)
+        for (uint i = 0; i < mHeader.nColors; ++i)
         {
             if (cols[i].color.type != 0 || cols[i].opacity.type != 0)
             {
@@ -109,7 +109,7 @@ bool IsAnimated( char* sBuffer, ModelHeader mHeader )
     if (mHeader.nTransparency && !animMisc)
     {
         ModelTransDef *trs = (ModelTransDef*)(sBuffer + mHeader.ofsTransparency);
-        for (uint i = 0; i < mHeader.nTransparency; i++)
+        for (uint i = 0; i < mHeader.nTransparency; ++i)
         {
             if (trs[i].trans.type != 0)
             {
@@ -230,7 +230,7 @@ namespace Frost
 
             // Load animation sub sequences and get total animation time
             ModelAnimation* lAnims = (ModelAnimation*)(sBuffer + mHeader.ofsAnimations);
-            for (uint i = 0; i < mHeader.nAnimations; i++)
+            for (uint i = 0; i < mHeader.nAnimations; ++i)
             {
                 MeshAnimation mMA;
                 mMA.uiID = lAnims[i].animID;
@@ -249,7 +249,7 @@ namespace Frost
 
             // Load bones
             ModelBoneDef* lBones = (ModelBoneDef*)(sBuffer + mHeader.ofsBones);
-            for (uint i = 0; i < mHeader.nBones; i++)
+            for (uint i = 0; i < mHeader.nBones; ++i)
             {
                 Ogre::Bone* pBone;
                 Ogre::Vector3 mParentPos;
@@ -294,7 +294,7 @@ namespace Frost
                 uint* lTimes = (uint*)(sBuffer + lBones[i].translation.ofsTimes);
                 float* lValues = (float*)(sBuffer + lBones[i].translation.ofsKeys);
 
-                for (uint j = 0; j < lBones[i].translation.nTimes; j++)
+                for (uint j = 0; j < lBones[i].translation.nTimes; ++j)
                 {
                     // (x, y, z)    =>    (-y, z, -x)
                     lTranslation[lTimes[j]] = Ogre::Vector3(
@@ -309,7 +309,7 @@ namespace Frost
                 lTimes = (uint*)(sBuffer + lBones[i].scaling.ofsTimes);
                 lValues = (float*)(sBuffer + lBones[i].scaling.ofsKeys);
 
-                for (uint j = 0; j < lBones[i].scaling.nTimes; j++)
+                for (uint j = 0; j < lBones[i].scaling.nTimes; ++j)
                 {
                     // (x, y, z)    =>    (y, z, -x)
                     lScaling[lTimes[j]] = Ogre::Vector3(
@@ -324,7 +324,7 @@ namespace Frost
                 lTimes = (uint*)(sBuffer + lBones[i].rotation.ofsTimes);
                 short* lSValues = (short*)(sBuffer + lBones[i].rotation.ofsKeys);
 
-                for (uint j = 0; j < lBones[i].rotation.nTimes; j++)
+                for (uint j = 0; j < lBones[i].rotation.nTimes; ++j)
                 {
                     // (x, y, z, w)    =>    (w, -y, z, -x)
                     lRotation[lTimes[j]] = Ogre::Quaternion(
@@ -346,7 +346,7 @@ namespace Frost
                     Ogre::NodeAnimationTrack* pTrack = pMA->pAnim->createNodeTrack(i, pBone);
 
                     map<uint, AnimData>::iterator iterAnim = lData.lower_bound(pMA->uiStart.Get());
-                    for (; iterAnim != lData.end(); iterAnim++)
+                    for (; iterAnim != lData.end(); ++iterAnim)
                     {
                         ulTime = iterAnim->first;
                         if (ulTime <= pMA->uiEnd.Get())
@@ -401,7 +401,7 @@ namespace Frost
         s_float fYMin(s_float::FLOAT_INF_PLUS);
         s_float fZMin(s_float::FLOAT_INF_PLUS);
 
-        for (uint i = 0; i < mHeader.nVertices; i++)
+        for (uint i = 0; i < mHeader.nVertices; ++i)
         {
             lVertices[i*uiParamNbr+0] = -lOrigVertices[i].pos[1]*SCALE;
             lVertices[i*uiParamNbr+1] = lOrigVertices[i].pos[2]*SCALE;
@@ -443,7 +443,7 @@ namespace Frost
         ushort* lIndexLookup = (ushort*)(sBuffer + lView[uiLOD].ofsIndex);
         ushort* lTriangles = (ushort*)(sBuffer + lView[uiLOD].ofsTris);
         ushort* lGIndices = new ushort[lView[uiLOD].nTris];
-        for (uint i = 0; i < lView[uiLOD].nTris; i++)
+        for (uint i = 0; i < lView[uiLOD].nTris; ++i)
         {
             lGIndices[i] = lIndexLookup[lTriangles[i]];
         }
@@ -451,7 +451,7 @@ namespace Frost
         // Get submeshes
         uint uiMeshNbr = lView[uiLOD].nSub;
         ModelSubMesh* lSubMesh = (ModelSubMesh*)(sBuffer + lView[uiLOD].ofsSub);
-        for (uint i = 0; i < uiMeshNbr; i++)
+        for (uint i = 0; i < uiMeshNbr; ++i)
         {
             Ogre::SubMesh* pSub = pMesh_->createSubMesh(s_str::Convert(s_uint(lSubMesh[i].id), 4).Get());
 
@@ -471,7 +471,7 @@ namespace Frost
             map<uint, uint>::iterator iter;
 
             // Build a temporary index list
-            for (uint j = 0; j < uiIndexNbr; j++)
+            for (uint j = 0; j < uiIndexNbr; ++j)
             {
                 uint uiInd = lSubIndices[j] = lGIndices[lSubMesh[i].ofsTris+j];
 
@@ -507,11 +507,11 @@ namespace Frost
 
                 lIndexMap[uiInd] = k;
                 lReversedIndexMap[k] = uiInd;
-                k++;
+                ++k;
             }
 
             // Update the index list
-            for (k = 0; k < uiIndexNbr; k++)
+            for (k = 0; k < uiIndexNbr; ++k)
             {
                 lSubIndices[k] = lIndexMap[lSubIndices[k]];
             }
@@ -524,12 +524,12 @@ namespace Frost
             );
 
             // Then create vertex/bone assignements
-            for (uint j = 0; j < uiVertexNbr; j++)
+            for (uint j = 0; j < uiVertexNbr; ++j)
             {
                 Ogre::VertexBoneAssignment mVBA;
                 mVBA.vertexIndex = j;
                 uint iGIndex = lReversedIndexMap[j];
-                for (uint k = 0; k < 4 ; k++)
+                for (uint k = 0; k < 4 ; ++k)
                 {
                     mVBA.boneIndex = lBonesInd[iGIndex*4+k];
                     mVBA.weight = lBonesWgt[iGIndex*4+k];

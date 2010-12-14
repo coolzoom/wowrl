@@ -58,6 +58,7 @@ namespace Frost
     s_refptr<Material> MaterialManager::CreateMaterial( s_ptr<Ogre::Material> pOgreMat )
     {
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_UNKNOWN, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -66,6 +67,7 @@ namespace Frost
     s_refptr<Material> MaterialManager::CreateMaterial2D( s_ptr<Ogre::Material> pOgreMat )
     {
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_UNKNOWN, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         if (pOgreMat->getTechnique(0)->getNumPasses() == 1)
@@ -127,6 +129,7 @@ namespace Frost
         pOgreMat->setCullingMode(Ogre::CULL_NONE);
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D_PLAIN, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -184,6 +187,7 @@ namespace Frost
         }
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D, pOgreMat, true));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -210,6 +214,7 @@ namespace Frost
         pOgreMat->setCullingMode(Ogre::CULL_NONE);
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D_RT, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -237,6 +242,7 @@ namespace Frost
         pOgreMat->setCullingMode(Ogre::CULL_NONE);
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_2D_RT, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -254,6 +260,7 @@ namespace Frost
         ).get();
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D_PLAIN, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         pMat->SetDiffuse(Color(fA, fR, fG, fB));
@@ -298,6 +305,7 @@ namespace Frost
         pOgreMat->load();
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -334,6 +342,7 @@ namespace Frost
         }
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D, pOgreMat, true));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -346,6 +355,7 @@ namespace Frost
         ).get();
 
         s_refptr<Material> pMat(new Material(uiCounter_, Material::TYPE_3D, pOgreMat));
+        lMaterialList_[uiCounter_] = pMat;
         ++uiCounter_;
 
         return pMat;
@@ -354,5 +364,15 @@ namespace Frost
     s_refptr<Material> MaterialManager::GetDefault3D()
     {
         return pDefault3D_;
+    }
+
+    s_wptr<Material> MaterialManager::GetMaterial( const s_uint& uiID ) const
+    {
+        s_map< s_uint, s_wptr<Material> >::const_iterator iter = lMaterialList_.Get(uiID);
+
+        if (iter != lMaterialList_.End())
+            return iter->second;
+        else
+            return nullptr;
     }
 }
