@@ -78,6 +78,7 @@ void Slider::CopyFrom( s_ptr<UIObject> pObj )
                     pThumbTexture_->CreateGlue();
                 this->AddRegion(pThumbTexture_);
                 pThumbTexture_->CopyFrom(pThumb);
+                pThumbTexture_->NotifyLoaded();
             }
         }
     }

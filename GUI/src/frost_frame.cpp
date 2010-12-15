@@ -314,6 +314,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
                     pNewChild->CopyFrom(pChild);
                     if (!this->IsVirtual())
                         pNewChild->On("Load");
+                    pNewChild->NotifyLoaded();
                 }
             }
         }
@@ -359,6 +360,7 @@ void Frame::CopyFrom( s_ptr<UIObject> pObj )
 
                     this->AddRegion(pNewArt);
                     pNewArt->CopyFrom(pArt);
+                    pNewArt->NotifyLoaded();
                 }
             }
         }
@@ -390,6 +392,8 @@ void Frame::CreateTitleRegion()
 
         if (!pTitleRegion_->IsVirtual())
             pTitleRegion_->CreateGlue();
+
+        pTitleRegion_->NotifyLoaded();
     }
     else
     {
@@ -1339,8 +1343,8 @@ void Frame::SetParent( s_ptr<UIObject> pParent )
 {
     if (pParent != (UIObject*)this)
     {
-        if (pParentFrame_)
-            pParentFrame_->RemoveChild(this);
+        if (!pParentFrame_ && uiID_.IsValid())
+            pManager_->NotifyObjectHasParent(this);
 
         pParent_ = pParent;
         pParentFrame_ = s_ptr<Frame>::DynamicCast(pParent);

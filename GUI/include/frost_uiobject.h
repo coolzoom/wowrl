@@ -467,6 +467,9 @@ namespace Frost
             */
             virtual s_ctnr< s_ptr<UIObject> > ClearLinks();
 
+            /// Notifies this widget that it has been fully loaded.
+            void            NotifyLoaded();
+
             s_ptr<GUIManager> GetManager();
 
             /// Creates the associated Lua glue.
@@ -517,6 +520,7 @@ namespace Frost
             s_bool          bInherits_;
 
             s_bool          bVirtual_;
+            s_bool          bLoaded_;
             s_bool          bReady_;
 
             s_ctnr< s_ptr<LuaGlue> > lGlueList_;

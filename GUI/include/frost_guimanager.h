@@ -260,6 +260,15 @@ namespace Frost
         */
         void                 RemoveUIObject(s_ptr<GUI::UIObject> pObj);
 
+        /// Tells this manager that the provided object now has a parent.
+        /** \param pObj The object that has recently been given a parent
+        *   \note When the GUI closes, the GUIManager deletes all objects
+        *         that have no parents first, which then delete all their
+        *         children. This function is just here to prevent double
+        *         deleting of widgets that once were orphans.
+        */
+        void                 NotifyObjectHasParent(s_ptr<GUI::UIObject> pObj);
+
         /// Returns the UIObject associated with the given ID.
         /** \param uiID The unique ID representing the widget
         *   \return The UIObject associated with the given ID

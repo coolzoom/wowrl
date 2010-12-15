@@ -362,6 +362,8 @@ s_bool ModelFrame::SetModelFile( const s_str& sFile )
 
             if (pRenderTarget_)
                 pRenderTexture_->SetTexture(pRenderTarget_.Get());
+
+            pRenderTexture_->NotifyLoaded();
         }
 
         s_ptr<ModelManager> pModelMgr = ModelManager::GetSingleton();
@@ -570,7 +572,6 @@ void ModelFrame::SetModelMaterial( const ModelMaterial& mModelMat )
 
     if (pModel_)
         mModelMat_.ApplyOn(pModel_, false);
-
 
     NotifyRendererNeedRedraw();
     bRedrawRenderTarget_ = true;

@@ -313,6 +313,7 @@ namespace Frost
 
         pNewFrame->SetNewlyCreated();
         pNewFrame->On("Load");
+        pNewFrame->NotifyLoaded();
 
         return pNewFrame;
     }
@@ -439,6 +440,11 @@ namespace Frost
 
         if (pSizedObject_ == pObj)
             StopSizing(pObj);
+    }
+
+    void GUIManager::NotifyObjectHasParent( s_ptr<GUI::UIObject> pObj )
+    {
+        lMainObjectList_.Erase(pObj->GetID());
     }
 
     s_ptr<GUI::UIObject> GUIManager::GetUIObject( const s_uint& uiID )
@@ -1488,6 +1494,8 @@ namespace Frost
 
                             if (!pFrame->IsVirtual())
                                 pFrame->On("Load");
+
+                            pFrame->NotifyLoaded();
                         }
                         else
                         {

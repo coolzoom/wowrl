@@ -1207,3 +1207,8 @@ s_ctnr< s_ptr<UIObject> > UIObject::ClearLinks()
     return lList;
 }
 
+void UIObject::NotifyLoaded()
+{
+    bLoaded_ = true;
+}
+

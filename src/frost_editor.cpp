@@ -20,6 +20,7 @@ namespace Frost
 {
     Editor::Editor()
     {
+        iterAction_ = lHistoryList_.Begin();
     }
 
     Editor::~Editor()

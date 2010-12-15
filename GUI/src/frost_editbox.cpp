@@ -108,6 +108,8 @@ void EditBox::CopyFrom( s_ptr<UIObject> pObj )
 
                 if (!IsVirtual())
                     pFontString_->EnableFormatting(false);
+
+                pFontString_->NotifyLoaded();
             }
         }
     }
@@ -764,6 +766,8 @@ void EditBox::CreateHighlight_()
     );
 
     pHighlight_->SetColor(mHighlightColor_);
+
+    pHighlight_->NotifyLoaded();
 }
 
 void EditBox::CreateCarret_()
@@ -793,6 +797,8 @@ void EditBox::CreateCarret_()
 
         pCarret_->SetSprite(pSprite);
         pCarret_->SetAbsPoint(ANCHOR_LEFT, sName_, ANCHOR_LEFT, lTextInsets_[BORDER_LEFT] - 1, 0);
+
+        pCarret_->NotifyLoaded();
     }
 }
 
