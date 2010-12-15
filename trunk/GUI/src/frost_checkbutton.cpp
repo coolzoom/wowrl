@@ -58,6 +58,7 @@ void CheckButton::CopyFrom( s_ptr<UIObject> pObj )
                 pCheckedTexture_->SetDrawLayer(pButton->GetCheckedTexture()->GetDrawLayer());
                 this->AddRegion(pCheckedTexture_);
                 pCheckedTexture_->CopyFrom(pButton->GetCheckedTexture());
+                pCheckedTexture_->NotifyLoaded();
             }
         }
         if (pButton->GetDisabledCheckedTexture())
@@ -81,6 +82,7 @@ void CheckButton::CopyFrom( s_ptr<UIObject> pObj )
                 pDisabledCheckedTexture_->SetDrawLayer(pButton->GetDisabledCheckedTexture()->GetDrawLayer());
                 this->AddRegion(pDisabledCheckedTexture_);
                 pDisabledCheckedTexture_->CopyFrom(pButton->GetDisabledCheckedTexture());
+                pDisabledCheckedTexture_->NotifyLoaded();
             }
         }
     }

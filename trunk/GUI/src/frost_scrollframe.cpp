@@ -82,6 +82,7 @@ void ScrollFrame::CopyFrom( s_ptr<UIObject> pObj )
                     pScrollChild->CopyFrom(pScrollFrame->GetScrollChild());
                     if (!this->IsVirtual())
                         pScrollChild->On("Load");
+                    pScrollChild->NotifyLoaded();
 
                     this->SetScrollChild(pScrollChild);
                 }
@@ -129,6 +130,8 @@ void ScrollFrame::SetScrollChild( s_ptr<Frame> pFrame )
 
         if (pScrollRenderTarget_)
             pScrollTexture_->SetTexture(pScrollRenderTarget_);
+
+        pScrollTexture_->NotifyLoaded();
 
         bRebuildScrollRenderTarget_ = true;
     }

@@ -517,16 +517,19 @@ int LuaUIObject::_SetParent( lua_State* pLua )
         {
             s_ptr<Frame> pOldParent = s_ptr<Frame>::DynamicCast(pParent_->GetParent());
             pParent_->SetParent(pParent);
+
             if (pParent_->IsObjectType("Frame"))
             {
                 s_ptr<Frame> pThisFrame = s_ptr<Frame>::DynamicCast(pParent_);
-                pOldParent->RemoveChild(pThisFrame);
+                if (pOldParent)
+                    pOldParent->RemoveChild(pThisFrame);
                 pFrame->AddChild(pThisFrame);
             }
             else
             {
                 s_ptr<LayeredRegion> pThisRegion = s_ptr<LayeredRegion>::DynamicCast(pParent_);
-                pOldParent->RemoveRegion(pThisRegion);
+                if (pOldParent)
+                    pOldParent->RemoveRegion(pThisRegion);
                 pFrame->AddRegion(pThisRegion);
             }
         }

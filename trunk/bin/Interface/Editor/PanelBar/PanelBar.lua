@@ -9,9 +9,6 @@ function PanelBar:AddPanel(name)
     if (panel) then
         panel.name = name;
         panel.rank = self.panelNumber;
-        panel.lastObject = nil;
-        panel.AddFontString = AddFontString;
-        panel.AddButton = AddButton;
         panel:SetWidth(AddOns.PanelBar.Config.panelWidth);
         panel.Title:SetText(AddOns.PanelBar:GetLocalizedString(name));
         local header = CreateFrame("Button", "$parent"..name.."Header", self, "ButtonTemplate_PanelHeader");

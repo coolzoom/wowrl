@@ -73,6 +73,7 @@ void StatusBar::CopyFrom( s_ptr<UIObject> pObj )
                     pBarTexture_->CreateGlue();
                 this->AddRegion(pBarTexture_);
                 pBarTexture_->CopyFrom(pBar);
+                pBarTexture_->NotifyLoaded();
             }
         }
     }
@@ -169,20 +170,25 @@ void StatusBar::SetBarColor( const Color& mBarColor )
     {
         CreateBarTexture_();
         pBarTexture_->SetName("$parentBarTexture");
-        pManager_->AddUIObject(pBarTexture_);
-
-        if (!pBarTexture_)
+        if (!pManager_->AddUIObject(pBarTexture_))
         {
+            Warning(lType_.Back(),
+                "Trying to create bar texture for \""+sName_+"\",\n"
+                "but the name was already taken : \""+pBarTexture_->GetName()+"\". Skipped."
+            );
             pBarTexture_.Delete();
             return;
         }
+        else
+        {
+            if (!bVirtual_)
+                pBarTexture_->CreateGlue();
 
-        if (!bVirtual_)
-            pBarTexture_->CreateGlue();
+            AddRegion(pBarTexture_);
 
-        AddRegion(pBarTexture_);
-
-        pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT));
+            pBarTexture_->SetPoint(Anchor(pBarTexture_, ANCHOR_BOTTOMLEFT, "$parent", ANCHOR_BOTTOMLEFT));
+            pBarTexture_->NotifyLoaded();
+        }
     }
 
     mBarColor_ = mBarColor;

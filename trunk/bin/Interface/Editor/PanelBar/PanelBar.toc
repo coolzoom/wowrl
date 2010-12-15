@@ -9,4 +9,5 @@ Localization.lua
 PanelBarTemplates.xml
 PanelBar.xml
 PanelBar.lua
-Panels.lua
+ObjectsPanel.xml
+TerrainPanel.xml

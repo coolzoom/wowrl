@@ -442,6 +442,7 @@ void Frame::ParseFramesBlock_( s_ptr<XML::Block> pBlock )
                     pFrame->ParseBlock(pElemBlock);
                     if (!pFrame->IsVirtual())
                         pFrame->On("Load");
+                    pFrame->NotifyLoaded();
                 }
                 catch (const GUIException& e)
                 {

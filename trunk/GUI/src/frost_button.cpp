@@ -132,6 +132,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pNormalTexture_->SetDrawLayer(pButton->GetNormalTexture()->GetDrawLayer());
                 this->AddRegion(pNormalTexture_);
                 pNormalTexture_->CopyFrom(pButton->GetNormalTexture());
+                pNormalTexture_->NotifyLoaded();
             }
         }
         if (pButton->GetPushedTexture())
@@ -155,6 +156,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pPushedTexture_->SetDrawLayer(pButton->GetPushedTexture()->GetDrawLayer());
                 this->AddRegion(pPushedTexture_);
                 pPushedTexture_->CopyFrom(pButton->GetPushedTexture());
+                pPushedTexture_->NotifyLoaded();
             }
         }
         if (pButton->GetHighlightTexture())
@@ -178,6 +180,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pHighlightTexture_->SetDrawLayer(pButton->GetHighlightTexture()->GetDrawLayer());
                 this->AddRegion(pHighlightTexture_);
                 pHighlightTexture_->CopyFrom(pButton->GetHighlightTexture());
+                pHighlightTexture_->NotifyLoaded();
             }
         }
         if (pButton->GetDisabledTexture())
@@ -201,6 +204,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pDisabledTexture_->SetDrawLayer(pButton->GetDisabledTexture()->GetDrawLayer());
                 this->AddRegion(pDisabledTexture_);
                 pDisabledTexture_->CopyFrom(pButton->GetDisabledTexture());
+                pDisabledTexture_->NotifyLoaded();
             }
         }
 
@@ -225,6 +229,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pNormalText_->SetDrawLayer(pButton->GetNormalText()->GetDrawLayer());
                 this->AddRegion(pNormalText_);
                 pNormalText_->CopyFrom(pButton->GetNormalText());
+                pNormalText_->NotifyLoaded();
             }
         }
         if (pButton->GetHighlightText())
@@ -248,6 +253,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pHighlightText_->SetDrawLayer(pButton->GetHighlightText()->GetDrawLayer());
                 this->AddRegion(pHighlightText_);
                 pHighlightText_->CopyFrom(pButton->GetHighlightText());
+                pHighlightText_->NotifyLoaded();
             }
         }
         if (pButton->GetDisabledText())
@@ -271,6 +277,7 @@ void Button::CopyFrom( s_ptr<UIObject> pObj )
                 pDisabledText_->SetDrawLayer(pButton->GetDisabledText()->GetDrawLayer());
                 this->AddRegion(pDisabledText_);
                 pDisabledText_->CopyFrom(pButton->GetDisabledText());
+                pDisabledText_->NotifyLoaded();
             }
         }
 

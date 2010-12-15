@@ -34,6 +34,7 @@ void ScrollFrame::ParseScrollChildBlock_( s_ptr<XML::Block> pBlock )
                 pScrollChild->ParseBlock(pChildBlock);
                 if (!pScrollChild->IsVirtual())
                     pScrollChild->On("Load");
+                pScrollChild->NotifyLoaded();
 
                 s_ptr<XML::Block> pAnchors = pChildBlock->GetBlock("Anchors");
                 if (pAnchors)

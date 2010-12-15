@@ -32,7 +32,7 @@
             </OnEvent>
         </Scripts>
         <Frames>
-            <Frame name="$parentContent">
+            <!Frame name="$parentContent">
                 <Anchors>
                     <Anchor point="LEFT">
                         <Offset>
