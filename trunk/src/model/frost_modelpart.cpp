@@ -134,6 +134,8 @@ namespace Frost
         {
             if (lSubEntityMaterialList_.Find(uiSubEntity))
                 return lSubEntityMaterialList_[uiSubEntity];
+            else
+                return nullptr;
         }
         else
             return pMaterial_;

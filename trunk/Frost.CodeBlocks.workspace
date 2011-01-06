@@ -9,6 +9,5 @@
 		<Project filename="Frost - XML.cbp" />
 		<Project filename="Frost - Input.cbp" />
 		<Project filename="Frost - Utils.cbp" />
-		<Project filename="../temp/temp.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
