@@ -22,6 +22,7 @@
     #include <dirent.h>
     #include <unistd.h>
     #include <fnmatch.h>
+    #include <string.h>
 
     struct _finddata_t
     {
@@ -44,6 +45,9 @@
     #define _A_SYSTEM 0x04  /* System file */
     #define _A_SUBDIR 0x10  /* Subdirectory */
     #define _A_ARCH   0x20  /* Archive file */
+
+    int _findclose(long id);
+    int _findnext(long id, struct _finddata_t *data);
 
     long _findfirst(const char *pattern, struct _finddata_t *data)
     {

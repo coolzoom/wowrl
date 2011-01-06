@@ -5,11 +5,11 @@
 /*                                        */
 /*                                        */
 
-#include "lualib.h"
-#include "lauxlib.h"
-#include "lua.h"
+#include <lualib.h>
+#include <lauxlib.h>
+#include <lua.h>
 
-#include "lunar.h"
+#include <lunar.h>
 
 #ifndef FROST_UTILS_LUASTATE_H
 #define FROST_UTILS_LUASTATE_H
