@@ -32,6 +32,11 @@ namespace Frost
         /// Destructor.
         virtual ~MovableUnitHandler();
 
+        /// Enables controls of the MovableObject.
+        /** \note Disabled by default.
+        */
+        virtual void  Enable();
+
         /// Sets the handler's speed.
         /** \param mSpeed The new speed
         */
@@ -98,6 +103,8 @@ namespace Frost
 
         Vector mSpeed_;
         Vector mMovement_, mHorizontalSpeed_;
+        Vector mLastSpeed_;
+        Vector mInterpMovement_;
         s_bool bFirstUpdate_;
         State  mState_, mPreviousState_;
         s_bool bGravityCheck_;
@@ -108,6 +115,10 @@ namespace Frost
         Vector          mGroundNormal_;
         Vector          mGroundIntersection_;
         CollisionData   mData_;
+
+        s_float fTimeSinceLastUpdate_;
+
+        static const s_float fTimeBetweenUpdates_;
     };
 }
 

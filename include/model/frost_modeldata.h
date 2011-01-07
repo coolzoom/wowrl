@@ -11,6 +11,8 @@
 
 #include "frost.h"
 
+#include "scene/frost_meshobstacle.h"
+
 namespace Frost
 {
     /// Holds raw data for model loading.
@@ -46,6 +48,8 @@ namespace Frost
 
         s_map< s_uint, s_ptr<ModelPart> > lModelPartList_;
         s_map<s_uint, MeshAnimation>      lAnimList_;
+
+        s_array<MeshObstacle::Triangle> lTriangleList_;
 
     };
 }

@@ -222,19 +222,12 @@ namespace Frost
                     }
                 }
             }
-
-            if (bCollision && (fBestT != 1.0f))
-            {
-                mDistance *= fBestT;
-                fBestT = 1.0f;
-                fDistanceSquared = mDistance.GetLengthSquared();
-            }
         }
 
         if (bCollision)
         {
             // Calculate the new end position
-            rData.mNewPosition = mPosition + fBestT*mDistance;
+            rData.mNewPosition = mPosition + fBestT*0.99f*mDistance;
             rData.mNewPosition.ScaleUp(mRadiusVector);
             rData.mNewPosition += pParent_->GetPosition();
 

@@ -14,7 +14,7 @@
 
 namespace Frost
 {
-    /// Loads Blizzard's .m2 model files.
+    /// Loads Frost's FM model files.
     class FMModelData : public ModelData
     {
     public :

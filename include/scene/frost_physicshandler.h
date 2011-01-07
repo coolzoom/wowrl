@@ -32,12 +32,12 @@ namespace Frost
         /// Enables controls of the MovableObject.
         /** \note Disabled by default.
         */
-        void                 Enable();
+        virtual void         Enable();
 
         /// Disables controls of the MovableObject.
         /** \note Disabled by default.
         */
-        void                 Disable();
+        virtual void         Disable();
 
         /// Checks if the MovableObject is under control.
         /** \return 'true' if the MovableObject is under control

@@ -73,7 +73,7 @@
     <-- Doodads : lists all doodads in the scene -->
     <n[.,1]:Doodads>
         <-- Doodad : instance of model -->
-        <Doodad name model b:movable="false" b:hidden="false">
+        <Doodad name model b:movable="false" b:hidden="false" b:collisions="false">
             <-- Position : the position of this doodad (in world unit) -->
             <n[1,1]:Position n:x="0.0" n:y="0.0" n:z="0.0"/>
             <-- Scale : the scale of this doodad (relative : 1 is normal) -->

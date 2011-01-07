@@ -16,11 +16,12 @@ namespace Frost
 {
     const s_str MeshObstacle::CLASS_NAME = "MeshObstacle";
 
-    MeshObstacle::MeshObstacle( const s_array<Triangle>& lTriangleArray )
+    MeshObstacle::MeshObstacle( const s_array<Triangle>& lTriangleArray, const AxisAlignedBox& mBoundingBox )
     {
         lTriangleArray_ = lTriangleArray;
-        // TODO : MeshObstacle : calculate bounding box (or copy ?)
-        mBoundingBox_ = AxisAlignedBox();
+        lTransformedTriangleArray_ = lTriangleArray_;
+        mBoundingBox_ = mBoundingBox;
+        mTransform_ = Ogre::Matrix4::IDENTITY;
     }
 
     MeshObstacle::~MeshObstacle()
@@ -78,36 +79,35 @@ namespace Frost
         // Improved Collision Detection and Response,
         // by Kasper Fauerby on 25th July 2003.
 
-        Ogre::Matrix4 mTransform;
-        mTransform.makeTransform(
-            pNode_->_getDerivedPosition(),
-            Vector::FrostToOgre(mRadiusVector),
-            pNode_->_getDerivedOrientation()
-        );
+        // First, transform the obstacle according to the matrix of
+        // the model it is linked to
+        Ogre::Matrix4 mTransform = pNode_->_getFullTransform();
 
-        Ogre::Matrix4 mOrientationTransform(-pNode_->_getDerivedOrientation());
+        if (mTransform != mTransform_)
+        {
+            mTransform_ = mTransform;
+            s_array<MeshObstacle::Triangle>::iterator iterTriangle;
+            foreach (iterTriangle, lTransformedTriangleArray_)
+            {
+                iterTriangle->mP[0] = mTransform_ * iterTriangle->mP[0];
+                iterTriangle->mP[1] = mTransform_ * iterTriangle->mP[1];
+                iterTriangle->mP[2] = mTransform_ * iterTriangle->mP[2];
+            }
+        }
 
-        Ogre::Matrix4 mInverse;
-        mInverse.makeInverseTransform(
-            pNode_->_getDerivedPosition(),
-            Vector::FrostToOgre(mRadiusVector),
-            pNode_->_getDerivedOrientation()
-        );
+        // Then, convert world coordinates to ellipsoid coordinates
+        Vector mPosition = mPreviousPos;
+        mPosition.ScaleDown(mRadiusVector);
 
-        // First, transform the tested object into the obstacle's space
-        // and convert world coordinates to ellipsoid coordinates
-        Vector mPosition = mInverse*mPreviousPos;
-        Vector mDestination = mInverse*mNextPos;
+        Vector mDestination = mNextPos;
+        mDestination.ScaleDown(mRadiusVector);
 
         Vector mDistance = mDestination - mPosition;
+        Vector mInitialDistance = mDistance;
         s_float fDistanceSquared = mDistance.GetLengthSquared();
+
         Vector mDirection = mDistance;
         mDirection.Normalize();
-        Vector mInitialDistance = mDistance;
-
-        // FIXME : The ellipsoid can't be transformed.
-        // Transform the collision mesh instead...
-        Vector mTransformedRadiusVector = mOrientationTransform*mRadiusVector;
 
         // Declare needed variables
         Vector mPlaneNormal, mIntersection;
@@ -119,21 +119,21 @@ namespace Frost
         s_float fEdgeDotDist, fEdgeSquared, fEdgeDotBTV, fEdgeCollisionPoint;
 
         s_array<MeshObstacle::Triangle>::const_iterator iterTriangle;
-        foreach (iterTriangle, lTriangleArray_)
+        foreach (iterTriangle, lTransformedTriangleArray_)
         {
             MeshObstacle::Triangle mTriangle = *iterTriangle;
-            mTriangle.mP[0].ScaleDown(mTransformedRadiusVector);
-            mTriangle.mP[1].ScaleDown(mTransformedRadiusVector);
-            mTriangle.mP[2].ScaleDown(mTransformedRadiusVector);
+            mTriangle.mP[0].ScaleDown(mRadiusVector);
+            mTriangle.mP[1].ScaleDown(mRadiusVector);
+            mTriangle.mP[2].ScaleDown(mRadiusVector);
 
             // Calculate the triangle's plane and its normal
             mPlaneNormal = (mTriangle.mP[1] - mTriangle.mP[0])^(mTriangle.mP[2] - mTriangle.mP[0]);
             mPlaneNormal.Normalize();
 
+            // Always orient the plane normal toward the object
             fSignedDistance = mPlaneNormal*(mPosition - mTriangle.mP[0]);
-            if (fSignedDistance > 0.0f)
+            if (fSignedDistance < 0.0f)
             {
-                // Always orient the plane normal toward the object
                 mPlaneNormal    *= -1.0f;
                 fSignedDistance *= -1.0f;
             }
@@ -171,6 +171,9 @@ namespace Frost
                     // Not now.
                     continue;
                 }
+
+                fStartTime.Clamp(0.0f, 1.0f);
+                fEndTime.Clamp(0.0f, 1.0f);
             }
 
             // Calculate the intersection of the sphere and the plane
@@ -213,12 +216,12 @@ namespace Frost
                     mEdge = mTriangle.mP[i+1] - mTriangle.mP[i];
 
                 mBaseToVertex = mTriangle.mP[i] - mPosition;
-                fEdgeDotDist = mEdge*mDistance;
                 fEdgeSquared = mEdge.GetLengthSquared();
+                fEdgeDotDist = mEdge*mDistance;
                 fEdgeDotBTV = mEdge*mBaseToVertex;
 
                 fT = GetSmallestRoot_(
-                    -fDistanceSquared*fEdgeSquared  + fEdgeDotDist*fEdgeDotDist,
+                    -fDistanceSquared*fEdgeSquared + fEdgeDotDist*fEdgeDotDist,
                     fEdgeSquared*2.0f*(mDistance*mBaseToVertex) - 2.0f*fEdgeDotDist*fEdgeDotBTV,
                     fEdgeSquared*(1.0f - mBaseToVertex*mBaseToVertex) + fEdgeDotBTV*fEdgeDotBTV
                 );
@@ -234,32 +237,21 @@ namespace Frost
                     }
                 }
             }
-
-            if (bCollision)
-            {
-                mDistance *= fBestT;
-                fBestT = 1.0f;
-                fDistanceSquared = mDistance.GetLengthSquared();
-            }
         }
 
         if (bCollision)
         {
             // Calculate the new end position
-            rData.mNewPosition = mTransform*(mPosition + fBestT*mDistance);
+            rData.mNewPosition = mPosition + fBestT*0.99f*mDistance;
+            rData.mNewPosition.ScaleUp(mRadiusVector);
 
             // Transform the collision point
-            rData.mCollisionPoint = mTransform*mIntersection;
-
-            // Calculate the sliding movement
-            mPlaneNormal = mPosition + fBestT*mDistance - mIntersection;
-            mPlaneNormal.Normalize();
-
-            mDistance = mNextPos - mPreviousPos;
-            mDistance.Normalize();
+            rData.mCollisionPoint = mIntersection;
+            rData.mCollisionPoint.ScaleUp(mRadiusVector);
 
             // Calculate the world space collision normal
-            rData.mPlaneNormal = mPlaneNormal;
+            rData.mPlaneNormal = mPosition + fBestT*mDistance - mIntersection;
+            rData.mPlaneNormal.Normalize();
             rData.mPlaneNormal.ScaleUp(Vector(
                 mRadiusVector.Y()*mRadiusVector.Z(),
                 mRadiusVector.Z()*mRadiusVector.X(),

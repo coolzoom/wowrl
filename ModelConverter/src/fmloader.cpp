@@ -7,6 +7,8 @@
 #include "fmloader.h"
 #include "fmmodelstructs.h"
 
+#include <frost_utils_file.h>
+
 using namespace std;
 
 namespace Frost

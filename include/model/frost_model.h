@@ -90,6 +90,8 @@ namespace Frost
         s_ptr<Ogre::Entity> GetEntity();
         s_ptr<Ogre::Mesh>   GetMesh();
 
+        void              CreateObstacle();
+        s_ptr<Obstacle>   GetObstacle() const;
         void              Show(s_bool bSubMeshes = false);
         void              Hide(s_bool bSubMeshes = false);
         void              Highlight();
@@ -106,8 +108,11 @@ namespace Frost
 
     private :
 
-        s_ptr<Ogre::Mesh>   pMesh_;
+        s_ptr<const ModelData> pModelData_;
+        s_ptr<Ogre::Mesh>      pMesh_;
+
         AxisAlignedBox      mBoundingBox_;
+        s_ptr<Obstacle>     pObstacle_;
 
         s_refptr<Material> pMaterial_;
 

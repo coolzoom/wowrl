@@ -44,6 +44,7 @@
 			<Add directory="..\include\xml" />
 			<Add directory="..\include\utils" />
 			<Add directory="..\dependencies\lua" />
+			<Add directory="..\..\boost_1_43_0" />
 		</Compiler>
 		<Linker>
 			<Add option="-Wl,--enable-runtime-pseudo-reloc" />
@@ -55,11 +56,14 @@
 		<Unit filename="include\converter.h" />
 		<Unit filename="include\fmloader.h" />
 		<Unit filename="include\fmmodelstructs.h" />
+		<Unit filename="include\ftloader.h" />
+		<Unit filename="include\ftmodelstructs.h" />
 		<Unit filename="include\m2loader.h" />
 		<Unit filename="include\m2modelstructs.h" />
 		<Unit filename="include\modeldata.h" />
 		<Unit filename="include\xmlloader.h" />
 		<Unit filename="src\fmloader.cpp" />
+		<Unit filename="src\ftloader.cpp" />
 		<Unit filename="src\m2loader.cpp" />
 		<Unit filename="src\main.cpp" />
 		<Unit filename="src\modeldata.cpp" />

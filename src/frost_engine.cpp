@@ -183,6 +183,7 @@ namespace Frost
         pShaderMgr_->LoadShaders();
 
         pUnitMgr_->Initialize();
+        pUnitMgr_->ReadConfig();
         pUnitMgr_->ParseData();
 
         pGameplayMgr_->Initialize();
