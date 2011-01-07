@@ -110,8 +110,13 @@ namespace Frost
                 pDoodadBlock->GetAttribute("model")
             );
 
+            if (s_bool(pDoodadBlock->GetAttribute("collisions")))
+                pDoodad->EnableCollisions();
+
             if (s_bool(pDoodadBlock->GetAttribute("hidden")))
                 pDoodad->Hide();
+            else
+                pDoodad->Show();
 
             s_ptr<XML::Block> pPosition = pDoodadBlock->GetBlock("Position");
             pDoodad->SetPosition(Vector(

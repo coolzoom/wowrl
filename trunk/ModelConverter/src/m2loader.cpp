@@ -7,6 +7,8 @@
 #include "m2loader.h"
 #include "m2modelstructs.h"
 
+#include <frost_utils_file.h>
+
 #include <string.h>
 
 using namespace std;

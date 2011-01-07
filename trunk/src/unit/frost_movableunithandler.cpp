@@ -18,16 +18,26 @@ using namespace std;
 
 namespace Frost
 {
+    const s_float MovableUnitHandler::fTimeBetweenUpdates_ = 0.03333f;
+
     MovableUnitHandler::MovableUnitHandler( s_ptr<MovableUnit> pMovableUnit ) :
         PhysicsHandler(pMovableUnit ? pMovableUnit->GetNode() : nullptr),
         pMovableUnit_(pMovableUnit), mRadius_(Vector::UNIT), mBoundingBox_(-mRadius_, mRadius_),
-        bFirstUpdate_(true), mState_(STATE_FREEFALL), mPreviousState_(STATE_FREEFALL)
+        bFirstUpdate_(true), mState_(STATE_FREEFALL), mPreviousState_(STATE_FREEFALL),
+        fTimeSinceLastUpdate_(fTimeBetweenUpdates_)
     {
         SetEventReceiver(pMovableUnit_);
     }
 
     MovableUnitHandler::~MovableUnitHandler()
     {
+    }
+
+    void MovableUnitHandler::Enable()
+    {
+        PhysicsHandler::Enable();
+
+        fTimeSinceLastUpdate_ = fTimeBetweenUpdates_;
     }
 
     void MovableUnitHandler::SetSpeed( const Vector& mSpeed )
@@ -76,6 +86,34 @@ namespace Frost
     {
         if (IsEnabled())
         {
+            // The collision detection code is not executed for
+            // every frame (30 times per second at most).
+            // This prevents too small numbers from appearing when
+            // experiencing very high number of rendered frames per
+            // second.
+            // Frames for which the collision code is avoided use
+            // the last computed movement to translate the unit,
+            // regardless of collisions (to smooth out the movement).
+            // This "fake" movement is of course cancelled out when
+            // real collision detection is done.
+
+            fTimeSinceLastUpdate_ += fDelta;
+            if (fTimeSinceLastUpdate_ < fTimeBetweenUpdates_)
+            {
+                // Resort to "fake" movement : no check for collisions
+                pParent_->Translate(mLastSpeed_*fDelta);
+                mInterpMovement_ += mLastSpeed_*fDelta;
+                return;
+            }
+
+            // Real collision detection
+            s_float fNewDelta = fTimeSinceLastUpdate_;
+            fTimeSinceLastUpdate_ = 0;
+
+            // First cancel the "fake" movement
+            pParent_->Translate(-mInterpMovement_);
+            mInterpMovement_ = Vector::ZERO;
+
             mPosition_ = pParent_->GetPosition(false) - mHotSpot_;
             mPreviousState_ = mState_;
             Vector mPreviousPos = mPosition_;
@@ -85,9 +123,9 @@ namespace Frost
                 case STATE_FREEFALL :
                 {
                     // Apply gravity
-                    mSpeed_   += PhysicsManager::GetSingleton()->GetGravity()*fDelta;
-                    mMovement_ = fDelta*(
-                        mSpeed_ + PhysicsManager::GetSingleton()->GetGravity()*fDelta/2.0f
+                    mSpeed_   += PhysicsManager::GetSingleton()->GetGravity()*fNewDelta;
+                    mMovement_ = fNewDelta*(
+                        mSpeed_ + PhysicsManager::GetSingleton()->GetGravity()*fNewDelta/2.0f
                     );
 
                     // Check for collisions
@@ -99,32 +137,38 @@ namespace Frost
                 case STATE_TERRAIN :
                 {
                     mHorizontalSpeed_ = pMovableUnit_->GetMovementSpeed();
-                    mMovement_ = mHorizontalSpeed_*fDelta;
+                    mMovement_ = mHorizontalSpeed_*fNewDelta;
                     s_float fMovement = mMovement_.GetNorm();
 
                     // Check for collisions
                     uiRecursionCounter_ = 0;
                     UpdateMovement_();
 
-                    // Try to remain on the ground
-                    mMovement_ = -Vector::UNIT_Y*(
-                        0.001f + fMovement*tan(UnitManager::GetSingleton()->GetMaxClimbingAngle())
-                    );
+                    // Try to remain on the ground using a "gravity check"
+                    // If the terrain under the unit is too far away (more
+                    // than 0.2 world units), the unit will fall.
+                    mMovement_ = -Vector::UNIT_Y*0.2f;
 
                     bGravityCheck_ = true;
+
+                    // We only need one recursion here
                     uiRecursionCounter_ = PhysicsManager::GetSingleton()->GetMaxCollisionRecursion() - 1;
                     UpdateMovement_();
+
                     bGravityCheck_ = false;
 
                     if (mState_ == STATE_FREEFALL)
                     {
-                        // The unit starts to fall, give it some impulsion
-                        mSpeed_ = mHorizontalSpeed_*0.5f;
+                        // The unit starts to fall, give it some initial impulsion
+                        mSpeed_ = mHorizontalSpeed_ + Vector::UNIT_Y;
                     }
 
                     break;
                 }
             }
+
+            // Calculate the averaged speed for the "fake" movement
+            mLastSpeed_ = (mPosition_ - mPreviousPos)/fNewDelta;
 
             // Move the unit
             pParent_->Translate(mPosition_ - mPreviousPos);
@@ -238,7 +282,7 @@ namespace Frost
                     }
                     case STATE_FREEFALL :
                     {
-                        s_float fAngle = acos(mData_.mPlaneNormal*Vector::UNIT_Y);
+                        s_float fAngle = acos(mData_.mPlaneNormal.Y());
                         if (fAngle > UnitManager::GetSingleton()->GetMaxClimbingAngle())
                         {
                             // The slope is too steep to land, continue the free fall
@@ -272,6 +316,9 @@ namespace Frost
             }
             else
             {
+                if (bGravityCheck_)
+                    mMovement_ = Vector::ZERO;
+
                 mState_ = STATE_FREEFALL;
                 pBindedObstacle_ = nullptr;
             }

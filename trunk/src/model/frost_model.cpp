@@ -33,6 +33,7 @@ namespace Frost
 
     Model::Model( const ModelData& mData, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(pSceneManager)
     {
+        pModelData_ = &mData;
         pMesh_ = mData.pMesh_;
         sOgreModelName_ = mData.sModelName_;
         sEntityName_ = sEntityName;
@@ -175,6 +176,18 @@ namespace Frost
     s_wptr<AnimManager> Model::GetAnimMgr()
     {
         return pAnimMgr_;
+    }
+
+    void Model::CreateObstacle()
+    {
+        s_ptr<MeshObstacle> pObs = new MeshObstacle(pModelData_->lTriangleList_, mBoundingBox_);
+        pObs->AttachTo(this);
+        pObstacle_ = pObs;
+    }
+
+    s_ptr<Obstacle> Model::GetObstacle() const
+    {
+        return pObstacle_;
     }
 
     void Model::SetMaterial( s_refptr<Material> pMat )

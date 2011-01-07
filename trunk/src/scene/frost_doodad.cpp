@@ -12,6 +12,8 @@
 #include "scene/frost_scenemanager.h"
 #include "scene/frost_gizmo.h"
 
+#include "scene/frost_physicsmanager.h"
+
 #include <OgreSceneNode.h>
 
 using namespace std;
@@ -40,8 +42,17 @@ namespace Frost
     {
     }
 
+    void Doodad::EnableCollisions()
+    {
+        pModel_->CreateObstacle();
+        bCollisionsEnabled_ = true;
+    }
+
     void Doodad::Show()
     {
+        if (bCollisionsEnabled_)
+            PhysicsManager::GetSingleton()->AddObstacle(pModel_->GetObstacle());
+
         bIsShown_ = true;
         if (pModel_)
             pModel_->Show();
@@ -49,6 +60,9 @@ namespace Frost
 
     void Doodad::Hide()
     {
+        if (bCollisionsEnabled_)
+            PhysicsManager::GetSingleton()->RemoveObstacle(pModel_->GetObstacle());
+
         bIsShown_ = false;
         if (pModel_)
             pModel_->Hide();

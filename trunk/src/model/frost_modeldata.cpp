@@ -71,6 +71,20 @@ namespace Frost
         );
         pIBuf->writeData(0, pIBuf->getSizeInBytes(), lIndices, true);
 
+        lTriangleList_.Reserve(uiIndexNbr/3);
+        MeshObstacle::Triangle mTri;
+        for (uint i = 0; i < uiIndexNbr; i += 3)
+        {
+            ushort i1 = lIndices[i+0];
+            ushort i2 = lIndices[i+1];
+            ushort i3 = lIndices[i+2];
+
+            mTri.mP[0] = Vector(lVertices[i1*6+0], lVertices[i1*6+1], lVertices[i1*6+2]);
+            mTri.mP[1] = Vector(lVertices[i2*6+0], lVertices[i2*6+1], lVertices[i2*6+2]);
+            mTri.mP[2] = Vector(lVertices[i3*6+0], lVertices[i3*6+1], lVertices[i3*6+2]);
+            lTriangleList_.PushBack(mTri);
+        }
+
         pSub->indexData->indexBuffer = pIBuf;
         pSub->indexData->indexCount = uiIndexNbr;
         pSub->indexData->indexStart = 0;

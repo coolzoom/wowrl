@@ -12,6 +12,8 @@
 #include "frost.h"
 #include "scene/frost_obstacle.h"
 
+#include <OgreMatrix4.h>
+
 namespace Frost
 {
     /// Arbitrary mesh obstacle.
@@ -35,8 +37,9 @@ namespace Frost
 
         /// Constructor.
         /** \param lTriangleArray The triangle list
+        *   \param mBoundingBox   The bounding box of this obstacle
         */
-        MeshObstacle(const s_array<Triangle>& lTriangleArray);
+        MeshObstacle(const s_array<Triangle>& lTriangleArray, const AxisAlignedBox& mBoundingBox);
 
         /// Destructor.
         ~MeshObstacle();
@@ -64,7 +67,10 @@ namespace Frost
         s_bool  IsPointInsideTriangle_(const Vector& mPoint, const Triangle& mTriangle) const;
         s_float GetSmallestRoot_(const s_float& fA, const s_float& fB, const s_float& fC) const;
 
-        s_array<Triangle> lTriangleArray_;
+        s_array<Triangle>         lTriangleArray_;
+        mutable s_array<Triangle> lTransformedTriangleArray_;
+
+        mutable Ogre::Matrix4 mTransform_;
     };
 }
 

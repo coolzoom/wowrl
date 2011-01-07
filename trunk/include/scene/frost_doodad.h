@@ -61,6 +61,9 @@ namespace Frost
         /// Destructor.
         ~Doodad();
 
+        /// Makes this Doodad collidable.
+        void          EnableCollisions();
+
         /// Makes this Doodad visible.
         void          Show();
 
@@ -122,6 +125,7 @@ namespace Frost
 
         s_refptr<Model>     pModel_;
         DoodadOgreInterface mOgreInterface_;
+        s_bool              bCollisionsEnabled_;
 
         s_ptr<Gizmo> pGizmo_;
     };
