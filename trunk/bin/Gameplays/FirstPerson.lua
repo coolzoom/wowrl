@@ -45,12 +45,14 @@ end
 function FirstPersonGameplay.SetUnit(unit)
     if (FirstPersonGameplay.unit ~= nil) then
         FirstPersonGameplay.unit:EnableMotionBlur();
+        FirstPersonGameplay.unit:SetPlayerControlled(false);
     end
     
     FirstPersonGameplay.unit = unit;
     
     if (FirstPersonGameplay.unit ~= nil) then
         FirstPersonGameplay.unit:DisableMotionBlur();
+        FirstPersonGameplay.unit:SetPlayerControlled(true);
         FirstPersonGameplay.camera = FirstPersonGameplay.unit:GetCamera();
         this:SetCamera(FirstPersonGameplay.camera);
         FirstPersonGameplay.ready = true;

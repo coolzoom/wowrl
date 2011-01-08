@@ -113,6 +113,9 @@ namespace Frost
         /// Destructor.
         ~Character();
 
+        /// Tells this Unit that is is being controlled by the player.
+        virtual void     SetPlayerControlled(const s_bool& bPlayerControlled);
+
         /// Returns this Character's Race.
         /** \return This Character's Race
         */

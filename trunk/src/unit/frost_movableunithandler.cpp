@@ -97,22 +97,29 @@ namespace Frost
             // This "fake" movement is of course cancelled out when
             // real collision detection is done.
 
-            fTimeSinceLastUpdate_ += fDelta;
-            if (fTimeSinceLastUpdate_ < fTimeBetweenUpdates_)
+            s_float fNewDelta;
+
+            if (PhysicsManager::GetSingleton()->IsCollisionDetectionFixedRate())
             {
-                // Resort to "fake" movement : no check for collisions
-                pParent_->Translate(mLastSpeed_*fDelta);
-                mInterpMovement_ += mLastSpeed_*fDelta;
-                return;
+                fTimeSinceLastUpdate_ += fDelta;
+                if (fTimeSinceLastUpdate_ < fTimeBetweenUpdates_)
+                {
+                    // Resort to "fake" movement : no check for collisions
+                    pParent_->Translate(mLastSpeed_*fDelta);
+                    mInterpMovement_ += mLastSpeed_*fDelta;
+                    return;
+                }
+
+                // Real collision detection
+                fNewDelta = fTimeSinceLastUpdate_;
+                fTimeSinceLastUpdate_ = 0;
+
+                // First cancel the "fake" movement
+                pParent_->Translate(-mInterpMovement_);
+                mInterpMovement_ = Vector::ZERO;
             }
-
-            // Real collision detection
-            s_float fNewDelta = fTimeSinceLastUpdate_;
-            fTimeSinceLastUpdate_ = 0;
-
-            // First cancel the "fake" movement
-            pParent_->Translate(-mInterpMovement_);
-            mInterpMovement_ = Vector::ZERO;
+            else
+                fNewDelta = fDelta;
 
             mPosition_ = pParent_->GetPosition(false) - mHotSpot_;
             mPreviousState_ = mState_;
@@ -146,8 +153,9 @@ namespace Frost
 
                     // Try to remain on the ground using a "gravity check"
                     // If the terrain under the unit is too far away (more
-                    // than 0.2 world units), the unit will fall.
-                    mMovement_ = -Vector::UNIT_Y*0.2f;
+                    // than 0.5 world units), the unit will fall.
+                    mMovement_ = -Vector::UNIT_Y*0.5f;
+                    //mMovement_ = -0.5*Vector::UNIT_Y*(0.001f + fMovement*tan(UnitManager::GetSingleton()->GetMaxClimbingAngle()));
 
                     bGravityCheck_ = true;
 
@@ -157,17 +165,11 @@ namespace Frost
 
                     bGravityCheck_ = false;
 
-                    if (mState_ == STATE_FREEFALL)
-                    {
-                        // The unit starts to fall, give it some initial impulsion
-                        mSpeed_ = mHorizontalSpeed_ + Vector::UNIT_Y;
-                    }
-
                     break;
                 }
             }
 
-            // Calculate the averaged speed for the "fake" movement
+            // Calculate the averaged speed of this frame's movement
             mLastSpeed_ = (mPosition_ - mPreviousPos)/fNewDelta;
 
             // Move the unit
@@ -251,20 +253,10 @@ namespace Frost
                                 if (bClimbing_)
                                 {
                                     // The slope is too steep, the unit can't go there.
-                                    // Calculate remaning movement
-                                    /*mMovement_ = mFinalDestination - mPosition_;
-                                    mMovement_.Y() = 0.0f;
-                                    mMovement_.Y() = - mMovement_*mData_.mPlaneNormal/mData_.mPlaneNormal.Y();
-                                    mMovement_.Normalize();
-                                    mMovement_ *= (mFinalDestination - mPosition_).GetNorm();*/
-
-                                    // Slide
                                     mMovement_ = mData_.mPlaneNormal^Vector::UNIT_Y;
                                     mMovement_.Normalize();
                                     mMovement_ = ((mFinalDestination - mPosition_)*mMovement_)*mMovement_;
-                                    /*mTangent = mTangent^mData_.mPlaneNormal;
-                                    mMovement_ = mMovement_ - mTangent*(mMovement_*mTangent);*/
-                                    //mMovement_ = Vector::ZERO;
+
                                     mState_ = STATE_TERRAIN;
                                 }
                                 else
@@ -275,6 +267,9 @@ namespace Frost
 
                                     mState_ = STATE_FREEFALL;
                                     pBindedObstacle_ = nullptr;
+
+                                    // Give it some initial impulsion
+                                    mSpeed_ = mHorizontalSpeed_*0.5f;
                                 }
                             }
                         }
@@ -317,7 +312,12 @@ namespace Frost
             else
             {
                 if (bGravityCheck_)
+                {
                     mMovement_ = Vector::ZERO;
+
+                    // The unit starts to fall, give it some initial impulsion
+                    mSpeed_ = mHorizontalSpeed_;
+                }
 
                 mState_ = STATE_FREEFALL;
                 pBindedObstacle_ = nullptr;

@@ -109,11 +109,9 @@ s_bool EditorFrameFunc()
     return true;
 }
 
-// To Do List :
-
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = true;
+    s_bool bEditor = false;
 
     // Read commands
     if (argc > 1)
@@ -172,7 +170,7 @@ int main(int argc, char* argv[])
 
             // Create Units
             s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", Character::GENDER_MALE);
-            pChar->Teleport(Vector(0, 1, 0));
+            pChar->Teleport(Vector(-22, 4.2f, -14));
 
             pChar->SetClass("MAGE");
             pChar->SetLevel(51);

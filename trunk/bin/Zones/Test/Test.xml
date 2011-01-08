@@ -4,6 +4,34 @@
     <SunColor r="1" g="0.85" b="0.55"/>
     
     <Models>
+        <Model name="Castle" file="Models/World/wmo/Castle.fm">
+            <Materials>
+                <Material subMeshID="0" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/BM_SHDWFANG_INT_STNFLR01.png"/>
+                </Material>
+                <Material subMeshID="1" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/MM_FTRL_FLOOR_03.png"/>
+                </Material>
+                <Material subMeshID="2" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/BM_SHDWFNG_RAILINGS.png"/>
+                </Material>
+                <Material subMeshID="3" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/JLO_STRATHHOLD_INT_WALL01.png"/>
+                </Material>
+                <Material subMeshID="4" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/JLO_STRATHHOLD_STONEWALL.png"/>
+                </Material>
+                <Material subMeshID="5" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/MM_STRATH_WALL_04.png"/>
+                </Material>
+                <Material subMeshID="6" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/JLO_BBAY_PLANK.png"/>
+                </Material>
+                <Material subMeshID="7" subEntityID="-1">
+                    <DiffuseTexture file="Textures/World/wmo/BM_SHDWFANG_CLNG_01.png"/>
+                </Material>
+            </Materials>
+        </Model>
         <Model name="Tree" file="Models/World/Kalimdor/Azshara/AZR_Tree01.fm">
             <Materials>
                 <Material subMeshID="0" subEntityID="0">
@@ -23,7 +51,12 @@
     </Models>
     
     <Doodads>
-        <Doodad name="Tree" model="Tree">
+        <Doodad name="Castle" model="Castle" collisions="true">
+            <Position x="-32.4903" y="5.5656" z="-27.643"/>
+            <Scale x="0.8" y="0.8" z="0.8"/>
+            <Orientation x="0" y="0" z="0" w="1"/>
+        </Doodad>
+        <Doodad name="Tree" model="Tree" collisions="true">
             <Position x="-3.11682" y="-1.16752" z="-16.6649"/>
             <Scale x="0.2" y="0.2" z="0.2"/>
             <Orientation x="0" y="0" z="0" w="1"/>

@@ -4,6 +4,7 @@
 #include "ftloader.h"
 #include "m2loader.h"
 #include "xmlloader.h"
+#include "ogrexmlloader.h"
 
 #include <frost_utils_file.h>
 
@@ -37,7 +38,7 @@ int main(int argc, char** argv)
         if (argc == 3)
             sOutput = argv[argc-1];
 
-        if (sOutput != "fm" && sOutput != "xml")
+        if (sOutput != "fm" && sOutput != "xml" && sOutput != "")
         {
             Log("This program doesn't support exporting to formats other than \"fm\" and \"xml\". Sorry !");
             return 0;
@@ -53,6 +54,20 @@ int main(int argc, char** argv)
             try
             {
                 mData = M2Loader::LoadModelData(sFile);
+            }
+            catch (Exception e)
+            {
+                Log(e.GetDescription());
+                return 0;
+            }
+        }
+        else if (sExtension == "oxml")
+        {
+            Log("Extension says the file is an OXML model (Ogre's human readable model format).\nTrying to load it as such...");
+            if (sOutput.IsEmpty()) sOutput = "fm";
+            try
+            {
+                mData = OgreXMLLoader::LoadModelData(sFile);
             }
             catch (Exception e)
             {

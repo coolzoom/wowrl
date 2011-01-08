@@ -51,6 +51,7 @@ namespace Frost
         method(Creature, RotateModel),
         method(Creature, SetAnim),
         method(Creature, SetAttacking),
+        method(Creature, SetPlayerControlled),
         method(Creature, SetMoveForward),
         method(Creature, SetMoveBackward),
         method(Creature, SetMoveLeft),

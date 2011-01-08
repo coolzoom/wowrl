@@ -378,6 +378,16 @@ namespace Frost
         return pNode_->GetPosition(false);
     }
 
+    void Unit::SetPlayerControlled( const s_bool& bPlayerControlled )
+    {
+        bPlayerControlled_ = bPlayerControlled;
+    }
+
+    const s_bool& Unit::IsPlayerControlled() const
+    {
+        return bPlayerControlled_;
+    }
+
     void Unit::EnableMotionBlur()
     {
         if (!bMotionBlurEnabled_ && ShaderManager::GetSingleton()->IsMotionBlurEnabled())

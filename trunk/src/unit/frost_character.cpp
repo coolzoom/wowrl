@@ -154,6 +154,14 @@ namespace Frost
         return pBodyModel_->GetModelPart(uiID);
     }
 
+    void Character::SetPlayerControlled( const s_bool& bPlayerControlled )
+    {
+        Unit::SetPlayerControlled(bPlayerControlled);
+
+        if (bPlayerControlled_)
+            Highlight(false);
+    }
+
     void Character::PushOnLua( s_ptr<Lua::State> pLua ) const
     {
         pLua->PushGlobal(GetLuaID());
@@ -183,12 +191,14 @@ namespace Frost
     {
         if (sEvent == "Enter")
         {
-            pCharacter_->Highlight(true);
+            if (!pCharacter_->IsPlayerControlled())
+                pCharacter_->Highlight(true);
             UnitManager::GetSingleton()->NotifyMouseOveredUnit(pCharacter_);
         }
         else if (sEvent == "Leave")
         {
-            pCharacter_->Highlight(false);
+            if (!pCharacter_->IsPlayerControlled())
+                pCharacter_->Highlight(false);
             UnitManager::GetSingleton()->NotifyMouseOveredUnit(nullptr);
         }
     }

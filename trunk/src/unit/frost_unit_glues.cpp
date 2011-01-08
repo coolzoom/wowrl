@@ -309,6 +309,19 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaUnit::_SetPlayerControlled( lua_State* pLua )
+    {
+        Lua::Function mFunc("Unit:SetPlayerControlled", pLua);
+        mFunc.Add(0, "player controlled", Lua::TYPE_BOOLEAN);
+
+        if (mFunc.Check())
+        {
+            pParent_->SetPlayerControlled(mFunc.Get(0)->GetBool());
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaUnit::_GetCamera( lua_State* pLua )
     {
         Lua::Function mFunc("Unit:GetCamera", pLua, 1);
@@ -410,6 +423,7 @@ namespace Frost
         method(Unit, RotateModel),
         method(Unit, SetAnim),
         method(Unit, SetAttacking),
+        method(Unit, SetPlayerControlled),
         method(Unit, ZoomCamera),
 
         {0,0}

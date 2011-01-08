@@ -43,6 +43,14 @@ namespace Frost
         /// Destructor.
         virtual ~Unit();
 
+        /// Tells this Unit that is is being controlled by the player.
+        virtual void     SetPlayerControlled(const s_bool& bPlayerControlled);
+
+        /// Checks if this Unit is being controlled by the player.
+        /** \return 'true' if this Unit is being controlled by the player
+        */
+        const s_bool&    IsPlayerControlled() const;
+
         /// Changes this Unit's Class.
         /** \param sClassName The name of the new Class
         */
@@ -329,6 +337,8 @@ namespace Frost
         s_bool          bDead_;
 
         s_bool          bCameraMovedAlone_;
+
+        s_bool          bPlayerControlled_;
     };
 
     /** \cond NOT_REMOVE_FROM_DOC
@@ -366,6 +376,7 @@ namespace Frost
         int _RotateModel(lua_State*);
         int _SetAnim(lua_State*);
         int _SetAttacking(lua_State*);
+        int _SetPlayerControlled(lua_State*);
         int _ZoomCamera(lua_State*);
 
         int    GetDataTable(lua_State*);

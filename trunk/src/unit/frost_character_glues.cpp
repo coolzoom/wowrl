@@ -25,7 +25,7 @@ namespace Frost
     {
         if (!CheckParent_())
             return 0;
-        
+
         Lua::Function mFunc("Unit:GetRace", pLua, 1);
 
         if (mFunc.Check())
@@ -70,6 +70,7 @@ namespace Frost
         method(Character, SetMoveBackward),
         method(Character, SetMoveLeft),
         method(Character, SetMoveRight),
+        method(Character, SetPlayerControlled),
         method(Character, ToggleTurning),
         method(Character, ToggleWalking),
         method(Character, ZoomCamera),
