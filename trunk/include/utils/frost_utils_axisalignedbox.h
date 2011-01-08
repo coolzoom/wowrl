@@ -75,6 +75,11 @@ namespace Frost
         */
         s_bool        Contains(const Vector& mPoint) const;
 
+        /// Enlarges this box to contain the provided point.
+        /** \param mPoint The point
+        */
+        void          Include(const Vector& mPoint);
+
         /// Checks if this box is infinite in all directions.
         /** \return 'true' if this box is infinite in all directions
         */

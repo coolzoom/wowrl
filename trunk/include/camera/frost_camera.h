@@ -31,6 +31,15 @@ namespace Frost
         /// Destructor.
         ~Camera();
 
+        /// Projects a point of the 3D world on the screen.
+        /** \param mPoint The point to project
+        *   \return The projected vector
+        *   \note The position on the screen is described by (X,Y),
+        *         while the Z component stands for the distance to
+        *         the camera (in the [-1, 1] range).
+        */
+        Vector ProjectOnScreen(const Vector& mPoint) const;
+
         /// Checks if a point is visible by this Camera.
         /** \param mPoint The point to check
         *   \return 'true' if the point is visible by this Camera

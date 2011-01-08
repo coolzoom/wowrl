@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
 
             // Create Units
             s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", Character::GENDER_MALE);
-            pChar->Teleport(Vector(-22, 4.2f, -14));
+            pChar->Teleport(Vector(-40.0f, 6.0f, 40.0f));
 
             pChar->SetClass("MAGE");
             pChar->SetLevel(51);

@@ -212,6 +212,20 @@ namespace Frost
         */
         virtual void          Translate(const Vector& mTranslation, const s_bool& bLocalSpace = false);
 
+        /// Scales up or down this object.
+        /** \param mScale The scale vector
+        */
+        virtual void          Scale(const Vector& mScale);
+
+        /// Rotates this object around an arbitrary axis.
+        /** \param mAxis  The rotation axis
+        *   \param fAngle A non dimensional angle (1 = 2*PI rad = 360°)
+        *   \param bLocalSpace  If set to 'true', translation is done in
+        *                       the object's space instead of the world one.
+        *   \note Disables orbiting and path following.
+        */
+        virtual void          Rotate(const Vector& mAxis, const s_float& fAngle, const s_bool& bLocalSpace = false);
+
         /// Rotates this object around its local Z axis (up).
         /** \param fValue A non dimensional angle (1 = 2*PI rad = 360°)
         *   \note If orbiting is on, this functions rotates the object

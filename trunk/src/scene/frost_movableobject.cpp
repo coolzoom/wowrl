@@ -310,6 +310,29 @@ namespace Frost
         }
     }
 
+    void MovableObject::Scale( const Vector& mScale )
+    {
+        if (mScale != Vector::UNIT)
+        {
+            pNode_->scale(Vector::FrostToOgre(mScale));
+        }
+    }
+
+    void MovableObject::Rotate( const Vector& mAxis, const s_float& fAngle, const s_bool& bLocalSpace )
+    {
+        if (!fAngle.IsNull())
+        {
+            if (bLocalSpace)
+            {
+                pNode_->rotate(Vector::FrostToOgre(mAxis), Ogre::Radian(fAngle.GetRad().Get()), Ogre::SceneNode::TS_LOCAL);
+            }
+            else
+            {
+                pNode_->rotate(Vector::FrostToOgre(mAxis), Ogre::Radian(fAngle.GetRad().Get()), Ogre::SceneNode::TS_PARENT);
+            }
+        }
+    }
+
     void MovableObject::Yaw( const s_float& fValue )
     {
         if (bOrbits_)

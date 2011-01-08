@@ -163,6 +163,8 @@ namespace Frost
     protected :
 
         s_bool bIsStatic_;
+
+        AxisAlignedBox mTransformedBoundingBox_;
     };
 }
 

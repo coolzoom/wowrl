@@ -14,6 +14,7 @@
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "frost_inputmanager.h"
+#include "frost_editor.h"
 
 #include <OgreEntity.h>
 #include <OgreCamera.h>
@@ -123,16 +124,6 @@ namespace Frost
         }
     }
 
-    void Gizmo::SetTool( const Tool& mTool )
-    {
-        mTool_ = mTool;
-    }
-
-    const Gizmo::Tool& Gizmo::GetTool() const
-    {
-        return mTool_;
-    }
-
     void Gizmo::SetControlledObject( s_ptr<MovableObject> pObj )
     {
         pControlledObject_ = pObj;
@@ -212,9 +203,9 @@ namespace Frost
             lAxisList_[i].lDragPlaneList[1]->Update(fDelta);
         }
 
-        switch (mTool_)
+        switch (Editor::GetSingleton()->GetCurrentTool())
         {
-            case TOOL_MOVE :
+            case Editor::TOOL_MOVE :
             {
                 if (!pControlledObject_)
                     break;
@@ -277,9 +268,125 @@ namespace Frost
                             }
 
                             // Move the object
+                            mMovement = Transform(mMovement);
                             pControlledObject_->Translate(mMovement);
                             pAxis->mOldDragPos = mPos;
                         }
+                    }
+                }
+
+                break;
+            }
+            case Editor::TOOL_SCALE :
+            {
+                if (!pControlledObject_)
+                    break;
+
+                s_ctnr< s_ptr<Axis> > lDraggedList;
+                for (s_uint i = 0; i < 3; ++i)
+                {
+                    if (lAxisList_[i].bDragged)
+                        lDraggedList.PushBack(&lAxisList_[i]);
+                }
+
+                if (lDraggedList.GetSize() == 1)
+                {
+                    s_ptr<Axis> pAxis = lDraggedList.Back();
+
+                    // Calculate difference of distance between the mouse and the dragged axis
+                    Vector mMouse(
+                        InputManager::GetSingleton()->GetMousePosX()/s_float(Engine::GetSingleton()->GetScreenWidth()),
+                        InputManager::GetSingleton()->GetMousePosY()/s_float(Engine::GetSingleton()->GetScreenHeight()),
+                        0.0f
+                    );
+
+                    s_ptr<Camera> pMainCam = CameraManager::GetSingleton()->GetMainCamera();
+
+                    Vector mU1 = pMainCam->ProjectOnScreen(GetPosition(false));
+                    mU1.Z() = 0.0f;
+
+                    Vector mPos = mMouse - mU1;
+                    s_float fDistance = mPos.GetNorm();
+
+                    if (!pAxis->pDraggedPlane)
+                    {
+                        pAxis->pDraggedPlane = pAxis->lDragPlaneList[0];
+                        pAxis->fOldDistance = fDistance;
+                    }
+                    else
+                    {
+                        s_float fMovement = fDistance - pAxis->fOldDistance;
+
+                        // Scale the object
+                        pControlledObject_->Scale(Vector::UNIT*(1.0f + fMovement));
+
+                        pAxis->fOldDistance = fDistance;
+                    }
+                }
+
+                break;
+            }
+            case Editor::TOOL_ROTATE :
+            {
+                if (!pControlledObject_)
+                    break;
+
+                s_ctnr< s_ptr<Axis> > lDraggedList;
+                for (s_uint i = 0; i < 3; ++i)
+                {
+                    if (lAxisList_[i].bDragged)
+                        lDraggedList.PushBack(&lAxisList_[i]);
+                }
+
+                if (lDraggedList.GetSize() == 1)
+                {
+                    s_ptr<Axis> pAxis = lDraggedList.Back();
+
+                    // Calculate difference of distance between the mouse and the dragged axis
+                    Vector mMouse(
+                        InputManager::GetSingleton()->GetMousePosX()/s_float(Engine::GetSingleton()->GetScreenWidth()),
+                        InputManager::GetSingleton()->GetMousePosY()/s_float(Engine::GetSingleton()->GetScreenHeight()),
+                        0.0f
+                    );
+
+                    s_ptr<Camera> pMainCam = CameraManager::GetSingleton()->GetMainCamera();
+
+                    Vector mDir;
+                    if (pAxis->uiID == 0)      mDir = Vector::UNIT_X;
+                    else if (pAxis->uiID == 1) mDir = Vector::UNIT_Y;
+                    else if (pAxis->uiID == 2) mDir = Vector::UNIT_Z;
+
+                    Vector mU1 = pMainCam->ProjectOnScreen(GetPosition(false));
+                    mU1.Z() = 0.0f;
+                    Vector mU2 = pMainCam->ProjectOnScreen(GetPosition(false) + mDir);
+                    mU2.Z() = 0.0f;
+
+                    Vector mPDir = mU2 - mU1;
+                    mPDir.Normalize();
+
+                    Vector mPos = mMouse - mU1;
+                    Vector mProj = (mPDir*mPos)*mPDir;
+                    Vector mDist = mPos - mProj;
+
+                    s_float fDistance = mDist.GetNorm();
+
+                    Vector mLeft = mPDir^Vector::UNIT_Z;
+                    if (mDist*mLeft > 0)
+                        fDistance *= -1.0f;
+
+                    if (!pAxis->pDraggedPlane)
+                    {
+                        pAxis->pDraggedPlane = pAxis->lDragPlaneList[0];
+                        pAxis->fOldDistance = fDistance;
+                    }
+                    else
+                    {
+                        s_float fMovement = fDistance - pAxis->fOldDistance;
+
+                        // Rotate the object
+                        pControlledObject_->Rotate(mDir, fMovement, true);
+
+                        pAxis->fOldDistance = fDistance;
                     }
                 }
 

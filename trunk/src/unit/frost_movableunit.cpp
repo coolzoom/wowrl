@@ -39,7 +39,6 @@ namespace Frost
         {
             bFalling_ = true;
 
-            //pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 5.0f, 0));
             pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 7.2f, 0));
 
             if (pBodyModel_->HasAnimation())

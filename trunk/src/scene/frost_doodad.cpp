@@ -36,6 +36,8 @@ namespace Frost
             pModel_->SetOgreInterface(&mOgreInterface_);
             pEntity_ = pModel_->GetEntity();
         }
+
+        pNode_->setFixedYawAxis(false);
     }
 
     Doodad::~Doodad()
@@ -117,7 +119,6 @@ namespace Frost
         {
             pGizmo_ = SceneManager::GetSingleton()->CreateGizmo();
             pGizmo_->SetControlledObject(this);
-            pGizmo_->SetTool(Gizmo::TOOL_MOVE);
         }
 
         pGizmo_->Show();
