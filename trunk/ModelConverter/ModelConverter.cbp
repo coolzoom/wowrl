@@ -61,12 +61,14 @@
 		<Unit filename="include\m2loader.h" />
 		<Unit filename="include\m2modelstructs.h" />
 		<Unit filename="include\modeldata.h" />
+		<Unit filename="include\ogrexmlloader.h" />
 		<Unit filename="include\xmlloader.h" />
 		<Unit filename="src\fmloader.cpp" />
 		<Unit filename="src\ftloader.cpp" />
 		<Unit filename="src\m2loader.cpp" />
 		<Unit filename="src\main.cpp" />
 		<Unit filename="src\modeldata.cpp" />
+		<Unit filename="src\ogrexmlloader.cpp" />
 		<Unit filename="src\xmlloader.cpp" />
 		<Extensions>
 			<code_completion />
