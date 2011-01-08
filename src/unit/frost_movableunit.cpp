@@ -39,8 +39,8 @@ namespace Frost
         {
             bFalling_ = true;
 
-            //pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 4.4145f, 0));
-            pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 5.0f, 0));
+            //pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 5.0f, 0));
+            pHandler_->SetSpeed(mMovementSpeed_ + Vector(0, 7.2f, 0));
 
             if (pBodyModel_->HasAnimation())
             {
@@ -111,13 +111,10 @@ namespace Frost
     void MovableUnit::Update( const s_float& fDelta )
     {
         if (pHealthType_)
-        {
             pHealthType_->Update(fDelta);
-        }
+
         if (pPowerType_)
-        {
             pPowerType_->Update(fDelta);
-        }
 
         UpdateMovement_(fDelta);
 
@@ -334,17 +331,9 @@ namespace Frost
     void MovableUnit::RotateModel( const s_float& fYaw, const s_float& fPitch )
     {
         if (bCameraMovedAlone_)
-        {
-            Vector mDirection = pCamera_->GetDirection(false);
-            mDirection.Y() = 0.0f;
-            pNode_->SetDirection(mDirection);
-            bCameraMovedAlone_ = false;
             fCumuledYaw_ = 0.0f;
-        }
 
-        pNode_->Yaw(fYaw);
-        pCamera_->Yaw(fYaw);
-        pCamera_->Pitch(fPitch);
+        Unit::RotateModel(fYaw, fPitch);
     }
 
     void MovableUnit::CreateGlue( s_ptr<Lua::State> pLua )

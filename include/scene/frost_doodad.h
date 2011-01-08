@@ -64,6 +64,11 @@ namespace Frost
         /// Makes this Doodad collidable.
         void          EnableCollisions();
 
+        /// Checks if this Doodad can collide with the player.
+        /** \return 'true' if this Doodad can collide with the player
+        */
+        const s_bool& AreCollisionsEnabled() const;
+
         /// Makes this Doodad visible.
         void          Show();
 

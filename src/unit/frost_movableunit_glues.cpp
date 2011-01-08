@@ -129,6 +129,7 @@ namespace Frost
         method(MovableUnit, RotateModel),
         method(MovableUnit, SetAnim),
         method(MovableUnit, SetAttacking),
+        method(MovableUnit, SetPlayerControlled),
         method(MovableUnit, ZoomCamera),
 
         method(MovableUnit, Jump),

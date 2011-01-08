@@ -59,6 +59,13 @@ namespace Frost
         */
         const s_uint&         GetMaxCollisionRecursion() const;
 
+        /// Checks if the collision detection algorithm is run at a fixed rate.
+        /** \return 'true' if it is the case
+        *   \note See more comments about this feature in
+        *               MovableUnitHandler::Update().
+        */
+        const s_bool&         IsCollisionDetectionFixedRate() const;
+
         /// Adds a new obstacle to the scene.
         /** \param pObstacle The obstacle to add
         *   \note Automatically enables the obstacle.<br>
@@ -126,8 +133,9 @@ namespace Frost
         s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> > lHandlerList_;
         s_ctnr< s_ptr<Obstacle> >                            lObstacleList_;
 
-        Vector  mGravity_;
-        s_uint  uiMaxCollisionRecursion_;
+        Vector mGravity_;
+        s_uint uiMaxCollisionRecursion_;
+        s_bool bFixedRateCollisionDetection_;
 
     };
 }

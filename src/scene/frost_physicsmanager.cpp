@@ -18,7 +18,7 @@ namespace Frost
     const s_str PhysicsManager::CLASS_NAME = "PhysicsManager";
 
     PhysicsManager::PhysicsManager() :
-        mGravity_(0, -12.5f, 0), uiMaxCollisionRecursion_(5u)
+        mGravity_(0, -18.0f, 0), uiMaxCollisionRecursion_(5u), bFixedRateCollisionDetection_(true)
     {
     }
 
@@ -32,6 +32,9 @@ namespace Frost
         s_ptr<Engine> pEngine = Engine::GetSingleton();
         if (pEngine->IsConstantDefined("MaxCollisionRecursion"))
             uiMaxCollisionRecursion_ = pEngine->GetUIntConstant("MaxCollisionRecursion");
+
+        if (pEngine->IsConstantDefined("FixedRateCollisionDetection"))
+            bFixedRateCollisionDetection_ = pEngine->GetBoolConstant("FixedRateCollisionDetection");
 
         return true;
     }
@@ -73,6 +76,11 @@ namespace Frost
     const s_uint& PhysicsManager::GetMaxCollisionRecursion() const
     {
         return uiMaxCollisionRecursion_;
+    }
+
+    const s_bool& PhysicsManager::IsCollisionDetectionFixedRate() const
+    {
+        return bFixedRateCollisionDetection_;
     }
 
     void PhysicsManager::AddObstacle( s_ptr<Obstacle> pObstacle )

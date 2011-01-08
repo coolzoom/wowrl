@@ -48,6 +48,11 @@ namespace Frost
         bCollisionsEnabled_ = true;
     }
 
+    const s_bool& Doodad::AreCollisionsEnabled() const
+    {
+        return bCollisionsEnabled_;
+    }
+
     void Doodad::Show()
     {
         if (bCollisionsEnabled_)

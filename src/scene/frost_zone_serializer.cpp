@@ -170,7 +170,8 @@ namespace Frost
         {
             s_ptr<Doodad> pDoodad = iterDoodad->second;
             mFile.WriteLine("<Doodad name=\""+pDoodad->GetName()+"\" model=\""+pDoodad->GetModelName()+"\""+
-                            (pDoodad->IsShown() ? "" : "hidden=\"true\"")+">");
+                            (pDoodad->IsShown() ? "" : " hidden=\"true\"") +
+                            (pDoodad->AreCollisionsEnabled() ? " collisions=\"true\"" : "") + ">");
                 mFile.AddTab();
                 mFile.WriteLine(SerializeVector(pDoodad->GetPosition(false), "Position"));
                 mFile.WriteLine(SerializeVector(pDoodad->GetScale(false), "Scale"));
