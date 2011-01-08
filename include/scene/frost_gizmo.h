@@ -48,14 +48,6 @@ namespace Frost
     {
     public :
 
-        enum Tool
-        {
-            TOOL_NONE,
-            TOOL_MOVE,
-            TOOL_SCALE,
-            TOOL_ROTATE
-        };
-
         /// Constructor.
         Gizmo();
 
@@ -74,10 +66,6 @@ namespace Frost
         void Unlight(const s_char& cAxis);
 
         const s_bool& IsShown() const;
-
-        void SetTool(const Tool& mTool);
-
-        const Tool& GetTool() const;
 
         void SetControlledObject(s_ptr<MovableObject> pObj);
 
@@ -116,15 +104,15 @@ namespace Frost
             s_bool             bHighlighted;
             s_bool             bDragged;
 
-            s_array<s_refptr<PlaneObstacle>,2> lDragPlaneList;
+            s_array<s_refptr<PlaneObstacle>,3> lDragPlaneList;
             s_wptr<PlaneObstacle>              pDraggedPlane;
             Vector                             mOldDragPos;
+            s_float                            fOldDistance;
         };
 
         s_array<Axis,3> lAxisList_;
         s_bool          bIsShown_;
 
-        Tool                 mTool_;
         s_ptr<MovableObject> pControlledObject_;
     };
 }

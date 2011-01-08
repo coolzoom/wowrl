@@ -32,6 +32,14 @@ namespace Frost
         pSceneManager_->destroyCamera(pOgreCamera_.Get());
     }
 
+    Vector Camera::ProjectOnScreen( const Vector& mPoint ) const
+    {
+        Ogre::Matrix4 mViewProj = pOgreCamera_->getProjectionMatrix() * pOgreCamera_->getViewMatrix();
+        Ogre::Vector4 mProj = mViewProj * Ogre::Vector4(Vector::FrostToOgre(mPoint));
+
+        return Vector(mProj.x * 0.5f / mProj.w + 0.5f, 1.0f - (mProj.y * 0.5f / mProj.w + 0.5f), mProj.z/mProj.w);
+    }
+
     s_bool Camera::IsVisible( const Vector& mPoint ) const
     {
         return pOgreCamera_->isVisible(Vector::FrostToOgre(mPoint));

@@ -60,16 +60,12 @@ namespace Frost
 
     s_bool MovableObstacle::IsInBoundingBox( const Vector& mPoint ) const
     {
-        AxisAlignedBox mTemp = mBoundingBox_;
-        mTemp = mTemp + GetPosition(false);
-        return mTemp.Contains(mPoint);
+        return mTransformedBoundingBox_.Contains(mPoint);
     }
 
     s_bool MovableObstacle::IsInBoundingBox( const AxisAlignedBox& mBox ) const
     {
-        AxisAlignedBox mTemp = mBoundingBox_;
-        mTemp = mTemp + GetPosition(false);
-        return mTemp.Contains(mBox);
+        return mTransformedBoundingBox_.Contains(mBox);
     }
 
     void MovableObstacle::ForceUpdate()
@@ -79,5 +75,25 @@ namespace Frost
     void MovableObstacle::Update( const s_float& fDelta )
     {
         MovableObject::Update(fDelta);
+
+        mTransformedBoundingBox_ = AxisAlignedBox();
+        Vector mScale = GetScale(false);
+        Vector mPos = GetPosition(false);
+
+        for (int i = 0; i < 8; ++i)
+        {
+            Vector mVec = Transform(mBoundingBox_[i]);
+            mVec.ScaleUp(mScale);
+            mVec += mPos;
+
+            if (mTransformedBoundingBox_.IsInfinite())
+            {
+                mTransformedBoundingBox_ = AxisAlignedBox(mVec, mVec);
+            }
+            else
+            {
+                mTransformedBoundingBox_.Include(mVec);
+            }
+        }
     }
 }

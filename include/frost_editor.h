@@ -27,6 +27,14 @@ namespace Frost
     friend class Manager<Editor>;
     public :
 
+        enum Tool
+        {
+            TOOL_NONE,
+            TOOL_MOVE,
+            TOOL_SCALE,
+            TOOL_ROTATE
+        };
+
         /// Initializes the Editor.
         void Initialize();
 
@@ -62,6 +70,16 @@ namespace Frost
 
         /// Closes the current Zone.
         void CloseZone();
+
+        /// Sets the new tool to use.
+        /** \param mTool The tool to use (see Editor::Tool)
+        */
+        void SetCurrentTool(const Tool& mTool);
+
+        /// Returns the tool that is currently selected.
+        /** \return The tool that is currently selected
+        */
+        const Tool& GetCurrentTool() const;
 
         /// Adds a new Doodad in the current Zone.
         /** \param sName  The name of the Doodad
@@ -118,6 +136,8 @@ namespace Frost
         s_str       sCurrentZoneFile_;
         s_bool      bZoneSaved_;
 
+        Tool mTool_;
+
         s_ctnr< s_refptr<EditorAction> >           lHistoryList_;
         s_ctnr< s_refptr<EditorAction> >::iterator iterAction_;
     };
@@ -145,6 +165,7 @@ namespace Frost
         int _RegisterNewModel(lua_State*);
         int _SaveZone(lua_State*);
         int _SetBackgroundColor(lua_State*);
+        int _SetCurrentTool(lua_State*);
         int _SetModelMaterial(lua_State*);
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);

@@ -1,0 +1,155 @@
+<Ui>
+    <Frame name="ToolBox" parent="UIParent">
+        <Size>
+            <AbsDimension x="64" y="128"/>
+        </Size>
+        <Anchors>
+            <Anchor point="LEFT"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this.normalBgColor   = Color(0.75, 0.75, 0.75);
+
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self.Background:SetVertexColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    AddOns.Editor:CallColorFunctions(this);
+                    this.checkedTool = this.Move;
+                    this.checkedTool:SetChecked(true);
+                    Editor:SetCurrentTool("MOVE");
+                end
+            </OnEvent>
+        </Scripts>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parentBackground" file="|ToolBoxBackground.png" setAllPoints="true"/>
+            </Layer>
+            <Layer level="BORDER">
+                <Texture name="$parentBorder" file="|ToolBoxBorder.png" setAllPoints="true"/>
+            </Layer>
+        </Layers>
+        <Frames>
+            <CheckButton name="$parentMove" checked="true">
+                <Size>
+                    <AbsDimension x="32" y="32"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="4" y="12"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <NormalTexture file="|MoveButton.png"/>
+                <HighlightTexture file="|HighlightedTool.png" setAllPoints="false">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </HighlightTexture>
+                <CheckedTexture file="|SelectedTool.png" setAllPoints="false">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </CheckedTexture>
+                <Scripts>
+                    <OnClick>
+                        if (ToolBox.checkedTool ~= this) then
+                            ToolBox.checkedTool:SetChecked(false);
+                            ToolBox.checkedTool = this;
+                            Editor:SetCurrentTool("MOVE");
+                        else
+                            this:SetChecked(true);
+                        end
+                    </OnClick>
+                </Scripts>
+            </CheckButton>
+            <CheckButton name="$parentScale">
+                <Size>
+                    <AbsDimension x="32" y="32"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentMove">
+                        <Offset> <AbsDimension y="4"/> </Offset>
+                    </Anchor>
+                </Anchors>
+                <NormalTexture file="|ScaleButton.png"/>
+                <HighlightTexture file="|HighlightedTool.png" setAllPoints="false">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </HighlightTexture>
+                <CheckedTexture file="|SelectedTool.png" setAllPoints="false">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </CheckedTexture>
+                <Scripts>
+                    <OnClick>
+                        if (ToolBox.checkedTool ~= this) then
+                            ToolBox.checkedTool:SetChecked(false);
+                            ToolBox.checkedTool = this;
+                            Editor:SetCurrentTool("SCALE");
+                        else
+                            this:SetChecked(true);
+                        end
+                    </OnClick>
+                </Scripts>
+            </CheckButton>
+            <CheckButton name="$parentRotate">
+                <Size>
+                    <AbsDimension x="32" y="32"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativePoint="BOTTOM" relativeTo="$parentScale">
+                        <Offset> <AbsDimension y="4"/> </Offset>
+                    </Anchor>
+                </Anchors>
+                <NormalTexture file="|RotateButton.png"/>
+                <HighlightTexture file="|HighlightedTool.png" setAllPoints="false">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </HighlightTexture>
+                <CheckedTexture file="|SelectedTool.png" setAllPoints="false">
+                    <Size>
+                        <AbsDimension x="64" y="64"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </CheckedTexture>
+                <Scripts>
+                    <OnClick>
+                        if (ToolBox.checkedTool ~= this) then
+                            ToolBox.checkedTool:SetChecked(false);
+                            ToolBox.checkedTool = this;
+                            Editor:SetCurrentTool("ROTATE");
+                        else
+                            this:SetChecked(true);
+                        end
+                    </OnClick>
+                </Scripts>
+            </CheckButton>
+        </Frames>
+    </Frame>
+</Ui>

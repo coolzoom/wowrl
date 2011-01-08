@@ -379,6 +379,35 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_SetCurrentTool( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:SetCurrentTool", pLua);
+        mFunc.Add(0, "tool", Lua::TYPE_STRING);
+
+        if (mFunc.Check())
+        {
+            Editor::Tool mTool;
+            s_str sTool = mFunc.Get(0)->GetString();
+
+            if (sTool == "MOVE")
+                mTool = Editor::TOOL_MOVE;
+            else if (sTool == "SCALE")
+                mTool = Editor::TOOL_SCALE;
+            else if (sTool == "ROTATE")
+                mTool = Editor::TOOL_ROTATE;
+            else
+            {
+                Warning(mFunc.GetName(), "Unknown tool : \""+sTool+"\".");
+                return mFunc.Return();
+
+            }
+
+            pEditor_->SetCurrentTool(mTool);
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_SetModelMaterial( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:RegisterNewModel", pLua, 1);
@@ -436,6 +465,7 @@ namespace Frost
         method(Editor, RegisterNewModel),
         method(Editor, SaveZone),
         method(Editor, SetBackgroundColor),
+        method(Editor, SetCurrentTool),
         method(Editor, SetModelMaterial),
         method(Editor, ToggleShading),
         method(Editor, ToggleWireframeView),

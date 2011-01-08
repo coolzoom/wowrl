@@ -107,13 +107,24 @@ namespace Frost
 
     s_bool AxisAlignedBox::Contains(const AxisAlignedBox& mBox) const
     {
-        for (uint ui = 0; ui < 8; ++ui)
-        {
-            if (this->Contains(mBox[ui]))
-                return true;
-        }
+        if (IsInfinite() || mBox.IsInfinite())
+            return true;
 
-        return false;
+        if (mMax_.X() < mBox.mMin_.X())
+            return false;
+        if (mMax_.Y() < mBox.mMin_.Y())
+            return false;
+        if (mMax_.Z() < mBox.mMin_.Z())
+            return false;
+
+        if (mMin_.X() > mBox.mMax_.X())
+            return false;
+        if (mMin_.Y() > mBox.mMax_.Y())
+            return false;
+        if (mMin_.Z() > mBox.mMax_.Z())
+            return false;
+
+        return true;
     }
 
     s_bool AxisAlignedBox::Contains(const Vector& mPoint) const
@@ -121,6 +132,17 @@ namespace Frost
         return (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) &&
                 mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()) &&
                 mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()));
+    }
+
+    void AxisAlignedBox::Include( const Vector& mPoint )
+    {
+        mMax_.X() = s_float::Max(mMax_.X(), mPoint.X());
+        mMax_.Y() = s_float::Max(mMax_.Y(), mPoint.Y());
+        mMax_.Z() = s_float::Max(mMax_.Z(), mPoint.Z());
+
+        mMin_.X() = s_float::Min(mMin_.X(), mPoint.X());
+        mMin_.Y() = s_float::Min(mMin_.Y(), mPoint.Y());
+        mMin_.Z() = s_float::Min(mMin_.Z(), mPoint.Z());
     }
 
     s_bool AxisAlignedBox::IsInfinite() const

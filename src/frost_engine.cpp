@@ -25,6 +25,7 @@
 #include "scene/frost_zonemanager.h"
 #include "camera/frost_camera.h"
 #include "gui/frost_modelframe.h"
+#include <frost_sprite.h>
 #include "lua/frost_lua.h"
 
 #include <OgreRoot.h>

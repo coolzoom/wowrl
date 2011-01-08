@@ -64,6 +64,16 @@ namespace Frost
         }
     }
 
+    void Editor::SetCurrentTool( const Tool& mTool )
+    {
+        mTool_ = mTool;
+    }
+
+    const Editor::Tool& Editor::GetCurrentTool() const
+    {
+        return mTool_;
+    }
+
     const s_bool& Editor::IsZoneSaved()
     {
         return bZoneSaved_;

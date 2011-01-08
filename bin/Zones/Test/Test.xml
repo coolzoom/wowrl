@@ -52,14 +52,34 @@
     
     <Doodads>
         <Doodad name="Castle" model="Castle" collisions="true">
-            <Position x="-32.4903" y="5.5656" z="-27.643"/>
+            <Position x="-60.2942" y="7.7663" z="46.6543"/>
             <Scale x="0.8" y="0.8" z="0.8"/>
-            <Orientation x="0" y="0" z="0" w="1"/>
+            <Orientation x="0.0301315" y="0.868931" z="-0.0199518" w="0.493607"/>
         </Doodad>
         <Doodad name="Tree" model="Tree" collisions="true">
-            <Position x="-3.11682" y="-1.16752" z="-16.6649"/>
+            <Position x="-85.8917" y="3.37476" z="29.3767"/>
             <Scale x="0.2" y="0.2" z="0.2"/>
-            <Orientation x="0" y="0" z="0" w="1"/>
+            <Orientation x="-0.00677061" y="-0.924054" z="0.00280033" w="0.382189"/>
+        </Doodad>
+        <Doodad name="Tree1" model="Tree" collisions="true">
+            <Position x="-100.384" y="1.35215" z="17.3903"/>
+            <Scale x="0.124935" y="0.124935" z="0.124935"/>
+            <Orientation x="-0.0588954" y="-0.25127" z="0.0153195" w="0.966002"/>
+        </Doodad>
+        <Doodad name="Tree2" model="Tree" collisions="true">
+            <Position x="-92.9034" y="1.65629" z="24.7956"/>
+            <Scale x="0.188691" y="0.188691" z="0.188691"/>
+            <Orientation x="0" y="-0.585097" z="0" w="0.810963"/>
+        </Doodad>
+        <Doodad name="Tree3" model="Tree" collisions="true">
+            <Position x="-72.8499" y="2.07742" z="36.2946"/>
+            <Scale x="0.237293" y="0.237293" z="0.237293"/>
+            <Orientation x="0" y="0" z="-0.0624259" w="0.99805"/>
+        </Doodad>
+        <Doodad name="Tree4" model="Tree" collisions="true">
+            <Position x="-86.5143" y="1.66372" z="14.8962"/>
+            <Scale x="0.138942" y="0.138942" z="0.138942"/>
+            <Orientation x="0" y="0" z="-0.0197913" w="0.999803"/>
         </Doodad>
     </Doodads>
     
