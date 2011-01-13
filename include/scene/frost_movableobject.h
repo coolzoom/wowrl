@@ -169,13 +169,10 @@ namespace Frost
         virtual void          SetDirection(const Vector& mDirection);
 
         /// Orientates the object to a certain direction.
-        /** \param fX The first coordinate of the quaternion
-        *   \param fY The second coordinate of the quaternion
-        *   \param fZ The third coordinate of the quaternion
-        *   \param fW The fourth coordinate of the quaternion
+        /** \param mOrientation The quaternion containing orientation
         *   \note Disables orbiting and tracking.
         */
-        virtual void          SetOrientation(const s_float& fX, const s_float& fY, const s_float& fZ, const s_float& fW);
+        virtual void          SetOrientation(const Ogre::Quaternion& mOrientation);
 
         /// Sets this object's scale.
         /** \param mScale The new scale

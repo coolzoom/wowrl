@@ -34,7 +34,7 @@ namespace Frost
         }
     }
 
-    void ModelData::CreateBuffers_( Ogre::SubMesh* pSub, uint uiVertexNbr, uint uiIndexNbr, float* lVertices, float* lUVs, ushort* lIndices )
+    void ModelData::CreateBuffers_( const s_uint& uiSubID, Ogre::SubMesh* pSub, uint uiVertexNbr, uint uiIndexNbr, float* lVertices, float* lUVs, ushort* lIndices )
     {
         Ogre::VertexData* pData = new Ogre::VertexData();
         pSub->vertexData = pData;
@@ -71,8 +71,14 @@ namespace Frost
         );
         pIBuf->writeData(0, pIBuf->getSizeInBytes(), lIndices, true);
 
-        lTriangleList_.Reserve(uiIndexNbr/3);
+        pSub->indexData->indexBuffer = pIBuf;
+        pSub->indexData->indexCount = uiIndexNbr;
+        pSub->indexData->indexStart = 0;
+
+        // Build triangle list for collision
         MeshObstacle::Triangle mTri;
+        s_array<MeshObstacle::Triangle>& lArray = lTriangleList_[uiSubID];
+        lArray.Reserve(uiIndexNbr/3);
         for (uint i = 0; i < uiIndexNbr; i += 3)
         {
             ushort i1 = lIndices[i+0];
@@ -82,11 +88,17 @@ namespace Frost
             mTri.mP[0] = Vector(lVertices[i1*6+0], lVertices[i1*6+1], lVertices[i1*6+2]);
             mTri.mP[1] = Vector(lVertices[i2*6+0], lVertices[i2*6+1], lVertices[i2*6+2]);
             mTri.mP[2] = Vector(lVertices[i3*6+0], lVertices[i3*6+1], lVertices[i3*6+2]);
-            lTriangleList_.PushBack(mTri);
+            lArray.PushBack(mTri);
         }
 
-        pSub->indexData->indexBuffer = pIBuf;
-        pSub->indexData->indexCount = uiIndexNbr;
-        pSub->indexData->indexStart = 0;
+        // Build local bounding box
+        AxisAlignedBox& mBox = lBoxList_[uiSubID];
+        Vector mVec(lVertices[0], lVertices[1], lVertices[2]);
+        mBox.SetMin(mVec);
+        mBox.SetMax(mVec);
+        for (uint i = 6; i < uiVertexNbr; ++i)
+        {
+            mBox.Include(Vector(lVertices[i*6+0], lVertices[i*6+1], lVertices[i*6+2]));
+        }
     }
 }

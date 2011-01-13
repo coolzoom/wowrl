@@ -41,7 +41,7 @@ namespace Frost
 
     protected :
 
-        void CreateBuffers_(Ogre::SubMesh* pSub, uint iVertexNbr, uint iIndexNbr, float* lVertices, float* lUVs, ushort* lIndices);
+        void CreateBuffers_( const s_uint& uiSubID, Ogre::SubMesh* pSub, uint iVertexNbr, uint iIndexNbr, float* lVertices, float* lUVs, ushort* lIndices);
 
         s_ptr<Ogre::Mesh> pMesh_;
         s_str             sModelName_;
@@ -49,7 +49,8 @@ namespace Frost
         s_map< s_uint, s_ptr<ModelPart> > lModelPartList_;
         s_map<s_uint, MeshAnimation>      lAnimList_;
 
-        s_array<MeshObstacle::Triangle> lTriangleList_;
+        s_map< s_uint, s_array<MeshObstacle::Triangle> > lTriangleList_;
+        s_map< s_uint, AxisAlignedBox >                  lBoxList_;
 
     };
 }

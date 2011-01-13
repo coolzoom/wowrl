@@ -178,7 +178,18 @@ namespace Frost
         Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
         // Create Ogre's scene manager
-        pOgreSceneMgr_ = pRoot_->createSceneManager(Ogre::ST_GENERIC, "FrostSceneMgr");
+        if (GetBoolConstant("OctreeSceneManager"))
+        {
+            #ifdef _DEBUG
+                pRoot_->loadPlugin("Plugin_OctreeSceneManager_d");
+            #else
+                pRoot_->loadPlugin("Plugin_OctreeSceneManager");
+            #endif
+
+            pOgreSceneMgr_ = pRoot_->createSceneManager("OctreeSceneManager", "FrostSceneMgr");
+        }
+        else
+            pOgreSceneMgr_ = pRoot_->createSceneManager(Ogre::ST_GENERIC, "FrostSceneMgr");
 
         // Load shaders
         pShaderMgr_->LoadShaders();
@@ -328,7 +339,8 @@ namespace Frost
                 Log("    Best FPS : "+ pTimeMgr_->GetBestFPS());
                 Log("    Worst FPS : "+ pTimeMgr_->GetWorstFPS()+"\n");
 
-                pGUIMgr_->PrintStatistics();
+                if (pGUIMgr_)
+                    pGUIMgr_->PrintStatistics();
 
                 Log("");
 

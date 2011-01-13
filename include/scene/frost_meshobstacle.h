@@ -60,6 +60,19 @@ namespace Frost
             Vector& mIntersection
         ) const;
 
+        /// Updates this MovableObstacle once.
+        /** \note Only needed if the obstacle is static,
+        *         you may need to update it at least once.<br>
+        *         If not implemented by the derived class, this
+        *         function has no effect.
+        */
+        virtual void ForceUpdate();
+
+        /// Update this object's parameters.
+        /** \param fDelta The time elapsed since the last call
+        */
+        virtual void Update(const s_float& fDelta);
+
         static const s_str CLASS_NAME;
 
     private :

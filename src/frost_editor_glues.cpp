@@ -57,6 +57,24 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_CanRedo( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:CanRedo", pLua, 1);
+
+        mFunc.Push(pEditor_->CanRedo());
+
+        return mFunc.Return();
+    }
+
+    int LuaEditor::_CanUndo( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:CanUndo", pLua, 1);
+
+        mFunc.Push(pEditor_->CanUndo());
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_GetCurrentZoneFile( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:GetCurrentZoneFile", pLua, 1);
@@ -281,6 +299,15 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_Redo( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:Redo", pLua, 1);
+
+        mFunc.Push(pEditor_->Redo());
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_SaveZone( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:SaveZone", pLua, 2);
@@ -438,6 +465,15 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_Undo( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:Undo", pLua, 1);
+
+        mFunc.Push(pEditor_->Undo());
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::GetDataTable( lua_State* pLua )
     {
         lua_getref(pLua, iRef_);
@@ -450,6 +486,8 @@ namespace Frost
         {"dt", &LuaEditor::GetDataTable},
 
         method(Editor, AddDoodad),
+        method(Editor, CanRedo),
+        method(Editor, CanUndo),
         method(Editor, GetCurrentZoneFile),
         method(Editor, GetBackgroundColor),
         method(Editor, GetModelFile),
@@ -462,6 +500,7 @@ namespace Frost
         method(Editor, LoadZoneFile),
         method(Editor, NewZone),
         method(Editor, NotifyDoodadPositioned),
+        method(Editor, Redo),
         method(Editor, RegisterNewModel),
         method(Editor, SaveZone),
         method(Editor, SetBackgroundColor),
@@ -470,6 +509,7 @@ namespace Frost
         method(Editor, ToggleShading),
         method(Editor, ToggleWireframeView),
         method(Editor, UnloadZone),
+        method(Editor, Undo),
 
         {0,0}
     };

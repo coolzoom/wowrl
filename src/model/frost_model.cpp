@@ -53,13 +53,17 @@ namespace Frost
         }
 
         if (pMesh_)
-        {
             mBoundingBox_ = AxisAlignedBox::OgreToFrost(pMesh_->getBounds());
-        }
     }
 
     Model::~Model()
     {
+        s_map< s_uint, s_ptr<Obstacle> >::iterator iterObs;
+        foreach (iterObs, lObstacleList_)
+        {
+            iterObs->second.Delete();
+        }
+
         s_map< s_uint, s_ptr<ModelPart> >::iterator iterPart;
         foreach (iterPart, lModelPartList_)
         {
@@ -134,7 +138,6 @@ namespace Frost
         pEntity_->setVisible(false);
     }
 
-
     void Model::Highlight()
     {
         if (!bHighlighted_)
@@ -165,7 +168,6 @@ namespace Frost
                 iterMP->second->Unlight();
             }
         }
-
     }
 
     const s_bool& Model::HasAnimation() const
@@ -178,16 +180,42 @@ namespace Frost
         return pAnimMgr_;
     }
 
-    void Model::CreateObstacle()
+    void Model::CreateObstacles()
     {
-        s_ptr<MeshObstacle> pObs = new MeshObstacle(pModelData_->lTriangleList_, mBoundingBox_);
-        pObs->AttachTo(this);
-        pObstacle_ = pObs;
+        s_map< s_uint, s_ptr<ModelPart> >::const_iterator iterMP;
+        foreach (iterMP, lModelPartList_)
+        {
+            CreateObstacle(iterMP->first);
+        }
     }
 
-    s_ptr<Obstacle> Model::GetObstacle() const
+    void Model::CreateObstacle( const s_uint& uiSubMeshID )
     {
-        return pObstacle_;
+        if (lObstacleList_[uiSubMeshID] == nullptr)
+        {
+            s_ptr<MeshObstacle> pObs = new MeshObstacle(
+                pModelData_->lTriangleList_.Get(uiSubMeshID)->second,
+                pModelData_->lBoxList_.Get(uiSubMeshID)->second
+            );
+
+            pObs->AttachTo(this);
+
+            lObstacleList_[uiSubMeshID] = pObs;
+        }
+    }
+
+    s_ptr<Obstacle> Model::GetObstacle( const s_uint& uiSubMeshID ) const
+    {
+        s_map< s_uint, s_ptr<Obstacle> >::const_iterator iter = lObstacleList_.Get(uiSubMeshID);
+        if (iter != lObstacleList_.End())
+            return iter->second;
+        else
+            return nullptr;
+    }
+
+    const s_map< s_uint, s_ptr<Obstacle> >& Model::GetObstacleList() const
+    {
+        return lObstacleList_;
     }
 
     void Model::SetMaterial( s_refptr<Material> pMat )

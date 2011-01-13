@@ -79,23 +79,7 @@ namespace Frost
         // Improved Collision Detection and Response,
         // by Kasper Fauerby on 25th July 2003.
 
-        // First, transform the obstacle according to the matrix of
-        // the model it is linked to
-        Ogre::Matrix4 mTransform = pNode_->_getFullTransform();
-
-        if (mTransform != mTransform_)
-        {
-            mTransform_ = mTransform;
-            s_array<MeshObstacle::Triangle>::iterator iterTriangle;
-            foreach (iterTriangle, lTransformedTriangleArray_)
-            {
-                iterTriangle->mP[0] = mTransform_ * iterTriangle->mP[0];
-                iterTriangle->mP[1] = mTransform_ * iterTriangle->mP[1];
-                iterTriangle->mP[2] = mTransform_ * iterTriangle->mP[2];
-            }
-        }
-
-        // Then, convert world coordinates to ellipsoid coordinates
+        // First convert world coordinates to ellipsoid coordinates
         Vector mPosition = mPreviousPos;
         mPosition.ScaleDown(mRadiusVector);
 
@@ -130,13 +114,10 @@ namespace Frost
             mPlaneNormal = (mTriangle.mP[1] - mTriangle.mP[0])^(mTriangle.mP[2] - mTriangle.mP[0]);
             mPlaneNormal.Normalize();
 
-            // Always orient the plane normal toward the object
+            // Discard faces that are backfacing
             fSignedDistance = mPlaneNormal*(mPosition - mTriangle.mP[0]);
             if (fSignedDistance < 0.0f)
-            {
-                mPlaneNormal    *= -1.0f;
-                fSignedDistance *= -1.0f;
-            }
+                continue;
 
             fNormDotDist = mPlaneNormal*mDistance;
 
@@ -267,5 +248,44 @@ namespace Frost
         const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection ) const
     {
         return false;
+    }
+
+    void MeshObstacle::ForceUpdate()
+    {
+        Ogre::Matrix4 mTransform = pNode_->_getFullTransform();
+
+        if (mTransform != mTransform_)
+        {
+            mTransform_ = mTransform;
+            s_array<MeshObstacle::Triangle>::iterator iterTriangle;
+            foreach (iterTriangle, lTransformedTriangleArray_)
+            {
+                iterTriangle->mP[0] = mTransform_ * iterTriangle->mP[0];
+                iterTriangle->mP[1] = mTransform_ * iterTriangle->mP[1];
+                iterTriangle->mP[2] = mTransform_ * iterTriangle->mP[2];
+            }
+        }
+    }
+
+    void MeshObstacle::Update( const s_float& fDelta )
+    {
+        MovableObstacle::Update(fDelta);
+
+        if (!bIsStatic_)
+        {
+            Ogre::Matrix4 mTransform = pNode_->_getFullTransform();
+
+            if (mTransform != mTransform_)
+            {
+                mTransform_ = mTransform;
+                s_array<MeshObstacle::Triangle>::iterator iterTriangle;
+                foreach (iterTriangle, lTransformedTriangleArray_)
+                {
+                    iterTriangle->mP[0] = mTransform_ * iterTriangle->mP[0];
+                    iterTriangle->mP[1] = mTransform_ * iterTriangle->mP[1];
+                    iterTriangle->mP[2] = mTransform_ * iterTriangle->mP[2];
+                }
+            }
+        }
     }
 }

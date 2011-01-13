@@ -36,6 +36,9 @@ namespace Frost
         if (pEngine->IsConstantDefined("FixedRateCollisionDetection"))
             bFixedRateCollisionDetection_ = pEngine->GetBoolConstant("FixedRateCollisionDetection");
 
+        if (pEngine->IsConstantDefined("CollisionDetectionRate"))
+            fCollisionDetectionRate_ = pEngine->GetFloatConstant("CollisionDetectionRate");
+
         return true;
     }
 
@@ -81,6 +84,11 @@ namespace Frost
     const s_bool& PhysicsManager::IsCollisionDetectionFixedRate() const
     {
         return bFixedRateCollisionDetection_;
+    }
+
+    const s_float& PhysicsManager::GetCollisionDetectionRate() const
+    {
+        return fCollisionDetectionRate_;
     }
 
     void PhysicsManager::AddObstacle( s_ptr<Obstacle> pObstacle )

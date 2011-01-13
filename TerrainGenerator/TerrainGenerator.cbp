@@ -44,6 +44,7 @@
 			<Add directory="..\dependencies\CImg" />
 			<Add directory="..\..\libpng" />
 			<Add directory="..\..\zlib123" />
+			<Add directory="..\..\boost_1_43_0" />
 		</Compiler>
 		<Linker>
 			<Add option="-Wl,--enable-runtime-pseudo-reloc" />

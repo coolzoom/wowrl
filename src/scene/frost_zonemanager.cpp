@@ -12,6 +12,8 @@
 #include "model/frost_modelmanager.h"
 #include "camera/frost_cameramanager.h"
 #include "scene/frost_lightmanager.h"
+#include "scene/frost_scenemanager.h"
+#include "scene/frost_doodad.h"
 #include "material/frost_decal.h"
 #include "frost_inputmanager.h"
 
@@ -237,5 +239,29 @@ namespace Frost
         {
 
         }
+    }
+
+    AddDoodadAction::AddDoodadAction(const s_str& sName, const s_str& sModel) :
+        sName_(sName), sModel_(sModel)
+    {
+    }
+
+    void AddDoodadAction::Do()
+    {
+        s_ptr<Zone> pZone = ZoneManager::GetSingleton()->GetCurrentZone();
+        if (!pZone)
+            throw Exception("No Zone loaded, can't create doodad.");
+
+        s_ptr<Doodad> pDoodad = pZone->AddDoodad(sName_, sModel_);
+
+        if (pDoodad)
+            SceneManager::GetSingleton()->StartMoving(pDoodad, Vector::CONSTRAINT_NONE, true);
+
+        EventManager::GetSingleton()->FireEvent(Event("DOODAD_ADDED"));
+    }
+
+    void AddDoodadAction::Undo()
+    {
+        // TODO : # Implement AddDoodad::Undo.
     }
 }

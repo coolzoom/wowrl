@@ -47,6 +47,7 @@ end);
 -- FILE / SAVE
 function FileSave()
     Editor:SaveZone();
+    AddOns.Editor:NotifyDataSaved();
 end
 
 local item = MenuBar:AddMenuItem("File", "Save", "Ctrl-S");
@@ -79,6 +80,7 @@ function FileSaveAs()
     FileSelector:SelectFolder("Zones");
     FileSelector:SetOnOkFunc(function()
         Editor:SaveZone(FileSelector:GetSelectedFile());
+        AddOns.Editor:NotifyDataSaved();
     end);
 end
 

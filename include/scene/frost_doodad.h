@@ -131,6 +131,7 @@ namespace Frost
         s_refptr<Model>     pModel_;
         DoodadOgreInterface mOgreInterface_;
         s_bool              bCollisionsEnabled_;
+        s_bool              bObstacleUpdated_;
 
         s_ptr<Gizmo> pGizmo_;
     };

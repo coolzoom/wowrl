@@ -253,12 +253,12 @@ namespace Frost
         }
     }
 
-    void MovableObject::SetOrientation( const s_float& fX, const s_float& fY, const s_float& fZ, const s_float& fW )
+    void MovableObject::SetOrientation( const Ogre::Quaternion& mOrientation )
     {
         UnlockOrbiting();
         UnlockTracking();
 
-        pNode_->setOrientation(fW.Get(), fX.Get(), fY.Get(), fZ.Get());
+        pNode_->setOrientation(mOrientation);
     }
 
     void MovableObject::SetInitialDirection( const Vector& mInitialDirection )

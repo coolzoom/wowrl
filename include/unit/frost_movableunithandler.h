@@ -117,8 +117,6 @@ namespace Frost
         CollisionData   mData_;
 
         s_float fTimeSinceLastUpdate_;
-
-        static const s_float fTimeBetweenUpdates_;
     };
 }
 

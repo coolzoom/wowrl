@@ -213,7 +213,7 @@ namespace Frost
             ushort* lSubIndices = new ushort[mMSM.nIndice];
             mFile.Read(lSubIndices, mMSM.nIndice*sizeof(ushort));
 
-            CreateBuffers_(pSub, mMSM.nVertex, mMSM.nIndice, lSubVertices, lSubUVs, lSubIndices);
+            CreateBuffers_(mMSM.id, pSub, mMSM.nVertex, mMSM.nIndice, lSubVertices, lSubUVs, lSubIndices);
 
             pSub->_compileBoneAssignments();
 

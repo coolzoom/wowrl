@@ -46,7 +46,15 @@ namespace Frost
 
     void Doodad::EnableCollisions()
     {
-        pModel_->CreateObstacle();
+        pModel_->CreateObstacles();
+
+        s_map< s_uint, s_ptr<Obstacle> >::const_iterator iterObs;
+        foreach (iterObs, pModel_->GetObstacleList())
+        {
+            s_ptr<MovableObstacle> pObs = s_ptr<MovableObstacle>::DynamicCast(iterObs->second);
+            pObs->SetStatic(true);
+        }
+
         bCollisionsEnabled_ = true;
     }
 
@@ -58,7 +66,13 @@ namespace Frost
     void Doodad::Show()
     {
         if (bCollisionsEnabled_)
-            PhysicsManager::GetSingleton()->AddObstacle(pModel_->GetObstacle());
+        {
+            s_map< s_uint, s_ptr<Obstacle> >::const_iterator iterObs;
+            foreach (iterObs, pModel_->GetObstacleList())
+            {
+                PhysicsManager::GetSingleton()->AddObstacle(iterObs->second);
+            }
+        }
 
         bIsShown_ = true;
         if (pModel_)
@@ -68,7 +82,13 @@ namespace Frost
     void Doodad::Hide()
     {
         if (bCollisionsEnabled_)
-            PhysicsManager::GetSingleton()->RemoveObstacle(pModel_->GetObstacle());
+        {
+            s_map< s_uint, s_ptr<Obstacle> >::const_iterator iterObs;
+            foreach (iterObs, pModel_->GetObstacleList())
+            {
+                PhysicsManager::GetSingleton()->RemoveObstacle(iterObs->second);
+            }
+        }
 
         bIsShown_ = false;
         if (pModel_)
@@ -135,7 +155,20 @@ namespace Frost
         MovableObject::Update(fDelta);
 
         if (pModel_)
+        {
             pModel_->Update(fDelta);
+
+            if (!bObstacleUpdated_)
+            {
+                s_map< s_uint, s_ptr<Obstacle> >::const_iterator iterObs;
+                foreach (iterObs, pModel_->GetObstacleList())
+                {
+                    s_ptr<MovableObstacle> pObs = s_ptr<MovableObstacle>::DynamicCast(iterObs->second);
+                    pObs->ForceUpdate();
+                }
+                bObstacleUpdated_ = true;
+            }
+        }
 
         if (pGizmo_)
             pGizmo_->Update(fDelta);
