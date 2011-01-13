@@ -138,12 +138,12 @@ namespace Frost
             s_ptr<XML::Block> pOrientation = pDoodadBlock->GetBlock("Orientation");
             if (pOrientation)
             {
-                pDoodad->SetOrientation(
-                    s_float(pOrientation->GetAttribute("x")),
-                    s_float(pOrientation->GetAttribute("y")),
-                    s_float(pOrientation->GetAttribute("z")),
-                    s_float(pOrientation->GetAttribute("w"))
-                );
+                pDoodad->SetOrientation(Ogre::Quaternion(
+                    s_float(pOrientation->GetAttribute("w")).Get(),
+                    s_float(pOrientation->GetAttribute("x")).Get(),
+                    s_float(pOrientation->GetAttribute("y")).Get(),
+                    s_float(pOrientation->GetAttribute("z")).Get()
+                ));
             }
         }
     }

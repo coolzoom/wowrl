@@ -14,7 +14,6 @@
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "frost_inputmanager.h"
-#include "frost_editor.h"
 
 #include <OgreEntity.h>
 #include <OgreCamera.h>
@@ -171,6 +170,21 @@ namespace Frost
                 lAxisList_[2].pDraggedPlane = nullptr;
                 break;
             default :
+                return;
+        }
+
+        switch (Editor::GetSingleton()->GetCurrentTool())
+        {
+            case Editor::TOOL_MOVE :
+                mOldVec_ = pControlledObject_->GetPosition(false);
+                break;
+            case Editor::TOOL_SCALE :
+                mOldVec_ = pControlledObject_->GetScale(false);
+                break;
+            case Editor::TOOL_ROTATE :
+                mOldQuat_ = pControlledObject_->GetOrientation(false);
+                break;
+            default :
                 break;
         }
     }
@@ -189,8 +203,36 @@ namespace Frost
                 lAxisList_[2].bDragged = false;
                 break;
             default :
-                break;
+                return;
         }
+
+        s_refptr<EditorAction> pEditorAction;
+
+        switch (Editor::GetSingleton()->GetCurrentTool())
+        {
+            case Editor::TOOL_MOVE :
+                pEditorAction = s_refptr<EditorAction>(new MoveAction(
+                    pControlledObject_, mOldVec_,
+                    pControlledObject_->GetPosition(false)
+                ));
+                break;
+            case Editor::TOOL_SCALE :
+                pEditorAction = s_refptr<EditorAction>(new ScaleAction(
+                    pControlledObject_, mOldVec_,
+                    pControlledObject_->GetScale(false)
+                ));
+                break;
+            case Editor::TOOL_ROTATE :
+                pEditorAction = s_refptr<EditorAction>(new RotateAction(
+                    pControlledObject_, mOldQuat_,
+                    pControlledObject_->GetOrientation(false)
+                ));
+                break;
+            default :
+                return;
+        }
+
+        Editor::GetSingleton()->AddEditorAction(pEditorAction);
     }
 
     void Gizmo::Update( const s_float& fDelta )
@@ -234,8 +276,8 @@ namespace Frost
                     if (!pAxis->pDraggedPlane)
                     {
                         // Choose which drag plane to use
-                        s_float fDot1 = fabs(mRayDirection*pAxis->lDragPlaneList[0]->GetDirection());
-                        s_float fDot2 = fabs(mRayDirection*pAxis->lDragPlaneList[1]->GetDirection());
+                        s_float fDot1 = fabs(mRayDirection*pAxis->lDragPlaneList[0]->GetDirection(false));
+                        s_float fDot2 = fabs(mRayDirection*pAxis->lDragPlaneList[1]->GetDirection(false));
 
                         // Pick the one which is most facing the camera
                         pAxis->pDraggedPlane = (fDot1 > fDot2) ? pAxis->lDragPlaneList[0] : pAxis->lDragPlaneList[1];
@@ -402,7 +444,7 @@ namespace Frost
 
         lAxisList_[0].uiID = 0;
         lAxisList_[0].pModel = ModelManager::GetSingleton()->CreateModel("GizmoXAxis", "Gizmo"+uiID_+"XAxis");
-        lAxisList_[0].pModel->GetEntity()->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAX);
+        lAxisList_[0].pModel->GetEntity()->setRenderQueueGroup(99);
         lAxisList_[0].pModel->AttachTo(this);
         s_refptr<Material> pXMat = MaterialManager::GetSingleton()->CreateMaterial3D();
             pXMat->SetDiffuse(X_BASE_COLOR * ALPHA_MASK);
@@ -429,7 +471,7 @@ namespace Frost
 
         lAxisList_[1].uiID = 1;
         lAxisList_[1].pModel = ModelManager::GetSingleton()->CreateModel("GizmoYAxis", "Gizmo"+uiID_+"YAxis");
-        lAxisList_[1].pModel->GetEntity()->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAX);
+        lAxisList_[1].pModel->GetEntity()->setRenderQueueGroup(99);
         lAxisList_[1].pModel->AttachTo(this);
         s_refptr<Material> pYMat = MaterialManager::GetSingleton()->CreateMaterial3D();
             pYMat->SetDiffuse(Y_BASE_COLOR * ALPHA_MASK);
@@ -456,7 +498,7 @@ namespace Frost
 
         lAxisList_[2].uiID = 2;
         lAxisList_[2].pModel = ModelManager::GetSingleton()->CreateModel("GizmoZAxis", "Gizmo"+uiID_+"ZAxis");
-        lAxisList_[2].pModel->GetEntity()->setRenderQueueGroup(Ogre::RENDER_QUEUE_MAX);
+        lAxisList_[2].pModel->GetEntity()->setRenderQueueGroup(99);
         lAxisList_[2].pModel->AttachTo(this);
         s_refptr<Material> pZMat = MaterialManager::GetSingleton()->CreateMaterial3D();
             pZMat->SetDiffuse(Z_BASE_COLOR * ALPHA_MASK);
@@ -503,5 +545,53 @@ namespace Frost
     s_bool GizmoOgreInterface::IsMouseEnabled() const
     {
         return OgreInterface::IsMouseEnabled() && pGizmo_->IsShown();
+    }
+
+    MoveAction::MoveAction( s_ptr<MovableObject> pObject, const Vector& mOld, const Vector& mNew ) :
+        pObject_(pObject), mOldPosition_(mOld), mNewPosition_(mNew)
+    {
+        bCallDoWhenAdded_ = false;
+    }
+
+    void MoveAction::Do()
+    {
+        pObject_->SetPosition(mNewPosition_);
+    }
+
+    void MoveAction::Undo()
+    {
+        pObject_->SetPosition(mOldPosition_);
+    }
+
+    ScaleAction::ScaleAction( s_ptr<MovableObject> pObject, const Vector& mOld, const Vector& mNew ) :
+        pObject_(pObject), mOldScale_(mOld), mNewScale_(mNew)
+    {
+        bCallDoWhenAdded_ = false;
+    }
+
+    void ScaleAction::Do()
+    {
+        pObject_->SetScale(mNewScale_);
+    }
+
+    void ScaleAction::Undo()
+    {
+        pObject_->SetScale(mOldScale_);
+    }
+
+    RotateAction::RotateAction( s_ptr<MovableObject> pObject, const Ogre::Quaternion& mOld, const Ogre::Quaternion& mNew ) :
+        pObject_(pObject), mOldOrientation_(mOld), mNewOrientation_(mNew)
+    {
+        bCallDoWhenAdded_ = false;
+    }
+
+    void RotateAction::Do()
+    {
+        pObject_->SetOrientation(mNewOrientation_);
+    }
+
+    void RotateAction::Undo()
+    {
+        pObject_->SetOrientation(mOldOrientation_);
     }
 }

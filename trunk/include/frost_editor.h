@@ -18,8 +18,16 @@ namespace Frost
     {
     public :
 
+        EditorAction();
+
         virtual void Do() = 0;
         virtual void Undo() = 0;
+
+        const s_bool& CallDoWhenAdded() const;
+
+    protected :
+
+        s_bool bCallDoWhenAdded_;
     };
 
     class Editor : public Manager<Editor>
@@ -45,10 +53,20 @@ namespace Frost
         void AddEditorAction(s_refptr<EditorAction> pEditorAction);
 
         /// Undoes the previous action.
-        void Undo();
+        s_bool Undo();
 
         /// Redoes the action previously undone.
-        void Redo();
+        s_bool Redo();
+
+        /// Checks if there are any editor actions to undo
+        /** \return 'true' if it is the case
+        */
+        s_bool CanUndo() const;
+
+        /// Checks if there are any editor actions to redo
+        /** \return 'true' if it is the case
+        */
+        s_bool CanRedo() const;
 
         /// Creates a new Zone.
         /** \param sName The name of the new Zone
@@ -150,6 +168,8 @@ namespace Frost
         LuaEditor(lua_State* luaVM);
 
         int _AddDoodad(lua_State*);
+        int _CanRedo(lua_State*);
+        int _CanUndo(lua_State*);
         int _GetCurrentZoneFile(lua_State*);
         int _GetBackgroundColor(lua_State*);
         int _GetModelFile(lua_State*);
@@ -162,6 +182,7 @@ namespace Frost
         int _LoadZoneFile(lua_State*);
         int _NewZone(lua_State*);
         int _NotifyDoodadPositioned(lua_State*);
+        int _Redo(lua_State*);
         int _RegisterNewModel(lua_State*);
         int _SaveZone(lua_State*);
         int _SetBackgroundColor(lua_State*);
@@ -170,6 +191,7 @@ namespace Frost
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);
         int _UnloadZone(lua_State*);
+        int _Undo(lua_State*);
 
         // Lunar function
         int GetDataTable(lua_State *L);

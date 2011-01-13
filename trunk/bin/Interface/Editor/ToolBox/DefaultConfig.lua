@@ -1,2 +1,2 @@
-AddOns.Console = AddOn("Console");
-AddOns.Console.Config = {};
+AddOns.ToolBox = AddOn("ToolBox");
+AddOns.ToolBox.Config = {};

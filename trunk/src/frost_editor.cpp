@@ -12,8 +12,6 @@
 #include "scene/frost_doodad.h"
 #include "scene/frost_scenemanager.h"
 
-#include "frost_editor_actions.h"
-
 using namespace std;
 
 namespace Frost
@@ -35,14 +33,18 @@ namespace Frost
     {
         if (pEditorAction)
         {
-            pEditorAction->Do();
+            if (pEditorAction->CallDoWhenAdded())
+                pEditorAction->Do();
+
             lHistoryList_.EraseRange(iterAction_, lHistoryList_.End());
             lHistoryList_.PushBack(pEditorAction);
             iterAction_ = lHistoryList_.End();
+
+            EventManager::GetSingleton()->FireEvent(Event("ZONE_MODIFIED"));
         }
     }
 
-    void Editor::Undo()
+    s_bool Editor::Undo()
     {
         if (iterAction_ != lHistoryList_.Begin())
         {
@@ -50,10 +52,13 @@ namespace Frost
             (*iterAction_)->Undo();
 
             EventManager::GetSingleton()->FireEvent(Event("UNDO"));
+            return true;
         }
+
+        return false;
     }
 
-    void Editor::Redo()
+    s_bool Editor::Redo()
     {
         if (iterAction_ != lHistoryList_.End())
         {
@@ -61,7 +66,20 @@ namespace Frost
             ++iterAction_;
 
             EventManager::GetSingleton()->FireEvent(Event("REDO"));
+            return true;
         }
+
+        return false;
+    }
+
+    s_bool Editor::CanUndo() const
+    {
+        return iterAction_ != lHistoryList_.Begin();
+    }
+
+    s_bool Editor::CanRedo() const
+    {
+        return iterAction_ != lHistoryList_.End();
     }
 
     void Editor::SetCurrentTool( const Tool& mTool )
@@ -137,7 +155,7 @@ namespace Frost
 
     void Editor::AddDoodad( const s_str& sName, const s_str& sModel )
     {
-        AddEditorAction(s_refptr<ActionAddDoodad>(new ActionAddDoodad(sName, sModel)));
+        AddEditorAction(s_refptr<AddDoodadAction>(new AddDoodadAction(sName, sModel)));
     }
 
     void Editor::SetCurrentZoneFile( const s_str& sFile )
@@ -150,5 +168,14 @@ namespace Frost
         pLua->Register<LuaEditor>();
         pLua->PushNew<LuaEditor>();
         pLua->SetGlobal("Editor");
+    }
+
+    EditorAction::EditorAction() : bCallDoWhenAdded_(true)
+    {
+    }
+
+    const s_bool& EditorAction::CallDoWhenAdded() const
+    {
+        return bCallDoWhenAdded_;
     }
 }

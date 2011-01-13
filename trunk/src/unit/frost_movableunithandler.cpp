@@ -18,13 +18,11 @@ using namespace std;
 
 namespace Frost
 {
-    const s_float MovableUnitHandler::fTimeBetweenUpdates_ = 0.03333f;
-
     MovableUnitHandler::MovableUnitHandler( s_ptr<MovableUnit> pMovableUnit ) :
         PhysicsHandler(pMovableUnit ? pMovableUnit->GetNode() : nullptr),
         pMovableUnit_(pMovableUnit), mRadius_(Vector::UNIT), mBoundingBox_(-mRadius_, mRadius_),
         bFirstUpdate_(true), mState_(STATE_FREEFALL), mPreviousState_(STATE_FREEFALL),
-        fTimeSinceLastUpdate_(fTimeBetweenUpdates_)
+        fTimeSinceLastUpdate_(1.0f/PhysicsManager::GetSingleton()->GetCollisionDetectionRate())
     {
         SetEventReceiver(pMovableUnit_);
     }
@@ -37,7 +35,7 @@ namespace Frost
     {
         PhysicsHandler::Enable();
 
-        fTimeSinceLastUpdate_ = fTimeBetweenUpdates_;
+        fTimeSinceLastUpdate_ = 1.0f/PhysicsManager::GetSingleton()->GetCollisionDetectionRate();
     }
 
     void MovableUnitHandler::SetSpeed( const Vector& mSpeed )
@@ -102,7 +100,7 @@ namespace Frost
             if (PhysicsManager::GetSingleton()->IsCollisionDetectionFixedRate())
             {
                 fTimeSinceLastUpdate_ += fDelta;
-                if (fTimeSinceLastUpdate_ < fTimeBetweenUpdates_)
+                if (fTimeSinceLastUpdate_ < 1.0f/PhysicsManager::GetSingleton()->GetCollisionDetectionRate())
                 {
                     // Resort to "fake" movement : no check for collisions
                     pParent_->Translate(mLastSpeed_*fDelta);
@@ -199,15 +197,15 @@ namespace Frost
             s_ctnr< s_ptr<Obstacle> >::const_iterator iterObstacle;
             foreach (iterObstacle, lObstacleList)
             {
-                s_ptr<Obstacle> pObstacle = (*iterObstacle);
+                s_ptr<Obstacle> pObs = (*iterObstacle);
                 // First check if the two bounding boxes intersect
-                if (pObstacle->IsInBoundingBox(mTempBox))
+                if (pObs->IsInBoundingBox(mTempBox))
                 {
                     // Then do the true collision detection
-                    if (!pObstacle->EllipsoidGoThrough(mRadius_, mPosition_, mDestination, mData))
+                    if (!pObs->EllipsoidGoThrough(mRadius_, mPosition_, mDestination, mData))
                     {
                         mDestination = mData.mNewPosition;
-                        pBindedObstacle_ = *iterObstacle;
+                        pBindedObstacle_ = pObs;
                         mData_ = mData;
                         bCollision = true;
                     }

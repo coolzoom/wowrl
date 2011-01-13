@@ -26,6 +26,17 @@ namespace Frost
             fZ = z;
         }
 
+        Quaternion(const Vector& mAxis, const s_float& fAngle)
+        {
+            s_float fHalfAngle = 0.5f*fAngle;
+            s_float fSin = sin(fHalfAngle);
+
+            fW = cos(fHalfAngle);
+            fX = fSin*mAxis.X();
+            fY = fSin*mAxis.Y();
+            fZ = fSin*mAxis.Z();
+        }
+
         Quaternion operator + (const Quaternion& mQuat) const
         {
             return Quaternion(fW + mQuat.fW, fX + mQuat.fX, fY + mQuat.fY, fZ + mQuat.fZ);

@@ -1,5 +1,6 @@
 #include "generator.h"
 
+#include <frost_utils_file.h>
 #include <CImg.h>
 
 using namespace Frost;
@@ -48,6 +49,14 @@ void LogCout(const s_str& sMessage, const s_bool& bStamps=false, const s_uint& u
 {
     std::cout << sMessage.Get() << std::endl;
     Log(sMessage, bStamps, uiOffset);
+}
+
+namespace Frost
+{
+    s_double GetTime()
+    {
+        return 0.0;
+    }
 }
 
 int main(int argc, char** argv)
@@ -163,9 +172,9 @@ int main(int argc, char** argv)
 
                     lHeightList[j] = y;
 
-                    lVertexList[j*3 + 0] = fXDim*x/(uiNTPX-1.0f);
+                    lVertexList[j*3 + 0] = fXDim*x;
                     lVertexList[j*3 + 1] = fYDim*y;
-                    lVertexList[j*3 + 2] = fZDim*z/(uiNTPZ-1.0f);
+                    lVertexList[j*3 + 2] = fZDim*z;
 
                     if (y < fMinY)
                         fMinY = y;
@@ -249,7 +258,7 @@ int main(int argc, char** argv)
             {
                 for (uint z = 0; z < uiNCZ; ++z)
                 {
-                    File mFile("Test"+s_str(count, 3)+".ft", File::O, true);
+                    File mFile("Test"+s_str::Convert(count, 3)+".ft", File::O, true);
 
                     mFile.Write(mHeader);
 
@@ -262,6 +271,7 @@ int main(int argc, char** argv)
                             uint jp = j + z*(uiNPZ-1);
                             uint uiLocalID = i*uiNPZ+j;
                             uint uiID = ip*uiNTPZ+jp;
+                            
                             lLocalVertexList[uiLocalID].fHeight = lHeightList[uiID];
                             lLocalVertexList[uiLocalID].fUVs[0] = i/(float)(uiNPX-1);
                             lLocalVertexList[uiLocalID].fUVs[1] = j/(float)(uiNPZ-1);
@@ -308,7 +318,7 @@ int main(int argc, char** argv)
                 cimg_library::CImgList<float> sublist = iter1->get_split('y', uiNCZ);
                 foreach (iter2, sublist)
                 {
-                    iter2->save_png(("Test"+s_str(uiCount, 4)+".png").c_str());
+                    iter2->save_png(("Test"+s_str::Convert(uiCount, 3)+".png").c_str());
                     ++uiCount;
                 }
             }

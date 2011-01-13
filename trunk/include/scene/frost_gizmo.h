@@ -12,6 +12,7 @@
 #include "frost.h"
 #include "scene/frost_movableobject.h"
 #include "scene/frost_planeobstacle.h"
+#include "frost_editor.h"
 
 namespace Frost
 {
@@ -41,6 +42,54 @@ namespace Frost
         s_ptr<Gizmo> pGizmo_;
         s_char       cAxis_;
 
+    };
+
+    class MoveAction : public EditorAction
+    {
+    public :
+
+        MoveAction(s_ptr<MovableObject> pObject, const Vector& mOld, const Vector& mNew);
+
+        virtual void Do();
+        virtual void Undo();
+
+    private :
+
+        s_ptr<MovableObject> pObject_;
+        Vector mOldPosition_;
+        Vector mNewPosition_;
+    };
+
+    class ScaleAction : public EditorAction
+    {
+    public :
+
+        ScaleAction(s_ptr<MovableObject> pObject, const Vector& mOld, const Vector& mNew);
+
+        virtual void Do();
+        virtual void Undo();
+
+    private :
+
+        s_ptr<MovableObject> pObject_;
+        Vector mOldScale_;
+        Vector mNewScale_;
+    };
+
+    class RotateAction : public EditorAction
+    {
+    public :
+
+        RotateAction(s_ptr<MovableObject> pObject, const Ogre::Quaternion& mOld, const Ogre::Quaternion& mNew);
+
+        virtual void Do();
+        virtual void Undo();
+
+    private :
+
+        s_ptr<MovableObject> pObject_;
+        Ogre::Quaternion mOldOrientation_;
+        Ogre::Quaternion mNewOrientation_;
     };
 
     /// An object to manipulate others.
@@ -114,6 +163,8 @@ namespace Frost
         s_bool          bIsShown_;
 
         s_ptr<MovableObject> pControlledObject_;
+        Vector               mOldVec_;
+        Ogre::Quaternion     mOldQuat_;
     };
 }
 

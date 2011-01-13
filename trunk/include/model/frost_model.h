@@ -90,8 +90,10 @@ namespace Frost
         s_ptr<Ogre::Entity> GetEntity();
         s_ptr<Ogre::Mesh>   GetMesh();
 
-        void              CreateObstacle();
-        s_ptr<Obstacle>   GetObstacle() const;
+        void              CreateObstacles();
+        void              CreateObstacle(const s_uint& uiSubMeshID);
+        s_ptr<Obstacle>   GetObstacle(const s_uint& uiSubMeshID) const;
+        const s_map< s_uint, s_ptr<Obstacle> >& GetObstacleList() const;
         void              Show(s_bool bSubMeshes = false);
         void              Hide(s_bool bSubMeshes = false);
         void              Highlight();
@@ -110,9 +112,7 @@ namespace Frost
 
         s_ptr<const ModelData> pModelData_;
         s_ptr<Ogre::Mesh>      pMesh_;
-
-        AxisAlignedBox      mBoundingBox_;
-        s_ptr<Obstacle>     pObstacle_;
+        AxisAlignedBox         mBoundingBox_;
 
         s_refptr<Material> pMaterial_;
 
@@ -125,6 +125,7 @@ namespace Frost
         s_bool bHighlighted_;
 
         s_map< s_uint, s_ptr<ModelPart> > lModelPartList_;
+        s_map< s_uint, s_ptr<Obstacle> >  lObstacleList_;
     };
 }
 

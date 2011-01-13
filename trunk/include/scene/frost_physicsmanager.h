@@ -66,6 +66,11 @@ namespace Frost
         */
         const s_bool&         IsCollisionDetectionFixedRate() const;
 
+        /// Returns the maximum number of collision detection test done per second.
+        /** \return the maximum number of collision detection test done per second
+        */
+        const s_float&        GetCollisionDetectionRate() const;
+
         /// Adds a new obstacle to the scene.
         /** \param pObstacle The obstacle to add
         *   \note Automatically enables the obstacle.<br>
@@ -133,9 +138,10 @@ namespace Frost
         s_map< s_ptr<MovableObject>, s_ptr<PhysicsHandler> > lHandlerList_;
         s_ctnr< s_ptr<Obstacle> >                            lObstacleList_;
 
-        Vector mGravity_;
-        s_uint uiMaxCollisionRecursion_;
-        s_bool bFixedRateCollisionDetection_;
+        Vector  mGravity_;
+        s_uint  uiMaxCollisionRecursion_;
+        s_bool  bFixedRateCollisionDetection_;
+        s_float fCollisionDetectionRate_;
 
     };
 }

@@ -516,7 +516,7 @@ namespace Frost
                 lSubIndices[k] = lIndexMap[lSubIndices[k]];
             }
 
-            CreateBuffers_(pSub, uiVertexNbr, uiIndexNbr, lSubVertices, lSubUVs, lSubIndices);
+            CreateBuffers_(lSubMesh[i].id, pSub, uiVertexNbr, uiIndexNbr, lSubVertices, lSubUVs, lSubIndices);
 
             // Use default material
             pSub->setMaterialName(

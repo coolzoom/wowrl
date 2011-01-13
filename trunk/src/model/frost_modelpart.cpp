@@ -103,8 +103,8 @@ namespace Frost
         {
             if (uiSubEntity >= lSubEntity_.GetSize())
             {
-                Warning(CLASS_NAME, "Trying to set the material of subentity "+uiSubEntity+", but this ModelPart\n"
-                    "("+pParent_->GetOgreModelName()+":"+uiID_+") only contains "+lSubEntity_.GetSize()+" subentities."
+                Warning(CLASS_NAME, "Trying to set the material of subentity "+(uiSubEntity+1)+", but this ModelPart\n"
+                    "("+pParent_->GetOgreModelName()+":"+uiID_+") only\ncontains "+lSubEntity_.GetSize()+" subentities."
                 );
             }
             else

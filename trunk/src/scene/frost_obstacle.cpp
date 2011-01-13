@@ -68,31 +68,47 @@ namespace Frost
         return mTransformedBoundingBox_.Contains(mBox);
     }
 
+    void MovableObstacle::SetStatic( const s_bool& bIsStatic )
+    {
+        bIsStatic_ = bIsStatic;
+    }
+
+    const s_bool& MovableObstacle::IsStatic() const
+    {
+        return bIsStatic_;
+    }
+
     void MovableObstacle::ForceUpdate()
     {
+        mTransformedBoundingBox_ = AxisAlignedBox();
+
+        for (int i = 0; i < 8; ++i)
+        {
+            Vector mVec = pNode_->_getFullTransform()*mBoundingBox_[i];
+
+            if (mTransformedBoundingBox_.IsInfinite())
+                mTransformedBoundingBox_ = AxisAlignedBox(mVec, mVec);
+            else
+                mTransformedBoundingBox_.Include(mVec);
+        }
     }
 
     void MovableObstacle::Update( const s_float& fDelta )
     {
         MovableObject::Update(fDelta);
 
-        mTransformedBoundingBox_ = AxisAlignedBox();
-        Vector mScale = GetScale(false);
-        Vector mPos = GetPosition(false);
-
-        for (int i = 0; i < 8; ++i)
+        if (!bIsStatic_)
         {
-            Vector mVec = Transform(mBoundingBox_[i]);
-            mVec.ScaleUp(mScale);
-            mVec += mPos;
+            mTransformedBoundingBox_ = AxisAlignedBox();
 
-            if (mTransformedBoundingBox_.IsInfinite())
+            for (int i = 0; i < 8; ++i)
             {
-                mTransformedBoundingBox_ = AxisAlignedBox(mVec, mVec);
-            }
-            else
-            {
-                mTransformedBoundingBox_.Include(mVec);
+                Vector mVec = pNode_->_getFullTransform()*mBoundingBox_[i];
+
+                if (mTransformedBoundingBox_.IsInfinite())
+                    mTransformedBoundingBox_ = AxisAlignedBox(mVec, mVec);
+                else
+                    mTransformedBoundingBox_.Include(mVec);
             }
         }
     }

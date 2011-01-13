@@ -11,6 +11,7 @@
 
 #include "frost.h"
 #include "utils/frost_utils_manager.h"
+#include "frost_editor.h"
 
 namespace Frost
 {
@@ -144,6 +145,21 @@ namespace Frost
         s_refptr<Decal> pMouseDecal_;
 
         s_ctnr< s_wptr<Decal> > lDecalList_;
+    };
+
+    class AddDoodadAction : public EditorAction
+    {
+    public :
+
+        AddDoodadAction(const s_str& sName, const s_str& sModel);
+
+        virtual void Do();
+        virtual void Undo();
+
+    private :
+
+        s_str sName_;
+        s_str sModel_;
     };
 }
 
