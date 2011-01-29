@@ -34,7 +34,7 @@ namespace Frost
     // TODO : Unit : Implement buffs
 
     Unit::Unit( const s_uint& uiID, const s_str& sName ) :
-        uiID_(uiID), sName_(sName), uiLevel_(s_uint::NaN)
+        SceneObject(uiID, sName), uiLevel_(s_uint::NaN)
     {
         pNode_ = SceneManager::GetSingleton()->CreateNode();
         pCamera_ = CameraManager::GetSingleton()->CreateCamera(Vector(0, 4, 5));
@@ -287,7 +287,7 @@ namespace Frost
         return bHighlighted_;
     }
 
-    void Unit::NotifySelected( const s_bool& bSelected )
+    void Unit::Select( const s_bool& bSelected )
     {
         if (bSelected != bSelected_)
         {
@@ -297,11 +297,6 @@ namespace Frost
             else
                 ZoneManager::GetSingleton()->RemoveDecalFromGround(pSelectionDecal_);
         }
-    }
-
-    const s_bool& Unit::IsSelected() const
-    {
-        return bSelected_;
     }
 
     void Unit::Teleport( const Vector& mDestination )
@@ -411,19 +406,9 @@ namespace Frost
         return bMotionBlurEnabled_;
     }
 
-    const s_str& Unit::GetName() const
-    {
-        return sName_;
-    }
-
-    const s_uint& Unit::GetID() const
-    {
-        return uiID_;
-    }
-
     s_str Unit::GetLuaID() const
     {
-        return "U_"+uiID_;
+        return "U_"+uiSceneID_;
     }
 
     void Unit::PushOnLua( s_ptr<Lua::State> pLua ) const
@@ -460,5 +445,16 @@ namespace Frost
 
         if (pBodyModel_)
             pBodyModel_->Update(fDelta);
+    }
+
+    const s_str& Unit::GetType() const
+    {
+        return CLASS_NAME;
+    }
+
+    s_refptr<EditorAction> Unit::CreateDeleteAction()
+    {
+        // TODO : Implement Unit::CreateDeleteAction
+        return nullptr;
     }
 }

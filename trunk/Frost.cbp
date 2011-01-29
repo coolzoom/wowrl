@@ -201,6 +201,7 @@
 		<Unit filename="include\scene\frost_plane.h" />
 		<Unit filename="include\scene\frost_planeobstacle.h" />
 		<Unit filename="include\scene\frost_scenemanager.h" />
+		<Unit filename="include\scene\frost_sceneobject.h" />
 		<Unit filename="include\scene\frost_sphereobstacle.h" />
 		<Unit filename="include\scene\frost_terrainchunk.h" />
 		<Unit filename="include\scene\frost_terrainobstacle.h" />
@@ -272,6 +273,7 @@
 		<Unit filename="src\scene\frost_plane.cpp" />
 		<Unit filename="src\scene\frost_planeobstacle.cpp" />
 		<Unit filename="src\scene\frost_scenemanager.cpp" />
+		<Unit filename="src\scene\frost_sceneobject.cpp" />
 		<Unit filename="src\scene\frost_sphereobstacle.cpp" />
 		<Unit filename="src\scene\frost_terrainchunk.cpp" />
 		<Unit filename="src\scene\frost_terrainobstacle.cpp" />

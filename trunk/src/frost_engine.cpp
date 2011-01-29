@@ -157,6 +157,8 @@ namespace Frost
         // Load configuration
         ReadConfig();
 
+        pUtilsMgr_->SetLogLevel(GetUIntConstant("LogLevel"));
+
         s_str sLine = "# Starting Frost Engine ("+GetStringConstant("GameVersion")+") #";
         Log(s_str('#', sLine.GetLength()));
         Log(sLine);
@@ -249,6 +251,7 @@ namespace Frost
             mBufferFlush.start(uiDummyHOQFrameQueue.Get());
 
         bRun_ = true;
+        s_bool bFirst = true;
 
         // Start the main loop
         while (bRun_)
@@ -311,7 +314,16 @@ namespace Frost
             pGUIMgr_->End();
 
             // Render everyting
+            if (bFirst)
+            {
+                Log("\nBegin rendering...");
+            }
             pRoot_->_updateAllRenderTargets();
+            if (bFirst)
+            {
+                Log<1>("First frame rendered.\n");
+                bFirst = false;
+            }
 
             // Update inputs and timers
             pTimeMgr_->Update();
@@ -322,6 +334,7 @@ namespace Frost
 
             pEventMgr_->FrameEnded();
         }
+        Log("\nStopped rendering.\n");
 
         bRun_ = false;
     }

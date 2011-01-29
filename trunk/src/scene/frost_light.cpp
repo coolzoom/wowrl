@@ -16,7 +16,7 @@ namespace Frost
 {
     const s_str Light::CLASS_NAME = "Light";
 
-    Light::Light( Type mType, s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(pSceneManager), mType_(mType)
+    Light::Light( Type mType, s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(s_uint::NaN, pSceneManager), mType_(mType)
     {
         pOgreLight_ = pSceneManager_->createLight(("Light_"+uiID_).Get());
 

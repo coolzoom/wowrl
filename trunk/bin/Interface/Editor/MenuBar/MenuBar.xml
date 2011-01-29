@@ -1,5 +1,5 @@
 <Ui>
-	<Frame name="MenuBar" parent="UIParent" clampedToScreen="true">
+	<Frame name="MenuBar" parent="UIParent" enableMouse="true">
 		<Size>
 			<AbsDimension y="16"/>
 		</Size>
@@ -7,6 +7,9 @@
 			<Anchor point="TOPLEFT"/>
             <Anchor point="TOPRIGHT"/>
 		</Anchors>
+		<HitRectInsets>
+			<AbsInset bottom="-3"/>
+		</HitRectInsets>
         <Scripts>
             <OnLoad>
                 this.activeDropDown = nil;

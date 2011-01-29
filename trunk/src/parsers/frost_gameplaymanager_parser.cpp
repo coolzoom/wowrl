@@ -45,6 +45,7 @@ namespace Frost
         s_str sName = pGameplayBlock->GetAttribute("name");
         if (!GetGameplay(sName))
         {
+            Log<2>("    Loading gameplay : "+sName);
             s_ptr<Gameplay> pGameplay = new Gameplay(sName);
             lGameplayList_[sName] = pGameplay;
 

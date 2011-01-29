@@ -25,7 +25,7 @@ namespace Frost
 {
     const s_str UnitManager::CLASS_NAME = "UnitManager";
 
-    UnitManager::UnitManager() : fMaxClimbingAngle_(0.125f)
+    UnitManager::UnitManager() : fMaxClimbingAngle_(0.2f)
     {
         Log("Creating "+CLASS_NAME+".");
     }
@@ -74,11 +74,13 @@ namespace Frost
 
         if (lRaceList_.Find(sRace))
         {
+            Log<2>("Creating character : "+sName);
             pCharacter = new Character(uiCounter_, sName, lRaceList_[sRace], mGender);
             lUnitList_[uiCounter_] = pCharacter;
             pCharacter->CreateGlue(pLua_);
             pCharacter->CreateGlue(GameplayManager::GetSingleton()->GetLua());
-            uiCounter_++;
+            ++uiCounter_;
+            Log<2>("Done.");
         }
         else
         {
@@ -90,11 +92,13 @@ namespace Frost
 
     s_ptr<Creature> UnitManager::CreateCreature( const s_str& sName )
     {
+        Log<2>("Creating creature : "+sName);
         s_ptr<Creature> pCreature = new Creature(uiCounter_, sName);
         lUnitList_[uiCounter_] = pCreature;
         pCreature->CreateGlue(pLua_);
         pCreature->CreateGlue(GameplayManager::GetSingleton()->GetLua());
-        uiCounter_++;
+        ++uiCounter_;
+        Log<2>("Done.");
 
         return pCreature;
     }
@@ -166,13 +170,13 @@ namespace Frost
                 s_map< s_uint, s_ptr<Unit> >::iterator iterUnit;
                 foreach (iterUnit, lSelectedUnitList_)
                 {
-                    iterUnit->second->NotifySelected(false);
+                    iterUnit->second->Select(false);
                 }
                 lSelectedUnitList_.IsEmpty();
 
                 if (pMouseOveredUnit_)
                 {
-                    pMouseOveredUnit_->NotifySelected(true);
+                    pMouseOveredUnit_->Select(true);
                     lSelectedUnitList_[pMouseOveredUnit_->GetID()] = pMouseOveredUnit_;
                 }
             }
@@ -247,6 +251,8 @@ namespace Frost
         ParseClasses_();
         ParseHealthTypes_();
         ParsePowerTypes_();
+        ParseCreatureModels_();
+        ParseCreatures_();
     }
 
     s_ptr<Lua::State> UnitManager::GetLua()

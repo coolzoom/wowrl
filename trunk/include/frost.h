@@ -130,7 +130,6 @@ namespace Frost
     class  MeshObstacle;
 
     // scene/frost_movableobject.h
-    class  OgreInterface;
     class  MovableObject;
     class  LuaMovableObject;
 
@@ -156,6 +155,10 @@ namespace Frost
 
     // scene/frost_scenemanager.h
     class  SceneManager;
+
+    // scene/frost_sceneobject.h
+    class  OgreInterface;
+    class  SceneObject;
 
     // scene/frost_sphereobstacle.h
     class  SphereObstacle;
@@ -219,6 +222,10 @@ namespace Frost
     class  LuaUnitManager;
 
     /* ***************************************************/
+    // frost_editor.h
+    class  Editor;
+    class  LuaEditor;
+
     // frost_engine.h
     class  Engine;
 

@@ -99,12 +99,6 @@ namespace Frost
         */
         const Tool& GetCurrentTool() const;
 
-        /// Adds a new Doodad in the current Zone.
-        /** \param sName  The name of the Doodad
-        *   \param sModel The model to use
-        */
-        void AddDoodad(const s_str& sName, const s_str& sModel);
-
         /// Sets the current Zone's file.
         /** \param sFile The file to save the current Zone into
         *   \note Sets the file the current Zone will be saved into.
@@ -170,11 +164,17 @@ namespace Frost
         int _AddDoodad(lua_State*);
         int _CanRedo(lua_State*);
         int _CanUndo(lua_State*);
+        int _DeleteObject(lua_State*);
+        int _DeselectObject(lua_State*);
         int _GetCurrentZoneFile(lua_State*);
         int _GetBackgroundColor(lua_State*);
         int _GetModelFile(lua_State*);
         int _GetModelMaterial(lua_State*);
+        int _GetObjectList(lua_State*);
+        int _GetSelectedObjectCount(lua_State*);
+        int _GetSelectedObjects(lua_State*);
         int _GetZoneModelList(lua_State*);
+        int _HideObject(lua_State*);
         int _IsModelLoaded(lua_State*);
         int _IsZoneLoaded(lua_State*);
         int _IsZoneSaved(lua_State*);
@@ -185,9 +185,11 @@ namespace Frost
         int _Redo(lua_State*);
         int _RegisterNewModel(lua_State*);
         int _SaveZone(lua_State*);
+        int _SelectObject(lua_State*);
         int _SetBackgroundColor(lua_State*);
         int _SetCurrentTool(lua_State*);
         int _SetModelMaterial(lua_State*);
+        int _ShowObject(lua_State*);
         int _ToggleWireframeView(lua_State*);
         int _ToggleShading(lua_State*);
         int _UnloadZone(lua_State*);

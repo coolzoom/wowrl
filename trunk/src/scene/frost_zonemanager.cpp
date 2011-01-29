@@ -77,7 +77,10 @@ namespace Frost
             UnloadZone();
 
             pCurrentZone_ = new Zone();
+
+            Log<1>("Loading zone : "+sZoneFile);
             pCurrentZone_->ParseXMLFile(sZoneFile);
+            Log<1>("Done.");
 
             LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
             LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());
@@ -101,7 +104,10 @@ namespace Frost
         UnloadZone();
 
         pCurrentZone_ = new Zone();
+
+        Log<1>("Loading zone : "+sZoneName);
         pCurrentZone_->ParseXMLFile("Zones/"+sZoneName+"/"+sZoneName+".xml");
+        Log<1>("Done.");
 
         LightManager::GetSingleton()->SetAmbient(pCurrentZone_->GetAmbientColor());
         LightManager::GetSingleton()->SetSunColor(pCurrentZone_->GetSunColor());

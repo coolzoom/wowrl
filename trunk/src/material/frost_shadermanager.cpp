@@ -151,12 +151,14 @@ namespace Frost
     {
         Directory mDir("Shaders");
 
+        Log<1>("Loading shaders...");
         s_ctnr<s_str> lFileList = mDir.GetRecursiveFileList(true, "xml");
         s_ctnr<s_str>::iterator iterFile;
         foreach (iterFile, lFileList)
         {
             ParseXMLFile_(*iterFile);
         }
+        Log<1>("Done.");
 
         if (IsPostProcessingEnabled())
         {

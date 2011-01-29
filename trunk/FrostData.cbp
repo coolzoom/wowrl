@@ -220,6 +220,11 @@
 		<Unit filename="bin\Interface\Editor\ConfigMenu\Localization.lua">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="bin\Interface\Editor\Console\Console.lua" />
+		<Unit filename="bin\Interface\Editor\Console\Console.toc" />
+		<Unit filename="bin\Interface\Editor\Console\Console.xml" />
+		<Unit filename="bin\Interface\Editor\Console\DefaultConfig.lua" />
+		<Unit filename="bin\Interface\Editor\Console\Localization.lua" />
 		<Unit filename="bin\Interface\Editor\Editor\DefaultConfig.lua">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -307,6 +312,19 @@
 		</Unit>
 		<Unit filename="bin\Interface\Editor\MenuBar\Settings.lua" />
 		<Unit filename="bin\Interface\Editor\MenuBar\View.lua" />
+		<Unit filename="bin\Interface\Editor\ModelEditor\DefaultConfig.lua" />
+		<Unit filename="bin\Interface\Editor\ModelEditor\Localization.lua" />
+		<Unit filename="bin\Interface\Editor\ModelEditor\ModelEditor.lua" />
+		<Unit filename="bin\Interface\Editor\ModelEditor\ModelEditor.toc" />
+		<Unit filename="bin\Interface\Editor\ModelEditor\ModelEditor.xml" />
+		<Unit filename="bin\Interface\Editor\ModelEditor\ModelEditorModel.xml" />
+		<Unit filename="bin\Interface\Editor\ModelEditor\ModelEditorOptions.xml" />
+		<Unit filename="bin\Interface\Editor\ObjectList\DefaultConfig.lua" />
+		<Unit filename="bin\Interface\Editor\ObjectList\Localization.lua" />
+		<Unit filename="bin\Interface\Editor\ObjectList\ObjectList.lua" />
+		<Unit filename="bin\Interface\Editor\ObjectList\ObjectList.toc" />
+		<Unit filename="bin\Interface\Editor\ObjectList\ObjectList.xml" />
+		<Unit filename="bin\Interface\Editor\ObjectList\ObjectList_Templates.xml" />
 		<Unit filename="bin\Interface\Editor\PanelBar\DefaultConfig.lua">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -337,6 +355,7 @@
 		<Unit filename="bin\Interface\Editor\Templates\Template_Button.xml">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="bin\Interface\Editor\Templates\Template_ColorSwatch.xml" />
 		<Unit filename="bin\Interface\Editor\Templates\Template_ConfirmDialog.xml">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
@@ -348,12 +367,19 @@
 		</Unit>
 		<Unit filename="bin\Interface\Editor\Templates\Template_EditBox.xml" />
 		<Unit filename="bin\Interface\Editor\Templates\Template_ErrorDialog.xml" />
+		<Unit filename="bin\Interface\Editor\Templates\Template_ScrollableDropDown.lua" />
+		<Unit filename="bin\Interface\Editor\Templates\Template_ScrollableDropDown.xml" />
 		<Unit filename="bin\Interface\Editor\Templates\Template_YesNoDialog.xml">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="bin\Interface\Editor\Templates\Templates.toc">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="bin\Interface\Editor\ToolBox\DefaultConfig.lua" />
+		<Unit filename="bin\Interface\Editor\ToolBox\Localization.lua" />
+		<Unit filename="bin\Interface\Editor\ToolBox\ToolBox.lua" />
+		<Unit filename="bin\Interface\Editor\ToolBox\ToolBox.toc" />
+		<Unit filename="bin\Interface\Editor\ToolBox\ToolBox.xml" />
 		<Unit filename="bin\Interface\UI.def">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>

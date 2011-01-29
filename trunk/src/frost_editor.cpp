@@ -153,11 +153,6 @@ namespace Frost
         EventManager::GetSingleton()->FireEvent(Event("ZONE_CLOSED"));
     }
 
-    void Editor::AddDoodad( const s_str& sName, const s_str& sModel )
-    {
-        AddEditorAction(s_refptr<AddDoodadAction>(new AddDoodadAction(sName, sModel)));
-    }
-
     void Editor::SetCurrentZoneFile( const s_str& sFile )
     {
         sCurrentZoneFile_ = sFile;

@@ -44,6 +44,25 @@ namespace Frost
         */
         void Log(const s_str& sMessage, const s_bool& bTimeStamps, const s_uint& uiOffset);
 
+        /// Sets the highest log level allowed for all following messages.
+        /** \param uiLevel The new highest level
+        *   \note When using Log<5>("blabla"), you specify that this message
+        *         has a log level of 5. By default, the highest level allowed
+        *         is 0 : if you want your message to be printed on the log file,
+        *         you must call SetLogLevel(5) or higher.
+        *         This allows quick selection of which log messages to print.
+        *         The admitted convention is that higher level messages are
+        *         less important or extremely precise, so you may not want them
+        *         to be printed all the time.
+        */
+        void SetLogLevel(const s_uint& uiLevel);
+
+        /// Returns the current highest log level allowed.
+        /** \return The current highest log level allowed
+        *   \note See SetLogLevel.
+        */
+        const s_uint& GetLogLevel() const;
+
         static const s_str CLASS_NAME;
 
     protected :
@@ -78,6 +97,7 @@ namespace Frost
     private :
 
         LogFunction pLogFunction_;
+        s_uint      uiLogLevel_;
 
     };
 }

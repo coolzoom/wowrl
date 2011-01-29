@@ -10,7 +10,7 @@
 #define FROST_GIZMO_H
 
 #include "frost.h"
-#include "scene/frost_movableobject.h"
+#include "scene/frost_sceneobject.h"
 #include "scene/frost_planeobstacle.h"
 #include "frost_editor.h"
 
@@ -55,7 +55,7 @@ namespace Frost
 
     private :
 
-        s_ptr<MovableObject> pObject_;
+        s_uint uiObjectID_;
         Vector mOldPosition_;
         Vector mNewPosition_;
     };
@@ -71,7 +71,7 @@ namespace Frost
 
     private :
 
-        s_ptr<MovableObject> pObject_;
+        s_uint uiObjectID_;
         Vector mOldScale_;
         Vector mNewScale_;
     };
@@ -87,7 +87,7 @@ namespace Frost
 
     private :
 
-        s_ptr<MovableObject> pObject_;
+        s_uint           uiObjectID_;
         Ogre::Quaternion mOldOrientation_;
         Ogre::Quaternion mNewOrientation_;
     };
@@ -117,6 +117,8 @@ namespace Frost
         const s_bool& IsShown() const;
 
         void SetControlledObject(s_ptr<MovableObject> pObj);
+
+        void SetExtents(const AxisAlignedBox& mBox);
 
         s_ptr<MovableObject> GetControlledObject();
 

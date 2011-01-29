@@ -32,4 +32,9 @@ namespace Frost
 
         Log(sHeader + sMessage, true, sHeader.GetLength());
     }
+
+    const s_uint& GetLogLevel()
+    {
+        return UtilsManager::GetSingleton()->GetLogLevel();
+    }
 }

@@ -1,5 +1,5 @@
 <Ui>
-    <Frame name="FrameTemplate_Panel" virtual="true" hidden="true">
+    <Frame name="FrameTemplate_Panel" enableMouse="true" virtual="true" hidden="true">
         <Anchors>
             <Anchor point="LEFT" relativePoint="RIGHT"/>
             <Anchor point="TOP" relativePoint="TOP"/>
@@ -31,35 +31,6 @@
                 end
             </OnEvent>
         </Scripts>
-        <Frames>
-            <!Frame name="$parentContent">
-                <Anchors>
-                    <Anchor point="LEFT">
-                        <Offset>
-                            <AbsDimension x="5"/>
-                        </Offset>
-                    </Anchor>
-                    <Anchor point="RIGHT">
-                        <Offset>
-                            <AbsDimension x="-5"/>
-                        </Offset>
-                    </Anchor>
-                    <Anchor point="TOP" relativeTo="$parentTitle" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension y="3"/>
-                        </Offset>
-                    </Anchor>
-                    <Anchor point="BOTTOM">
-                        <Offset>
-                            <AbsDimension y="-5"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Backdrop edgeFile="Interface/Editor/Templates/Border2PX.png">
-                    <BackgroundColor a="0.2" r="1" g="1" b="1"/>
-                </Backdrop>
-            </Frame>
-        </Frames>
         <Layers>
             <Layer>
                 <FontString name="$parentTitle" fontHeight="10" font="Fonts/Vera.ttf">
@@ -80,9 +51,6 @@
         <Size>
             <AbsDimension x="45" y="52"/>
         </Size>
-        <HitRectInsets>
-            <AbsInset left="3" right="3" top="3" bottom="3"/>
-        </HitRectInsets>
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture name="$parentBackground" file="Interface/Editor/PanelBar/PanelHeaderBackground.png">

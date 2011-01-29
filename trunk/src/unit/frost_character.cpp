@@ -106,7 +106,8 @@ namespace Frost
         }
 
         pBodyModel_->AttachTo(pNode_);
-        pBodyModel_->SetOgreInterface(&mOgreInterface_);
+        mOgreInterface_.BindEntity(pBodyModel_->GetEntity());
+        mOgreInterface_.SetSceneObject(this);
 
         const AxisAlignedBox& mBox = pBodyModel_->GetBoundingBox();
         const Vector& mMin = mBox.GetMin();
@@ -177,14 +178,14 @@ namespace Frost
         MovableUnit::Update(fDelta);
     }
 
+    const s_str& Character::GetType() const
+    {
+        return CLASS_NAME;
+    }
+
     void CharacterOgreInterface::SetCharacter( s_ptr<Character> pCharacter )
     {
         pCharacter_ = pCharacter;
-    }
-
-    s_bool CharacterOgreInterface::IsSelectable() const
-    {
-        return true;
     }
 
     void CharacterOgreInterface::On( const s_str& sEvent )

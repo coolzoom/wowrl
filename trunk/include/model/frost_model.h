@@ -111,6 +111,7 @@ namespace Frost
     private :
 
         s_ptr<const ModelData> pModelData_;
+        s_ptr<Ogre::Entity>    pEntity_;
         s_ptr<Ogre::Mesh>      pMesh_;
         AxisAlignedBox         mBoundingBox_;
 

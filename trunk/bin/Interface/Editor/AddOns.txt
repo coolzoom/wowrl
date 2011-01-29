@@ -8,6 +8,7 @@ ConfigMenu:1
 MenuBar:1
 ToolBox:1
 ModelEditor:1
+ObjectList:1
 PanelBar:1
 #Others
 FPSCounter:1

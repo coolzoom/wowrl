@@ -111,7 +111,7 @@ s_bool EditorFrameFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = false;
+    s_bool bEditor = true;
 
     // Read commands
     if (argc > 1)
@@ -166,11 +166,11 @@ int main(int argc, char* argv[])
             pGUIMgr->ReadFiles();
 
             // Populate the world !
-            ZoneManager::GetSingleton()->LoadZone("Test");
+            ZoneManager::GetSingleton()->LoadZone("SmallHouse");
 
             // Create Units
             s_ptr<Character> pChar = UnitManager::GetSingleton()->CreateCharacter("Athrauka", "Orc", Character::GENDER_MALE);
-            pChar->Teleport(Vector(-40.0f, 6.0f, 40.0f));
+            pChar->Teleport(Vector(-11.3391f, 27.5f, 0.5f));
 
             pChar->SetClass("MAGE");
             pChar->SetLevel(51);

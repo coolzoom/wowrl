@@ -46,6 +46,8 @@ function MenuBar:CreateMenuDropDown(caption)
             local backdrop = dropdown:GetBackdrop();
             backdrop.edgeFile = "Interface/Editor/MenuBar/DropDownBorder.png";
             dropdown:SetBackdrop(backdrop);
+			dropdown:EnableMouse(true);
+			dropdown:SetHitRectInsets(5, 5, 0, 5);
             dropdown.menu = menu;
             dropdown.children = {};
 
@@ -82,7 +84,7 @@ function MenuBar:AddMenuItem(menuCaption, itemCaption, keycode)
             MenuBar:CreateMenuDropDown(menuCaption);
         end
         if (menu.DropDown) then
-            local item = CreateFrame("Button", "$parent"..itemCaption, menu, "ButtonTemplate_MenuItem");
+            local item = CreateFrame("Button", "$parent"..itemCaption, menu.DropDown, "ButtonTemplate_MenuItem");
             if (item) then
                 item.caption = menuCaption..itemCaption;
 
@@ -133,7 +135,7 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
             MenuBar:CreateMenuDropDown(menuCaption);
         end
         if (menu.DropDown) then
-            local item = CreateFrame("CheckButton", "$parent"..itemCaption, menu, "CheckButtonTemplate_MenuCheckItem");
+            local item = CreateFrame("CheckButton", "$parent"..itemCaption, menu.DropDown, "CheckButtonTemplate_MenuCheckItem");
             if (item) then
                 item.caption = menuCaption..itemCaption;
 
@@ -180,26 +182,23 @@ function MenuBar:AddMenuCheckItem(menuCaption, itemCaption, keycode, defaultStat
 end
 
 function MenuBar:SetCurrentDropDown(dropdown)
+	AddOns.Editor:SetCurrentDropDown(dropdown, self.CloseCurrentDropDown, self);
     if (self.activeDropDown) then
         if (self.activeDropDown ~= dropdown) then
-            self.activeDropDown:Hide();
             self.activeDropDown = dropdown;
-            self.activeDropDown:Show();
         else
-            self.activeDropDown:Hide();
             self.activeDropDown = nil;
         end
     else
         self.activeDropDown = dropdown;
-        self.activeDropDown:Show();
     end
 end
 
 function MenuBar:CloseCurrentDropDown()
-    if (self.activeDropDown) then
-        self.activeDropDown:Hide();
-        self.activeDropDown = nil;
-    end
+	if (self.activeDropDown) then
+		AddOns.Editor:CloseCurrentDropDown();
+		self.activeDropDown = nil;
+	end
 end
 
 function MenuBar:UpdateHorizontalBorder()

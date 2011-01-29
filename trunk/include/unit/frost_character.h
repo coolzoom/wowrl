@@ -11,7 +11,7 @@
 
 #include "frost.h"
 #include "unit/frost_movableunit.h"
-#include "scene/frost_movableobject.h"
+#include "scene/frost_sceneobject.h"
 
 namespace Frost
 {
@@ -66,11 +66,6 @@ namespace Frost
         /** \param pCharacter The Character
         */
         void   SetCharacter(s_ptr<Character> pCharacter);
-
-        /// Checks if this object can be selected or not.
-        /** \return 'true' if this object can be selected
-        */
-        s_bool IsSelectable() const;
 
         /// Callback to react to events.
         /** \param sEvent The name of the event
@@ -145,6 +140,12 @@ namespace Frost
         /** \param pLua The Lua::State on which to push the glue
         */
         virtual void     CreateGlue(s_ptr<Lua::State> pLua);
+
+        /// Returns this object's type.
+        /** \return This object's type
+        *   \note Simply returns CLASS_NAME.
+        */
+        virtual const s_str& GetType() const;
 
         static const s_str CLASS_NAME;
 

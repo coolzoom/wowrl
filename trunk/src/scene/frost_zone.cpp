@@ -123,6 +123,7 @@ namespace Frost
 
         if (!lDoodadList_.Find(sName) && ModelManager::GetSingleton()->IsModelAvailable("Zone", sModelName))
         {
+            Log<2>("    Creating doodad : "+sName+" (with model : "+sModelName+")");
             pDoodad = new Doodad(sName, sModelName, this);
             lDoodadList_[sName] = pDoodad;
 
@@ -134,6 +135,54 @@ namespace Frost
         }
 
         return pDoodad;
+    }
+
+    s_ptr<Doodad> Zone::AddDoodad( const s_uint& uiID, const s_str& sName, const s_str& sModelName )
+    {
+        s_ptr<Doodad> pDoodad;
+
+        if (!lDoodadList_.Find(sName) && ModelManager::GetSingleton()->IsModelAvailable("Zone", sModelName))
+        {
+            Log<2>("    Creating doodad : "+sName+" (with model : "+sModelName+")");
+            pDoodad = new Doodad(uiID, sName, sModelName, this);
+            lDoodadList_[sName] = pDoodad;
+
+            s_map<s_str, ModelMaterial>::const_iterator iter = lMaterialInfoList_.Get(sModelName);
+            if (iter != lMaterialInfoList_.End())
+            {
+                iter->second.ApplyOn(pDoodad->GetModel());
+            }
+        }
+
+        return pDoodad;
+    }
+
+    void Zone::DeleteDoodad( s_ptr<Doodad> pDoodad )
+    {
+        s_map< s_str, s_ptr<Doodad> >::iterator iter = lDoodadList_.Get(pDoodad->GetName());
+        if (iter != lDoodadList_.End())
+        {
+            pDoodad.Delete();
+            lDoodadList_.Erase(iter);
+        }
+        else
+        {
+            Warning(CLASS_NAME, "No Doodad found with the name \""+pDoodad->GetName()+"\".");
+        }
+    }
+
+    void Zone::DeleteDoodad( const s_str& sName )
+    {
+        s_map< s_str, s_ptr<Doodad> >::iterator iter = lDoodadList_.Get(sName);
+        if (iter != lDoodadList_.End())
+        {
+            iter->second.Delete();
+            lDoodadList_.Erase(iter);
+        }
+        else
+        {
+            Warning(CLASS_NAME, "No Doodad found with the name \""+sName+"\".");
+        }
     }
 
     s_ptr<Doodad> Zone::GetDoodadByName( const s_str& sName ) const
@@ -237,5 +286,10 @@ namespace Frost
     const s_map<s_str, ModelMaterial>& Zone::GetMaterialInfoList() const
     {
         return lMaterialInfoList_;
+    }
+
+    const s_map< s_str, s_ptr<Doodad> >& Zone::GetDoodadList() const
+    {
+        return lDoodadList_;
     }
 }

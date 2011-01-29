@@ -31,7 +31,7 @@ namespace Frost
 {
     const s_str Model::CLASS_NAME = "Model";
 
-    Model::Model( const ModelData& mData, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(pSceneManager)
+    Model::Model( const ModelData& mData, const s_str& sEntityName, s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(s_uint::NaN, pSceneManager)
     {
         pModelData_ = &mData;
         pMesh_ = mData.pMesh_;

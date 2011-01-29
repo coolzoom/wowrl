@@ -86,7 +86,8 @@ void ModelFrame::OnEvent( const Event& mEvent )
     {
         if (pCamera_)
         {
-            pCamera_->Translate(-2.0*mEvent[0].Get<s_float>()*Vector::UNIT_Z, true);
+            s_float fDist = 0.5f*(pCamera_->GetPosition() - pCamera_->GetOrbitCenter()).GetLength();
+            pCamera_->Translate(-mEvent[0].Get<s_float>()*fDist*Vector::UNIT_Z, true);
             NotifyRendererNeedRedraw();
             bRedrawRenderTarget_ = true;
         }
@@ -685,9 +686,10 @@ void ModelFrame::Update()
 
         if (bLeft && bRight)
         {
-            if (!fRelDX.IsNull())
+            if (!fRelDX.IsNull() || !fRelDY.IsNull())
             {
-                pCamera_->Translate(fRelDY*Vector::UNIT_Z, true);
+                s_float fDist = (pCamera_->GetPosition() - pCamera_->GetOrbitCenter()).GetLength();
+                pCamera_->Translate(-fRelDX*fDist*Vector::UNIT_X + fRelDY*fDist*Vector::UNIT_Y, true);
 
                 NotifyRendererNeedRedraw();
                 bRedrawRenderTarget_ = true;
@@ -801,8 +803,6 @@ void ModelFrame::UpdateRenderTarget_()
         }
     }
 }
-
-// TODO : # finir modeleditor
 
 void ModelFrame::SetupCamera_()
 {

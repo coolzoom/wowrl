@@ -7,9 +7,6 @@
 #include "frost_utils_stdhelper.h"
 #include "frost_utils_log.h"
 
-/*#include <OgreArchiveManager.h>
-#include <OgreStringVector.h>*/
-
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -18,7 +15,6 @@
     // Note : Taken directly from Ogre3D
     // http://www.ogre3d.org/
 
-    // TODO : test me
     #include <dirent.h>
     #include <unistd.h>
     #include <fnmatch.h>

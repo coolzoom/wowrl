@@ -12,6 +12,7 @@
 #include "scene/frost_scenemanager.h"
 #include "scene/frost_gizmo.h"
 
+#include "scene/frost_zone.h"
 #include "scene/frost_physicsmanager.h"
 
 #include <OgreSceneNode.h>
@@ -22,8 +23,8 @@ namespace Frost
 {
     const s_str Doodad::CLASS_NAME = "Doodad";
 
-    Doodad::Doodad(const s_str& sName, const s_str& sModelName, s_ptr<Zone> pParent) :
-        sName_(sName), sModelName_(sModelName), pParent_(pParent), bIsShown_(true)
+    Doodad::Doodad( const s_str& sName, const s_str& sModelName, s_ptr<Zone> pParent) :
+        SceneObject(uiID_, sName), sModelName_(sModelName), pParent_(pParent)
     {
         mOgreInterface_.SetDoodad(this);
         if (Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR)
@@ -33,11 +34,33 @@ namespace Frost
         if (pModel_)
         {
             pModel_->AttachTo(this);
-            pModel_->SetOgreInterface(&mOgreInterface_);
-            pEntity_ = pModel_->GetEntity();
+            mOgreInterface_.BindEntity(pModel_->GetEntity());
+            mOgreInterface_.SetSceneObject(this);
         }
 
         pNode_->setFixedYawAxis(false);
+
+        bIsSelectable_ = (Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR);
+    }
+
+    Doodad::Doodad( const s_uint& uiID, const s_str& sName, const s_str& sModelName, s_ptr<Zone> pParent) :
+        MovableObject(uiID), SceneObject(uiID, sName), sModelName_(sModelName), pParent_(pParent)
+    {
+        mOgreInterface_.SetDoodad(this);
+        if (Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR)
+            mOgreInterface_.EnableMouse(true);
+
+        pModel_ = ModelManager::GetSingleton()->CreateModel("Zone", sModelName, sName_);
+        if (pModel_)
+        {
+            pModel_->AttachTo(this);
+            mOgreInterface_.BindEntity(pModel_->GetEntity());
+            mOgreInterface_.SetSceneObject(this);
+        }
+
+        pNode_->setFixedYawAxis(false);
+
+        bIsSelectable_ = (Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR);
     }
 
     Doodad::~Doodad()
@@ -98,11 +121,6 @@ namespace Frost
             pGizmo_->Hide();
     }
 
-    const s_bool& Doodad::IsShown()
-    {
-        return bIsShown_;
-    }
-
     void Doodad::Highlight( const s_bool& bHighlighted )
     {
         if (bHighlighted != bHighlighted_)
@@ -139,6 +157,7 @@ namespace Frost
         {
             pGizmo_ = SceneManager::GetSingleton()->CreateGizmo();
             pGizmo_->SetControlledObject(this);
+            pGizmo_->SetExtents(pModel_->GetBoundingBox());
         }
 
         pGizmo_->Show();
@@ -179,24 +198,29 @@ namespace Frost
         return pModel_;
     }
 
-    const s_str& Doodad::GetName() const
-    {
-        return sName_;
-    }
-
     const s_str& Doodad::GetModelName() const
     {
         return sModelName_;
     }
 
+    s_ptr<Zone> Doodad::GetZone() const
+    {
+        return pParent_;
+    }
+
+    const s_str& Doodad::GetType() const
+    {
+        return CLASS_NAME;
+    }
+
+    s_refptr<EditorAction> Doodad::CreateDeleteAction()
+    {
+        return s_refptr<EditorAction>(new DoodadDeleteAction(this));
+    }
+
     void DoodadOgreInterface::SetDoodad( s_ptr<Doodad> pDoodad )
     {
         pDoodad_ = pDoodad;
-    }
-
-    s_bool DoodadOgreInterface::IsSelectable() const
-    {
-        return Engine::GetSingleton()->GetState() == Engine::STATE_EDITOR;
     }
 
     s_bool DoodadOgreInterface::IsMouseEnabled() const
@@ -210,9 +234,31 @@ namespace Frost
             pDoodad_->Highlight(true);
         else if (sEvent == "Leave")
             pDoodad_->Highlight(false);
-        else if (sEvent == "Selected")
-            pDoodad_->Select(true);
-        else if (sEvent == "Deselected")
-            pDoodad_->Select(false);
+    }
+
+    DoodadDeleteAction::DoodadDeleteAction( s_ptr<Doodad> pDoodad ) :
+        uiObjectID_(pDoodad->GetID()), pZone_(pDoodad->GetZone()),
+        sName_(pDoodad->GetName()), sModelName_(pDoodad->GetModelName()),
+        bCollisionsEnabled_(pDoodad->AreCollisionsEnabled()), bIsShown_(pDoodad->IsShown()),
+        mPosition_(pDoodad->GetPosition(false)), mScale_(pDoodad->GetScale(false)),
+        mOrientation_(pDoodad->GetOrientation(false))
+    {
+    }
+
+    void DoodadDeleteAction::Do()
+    {
+        pZone_->DeleteDoodad(sName_);
+        EventManager::GetSingleton()->FireEvent(Event("OBJECT_REMOVED"));
+    }
+
+    void DoodadDeleteAction::Undo()
+    {
+        s_ptr<Doodad> pDoodad = pZone_->AddDoodad(uiObjectID_, sName_, sModelName_);
+        if (bCollisionsEnabled_) pDoodad->EnableCollisions();
+        if (bIsShown_) pDoodad->Show(); else pDoodad->Hide();
+        pDoodad->SetPosition(mPosition_);
+        pDoodad->SetScale(mScale_);
+        pDoodad->SetOrientation(mOrientation_);
+        EventManager::GetSingleton()->FireEvent(Event("OBJECT_ADDED"));
     }
 }

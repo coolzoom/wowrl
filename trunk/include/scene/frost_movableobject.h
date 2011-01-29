@@ -13,79 +13,12 @@
 
 #include "path/frost_path.h"
 
-#include <OgreUserDefinedObject.h>
 #include <OgreQuaternion.h>
 
 #include <utils/frost_utils_lua.h>
 
 namespace Frost
 {
-    /// Abstract base class for mouse picking.
-    /** The use of this class is to react to mouse picking in the
-    *   3D world. It must be derivated to implement the On() function,
-    *   which defines the click behavior of the associated object.
-    */
-    class OgreInterface : public Ogre::UserDefinedObject
-    {
-    public :
-
-        /// Constructor.
-        OgreInterface();
-
-        /// Destructor.
-        virtual ~OgreInterface();
-
-        /// Sets the associated MovableObject.
-        /** \param pMovableObject The associated MovableObject
-        */
-        void                 SetMovableObject(s_ptr<MovableObject> pMovableObject);
-
-        /// Returns the associated MovableObject.
-        /** \return The associated MovableObject
-        */
-        s_ptr<MovableObject> GetMovableObject() const;
-
-        /// Sets the priority of this object.
-        /** \param iPriority The priority
-        *   \note No matter if there is an object in front of
-        *         this one : if its priority is higher, it will
-        *         be picked in place of the other one.<br>
-        *         Default is 0.
-        */
-        void                 SetPriority(const s_int& iPriority);
-
-        /// Returns the priority of this object.
-        /** \return The priority of this object
-        */
-        const s_int&         GetPriority() const;
-
-        /// Allows this object to react to mouse events.
-        /** \param bEnable 'true' to enable mouse events
-        */
-        void                 EnableMouse(const s_bool& bEnable);
-
-        /// Checks if this object can react to mouse events.
-        /** \return 'true' if this object can react to mouse events
-        */
-        virtual s_bool       IsMouseEnabled() const;
-
-        /// Checks if this object can be selected or not.
-        /** \return 'true' if this object can be selected
-        */
-        virtual s_bool       IsSelectable() const;
-
-        /// Callback to react to events.
-        /** \param sEvent The name of the event
-        */
-        virtual void         On(const s_str& sEvent) = 0;
-
-    private :
-
-        s_ptr<MovableObject> pMovableObject_;
-        s_int                iPriority_;
-        s_bool               bMouseEnabled_;
-    };
-
     /// A class storing position, orientation and scale
     /** It's a base for every object in the 3D world.
     */
@@ -97,27 +30,20 @@ namespace Frost
         /** \param pSceneManager The scene manager in which to create the object
         *   \note If no scene manager is provided, the default one is used.
         */
-        MovableObject(s_ptr<Ogre::SceneManager> pSceneManager = nullptr);
+        MovableObject(const s_uint& uiID = s_uint::NaN, s_ptr<Ogre::SceneManager> pSceneManager = nullptr);
 
         /// Constructor.
         /** \param mPosition     The initial position to give to this object
         *   \param pSceneManager The scene manager in which to create the object
         *   \note If no scene manager is provided, the default one is used.
         */
-        MovableObject(const Vector& mPosition, s_ptr<Ogre::SceneManager> pSceneManager = nullptr);
+        MovableObject(const Vector& mPosition, const s_uint& uiID = s_uint::NaN, s_ptr<Ogre::SceneManager> pSceneManager = nullptr);
 
         /// Copy constructor.
         MovableObject(const MovableObject& mObject);
 
         /// Destructor.
         virtual ~MovableObject();
-
-        /// Sets the OgreInterface object to use as a callback.
-        /** \param pOgreInterface The callback object
-        *   \note  This movable object <b>must</b> have an entity for
-        *          the callback to work properly.
-        */
-        void                  SetOgreInterface(s_ptr<OgreInterface> pOgreInterface);
 
         /// Attaches this object to another.
         /** \param pObject       The new parent
@@ -324,11 +250,6 @@ namespace Frost
         */
         s_ptr<Ogre::SceneNode> GetOgreNode();
 
-        /// Returns this MovableObject's entity (if any).
-        /** \return This MovableObject's entity (if any)
-        */
-        s_ptr<Ogre::Entity>   GetOgreEntity();
-
         /// Returns this MovableObject's unique ID.
         /** \return This MovableObject's unique ID
         */
@@ -373,7 +294,6 @@ namespace Frost
         s_ctnr< s_ptr<MovableObject> > lLookingAtList_;
 
         s_ptr<Ogre::SceneManager> pSceneManager_;
-        s_ptr<Ogre::Entity>       pEntity_;
         s_ptr<Ogre::SceneNode>    pNode_;
         s_ptr<Ogre::SceneNode>    pTargetNode_;
 

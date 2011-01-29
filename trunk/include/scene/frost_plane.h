@@ -59,6 +59,7 @@ namespace Frost
 
     private :
 
+        s_ptr<Ogre::Entity> pEntity_;
         s_refptr<Material>  pMaterial_;
 
     };
