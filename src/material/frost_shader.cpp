@@ -270,6 +270,7 @@ namespace Frost
         {
             try
             {
+                Log<2>("   Loading vertex shader : "+sName_);
                 Ogre::HighLevelGpuProgram* pProgram;
 
                 // HLSL
@@ -365,6 +366,7 @@ namespace Frost
         {
             try
             {
+                Log<2>("   Loading pixel shader  : "+sName_);
                 Ogre::HighLevelGpuProgram* pProgram;
 
                 // HLSL

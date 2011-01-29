@@ -7,9 +7,18 @@ UIParent:SetScript("OnMouseUp", function ()
     end
 
     if (arg1 == "LeftButton") then
-        if (this.activeDropDown) then
-            this.activeDropDown:Hide();
-            this.activeDropDown = nil;
+        if (AddOns.Editor.activeDropDown) then
+			if (AddOns.Editor.dropDownCloseFunction) then
+				if (AddOns.Editor.dropDownCloseFunctionObject) then
+					AddOns.Editor.dropDownCloseFunction(AddOns.Editor.dropDownCloseFunctionObject);
+				else
+					AddOns.Editor.dropDownCloseFunction();
+				end
+			else
+				AddOns.Editor.activeDropDown:Hide();
+			end
+			
+            AddOns.Editor.activeDropDown = nil;
         end
     elseif (arg1 == "RightButton") then
         -- Handle right clicking the 3D view
@@ -21,12 +30,12 @@ function AddOns.Editor:SetWorldClickFunction(func)
 end
 
 function AddOns.Editor:NotifyDataChanged()
-    MenuBar.File.Save:Enable();
+    MenuBar.File.DropDown.Save:Enable();
     self.dataSaved = false;
 end
 
 function AddOns.Editor:NotifyDataSaved()
-    MenuBar.File.Save:Disable();
+    MenuBar.File.DropDown.Save:Disable();
     self.dataSaved = true;
 end
 
@@ -62,18 +71,24 @@ function AddOns.Editor:IsMouseDecalEnabled()
     return self.mouseDecalEnabled;
 end
 
-function AddOns.Editor:SetCurrentDropDown(dropdown)
+function AddOns.Editor:SetCurrentDropDown(dropdown, closeFunction, functionObject)
     if (self.activeDropDown) then
         if (self.activeDropDown ~= dropdown) then
             self.activeDropDown:Hide();
             self.activeDropDown = dropdown;
+			self.dropDownCloseFunction = closeFunction;
+			self.dropDownCloseFunctionObject = functionObject;
             self.activeDropDown:Show();
         else
             self.activeDropDown:Hide();
             self.activeDropDown = nil;
+			self.dropDownCloseFunction = nil;
+			self.dropDownCloseFunctionObject = nil;
         end
     else
         self.activeDropDown = dropdown;
+		self.dropDownCloseFunction = closeFunction;
+			self.dropDownCloseFunctionObject = functionObject;
         self.activeDropDown:Show();
     end
 end

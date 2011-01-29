@@ -1,7 +1,7 @@
 <Ui>
     <Frame name="FileSelector" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
         <Size>
-            <AbsDimension x="600" y="300"/>
+            <AbsDimension x="600" y="500"/>
         </Size>
         <Anchors>
             <Anchor point="CENTER"/>

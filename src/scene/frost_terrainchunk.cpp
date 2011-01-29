@@ -84,6 +84,7 @@ namespace Frost
     {
         if (!bLoaded_)
         {
+            Log<3>("Loading terrain chunk : "+uiID_);
             s_ptr<Ogre::SceneManager> pSceneMgr = Engine::GetSingleton()->GetOgreSceneManager();
 
             if (bPlane_)
@@ -437,7 +438,6 @@ namespace Frost
                     Vector::FrostToOgre(mPosition_)
                 );
                 pNode_->attachObject(pEntity_.Get());
-                //pNode_->showBoundingBox(true);
 
                 pObstacle_ = new TerrainObstacle(
                     lTriangleArray, lHeightData, uiNX, uiNZ,

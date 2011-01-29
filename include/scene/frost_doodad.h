@@ -11,6 +11,7 @@
 
 #include "frost.h"
 #include "scene/frost_movableobject.h"
+#include "scene/frost_sceneobject.h"
 
 namespace Frost
 {
@@ -46,7 +47,7 @@ namespace Frost
     };
 
     /// A decorative object in a Zone.
-    class Doodad : public MovableObject
+    class Doodad : public MovableObject, public SceneObject
     {
     public :
 
@@ -57,6 +58,15 @@ namespace Frost
         *   \note You shouldn't have to call this. Use Zone::AddDoodad() instead.
         */
         Doodad(const s_str& sName, const s_str& sModelName, s_ptr<Zone> pParent);
+
+        /// Constructor.
+        /** \param uiID       The ID of this Doodad
+        *   \param sName      The name of this Doodad
+        *   \param sModelName The name of the model to use
+        *   \param pParent    The zone this Doodad belongs to
+        *   \note You shouldn't have to call this. Use Zone::AddDoodad() instead.
+        */
+        Doodad(const s_uint& uiID, const s_str& sName, const s_str& sModelName, s_ptr<Zone> pParent);
 
         /// Destructor.
         ~Doodad();
@@ -74,11 +84,6 @@ namespace Frost
 
         /// Makes this Doodad invisible.
         void          Hide();
-
-        /// Checks if this Doodad is visible.
-        /** \return 'true' if this Doodad is visible
-        */
-        const s_bool& IsShown();
 
         /// Makes this Doodad fully lighted (no shadow).
         /** \param bHighlighted 'true' to make the Doodad highlighted
@@ -106,27 +111,37 @@ namespace Frost
         */
         s_wptr<Model> GetModel();
 
-        /// Returns this Doodad's name.
-        /** \return This Doodad's name
-        */
-        const s_str&  GetName() const;
-
         /// Returns this Doodad's Model's name.
         /** \return This Doodad's Model's name
         */
         const s_str&  GetModelName() const;
 
+        /// Returns this Doodad's Zone.
+        /** \return This Doodad's Zone
+        */
+        s_ptr<Zone>   GetZone() const;
+
+        /// Creates an EditorAction capable of both creating and deleting this object.
+        /** \return An EditorAction capable of both creating and deleting this object
+        */
+        virtual s_refptr<EditorAction> CreateDeleteAction();
+
+        /// Returns this object's type.
+        /** \return This object's type
+        *   \note Simply returns CLASS_NAME.
+        */
+        const s_str& GetType() const;
+
+        using MovableObject::GetID;
+
         static const s_str CLASS_NAME;
 
     private :
 
-        s_str       sName_;
         s_str       sModelName_;
         s_ptr<Zone> pParent_;
 
-        s_bool bIsShown_;
         s_bool bHighlighted_;
-        s_bool bSelected_;
 
         s_refptr<Model>     pModel_;
         DoodadOgreInterface mOgreInterface_;
@@ -134,6 +149,25 @@ namespace Frost
         s_bool              bObstacleUpdated_;
 
         s_ptr<Gizmo> pGizmo_;
+    };
+
+    class DoodadDeleteAction : public EditorAction
+    {
+    public :
+
+        DoodadDeleteAction(s_ptr<Doodad> pDoodad);
+
+        virtual void Do();
+        virtual void Undo();
+
+    private :
+
+        s_uint           uiObjectID_;
+        s_ptr<Zone>      pZone_;
+        s_str            sName_, sModelName_;
+        s_bool           bCollisionsEnabled_, bIsShown_;
+        Vector           mPosition_, mScale_;
+        Ogre::Quaternion mOrientation_;
     };
 }
 

@@ -45,7 +45,8 @@ namespace Frost
             return;
 
         pBodyModel_ = ModelManager::GetSingleton()->CreateModel(sModelName, sName_);
-        pBodyModel_->SetOgreInterface(&mOgreInterface_);
+        mOgreInterface_.BindEntity(pBodyModel_->GetEntity());
+        mOgreInterface_.SetSceneObject(this);
     }
 
     void Creature::PushOnLua( s_ptr<Lua::State> pLua ) const
@@ -63,14 +64,14 @@ namespace Frost
         MovableUnit::Update(fDelta);
     }
 
+    const s_str& Creature::GetType() const
+    {
+        return CLASS_NAME;
+    }
+
     void CreatureOgreInterface::SetCreature( s_ptr<Creature> pCreature )
     {
         pCreature_ = pCreature;
-    }
-
-    s_bool CreatureOgreInterface::IsSelectable() const
-    {
-        return true;
     }
 
     void CreatureOgreInterface::On( const s_str& sEvent )

@@ -51,6 +51,16 @@ namespace Frost
         if (pLogFunction_)
             pLogFunction_(sMessage, bTimeStamps, uiOffset);
     }
+
+    void UtilsManager::SetLogLevel( const s_uint& uiLevel )
+    {
+        uiLogLevel_ = uiLevel;
+    }
+
+    const s_uint& UtilsManager::GetLogLevel() const
+    {
+        return uiLogLevel_;
+    }
 }
 
 

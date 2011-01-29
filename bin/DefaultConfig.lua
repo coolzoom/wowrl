@@ -4,6 +4,7 @@ GameOptions = {
     -- Generic
     ["GameVersion"] = "0045",
     ["GameLocale"] = "enGB",
+	["LogLevel"] = 10,
     
     -- Screen resolution
     ["FullScreen"] = false,

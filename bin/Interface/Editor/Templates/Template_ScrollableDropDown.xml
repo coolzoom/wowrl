@@ -76,8 +76,16 @@
                                     <AbsDimension y="-1"/>
                                 </Offset>
                             </Anchor>
-                            <Anchor point="LEFT"/>
-                            <Anchor point="RIGHT"/>
+                            <Anchor point="LEFT">
+                                <Offset>
+                                    <AbsDimension x="-1"/>
+                                </Offset>
+                            </Anchor>
+                            <Anchor point="RIGHT">
+                                <Offset>
+                                    <AbsDimension x="18"/>
+                                </Offset>
+                            </Anchor>
                         </Anchors>
                         <Backdrop edgeFile="|Border1PX.png"/>
                         <Frames>
@@ -86,9 +94,9 @@
                                     <AbsDimension x="16" y="16"/>
                                 </Size>
                                 <Anchors>
-                                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                                    <Anchor point="TOPRIGHT">
                                         <Offset>
-                                            <AbsDimension x="1"/>
+                                            <AbsDimension x="-1" y="1"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -112,9 +120,9 @@
                                     <AbsDimension x="16" y="16"/>
                                 </Size>
                                 <Anchors>
-                                    <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT">
+                                    <Anchor point="BOTTOMRIGHT">
                                         <Offset>
-                                            <AbsDimension x="1"/>
+                                            <AbsDimension x="-1" y="-1"/>
                                         </Offset>
                                     </Anchor>
                                 </Anchors>
@@ -138,9 +146,9 @@
                                     <AbsDimension x="6"/>
                                 </Size>
                                 <Anchors>
-                                    <Anchor point="LEFT" relativePoint="RIGHT">
+                                    <Anchor point="RIGHT">
                                         <Offset>
-                                            <AbsDimension x="6"/>
+                                            <AbsDimension x="-6"/>
                                         </Offset>
                                     </Anchor>
                                     <Anchor point="TOP" relativeTo="$parentUp" relativePoint="BOTTOM">

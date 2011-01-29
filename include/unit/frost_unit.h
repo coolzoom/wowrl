@@ -10,7 +10,8 @@
 #define FROST_UNIT_H
 
 #include "frost.h"
-#include "frost_stats.h"
+#include "unit/frost_stats.h"
+#include "scene/frost_sceneobject.h"
 #include <utils/frost_utils_lua.h>
 
 namespace Frost
@@ -28,7 +29,7 @@ namespace Frost
     *   A Unit can move on its own and interract with
     *   the world.
     */
-    class Unit : public EventReceiver
+    class Unit : public EventReceiver, public SceneObject
     {
     public :
 
@@ -185,12 +186,7 @@ namespace Frost
         /// Tells this Unit that it has been selected/deselected.
         /** \param bSelected 'true' if the Unit has been selected
         */
-        void             NotifySelected(const s_bool& bSelected);
-
-        /// Checks if this Unit is selected.
-        /** \return 'true' if this Unit is selected
-        */
-        const s_bool&    IsSelected() const;
+        void             Select(const s_bool& bSelected);
 
         /// Instantaneously move this Unit to a given position.
         /** \param mDestination The new position of the Unit
@@ -271,16 +267,6 @@ namespace Frost
         */
         s_ptr<Camera>    GetCamera();
 
-        /// Returns this Unit's name.
-        /** \return This Unit's name
-        */
-        const s_str&     GetName() const;
-
-        /// Returns this Unit's ID.
-        /** \return This Unit's ID
-        */
-        const s_uint&    GetID() const;
-
         /// Returns the ID that represents this Unit in the Lua code.
         /** \return The ID that represents this Unit in the Lua code
         */
@@ -307,12 +293,20 @@ namespace Frost
         */
         virtual void     Update(const s_float& fDelta);
 
+        /// Returns this object's type.
+        /** \return This object's type
+        *   \note Simply returns CLASS_NAME.
+        */
+        virtual const s_str& GetType() const;
+
+        /// Creates an EditorAction capable of both creating and deleting this object.
+        /** \return An EditorAction capable of both creating and deleting this object
+        */
+        virtual s_refptr<EditorAction> CreateDeleteAction();
+
         static const s_str CLASS_NAME;
 
     protected :
-
-        s_uint uiID_;
-        s_str  sName_;
 
         s_ctnr< s_ptr<LuaUnit> > lGlueList_;
 

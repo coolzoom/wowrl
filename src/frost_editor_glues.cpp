@@ -9,6 +9,7 @@
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "scene/frost_scenemanager.h"
+#include "scene/frost_sceneobject.h"
 #include "scene/frost_zonemanager.h"
 #include "scene/frost_zone.h"
 #include "material/frost_material.h"
@@ -45,7 +46,8 @@ namespace Frost
         {
             try
             {
-                pEditor_->AddDoodad(mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString());
+                pEditor_->AddEditorAction(s_refptr<AddDoodadAction>(new AddDoodadAction(mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString())));
+                EventManager::GetSingleton()->FireEvent(Event("OBJECT_ADDED"));
                 mFunc.PushNil();
             }
             catch (Exception& e)
@@ -71,6 +73,45 @@ namespace Frost
         Lua::Function mFunc("Editor:CanUndo", pLua, 1);
 
         mFunc.Push(pEditor_->CanUndo());
+
+        return mFunc.Return();
+    }
+
+    int LuaEditor::_DeleteObject( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:DeselectObject", pLua, 1);
+        mFunc.Add(0, "object id", Lua::TYPE_NUMBER);
+        if (mFunc.Check())
+        {
+            s_ptr<SceneObject> pObj = SceneManager::GetSingleton()->GetSceneObjectByID(s_uint(mFunc.Get(0)->GetNumber()));
+            if (!pObj)
+            {
+                Warning(mFunc.GetName(), "No object found with ID "+mFunc.Get(0)->GetNumber()+".");
+                return mFunc.Return();
+            }
+
+            SceneManager::GetSingleton()->DeselectSceneObject(pObj);
+            pEditor_->AddEditorAction(pObj->CreateDeleteAction());
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEditor::_DeselectObject( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:DeselectObject", pLua, 1);
+        mFunc.Add(0, "object id", Lua::TYPE_NUMBER);
+        if (mFunc.Check())
+        {
+            s_ptr<SceneObject> pObj = SceneManager::GetSingleton()->GetSceneObjectByID(s_uint(mFunc.Get(0)->GetNumber()));
+            if (!pObj)
+            {
+                Warning(mFunc.GetName(), "No object found with ID "+mFunc.Get(0)->GetNumber()+".");
+                return mFunc.Return();
+            }
+
+            SceneManager::GetSingleton()->DeselectSceneObject(pObj);
+        }
 
         return mFunc.Return();
     }
@@ -150,6 +191,50 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_GetObjectList( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:GetObjectList", pLua);
+
+        s_ptr<Lua::State> pState = mFunc.GetState();
+
+        const s_map< s_uint, s_ptr<SceneObject> >& lObjectList = SceneManager::GetSingleton()->GetSceneObjectList();
+        s_map< s_uint, s_ptr<SceneObject> >::const_iterator iter;
+        foreach (iter, lObjectList)
+        {
+            pState->NewTable();
+            pState->SetFieldString("name", iter->second->GetName());
+            pState->SetFieldInt("id", s_int(iter->first));
+            pState->SetFieldString("type", iter->second->GetType());
+
+            mFunc.NotifyPushed();
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEditor::_GetSelectedObjectCount( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:GetSelectedObjectCount", pLua, 1);
+
+        mFunc.Push(SceneManager::GetSingleton()->GetSelectedSceneObjectList().GetSize());
+
+        return mFunc.Return();
+    }
+
+    int LuaEditor::_GetSelectedObjects( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:GetSelectedObjects", pLua);
+
+        const s_map< s_uint, s_ptr<SceneObject> >& lObjects = SceneManager::GetSingleton()->GetSelectedSceneObjectList();
+        s_map< s_uint, s_ptr<SceneObject> >::const_iterator iter;
+        foreach (iter, lObjects)
+        {
+            mFunc.Push(iter->second->GetID());
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_GetZoneModelList( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:GetZoneModelList", pLua);
@@ -167,6 +252,29 @@ namespace Frost
         else
         {
             Warning(mFunc.GetName(), "Can't create a model list if no zone is loaded.");
+        }
+
+        return mFunc.Return();
+    }
+
+    int LuaEditor::_HideObject( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:ShowObject", pLua, 1);
+        mFunc.Add(0, "object id", Lua::TYPE_NUMBER);
+        if (mFunc.Check())
+        {
+            s_ptr<SceneObject> pObj = SceneManager::GetSingleton()->GetSceneObjectByID(s_uint(mFunc.Get(0)->GetNumber()));
+            if (!pObj)
+            {
+                Warning(mFunc.GetName(), "No object found with ID "+mFunc.Get(0)->GetNumber()+".");
+                return mFunc.Return();
+            }
+            if (pObj->IsShown())
+            {
+                pEditor_->AddEditorAction(s_refptr<EditorAction>(new VisibilityAction(
+                    pObj, false
+                )));
+            }
         }
 
         return mFunc.Return();
@@ -204,6 +312,7 @@ namespace Frost
             if (pZone)
             {
                 pZone->RegisterModel(mFunc.Get(0)->GetString(), mFunc.Get(1)->GetString());
+                EventManager::GetSingleton()->FireEvent(Event("MODEL_CREATED"));
             }
         }
 
@@ -371,6 +480,24 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_SelectObject( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:SelectObject", pLua, 1);
+        mFunc.Add(0, "object id", Lua::TYPE_NUMBER);
+        if (mFunc.Check())
+        {
+            s_ptr<SceneObject> pObj = SceneManager::GetSingleton()->GetSceneObjectByID(s_uint(mFunc.Get(0)->GetNumber()));
+            if (!pObj)
+            {
+                Warning(mFunc.GetName(), "No object found with ID "+mFunc.Get(0)->GetNumber()+".");
+                return mFunc.Return();
+            }
+            SceneManager::GetSingleton()->SelectSceneObject(pObj);
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_SetBackgroundColor( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:SetBackgroundColor", pLua);
@@ -456,6 +583,29 @@ namespace Frost
         return mFunc.Return();
     }
 
+    int LuaEditor::_ShowObject( lua_State* pLua )
+    {
+        Lua::Function mFunc("Editor:ShowObject", pLua, 1);
+        mFunc.Add(0, "object id", Lua::TYPE_NUMBER);
+        if (mFunc.Check())
+        {
+            s_ptr<SceneObject> pObj = SceneManager::GetSingleton()->GetSceneObjectByID(s_uint(mFunc.Get(0)->GetNumber()));
+            if (!pObj)
+            {
+                Warning(mFunc.GetName(), "No object found with ID "+mFunc.Get(0)->GetNumber()+".");
+                return mFunc.Return();
+            }
+            if (!pObj->IsShown())
+            {
+                pEditor_->AddEditorAction(s_refptr<EditorAction>(new VisibilityAction(
+                    pObj, true
+                )));
+            }
+        }
+
+        return mFunc.Return();
+    }
+
     int LuaEditor::_UnloadZone( lua_State* pLua )
     {
         Lua::Function mFunc("Editor:UnloadZone", pLua);
@@ -488,11 +638,17 @@ namespace Frost
         method(Editor, AddDoodad),
         method(Editor, CanRedo),
         method(Editor, CanUndo),
+        method(Editor, DeleteObject),
+        method(Editor, DeselectObject),
         method(Editor, GetCurrentZoneFile),
         method(Editor, GetBackgroundColor),
         method(Editor, GetModelFile),
         method(Editor, GetModelMaterial),
+        method(Editor, GetObjectList),
+        method(Editor, GetSelectedObjectCount),
+        method(Editor, GetSelectedObjects),
         method(Editor, GetZoneModelList),
+        method(Editor, HideObject),
         method(Editor, IsModelLoaded),
         method(Editor, IsZoneLoaded),
         method(Editor, IsZoneSaved),
@@ -503,9 +659,11 @@ namespace Frost
         method(Editor, Redo),
         method(Editor, RegisterNewModel),
         method(Editor, SaveZone),
+        method(Editor, SelectObject),
         method(Editor, SetBackgroundColor),
         method(Editor, SetCurrentTool),
         method(Editor, SetModelMaterial),
+        method(Editor, ShowObject),
         method(Editor, ToggleShading),
         method(Editor, ToggleWireframeView),
         method(Editor, UnloadZone),

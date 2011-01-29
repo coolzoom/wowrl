@@ -18,7 +18,7 @@ namespace Frost
 {
     const s_str Camera::CLASS_NAME = "Camera";
 
-    Camera::Camera( s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(pSceneManager)
+    Camera::Camera( s_ptr<Ogre::SceneManager> pSceneManager ) : MovableObject(s_uint::NaN, pSceneManager)
     {
         pOgreCamera_ = pSceneManager_->createCamera(("Camera_"+uiID_).Get());
         pOgreCamera_->setNearClipDistance(1);

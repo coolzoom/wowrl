@@ -93,6 +93,7 @@ namespace Frost
 
     void GameplayManager::ParseData()
     {
+        Log<1>("Loading gameplays...");
         Directory mDir("Gameplays");
         s_ctnr<s_str> lXMLFileList = mDir.GetFileList(true, "xml");
         s_ctnr<s_str>::iterator iter;
@@ -100,6 +101,7 @@ namespace Frost
         {
             ParseXMLFile_(*iter);
         }
+        Log<1>("Done.");
     }
 
     s_ptr<Lua::State> GameplayManager::GetLua()

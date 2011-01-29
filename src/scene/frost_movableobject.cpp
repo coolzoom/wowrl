@@ -20,8 +20,8 @@ namespace Frost
 {
     const s_str MovableObject::CLASS_NAME = "MovableObject";
 
-    MovableObject::MovableObject( s_ptr<Ogre::SceneManager> pSceneManager ) :
-        mInitialDirection_(-Vector::UNIT_Z)
+    MovableObject::MovableObject( const s_uint& uiID, s_ptr<Ogre::SceneManager> pSceneManager ) :
+        uiID_(uiID), mInitialDirection_(-Vector::UNIT_Z)
     {
         uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
 
@@ -36,8 +36,8 @@ namespace Frost
         pNode_->setFixedYawAxis(true);
     }
 
-    MovableObject::MovableObject( const Vector& mPosition, s_ptr<Ogre::SceneManager> pSceneManager ) :
-        mInitialDirection_(-Vector::UNIT_Z)
+    MovableObject::MovableObject( const Vector& mPosition, const s_uint& uiID, s_ptr<Ogre::SceneManager> pSceneManager ) :
+        uiID_(uiID), mInitialDirection_(-Vector::UNIT_Z)
     {
         uiID_ = SceneManager::GetSingleton()->RegisterObject(this);
 
@@ -101,14 +101,6 @@ namespace Frost
         }
 
         pSceneManager_->destroySceneNode(pNode_.Get());
-    }
-
-    void MovableObject::SetOgreInterface( s_ptr<OgreInterface> pOgreInterface )
-    {
-        if (pEntity_)
-        {
-            pEntity_->setUserObject(pOgreInterface.Get());
-        }
     }
 
     void MovableObject::AttachTo( s_ptr<MovableObject> pObject, const s_bool& bInheritRot, const s_bool& bInheritScale )
@@ -480,11 +472,6 @@ namespace Frost
         return uiID_;
     }
 
-    s_ptr<Ogre::Entity> MovableObject::GetOgreEntity()
-    {
-        return pEntity_;
-    }
-
     void MovableObject::Update( const s_float& fDelta )
     {
         if (pPathIterator_.IsValid())
@@ -533,48 +520,5 @@ namespace Frost
     void MovableObject::PushOnLua( s_ptr<Lua::State> pLua ) const
     {
         pLua->PushGlobal("Movable_"+uiID_);
-    }
-
-    OgreInterface::OgreInterface()
-    {
-    }
-
-    OgreInterface::~OgreInterface()
-    {
-    }
-
-    void OgreInterface::SetMovableObject( s_ptr<MovableObject> pMovableObject )
-    {
-        pMovableObject_ = pMovableObject;
-    }
-
-    s_ptr<MovableObject> OgreInterface::GetMovableObject() const
-    {
-        return pMovableObject_;
-    }
-
-    void OgreInterface::SetPriority( const s_int& iPriority )
-    {
-        iPriority_ = iPriority;
-    }
-
-    const s_int& OgreInterface::GetPriority() const
-    {
-        return iPriority_;
-    }
-
-    s_bool OgreInterface::IsSelectable() const
-    {
-        return false;
-    }
-
-    void OgreInterface::EnableMouse( const s_bool& bEnable )
-    {
-        bMouseEnabled_ = bEnable;
-    }
-
-    s_bool OgreInterface::IsMouseEnabled() const
-    {
-        return bMouseEnabled_;
     }
 }

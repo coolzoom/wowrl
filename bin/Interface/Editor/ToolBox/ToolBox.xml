@@ -1,11 +1,14 @@
 <Ui>
-    <Frame name="ToolBox" parent="UIParent">
+    <Frame name="ToolBox" parent="UIParent" enableMouse="true">
         <Size>
             <AbsDimension x="64" y="128"/>
         </Size>
         <Anchors>
             <Anchor point="LEFT"/>
         </Anchors>
+		<HitRectInsets>
+			<AbsInset right="21" top="5" bottom="5"/>
+		</HitRectInsets>
         <Scripts>
             <OnLoad>
                 this.normalBgColor   = Color(0.75, 0.75, 0.75);

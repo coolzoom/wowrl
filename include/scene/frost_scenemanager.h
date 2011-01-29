@@ -60,6 +60,12 @@ namespace Frost
         */
         s_ptr<MovableObject> GetMovableObjectByID(const s_uint& uiID) const;
 
+        /// Returns the SceneObject associated to the provided id.
+        /** \param uiID The ID of the SceneObject you're after
+        *   \return The SceneObject associated to the provided id
+        */
+        s_ptr<SceneObject> GetSceneObjectByID(const s_uint& uiID) const;
+
         /// Deletes a particular Plane.
         /** \param pPlane The Plane to delete
         *   \note All planes created by this manager are automatically deleted
@@ -110,6 +116,24 @@ namespace Frost
             Vector::Constraint   mConstraint = Vector::CONSTRAINT_NONE
         );
 
+        /// Deselects all objects and selects a new scene object.
+        /** \param pObj The object to select
+        */
+        void           SelectSceneObject(s_ptr<SceneObject> pObj);
+
+        /// Deselects all objects and selects a new scene object.
+        /** \param pObj The object to select
+        */
+        void           DeselectSceneObject(s_ptr<SceneObject> pObj);
+
+        /// Adds a scene object to the current selection.
+        /** \param pObj The object to select
+        */
+        void           AddSceneObjectToSelection(s_ptr<SceneObject> pObj);
+
+        /// Deselects all objects.
+        void           ClearSelection();
+
         /// Makes the translated object follow the ground.
         /** \param bConstraint 'true' to force on ground
         */
@@ -128,17 +152,35 @@ namespace Frost
         */
         const s_uint&  RegisterObject(s_ptr<MovableObject> pObj);
 
+        /// Registers a scene object to this manager.
+        /** \param pObj The object to register
+        *   \note Automatically called by SceneObject.
+        */
+        void           RegisterSceneObject(s_ptr<SceneObject> pObj);
+
         /// Unregisters an object from this manager.
-        /** \param pObj The object to unreg
+        /** \param pObj The object to unregister
         *   \note Automatically called by MovableObject.
         */
         void           UnregisterObject(s_ptr<MovableObject> pObj);
+
+        /// Unregisters a scene object from this manager.
+        /** \param pObj The object to unregister
+        *   \note Automatically called by SceneObject.
+        */
+        void           UnregisterSceneObject(s_ptr<SceneObject> pObj);
 
         /// Deletes an object.
         /** \param pObj The object to delete
         *   \note Only works for objects created by this manager.
         */
         void           DeleteObject(s_ptr<MovableObject> pObj);
+
+        /// Returns all objects of the scene.
+        const s_map< s_uint, s_ptr<SceneObject> >& GetSceneObjectList() const;
+
+        /// Returns all selected objects of the scene.
+        const s_map< s_uint, s_ptr<SceneObject> >& GetSelectedSceneObjectList() const;
 
         /// Updates this manager.
         /** \param fDelta The time elapsed since the last call
@@ -192,8 +234,10 @@ namespace Frost
         s_map< s_uint, s_ptr<MovableObject> > lRegisteredObjectList_;
         s_map< s_uint, s_ptr<MovableObject> > lCreatedObjectList_;
 
+        s_map< s_uint, s_ptr<SceneObject> > lSceneObjectList_;
+        s_map< s_uint, s_ptr<SceneObject> > lSelectedObjectList_;
+
         s_ptr<OgreInterface> pMouseOveredObject_;
-        s_ptr<OgreInterface> pSelectedObject_;
         s_ptr<OgreInterface> pDraggedObject_;
 
         Transformation       mCurrentTransformation_;

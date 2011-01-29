@@ -13,6 +13,7 @@
 #include "material/frost_material.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include "scene/frost_scenemanager.h"
 #include "frost_inputmanager.h"
 
 #include <OgreEntity.h>
@@ -128,23 +129,16 @@ namespace Frost
         pControlledObject_ = pObj;
 
         if (pControlledObject_)
-        {
             AttachTo(pControlledObject_);
-            s_ptr<Ogre::Entity> pEntity = pObj->GetOgreEntity();
-            if (pEntity)
-            {
-                s_ptr<Ogre::Mesh> pMesh = pEntity->getMesh().get();
-                if (pMesh)
-                {
-                    AxisAlignedBox mBox = AxisAlignedBox::OgreToFrost(pMesh->getBounds());
-                    if (!mBox.IsInfinite())
-                    {
-                        Vector mSize = mBox.GetMax() - mBox.GetMin();
-                        s_float fScale = s_float::Min(mSize.X(), s_float::Min(mSize.Y(), mSize.Z()));
-                        SetScale(fScale*Vector::UNIT);
-                    }
-                }
-            }
+    }
+
+    void Gizmo::SetExtents( const AxisAlignedBox& mBox )
+    {
+        if (!mBox.IsInfinite())
+        {
+            Vector mSize = mBox.GetMax() - mBox.GetMin();
+            s_float fScale = s_float::Min(mSize.X(), s_float::Min(mSize.Y(), mSize.Z()));
+            SetScale(fScale*Vector::UNIT);
         }
     }
 
@@ -461,7 +455,7 @@ namespace Frost
         lAxisList_[0].mOgreInterface.SetGizmo(this, 'X');
         lAxisList_[0].mOgreInterface.EnableMouse(true);
         lAxisList_[0].mOgreInterface.SetPriority(1);
-        lAxisList_[0].pModel->SetOgreInterface(&lAxisList_[0].mOgreInterface);
+        lAxisList_[0].mOgreInterface.BindEntity(lAxisList_[0].pModel->GetEntity());
         lAxisList_[0].lDragPlaneList[0] = s_refptr<PlaneObstacle>(new PlaneObstacle());
         lAxisList_[0].lDragPlaneList[0]->SetDirection(Vector::UNIT_Y);
         lAxisList_[0].lDragPlaneList[0]->AttachTo(this);
@@ -488,7 +482,7 @@ namespace Frost
         lAxisList_[1].mOgreInterface.SetGizmo(this, 'Y');
         lAxisList_[1].mOgreInterface.EnableMouse(true);
         lAxisList_[1].mOgreInterface.SetPriority(1);
-        lAxisList_[1].pModel->SetOgreInterface(&lAxisList_[1].mOgreInterface);
+        lAxisList_[1].mOgreInterface.BindEntity(lAxisList_[1].pModel->GetEntity());
         lAxisList_[1].lDragPlaneList[0] = s_refptr<PlaneObstacle>(new PlaneObstacle());
         lAxisList_[1].lDragPlaneList[0]->SetDirection(Vector::UNIT_Z);
         lAxisList_[1].lDragPlaneList[0]->AttachTo(this);
@@ -515,7 +509,7 @@ namespace Frost
         lAxisList_[2].mOgreInterface.SetGizmo(this, 'Z');
         lAxisList_[2].mOgreInterface.EnableMouse(true);
         lAxisList_[2].mOgreInterface.SetPriority(1);
-        lAxisList_[2].pModel->SetOgreInterface(&lAxisList_[2].mOgreInterface);
+        lAxisList_[2].mOgreInterface.BindEntity(lAxisList_[1].pModel->GetEntity());
         lAxisList_[2].lDragPlaneList[0] = s_refptr<PlaneObstacle>(new PlaneObstacle());
         lAxisList_[2].lDragPlaneList[0]->SetDirection(Vector::UNIT_X);
         lAxisList_[2].lDragPlaneList[0]->AttachTo(this);
@@ -548,50 +542,50 @@ namespace Frost
     }
 
     MoveAction::MoveAction( s_ptr<MovableObject> pObject, const Vector& mOld, const Vector& mNew ) :
-        pObject_(pObject), mOldPosition_(mOld), mNewPosition_(mNew)
+        uiObjectID_(pObject->GetID()), mOldPosition_(mOld), mNewPosition_(mNew)
     {
         bCallDoWhenAdded_ = false;
     }
 
     void MoveAction::Do()
     {
-        pObject_->SetPosition(mNewPosition_);
+        SceneManager::GetSingleton()->GetMovableObjectByID(uiObjectID_)->SetPosition(mNewPosition_);
     }
 
     void MoveAction::Undo()
     {
-        pObject_->SetPosition(mOldPosition_);
+        SceneManager::GetSingleton()->GetMovableObjectByID(uiObjectID_)->SetPosition(mOldPosition_);
     }
 
     ScaleAction::ScaleAction( s_ptr<MovableObject> pObject, const Vector& mOld, const Vector& mNew ) :
-        pObject_(pObject), mOldScale_(mOld), mNewScale_(mNew)
+        uiObjectID_(pObject->GetID()), mOldScale_(mOld), mNewScale_(mNew)
     {
         bCallDoWhenAdded_ = false;
     }
 
     void ScaleAction::Do()
     {
-        pObject_->SetScale(mNewScale_);
+        SceneManager::GetSingleton()->GetMovableObjectByID(uiObjectID_)->SetScale(mNewScale_);
     }
 
     void ScaleAction::Undo()
     {
-        pObject_->SetScale(mOldScale_);
+        SceneManager::GetSingleton()->GetMovableObjectByID(uiObjectID_)->SetScale(mOldScale_);
     }
 
     RotateAction::RotateAction( s_ptr<MovableObject> pObject, const Ogre::Quaternion& mOld, const Ogre::Quaternion& mNew ) :
-        pObject_(pObject), mOldOrientation_(mOld), mNewOrientation_(mNew)
+        uiObjectID_(pObject->GetID()), mOldOrientation_(mOld), mNewOrientation_(mNew)
     {
         bCallDoWhenAdded_ = false;
     }
 
     void RotateAction::Do()
     {
-        pObject_->SetOrientation(mNewOrientation_);
+        SceneManager::GetSingleton()->GetMovableObjectByID(uiObjectID_)->SetOrientation(mNewOrientation_);
     }
 
     void RotateAction::Undo()
     {
-        pObject_->SetOrientation(mOldOrientation_);
+        SceneManager::GetSingleton()->GetMovableObjectByID(uiObjectID_)->SetOrientation(mOldOrientation_);
     }
 }

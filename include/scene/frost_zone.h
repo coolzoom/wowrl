@@ -92,6 +92,30 @@ namespace Frost
         */
         s_ptr<Doodad> AddDoodad(const s_str& sName, const s_str& sModelName);
 
+        /// Adds a Doodad to the zone.
+        /** \param uiID       The ID to give to this Doodad
+        *   \param sName      The name of the Doodad
+        *   \param sModelName The name of the model to give to this Doodad
+        *   \return The created Doodad
+        *   \note Returns nullptr if the model couldn't be found or if the
+        *         provided name was already in use.
+        *   \note This function should only be used while in Editor mode.
+        *         The ID you provide shouldn't be already in use by another
+        *         object of the scene.
+        */
+        s_ptr<Doodad> AddDoodad(const s_uint& uiID, const s_str& sName, const s_str& sModelName);
+
+        /// Removes a Doodad from the zone and deletes it.
+        /** \param pDoodad The Doodad to remove
+        *   \note The provided pointer will then become invalid.
+        */
+        void DeleteDoodad(s_ptr<Doodad> pDoodad);
+
+        /// Removes a Doodad from the zone and deletes it.
+        /** \param sName The name of the Doodad to remove
+        */
+        void DeleteDoodad(const s_str& sName);
+
         /// Returns the Doodad associated with the provided name.
         /** \param sName The name of the Doodad
         *   \return The associated Doodad (nullptr if none)
@@ -132,6 +156,9 @@ namespace Frost
 
         /// Returns the list of ModelMaterials of this Zone.
         const s_map<s_str, ModelMaterial>& GetMaterialInfoList() const;
+
+        /// Returns the list of Doodads in this Zone.
+        const s_map< s_str, s_ptr<Doodad> >& GetDoodadList() const;
 
         /// Reads this Zone's data from an XML file.
         /** \param sFile The file to read

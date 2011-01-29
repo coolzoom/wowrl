@@ -1,7 +1,7 @@
 <Ui>
     <Frame name="ObjectPanelContent">
         <Frames>
-            <Button name="$parentEditModel" inherits="ButtonTemplate_Button">
+            <Button name="$parentObjectList" inherits="ButtonTemplate_Button">
                 <Anchors>
                     <Anchor point="TOP">
                         <Offset>
@@ -22,10 +22,47 @@
                 <Scripts>
                     <OnLoad>
                         this:GetBase():OnLoad();
+                        this:SetText(AddOns.PanelBar:GetLocalizedString("ObjectsObjectList"));
+                    </OnLoad>
+                    <OnClick>
+						if (ObjectList:IsShown()) then
+							ObjectList:Hide();
+						else
+							ObjectList:Show();
+						end
+                    </OnClick>
+                </Scripts>
+            </Button>
+			
+            <Button name="$parentEditModel" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentObjectList" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="13"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
                         this:SetText(AddOns.PanelBar:GetLocalizedString("ObjectsEditModel"));
                     </OnLoad>
                     <OnClick>
-                        ModelEditor:Show();
+						if (ModelEditor:IsShown()) then
+							ModelEditor:Hide();
+						else
+							ModelEditor:Show();
+						end
                     </OnClick>
                 </Scripts>
             </Button>

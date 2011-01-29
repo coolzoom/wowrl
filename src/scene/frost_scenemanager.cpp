@@ -6,6 +6,7 @@
 /*                                        */
 
 #include "scene/frost_scenemanager.h"
+#include "scene/frost_sceneobject.h"
 #include "scene/frost_plane.h"
 #include "scene/frost_node.h"
 #include "scene/frost_gizmo.h"
@@ -50,9 +51,9 @@ namespace Frost
         );
 
         // Register the GizmoAxis mesh
-        ModelManager::GetSingleton()->LinkModelNameToFile("GizmoXAxis", "Models/GizmoXAxis.mesh");
-        ModelManager::GetSingleton()->LinkModelNameToFile("GizmoYAxis", "Models/GizmoYAxis.mesh");
-        ModelManager::GetSingleton()->LinkModelNameToFile("GizmoZAxis", "Models/GizmoZAxis.mesh");
+        ModelManager::GetSingleton()->LinkModelNameToFile("GizmoXAxis", "Models/GizmoXAxis.fm");
+        ModelManager::GetSingleton()->LinkModelNameToFile("GizmoYAxis", "Models/GizmoYAxis.fm");
+        ModelManager::GetSingleton()->LinkModelNameToFile("GizmoZAxis", "Models/GizmoZAxis.fm");
     }
 
     s_ptr<Plane> SceneManager::CreatePlane()
@@ -138,11 +139,35 @@ namespace Frost
             return nullptr;
     }
 
+    s_ptr<SceneObject> SceneManager::GetSceneObjectByID( const s_uint& uiID ) const
+    {
+        s_map< s_uint, s_ptr<SceneObject> >::const_iterator iterObject;
+        iterObject = lSceneObjectList_.Get(uiID);
+
+        if (iterObject != lSceneObjectList_.End())
+            return iterObject->second;
+        else
+            return nullptr;
+    }
+
     const s_uint& SceneManager::RegisterObject( s_ptr<MovableObject> pObject )
     {
-        ++uiObjectCounter_;
-        lRegisteredObjectList_[uiObjectCounter_] = pObject;
-        return uiObjectCounter_;
+        if (pObject->GetID().IsValid())
+        {
+            lRegisteredObjectList_[pObject->GetID()] = pObject;
+            return pObject->GetID();
+        }
+        else
+        {
+            ++uiObjectCounter_;
+            lRegisteredObjectList_[uiObjectCounter_] = pObject;
+            return uiObjectCounter_;
+        }
+    }
+
+    void SceneManager::RegisterSceneObject( s_ptr<SceneObject> pObject )
+    {
+        lSceneObjectList_[pObject->GetID()] = pObject;
     }
 
     void SceneManager::UnregisterObject( s_ptr<MovableObject> pObject )
@@ -164,6 +189,30 @@ namespace Frost
 
             Warning(CLASS_NAME,
                 "Trying to call UnregisterObject on a MovableObject that has not been registered "
+                "to SceneManager (ID:"+pObject->GetID()+")."
+            );
+        }
+    }
+
+    void SceneManager::UnregisterSceneObject( s_ptr<SceneObject> pObject )
+    {
+        if (pObject)
+        {
+            s_map< s_uint, s_ptr<SceneObject> >::iterator iterObject;
+            iterObject = lSceneObjectList_.Get(pObject->GetID());
+
+            if (iterObject != lSceneObjectList_.End())
+            {
+                if (iterObject->second->GetID() == pObject->GetID())
+                {
+                    // Everything went fine, delete, erase from map and return
+                    lSceneObjectList_.Erase(iterObject);
+                    return;
+                }
+            }
+
+            Warning(CLASS_NAME,
+                "Trying to call UnregisterSceneObject on a SceneObject that has not been registered "
                 "to SceneManager (ID:"+pObject->GetID()+")."
             );
         }
@@ -218,24 +267,90 @@ namespace Frost
         pTransformedObject_ = nullptr;
     }
 
+    const s_map< s_uint, s_ptr<SceneObject> >& SceneManager::GetSceneObjectList() const
+    {
+        return lSceneObjectList_;
+    }
+
+    const s_map< s_uint, s_ptr<SceneObject> >& SceneManager::GetSelectedSceneObjectList() const
+    {
+        return lSelectedObjectList_;
+    }
+
+    void SceneManager::SelectSceneObject( s_ptr<SceneObject> pObject )
+    {
+        ClearSelection();
+        AddSceneObjectToSelection(pObject);
+    }
+
+    void SceneManager::DeselectSceneObject( s_ptr<SceneObject> pObject )
+    {
+        if (!pObject)
+            return;
+
+        if (pMouseOveredObject_ && pMouseOveredObject_->GetSceneObject() == pObject)
+            pMouseOveredObject_ = nullptr;
+
+        s_map< s_uint, s_ptr<SceneObject> >::iterator iter = lSelectedObjectList_.Get(pObject->GetID());
+        if (iter != lSelectedObjectList_.End())
+        {
+            iter->second->Select(false);
+            lSelectedObjectList_.Erase(iter);
+        }
+
+        if (lSelectedObjectList_.GetSize() == 0)
+            EventManager::GetSingleton()->FireEvent(Event("NO_OBJECT_SELECTED"));
+    }
+
+    void SceneManager::AddSceneObjectToSelection( s_ptr<SceneObject> pObject )
+    {
+        if (!pObject)
+            return;
+
+        if (lSelectedObjectList_.GetSize() == 0)
+            EventManager::GetSingleton()->FireEvent(Event("OBJECT_SELECTED"));
+
+        s_map< s_uint, s_ptr<SceneObject> >::iterator iter = lSelectedObjectList_.Get(pObject->GetID());
+        if (iter == lSelectedObjectList_.End())
+        {
+            lSelectedObjectList_[pObject->GetID()] = pObject;
+            pObject->Select(true);
+        }
+    }
+
+    void SceneManager::ClearSelection()
+    {
+        s_map< s_uint, s_ptr<SceneObject> >::iterator iter;
+        foreach (iter, lSelectedObjectList_)
+        {
+            iter->second->Select(false);
+        }
+
+        lSelectedObjectList_.Clear();
+
+        EventManager::GetSingleton()->FireEvent(Event("NO_OBJECT_SELECTED"));
+    }
+
     void SceneManager::Update( const s_float& fDelta )
     {
-        // Handle selection
         s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
         s_ptr<Engine>       pFrost = Engine::GetSingleton();
 
-        Ogre::Ray mRay = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera()->getCameraToViewportRay(
-            (pInputMgr->GetMousePosX()/s_float(pFrost->GetScreenWidth())).Get(),
-            (pInputMgr->GetMousePosY()/s_float(pFrost->GetScreenHeight())).Get()
-        );
-        s_ptr<Ogre::RaySceneQuery> pRayQuery = pFrost->GetOgreSceneManager()->createRayQuery(mRay);
+        s_ptr<OgreInterface> pNewObject;
 
-        pRayQuery->setSortByDistance(true);
-        Ogre::RaySceneQueryResult& mRes = pRayQuery->execute();
-        Ogre::RaySceneQueryResult::iterator iter = mRes.begin();
-        if (iter != mRes.end())
+        // Handle mouse overing
+        if (InputManager::GetSingleton()->CanGroupReceiveClicks("WORLD"))
         {
-            s_ptr<OgreInterface> pNewObject;
+            Ogre::Ray mRay = CameraManager::GetSingleton()->GetMainCamera()->GetOgreCamera()->getCameraToViewportRay(
+                (pInputMgr->GetMousePosX()/s_float(pFrost->GetScreenWidth())).Get(),
+                (pInputMgr->GetMousePosY()/s_float(pFrost->GetScreenHeight())).Get()
+            );
+            s_ptr<Ogre::RaySceneQuery> pRayQuery = pFrost->GetOgreSceneManager()->createRayQuery(mRay);
+
+            pRayQuery->setSortByDistance(true);
+            Ogre::RaySceneQueryResult& mRes = pRayQuery->execute();
+            Ogre::RaySceneQueryResult::iterator iter = mRes.begin();
+
             foreach (iter, mRes)
             {
                 s_ptr<OgreInterface> pObject = s_ptr<OgreInterface>::DynamicCast(iter->movable->getUserObject());
@@ -244,25 +359,20 @@ namespace Frost
                     pNewObject = pObject;
             }
 
-            if (pNewObject)
-            {
-                if (pMouseOveredObject_ != pNewObject)
-                {
-                    if (pMouseOveredObject_)
-                        pMouseOveredObject_->On("Leave");
+            pFrost->GetOgreSceneManager()->destroyQuery(pRayQuery.Get());
+        }
 
-                    pMouseOveredObject_ = pNewObject;
-
-                    if (pMouseOveredObject_)
-                        pMouseOveredObject_->On("Enter");
-                }
-            }
-            else
+        if (pNewObject)
+        {
+            if (pMouseOveredObject_ != pNewObject)
             {
                 if (pMouseOveredObject_)
                     pMouseOveredObject_->On("Leave");
 
-                pMouseOveredObject_ = nullptr;
+                pMouseOveredObject_ = pNewObject;
+
+                if (pMouseOveredObject_)
+                    pMouseOveredObject_->On("Enter");
             }
         }
         else
@@ -273,25 +383,28 @@ namespace Frost
             pMouseOveredObject_ = nullptr;
         }
 
-        pFrost->GetOgreSceneManager()->destroyQuery(pRayQuery.Get());
-
+        // Handle selection
         if (InputManager::GetSingleton()->CanGroupReceiveClicks("WORLD"))
         {
             if (pInputMgr->MouseIsPressed(MOUSE_LEFT))
             {
                 if (pMouseOveredObject_)
                 {
-                    if (pMouseOveredObject_->IsSelectable())
+                    s_ptr<SceneObject> pObj = pMouseOveredObject_->GetSceneObject();
+                    if (pObj)
                     {
-                        if (pSelectedObject_ != pMouseOveredObject_)
+                        if (pObj->IsSelectable())
                         {
-                            if (pSelectedObject_)
-                                pSelectedObject_->On("Deselected");
-
-                            pMouseOveredObject_->On("Selected");
+                            if (pInputMgr->ShiftPressed())
+                            {
+                                if (pObj->IsSelected())
+                                    DeselectSceneObject(pObj);
+                                else
+                                    AddSceneObjectToSelection(pObj);
+                            }
+                            else
+                                SelectSceneObject(pObj);
                         }
-
-                        pSelectedObject_ = pMouseOveredObject_;
                     }
 
                     pMouseOveredObject_->On("MousePressed");
@@ -299,10 +412,9 @@ namespace Frost
 
                     pDraggedObject_ = pMouseOveredObject_;
                 }
-                else if (pSelectedObject_)
+                else
                 {
-                    pSelectedObject_->On("Deselected");
-                    pSelectedObject_ = nullptr;
+                    ClearSelection();
                 }
             }
             if (pInputMgr->MouseIsReleased(MOUSE_LEFT))

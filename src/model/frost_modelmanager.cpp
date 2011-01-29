@@ -219,6 +219,7 @@ namespace Frost
 
     s_ptr<ModelData> ModelManager::LoadModelData_( const s_str& sFile )
     {
+        Log<3>("    Loading model : "+sFile);
         try
         {
             if (sFile.EndsWith(".m2"))
