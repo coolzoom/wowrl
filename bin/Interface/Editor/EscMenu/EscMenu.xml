@@ -22,6 +22,7 @@
             <OnLoad>
                 this:GetBase():OnLoad();
                 this:SetMinWidth(100);
+                this:SetMinHeight(110);
                 this.Content:SetText(AddOns.EscMenu:GetLocalizedString("ConfirmExit"));
                 
                 this.OnYes = function(self)

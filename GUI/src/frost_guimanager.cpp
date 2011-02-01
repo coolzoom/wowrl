@@ -1396,13 +1396,86 @@ namespace Frost
 
     void GUIManager::SetKeyBinding( const s_uint& uiKey, const s_str& sLuaString )
     {
-        lKeyBindingList_[uiKey] = sLuaString;
+        lKeyBindingList_[uiKey][KEY_UNASSIGNED][KEY_UNASSIGNED] = sLuaString;
+    }
+
+    void GUIManager::SetKeyBinding( const s_uint& uiKey, const s_uint& uiModifier, const s_str& sLuaString )
+    {
+        lKeyBindingList_[uiKey][uiModifier][KEY_UNASSIGNED] = sLuaString;
+    }
+
+    void GUIManager::SetKeyBinding( const s_uint& uiKey, const s_uint& uiModifier1, const s_uint& uiModifier2, const s_str& sLuaString )
+    {
+        lKeyBindingList_[uiKey][uiModifier1][uiModifier2] = sLuaString;
     }
 
     void GUIManager::RemoveKeyBinding( const s_uint& uiKey )
     {
-        if (lKeyBindingList_.Find(uiKey))
-            lKeyBindingList_.Erase(uiKey);
+        s_map< s_uint, s_map< s_uint, s_map<s_uint, s_str> > >::iterator iter1 = lKeyBindingList_.Get(uiKey);
+        if (iter1 != lKeyBindingList_.End())
+        {
+            s_map< s_uint, s_map<s_uint, s_str> >::iterator iter2 = iter1->second.Get(KEY_UNASSIGNED);
+            if (iter2 != iter1->second.End())
+            {
+                s_map<s_uint, s_str>::iterator iter3 = iter2->second.Get(KEY_UNASSIGNED);
+                if (iter3 != iter2->second.End())
+                {
+                    iter2->second.Erase(iter3);
+
+                    if (iter2->second.GetSize() == 0)
+                        iter1->second.Erase(iter2);
+
+                    if (iter1->second.GetSize() == 0)
+                        lKeyBindingList_.Erase(iter1);
+                }
+            }
+        }
+    }
+
+    void GUIManager::RemoveKeyBinding( const s_uint& uiKey, const s_uint& uiModifier )
+    {
+        s_map< s_uint, s_map< s_uint, s_map<s_uint, s_str> > >::iterator iter1 = lKeyBindingList_.Get(uiKey);
+        if (iter1 != lKeyBindingList_.End())
+        {
+            s_map< s_uint, s_map<s_uint, s_str> >::iterator iter2 = iter1->second.Get(uiModifier);
+            if (iter2 != iter1->second.End())
+            {
+                s_map<s_uint, s_str>::iterator iter3 = iter2->second.Get(KEY_UNASSIGNED);
+                if (iter3 != iter2->second.End())
+                {
+                    iter2->second.Erase(iter3);
+
+                    if (iter2->second.GetSize() == 0)
+                        iter1->second.Erase(iter2);
+
+                    if (iter1->second.GetSize() == 0)
+                        lKeyBindingList_.Erase(iter1);
+                }
+            }
+        }
+    }
+
+    void GUIManager::RemoveKeyBinding( const s_uint& uiKey, const s_uint& uiModifier1, const s_uint& uiModifier2 )
+    {
+        s_map< s_uint, s_map< s_uint, s_map<s_uint, s_str> > >::iterator iter1 = lKeyBindingList_.Get(uiKey);
+        if (iter1 != lKeyBindingList_.End())
+        {
+            s_map< s_uint, s_map<s_uint, s_str> >::iterator iter2 = iter1->second.Get(uiModifier1);
+            if (iter2 != iter1->second.End())
+            {
+                s_map<s_uint, s_str>::iterator iter3 = iter2->second.Get(uiModifier2);
+                if (iter3 != iter2->second.End())
+                {
+                    iter2->second.Erase(iter3);
+
+                    if (iter2->second.GetSize() == 0)
+                        iter1->second.Erase(iter2);
+
+                    if (iter1->second.GetSize() == 0)
+                        lKeyBindingList_.Erase(iter1);
+                }
+            }
+        }
     }
 
     s_int GUIManager::GetHighestLevel( FrameStrata mFrameStrata ) const
@@ -1541,18 +1614,77 @@ namespace Frost
         if (mEvent.GetName() == "KEY_PRESSED")
         {
             s_uint uiKey = mEvent.Get(0)->Get<s_uint>();
-            s_map<s_uint, s_str>::iterator iter = lKeyBindingList_.Get(uiKey);
-            if (iter != lKeyBindingList_.End())
+            s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
+            s_bool bCaptured;
+
+            s_map< s_uint, s_map< s_uint, s_map<s_uint, s_str> > >::const_iterator iter1 = lKeyBindingList_.Get(uiKey);
+            s_map< s_uint, s_map<s_uint, s_str> >::const_iterator iter2;
+            s_map<s_uint, s_str>::const_iterator iter3;
+
+            if (iter1 != lKeyBindingList_.End())
             {
-                try
+                foreach (iter2, iter1->second)
                 {
-                    pLua_->DoString(iter->second);
+                    if (iter2->first == KEY_UNASSIGNED || !pInputMgr->KeyIsDown((KeyCode)iter2->first.Get()))
+                        continue;
+
+                    foreach (iter3, iter2->second)
+                    {
+                        if (iter3->first == KEY_UNASSIGNED || !pInputMgr->KeyIsDown((KeyCode)iter3->first.Get()))
+                            continue;
+
+                        try
+                        {
+                            pLua_->DoString(iter3->second);
+                        }
+                        catch (LuaException& e)
+                        {
+                            Error("Binded action : "+pInputMgr->GetKeyName(
+                                    (KeyCode)uiKey.Get(), (KeyCode)iter2->first.Get(), (KeyCode)iter3->first.Get()
+                                ), e.GetDescription()
+                            );
+                        }
+
+                        bCaptured = true;
+                        break;
+                    }
+
+                    if (bCaptured) break;
+
+                    iter3 = iter2->second.Get(KEY_UNASSIGNED);
+                    if (iter3 != iter2->second.End())
+                    {
+                        try
+                        {
+                            pLua_->DoString(iter3->second);
+                        }
+                        catch (LuaException& e)
+                        {
+                            Error("Binded action : "+pInputMgr->GetKeyName(
+                                    (KeyCode)uiKey.Get(), (KeyCode)iter2->first.Get()
+                                ), e.GetDescription()
+                            );
+                        }
+                    }
                 }
-                catch (LuaException& e)
+
+                iter2 = iter1->second.Get(KEY_UNASSIGNED);
+                if (iter2 != iter1->second.End())
                 {
-                    Error("Binded action : "+InputManager::GetSingleton()->GetKeyName((KeyCode)uiKey.Get()),
-                        e.GetDescription()
-                    );
+                    iter3 = iter2->second.Get(KEY_UNASSIGNED);
+                    if (iter3 != iter2->second.End())
+                    {
+                        try
+                        {
+                            pLua_->DoString(iter3->second);
+                        }
+                        catch (LuaException& e)
+                        {
+                            Error("Binded action : "+pInputMgr->GetKeyName((KeyCode)uiKey.Get()),
+                                e.GetDescription()
+                            );
+                        }
+                    }
                 }
             }
         }
@@ -1656,8 +1788,19 @@ namespace Frost
     {
         Lua::Function mFunc("SetKeyBinding", pLua);
         mFunc.Add(0, "key", Lua::TYPE_NUMBER);
-        mFunc.Add(1, "code", Lua::TYPE_STRING, true);
-        mFunc.Add(1, "nil", Lua::TYPE_NIL, true);
+        mFunc.Add(1, "code", Lua::TYPE_STRING);
+        mFunc.Add(1, "nil", Lua::TYPE_NIL);
+        mFunc.NewParamSet();
+        mFunc.Add(0, "key", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "modifier", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "code", Lua::TYPE_STRING);
+        mFunc.Add(2, "nil", Lua::TYPE_NIL);
+        mFunc.NewParamSet();
+        mFunc.Add(0, "key", Lua::TYPE_NUMBER);
+        mFunc.Add(1, "modifier1", Lua::TYPE_NUMBER);
+        mFunc.Add(2, "modifier2", Lua::TYPE_NUMBER);
+        mFunc.Add(3, "code", Lua::TYPE_STRING);
+        mFunc.Add(3, "nil", Lua::TYPE_NIL);
 
         if (mFunc.Check())
         {
@@ -1667,15 +1810,33 @@ namespace Frost
             s_ptr<GUIManager> pGUIMgr = pLuaMgr->GetManager();
             pState->Pop();
 
-            if (mFunc.IsProvided(1) && mFunc.Get(1)->GetType() == Lua::TYPE_STRING)
+            s_uint uiKey = s_uint(mFunc.Get(0)->GetNumber());
+
+            if (mFunc.GetParamSetRank() == 0)
             {
-                pGUIMgr->SetKeyBinding(
-                    s_uint(mFunc.Get(0)->GetNumber()), mFunc.Get(1)->GetString()
-                );
+                if (mFunc.IsProvided(1) && mFunc.Get(1)->GetType() == Lua::TYPE_STRING)
+                    pGUIMgr->SetKeyBinding(uiKey, mFunc.Get(1)->GetString());
+                else
+                    pGUIMgr->RemoveKeyBinding(uiKey);
+            }
+            else if (mFunc.GetParamSetRank() == 1)
+            {
+                s_uint uiModifier = s_uint(mFunc.Get(1)->GetNumber());
+
+                if (mFunc.IsProvided(2) && mFunc.Get(2)->GetType() == Lua::TYPE_STRING)
+                    pGUIMgr->SetKeyBinding(uiKey, uiModifier, mFunc.Get(2)->GetString());
+                else
+                    pGUIMgr->RemoveKeyBinding(uiKey, uiModifier);
             }
             else
             {
-                pGUIMgr->RemoveKeyBinding(s_uint(mFunc.Get(0)->GetNumber()));
+                s_uint uiModifier1 = s_uint(mFunc.Get(1)->GetNumber());
+                s_uint uiModifier2 = s_uint(mFunc.Get(2)->GetNumber());
+
+                if (mFunc.IsProvided(3) && mFunc.Get(3)->GetType() == Lua::TYPE_STRING)
+                    pGUIMgr->SetKeyBinding(uiKey, uiModifier1, uiModifier2, mFunc.Get(3)->GetString());
+                else
+                    pGUIMgr->RemoveKeyBinding(uiKey, uiModifier1, uiModifier2);
             }
         }
 

@@ -4,10 +4,12 @@ MenuBar:AddMenuCheckItem("View", "Wireframe", "F2", false):SetScript("OnClick", 
     Editor:ToggleWireframeView();
     MenuBar:CloseCurrentDropDown();
 end);
+SetKeyBinding(KEY_F2, "MenuBar.View.DropDown.Wireframe:Click();");
 MenuBar:AddMenuCheckItem("View", "Shading", "F3", true):SetScript("OnClick", function ()
     Editor:ToggleShading();
     MenuBar:CloseCurrentDropDown();
 end);
+SetKeyBinding(KEY_F3, "MenuBar.View.DropDown.Shading:Click();");
 MenuBar:AddMenuCheckItem("View", "Decal", "F4", true):SetScript("OnClick", function ()
     if (AddOns.Editor:IsMouseDecalEnabled()) then
         AddOns.Editor:EnableMouseDecal(false);
@@ -16,6 +18,7 @@ MenuBar:AddMenuCheckItem("View", "Decal", "F4", true):SetScript("OnClick", funct
     end
     MenuBar:CloseCurrentDropDown();
 end);
+SetKeyBinding(KEY_F4, "MenuBar.View.DropDown.Decal:Click();");
 MenuBar:AddMenuItem("View", "DecalColor"):SetScript("OnClick", function ()
     ColorSelector:SetColor(Color(Frost:GetMouseDecalColor()));
     ColorSelector:SetOnColorUpdateFunc(function (color)

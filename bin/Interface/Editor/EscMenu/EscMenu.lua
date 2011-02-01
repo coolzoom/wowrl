@@ -52,12 +52,3 @@ function EscMenu:AddSeparator()
         return sep;
     end
 end
-
-SetKeyBinding(KEY_ESCAPE, "EscMenu:OnEscape();");
-function EscMenu:OnEscape()
-    if (not self:IsShown()) then
-        self:Show();
-    else
-        self.buttons["Exit"]:OnClick();
-    end
-end

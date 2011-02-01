@@ -142,6 +142,84 @@ namespace Frost
         return pKeyboard_->getAsString((OIS::KeyCode)mKey);
     }
 
+    s_str InputManager::GetKeyName( KeyCode mKey, KeyCode mModifier ) const
+    {
+        s_str sString;
+        switch (mModifier)
+        {
+            case (KEY_LSHIFT) :
+            case (KEY_RSHIFT) :
+                sString = "Shift + ";
+                break;
+
+            case (KEY_LCONTROL) :
+            case (KEY_RCONTROL) :
+                sString = "Ctrl + ";
+                break;
+
+            case (KEY_LMENU) :
+            case (KEY_RMENU) :
+                sString = "Alt + ";
+                break;
+
+            default :
+                sString = pKeyboard_->getAsString((OIS::KeyCode)mModifier) + " + ";
+                break;
+        }
+
+        return sString + pKeyboard_->getAsString((OIS::KeyCode)mKey);
+    }
+
+    s_str InputManager::GetKeyName( KeyCode mKey, KeyCode mModifier1, KeyCode mModifier2 ) const
+    {
+        s_str sString;
+        switch (mModifier1)
+        {
+            case (KEY_LSHIFT) :
+            case (KEY_RSHIFT) :
+                sString = "Shift + ";
+                break;
+
+            case (KEY_LCONTROL) :
+            case (KEY_RCONTROL) :
+                sString = "Ctrl + ";
+                break;
+
+            case (KEY_LMENU) :
+            case (KEY_RMENU) :
+                sString = "Alt + ";
+                break;
+
+            default :
+                sString = pKeyboard_->getAsString((OIS::KeyCode)mModifier1) + " + ";
+                break;
+        }
+
+        switch (mModifier2)
+        {
+            case (KEY_LSHIFT) :
+            case (KEY_RSHIFT) :
+                sString += "Shift + ";
+                break;
+
+            case (KEY_LCONTROL) :
+            case (KEY_RCONTROL) :
+                sString += "Ctrl + ";
+                break;
+
+            case (KEY_LMENU) :
+            case (KEY_RMENU) :
+                sString += "Alt + ";
+                break;
+
+            default :
+                sString += pKeyboard_->getAsString((OIS::KeyCode)mModifier2) + " + ";
+                break;
+        }
+
+        return sString + pKeyboard_->getAsString((OIS::KeyCode)mKey);
+    }
+
     const s_ctnr<s_uint>& InputManager::GetPressedList() const
     {
         return lDownStack_;

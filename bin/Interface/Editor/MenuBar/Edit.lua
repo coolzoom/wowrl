@@ -20,6 +20,9 @@ if (not Editor:CanUndo()) then
     item:Disable();
 end
 
+SetKeyBinding(KEY_Z, KEY_LCONTROL, "MenuBar.Edit.DropDown.Undo:Click();");
+SetKeyBinding(KEY_Z, KEY_RCONTROL, "MenuBar.Edit.DropDown.Undo:Click();");
+
 -- EDIT / REDO
 item = MenuBar:AddMenuItem("Edit", "Redo", "Ctrl-Shift-Z");
 item:RegisterEvent("ZONE_MODIFIED");
@@ -39,10 +42,19 @@ end);
 if (not Editor:CanRedo()) then
     item:Disable();
 end
+
+SetKeyBinding(KEY_Z, KEY_LCONTROL, KEY_LSHIFT, "MenuBar.Edit.DropDown.Redo:Click();");
+SetKeyBinding(KEY_Z, KEY_LCONTROL, KEY_RSHIFT, "MenuBar.Edit.DropDown.Redo:Click();");
+SetKeyBinding(KEY_Z, KEY_RCONTROL, KEY_LSHIFT, "MenuBar.Edit.DropDown.Redo:Click();");
+SetKeyBinding(KEY_Z, KEY_RCONTROL, KEY_RSHIFT, "MenuBar.Edit.DropDown.Redo:Click();");
+
+-- EDIT / CLONE
 item = MenuBar:AddMenuItem("Edit", "Clone", "Ctrl-C");
 if (Editor:GetSelectedObjectCount() == 0) then
 	item:Disable();
 end
+
+-- EDIT / DELETE
 item = MenuBar:AddMenuItem("Edit", "Delete", "Del.");
 if (Editor:GetSelectedObjectCount() == 0) then
 	item:Disable();
@@ -62,3 +74,5 @@ item:SetScript("OnClick", function()
 		Editor:DeleteObject(obj);
 	end
 end);
+
+SetKeyBinding(KEY_DELETE, "MenuBar.Edit.DropDown.Delete:Click();");

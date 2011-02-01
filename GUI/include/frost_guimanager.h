@@ -314,10 +314,40 @@ namespace Frost
         */
         void                 SetKeyBinding(const s_uint& uiKey, const s_str& sLuaString);
 
+        /// Binds some Lua code to a key.
+        /** \param uiKey      The key to bind
+        *   \param uiModifier The modifier key (shift, ctrl, ...)
+        *   \param sLuaString The Lua code that will be executed
+        */
+        void                 SetKeyBinding(const s_uint& uiKey, const s_uint& uiModifier, const s_str& sLuaString);
+
+        /// Binds some Lua code to a key.
+        /** \param uiKey       The key to bind
+        *   \param uiModifier1 The first modifier key (shift, ctrl, ...)
+        *   \param uiModifier2 The second modifier key (shift, ctrl, ...)
+        *   \param sLuaString  The Lua code that will be executed
+        */
+        void                 SetKeyBinding(
+            const s_uint& uiKey, const s_uint& uiModifier1, const s_uint& uiModifier2, const s_str& sLuaString
+        );
+
         /// Unbinds a key.
         /** \param uiKey The key to unbind
         */
         void                 RemoveKeyBinding(const s_uint& uiKey);
+
+        /// Unbinds a key.
+        /** \param uiKey      The key to unbind
+        *   \param uiModifier The modifier key (shift, ctrl, ...)
+        */
+        void                 RemoveKeyBinding(const s_uint& uiKey, const s_uint& uiModifier);
+
+        /// Unbinds a key.
+        /** \param uiKey      The key to unbind
+        *   \param uiModifier1 The first modifier key (shift, ctrl, ...)
+        *   \param uiModifier2 The second modifier key (shift, ctrl, ...)
+        */
+        void                 RemoveKeyBinding(const s_uint& uiKey, const s_uint& uiModifier1, const s_uint& uiModifier2);
 
         /// Returns the GUI Lua state.
         /** \return The GUI Lua state
@@ -572,7 +602,7 @@ namespace Frost
         s_bool            bEnabled_;
         s_bool            bLoadingUI_;
 
-        s_map<s_uint, s_str> lKeyBindingList_;
+        s_map< s_uint, s_map< s_uint, s_map<s_uint, s_str> > > lKeyBindingList_;
 
         s_map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
         s_map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
