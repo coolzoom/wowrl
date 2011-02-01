@@ -289,6 +289,21 @@ namespace Frost
         */
         s_str           GetKeyName(KeyCode mKey) const;
 
+        /// Returns the name of the provided key combination.
+        /** \param mKey      The main key
+        *   \param mModifier The modifier key (shift, ctrl, ...)
+        *   \return The name of key combination, example : "Ctrl + A"
+        */
+        s_str           GetKeyName(KeyCode mKey, KeyCode mModifier) const;
+
+        /// Returns the name of the provided key combination.
+        /** \param mKey       The main key
+        *   \param mModifier1 The first modifier key (shift, ctrl, ...)
+        *   \param mModifier2 The second modifier key (shift, ctrl, ...)
+        *   \return The name of key combination, example : "Ctrl + Shift + A"
+        */
+        s_str           GetKeyName(KeyCode mKey, KeyCode mModifier1, KeyCode mModifier2) const;
+
         /// Returns the list of keys that have been released during this frame.
         /** \return The list of keys that have been released during this frame.
         */

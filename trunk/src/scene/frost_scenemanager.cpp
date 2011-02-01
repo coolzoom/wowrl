@@ -207,6 +207,13 @@ namespace Frost
                 {
                     // Everything went fine, delete, erase from map and return
                     lSceneObjectList_.Erase(iterObject);
+
+                    if (pMouseOveredObject_ && pMouseOveredObject_->GetSceneObject() == pObject)
+                        pMouseOveredObject_ = nullptr;
+
+                    if (pDraggedObject_ && pDraggedObject_->GetSceneObject() == pObject)
+                        pDraggedObject_ = nullptr;
+
                     return;
                 }
             }
@@ -287,9 +294,6 @@ namespace Frost
     {
         if (!pObject)
             return;
-
-        if (pMouseOveredObject_ && pMouseOveredObject_->GetSceneObject() == pObject)
-            pMouseOveredObject_ = nullptr;
 
         s_map< s_uint, s_ptr<SceneObject> >::iterator iter = lSelectedObjectList_.Get(pObject->GetID());
         if (iter != lSelectedObjectList_.End())

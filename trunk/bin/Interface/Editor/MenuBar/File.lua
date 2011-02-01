@@ -1,6 +1,5 @@
 MenuBar:AddMenu("File");
 
-
 -- FILE / NEW
 function FileNew()
     NewZoneDialog:Show();
@@ -16,6 +15,9 @@ item:SetScript("OnClick", function()
     end
     MenuBar:CloseCurrentDropDown();
 end);
+
+SetKeyBinding(KEY_N, KEY_LCONTROL, "MenuBar.File.DropDown.New:Click();");
+SetKeyBinding(KEY_N, KEY_RCONTROL, "MenuBar.File.DropDown.New:Click();");
 
 -- FILE / OPEN
 function FileOpen()
@@ -43,6 +45,9 @@ item:SetScript("OnClick", function()
     end
     MenuBar:CloseCurrentDropDown();
 end);
+
+SetKeyBinding(KEY_O, KEY_LCONTROL, "MenuBar.File.DropDown.Open:Click();");
+SetKeyBinding(KEY_O, KEY_RCONTROL, "MenuBar.File.DropDown.Open:Click();");
 
 -- FILE / SAVE
 function FileSave()
@@ -72,6 +77,9 @@ end);
 if (not Editor:IsZoneLoaded() or Editor:IsZoneSaved()) then
     item:Disable();
 end
+
+SetKeyBinding(KEY_S, KEY_LCONTROL, "MenuBar.File.DropDown.Save:Click();");
+SetKeyBinding(KEY_S, KEY_RCONTROL, "MenuBar.File.DropDown.Save:Click();");
 
 -- FILE / SAVE AS
 function FileSaveAs()
@@ -135,10 +143,12 @@ end
 -- FILE / EXIT
 local item = MenuBar:AddMenuItem("File", "Exit", "Esc.");
 item:SetScript("OnClick", function()
-    if (Editor:IsZoneSaved()) then
-        Exit();
+    if (not EscMenu:IsShown()) then
+        EscMenu:Show();
     else
-        EscMenuConfirmDialog:Show();
+        EscMenu.buttons["Exit"]:OnClick();
     end
     MenuBar:CloseCurrentDropDown();
 end);
+
+SetKeyBinding(KEY_ESCAPE, "MenuBar.File.DropDown.Exit:Click();");
