@@ -71,9 +71,31 @@ namespace Frost
         */
         const s_str& GetRelPath() const;
 
+        /// Checks if a directory exists.
+        /** \param sPath The path to the directory to check
+        *   \return 'true' if the directory exists
+        */
+        static s_bool Exists(const s_str& sPath);
+
+        /// Creates a new directory.
+        /** \param sPath The path to the directory to create
+        *   \return 'true' if the operation was successful
+        *   \note This fuction doesn't check if the directory
+        *         already exists.
+        */
+        static s_bool Make(const s_str& sPath);
+
         static const s_str CLASS_NAME;
 
     private :
+
+        /// Creates a new directory.
+        /** \param sPath The path to the directory to create
+        *   \return 'true' if the operation was successful
+        *   \note This version is very low level, it does absolutely
+        *         no checks, nor does it support nested directories.
+        */
+        static s_bool Make_(const s_str& sPath);
 
         /// The sub-directory list
         s_ctnr< s_refptr<Directory> > lSubDirectoryList_;

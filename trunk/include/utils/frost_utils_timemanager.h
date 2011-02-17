@@ -24,8 +24,6 @@ namespace Frost
     class Profiler;
     class Timer;
 
-    s_double GetTime();
-
     /// Keeper of time :)
     /** This class manages everything that is related
     *   to time : FPS, date and profiling.
@@ -34,6 +32,17 @@ namespace Frost
     {
     friend class Manager<TimeManager>;
     public :
+
+        typedef s_double (*GetTimeFunction)();
+
+        /// Sets the timing function to use.
+        /** \param pFunc The get time function
+        *   \note This function will be used by GetTime().<br>
+        *         Its signature must be :<br>
+        *         &nsbp&nsbp&nsbps_double Func();<br>
+        *         and it must return time in seconds.
+        */
+        void SetGetTimeFunction(GetTimeFunction pFunc);
 
         /// Initializes this manager
         /** \note Should be called just before entering
@@ -178,6 +187,8 @@ namespace Frost
         TimeManager& operator = (const TimeManager& mMgr);
 
     private :
+
+        GetTimeFunction pGetTimeFunction_;
 
         s_refptr<Timer> pFPSTimer_;
 

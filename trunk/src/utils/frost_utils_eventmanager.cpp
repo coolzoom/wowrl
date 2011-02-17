@@ -27,7 +27,10 @@ namespace Frost
 
     void EventManager::RegisterEvent( s_ptr<EventReceiver> pReceiver, const s_str& sEventName )
     {
+        #ifdef USING_THREADS
         Lock l(mMutex_);
+        #endif
+
         if (lReceiverList_.Find(sEventName))
         {
             // This event is already registered to one or more EventReceivers.
@@ -54,7 +57,10 @@ namespace Frost
 
     void EventManager::UnregisterEvent( s_ptr<EventReceiver> pReceiver, const s_str& sEventName )
     {
+        #ifdef USING_THREADS
         Lock l(mMutex_);
+        #endif
+
         if (lReceiverList_.Find(sEventName))
         {
             // This event is already registered to one or more EventReceivers.
@@ -81,7 +87,10 @@ namespace Frost
 
     void EventManager::UnregisterReceiver( s_ptr<EventReceiver> pReceiver )
     {
+        #ifdef USING_THREADS
         Lock l(mMutex_);
+        #endif
+
         s_ctnr<s_multimap< s_str, s_ptr<EventReceiver> >::iterator> lDeleteList;
 
         s_multimap< s_str, s_ptr<EventReceiver> >::iterator iterReceiver;
@@ -105,7 +114,10 @@ namespace Frost
         );
 
         {
+            #ifdef USING_THREADS
             Lock l(mMutex_);
+            #endif
+
             if (lReceiverList_.Find(mEvent.GetName()))
             {
                 // This event is registered to one or more EventReceivers.

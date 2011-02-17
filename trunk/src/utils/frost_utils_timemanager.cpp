@@ -32,10 +32,16 @@ namespace Frost
     {
         dDelta_ = 0.017;
         uiWorstFPS_ = s_uint::INF;
+        pGetTimeFunction_ = nullptr;
     }
 
     TimeManager::~TimeManager()
     {
+    }
+
+    void TimeManager::SetGetTimeFunction( GetTimeFunction pFunc )
+    {
+        pGetTimeFunction_ = pFunc;
     }
 
     void TimeManager::Initialize()
@@ -123,7 +129,10 @@ namespace Frost
 
     s_double TimeManager::GetTime() const
     {
-        return Frost::GetTime();
+        if (pGetTimeFunction_)
+            return (*pGetTimeFunction_)();
+        else
+            return 0.0;
     }
 
     s_str TimeManager::GetPlayTime() const
