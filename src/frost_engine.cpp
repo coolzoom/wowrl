@@ -145,6 +145,7 @@ namespace Frost
 
         // Register the log function
         pUtilsMgr_->SetLogFunction(&PrintInLog);
+        pTimeMgr_->SetGetTimeFunction(&GetTime);
 
         //pEventMgr_->ToggleDebugOutput();
 

@@ -11,7 +11,9 @@
 
 #include "frost_utils_config.h"
 #include "frost_utils_manager.h"
-#include "frost_utils_thread.h"
+#ifdef USING_THREADS
+ #include "frost_utils_thread.h"
+#endif
 
 namespace Frost
 {
@@ -93,7 +95,9 @@ namespace Frost
 
         s_bool bDebugOutput_;
 
+        #ifdef USING_THREADS
         Mutex mMutex_;
+        #endif
     };
 
 }

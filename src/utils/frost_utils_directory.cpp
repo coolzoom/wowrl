@@ -299,4 +299,60 @@ namespace Frost
     {
         return sRelPath_;
     }
+
+    s_bool Directory::Exists(const s_str& sPath)
+    {
+#ifdef FROST_LINUX
+    #warning Untested !
+        struct stat mStatus;
+        return stat(sPath.c_str(), &mStatus) == 0;
+#else
+        if (access(sPath.c_str(), 0) == 0)
+        {
+            struct stat mStatus;
+            stat(sPath.c_str(), &mStatus);
+
+            if (mStatus.st_mode & S_IFDIR)
+                return true;
+        }
+
+        return false;
+#endif
+    }
+
+    s_bool Directory::Make(const s_str& sPath)
+    {
+        s_str sTemp = sPath;
+        sTemp.Replace("\\", "/");
+        s_ctnr<s_str> lDirs = sTemp.Cut("/");
+        sTemp = "";
+
+        s_ctnr<s_str>::iterator iter;
+        foreach (iter, lDirs)
+        {
+            if (iter->IsEmpty())
+                continue;
+
+            if (sTemp.IsEmpty())
+                sTemp = *iter;
+            else
+                sTemp += "/" + *iter;
+
+            if (!Exists(sTemp))
+                if (!Make_(sTemp))
+                    return false;
+        }
+
+        return true;
+    }
+
+    s_bool Directory::Make_(const s_str& sPath)
+    {
+#ifdef FROST_LINUX
+    #warning Untested !
+        return mkdir(sPath.c_str(), 0777) == 0;
+#else
+        return CreateDirectory(sPath.c_str(), 0) != 0;
+#endif
+    }
 }

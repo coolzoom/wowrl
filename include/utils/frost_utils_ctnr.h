@@ -309,7 +309,7 @@ namespace Frost
         *   \note If the element is not present in the container, this function
         *         returns End().
         */
-        const_iterator Get(const ValueType& mElem, const s_uint_t<default_uint>& uiStart = 0u) const
+        const_iterator Get(const ValueType& mElem, const s_uint_t<default_uint>& uiStart) const
         {
             const_iterator iterStart = mContainer_.begin() + uiStart.Get();
             return std::find(iterStart, mContainer_.end(), mElem);
