@@ -1,0 +1,11 @@
+## Interface: 0045
+## Title: ConfigMenu
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+DefaultConfig.lua
+Localization.lua
+ConfigMenu_Templates.xml
+ConfigMenu.xml
+ConfigMenu.lua

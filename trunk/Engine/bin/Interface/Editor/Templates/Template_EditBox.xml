@@ -1,0 +1,37 @@
+<Ui>
+    <EditBox name="EditBoxTemplate_EditBox" virtual="true">
+        <Size>
+            <AbsDimension y="18"/>
+        </Size>
+        <Backdrop edgeFile="|Border1PX.png">
+            <BackgroundInsets>
+                <AbsInset left="1" right="1" top="1" bottom="1"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <FontString font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT" justifyV="MIDDLE"/>
+        <TextInsets left="4" right="4" top="2" bottom="2"/>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor = Color(1,1,1);
+                this.normalBgColor   = Color(0.5, 0.5, 0.5);
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self:SetBackdropColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.FontString:SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    AddOns.Editor:CallColorFunctions(this);
+                end
+            </OnEvent>
+            <OnEscapePressed>
+                this:ClearFocus();
+            </OnEscapePressed>
+        </Scripts>
+    </EditBox>
+</Ui>

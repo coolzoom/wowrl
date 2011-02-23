@@ -1,0 +1,27 @@
+<Shaders>
+    <VertexShader name="Character_Skinning" file="Shaders/Character/Character_Skinning_vs" skeletalAnimation="true">
+        <Params>
+            <AutoParam name="mViewProj"/>
+            <AutoParam name="mBoneMat" param="world_matrix_array_3x4"/>
+        </Params>
+        <#[MOTION_BLUR]>
+            <PreProcessor>
+                <Directive variable="MOTION_BLUR"/>
+            </PreProcessor>
+        </#>
+    </VertexShader>
+    <PixelShader name="Character_Skinning" file="Shaders/Character/Character_Skinning_ps">
+        <Params>
+            <LightParams number="5"/>
+            <AutoParam name="mAmbient"/>
+            <#[MOTION_BLUR]>
+                <AutoParam name="mMotionBlurMask" param="custom"/>
+            </#>
+        </Params>
+        <#[MOTION_BLUR]>
+            <PreProcessor>
+                <Directive variable="MOTION_BLUR"/>
+            </PreProcessor>
+        </#>
+    </PixelShader>
+</Shaders>

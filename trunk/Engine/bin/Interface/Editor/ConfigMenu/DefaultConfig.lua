@@ -1,0 +1,1 @@
+AddOns.ConfigMenu = AddOn("ConfigMenu");
