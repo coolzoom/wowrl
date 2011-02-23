@@ -1,0 +1,18 @@
+<-------------------->
+<-- FILE STRUCTURE -->
+<-------------------->
+
+<Gameplays>
+    <Script file/>
+
+    <Gameplay name>
+        <n[.,1]:Selection friendly hostile/>
+        <n[.,1]:Scripts>
+            <n[.,1]:OnLoad/>
+            <n[.,1]:OnEnabled/>
+            <n[.,1]:OnDisabled/>
+            <n[.,1]:OnUpdate/>
+            <n[.,1]:OnEvent/>
+        </Scripts>
+    </Gameplay>
+</Gameplays>

@@ -498,10 +498,10 @@ namespace Frost
             bLastDragged_ = false;
 
         // Update mouse position
-        /*fRawDMX_ = fDMX_ = mMouseState.X.abs - fMX_;
-        fRawDMY_ = fDMY_ = mMouseState.Y.abs - fMY_;*/
-        fRawDMX_ = fDMX_ = mMouseState.X.rel;
-        fRawDMY_ = fDMY_ = mMouseState.Y.rel;
+        fRawDMX_ = fDMX_ = mMouseState.X.abs - fMX_;
+        fRawDMY_ = fDMY_ = mMouseState.Y.abs - fMY_;
+        /*fRawDMX_ = fDMX_ = mMouseState.X.rel;
+        fRawDMY_ = fDMY_ = mMouseState.Y.rel;*/
 
         fMX_ = mMouseState.X.abs;
         fMY_ = mMouseState.Y.abs;

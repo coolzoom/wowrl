@@ -36,7 +36,10 @@ s_ptr<Font> FontManager::GetFont( const s_str& sFontFile, const s_uint& uiSize )
     }
     else
     {
+        #ifdef USING_THREADS
         Lock l(mMutex_);
+        #endif
+
         if (File::Exists(sFontFile))
         {
             s_ptr<Font> pFont = lFontList_[sID] = new Font(sFontFile, uiSize);

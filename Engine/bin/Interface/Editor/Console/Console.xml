@@ -1,0 +1,57 @@
+<Ui>
+    <Frame name="Console" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
+        <Size>
+            <AbsDimension x="350" y="58"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+                this.Title.TitleString:SetText(AddOns.Console:GetLocalizedString("Title"));
+                this.Run:SetText(AddOns.Console:GetLocalizedString("Run"));
+            </OnLoad>
+        </Scripts>
+        <Frames>
+            <Button name="$parentRun" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension y="28"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-12"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        RunScript(ConsoleEditBox:GetText());
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <EditBox name="$parentEditBox" inherits="EditBoxTemplate_EditBox">
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="12"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension y="28"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT" relativeTo="$parentRun" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </EditBox>
+        </Frames>
+    </Frame>
+</Ui>

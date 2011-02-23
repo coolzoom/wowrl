@@ -1,0 +1,90 @@
+<Ui>
+    <Frame name="FrameTemplate_ColorSlider" virtual="true">
+        <Size>
+            <AbsDimension y="12"/>
+        </Size>
+        <Anchors>
+            <Anchor point="LEFT" relativeTo="$parent"/>
+            <Anchor point="RIGHT" relativeTo="$parentSwatch" relativePoint="LEFT"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor = Color(1,1,1);
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.TitleString:SetTextColor(newColor:Unpack());
+                    self.ValueString:SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    AddOns.Editor:CallColorFunctions(this);
+                end
+            </OnEvent>
+        </Scripts>
+        <Layers>
+            <Layer>
+                <FontString name="$parentTitleString" font="Fonts/Vera.ttf" fontHeight="10" justifyH="LEFT">
+                    <Size>
+                        <AbsDimension x="40"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT">
+                            <Offset>
+                                <AbsDimension x="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString name="$parentValueString" font="Fonts/Vera.ttf" fontHeight="10" justifyH="RIGHT" text="0">
+                    <Size>
+                        <AbsDimension x="24"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="RIGHT" relativeTo="$parentTitleString" relativePoint="LEFT">
+                            <Offset>
+                                <AbsDimension x="-5"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Slider name="$parentSlider" minValue="0" maxValue="255" defaultValue="255" valueStep="1" orientation="HORIZONTAL">
+                <Size>
+                    <AbsDimension y="6"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="16"/>
+                        </Offset>          
+                    </Anchor>
+                    <Anchor point="RIGHT" relativeTo="$parentValueString" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-4"/>
+                        </Offset>          
+                    </Anchor>
+                </Anchors>
+                <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                <ThumbTexture file="Interface/Editor/Templates/SliderThumb.png">
+                    <Size>
+                        <AbsDimension x="8" y="8"/>
+                    </Size>
+                </ThumbTexture>
+                <Scripts>
+                    <OnLoad>
+                        this:SetBackdropColor(AddOns.Templates.Config.Dialog.sliderColor:Unpack());
+                    </OnLoad>
+                    <OnValueChanged>
+                        local value = this:GetValue();
+                        this:GetParent().ValueString:SetText(value);
+                        ColorSelector:OnColorUpdate(this:GetParent().chanel, value);
+                    </OnValueChanged>
+                </Scripts>
+            </Slider>
+        </Frames>
+    </Frame>
+</Ui>

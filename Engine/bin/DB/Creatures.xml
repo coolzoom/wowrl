@@ -1,0 +1,20 @@
+<Creatures>
+    <Creature name="TestNPC" model="TestModel">
+        <ModelParts>
+            <Part val="0"/>
+            <Part val="401"/>
+            <Part val="501"/>
+            <Part val="702"/>
+            <Part val="1301"/>
+            <Part val="1501"/>
+        </ModelParts>
+        <Materials>
+            <Material>
+                <DiffuseTexture file="Textures/Character/Nightelf/Female/NightElfFemaleSkin.png"/>
+            </Material>
+            <Material subMeshID="0" subEntityID="0">
+                <DiffuseTexture file="Textures/Character/Nightelf/Female/NightElfFemaleEyeGlow.png"/>
+            </Material>
+        </Materials>
+    </Creature>
+</Creatures>

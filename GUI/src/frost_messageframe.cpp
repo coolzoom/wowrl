@@ -14,7 +14,7 @@ using namespace Frost::GUI;
 
 const s_str MessageFrame::CLASS_NAME = "GUI::MessageFrame";
 
-// TODO : Implementer MessageFrame
+// TODO : Implement MessageFrame
 
 MessageFrame::MessageFrame(s_ptr<GUIManager> pManager) : Frame(pManager)
 {

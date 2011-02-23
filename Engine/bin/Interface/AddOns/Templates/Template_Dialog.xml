@@ -1,0 +1,231 @@
+<Ui>
+    <Frame name="FrameTemplate_Dialog" virtual="true" hidden="false" movable="true" resizable="true" enableMouse="true" clampedToScreen="true">
+        <ResizeBounds>
+            <Min>
+                <AbsDimension x="64" y="64"/>
+            </Min>
+        </ResizeBounds>
+        <Backdrop bgFile="|DialogBackground.png" edgeFile="|DialogBorder.png" tile="true">
+            <BackgroundInsets>
+                <AbsInset left="8" right="8" top="8" bottom="8"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <HitRectInsets>
+            <AbsInset left="5" right="5" top="5" bottom="5"/>
+        </HitRectInsets>
+        <TitleRegion>
+            <Size>
+                <AbsDimension x="140" y="30"/>
+            </Size>
+            <Anchors>
+                <Anchor point="TOP">
+                    <Offset>
+                        <AbsDimension x="0" y="-10"/>
+                    </Offset>
+                </Anchor>
+            </Anchors>
+        </TitleRegion>
+        <Frames>
+            <Frame name="$parentResizeZoneTL" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentResizeZoneTR" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </Frame>
+            <Frame name="$parentResizeZoneBR" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("BOTTOMRIGHT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneBL" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20" y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="5" y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("BOTTOMLEFT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneL" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentResizeZoneTL" relativePoint="BOTTOM"/>
+                    <Anchor point="BOTTOM" relativeTo="$parentResizeZoneBL" relativePoint="TOP"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("LEFT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneR" enableMouse="true">
+                <Size>
+                    <AbsDimension x="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentResizeZoneTR" relativePoint="BOTTOM"/>
+                    <Anchor point="BOTTOM" relativeTo="$parentResizeZoneBR" relativePoint="TOP"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("RIGHT");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Frame name="$parentResizeZoneB" enableMouse="true">
+                <Size>
+                    <AbsDimension y="20"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentResizeZoneBL" relativePoint="RIGHT"/>
+                    <Anchor point="RIGHT" relativeTo="$parentResizeZoneBR" relativePoint="LEFT"/>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:RegisterForDrag("LeftButton");
+                    </OnLoad>
+                    <OnDragStart>
+                        this:GetParent():StartSizing("BOTTOM");
+                    </OnDragStart>
+                    <OnDragStop>
+                        this:GetParent():StopMovingOrSizing();
+                    </OnDragStop>
+                </Scripts>
+            </Frame>
+            <Button name="$parentCloseButton">
+                <Size>
+                    <AbsDimension x="32" y="32"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-5" y="5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <HitRectInsets>
+					<AbsInset left="6" right="8" top="6" bottom="8"/>
+				</HitRectInsets>
+                <NormalTexture    file="|DialogCloseButtonUp.png"/>
+                <PushedTexture    file="|DialogCloseButtonDown.png"/>
+                <DisabledTexture  file="|DialogCloseButtonDisabled.png"/>
+                <HighlightTexture file="|DialogCloseButtonHighlight.png"/>
+                <Scripts>
+                    <OnClick>
+                        this:GetParent():Hide();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Layers>
+            <Layer level="BACKGROUND">
+				<Texture name="$parentTitleBorder" file="|DialogHeader.png">
+					<Size>
+						<AbsDimension x="160" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-10"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.2" right="0.8" top="0" bottom="0.6"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+                <FontString name="$parentTitleString" font="Fonts/VeraBold.ttf" fontHeight="10" justifyH="CENTER" text="">
+					<Size>
+						<AbsDimension x="140" y="32"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER" relativeTo="$parentTitleBorder"/>
+					</Anchors>
+					<Color r="1" g="0.8196079" b="0"/>
+					<Shadow>
+						<Color r="0" g="0" b="0"/>
+						<Offset x="1" y="1"/>
+					</Shadow>
+				</FontString>
+                <FontString name="$parentContent" font="Fonts/Vera.ttf" fontHeight="8" justifyH="LEFT" justifyV="TOP" text="">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="25" y="25"/>
+							</Offset>
+						</Anchor>
+                        <Anchor point="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-25" y="-25"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>

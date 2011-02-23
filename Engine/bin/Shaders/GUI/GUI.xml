@@ -1,0 +1,7 @@
+<Shaders>
+    <PixelShader name="GUI_Desaturation" file="Shaders/GUI/GUI_Desaturation_ps">
+        <TextureBinds>
+            <TextureBind name="mTexture" id="0"/>
+        </TextureBinds>
+    </PixelShader>
+</Shaders>

@@ -1,0 +1,81 @@
+<Shaders>
+    
+    <VertexShader name="SimpleTexture" file="Shaders/Simple/SimpleTexture_vs">
+        <Params>
+            <LightParams number="5"/>
+            <AutoParam name="mAmbient"/>
+            <AutoParam name="mWorldViewProj"/>
+            <AutoParam name="mWorld"/>
+            <AutoParam name="mTexCoordMat" param="texture_matrix" data="0"/>
+        </Params>
+        <PreProcessor>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
+        </PreProcessor>
+    </VertexShader>
+    
+    <PixelShader name="SimpleTexture" file="Shaders/Simple/SimpleTexture_ps">
+        <TextureBinds>
+            <TextureBind name="mTexture" id="0"/>
+        </TextureBinds>
+        <PreProcessor>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
+        </PreProcessor>
+    </PixelShader>
+    
+    <VertexShader name="SimpleTextureNoPP" file="Shaders/Simple/SimpleTexture_vs">
+        <Params>
+            <LightParams number="5"/>
+            <AutoParam name="mAmbient"/>
+            <AutoParam name="mWorldViewProj"/>
+            <AutoParam name="mWorld"/>
+            <AutoParam name="mTexCoordMat" param="texture_matrix" data="0"/>
+        </Params>
+    </VertexShader>
+    
+    <PixelShader name="SimpleTextureNoPP" file="Shaders/Simple/SimpleTexture_ps">
+        <TextureBinds>
+            <TextureBind name="mTexture" id="0"/>
+        </TextureBinds>
+    </PixelShader>
+    
+    <VertexShader name="SimpleColor" file="Shaders/Simple/SimpleColor_vs">
+        <Params>
+            <LightParams number="5"/>
+            <AutoParam name="mAmbient"/>
+            <AutoParam name="mDiffuse"/>
+            <AutoParam name="mWorldViewProj"/>
+            <AutoParam name="mWorld"/>
+        </Params>
+        <PreProcessor>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
+        </PreProcessor>
+    </VertexShader>
+    
+    <PixelShader name="SimpleColor" file="Shaders/Simple/SimpleColor_ps">
+        <PreProcessor>
+            <#[MOTION_BLUR]>
+                <Directive variable="MOTION_BLUR"/>
+            </#>
+        </PreProcessor>
+    </PixelShader>
+    
+    <VertexShader name="SimpleColorNoPP" file="Shaders/Simple/SimpleColor_vs">
+        <Params>
+            <LightParams number="5"/>
+            <AutoParam name="mAmbient"/>
+            <AutoParam name="mDiffuse"/>
+            <AutoParam name="mWorldViewProj"/>
+            <AutoParam name="mWorld"/>
+        </Params>
+    </VertexShader>
+    
+    <PixelShader name="SimpleColorNoPP" file="Shaders/Simple/SimpleColor_ps">
+    </PixelShader>
+    
+</Shaders>

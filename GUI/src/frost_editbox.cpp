@@ -1115,7 +1115,7 @@ s_uint EditBox::GetLetterIDAt_( const s_int& iX, const s_int& iY )
         }
         else
         {
-            // TODO : # Implement multi line EditBox
+            // TODO : Implement multi line EditBox
             return uiDisplayPos_;
         }
 
@@ -1179,7 +1179,7 @@ s_bool EditBox::MoveCarretVertically_( const s_bool& bDown )
 {
     if (bMultiLine_)
     {
-        // TODO : # Implement multi line EditBox
+        // TODO : Implement multi line EditBox
         return false;
     }
     else

@@ -1,0 +1,20 @@
+<-------------------->
+<-- FILE STRUCTURE -->
+<-------------------->
+
+<Creatures>
+    <Creature name model>
+        <n[.,1]:ModelParts>
+            <Part n:val/>
+        </ModelParts>
+        <n[.,1]:Materials>
+            <-- Material : how to render each submesh -->
+            <Material n:subMeshID="-1" n:subEntityID="-1">
+                <-- DiffuseColor : a plain color -->
+                <n[*]:DiffuseColor n:r="0" n:g="0" n:b="0" n:a="0"/>
+                <-- DiffuseTexture : a texture file -->
+                <n[*]:DiffuseTexture file b:alphaReject="false"/>
+            </Material>
+        </Materials>
+    </Creature>
+</Creatures>

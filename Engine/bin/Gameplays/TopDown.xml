@@ -1,0 +1,18 @@
+<Gameplays>
+    <Script file="TopDown.lua"/>
+
+    <Gameplay name="TopDown">
+        <Selection friendly="MULTIPLE" hostile="SINGLE"/>
+        <Scripts>
+            <OnLoad>
+                TopDownGameplay.OnLoad();
+            </OnLoad>
+            <OnEvent>
+                TopDownGameplay.OnEvent();
+            </OnEvent>
+            <OnUpdate>
+                TopDownGameplay.OnUpdate();
+            </OnUpdate>
+        </Scripts>
+    </Gameplay>
+</Gameplays>

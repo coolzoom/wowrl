@@ -85,7 +85,9 @@ namespace GUI
 
         s_map< s_str, s_ptr<Font> > lFontList_;
 
+        #ifdef USING_THREADS
         Mutex mMutex_;
+        #endif
     };
 }
 }
