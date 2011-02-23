@@ -72,9 +72,9 @@ is the same, so the API has not been changed).
  |    Note : If you don't want to compile these library by   |
  | yourself, you still have the option to donwload the pre-  |
  | built package available on FE's sourceforge page :        |
- |                                                           |
- |                    ----------------------                 |
- |                                                           |
+
+https://sourceforge.net/projects/wowrl/files/frost/Prebuilt%20Dependencies/
+
  |   Be carefull though : it may not be entierly up to date  |
  | and has not been fully tested. It should work though.     |
  >-----------------------------------------------------------<
