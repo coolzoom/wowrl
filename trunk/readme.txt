@@ -103,7 +103,24 @@ file :
 
      INSTALL_DIR/lua5.1/include
 
-... and then compile Lua. There is no big deal here : Lua has
+... and :
+
+     INSTALL_DIR/Frost/Lunar/ldebug.c
+
+... into :
+
+     INSTALL_DIR/lua5.1/src
+
+FE will assume that Lua has been compiled as C++ code, so
+remember to compile it with G++ and not GCC. You can change
+the default C compiler in Code::Blocks by navigating to
+
+     Settings -> Compiler and debugger settings
+
+... enter the "Toolchain executables" tab and change the "C
+compiler" entry to use g++.
+
+You can then compile Lua. There is no big deal here : Lua has
 no dependency and is very well coded. It should compile like
 a charm !
     If you're using Code::Blocks, create a new static library

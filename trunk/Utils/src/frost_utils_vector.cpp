@@ -284,7 +284,7 @@ namespace Frost
     }
     #endif
 
-    string_object StringConverter<string_element, Vector>::Convert( const Vector& mVector )
+    s_str::string StringConverter<string_element, Vector>::Convert( const Vector& mVector )
     {
         return "("+StringConverter<string_element, s_float>::Convert(mVector.X())+
               ", "+StringConverter<string_element, s_float>::Convert(mVector.Y())+

@@ -9,6 +9,8 @@
 #include "frost_guimanager.h"
 #include "frost_texture.h"
 
+#include <frost_utils_event.h>
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;

@@ -11,6 +11,7 @@
 #include "scene/frost_zonemanager.h"
 #include "scene/frost_lightmanager.h"
 #include "scene/frost_physicsmanager.h"
+#include "frost_engine.h"
 
 #include <OgreException.h>
 

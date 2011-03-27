@@ -8,6 +8,7 @@
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "material/frost_shadermanager.h"
+#include "frost_engine.h"
 
 #include <OgreCamera.h>
 #include <OgreRenderWindow.h>

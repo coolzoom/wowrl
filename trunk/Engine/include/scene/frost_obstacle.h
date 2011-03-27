@@ -12,6 +12,8 @@
 #include "frost.h"
 #include "scene/frost_movableobject.h"
 
+#include <frost_utils_axisalignedbox.h>
+
 namespace Frost
 {
     /// Contains returned collision data.

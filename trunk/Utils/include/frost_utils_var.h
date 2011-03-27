@@ -7,9 +7,10 @@
 #ifndef FROST_UTILS_VAR_H
 #define FROST_UTILS_VAR_H
 
-#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 #include "frost_utils_log.h"
+
+#include <typeinfo>
 
 namespace Frost
 {
@@ -33,7 +34,7 @@ namespace Frost
     public :
 
         /// Default constructor.
-        s_var() : pValue_(NULL) {}
+        s_var();
 
         /// Value assignment constructor.
         /** \param mValue The value to assign
@@ -44,82 +45,18 @@ namespace Frost
         /// Copy constructor.
         /** \param mVar The s_var to copy
         */
-        s_var(const s_var& mVar) : pValue_(mVar.pValue_ ? mVar.pValue_->Clone() : NULL) {}
+        s_var(const s_var& mVar);
 
-        /// Destructor.
-        ~s_var()
-        {
-        }
+        s_var& operator = (const s_var& mVar);
 
-        s_var& operator = (const s_var& mVar)
-        {
-            if (&mVar != this)
-            {
-                s_var mTemp(mVar);
-                Swap(mTemp);
-            }
-            return *this;
-        }
+        s_bool operator == (const s_var& mVar) const;
 
-        s_bool operator == (const s_var& mVar) const
-        {
-            if (GetType() == mVar.GetType())
-            {
-                if (IsOfType<s_str>())
-                {
-                    s_str s1 = Get<s_str>();
-                    s_str s2 = mVar.Get<s_str>();
-                    return s1 == s2;
-                }
-                else if (IsOfType<s_float>())
-                {
-                    s_float f1 = Get<s_float>();
-                    s_float f2 = mVar.Get<s_float>();
-                    return f1 == f2;
-                }
-                else if (IsOfType<s_double>())
-                {
-                    s_double d1 = Get<s_double>();
-                    s_double d2 = mVar.Get<s_double>();
-                    return d1 == d2;
-                }
-                else if (IsOfType<s_int>())
-                {
-                    s_int i1 = Get<s_int>();
-                    s_int i2 = mVar.Get<s_int>();
-                    return i1 == i2;
-                }
-                else if (IsOfType<s_uint>())
-                {
-                    s_uint ui1 = Get<s_uint>();
-                    s_uint ui2 = mVar.Get<s_uint>();
-                    return ui1 == ui2;
-                }
-                else if (IsOfType<s_bool>())
-                {
-                    s_bool b1 = Get<s_bool>();
-                    s_bool b2 = mVar.Get<s_bool>();
-                    return b1 == b2;
-                }
-                else if (IsOfType<void>())
-                    return true;
-            }
-
-            return false;
-        }
-
-        s_bool operator != (const s_var& mVar)
-        {
-            return !(operator == (mVar));
-        }
+        s_bool operator != (const s_var& mVar);
 
         /// Swaps this value with another.
         /** \param mVar the value to swap with this one
         */
-        void Swap(s_var& mVar)
-        {
-            std::swap(pValue_, mVar.pValue_);
-        }
+        void Swap(s_var& mVar);
 
         /// Returns the contained value.
         /** \return The contained value
@@ -154,26 +91,13 @@ namespace Frost
         *   \note Only the default constructor of s_var returns
         *         an empty variable.
         */
-        s_bool IsEmpty() const
-        {
-            return (pValue_ == NULL);
-        }
+        s_bool IsEmpty() const;
 
         /// Returns the type of the contained value.
         /** \return The type of the contained value
         *   \note Returns typeid(void) if the variable is empty.
         */
-        const s_type& GetType() const
-        {
-            if (pValue_)
-            {
-                return pValue_->GetType();
-            }
-            else
-            {
-                return typeid(void);
-            }
-        }
+        const s_type& GetType() const;
 
         /// Checks the contained value's type.
         /** \return 'true' if the contained value's type is the one
@@ -195,18 +119,7 @@ namespace Frost
         /// Converts this variable to a string.
         /** \return This variable converted to a string
         */
-        s_str ToString() const
-        {
-            const s_type& mType = GetType();
-            if (mType == VALUE_INT) return s_str::Convert(Get<s_int>());
-            else if (mType == VALUE_UINT) return s_str::Convert(Get<s_uint>())+"u";
-            else if (mType == VALUE_FLOAT) return s_str::Convert(Get<s_float>())+"f";
-            else if (mType == VALUE_DOUBLE) return s_str::Convert(Get<s_double>());
-            else if (mType == VALUE_BOOL) return s_str::Convert(Get<s_bool>());
-            else if (mType == VALUE_STRING) return "\""+Get<s_str>()+"\"";
-            else if (mType == VALUE_POINTER) return s_str::Convert(s_ptr<void>(Get<void*>()));
-            else return "<none>";
-        }
+        s_str ToString() const;
 
         static const s_type& VALUE_NONE;
         static const s_type& VALUE_INT;

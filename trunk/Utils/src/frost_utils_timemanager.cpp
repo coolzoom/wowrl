@@ -192,9 +192,9 @@ namespace Frost
                 bProfiling_ = false;
             }
 
-            Log("|t\n");
+            Log("\n");
             if (!uiGroup.IsValid())
-                Log("# Profiling info : "+ dProfileTime_ +" s of profiling");
+                Log("# Profiling info : "+ s_str::Convert(dProfileTime_, 0, 2) +" s of profiling");
             else
                 Log("# Profiling info for group ["+ uiGroup +"] : "+ dProfileTime_ +" s of profiling");
             map<s_str, Profiler>::iterator iter;

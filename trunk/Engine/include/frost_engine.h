@@ -14,6 +14,15 @@
 #define FROST_ENGINE_H
 
 #include "frost.h"
+#include <frost_utils_manager.h>
+
+namespace Ogre
+{
+    class Root;
+    class SceneManager;
+    class RenderSystem;
+    class RenderWindow;
+}
 
 namespace Frost
 {

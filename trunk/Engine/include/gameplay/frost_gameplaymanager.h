@@ -11,6 +11,7 @@
 #include "frost.h"
 
 #include <frost_utils_manager.h>
+#include <frost_xml.h>
 
 namespace Frost
 {

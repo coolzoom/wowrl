@@ -11,6 +11,8 @@
 
 #include "frost.h"
 
+#include <frost_utils_timers.h>
+
 namespace Frost
 {
     enum PowerRegenType

@@ -6,8 +6,12 @@
 #include "frost_utils_types.h"
 #include "frost_utils_stdhelper.h"
 
+#include <sstream>
+
 namespace Frost
 {
+    typedef std::stringstream string_stream;
+
     s_ustr UTF8ToUnicode( const s_str& s )
     {
         return UTF8ToUnicode(s.Get());
@@ -65,7 +69,7 @@ namespace Frost
         return UTF8ToUnicode(c.Get());
     }
 
-    uint UTF8ToUnicode( const char& c )
+    uint UTF8ToUnicode( const string_element& c )
     {
         static uchar MAX_ANSI = 127;
 
@@ -122,7 +126,7 @@ namespace Frost
         return UnicodeToUTF8(c.Get());
     }
 
-    char UnicodeToUTF8( const uint& c )
+    string_element UnicodeToUTF8( const uint& c )
     {
         static uint MAX_ANSI = 127;
         if (c <= MAX_ANSI)
@@ -130,4 +134,78 @@ namespace Frost
         else
             return '\0';
     }
+
+    s_uint_t<default_uint> HexToUInt( const s_str_t<string_element>& s )
+    {
+        default_uint i;
+        string_stream ss;
+        ss << s.Get();
+        ss >> std::hex >> i;
+        return i;
+    }
+
+    long StringToInt(const s_str& s)
+    {
+        long i;
+        string_stream ss(s.Get());
+        ss >> i;
+        return i;
+    }
+
+    long StringToInt(const s_ustr& s)
+    {
+        return StringToInt(UnicodeToUTF8(s));
+    }
+
+    ulong StringToUInt(const s_str& s)
+    {
+        ulong ui;
+        string_stream ss(s.Get());
+        ss >> ui;
+        return ui;
+    }
+
+    ulong StringToUInt(const s_ustr& s)
+    {
+        return StringToUInt(UnicodeToUTF8(s));
+    }
+
+    double StringToFloat(const s_str& s)
+    {
+        double d;
+        string_stream ss(s.Get());
+        ss >> d;
+        return d;
+    }
+
+    double StringToFloat(const s_ustr& s)
+    {
+        return StringToFloat(UnicodeToUTF8(s));
+    }
+
+    s_str::string IntToString(const long& i)
+    {
+        string_stream sStream;
+        sStream << i;
+        return sStream.str();
+    }
+
+    s_str::string UIntToString(const ulong& ui)
+    {
+        string_stream sStream;
+        sStream << ui;
+        return sStream.str();
+    }
+
+    template <class T>
+    s_str::string FloatToString(const T& f)
+    {
+        string_stream sStream;
+        sStream.precision(s_float_t<T>::DIGIT);
+        sStream << f;
+        return sStream.str();
+    }
+
+    template s_str::string FloatToString(const float& f);
+    template s_str::string FloatToString(const double& f);
 }

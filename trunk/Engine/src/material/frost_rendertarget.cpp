@@ -9,6 +9,7 @@
 
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
+#include "frost_engine.h"
 
 #include <OgreTextureManager.h>
 #include <OgreHardwarePixelBuffer.h>

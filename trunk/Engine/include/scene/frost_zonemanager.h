@@ -13,6 +13,7 @@
 #include "frost_editor.h"
 
 #include <frost_utils_manager.h>
+#include <frost_utils_eventreceiver.h>
 
 namespace Frost
 {

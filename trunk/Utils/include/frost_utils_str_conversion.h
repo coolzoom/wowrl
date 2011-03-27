@@ -3,15 +3,23 @@
 */
 namespace Frost
 {
-    s_str_t<uint>           UTF8ToUnicode(const s_str_t<char>& s);
+    s_str_t<uint>           UTF8ToUnicode(const s_str_t<string_element>& s);
     std::basic_string<uint> UTF8ToUnicode(const std::string& s);
-    s_uint_t<uint>          UTF8ToUnicode(const s_int_t<char>& c);
-    uint                    UTF8ToUnicode(const char& c);
+    s_uint_t<uint>          UTF8ToUnicode(const s_int_t<string_element>& c);
+    uint                    UTF8ToUnicode(const string_element& c);
 
-    s_str_t<char>           UnicodeToUTF8(const s_str_t<uint>& s);
+    s_str_t<string_element> UnicodeToUTF8(const s_str_t<uint>& s);
     std::string             UnicodeToUTF8(const std::basic_string<uint>& s);
-    s_int_t<char>           UnicodeToUTF8(const s_uint_t<uint>& c);
-    char                    UnicodeToUTF8(const uint& c);
+    s_int_t<string_element> UnicodeToUTF8(const s_uint_t<uint>& c);
+    string_element          UnicodeToUTF8(const uint& c);
+
+    s_uint_t<default_uint>  HexToUInt(const s_str_t<string_element>& s);
+
+    s_str_t<string_element>::string IntToString(const long& i);
+    s_str_t<string_element>::string UIntToString(const ulong& ui);
+
+    template <class T>
+    s_str_t<string_element>::string FloatToString(const T& f);
 
     template<class T>
     class StringConverter< T, s_str_t<T> >
@@ -260,7 +268,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Constructor.
         /** \param c The character to copy
@@ -298,7 +306,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided integer.
         /** \param i The integer to convert
@@ -308,11 +316,7 @@ namespace Frost
             switch (i.GetType())
             {
                 case s_int_t<N>::INTEGER :
-                {
-                    string_stream sStream;
-                    sStream << i.Get();
-                    return sStream.str();
-                }
+                    return IntToString(i.Get());
                 case s_int_t<N>::INTEGER_NAN :
                     return "nan";
                 case  s_int_t<N>::INTEGER_INF_PLUS :
@@ -364,7 +368,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided unsigned integer (as a number).
         /** \param ui The unsigned integer to convert
@@ -374,11 +378,7 @@ namespace Frost
             switch (ui.GetType())
             {
                 case TypeTraits<uint>::FrostType::INTEGER :
-                {
-                    string_stream sStream;
-                    sStream << ui.Get();
-                    return sStream.str();
-                }
+                    return UIntToString(ui.Get());
                 case TypeTraits<uint>::FrostType::INTEGER_NAN :
                     return "nan";
                 case TypeTraits<uint>::FrostType::INTEGER_INF :
@@ -419,7 +419,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided unsigned integer.
         /** \param ui The unsigned integer to convert
@@ -429,11 +429,7 @@ namespace Frost
             switch (ui.GetType())
             {
                 case s_uint_t<N>::INTEGER :
-                {
-                    string_stream sStream;
-                    sStream << ui.Get();
-                    return sStream.str();
-                }
+                    return UIntToString(ui.Get());
                 case s_uint_t<N>::INTEGER_NAN :
                     return "nan";
                 case s_uint_t<N>::INTEGER_INF :
@@ -466,7 +462,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided floating point number.
         /** \param f The floating point number to convert
@@ -476,12 +472,7 @@ namespace Frost
             switch (f.GetType())
             {
                 case s_float_t<N>::FLOAT :
-                {
-                    string_stream sStream;
-                    sStream.precision(s_float_t<N>::DIGIT);
-                    sStream << f.Get();
-                    return sStream.str();
-                }
+                    return FloatToString<N>(f.Get());
                 case s_float_t<N>::FLOAT_NAN :
                     return "nan";
                 case s_float_t<N>::FLOAT_INF_PLUS :
@@ -492,55 +483,115 @@ namespace Frost
             }
         }
 
-        /// s_float conversion constructor.
+        /// Converts the provided floating point number with fixed number of significant digits.
+        /** \param f          The floating point number to convert
+        *   \param uiDigitNbr The number of significant digit to display
+        */
+        static string Convert(const s_float_t<N>& f, const s_uint_t<default_uint>& uiDigitNbr)
+        {
+            string sReturn;
+
+            s_float_t<N> fTemp = f;
+            if (fTemp < 0.0f)
+            {
+                sReturn.push_back('-');
+                fTemp *= -1.0f;
+            }
+
+            if (fTemp < 1.0f)
+            {
+                sReturn += "0.";
+
+                default_uint uiZeroes = 0;
+
+                do
+                {
+                    fTemp *= 10.0f;
+                    ++uiZeroes;
+                }
+                while (fTemp < 1.0f);
+
+                sReturn.append(uiZeroes, '0');
+
+                for (default_uint i = 0; i < uiDigitNbr.Get(); ++i)
+                {
+                    fTemp *= 10.0f;
+                }
+
+                sReturn += StringConverter< string_element, s_uint_t<default_uint> >::Convert(
+                    s_uint_t<default_uint>(fTemp)
+                );
+            }
+            else
+            {
+                s_float_t<N> fTemp2 = s_float_t<N>::RoundDown(fTemp);
+                s_uint_t<default_uint> uiInt(fTemp2);
+                sReturn += StringConverter< string_element, s_uint_t<default_uint> >::Convert(uiInt);
+
+                default_uint uiSize = sReturn.size();
+                if (sReturn[0] == '-')
+                    --uiSize;
+
+                if (uiSize > uiDigitNbr.Get())
+                {
+                    default_uint uiExcess = uiSize - uiDigitNbr.Get();
+
+                    sReturn.erase(sReturn.length() - uiExcess, uiExcess);
+                    sReturn.append(uiExcess, '0');
+                    return sReturn;
+                }
+
+                sReturn.push_back('.');
+
+                default_uint uiRemaining = uiDigitNbr.Get() - uiSize;
+
+                fTemp2 = fTemp - fTemp2;
+                for (default_uint i = 0; i < uiRemaining; ++i)
+                {
+                    fTemp2 *= 10.0f;
+                }
+
+                sReturn += StringConverter< string_element, s_uint_t<default_uint> >::Convert(
+                    s_uint_t<default_uint>(fTemp2), uiRemaining
+                );
+            }
+
+            return sReturn;
+        }
+
+        /// Converts the provided floating point number with fixed size integer and fractional parts.
         /** \param fValue         The s_float to convert
         *   \param uiIntCharNbr   The minimum number of character allowed for the
         *                         integer part (fills with zeros)
         *   \param uinFracCharNbr The number of decimal to show (fills with zeros)
         */
-        static string Convert(const s_float_t<N>& f, const s_uint_t<default_uint>& uiIntCharNbr, const s_uint_t<default_uint>& uiFracCharNbr = s_float_t<N>::DIGIT)
+        static string Convert(const s_float_t<N>& f, const s_uint_t<default_uint>& uiIntCharNbr, const s_uint_t<default_uint>& uiFracCharNbr)
         {
             string sReturn;
 
-            if (f >= 0)
+            s_float_t<N> fTemp = f;
+            if (fTemp < 0.0f)
             {
-                s_float_t<N> fRoundDown = s_float_t<N>::RoundDown(f);
-
-                sReturn = StringConverter< string_element, s_int_t<default_int> >::Convert(
-                    s_int_t<default_int>(fRoundDown), uiIntCharNbr
-                );
-
-                if (uiFracCharNbr > 0)
-                {
-                    s_float_t<N> fPower = 1.0f;
-                    for (default_uint i = 0; i < uiFracCharNbr.Get(); ++i)
-                        fPower *= 10.0f;
-
-                    sReturn += ".";
-                    sReturn += StringConverter< string_element, s_uint_t<default_uint> >::Convert(
-                        s_uint_t<default_uint>((f - fRoundDown)*fPower)
-                    );
-                }
+                sReturn.push_back('-');
+                fTemp *= -1.0f;
             }
-            else
+
+            s_float_t<N> fTemp2 = s_float_t<N>::RoundDown(fTemp);
+
+            sReturn = StringConverter< string_element, s_uint_t<default_uint> >::Convert(
+                s_uint_t<default_uint>(fTemp2), uiIntCharNbr
+            );
+
+            if (uiFracCharNbr > 0)
             {
-                s_float_t<N> fRoundUp = s_float_t<N>::RoundUp(f);
+                fTemp2 = fTemp - fTemp2;
+                for (default_uint i = 0; i < uiFracCharNbr.Get(); ++i)
+                    fTemp2 *= 10.0f;
 
-                sReturn = StringConverter< string_element, s_int_t<default_int> >::Convert(
-                    s_int_t<default_int>(fRoundUp), uiIntCharNbr
+                sReturn.push_back('.');
+                sReturn += StringConverter< string_element, s_uint_t<default_uint> >::Convert(
+                    s_uint_t<default_uint>(fTemp2), uiFracCharNbr
                 );
-
-                if (uiFracCharNbr > 0)
-                {
-                    s_float_t<N> fPower = 1.0f;
-                    for (default_uint i = 0; i < uiFracCharNbr.Get(); ++i)
-                        fPower *= 10.0f;
-
-                    sReturn += ".";
-                    sReturn += StringConverter< string_element, s_uint_t<default_uint> >::Convert(
-                        s_uint_t<default_uint>((fRoundUp - f)*fPower)
-                    );
-                }
             }
 
             return sReturn;
@@ -551,7 +602,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided boolean.
         /** \param b The boolean to convert
@@ -566,7 +617,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided pointer's address.
         /** \param b The pointer to convert
@@ -587,7 +638,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided pointer's address.
         /** \param b The pointer to convert
@@ -608,7 +659,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Converts the provided pointer's address.
         /** \param b The pointer to convert
@@ -652,7 +703,7 @@ namespace Frost
         }
     };
 
-    template<> class StringConverter< uint, string_object >
+    template<> class StringConverter< uint, s_str_t<string_element>::string >
     {
     public :
 
@@ -664,7 +715,7 @@ namespace Frost
         /** \param s The string to copy
         *   \note Calls UTF8ToUnicode().
         */
-        static string Construct(const string_object& s)
+        static string Construct(const s_str_t<string_element>::string& s)
         {
             return Convert(s);
         }
@@ -673,7 +724,7 @@ namespace Frost
         /** \param s The string to convert
         *   \note Calls UTF8ToUnicode().
         */
-        static string Convert(const string_object& s)
+        static string Convert(const s_str_t<string_element>::string& s)
         {
             return UTF8ToUnicode(s);
         }
@@ -702,7 +753,7 @@ namespace Frost
         */
         static string Convert(const string_element* s)
         {
-            return UTF8ToUnicode(string_object(s));
+            return UTF8ToUnicode(s_str_t<string_element>::string(s));
         }
     };
 
@@ -729,7 +780,7 @@ namespace Frost
         */
         static string Convert(string_element* s)
         {
-            return UTF8ToUnicode(string_object(s));
+            return UTF8ToUnicode(s_str_t<string_element>::string(s));
         }
     };
 
@@ -756,7 +807,7 @@ namespace Frost
         */
         static string Convert(const string_element* s)
         {
-            return UTF8ToUnicode(string_object(s));
+            return UTF8ToUnicode(s_str_t<string_element>::string(s));
         }
     };
 
@@ -783,7 +834,7 @@ namespace Frost
         */
         static string Convert(const string_element* s)
         {
-            return UTF8ToUnicode(string_object(s));
+            return UTF8ToUnicode(s_str_t<string_element>::string(s));
         }
     };
 
@@ -836,7 +887,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str_t<string_element>::string string;
 
         /// Constructor.
         /** \param c The character to copy

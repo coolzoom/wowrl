@@ -13,7 +13,7 @@
 #ifndef FROST_LUA_UTILS_H
 #define FROST_LUA_UTILS_H
 
-#include "frost_utils_config.h"
+#include "frost_utils_types.h"
 #include "frost_utils_var.h"
 
 namespace Frost

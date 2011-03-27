@@ -240,7 +240,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str::string string;
 
         static string Convert(const s_array<T, N>& mArray)
         {

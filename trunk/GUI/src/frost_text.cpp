@@ -448,19 +448,19 @@ void GetFormat( s_ustr::iterator& iterChar, Text::Format& mFormat )
         iterChar++;
         sColorPart += *iterChar; iterChar++;
         sColorPart += *iterChar; iterChar++;
-        s_float fA = s_float(sColorPart.HexToUInt())/255.0f;
+        s_float fA = s_float(HexToUInt(sColorPart))/255.0f;
         sColorPart.Clear();
         sColorPart += *iterChar; iterChar++;
         sColorPart += *iterChar; iterChar++;
-        s_float fR = s_float(sColorPart.HexToUInt())/255.0f;
+        s_float fR = s_float(HexToUInt(sColorPart))/255.0f;
         sColorPart.Clear();
         sColorPart += *iterChar; iterChar++;
         sColorPart += *iterChar; iterChar++;
-        s_float fG = s_float(sColorPart.HexToUInt())/255.0f;
+        s_float fG = s_float(HexToUInt(sColorPart))/255.0f;
         sColorPart.Clear();
         sColorPart += *iterChar; iterChar++;
         sColorPart += *iterChar;
-        s_float fB = s_float(sColorPart.HexToUInt())/255.0f;
+        s_float fB = s_float(HexToUInt(sColorPart))/255.0f;
 
         mFormat.mColorAction = Text::COLOR_ACTION_SET;
         mFormat.mColor = Color(fA, fR, fG, fB);
@@ -606,7 +606,7 @@ void Text::UpdateLines_()
                         // is to truncate it.
                         if (bAddEllipsis_)
                         {
-                            s_float fWordWidth = 3*(GetCharacterWidth((uint)'.') + fTracking_);
+                            s_float fWordWidth = 3.0f*(GetCharacterWidth((uint)'.') + fTracking_);
                             s_ustr::iterator iterChar2 = mLine.sCaption.End();
                             s_uint uiCharToErase;
                             while ( (mLine.fWidth + fWordWidth > fBoxW_) && (iterChar2 != mLine.sCaption.Begin()) )

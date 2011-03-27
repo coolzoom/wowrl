@@ -7,6 +7,7 @@
 
 #include "material/frost_shadermanager.h"
 #include "material/frost_shader.h"
+#include "frost_engine.h"
 
 #include <frost_xml_document.h>
 

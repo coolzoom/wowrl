@@ -16,8 +16,10 @@
 #include "lua/frost_lua.h"
 #include "unit/frost_healthtype.h"
 #include "unit/frost_powertype.h"
-#include "frost_inputmanager.h"
 #include "gameplay/frost_gameplaymanager.h"
+#include "frost_engine.h"
+
+#include <frost_inputmanager.h>
 
 using namespace std;
 

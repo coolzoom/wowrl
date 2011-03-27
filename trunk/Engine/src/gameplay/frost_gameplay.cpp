@@ -11,6 +11,9 @@
 #include "camera/frost_camera.h"
 #include "frost_inputmanager.h"
 
+#include <frost_utils_timemanager.h>
+#include <frost_utils_event.h>
+
 using namespace std;
 
 namespace Frost

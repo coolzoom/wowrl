@@ -4,6 +4,8 @@
 #include "frost.h"
 #include "scene/frost_movableobject.h"
 
+#include <frost_utils_color.h>
+
 namespace Frost
 {
 

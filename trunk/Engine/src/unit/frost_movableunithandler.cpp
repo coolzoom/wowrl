@@ -10,9 +10,10 @@
 #include "unit/frost_unitmanager.h"
 #include "scene/frost_physicsmanager.h"
 #include "scene/frost_node.h"
-
 #include "scene/frost_zonemanager.h"
 #include "scene/frost_zone.h"
+
+#include <frost_utils_event.h>
 
 using namespace std;
 

@@ -14,8 +14,6 @@
 #ifndef FROST_UTILS_LUASTATE_H
 #define FROST_UTILS_LUASTATE_H
 
-#include "frost_utils_config.h"
-
 #include "frost_utils_types.h"
 #include "frost_utils_exception.h"
 
@@ -134,6 +132,25 @@ namespace Frost
             *   \note This function will print out the current file and line
             */
             void    PrintError(const s_str& sError);
+
+            /// Formats a raw error string.
+            /** \param sError The raw error string
+            *   \note Calls the custom error function if provided,
+            *         else formats as :<br>
+            *         [source]:line: error
+            */
+            s_str   FormatError(const s_str& sError);
+
+            /// Sets a custom error formatting function.
+            /** \param pFunc The error function
+            *   \note The string that is passed to this error function only
+            *         contains the raw error message from Lua : no indication
+            *         on the location of the error.<br>
+            *         The default implementation of this function returns :<br>
+            *         [source]:line: error<br>
+            *         See FormatError().
+            */
+            void    SetErrorFunction(lua_CFunction pFunc);
 
             /// Checks if a variable is serializable.
             /** \param iIndex The index on the stack of the variable
@@ -502,6 +519,8 @@ namespace Frost
         private :
 
             lua_State* pLua_;
+
+            lua_CFunction pErrorFunction_;
         };
     }
 }

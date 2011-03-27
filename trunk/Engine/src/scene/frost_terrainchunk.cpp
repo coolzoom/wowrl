@@ -15,6 +15,7 @@
 #include "scene/frost_terrainobstacle.h"
 #include "scene/frost_planeobstacle.h"
 #include "scene/frost_physicsmanager.h"
+#include "frost_engine.h"
 
 #include <OgreSceneManager.h>
 #include <OgreMeshManager.h>

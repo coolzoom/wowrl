@@ -2,6 +2,7 @@
 #define FROST_GUI_FONT_H
 
 #include <frost_utils.h>
+#include <frost_utils_point.h>
 
 namespace Frost
 {

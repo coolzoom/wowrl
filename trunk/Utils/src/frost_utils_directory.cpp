@@ -5,7 +5,6 @@
 
 #include "frost_utils_directory.h"
 #include "frost_utils_stdhelper.h"
-#include "frost_utils_log.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -303,7 +302,6 @@ namespace Frost
     s_bool Directory::Exists(const s_str& sPath)
     {
 #ifdef FROST_LINUX
-    #warning Untested !
         struct stat mStatus;
         return stat(sPath.c_str(), &mStatus) == 0;
 #else
@@ -349,7 +347,6 @@ namespace Frost
     s_bool Directory::Make_(const s_str& sPath)
     {
 #ifdef FROST_LINUX
-    #warning Untested !
         return mkdir(sPath.c_str(), 0777) == 0;
 #else
         return CreateDirectory(sPath.c_str(), 0) != 0;

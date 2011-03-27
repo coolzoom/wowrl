@@ -9,6 +9,7 @@
 #define FROST_GUI_TEXT_H
 
 #include <frost_utils.h>
+#include <frost_utils_color.h>
 
 namespace Frost
 {

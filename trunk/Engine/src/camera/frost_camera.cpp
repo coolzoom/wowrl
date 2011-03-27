@@ -12,6 +12,8 @@
 #include <OgreSceneManager.h>
 #include <OgreCamera.h>
 
+#include <frost_utils_axisalignedbox.h>
+
 using namespace std;
 
 namespace Frost

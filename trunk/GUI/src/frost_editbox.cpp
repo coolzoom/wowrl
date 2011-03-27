@@ -12,6 +12,8 @@
 #include "frost_sprite.h"
 #include "frost_inputmanager.h"
 #include "frost_localemanager.h"
+#include <frost_utils_timers.h>
+#include <frost_utils_event.h>
 
 using namespace std;
 using namespace Frost;

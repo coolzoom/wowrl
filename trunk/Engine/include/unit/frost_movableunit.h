@@ -11,6 +11,8 @@
 #include "frost.h"
 #include "unit/frost_unit.h"
 
+#include <frost_utils_vector.h>
+
 namespace Frost
 {
     /// Abstract Unit type.

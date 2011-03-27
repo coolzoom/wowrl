@@ -1,4 +1,11 @@
 // Warning : If you need to use this file, include frost_utils_types.h
+#include <deque>
+#include <vector>
+#include <algorithm>
+
+#include "frost_utils_range.h"
+#include "frost_utils_pair.h"
+
 namespace Frost
 {
     /// Base type : container (sequence)
@@ -434,20 +441,6 @@ namespace Frost
             std::sort(mContainer_.begin(), mContainer_.end());
         }
 
-        s_ctnr_t& operator, (const ValueType& mElem)
-        {
-            mContainer_.push_back(mElem);
-            return (*this);
-        }
-
-        s_ctnr_t<s_ctnr_t, ContainerType> operator, (const s_ctnr_t& lValue)
-        {
-            s_ctnr_t<s_ctnr_t, ContainerType> mContainer;
-            mContainer.PushBack(*this);
-            mContainer.PushBack(lValue);
-            return mContainer;
-        }
-
         template<default_uint N>
         s_ctnr_t& operator = (const s_array<ValueType,N>& lElemArray)
         {
@@ -549,6 +542,12 @@ namespace Frost
         s_ctnr(const s_array<ValueType,N>& lElemArray) : ParentContainerType(lElemArray) {}
 
         s_ctnr(const ParentContainerType& mCtnr) : ParentContainerType(mCtnr) {}
+
+        s_ctnr& operator, (const ValueType& mElem)
+        {
+            PushBack(mElem);
+            return (*this);
+        }
     };
 
     /// Dynamic array.
@@ -610,7 +609,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef typename s_str::string string;
 
         static string Convert(const s_ctnr_t<T,C>& mCtnr)
         {
@@ -633,7 +632,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef typename s_str::string string;
 
         static string Convert(const s_ctnr<T>& mCtnr)
         {
@@ -656,7 +655,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef typename s_str::string string;
 
         static string Convert(const s_array<T,0>& mCtnr)
         {
@@ -676,4 +675,45 @@ namespace Frost
     };
     /** \endcond
     */
+
+    template<class T>
+    s_ctnr<s_bool> operator, (const s_bool& mLeft, const s_bool& mRight)
+    {
+        s_ctnr<s_bool> mCtnr;
+        mCtnr.PushBack(mLeft);
+        mCtnr.PushBack(mRight);
+        return mCtnr;
+    }
+    template<class T>
+    s_ctnr< s_int_t<T> > operator, (const s_int_t<T>& mLeft, const s_int_t<T>& mRight)
+    {
+        s_ctnr< s_int_t<T> > mCtnr;
+        mCtnr.PushBack(mLeft);
+        mCtnr.PushBack(mRight);
+        return mCtnr;
+    }
+    template<class T>
+    s_ctnr< s_uint_t<T> > operator, (const s_uint_t<T>& mLeft, const s_uint_t<T>& mRight)
+    {
+        s_ctnr< s_uint_t<T> > mCtnr;
+        mCtnr.PushBack(mLeft);
+        mCtnr.PushBack(mRight);
+        return mCtnr;
+    }
+    template<class T>
+    s_ctnr< s_float_t<T> > operator, (const s_float_t<T>& mLeft, const s_float_t<T>& mRight)
+    {
+        s_ctnr< s_float_t<T> > mCtnr;
+        mCtnr.PushBack(mLeft);
+        mCtnr.PushBack(mRight);
+        return mCtnr;
+    }
+    template<class T>
+    s_ctnr< s_str_t<T> > operator, (const s_str_t<T>& mLeft, const s_str_t<T>& mRight)
+    {
+        s_ctnr< s_str_t<T> > mCtnr;
+        mCtnr.PushBack(mLeft);
+        mCtnr.PushBack(mRight);
+        return mCtnr;
+    }
 }

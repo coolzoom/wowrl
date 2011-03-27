@@ -212,6 +212,12 @@
 			<Add directory="..\Lunar" />
 			<Add directory="..\..\lua5.1\include" />
 		</Compiler>
+		<Unit filename="include\boost_thread.h">
+			<Option target="ThreadRelease_Win32" />
+			<Option target="ThreadDebug_Win32" />
+			<Option target="ThreadRelease_Linux" />
+			<Option target="ThreadDebug_Linux" />
+		</Unit>
 		<Unit filename="include\frost_utils.h" />
 		<Unit filename="include\frost_utils_array.h" />
 		<Unit filename="include\frost_utils_axisalignedbox.h" />

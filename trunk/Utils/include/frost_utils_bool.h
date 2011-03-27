@@ -11,151 +11,60 @@ namespace Frost
     *   \note This class doesn't need to be a template,
     *         as there is only one boolean type in C++.
     *         But it is delays the compilation of the
-    *         class, allo
+    *         class.
     */
     template<class T>
     class s_bool_t
     {
     public :
 
-        s_bool_t()
-        {
-            bValue_ = false;
-        }
+        s_bool_t();
 
-        s_bool_t(const T& bValue)
-        {
-            bValue_ = bValue;
-        }
-
-        template<class N>
-        explicit s_bool_t(const N* sValue)
-        {
-            if ((s_str_t<N>(sValue) == BOOL_TRUE) ||
-                (s_str_t<N>(sValue) == BOOL_ONE)  ||
-                (s_str_t<N>(sValue) == BOOL_YES))
-                bValue_ = true;
-            else
-                bValue_ = false;
-        }
-
-        explicit s_bool_t(const string_object& sValue)
-        {
-            if ((sValue == BOOL_TRUE) ||
-                (sValue == BOOL_ONE)  ||
-                (sValue == BOOL_YES))
-                bValue_ = true;
-            else
-                bValue_ = false;
-        }
+        s_bool_t(const T& bValue);
 
         template<class N>
         explicit s_bool_t(const s_str_t<N>& sValue)
         {
-            if ((sValue == BOOL_TRUE) ||
-                (sValue == BOOL_ONE)  ||
-                (sValue == BOOL_YES))
-                bValue_ = true;
-            else
-                bValue_ = false;
+            bValue_ = ((sValue == BOOL_TRUE) ||
+                       (sValue == BOOL_ONE)  ||
+                       (sValue == BOOL_YES));
         }
 
         /// Returns a const reference to the boolean.
         /** \return A const reference to the boolean
         */
-        inline const T& Get() const
-        {
-            return bValue_;
-        }
+        inline const T& Get() const { return bValue_; }
 
         /// Returns a reference to the boolean.
         /** \return A reference to the boolean
         */
-        inline T& GetR()
-        {
-            return bValue_;
-        }
+        inline T& GetR() { return bValue_; }
 
-        bool operator ! () const
-        {
-            return !bValue_;
-        }
+        bool operator ! () const;
 
         typedef const bool& (s_bool_t::*MemberFn)() const;
-        operator MemberFn() const
-        {
-            if (bValue_)
-                return &s_bool_t::Get;
-            else
-                return NULL;
-        }
+        operator MemberFn() const;
 
-        s_bool_t operator == (const s_bool_t& bValue) const
-        {
-            return (bValue_ == bValue.bValue_);
-        }
+        s_bool_t operator == (const s_bool_t& bValue) const;
 
-        s_bool_t operator != (const s_bool_t& bValue) const
-        {
-            return (bValue_ != bValue.bValue_);
-        }
+        s_bool_t operator != (const s_bool_t& bValue) const;
 
-        template<class N>
-        s_str_t<N> operator + (const N* sValue) const
-        {
-            return s_str_t<N>::Convert(*this) + sValue;
-        }
+        s_bool_t& operator =  (const s_bool_t& bValue);
 
-        template<class N>
-        s_str_t<N> operator + (const s_str_t<N>& sValue) const
-        {
-            return s_str_t<N>::Convert(*this) + sValue;
-        }
-
-        s_bool_t& operator =  (const s_bool_t& bValue)
-        {
-            bValue_ = bValue.bValue_;
-            return *this;
-        }
-
-        s_ctnr<s_bool_t> operator , (const s_bool_t& bValue) const
-        {
-            s_ctnr<s_bool_t> mContainer;
-            mContainer.PushBack(*this);
-            mContainer.PushBack(bValue);
-            return mContainer;
-        }
-
-        static const string_object BOOL_TRUE;
-        static const string_object BOOL_ONE;
-        static const string_object BOOL_YES;
-        static T                   bDummy;
+        static const string_element* BOOL_TRUE;
+        static const string_element* BOOL_ONE;
+        static const string_element* BOOL_YES;
+        static T                     bDummy;
 
         /// Returns a random boolean.
         /** \return Either 'true' or 'false' (50% each).
         */
-        static s_bool_t Random()
-        {
-            return (rand()/(RAND_MAX+1.0) < 0.5f);
-        }
+        static s_bool_t Random();
 
     private :
 
         T bValue_;
     };
-
-    template<class T>
-    const string_object s_bool_t<T>::BOOL_TRUE = "true";
-    template<class T>
-    const string_object s_bool_t<T>::BOOL_ONE  = "1";
-    template<class T>
-    const string_object s_bool_t<T>::BOOL_YES  = "yes";
-
-    template<class T, class N>
-    s_str_t<N> operator+ ( const N* sLeft, const s_bool_t<T>& bRight )
-    {
-        return s_str_t<N>(sLeft) + s_str_t<N>::Convert(bRight);
-    }
 
     typedef s_bool_t<bool> s_bool;
 

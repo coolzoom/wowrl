@@ -12,6 +12,12 @@
 #include "frost.h"
 
 #include <frost_utils_manager.h>
+#include <frost_utils_color.h>
+
+namespace Ogre
+{
+    class Material;
+}
 
 namespace Frost
 {

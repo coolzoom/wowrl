@@ -297,7 +297,7 @@ namespace Frost
         return mRight/fLeft;
     }
 
-    string_object StringConverter<string_element, Color>::Convert( const Color& mColor )
+    s_str::string StringConverter<string_element, Color>::Convert( const Color& mColor )
     {
         return  "(a:"+StringConverter<string_element, s_uint>::Convert(s_uint(mColor.GetA()*255.0f))+
                ", r:"+StringConverter<string_element, s_uint>::Convert(s_uint(mColor.GetR()*255.0f))+

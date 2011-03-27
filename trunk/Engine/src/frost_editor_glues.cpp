@@ -16,6 +16,8 @@
 #include "model/frost_model.h"
 
 #include <frost_xml_document.h>
+#include <frost_utils_eventmanager.h>
+#include <frost_utils_event.h>
 
 #include <OgreCamera.h>
 

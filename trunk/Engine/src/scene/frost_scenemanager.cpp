@@ -15,6 +15,10 @@
 #include "camera/frost_camera.h"
 #include "model/frost_modelmanager.h"
 #include "frost_inputmanager.h"
+#include "frost_engine.h"
+
+#include <frost_utils_eventmanager.h>
+#include <frost_utils_event.h>
 
 #include <OgreMeshManager.h>
 #include <OgreRay.h>

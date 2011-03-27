@@ -10,6 +10,10 @@
 #include "frost_backdrop.h"
 #include "frost_inputmanager.h"
 
+#include <frost_utils_event.h>
+#include <frost_utils_eventmanager.h>
+#include <frost_utils_timemanager.h>
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;

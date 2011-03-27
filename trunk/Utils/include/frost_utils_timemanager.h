@@ -10,7 +10,6 @@
 #ifndef FROST_TIMEMANAGER_H
 #define FROST_TIMEMANAGER_H
 
-#include "frost_utils_config.h"
 #include "frost_utils_manager.h"
 #include "frost_utils_types.h"
 

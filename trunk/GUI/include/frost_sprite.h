@@ -18,6 +18,8 @@
 #define FROST_GUI_SPRITE_H
 
 #include <frost_utils.h>
+#include <frost_utils_point.h>
+#include <frost_utils_color.h>
 
 namespace Frost
 {

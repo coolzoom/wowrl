@@ -11,6 +11,16 @@
 
 #include "frost.h"
 
+#include <frost_utils_vector.h>
+#include <frost_utils_axisalignedbox.h>
+
+namespace Ogre
+{
+    class Mesh;
+    class Entity;
+    class SceneNode;
+}
+
 namespace Frost
 {
     /// A 'terrain unit'.

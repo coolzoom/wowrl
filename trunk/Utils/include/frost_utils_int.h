@@ -1,10 +1,4 @@
 // Warning : If you need to use this file, include frost_utils_types.h
-#ifdef MSVC
-    // Note : Microsoft's Visual C++ doesn't include the round function.
-    // Definition of this function is in frost_utils_math.cpp.
-    long round( double x );
-#endif
-
 namespace Frost
 {
     /// Base type : integer
@@ -37,35 +31,15 @@ namespace Frost
             INTEGER_NAN
         };
 
-        s_int_t()
-        {
-            mType_ = INTEGER;
-            iValue_ = 0;
-        }
+        s_int_t();
 
-        s_int_t(const T& iValue)
-        {
-            mType_ = INTEGER;
-            iValue_ = iValue;
-        }
+        s_int_t(const T& iValue);
 
-        explicit s_int_t(const Type& mType)
-        {
-            mType_ = mType;
-            iValue_ = 0;
-        }
+        explicit s_int_t(const Type& mType);
 
-        explicit s_int_t(const float& fValue)
-        {
-            mType_ = INTEGER;
-            iValue_ = static_cast<T>(round(fValue));
-        }
+        explicit s_int_t(const float& fValue);
 
-        explicit s_int_t(const double& dValue)
-        {
-            mType_ = INTEGER;
-            iValue_ = static_cast<T>(round(dValue));
-        }
+        explicit s_int_t(const double& dValue);
 
         template<class N>
         explicit s_int_t(const s_int_t<N>& iValue)
@@ -119,493 +93,128 @@ namespace Frost
             }
         }
 
-        template<class N>
-        explicit s_int_t(const s_bool_t<N>& bValue)
-        {
-            mType_ = INTEGER;
-            if (bValue)
-                iValue_ = 1;
-            else
-                iValue_ = 0;
-        }
-
-        explicit s_int_t(const string_element* sValue)
-        {
-            mType_ = INTEGER;
-            string_stream s(sValue);
-            s >> iValue_;
-        }
-
-        explicit s_int_t(const string_object& sValue)
-        {
-            mType_ = INTEGER;
-            string_stream s(sValue);
-            s >> iValue_;
-        }
+        explicit s_int_t(const s_bool& bValue);
 
         template<class N>
         explicit s_int_t(const s_str_t<N>& sValue)
         {
             mType_ = INTEGER;
-            string_stream s(sValue.Get());
-            s >> iValue_;
+            iValue_ = StringToInt(sValue);
         }
 
         /// Returns a const reference to the int.
         /** \return A const reference to the int
         */
-        inline const T& Get() const
-        {
-            if (mType_ != INTEGER)
-                return iDummy;
-            else
-                return iValue_;
-        }
+        inline const T& Get() const { return iValue_; }
 
         /// Returns a reference to the int.
         /** \return A reference to the int
         */
-        inline T& GetR()
-        {
-            if (mType_ != INTEGER)
-                return iDummy;
-            else
-                return iValue_;
-        }
+        inline T& GetR() { return iValue_; }
 
         /// Adjusts this int's value to be contained into the provided interval.
         /** \param iMin The minimum value
         *   \param iMax The maximum value
         */
-        void Clamp(const s_int_t& iMin, const s_int_t& iMax)
-        {
-            iValue_ = (*this < iMax) ? ((*this > iMin) ? iValue_ : iMin.iValue_) : iMax.iValue_;
-        }
+        void Clamp(const s_int_t& iMin, const s_int_t& iMax);
 
         /// Returns the power of two just above the value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-        s_uint_t<T> GetNearestPowerOfTwo() const
-        {
-            if (IsValid())
-            {
-                int i = 1;
-                while (iValue_ > i)
-                    i = i << 1;
-
-                return static_cast<uint>(i);
-            }
-            else
-                return s_uint_t<T>::NaN;
-        }
+        s_uint_t<typename TypeTraits<T>::UnsignedType> GetNearestPowerOfTwo() const;
 
         /// Returns the type of this int.
         /** \return The type of this int (infinite, NaN, ...)
         */
-        Type GetType() const
-        {
-            return mType_;
-        }
+        Type GetType() const;
 
         /// Checks if this int is infinite and negative.
         /** \return 'true' if this int is infinite and negative
         */
-        s_bool IsInfiniteMinus() const
-        {
-            return (mType_ == INTEGER_INF_MINUS);
-        }
+        s_bool IsInfiniteMinus() const;
 
         /// Checks if this int is infinite and positive.
         /** \return 'true' if this int is infinite and positive
         */
-        s_bool IsInfinitePlus() const
-        {
-            return (mType_ == INTEGER_INF_PLUS);
-        }
+        s_bool IsInfinitePlus() const;
 
         /// Checks if this int is contained into the provided range.
-        s_bool IsInRange(const s_int_t<T>& iMin, const s_int_t<T>& iMax) const
-        {
-            return ( (iMin <= (*this)) && ((*this) <= iMax) );
-        }
+        s_bool IsInRange(const s_int_t<T>& iMin, const s_int_t<T>& iMax) const;
 
         /// Checks if this int is a Not a Number (NaN).
         /** \return 'true' if this int is NaN
         */
-        s_bool IsNaN() const
-        {
-            return (mType_ == INTEGER_NAN);
-        }
+        s_bool IsNaN() const;
 
         /// Checks if this int equals zero.
         /** \return 'true' if this int equals zero
         */
-        s_bool IsNull() const
-        {
-            return ( IsValid() && (iValue_ == 0) );
-        }
+        s_bool IsNull() const;
 
         /// Checks if this int is a valid number.
         /** \return 'true' if this int is not infinite and a number
         */
-        s_bool IsValid() const
-        {
-            return (mType_ == INTEGER);
-        }
+        s_bool IsValid() const;
 
         /// Checks if this int is an infinite number.
         /** \return 'true' if this int is an infinite number
         */
-        s_bool IsInfinite() const
-        {
-            return (mType_ == INTEGER_INF_MINUS) || (mType_ == INTEGER_INF_PLUS);
-        }
+        s_bool IsInfinite() const;
 
         /// Elevates this int to a certain power (this^n).
         /** \param uiPower The power
         */
-        template<class N>
-        void Pow(const s_uint_t<N>& uiPower)
-        {
-            if (IsValid() && uiPower.IsValid())
-            {
-                iValue_ = static_cast<T>(pow(
-                    static_cast<float>(iValue_), static_cast<int>(uiPower.Get())
-                ));
-            }
-        }
+        void Pow(const s_uint_t<typename TypeTraits<T>::UnsignedType>& uiPower);
 
         /// Sets the value of the int to a random number.
         /** \param iMin The lower bound (minimum)
         *   \param iMax The upper bound (maximum)
         */
-        void Randomize(const s_int_t& iMin = 0, const s_int_t& iMax = 1)
-        {
-            if (iMin.IsValid() && iMax.IsValid())
-            {
-                mType_ = INTEGER;
-                if (iMax.iValue_ < iMin.iValue_)
-                    iValue_ = iMin.iValue_;
-                else
-                {
-                    T iRange = iMax.iValue_ - iMin.iValue_ + 1;
-                    iValue_ = static_cast<T>(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
-                }
-            }
-        }
+        void Randomize(const s_int_t& iMin = 0, const s_int_t& iMax = 1);
 
         /// Sets this int to infinite (negative).
-        void SetInfiniteMinus()
-        {
-            mType_ = INTEGER_INF_MINUS;
-            iValue_ = 0;
-        }
+        void SetInfiniteMinus();
 
         /// Sets this int to infinite (positive).
-        void SetInfinitePlus()
-        {
-            mType_ = INTEGER_INF_PLUS;
-            iValue_ = 0;
-        }
+        void SetInfinitePlus();
 
         /// Set this int to Not a Number state.
-        void SetNaN()
-        {
-            mType_ = INTEGER_NAN;
-            iValue_ = 0;
-        }
+        void SetNaN();
 
         /// Returns the sign of this int (either 1 or -1).
         /** \return The sign of this int (either 1 or -1)
         */
-        s_int_t GetSign() const
-        {
-            if (IsValid())
-            {
-                return (iValue_ < 0) ? -1 : 1;
-            }
-            else
-                return s_int_t::NaN;
-        }
+        s_int_t GetSign() const;
 
-        s_int_t& operator ++ ()
-        {
-            if (IsValid())
-            {
-                ++iValue_;
-            }
-            return *this;
-        }
+        s_int_t& operator ++ ();
 
-        s_int_t operator ++ (int)
-        {
-            if (IsValid())
-            {
-                return iValue_++;
-            }
-            else
-                return *this;
-        }
+        s_int_t operator ++ (int);
 
-        s_int_t operator - () const
-        {
-            if (!IsNaN())
-            {
-                if (IsInfinitePlus())
-                    return s_int_t::INFMINUS;
-                else if (IsInfiniteMinus())
-                    return s_int_t::INFPLUS;
-                else
-                    return -iValue_;
-            }
-            else
-                return s_int_t::NaN;
-        }
+        s_int_t operator - () const;
 
-        s_int_t& operator -- ()
-        {
-            if (IsValid())
-            {
-                --iValue_;
-            }
-            return *this;
-        }
+        s_int_t& operator -- ();
 
-        s_int_t operator -- (int)
-        {
-            if (IsValid())
-            {
-                return iValue_--;
-            }
-            else
-                return *this;
-        }
+        s_int_t operator -- (int);
 
-        s_int_t operator + (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return s_int_t::NaN;
+        s_int_t operator + (const s_int_t& iValue) const;
 
-            if (!iValue.IsValid())
-            {
-                if (iValue.IsInfinitePlus())
-                {
-                    if (IsInfiniteMinus())
-                        return s_int_t::NaN;
-                    else
-                        return s_int_t::INFPLUS;
-                }
-                else
-                {
-                    if (IsInfinitePlus())
-                        return s_int_t::NaN;
-                    else
-                        return s_int_t::INFMINUS;
-                }
-            }
-            else if (!this->IsValid())
-            {
-                if (IsInfinitePlus())
-                    return s_int_t::INFPLUS;
-                else
-                    return s_int_t::INFMINUS;
-            }
-            else
-            {
-                return iValue_ + iValue.iValue_;
-            }
-        }
+        s_int_t operator - (const s_int_t& iValue) const;
 
-        s_int_t operator - (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return s_int_t::NaN;
+        s_int_t operator * (const s_int_t& iValue) const;
 
-            if (!iValue.IsValid())
-            {
-                if (iValue.IsInfinitePlus())
-                {
-                    if (IsInfinitePlus())
-                        return s_int_t::NaN;
-                    else
-                        return s_int_t::INFMINUS;
-                }
-                else
-                {
-                    if (IsInfiniteMinus())
-                        return s_int_t::NaN;
-                    else
-                        return s_int_t::INFPLUS;
-                }
-            }
-            else if (!this->IsValid())
-            {
-                if (IsInfinitePlus())
-                    return s_int_t::INFMINUS;
-                else
-                    return s_int_t::INFPLUS;
-            }
-            else
-            {
-                return iValue_ - iValue.iValue_;
-            }
-        }
+        s_int_t operator / (const s_int_t& iValue) const;
 
-        s_int_t operator * (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return s_int_t::NaN;
+        s_int_t operator % (const s_int_t& iValue) const;
 
-            if (!iValue.IsValid())
-            {
-                if (iValue.IsInfinitePlus())
-                {
-                    if (IsInfiniteMinus() || IsNull())
-                        return s_int_t::NaN;
-                    else if (IsInfinitePlus())
-                        return s_int_t::INFPLUS;
-                    else
-                    {
-                        if (iValue_ > 0)
-                            return s_int_t::INFPLUS;
-                        else
-                            return s_int_t::INFMINUS;
-                    }
-                }
-                else
-                {
-                    if (IsInfinitePlus() || IsNull())
-                        return s_int_t::NaN;
-                    else if (IsInfiniteMinus())
-                        return s_int_t::INFMINUS;
-                    else
-                    {
-                        if (iValue_ > 0)
-                            return s_int_t::INFMINUS;
-                        else
-                            return s_int_t::INFPLUS;
-                    }
-                }
-            }
-            else if (!this->IsValid())
-            {
-                if (iValue.IsNull())
-                    return s_int_t::NaN;
+        void operator += (const s_int_t& iValue);
 
-                if (IsInfinitePlus())
-                {
-                    if (iValue.iValue_ > 0)
-                        return s_int_t::INFPLUS;
-                    else
-                        return s_int_t::INFMINUS;
-                }
-                else
-                {
-                    if (iValue.iValue_ > 0)
-                        return s_int_t::INFMINUS;
-                    else
-                        return s_int_t::INFPLUS;
-                }
-            }
-            else
-            {
-                return iValue_ * iValue.iValue_;
-            }
-        }
+        void operator -= (const s_int_t& iValue);
 
-        s_int_t operator / (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN() || iValue.IsNull())
-                return s_int_t::NaN;
+        void operator *= (const s_int_t& iValue);
 
-            if (!iValue.IsValid())
-            {
-                if (!this->IsValid())
-                    return s_int_t::NaN;
-                else
-                    return 0;
-            }
-            else if (!this->IsValid())
-            {
-                if (IsInfinitePlus())
-                {
-                    if (iValue.iValue_ > 0)
-                        return s_int_t::INFPLUS;
-                    else
-                        return s_int_t::INFMINUS;
-                }
-                else
-                {
-                    if (iValue.iValue_ > 0)
-                        return s_int_t::INFMINUS;
-                    else
-                        return s_int_t::INFPLUS;
-                }
-            }
-            else
-            {
-                return iValue_ / iValue.iValue_;
-            }
-        }
+        void operator /= (const s_int_t& iValue);
 
-        s_int_t operator % (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN() || iValue.IsNull())
-                return s_int_t::NaN;
-
-            if (!iValue.IsValid())
-            {
-                if (!this->IsValid())
-                    return 0;
-                else
-                    return *this;
-            }
-            else if (!this->IsValid())
-            {
-                return 0;
-            }
-            else
-            {
-                return iValue_ % iValue.iValue_;
-            }
-        }
-
-        void operator += (const s_int_t& iValue)
-        {
-            *this = *this + iValue;
-        }
-
-        void operator -= (const s_int_t& iValue)
-        {
-            *this = *this - iValue;
-        }
-
-        void operator *= (const s_int_t& iValue)
-        {
-            *this = *this * iValue;
-        }
-
-        void operator /= (const s_int_t& iValue)
-        {
-            *this = *this / iValue;
-        }
-
-        void operator %= (const s_int_t& iValue)
-        {
-            *this = *this % iValue;
-        }
-
-        template<class N>
-        s_str_t<N> operator + (const N* sValue) const
-        {
-            return s_str_t<N>::Convert(*this) + sValue;
-        }
-
-        template<class N>
-        s_str_t<N> operator + (const s_str_t<N>& sValue) const
-        {
-            return s_str_t<N>::Convert(*this) + sValue;
-        }
+        void operator %= (const s_int_t& iValue);
 
         template<class N>
         s_int_t& operator << (const s_uint_t<N>& uiValue)
@@ -617,165 +226,37 @@ namespace Frost
             return *this;
         }
 
-        s_int_t& operator << (const uint& uiValue)
-        {
-            if (IsValid())
-            {
-                iValue_ = iValue_ << uiValue;
-            }
-            return *this;
-        }
+        s_int_t& operator << (const uint& uiValue);
 
-        s_bool operator == (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == iValue.mType_) && (mType_ != INTEGER) )
-                    return true;
+        s_bool operator == (const s_int_t& iValue) const;
 
-                return (iValue_ == iValue.iValue_);
-            }
-        }
+        s_bool operator != (const s_int_t& iValue) const;
 
-        s_bool operator != (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if (mType_ != iValue.mType_)
-                    return true;
+        s_bool operator < (const s_int_t& iValue) const;
 
-                return (iValue_ != iValue.iValue_);
-            }
-        }
+        s_bool operator > (const s_int_t& iValue) const;
 
-        s_bool operator < (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == iValue.mType_) && (mType_ != INTEGER) )
-                    return false;
+        s_bool operator <= (const s_int_t& iValue) const;
 
-                if (mType_ == INTEGER_INF_MINUS)
-                    return true;
-                if (mType_ == INTEGER_INF_PLUS)
-                    return false;
-
-                if (iValue.mType_ == INTEGER_INF_MINUS)
-                    return false;
-                if (iValue.mType_ == INTEGER_INF_PLUS)
-                    return true;
-
-                return (iValue_ < iValue.iValue_);
-            }
-        }
-
-        s_bool operator > (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == iValue.mType_) && (mType_ != INTEGER) )
-                    return false;
-
-                if (mType_ == INTEGER_INF_MINUS)
-                    return false;
-                if (mType_ == INTEGER_INF_PLUS)
-                    return true;
-
-                if (iValue.mType_ == INTEGER_INF_MINUS)
-                    return true;
-                if (iValue.mType_ == INTEGER_INF_PLUS)
-                    return false;
-
-                return (iValue_ > iValue.iValue_);
-            }
-        }
-
-        s_bool operator <= (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == iValue.mType_) && (mType_ != INTEGER) )
-                    return true;
-
-                if (mType_ == INTEGER_INF_MINUS)
-                    return true;
-                if (mType_ == INTEGER_INF_PLUS)
-                    return false;
-
-                if (iValue.mType_ == INTEGER_INF_MINUS)
-                    return false;
-                if (iValue.mType_ == INTEGER_INF_PLUS)
-                    return true;
-
-                return (iValue_ <= iValue.iValue_);
-            }
-        }
-
-        s_bool operator >= (const s_int_t& iValue) const
-        {
-            if (iValue.IsNaN() || IsNaN())
-                return false;
-            else
-            {
-                if ( (mType_ == iValue.mType_) && (mType_ != INTEGER) )
-                    return true;
-
-                if (mType_ == INTEGER_INF_MINUS)
-                    return false;
-                if (mType_ == INTEGER_INF_PLUS)
-                    return true;
-
-                if (iValue.mType_ == INTEGER_INF_MINUS)
-                    return true;
-                if (iValue.mType_ == INTEGER_INF_PLUS)
-                    return false;
-
-                return (iValue_ >= iValue.iValue_);
-            }
-        }
-
-        s_ctnr<s_int_t> operator ,  (const s_int_t& iValue) const
-        {
-            s_ctnr<s_int_t> mContainer;
-            mContainer.PushBack(*this);
-            mContainer.PushBack(iValue);
-            return mContainer;
-        }
+        s_bool operator >= (const s_int_t& iValue) const;
 
         static const s_int_t NaN;
         static const s_int_t INFPLUS;
         static const s_int_t INFMINUS;
-        static       T       iDummy;
 
         /// Returns the lowest value of the two provided ones.
         /** \param iLeft  The first value
         *   \param iRight The second value
         *   \return The lowest value of the two provided ones
         */
-        static s_int_t Min(const s_int_t& iLeft, const s_int_t& iRight)
-        {
-            return (iLeft >= iRight) ? iRight : iLeft;
-        }
+        static s_int_t Min(const s_int_t& iLeft, const s_int_t& iRight);
 
         /// Returns the highest value of the two provided ones.
         /** \param iLeft  The first value
         *   \param iRight The second value
         *   \return The highest value of the two provided ones
         */
-        static s_int_t Max(const s_int_t& iLeft, const s_int_t& iRight)
-        {
-            return (iLeft <= iRight) ? iRight : iLeft;
-        }
+        static s_int_t Max(const s_int_t& iLeft, const s_int_t& iRight);
 
         /// Clamps the provided value into the provided interval.
         /** \param iValue The value to clamp
@@ -783,44 +264,19 @@ namespace Frost
         *   \param iMax   The maximum value
         *   \return The clamped value
         */
-        static s_int_t Clamp(const s_int_t& iValue, const s_int_t& iMin, const s_int_t& iMax)
-        {
-            return (iValue < iMax) ? ((iValue > iMin) ? iValue : iMin) : iMax;
-        }
+        static s_int_t Clamp(const s_int_t& iValue, const s_int_t& iMin, const s_int_t& iMax);
 
         /// Returns a random int in the provided range.
         /** \param iMin The lower bound (minimum)
         *   \param iMax The upper bound (maximum)
         *   \return A random int in the provided range
         */
-        static s_int_t Random(const s_int_t& iMin = 0, const s_int_t& iMax = 1)
-        {
-            if (iMin.IsValid() && iMax.IsValid())
-            {
-                if (iMax.iValue_ < iMin.iValue_)
-                    return iMin;
-                else
-                {
-                    T iRange = iMax.iValue_ - iMin.iValue_ + 1;
-                    return static_cast<T>(iRange*(rand()/(RAND_MAX+1.0))) + iMin.iValue_;
-                }
-            }
-            else
-                return s_int_t::NaN;
-        }
+        static s_int_t Random(const s_int_t& iMin = 0, const s_int_t& iMax = 1);
 
         /// Returns the sign of the provided int (either 1 or -1).
         /** \return The sign of the provided int (either 1 or -1)
         */
-        s_int_t Sign(const s_int_t& iValue) const
-        {
-            if (iValue.IsValid())
-            {
-                return (iValue.iValue_ < 0) ? -1 : 1;
-            }
-            else
-                return s_int_t::NaN;
-        }
+        s_int_t Sign(const s_int_t& iValue) const;
 
     private :
 
@@ -830,45 +286,26 @@ namespace Frost
     };
 
     template<class T>
-    const s_int_t<T> s_int_t<T>::NaN      = s_int_t<T>(INTEGER_NAN);
+    s_int_t<T> operator + (const T& iLeft, const s_int_t<T>& iRight);
     template<class T>
-    const s_int_t<T> s_int_t<T>::INFPLUS  = s_int_t<T>(INTEGER_INF_PLUS);
+    s_int_t<T> operator - (const T& iLeft, const s_int_t<T>& iRight);
     template<class T>
-    const s_int_t<T> s_int_t<T>::INFMINUS = s_int_t<T>(INTEGER_INF_MINUS);
+    s_int_t<T> operator * (const T& iLeft, const s_int_t<T>& iRight);
     template<class T>
-    T s_int_t<T>::iDummy = 0;
+    s_int_t<T> operator / (const T& iLeft, const s_int_t<T>& iRight);
+    template<class T>
+    s_int_t<T> operator % (const T& iLeft, const s_int_t<T>& iRight);
 
     template<class T>
-    s_int_t<T> operator + (const int& iLeft, const s_int_t<T>& iRight)
-    {
-        return s_int_t<T>(iLeft) + iRight;
-    }
+    s_int_t<T> operator + (const typename TypeTraits<T>::UnsignedType& uiLeft, const s_int_t<T>& iRight);
     template<class T>
-    s_int_t<T> operator - (const int& iLeft, const s_int_t<T>& iRight)
-    {
-        return s_int_t<T>(iLeft) - iRight;
-    }
+    s_int_t<T> operator - (const typename TypeTraits<T>::UnsignedType& uiLeft, const s_int_t<T>& iRight);
     template<class T>
-    s_int_t<T> operator * (const int& iLeft, const s_int_t<T>& iRight)
-    {
-        return s_int_t<T>(iLeft) * iRight;
-    }
+    s_int_t<T> operator * (const typename TypeTraits<T>::UnsignedType& uiLeft, const s_int_t<T>& iRight);
     template<class T>
-    s_int_t<T> operator / (const int& iLeft, const s_int_t<T>& iRight)
-    {
-        return s_int_t<T>(iLeft) / iRight;
-    }
+    s_int_t<T> operator / (const typename TypeTraits<T>::UnsignedType& uiLeft, const s_int_t<T>& iRight);
     template<class T>
-    s_int_t<T> operator % (const int& iLeft, const s_int_t<T>& iRight)
-    {
-        return s_int_t<T>(iLeft) % iRight;
-    }
-
-    template<class T, class N>
-    s_str_t<N> operator + ( const N* sLeft, const s_int_t<T>& iRight )
-    {
-        return s_str_t<N>::Convert(sLeft) + s_str_t<N>::Convert(iRight);
-    }
+    s_int_t<T> operator % (const typename TypeTraits<T>::UnsignedType& uiLeft, const s_int_t<T>& iRight);
 
     /** \cond NOT_REMOVE_FROM_DOC
     */
@@ -883,6 +320,9 @@ namespace Frost
         typedef const char&   CRefType;
         typedef char*         PointerType;
 
+        typedef char  IsInteger;
+        typedef uchar UnsignedType;
+
         static inline RefType  GetValue(RefType m)  { return m; }
         static inline CRefType GetValue(CRefType m) { return m; }
     };
@@ -895,6 +335,9 @@ namespace Frost
         typedef short&         RefType;
         typedef const short&   CRefType;
         typedef short*         PointerType;
+
+        typedef short  IsInteger;
+        typedef ushort UnsignedType;
 
         static inline RefType  GetValue(RefType m)  { return m; }
         static inline CRefType GetValue(CRefType m) { return m; }
@@ -909,6 +352,9 @@ namespace Frost
         typedef const int&   CRefType;
         typedef int*         PointerType;
 
+        typedef int  IsInteger;
+        typedef uint UnsignedType;
+
         static inline RefType  GetValue(RefType m)  { return m; }
         static inline CRefType GetValue(CRefType m) { return m; }
     };
@@ -921,6 +367,9 @@ namespace Frost
         typedef long&         RefType;
         typedef const long&   CRefType;
         typedef long*         PointerType;
+
+        typedef long  IsInteger;
+        typedef ulong UnsignedType;
 
         static inline RefType  GetValue(RefType m)  { return m; }
         static inline CRefType GetValue(CRefType m) { return m; }
@@ -935,6 +384,9 @@ namespace Frost
         typedef const long long&   CRefType;
         typedef long long*         PointerType;
 
+        typedef long long          IsInteger;
+        typedef unsigned long long UnsignedType;
+
         static inline RefType  GetValue(RefType m)  { return m; }
         static inline CRefType GetValue(CRefType m) { return m; }
     };
@@ -948,6 +400,9 @@ namespace Frost
         typedef s_int_t<T>&       RefType;
         typedef const s_int_t<T>& CRefType;
         typedef s_int_t<T>*       PointerType;
+
+        typedef s_int_t<T> IsInteger;
+        typedef s_uint_t<typename TypeTraits<T>::UnsignedType> UnsignedType;
 
         static inline typename TypeTraits<BaseType>::RefType  GetValue(RefType m)  { return m.GetR(); }
         static inline typename TypeTraits<BaseType>::CRefType GetValue(CRefType m) { return m.Get(); }

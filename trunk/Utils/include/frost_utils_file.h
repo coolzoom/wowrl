@@ -7,8 +7,9 @@
 #ifndef FROST_UTILS_FILE_H
 #define FROST_UTILS_FILE_H
 
-#include "frost_utils_config.h"
 #include "frost_utils_types.h"
+
+#include <fstream>
 
 namespace Frost
 {

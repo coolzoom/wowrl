@@ -15,6 +15,8 @@
 #include "scene/frost_physicsmanager.h"
 #include "unit/frost_movableunithandler.h"
 
+#include <frost_utils_event.h>
+
 using namespace std;
 
 namespace Frost

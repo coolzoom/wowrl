@@ -13,6 +13,7 @@
 #include "model/frost_model.h"
 
 #include <frost_frame.h>
+#include <frost_utils_color.h>
 
 namespace Frost
 {

@@ -11,6 +11,8 @@
 
 #include <frost_utils.h>
 #include <frost_utils_lua.h>
+#include <frost_utils_eventreceiver.h>
+#include <frost_utils_vector.h>
 #include "frost_anchor.h"
 
 namespace Frost
