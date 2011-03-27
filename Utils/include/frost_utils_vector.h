@@ -7,7 +7,6 @@
 #ifndef FROST_UTILS_VECTOR3_H
 #define FROST_UTILS_VECTOR3_H
 
-#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
 #ifdef USING_OGRE
@@ -236,7 +235,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str::string string;
 
         static string Convert(const Vector& mVector);
     };

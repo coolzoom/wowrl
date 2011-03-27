@@ -8,6 +8,7 @@
 #include "gameplay/frost_gameplaymanager.h"
 #include "gameplay/frost_gameplay.h"
 #include "lua/frost_lua.h"
+#include "frost_engine.h"
 
 #include <frost_utils_directory.h>
 #include <frost_utils_lua.h>

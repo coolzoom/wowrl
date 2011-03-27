@@ -16,6 +16,7 @@
 #include <OgreQuaternion.h>
 
 #include <frost_utils_lua.h>
+#include <frost_utils_eventreceiver.h>
 
 namespace Frost
 {

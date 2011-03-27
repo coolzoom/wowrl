@@ -9,7 +9,6 @@
 #ifndef FROST_EVENT_H
 #define FROST_EVENT_H
 
-#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 #include "frost_utils_var.h"
 

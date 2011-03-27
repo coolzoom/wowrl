@@ -18,8 +18,11 @@
 #include "model/frost_animmanager.h"
 #include "material/frost_materialmanager.h"
 #include "material/frost_material.h"
+#include "frost_engine.h"
 
 #include <frost_inputmanager.h>
+#include <frost_utils_event.h>
+#include <frost_utils_timemanager.h>
 
 #include <OgreRoot.h>
 #include <OgreRenderTarget.h>

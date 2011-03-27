@@ -248,7 +248,7 @@ namespace Frost
     }
     #endif
 
-    string_object StringConverter<string_element, AxisAlignedBox>::Convert( const AxisAlignedBox& mBox )
+    s_str::string StringConverter<string_element, AxisAlignedBox>::Convert( const AxisAlignedBox& mBox )
     {
         return "(min : "+StringConverter<string_element, Vector>::Convert(mBox.GetMin())+
               ", max : "+StringConverter<string_element, Vector>::Convert(mBox.GetMax())+")";

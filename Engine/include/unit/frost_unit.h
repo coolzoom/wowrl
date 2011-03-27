@@ -12,7 +12,9 @@
 #include "frost.h"
 #include "unit/frost_stats.h"
 #include "scene/frost_sceneobject.h"
+
 #include <frost_utils_lua.h>
+#include <frost_utils_eventreceiver.h>
 
 namespace Frost
 {

@@ -11,6 +11,13 @@
 
 #include "frost.h"
 
+#include <frost_utils_manager.h>
+
+namespace Ogre
+{
+    class SceneManager;
+}
+
 namespace Frost
 {
     /// Exception to be thrown by Model loading code.

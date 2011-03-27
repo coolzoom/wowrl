@@ -5,10 +5,12 @@
 /*                                        */
 
 #include "lua/frost_lua.h"
+#include "frost_engine.h"
 
 #include <frost_inputmanager.h>
 #include <frost_localemanager.h>
 #include <frost_utils_lua.h>
+#include <frost_utils_timemanager.h>
 
 using namespace std;
 using namespace Frost;

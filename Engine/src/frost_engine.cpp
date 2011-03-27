@@ -37,6 +37,10 @@
 
 #include <frost_utils_lua.h>
 #include <frost_utils_file.h>
+#include <frost_utilsmanager.h>
+#include <frost_utils_timemanager.h>
+#include <frost_utils_eventmanager.h>
+#include <frost_utils_event.h>
 
 #undef VOID
 
@@ -331,7 +335,10 @@ namespace Frost
             pInputMgr_->Update(fDelta);
 
             if (!pRoot_->_fireFrameEnded())
+            {
+                Log("Error in Ogre ?");
                 bRun_ = false;
+            }
 
             pEventMgr_->FrameEnded();
         }

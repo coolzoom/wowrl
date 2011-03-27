@@ -10,6 +10,8 @@
 
 #include "frost.h"
 #include <frost_utils_lua.h>
+#include <frost_utils_eventreceiver.h>
+#include <frost_utils_vector.h>
 
 namespace Frost
 {

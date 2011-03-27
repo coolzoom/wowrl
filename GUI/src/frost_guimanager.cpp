@@ -33,6 +33,8 @@
 #include <frost_xml_document.h>
 #include <frost_utils_file.h>
 #include <frost_utils_directory.h>
+#include <frost_utils_event.h>
+#include <frost_utils_eventmanager.h>
 
 #if FRONT_END_OGRE
     #include "impl/ogre/ogre_guimanager.h"

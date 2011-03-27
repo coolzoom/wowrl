@@ -7,6 +7,7 @@
 
 #include "scene/frost_plane.h"
 #include "material/frost_material.h"
+#include "frost_engine.h"
 
 #include <OgreSceneManager.h>
 #include <OgreMeshManager.h>

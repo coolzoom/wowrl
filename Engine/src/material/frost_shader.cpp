@@ -7,6 +7,7 @@
 
 #include "material/frost_shader.h"
 #include "scene/frost_lightmanager.h"
+#include "frost_engine.h"
 
 #include <OgrePass.h>
 

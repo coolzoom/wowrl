@@ -33,26 +33,11 @@ namespace Frost
             FLOAT_NAN
         };
 
-        s_float_t()
-        {
-            fValue_ = 0.0;
-        }
+        s_float_t();
 
-        s_float_t(const T& fValue)
-        {
-            fValue_ = fValue;
-        }
+        s_float_t(const T& fValue);
 
-        explicit s_float_t(const Type& mType)
-        {
-            switch (mType)
-            {
-                case FLOAT_INF_PLUS  : SetInfinitePlus();
-                case FLOAT_INF_MINUS : SetInfiniteMinus();
-                case FLOAT_NAN       : SetNaN();
-                default : fValue_ = 0.0;
-            }
-        }
+        explicit s_float_t(const Type& mType);
 
         template <class N>
         explicit s_float_t(const s_float_t<N>& fValue)
@@ -98,420 +83,163 @@ namespace Frost
             }
         }
 
-        template<class N>
-        explicit s_float_t(const s_bool_t<N>& bValue)
-        {
-            if (bValue)
-                fValue_ = 1.0;
-            else
-                fValue_ = 0.0;
-        }
-
-        explicit s_float_t(const string_element* sValue)
-        {
-            string_stream s(sValue);
-            s >> fValue_;
-        }
-
-        explicit s_float_t(const string_object& sValue)
-        {
-            string_stream s(sValue);
-            s >> fValue_;
-        }
+        explicit s_float_t(const s_bool& bValue);
 
         template<class N>
         explicit s_float_t(const s_str_t<N>& sValue)
         {
-            string_stream s(sValue.Get());
-            s >> fValue_;
+            fValue_ = StringToFloat(sValue);
         }
 
         /// Adjusts this float's value to be contained into the provided interval.
         /** \param fMin The minimum value
         *   \param fMax The maximum value
         */
-        void Clamp(const s_float_t& fMin, const s_float_t& fMax)
-        {
-            fValue_ = (fValue_ < fMax.fValue_) ? ((fValue_ > fMin.fValue_) ? fValue_ : fMin.fValue_) : fMax.fValue_;
-        }
+        void Clamp(const s_float_t& fMin, const s_float_t& fMax);
 
         /// Converts this float to a angle in radian.
         /** \note It is assumed that the previous value was an angle in degree.
         */
-        void DegToRad()
-        {
-            if (IsValid())
-            {
-                fValue_ *= PI.fValue_/180.0;
-            }
-        }
+        void DegToRad();
 
         /// Converts this float to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        s_float_t GetRad() const
-        {
-            if (IsValid())
-            {
-                return fValue_*2*PI.fValue_;
-            }
-            else
-                return 0.0;
-        }
+        s_float_t GetRad() const;
 
         /// Converts this float to an angle in degree.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        s_float_t GetDeg() const
-        {
-            if (IsValid())
-            {
-                return fValue_*360.0;
-            }
-            else
-                return 0.0;
-        }
+        s_float_t GetDeg() const;
 
         /// Returns a const reference to the float.
         /** \return A const reference to the float
         */
-        inline const T& Get() const
-        {
-            return fValue_;
-        }
+        inline const T& Get() const { return fValue_; }
 
         /// Returns a reference to the float.
         /** \return A reference to the float
         */
-        inline T& GetR()
-        {
-            return fValue_;
-        }
+        inline T& GetR() { return fValue_; }
 
         /// Returns the power of two just above the value (or equal).
         /** \return The associated power of two (2^n) (superior of equal)
         */
-        s_uint_t<default_uint> GetNearestPowerOfTwo() const
-        {
-            if (IsValid())
-            {
-                default_uint i = 1;
-                while (fValue_ > i)
-                    i = i << 1;
-
-                return i;
-            }
-            else
-                return s_uint_t<default_uint>::NaN;
-        }
+        s_uint_t<default_uint> GetNearestPowerOfTwo() const;
 
         /// Returns the type of this float.
         /** \return The type of this float (infinite, NaN, ...)
         */
-        Type GetType() const
-        {
-            if (IsNaN())
-                return FLOAT_NAN;
-            else
-            {
-                if (IsValid())
-                    return FLOAT;
-                else
-                {
-                    if (fValue_ < 0.0)
-                        return FLOAT_INF_MINUS;
-                    else
-                        return FLOAT_INF_PLUS;
-                }
-            }
-        }
+        Type GetType() const;
 
         /// Checks if this float is infinite and negative
         /** \return 'true' if this float is infinite and negative
         */
-        s_bool IsInfiniteMinus() const
-        {
-            return (IsInfinite() && (fValue_ < 0.0));
-        }
+        s_bool IsInfiniteMinus() const;
 
         /// Checks if this float is infinite and positive
         /** \return 'true' if this float is infinite and positive
         */
-        s_bool IsInfinitePlus() const
-        {
-            return (IsInfinite() && (fValue_ > 0.0));
-        }
+        s_bool IsInfinitePlus() const;
 
         /// Checks if this float is contained into the provided range.
-        s_bool IsInRange(const s_float_t<T>& fMin, const s_float_t<T>& fMax) const
-        {
-            return ( (fMin <= (*this)) && ((*this) <= fMax) );
-        }
+        s_bool IsInRange(const s_float_t<T>& fMin, const s_float_t<T>& fMax) const;
 
         /// Checks if this float is a Not a Number (NaN)
         /** \return 'true' if this float is NaN
         */
-        s_bool IsNaN() const
-        {
-            #ifdef MSVC
-                return _isnan(fValue_) != 0;
-            #else
-                return std::isnan(fValue_);
-            #endif
-        }
+        s_bool IsNaN() const;
 
         /// Checks if this float equals zero.
         /** \return 'true' if this float equals zero (precision : EPS)
         */
-        s_bool IsNull() const
-        {
-            return ( IsValid() && (fValue_ < EPS) && (fValue_ > -EPS) );
-        }
+        s_bool IsNull() const;
 
         /// Checks if this float is a valid number.
         /** \return 'true' if this float is not infinite and a number
         */
-        s_bool IsValid() const
-        {
-            #ifdef MSVC
-                return _finite(fValue_) != 0;
-            #else
-                return std::isfinite(fValue_);
-            #endif
-        }
+        s_bool IsValid() const;
 
         /// Checks if this float is an infinite number.
         /** \return 'true' if this float is an infinite number
         */
-        s_bool IsInfinite() const
-        {
-            #ifdef MSVC
-                return (_finite(fValue_) == 0) && (_isnan(fValue_) == 0);
-            #else
-                return !std::isfinite(fValue_) && !std::isnan(fValue_);
-            #endif
-        }
+        s_bool IsInfinite() const;
 
         /// Elevates this float to a certain power (this^n).
         /** \param fPower The power
         */
-        void Pow(const s_float_t& fPower)
-        {
-            if (IsValid() && fPower.IsValid())
-            {
-                fValue_ = pow(fValue_, fPower.fValue_);
-            }
-        }
+        void Pow(const s_float_t& fPower);
 
         /// Converts this float to an angle in degree.
         /** \param bNegativeAllowed 'true' if you allow negative return values
         *   \note It is assumed that the previous value was an angle in radian.
         */
-        template<class N>
-        void RadToDeg(const s_bool_t<N>& bNegativeAllowed = true)
-        {
-            if (IsValid())
-            {
-                fValue_ *= 180.0/PI.fValue_;
-                if ( (!bNegativeAllowed) && (fValue_ < 0.0) )
-                    fValue_ += 360.0;
-            }
-        }
+        void RadToDeg(const s_bool& bNegativeAllowed = true);
 
         /// Sets the value of the float to a random number.
         /** \param fMin The lower bound (minimum)
         *   \param fMax The upper bound (maximum)
         */
-        void Randomize(const s_float_t& fMin = 0.0, const s_float_t& fMax = 1.0)
-        {
-            if (fMin.IsValid() && fMax.IsValid())
-            {
-                if (fMax < fMin)
-                    fValue_ = fMin.fValue_;
-                else
-                {
-                    T fRange = fMax.fValue_ - fMin.fValue_;
-                    fValue_ = fRange*(rand()/((T)RAND_MAX)) + fMin.fValue_;
-                }
-            }
-        }
+        void Randomize(const s_float_t& fMin = 0.0, const s_float_t& fMax = 1.0);
 
         /// Rounds the value.
         /** \note If the decimal part is greater than 0.5, the number is rounded up.
         *         Else the number is rounded down.
         */
-        void Round()
-        {
-            fValue_ = round(fValue_);
-        }
+        void Round();
 
         /// Rounds up the value.
-        void RoundUp()
-        {
-            fValue_ = ceil(fValue_);
-        }
+        void RoundUp();
 
         /// Rounds down the value.
-        void RoundDown()
-        {
-            fValue_ = floor(fValue_);
-        }
+        void RoundDown();
 
         /// Sets this float to infinite (negative).
-        void SetInfiniteMinus()
-        {
-            fValue_ = INFMINUS.fValue_;
-        }
+        void SetInfiniteMinus();
 
         /// Sets this float to infinite (positive).
-        void SetInfinitePlus()
-        {
-            fValue_ = INFPLUS.fValue_;
-        }
+        void SetInfinitePlus();
 
         /// Set this float to Not a Number state.
-        void SetNaN()
-        {
-            fValue_ = NaN.fValue_;
-        }
+        void SetNaN();
 
         /// Returns the sign of this float.
         /** \return The sign of this float
         */
-        s_float_t GetSign() const
-        {
-            if (IsValid())
-            {
-                return (fValue_ < 0.0) ? -1 : 1;
-            }
-            else
-                return s_float_t::NaN;
-        }
+        s_float_t GetSign() const;
 
         /// Converts this float to an angle in degree.
         /** \param bNegativeAllowed 'true' if you allow negative return values
         *   \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        template<class N>
-        void ToDeg(const s_bool_t<N>& bNegativeAllowed = true)
-        {
-            if (IsValid())
-            {
-                fValue_ *= 360.0;
-                if ( (!bNegativeAllowed) && (fValue_ < 0.0) )
-                    fValue_ += 360.0;
-            }
-        }
+        void ToDeg(const s_bool& bNegativeAllowed);
 
         /// Converts this float to an angle in radian.
         /** \note It is assumed that the previous value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        void ToRad()
-        {
-            if (IsValid())
-            {
-                fValue_ *= 2*PI.fValue_;
-            }
-        }
+        void ToRad();
 
-        s_float_t operator - () const
-        {
-            return -fValue_;
-        }
+        s_float_t operator - () const;
+        s_float_t operator + (const s_float_t& fValue) const;
+        s_float_t operator - (const s_float_t& fValue) const;
+        s_float_t operator * (const s_float_t& fValue) const;
+        s_float_t operator / (const s_float_t& fValue) const;
 
-        s_float_t operator + (const s_float_t& fValue) const
-        {
-            return fValue_ + fValue.fValue_;
-        }
+        void operator += (const s_float_t& fValue);
+        void operator -= (const s_float_t& fValue);
+        void operator *= (const s_float_t& fValue);
+        void operator /= (const s_float_t& fValue);
 
-        s_float_t operator - (const s_float_t& fValue) const
-        {
-            return fValue_ - fValue.fValue_;
-        }
-
-        s_float_t operator * (const s_float_t& fValue) const
-        {
-            return fValue_ * fValue.fValue_;
-        }
-
-        s_float_t operator / (const s_float_t& fValue) const
-        {
-            return fValue_ / fValue.fValue_;
-        }
-
-        void operator += (const s_float_t& fValue)
-        {
-            fValue_ += fValue.fValue_;
-        }
-
-        void operator -= (const s_float_t& fValue)
-        {
-            fValue_ -= fValue.fValue_;
-        }
-
-        void operator *= (const s_float_t& fValue)
-        {
-            fValue_ *= fValue.fValue_;
-        }
-
-        void operator /= (const s_float_t& fValue)
-        {
-            fValue_ /= fValue.fValue_;
-        }
-
-        template<class N>
-        s_str_t<N> operator + (const N* sValue) const
-        {
-            return s_str_t<N>::Convert(*this) + sValue;
-        }
-
-        template<class N>
-        s_str_t<N> operator + (const s_str_t<N>& sValue) const
-        {
-            return s_str_t<N>::Convert(*this) + sValue;
-        }
-
-        s_bool operator == (const s_float_t& fValue) const
-        {
-            return (fValue_ == fValue.fValue_);
-        }
-
-        s_bool operator != (const s_float_t& fValue) const
-        {
-            return (fValue_ != fValue.fValue_);
-        }
-
-        s_bool operator < (const s_float_t& fValue) const
-        {
-            return (fValue_ < fValue.fValue_);
-        }
-
-        s_bool operator > (const s_float_t& fValue) const
-        {
-            return (fValue_ > fValue.fValue_);
-        }
-
-        s_bool operator <= (const s_float_t& fValue) const
-        {
-            return (fValue_ <= fValue.fValue_);
-        }
-
-        s_bool operator >= (const s_float_t& fValue) const
-        {
-            return (fValue_ >= fValue.fValue_);
-        }
-
-        s_ctnr<s_float_t> operator , (const s_float_t& fValue) const
-        {
-            s_ctnr<s_float_t> mContainer;
-            mContainer.PushBack(*this);
-            mContainer.PushBack(fValue);
-            return mContainer;
-        }
+        s_bool operator == (const s_float_t& fValue) const;
+        s_bool operator != (const s_float_t& fValue) const;
+        s_bool operator < (const s_float_t& fValue) const;
+        s_bool operator > (const s_float_t& fValue) const;
+        s_bool operator <= (const s_float_t& fValue) const;
+        s_bool operator >= (const s_float_t& fValue) const;
 
         static const s_float_t    NaN;
         static const s_float_t    INFPLUS;
@@ -524,35 +252,23 @@ namespace Frost
         /** \note It is assumed that the value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        static s_float_t ToRad(const s_float_t& fValue)
-        {
-            return fValue * 2*PI;
-        }
+        static s_float_t ToRad(const s_float_t& fValue);
 
         /// Converts this float to an angle in degree.
         /** \note It is assumed that the value was a non dimensionnal angle
         *         (1 = 2*PI rad = 360°).
         */
-        static s_float_t ToDeg(const s_float_t& fValue)
-        {
-            return fValue * 360;
-        }
+        static s_float_t ToDeg(const s_float_t& fValue);
 
         /// Converts a float to a angle in radian.
         /** \note It is assumed that the value was an angle in degree.
         */
-        static s_float_t DegToRad(const s_float_t& fValue)
-        {
-            return fValue * PI / 180;
-        }
+        static s_float_t DegToRad(const s_float_t& fValue);
 
         /// Converts a float to a angle in degree.
         /** \note It is assumed that the value was an angle in radian.
         */
-        static s_float_t RadToDeg(const s_float_t& fValue)
-        {
-            return fValue * 180 / PI;
-        }
+        static s_float_t RadToDeg(const s_float_t& fValue);
 
         /// Clamps the provided value into the provided interval.
         /** \param fValue The value to clamp
@@ -560,92 +276,50 @@ namespace Frost
         *   \param fMax   The maximum value
         *   \return The clamped value
         */
-        static s_float_t Clamp(const s_float_t& fValue, const s_float_t& fMin, const s_float_t& fMax)
-        {
-            return (fValue.fValue_ < fMax.fValue_) ? ((fValue.fValue_ > fMin.fValue_) ? fValue.fValue_ : fMin.fValue_) : fMax.fValue_;
-        }
+        static s_float_t Clamp(const s_float_t& fValue, const s_float_t& fMin, const s_float_t& fMax);
 
         /// Returns the lowest value of the two provided ones.
         /** \param fLeft  The first value
         *   \param fRight The second value
         *   \return The lowest value of the two provided ones
         */
-        static s_float_t Min(const s_float_t& fLeft, const s_float_t& fRight)
-        {
-            return (fLeft >= fRight) ? fRight : fLeft;
-        }
+        static s_float_t Min(const s_float_t& fLeft, const s_float_t& fRight);
 
         /// Returns the highest value of the two provided ones.
         /** \param fLeft  The first value
         *   \param fRight The second value
         *   \return The highest value of the two provided ones
         */
-        static s_float_t Max(const s_float_t& fLeft, const s_float_t& fRight)
-        {
-            return (fLeft <= fRight) ? fRight : fLeft;
-        }
+        static s_float_t Max(const s_float_t& fLeft, const s_float_t& fRight);
 
         /// Returns a random float in the provided range.
         /** \param fMin The lower bound (minimum)
         *   \param fMax The upper bound (maximum)
         *   \return A random float in the provided range
         */
-        static s_float_t Random(const s_float_t& fMin = 0.0, const s_float_t& fMax = 1.0)
-        {
-            if (fMin.IsValid() && fMax.IsValid())
-            {
-                if (fMax.fValue_ < fMin.fValue_)
-                {
-                    return fMin;
-                }
-                else
-                {
-                    T fRange = fMax.fValue_ - fMin.fValue_;
-                    return fRange*(rand()/((T)RAND_MAX)) + fMin.fValue_;
-                }
-            }
-            else
-                return s_float_t::NaN;
-        }
+        static s_float_t Random(const s_float_t& fMin = 0.0, const s_float_t& fMax = 1.0);
 
         /// Rounds a float value.
         /** \param fValue The value to round
         *   \note If the decimal part is greater than 0.5, the number is rounded up.
         *         Else the number is rounded down.
         */
-        static s_float_t Round(const s_float_t& fValue)
-        {
-            return round(fValue.fValue_);
-        }
+        static s_float_t Round(const s_float_t& fValue);
 
         /// Rounds a float value up.
         /** \param fValue The value to round
         */
-        static s_float_t RoundUp(const s_float_t& fValue)
-        {
-            return ceil(fValue.fValue_);
-        }
+        static s_float_t RoundUp(const s_float_t& fValue);
 
         /// Rounds a float value down.
         /** \param fValue The value to round
         */
-        static s_float_t RoundDown(const s_float_t& fValue)
-        {
-            return floor(fValue.fValue_);
-        }
+        static s_float_t RoundDown(const s_float_t& fValue);
 
         /// Returns the sign of the provided float.
         /** \return The sign of the provided float
         */
-        static s_float_t Sign(const s_float_t& fValue)
-        {
-            if (fValue.IsValid())
-            {
-                return (fValue.fValue_ < 0.0) ? -1 : 1;
-            }
-            else
-                return s_float_t::NaN;
-        }
+        static s_float_t Sign(const s_float_t& fValue);
 
     private :
 
@@ -655,71 +329,13 @@ namespace Frost
     float MakeFloat(const ulong& ul);
 
     template <class T>
-    const s_float_t<T> s_float_t<T>::NaN      = MakeFloat(0xFFC00000);
+    s_float_t<T> operator + (const T& fLeft, const s_float_t<T>& fRight);
     template <class T>
-    const s_float_t<T> s_float_t<T>::INFPLUS  = MakeFloat(0x7F800000);
+    s_float_t<T> operator - (const T& fLeft, const s_float_t<T>& fRight);
     template <class T>
-    const s_float_t<T> s_float_t<T>::INFMINUS = MakeFloat(0xFF800000);
+    s_float_t<T> operator * (const T& fLeft, const s_float_t<T>& fRight);
     template <class T>
-    const T s_float_t<T>::EPS = 0.0;
-    template <class T>
-    const s_float_t<T> s_float_t<T>::PI = 3.1415;
-    template <class T>
-    const default_uint s_float_t<T>::DIGIT = 1;
-
-    template <class T>
-    s_float_t<T> operator + (const T& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(fLeft) + fRight;
-    }
-
-    template <class T>
-    s_float_t<T> operator - (const T& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(fLeft) - fRight;
-    }
-
-    template <class T>
-    s_float_t<T> operator * (const T& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(fLeft) * fRight;
-    }
-
-    template <class T>
-    s_float_t<T> operator / (const T& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(fLeft) / fRight;
-    }
-
-    template <class T>
-    s_float_t<T> operator + (const int& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(static_cast<float>(fLeft)) + fRight;
-    }
-
-    template <class T>
-    s_float_t<T> operator - (const int& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(static_cast<float>(fLeft)) - fRight;
-    }
-
-    template <class T>
-    s_float_t<T> operator * (const int& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(static_cast<float>(fLeft)) * fRight;
-    }
-
-    template <class T>
-    s_float_t<T> operator / (const int& fLeft, const s_float_t<T>& fRight)
-    {
-        return s_float_t<T>(static_cast<float>(fLeft)) / fRight;
-    }
-
-    template <class T, class N>
-    s_str_t<N> operator+ (const N* sLeft, const s_float_t<T>& fRight)
-    {
-        return s_str_t<N>(sLeft) + s_str_t<N>::Convert(fRight);
-    }
+    s_float_t<T> operator / (const T& fLeft, const s_float_t<T>& fRight);
 
     /** \cond NOT_REMOVE_FROM_DOC
     */

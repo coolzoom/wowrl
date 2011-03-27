@@ -309,7 +309,7 @@ void Backdrop::Render() const
 
             // Render sides
             s_float fEdgeHeight = s_float(lParentBorders[BORDER_BOTTOM] - lEdgeInsets_[BORDER_BOTTOM]
-                - lParentBorders[BORDER_TOP] - lEdgeInsets_[BORDER_TOP] -s_int(2*uiEdgeSize_)
+                - lParentBorders[BORDER_TOP] - lEdgeInsets_[BORDER_TOP] - s_int(2u*uiEdgeSize_)
             );
 
             if (fEdgeHeight > 0.0f)
@@ -319,7 +319,7 @@ void Backdrop::Render() const
                 );
 
                 lEdgeList_[EDGE_RIGHT]->SetTextureRect(
-                    s_float(uiOriginalEdgeSize_), 0.0f, s_float(2*uiOriginalEdgeSize_), fEdgeHeight
+                    s_float(uiOriginalEdgeSize_), 0.0f, s_float(2u*uiOriginalEdgeSize_), fEdgeHeight
                 );
 
                 lEdgeList_[EDGE_LEFT]->Render2V(
@@ -346,11 +346,11 @@ void Backdrop::Render() const
             if (fEdgeWidth > 0.0f)
             {
                 lEdgeList_[EDGE_TOP]->SetTextureRect(
-                    s_float(2*uiOriginalEdgeSize_), 0.0f, s_float(3*uiOriginalEdgeSize_), fEdgeWidth
+                    s_float(2u*uiOriginalEdgeSize_), 0.0f, s_float(3u*uiOriginalEdgeSize_), fEdgeWidth
                 );
 
                 lEdgeList_[EDGE_BOTTOM]->SetTextureRect(
-                    s_float(3*uiOriginalEdgeSize_), 0.0f, s_float(4*uiOriginalEdgeSize_), fEdgeWidth
+                    s_float(3u*uiOriginalEdgeSize_), 0.0f, s_float(4u*uiOriginalEdgeSize_), fEdgeWidth
                 );
 
                 lEdgeList_[EDGE_TOP]->Render4V(

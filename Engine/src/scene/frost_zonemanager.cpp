@@ -16,6 +16,10 @@
 #include "scene/frost_doodad.h"
 #include "material/frost_decal.h"
 #include "frost_inputmanager.h"
+#include "frost_engine.h"
+
+#include <frost_utils_event.h>
+#include <frost_utils_eventmanager.h>
 
 using namespace std;
 

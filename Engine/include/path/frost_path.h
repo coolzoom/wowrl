@@ -10,6 +10,7 @@
 #define FROST_PATH_H
 
 #include "frost.h"
+#include <frost_utils_vector.h>
 
 namespace Frost
 {

@@ -9,7 +9,6 @@
 #ifndef FROST_PROFILER_H
 #define FROST_PROFILER_H
 
-#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
 namespace Frost

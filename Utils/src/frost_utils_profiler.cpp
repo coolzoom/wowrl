@@ -61,14 +61,14 @@ namespace Frost
     void Profiler::PrintProfile( const s_double& dProfileTime )
     {
         Log("  - "+ sName_ +" :");
-        Log("     - call number : "+ uiCallNbr_ +" ("+ uiZeroTimings_ +" not timed)");
+        Log("     - call number     : "+ uiCallNbr_ +" ("+ uiZeroTimings_ +" not timed)");
 
         if (uiCallNbr_ != 0)
         {
-            Log("     - total time : "+ dTotalTime_ +" s ("+ 100.0*dTotalTime_/dProfileTime +"%% of total)");
-            Log("     - average time : "+ 1000.0*dTotalTime_/s_double(uiCallNbr_-uiZeroTimings_) +" ms");
-            Log("     - highest time : "+ 1000.0*dHighestTime_ +" ms");
-            Log("     - lowest time : "+ 1000.0*dLowestTime_ +" ms");
+            Log("     - total time      : "+ s_str::Convert(dTotalTime_, 4) +" s ("+ s_str::Convert(100.0*dTotalTime_/dProfileTime, 2, 2) +"% of total)");
+            Log("     - average time    : "+ s_str::Convert(1000.0*dTotalTime_/s_double(uiCallNbr_-uiZeroTimings_), 4) +" ms");
+            Log("     - highest time    : "+ s_str::Convert(1000.0*dHighestTime_, 4) +" ms");
+            Log("     - lowest time     : "+ s_str::Convert(1000.0*dLowestTime_, 4) +" ms");
 
             if (bRecord_)
             {

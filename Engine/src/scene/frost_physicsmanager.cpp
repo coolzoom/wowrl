@@ -10,6 +10,7 @@
 #include "scene/frost_physicshandler.h"
 #include "scene/frost_movableobject.h"
 #include "scene/frost_obstacle.h"
+#include "frost_engine.h"
 
 using namespace std;
 

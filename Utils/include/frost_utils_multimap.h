@@ -1,4 +1,6 @@
 // Warning : If you need to use this file, include frost_utils_types.h
+#include <map>
+
 namespace Frost
 {
     /// Base type : container (sorted associative)
@@ -326,7 +328,7 @@ namespace Frost
     {
     public :
 
-        typedef string_object string;
+        typedef s_str::string string;
 
         static string Convert(const s_multimap<Key, Value>& mMap)
         {

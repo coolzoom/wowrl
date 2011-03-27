@@ -13,6 +13,7 @@
 #include "frost_anchor.h"
 #include "frost_guimanager.h"
 #include <frost_utils_lua.h>
+#include <frost_utils_point.h>
 #include <frost_xml.h>
 
 namespace Frost

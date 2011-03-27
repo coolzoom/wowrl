@@ -9,7 +9,7 @@
 #ifndef FROST_UTILSMANAGER_H
 #define FROST_UTILSMANAGER_H
 
-#include "frost_utils_config.h"
+#include "frost_utils_types.h"
 #include "frost_utils_manager.h"
 
 namespace Frost

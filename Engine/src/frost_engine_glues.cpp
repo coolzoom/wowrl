@@ -9,8 +9,12 @@
 #include "scene/frost_zone.h"
 #include "material/frost_decal.h"
 #include "frost_inputmanager.h"
+#include "frost_engine.h"
+
 #include <frost_utils_directory.h>
 #include <frost_utils_file.h>
+#include <frost_utils_event.h>
+#include <frost_utils_eventmanager.h>
 
 #define method(widget, function) {#function, &Lua##widget::_##function}
 

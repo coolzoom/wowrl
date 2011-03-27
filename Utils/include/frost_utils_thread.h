@@ -8,17 +8,9 @@
 #ifndef FROST_UTILS_THREAD_H
 #define FROST_UTILS_THREAD_H
 
-#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-
-namespace boost
-{
-    class mutex;
-    class thread;
-}
+#include "boost_thread.h"
 
 namespace Frost
 {
@@ -98,6 +90,12 @@ namespace Frost
         {
         }
 
+        /// Constructor.
+        /** \param mFunc The boost::function to execute in the thread
+        *   \note You still have to call Launch() to start the thread.
+        */
+        Thread(const boost::function<void()>& mFunc);
+
         /// Destructor.
         /** \note Kills the thread, but waits for the function to return.
         */
@@ -127,6 +125,15 @@ namespace Frost
 
             mFunction_ = boost::bind(pFunction, p);
         }
+
+        /// Sets the function to call in the thread.
+        /** \param mFunc The boost::function to execute in the thread
+        *   \note You still have to call Launch() to start the thread.
+        *   \note If the thread was already active, it waits until
+        *         the end of the current function, then sets this
+        *         new one.
+        */
+        void SetFunction(const boost::function<void()>& mFunc);
 
         /// Starts the thread.
         /** \note Does nothing if no function was defined.

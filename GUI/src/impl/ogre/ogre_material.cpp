@@ -10,6 +10,7 @@
 #include "impl/ogre/ogre_rendertarget.h"
 
 #include <frost_utils_file.h>
+#include <frost_utils_color.h>
 
 #include <OgreMaterialManager.h>
 #include <OgreTextureManager.h>

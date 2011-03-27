@@ -14,7 +14,9 @@
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
 #include "scene/frost_scenemanager.h"
-#include "frost_inputmanager.h"
+#include "frost_engine.h"
+
+#include <frost_inputmanager.h>
 
 #include <OgreEntity.h>
 #include <OgreCamera.h>

@@ -11,6 +11,8 @@
 #ifndef FROST_GUI_GRADIENT_H
 #define FROST_GUI_GRADIENT_H
 
+#include <frost_utils_color.h>
+
 namespace Frost
 {
     namespace GUI

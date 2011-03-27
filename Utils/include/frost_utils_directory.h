@@ -10,7 +10,6 @@
 // Iterates through a Directory's sub directories
 #define foreach_dir(subdir, dir) for ((subdir) = (dir).GetNextSubDirectory(); (subdir); (subdir) = (dir).GetNextSubDirectory())
 
-#include "frost_utils_config.h"
 #include "frost_utils_types.h"
 
 namespace Frost

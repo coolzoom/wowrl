@@ -7,6 +7,11 @@
 #include "frost_inputmanager.h"
 #include "frost_localemanager.h"
 
+#include <frost_utils_eventreceiver.h>
+#include <frost_utils_event.h>
+#include <frost_utils_eventmanager.h>
+#include <frost_utils_timemanager.h>
+
 #include <OIS.h>
 
 using namespace std;
@@ -498,8 +503,8 @@ namespace Frost
             bLastDragged_ = false;
 
         // Update mouse position
-        fRawDMX_ = fDMX_ = mMouseState.X.abs - fMX_;
-        fRawDMY_ = fDMY_ = mMouseState.Y.abs - fMY_;
+        fRawDMX_ = fDMX_ = (float)mMouseState.X.abs - fMX_;
+        fRawDMY_ = fDMY_ = (float)mMouseState.Y.abs - fMY_;
         /*fRawDMX_ = fDMX_ = mMouseState.X.rel;
         fRawDMY_ = fDMY_ = mMouseState.Y.rel;*/
 

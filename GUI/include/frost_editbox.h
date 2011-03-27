@@ -11,6 +11,7 @@
 
 #include <frost_utils.h>
 #include "frost_frame.h"
+#include <frost_utils_color.h>
 
 namespace Frost
 {

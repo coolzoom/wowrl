@@ -10,6 +10,8 @@
 #define FROST_ZONE_H
 
 #include "frost.h"
+#include <frost_xml.h>
+#include <frost_utils_color.h>
 
 namespace Frost
 {

@@ -8,8 +8,9 @@
 #include "scene/frost_lightmanager.h"
 
 #include "scene/frost_light.h"
+#include "frost_engine.h"
 
-#include "OgreSceneManager.h"
+#include <OgreSceneManager.h>
 
 using namespace std;
 

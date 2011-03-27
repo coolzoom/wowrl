@@ -12,6 +12,9 @@
 #include "scene/frost_doodad.h"
 #include "scene/frost_scenemanager.h"
 
+#include <frost_utils_eventmanager.h>
+#include <frost_utils_event.h>
+
 using namespace std;
 
 namespace Frost

@@ -7,8 +7,6 @@
 
 #include "frost_utils_thread.h"
 
-#include <boost/thread.hpp>
-
 using namespace std;
 
 namespace Frost
@@ -39,6 +37,10 @@ namespace Frost
     {
     }
 
+    Thread::Thread(const boost::function<void()>& mFunc) : mFunction_(mFunc)
+    {
+    }
+
     Thread::~Thread()
     {
         if (pThread_)
@@ -50,6 +52,13 @@ namespace Frost
         Wait();
 
         mFunction_ = pFunction;
+    }
+
+    void Thread::SetFunction(const boost::function<void()>& mFunc)
+    {
+        Wait();
+
+        mFunction_ = mFunc;
     }
 
     void Thread::Launch()

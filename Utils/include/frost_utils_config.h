@@ -12,6 +12,11 @@ typedef unsigned short     ushort;
 typedef unsigned long      ulong;
 typedef unsigned long long ullong;
 
+typedef char string_element;
+
+typedef int  default_int;
+typedef uint default_uint;
+
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
     #define CPP_0X
 #endif
@@ -21,7 +26,9 @@ typedef unsigned long long ullong;
     #include <initializer_list>
 #endif
 
-#include <string>
+#include <cstddef>
+
+/*#include <string>
 #include <vector>
 #include <deque>
 #include <fstream>
@@ -30,5 +37,5 @@ typedef unsigned long long ullong;
 #include <cstdlib>
 #include <cstdio>
 #include <algorithm>
-#include <typeinfo>
+#include <typeinfo>*/
 

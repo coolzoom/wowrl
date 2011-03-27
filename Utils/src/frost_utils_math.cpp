@@ -25,37 +25,37 @@ namespace Frost
 
     s_float cos(const s_int& iValue)
     {
-        return ::cos(iValue.Get()*2*s_float::PI.Get());
+        return ::cos(iValue.Get()*2.0f*s_float::PI.Get());
     }
 
     s_float acos(const s_int& iValue)
     {
-        return s_float(::acos(static_cast<float>(iValue.Get())))/(2*s_float::PI);
+        return s_float(::acos(static_cast<float>(iValue.Get())))/(2.0f*s_float::PI);
     }
 
     s_float sin(const s_int& iValue)
     {
-        return ::sin(iValue.Get()*2*s_float::PI.Get());
+        return ::sin(iValue.Get()*2.0f*s_float::PI.Get());
     }
 
     s_float asin(const s_int& iValue)
     {
-        return s_float(::asin(static_cast<float>(iValue.Get())))/(2*s_float::PI);
+        return s_float(::asin(static_cast<float>(iValue.Get())))/(2.0f*s_float::PI);
     }
 
     s_float tan(const s_int& iValue)
     {
-        return ::tan(iValue.Get()*2*s_float::PI.Get());
+        return ::tan(iValue.Get()*2.0f*s_float::PI.Get());
     }
 
     s_float atan(const s_int& iValue)
     {
-        return s_float(::atan(static_cast<float>(iValue.Get())))/(2*s_float::PI);
+        return s_float(::atan(static_cast<float>(iValue.Get())))/(2.0f*s_float::PI);
     }
 
     s_float atan2(const s_int& iX, const s_int& iY)
     {
-        return s_float(::atan2(static_cast<float>(iX.Get()), static_cast<float>(iY.Get())))/(2*s_float::PI.Get());
+        return s_float(::atan2(static_cast<float>(iX.Get()), static_cast<float>(iY.Get())))/(2.0f*s_float::PI.Get());
     }
 
     s_int fabs(const s_int& iValue)
@@ -87,12 +87,12 @@ namespace Frost
 
     s_float cos(const s_uint& uiValue)
     {
-        return ::cos(uiValue.Get()*2*s_float::PI.Get());
+        return ::cos(uiValue.Get()*2.0f*s_float::PI.Get());
     }
 
     s_float acos(const s_uint& uiValue)
     {
-        return s_float(::acos(static_cast<float>(uiValue.Get())))/(2*s_float::PI);
+        return s_float(::acos(static_cast<float>(uiValue.Get())))/(2.0f*s_float::PI);
     }
 
     s_float sin(const s_uint& uiValue)
@@ -102,22 +102,22 @@ namespace Frost
 
     s_float asin(const s_uint& uiValue)
     {
-        return s_float(::asin(static_cast<float>(uiValue.Get())))/(2*s_float::PI);
+        return s_float(::asin(static_cast<float>(uiValue.Get())))/(2.0f*s_float::PI);
     }
 
     s_float tan(const s_uint& uiValue)
     {
-        return ::tan(uiValue.Get()*2*s_float::PI.Get());
+        return ::tan(uiValue.Get()*2.0f*s_float::PI.Get());
     }
 
     s_float atan(const s_uint& uiValue)
     {
-        return s_float(::atan(static_cast<float>(uiValue.Get())))/(2*s_float::PI);
+        return s_float(::atan(static_cast<float>(uiValue.Get())))/(2.0f*s_float::PI);
     }
 
     s_float atan2(const s_uint& uiX, const s_uint& uiY)
     {
-        return s_float(::atan2(static_cast<float>(uiX.Get()), static_cast<float>(uiY.Get())))/(2*s_float::PI);
+        return s_float(::atan2(static_cast<float>(uiX.Get()), static_cast<float>(uiY.Get())))/(2.0f*s_float::PI);
     }
 
     s_float pow(const s_uint& uiValue, const s_float& fValue)
@@ -144,12 +144,12 @@ namespace Frost
 
     s_float cos(const s_float& fValue)
     {
-        return ::cos((fValue*2*s_float::PI).Get());
+        return ::cos((fValue*2.0f*s_float::PI).Get());
     }
 
     s_float acos(const s_float& fValue)
     {
-        return s_float(::acos(fValue.Get()))/(2*s_float::PI);
+        return s_float(::acos(fValue.Get()))/(2.0f*s_float::PI);
     }
 
     s_float sin(const s_float& fValue)
@@ -159,22 +159,22 @@ namespace Frost
 
     s_float asin(const s_float& fValue)
     {
-        return s_float(::asin(fValue.Get()))/(2*s_float::PI);
+        return s_float(::asin(fValue.Get()))/(2.0f*s_float::PI);
     }
 
     s_float tan(const s_float& fValue)
     {
-        return ::tan((fValue*2*s_float::PI).Get());
+        return ::tan((fValue*2.0f*s_float::PI).Get());
     }
 
     s_float atan(const s_float& fValue)
     {
-        return s_float(::atan(fValue.Get()))/(2*s_float::PI);
+        return s_float(::atan(fValue.Get()))/(2.0f*s_float::PI);
     }
 
     s_float atan2(const s_float& fX, const s_float& fY)
     {
-        return s_float(::atan2(fX.Get(), fY.Get()))/(2*s_float::PI);
+        return s_float(::atan2(fX.Get(), fY.Get()))/(2.0f*s_float::PI);
     }
 
     s_float fabs(const s_float& fValue)
@@ -206,37 +206,37 @@ namespace Frost
 
     s_double cos(const s_double& dValue)
     {
-        return ::cos((dValue*2*s_double::PI).Get());
+        return ::cos((dValue*2.0*s_double::PI).Get());
     }
 
     s_double acos(const s_double& dValue)
     {
-        return s_double(::acos(dValue.Get()))/(2*s_double::PI);
+        return s_double(::acos(dValue.Get()))/(2.0*s_double::PI);
     }
 
     s_double sin(const s_double& dValue)
     {
-        return ::sin((dValue*2*s_double::PI).Get());
+        return ::sin((dValue*2.0*s_double::PI).Get());
     }
 
     s_double asin(const s_double& dValue)
     {
-        return s_double(::asin(dValue.Get()))/(2*s_double::PI);
+        return s_double(::asin(dValue.Get()))/(2.0*s_double::PI);
     }
 
     s_double tan(const s_double& dValue)
     {
-        return ::tan((dValue*2*s_double::PI).Get());
+        return ::tan((dValue*2.0*s_double::PI).Get());
     }
 
     s_double atan(const s_double& dValue)
     {
-        return s_double(::atan(dValue.Get()))/(2*s_double::PI);
+        return s_double(::atan(dValue.Get()))/(2.0*s_double::PI);
     }
 
     s_double atan2(const s_double& dX, const s_double& dY)
     {
-        return s_double(::atan2(dX.Get(), dY.Get()))/(2*s_double::PI);
+        return s_double(::atan2(dX.Get(), dY.Get()))/(2.0*s_double::PI);
     }
 
     s_double fabs(const s_double& dValue)

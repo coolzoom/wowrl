@@ -12,6 +12,8 @@
 #include "material/frost_rendertarget.h"
 #include "camera/frost_cameramanager.h"
 #include "camera/frost_camera.h"
+#include "frost_engine.h"
+
 #include <frost_material.h>
 #include <impl/ogre/ogre_material.h>
 #include <frost_sprite.h>

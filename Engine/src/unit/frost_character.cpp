@@ -16,6 +16,7 @@
 #include "camera/frost_camera.h"
 #include "unit/frost_unitmanager.h"
 #include "unit/frost_movableunithandler.h"
+#include "frost_engine.h"
 
 using namespace std;
 

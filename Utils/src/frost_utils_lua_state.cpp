@@ -42,8 +42,12 @@ void OpenLibs( lua_State* pLua_ )
 
 const s_str State::CLASS_NAME = "Lua::State";
 
+int l_TreatError(lua_State*);
+
 State::State()
 {
+    pErrorFunction_ = &l_TreatError;
+
     pLua_ = lua_open();
     if (!pLua_)
     {
@@ -218,25 +222,54 @@ void State::CopyTable( s_ptr<State> pLua, const s_str& sSrcName, const s_str& sD
     }
 }
 
+int l_TreatError( lua_State* pLua )
+{
+    if (!lua_isstring(pLua, -1))
+        return 0;
+
+    lua_Debug d;
+
+    lua_getstack(pLua, 1, &d);
+    lua_getinfo(pLua, "Sl", &d);
+
+    s_str sError = s_str(d.short_src) + ":" + s_int(d.currentline) + ": " + s_str(lua_tostring(pLua, -1));
+    lua_pushstring(pLua, sError.c_str());
+
+    return 1;
+}
+
 void State::DoFile( const s_str& sFile )
 {
     if (File::Exists(sFile))
     {
-        int iError = luaL_dofile(pLua_, sFile.c_str());
+        lua_pushcfunction(pLua_, pErrorFunction_);
+        s_uint uiFuncPos = GetTop();
+
+        if (luaL_loadfile(pLua_, sFile.c_str()) != 0)
+        {
+            lua_remove(pLua_, uiFuncPos.Get());
+            throw LuaException(CLASS_NAME, "Cannot load file.");
+        }
+
+        int iError = lua_pcall(pLua_, 0, LUA_MULTRET, -2);
         if (iError != 0)
         {
             if (lua_isstring(pLua_, -1))
             {
                 s_str sError = lua_tostring(pLua_, -1);
                 lua_pop(pLua_, 1);
+                lua_remove(pLua_, uiFuncPos.Get());
                 throw LuaException(sError);
             }
             else
             {
                 lua_pop(pLua_, 1);
+                lua_remove(pLua_, uiFuncPos.Get());
                 throw LuaException(CLASS_NAME, "Unhandled error.");
             }
         }
+
+        lua_remove(pLua_, uiFuncPos.Get());
     }
     else
     {
@@ -246,21 +279,34 @@ void State::DoFile( const s_str& sFile )
 
 void State::DoString( const s_str& sStr )
 {
-    int iError = luaL_dostring(pLua_, sStr.c_str());
+    lua_pushcfunction(pLua_, pErrorFunction_);
+    s_uint uiFuncPos = GetTop();
+
+    if (luaL_loadstring(pLua_, sStr.c_str()) != 0)
+    {
+        lua_remove(pLua_, uiFuncPos.Get());
+        throw LuaException(CLASS_NAME, "Unhandled error.");
+    }
+
+    int iError = lua_pcall(pLua_, 0, LUA_MULTRET, -2);
     if (iError != 0)
     {
         if (lua_isstring(pLua_, -1))
         {
             s_str sError = lua_tostring(pLua_, -1);
             lua_pop(pLua_, 1);
+            lua_remove(pLua_, uiFuncPos.Get());
             throw LuaException(sError);
         }
         else
         {
             lua_pop(pLua_, 1);
+            lua_remove(pLua_, uiFuncPos.Get());
             throw LuaException(CLASS_NAME, "Unhandled error.");
         }
     }
+
+    lua_remove(pLua_, uiFuncPos.Get());
 }
 
 void State::CallFunction( const s_str& sFunctionName )
@@ -278,6 +324,8 @@ void State::CallFunction( const s_str& sFunctionName )
         }
     }
 
+    lua_pushcfunction(pLua_, pErrorFunction_);
+    s_uint uiFuncPos = GetTop();
     lua_getglobal(pLua_, lDecomposedName.Front().c_str());
     s_uint uiCounter = 1;
 
@@ -295,6 +343,7 @@ void State::CallFunction( const s_str& sFunctionName )
                 if (lua_isnil(pLua_, -1))
                 {
                     Pop(uiCounter);
+                    lua_remove(pLua_, uiFuncPos.Get());
                     throw LuaException(CLASS_NAME,
                         "\""+sFunctionName+"\" doesn't exist."
                     );
@@ -304,34 +353,39 @@ void State::CallFunction( const s_str& sFunctionName )
 
         if (lua_isfunction(pLua_, -1))
         {
-            int iError = lua_pcall(pLua_, 0, 0, 0);
+            int iError = lua_pcall(pLua_, 0, 0, -uiCounter.Get());
             if (iError != 0)
             {
                 if (lua_isstring(pLua_, -1))
                 {
                     s_str sError = lua_tostring(pLua_, -1);
                     Pop(uiCounter + 1);
+                    lua_remove(pLua_, uiFuncPos.Get());
                     throw LuaException(sError);
                 }
                 else
                 {
                     Pop(uiCounter + 1);
+                    lua_remove(pLua_, uiFuncPos.Get());
                     throw LuaException(CLASS_NAME, "Unhandled error.");
                 }
             }
 
             --uiCounter;
             Pop(uiCounter);
+            lua_remove(pLua_, uiFuncPos.Get());
         }
         else
         {
             Pop(uiCounter);
+            lua_remove(pLua_, uiFuncPos.Get());
             throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" is not a function.");
         }
     }
     else
     {
         Pop(uiCounter);
+        lua_remove(pLua_, uiFuncPos.Get());
         throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
     }
 }
@@ -351,8 +405,10 @@ void State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgu
         }
     }
 
+    lua_pushcfunction(pLua_, pErrorFunction_);
+    s_uint uiFuncPos = GetTop();
     lua_getglobal(pLua_, lDecomposedName.Front().c_str());
-    s_uint uiCounter = 1;
+    s_uint uiCounter = 2;
 
     if (!lua_isnil(pLua_, -1))
     {
@@ -368,6 +424,7 @@ void State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgu
                 if (lua_isnil(pLua_, -1))
                 {
                     Pop(uiCounter);
+                    lua_remove(pLua_, uiFuncPos.Get());
                     throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
                 }
             }
@@ -381,34 +438,39 @@ void State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgu
                 PushVar(*iter);
             }
 
-            int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, 0);
+            int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, -uiCounter.Get());
             if (iError != 0)
             {
                 if (lua_isstring(pLua_, -1))
                 {
                     s_str sError = lua_tostring(pLua_, -1);
                     Pop(uiCounter + 1);
+                    lua_remove(pLua_, uiFuncPos.Get());
                     throw LuaException(sError);
                 }
                 else
                 {
                     Pop(uiCounter + 1);
+                    lua_remove(pLua_, uiFuncPos.Get());
                     throw LuaException(CLASS_NAME, "Unhandled error.");
                 }
             }
 
             --uiCounter;
             Pop(uiCounter);
+            lua_remove(pLua_, uiFuncPos.Get());
         }
         else
         {
             Pop(uiCounter);
+            lua_remove(pLua_, uiFuncPos.Get());
             throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" is not a function.");
         }
     }
     else
     {
         Pop(uiCounter);
+        lua_remove(pLua_, uiFuncPos.Get());
         throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
     }
 }
@@ -418,25 +480,35 @@ void State::Register( const s_str& sFunctionName, lua_CFunction mFunction )
     lua_register(pLua_, sFunctionName.c_str(), mFunction);
 }
 
+s_str State::FormatError( const s_str& sError )
+{
+    PushString(sError);
+    (*pErrorFunction_)(pLua_);
+    s_str sResult = GetString();
+    Pop(1);
+
+    return sResult;
+}
+
 void State::PrintError( const s_str& sError )
 {
-    lua_Debug d;
-    int i = lua_getstack(pLua_, 1, &d);
-    s_str sDebugStr;
-    if (i != 0)
-    {
-        lua_getinfo(pLua_, "Sl" , &d);
-        sDebugStr = s_str(d.short_src) + ":" + s_int(d.currentline) + " : " + sError;
-    }
-    else
-        sDebugStr = sError;
+    s_str sDebugStr = FormatError(sError);
 
-    Log("# Error # : Lua : " + sDebugStr);
+    Log(sDebugStr);
 
     Event e("LUA_ERROR");
     e.Add(s_var(sDebugStr));
+    e.Add(s_var(sError));
 
     EventManager::GetSingleton()->FireEvent(e);
+}
+
+void State::SetErrorFunction( lua_CFunction pFunc )
+{
+    if (pFunc != 0)
+        pErrorFunction_ = pFunc;
+    else
+        pErrorFunction_ = &l_TreatError;
 }
 
 s_bool State::IsSerializable( const s_int& iIndex )

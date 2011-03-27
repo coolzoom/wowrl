@@ -8,6 +8,8 @@
 #include "frost_rendertarget.h"
 #include "impl/ogre/ogre_rendertarget.h"
 
+#include <frost_utils_color.h>
+
 #include <OgreTextureManager.h>
 #include <OgreHardwarePixelBuffer.h>
 #include <OgreRenderTarget.h>
