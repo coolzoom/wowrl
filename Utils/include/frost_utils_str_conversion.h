@@ -669,7 +669,7 @@ namespace Frost
         {
             if (p.IsValid())
                 return StringConverter< string_element, s_int_t<ptrdiff_t> >::Convert(
-                    s_int_t<ptrdiff_t>((ptrdiff_t)p.Get())
+                    s_int_t<ptrdiff_t>((ptrdiff_t)p.Lock().Get())
                 );
             else
                 return ("NULL");

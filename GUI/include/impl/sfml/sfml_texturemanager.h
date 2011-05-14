@@ -3,6 +3,7 @@
 
 #include <frost_utils.h>
 #include <frost_utils_manager.h>
+#include <frost_utils_thread.h>
 
 #include <SFML/Graphics.hpp>
 

@@ -17,7 +17,8 @@
     #include <dirent.h>
     #include <unistd.h>
     #include <fnmatch.h>
-    #include <string.h>
+    #include <cstring>
+    #include <cstdio>
 
     struct _finddata_t
     {

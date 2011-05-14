@@ -6,47 +6,79 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Release">
+			<Target title="Release_Win32">
 				<Option platforms="Windows;Unix;" />
-				<Option output="..\lib\libxml" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libxml" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release\" />
+				<Option object_output="obj/Release/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-O3" />
+					<Add option="-DWIN32" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
 			</Target>
-			<Target title="Debug">
+			<Target title="Debug_Win32">
 				<Option platforms="Windows;Unix;" />
-				<Option output="..\lib\libxml_d" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libxml_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj/Debug/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DWIN32" />
+				</Compiler>
+			</Target>
+			<Target title="Release_Linux">
+				<Option platforms="Windows;Unix;" />
+				<Option output="../lib/libxml" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-DFROST_LINUX" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug_Linux">
+				<Option platforms="Windows;Unix;" />
+				<Option output="../lib/libxml_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DFROST_LINUX" />
 				</Compiler>
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Release;Debug;" />
+			<Add alias="Linux" targets="Release_Linux;Debug_Linux;" />
+			<Add alias="Win32" targets="Release_Win32;Debug_Win32;" />
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add directory="include" />
-			<Add directory="..\Utils\include" />
+			<Add directory="../Utils/include" />
 		</Compiler>
-		<Unit filename="include\frost_xml.h" />
-		<Unit filename="include\frost_xml_block.h" />
-		<Unit filename="include\frost_xml_document.h" />
-		<Unit filename="src\frost_xml_block.cpp" />
-		<Unit filename="src\frost_xml_document.cpp" />
+		<Unit filename="include/frost_xml.h" />
+		<Unit filename="include/frost_xml_block.h" />
+		<Unit filename="include/frost_xml_document.h" />
+		<Unit filename="src/frost_xml_block.cpp" />
+		<Unit filename="src/frost_xml_document.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

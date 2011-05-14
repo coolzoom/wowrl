@@ -12,7 +12,7 @@
 #include <frost_utils.h>
 #include <frost_utils_manager.h>
 
-#include <OISPrereqs.h>
+#include <OIS/OISPrereqs.h>
 
 #define INPUT_MOUSE_BUTTON_NUMBER 3
 

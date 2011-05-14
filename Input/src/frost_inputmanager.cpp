@@ -12,7 +12,7 @@
 #include <frost_utils_eventmanager.h>
 #include <frost_utils_timemanager.h>
 
-#include <OIS.h>
+#include <OIS/OIS.h>
 
 using namespace std;
 
