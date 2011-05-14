@@ -159,20 +159,6 @@ namespace Frost
             return *this;
         }
 
-        /// s_refptr assignation operator.
-        /** \param pRefPtr The s_refptr to use as a base
-        */
-        s_wptr& operator = (const s_refptr<T>& pRefPtr)
-        {
-            pValue_ = pRefPtr.pValue_;
-            pCounter_ = pRefPtr.pCounter_;
-            pWCounter_ = pRefPtr.pWCounter_;
-
-            Increment_();
-
-            return *this;
-        }
-
         /// Copy operator.
         /** \param pPtr The value to copy
         */
@@ -421,7 +407,38 @@ namespace Frost
             return mContainer;
         }
 
+        /// Casts the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        */
+        template<class N>
+        static s_wptr<T> StaticCast(const s_wptr<N>& pValue)
+        {
+            return s_wptr<T>(static_cast<T*>(pValue.pValue_), pValue.pCounter_, pValue.pWCounter_);
+        }
+
+        /// Tries to dynamic cast the provided pointer to this one's type.
+        /** \param pValue The pointer to cast
+        *   \return The new casted pointer
+        *   \note Dynamic cast can fail, and in this case, will result in
+        *         a NULL pointer.
+        */
+        template<class N>
+        static s_wptr<T> DynamicCast(const s_wptr<N>& pValue)
+        {
+            T* pTemp = dynamic_cast<T*>(pValue.pValue_);
+            if (pTemp)
+                return s_wptr<T>(pTemp, pValue.pCounter_, pValue.pWCounter_);
+            else
+                return s_wptr<T>();
+        }
+
     private :
+
+        s_wptr(T* pValue, default_uint* pCounter, default_uint* pWCounter) :
+            pValue_(pValue), pCounter_(pCounter), pWCounter_(pWCounter)
+        {
+        }
 
         void Increment_()
         {

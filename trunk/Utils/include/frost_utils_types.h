@@ -17,7 +17,11 @@
 #else
     // Forward declaration to avoid including <cmath>.
     // Used by some template functions.
+    #ifdef FROST_LINUX
+    extern "C" double round( double x ) throw();
+    #else
     extern "C" double __cdecl round( double x );
+    #endif
 #endif
 
 namespace Frost

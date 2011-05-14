@@ -8,6 +8,8 @@
 #include "frost_rendertarget.h"
 #include "impl/sfml/sfml_rendertarget.h"
 
+#include <frost_utils_color.h>
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;

@@ -7,9 +7,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Win32_Release">
-				<Option output="..\lib\libinput" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release\" />
+				<Option object_output="obj/Release/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -23,9 +23,9 @@
 				</Linker>
 			</Target>
 			<Target title="Win32_Debug">
-				<Option output="..\lib\libinput_d" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj/Debug/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -37,15 +37,16 @@
 			</Target>
 			<Target title="Linux_Release">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release\" />
+				<Option object_output="obj/Release/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-Wall" />
 					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DFROST_LINUX" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -53,21 +54,22 @@
 			</Target>
 			<Target title="Linux_Debug">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput_d" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj/Debug/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add option="-DFROST_LINUX" />
 				</Compiler>
 			</Target>
 			<Target title="Win32_Release_Threads">
-				<Option output="..\lib\libinput_thread" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput_thread" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release_Thread\" />
+				<Option object_output="obj/Release_Thread/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -82,9 +84,9 @@
 				</Linker>
 			</Target>
 			<Target title="Win32_Debug_Threads">
-				<Option output="..\lib\libinput_thread_d" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput_thread_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug_Thread\" />
+				<Option object_output="obj/Debug_Thread/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -97,9 +99,9 @@
 			</Target>
 			<Target title="Linux_Release_Threads">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput_thread" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput_thread" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release_Thread\" />
+				<Option object_output="obj/Release_Thread/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -107,6 +109,7 @@
 					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DUSING_THREADS" />
+					<Add option="-DFROST_LINUX" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -114,9 +117,9 @@
 			</Target>
 			<Target title="Linux_Debug_Threads">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput_thread_d" prefix_auto="1" extension_auto="1" />
+				<Option output="../lib/libinput_thread_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug_Thread\" />
+				<Option object_output="obj/Debug_Thread/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -124,6 +127,7 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DUSING_THREADS" />
+					<Add option="-DFROST_LINUX" />
 				</Compiler>
 			</Target>
 		</Build>
@@ -134,17 +138,17 @@
 			<Add alias="Win32_Threads" targets="Win32_Release_Threads;Win32_Debug_Threads;" />
 		</VirtualTargets>
 		<Compiler>
-			<Add directory="..\Input\include" />
-			<Add directory="..\Utils\include" />
-			<Add directory="..\Lunar" />
-			<Add directory="..\..\OIS\includes" />
-			<Add directory="..\..\lua5.1\include" />
-			<Add directory="..\..\boost_1_43_0" />
+			<Add directory="../Input/include" />
+			<Add directory="../Utils/include" />
+			<Add directory="../Lunar" />
+			<Add directory="../../OIS/includes" />
+			<Add directory="../../lua5.1/include" />
+			<Add directory="../../boost_1_43_0" />
 		</Compiler>
-		<Unit filename="include\frost_inputmanager.h" />
-		<Unit filename="include\frost_localemanager.h" />
-		<Unit filename="src\frost_inputmanager.cpp" />
-		<Unit filename="src\frost_localemanager.cpp" />
+		<Unit filename="include/frost_inputmanager.h" />
+		<Unit filename="include/frost_localemanager.h" />
+		<Unit filename="src/frost_inputmanager.cpp" />
+		<Unit filename="src/frost_localemanager.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

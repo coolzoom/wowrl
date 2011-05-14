@@ -183,7 +183,7 @@ namespace Frost
             return lArray_[uiIndex];
         }
 
-        s_bool operator == (const s_array& mValue)
+        s_bool operator == (const s_array& mValue) const
         {
             for (default_uint i = 0; i < N; ++i)
             {
@@ -194,7 +194,7 @@ namespace Frost
             return true;
         }
 
-        s_bool operator != (const s_array& mValue)
+        s_bool operator != (const s_array& mValue) const
         {
             for (default_uint i = 0; i < N; ++i)
             {

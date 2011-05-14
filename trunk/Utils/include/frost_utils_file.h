@@ -11,13 +11,13 @@
 
 #include <fstream>
 
+typedef char string_element;
+typedef std::string string_object;
+typedef std::stringstream string_stream;
+typedef std::fstream file_stream;
+
 namespace Frost
 {
-    typedef char string_element;
-    typedef std::string string_object;
-    typedef std::stringstream string_stream;
-    typedef std::fstream file_stream;
-
     /// A tool to input some data
     /** Built upon std::fstream, this class offers
     *   almost the exact same possibilities. The

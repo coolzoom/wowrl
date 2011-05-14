@@ -12,6 +12,10 @@
 #include <frost_utils.h>
 #include <frost_utils_manager.h>
 
+#ifdef USING_THREADS
+#include <frost_utils_thread.h>
+#endif
+
 namespace Frost
 {
 namespace GUI
