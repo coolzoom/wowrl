@@ -161,6 +161,16 @@ namespace Frost
         pDefaultPass_->pPass->setDepthWriteEnabled(bDepthWrite);
     }
 
+    void Material::SetCulling( const s_bool& bCulling )
+    {
+        CheckVanilla_();
+
+        if (bCulling)
+            pDefaultPass_->pPass->setCullingMode(Ogre::CULL_CLOCKWISE);
+        else
+            pDefaultPass_->pPass->setCullingMode(Ogre::CULL_NONE);
+    }
+
     const s_float& Material::GetWidth() const
     {
         return fWidth_;

@@ -77,6 +77,19 @@ namespace Frost
     // model/frost_m2modeldata.h
     class  M2ModelData;
 
+    // model/frost_manualmodeldata.h
+    namespace ManualModel
+    {
+        struct Vertex;
+        struct Triangle;
+        struct SubMesh;
+        struct Bone;
+        struct Animation;
+        struct Model;
+    }
+
+    class ManualModelData;
+
     // model/frost_model.h
     class  Model;
     class  ModelPart;

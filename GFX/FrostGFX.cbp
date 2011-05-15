@@ -129,6 +129,7 @@
 		<Unit filename="include\model\frost_fmmodelstructs.h" />
 		<Unit filename="include\model\frost_m2modeldata.h" />
 		<Unit filename="include\model\frost_m2modelstructs.h" />
+		<Unit filename="include\model\frost_manualmodeldata.h" />
 		<Unit filename="include\model\frost_model.h" />
 		<Unit filename="include\model\frost_modeldata.h" />
 		<Unit filename="include\model\frost_modelmanager.h" />
@@ -179,6 +180,7 @@
 		<Unit filename="src\model\frost_animmanager.cpp" />
 		<Unit filename="src\model\frost_fmmodeldata.cpp" />
 		<Unit filename="src\model\frost_m2modeldata.cpp" />
+		<Unit filename="src\model\frost_manualmodeldata.cpp" />
 		<Unit filename="src\model\frost_model.cpp" />
 		<Unit filename="src\model\frost_modeldata.cpp" />
 		<Unit filename="src\model\frost_modelmanager.cpp" />

@@ -108,6 +108,13 @@ namespace Frost
         */
         void            SetDepthWrite(const s_bool& bDepthWrite);
 
+        /// Sets whether the current pass should perform culling or not.
+        /** \param bCulling 'false' to disable culling
+        *   \note Enabled by default, automatically disabled when alpha
+        *         reject is enabled.
+        */
+        void            SetCulling(const s_bool& bCulling);
+
         /// Returns this Material's width.
         /** \return This Material's width
         *   \note Doesn't work for plain materials.

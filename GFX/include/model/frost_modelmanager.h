@@ -71,6 +71,18 @@ namespace Frost
             s_ptr<Ogre::SceneManager> pSceneManager = nullptr
         );
 
+        /// Creates a Model manually.
+        /** \param sEntityName   The name of the Ogre::Entity that will be created
+        *   \param mModelData    The structure containing the model data
+        *   \param pSceneManager The scene manager on which to create the model
+        *   \return The new Model
+        *   \note If no scene manager is provided, the default one is used
+        */
+        s_refptr<Model> CreateModel(
+            const s_str& sEntityName, const ManualModel::Model& mModelData,
+            s_ptr<Ogre::SceneManager> pSceneManager = nullptr
+        );
+
         /// Links a model name to a file.
         /** \param sModelName The model name to link
         *   \param sFile      The file to link to

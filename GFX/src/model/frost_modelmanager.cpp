@@ -14,6 +14,7 @@
 
 #include "model/frost_fmmodeldata.h"
 #include "model/frost_m2modeldata.h"
+#include "model/frost_manualmodeldata.h"
 #include "model/frost_ogremeshmodeldata.h"
 
 using namespace std;
@@ -69,6 +70,11 @@ namespace Frost
         }
 
         return pModel;
+    }
+
+    s_refptr<Model> ModelManager::CreateModel( const s_str& sEntityName, const ManualModel::Model& mModelData, s_ptr<Ogre::SceneManager> pSceneManager )
+    {
+        return s_refptr<Model>(new Model(ManualModelData(mModelData, sEntityName), sEntityName, pSceneManager));
     }
 
     s_bool ModelManager::LinkModelNameToFile( const s_str& sModelName, const s_str& sFile )

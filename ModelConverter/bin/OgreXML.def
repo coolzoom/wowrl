@@ -22,7 +22,7 @@
         </submesh>
     </submeshes>
 
-    <n[1]:submeshnames>
+    <n[.,1]:submeshnames>
         <submeshname name n:index/>
     </submeshnames>
 

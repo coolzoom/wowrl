@@ -24,5 +24,7 @@
 #include <ios>
 
 #include <frost_utils.h>
+#include <frost_utils_vector.h>
+#include <frost_utils_axisalignedbox.h>
 
 #endif

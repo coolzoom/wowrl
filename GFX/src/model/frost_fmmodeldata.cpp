@@ -169,6 +169,7 @@ namespace Frost
             pMesh_->_notifySkeleton(pSkel);
         }
 
+        // Geometry
         for (uint i = 0; i < mHeader.nSubMesh; ++i)
         {
             ModelSubMesh mMSM;

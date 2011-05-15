@@ -41,10 +41,10 @@
 			<Add option="-fexceptions" />
 			<Add option="-DWIN32" />
 			<Add directory="include" />
-			<Add directory="..\include\xml" />
-			<Add directory="..\include\utils" />
-			<Add directory="..\dependencies\lua" />
-			<Add directory="..\..\boost_1_43_0" />
+			<Add directory="..\XML\include" />
+			<Add directory="..\Utils\include" />
+			<Add directory="..\Lunar" />
+			<Add directory="..\..\lua5.1\include" />
 		</Compiler>
 		<Linker>
 			<Add option="-Wl,--enable-runtime-pseudo-reloc" />
