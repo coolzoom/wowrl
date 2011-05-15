@@ -9,7 +9,7 @@
 #ifndef FROST_HEALTHTYPE_H
 #define FROST_HEALTHTYPE_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 
 #include <frost_utils_timers.h>
 

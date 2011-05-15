@@ -9,7 +9,7 @@
 #ifndef FROST_ZONE_H
 #define FROST_ZONE_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 #include <frost_xml.h>
 #include <frost_utils_color.h>
 

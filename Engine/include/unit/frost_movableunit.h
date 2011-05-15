@@ -8,7 +8,7 @@
 #ifndef FROST_MOVABLEUNIT_H
 #define FROST_MOVABLEUNIT_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 #include "unit/frost_unit.h"
 
 #include <frost_utils_vector.h>

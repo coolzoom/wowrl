@@ -9,7 +9,7 @@
 #ifndef FROST_STATS_H
 #define FROST_STATS_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 
 namespace Frost
 {

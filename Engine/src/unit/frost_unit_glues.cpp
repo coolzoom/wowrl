@@ -7,7 +7,7 @@
 
 #include "unit/frost_unit.h"
 #include "unit/frost_unitmanager.h"
-#include "camera/frost_camera.h"
+#include <camera/frost_camera.h>
 
 #define method(widget, function) {#function, &Lua##widget::_##function}
 

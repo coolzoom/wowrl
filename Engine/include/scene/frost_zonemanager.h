@@ -9,9 +9,9 @@
 #ifndef FROST_ZONEMANAGER_H
 #define FROST_ZONEMANAGER_H
 
-#include "frost.h"
-#include "frost_editor.h"
+#include "frost_prereqs.h"
 
+#include <frost_editor.h>
 #include <frost_utils_manager.h>
 #include <frost_utils_eventreceiver.h>
 
@@ -56,8 +56,10 @@ namespace Frost
 
         /// Saves the current Zone in a file.
         /** \param sZoneFile The file into which to save the Zone
+        *   \note If sZoneFile is ommitted, the Zone is saved in the
+        *         current zone file (if any).
         */
-        void        SaveZone(const s_str& sZoneFile);
+        void        SaveZone(const s_str& sZoneFile = "");
 
         /// Shows a Decal on the ground following the mouse.
         /** \param pDecal The decal to use
@@ -91,6 +93,12 @@ namespace Frost
         /** \return The current Zone
         */
         s_ptr<Zone> GetCurrentZone();
+
+        /// Returns the current Zone's file.
+        const s_str& GetCurrentZoneFile();
+
+        /// Checks if the current Zone has been saved.
+        const s_bool& IsZoneSaved();
 
         /// Returns the Lua state used by zones.
         /** \return The Lua state used by zones
@@ -142,6 +150,9 @@ namespace Frost
     private :
 
         s_ptr<Zone> pCurrentZone_;
+        s_str       sCurrentZoneFile_;
+        s_bool      bZoneSaved_;
+
         s_ptr<Lua::State> pLua_;
 
         s_refptr<Decal> pMouseDecal_;

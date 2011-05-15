@@ -7,10 +7,11 @@
 
 #include "unit/frost_creature.h"
 
-#include "model/frost_modelmanager.h"
-#include "model/frost_model.h"
-#include "model/frost_animmanager.h"
 #include "unit/frost_unitmanager.h"
+#include <model/frost_modelmanager.h>
+#include <model/frost_model.h>
+#include <model/frost_animmanager.h>
+
 
 using namespace std;
 

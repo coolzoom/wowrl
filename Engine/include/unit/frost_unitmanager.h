@@ -9,7 +9,7 @@
 #ifndef FROST_UNITMANAGER_H
 #define FROST_UNITMANAGER_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 #include "unit/frost_character.h"
 
 #include <frost_utils_manager.h>
@@ -184,6 +184,10 @@ namespace Frost
         s_ptr<Lua::State> pLua_;
 
     };
+
+    namespace Lua {
+        void RegisterUnitClass(s_ptr<Lua::State> pLua);
+    }
 
     /** \cond NOT_REMOVE_FROM_DOC
     */

@@ -9,9 +9,9 @@
 #ifndef FROST_CREATURE_H
 #define FROST_CREATURE_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 #include "unit/frost_movableunit.h"
-#include "scene/frost_sceneobject.h"
+#include <scene/frost_sceneobject.h>
 
 namespace Frost
 {

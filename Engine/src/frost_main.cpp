@@ -1,22 +1,59 @@
-#include "frost.h"
-#include "frost_editor.h"
+#include "frost_prereqs.h"
+#include <frost_editor.h>
 #include <frost_guimanager.h>
 #include <frost_uiobject.h>
 #include <frost_frame.h>
 #include <frost_fontstring.h>
-#include "gui/frost_modelframe.h"
+#include <gui/frost_modelframe.h>
 #include <frost_inputmanager.h>
-#include "gameplay/frost_gameplaymanager.h"
+#include <gameplay/frost_gameplaymanager.h>
 #include "unit/frost_unitmanager.h"
 #include "scene/frost_zonemanager.h"
-#include "scene/frost_lightmanager.h"
-#include "scene/frost_physicsmanager.h"
-#include "frost_engine.h"
+#include <scene/frost_lightmanager.h>
+#include <scene/frost_physicsmanager.h>
+#include <frost_utils_timemanager.h>
+#include <frost_engine.h>
+#include <gameplay/frost_gameplaymanager.h>
+#include "frost_lua_glues.h"
+#include <model/frost_modelmanager.h>
+#include <model/frost_fmmodeldata.h>
 
 #include <OgreException.h>
 
 using namespace std;
 using namespace Frost;
+
+s_ptr<ModelData> LoadModelData_( const s_str& sFile )
+{
+    Log<3>("    Loading model : "+sFile);
+    try
+    {
+        if (sFile.EndsWith(".m2"))
+        {
+            //return new M2ModelData(sFile);
+            return nullptr;
+        }
+        else if (sFile.EndsWith(".fm"))
+        {
+            return new FMModelData(sFile);
+        }
+        else if (sFile.EndsWith(".mesh"))
+        {
+            //return new OgreMeshModelData(sFile);
+            return nullptr;
+        }
+        else
+        {
+            s_str sExtension = sFile.Cut(".").Back();
+            throw ModelLoadingException("ModelManager", "Model extension \""+sExtension+"\" is not supported.");
+        }
+    }
+    catch (const ModelLoadingException& e)
+    {
+        Error("ModelManager", "Model \""+sFile+"\" couldn't be loaded : \n"+e.GetDescription());
+        return nullptr;
+    }
+}
 
 s_bool GameFrameFunc()
 {
@@ -67,6 +104,14 @@ s_bool GameFrameFunc()
         GameplayManager::GetSingleton()->SetCurrentGameplay("FirstPerson");
     }
 
+    s_float fDelta = s_float(TimeManager::GetSingleton()->GetDelta());
+
+    // Update displayed zone chunks
+    ZoneManager::GetSingleton()->Update(fDelta);
+
+    // Update units' state, actions, movement, ...
+    UnitManager::GetSingleton()->UpdateUnits(fDelta);
+
     return true;
 }
 
@@ -107,12 +152,20 @@ s_bool EditorFrameFunc()
         pGUIMgr->ReadFiles();
     }
 
+    s_float fDelta = s_float(TimeManager::GetSingleton()->GetDelta());
+
+    // Update displayed zone chunks
+    ZoneManager::GetSingleton()->Update(fDelta);
+
+    // Update units' state, actions, movement, ...
+    UnitManager::GetSingleton()->UpdateUnits(fDelta);
+
     return true;
 }
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = true;
+    s_bool bEditor = false;
 
     // Read commands
     if (argc > 1)
@@ -132,6 +185,18 @@ int main(int argc, char* argv[])
         // Initialize base parameters
         pFrost->Initialize();
 
+        Lua::RegisterNewEngineFuncs(pFrost->GetLua());
+
+        Lua::RegisterUnitClass(GameplayManager::GetSingleton()->GetLua());
+
+        s_ptr<UnitManager> pUnitMgr = UnitManager::GetSingleton();
+        pUnitMgr->Initialize();
+        pUnitMgr->ReadConfig();
+        pUnitMgr->ParseData();
+
+        s_ptr<ZoneManager> pZoneMgr = ZoneManager::GetSingleton();
+        pZoneMgr->Initialize();
+
         if (bEditor)
         {
             pFrost->SetState(Engine::STATE_EDITOR);
@@ -144,6 +209,8 @@ int main(int argc, char* argv[])
             s_wptr<GUIManager> pGUIMgr = Engine::GetSingleton()->GetGUIManager();
             Engine::GetSingleton()->CreateGlue(pGUIMgr->GetLua());
             Editor::GetSingleton()->CreateGlue(pGUIMgr->GetLua());
+            Lua::RegisterNewEngineFuncs(pGUIMgr->GetLua());
+            Lua::RegisterNewEditorFuncs(pGUIMgr->GetLua());
             pGUIMgr->AddAddOnDirectory("Interface/BaseUI");
             pGUIMgr->AddAddOnDirectory("Interface/Editor");
             pGUIMgr->ReadFiles();
@@ -178,24 +245,7 @@ int main(int argc, char* argv[])
             pChar->SetStat("SPIRIT", s_int(50));
             pChar->SetStat("INTELLECT", s_int(50));
 
-            /*s_ptr<Character> pChar2 = UnitManager::GetSingleton()->CreateCharacter("Loulou", "Orc", Character::GENDER_MALE);
-            pChar2->EnablePhysics();
-            pChar2->Teleport(Vector(0, 1, -5));
-            pChar2->LookAtUnit(pChar);
-
-            pChar2->SetClass("MAGE");
-            pChar2->SetLevel(51);
-            pChar2->SetStat("SPIRIT", s_int(50));
-            pChar2->SetStat("INTELLECT", s_int(50));*/
-
             LightManager::GetSingleton()->SetSunDirection(Vector(1, -1, 0));
-
-            // Some light
-            /*s_ptr<Light> pLight1 = LightManager::GetSingleton()->CreateLight(Light::POINT);
-            pLight1->SetPosition(Vector(0, 5, 0));
-            pLight1->SetColor(Color(0.0f, 1.0f, 0.0f));
-            pLight1->SetAttenuation(0.0f, 0.125f, 0.0f);
-            pLight1->SetRange(100.0f);*/
         }
 
         // Enter the main loop
@@ -217,6 +267,9 @@ int main(int argc, char* argv[])
     {
         Log("Fatal exception.");
     }
+
+    UnitManager::Delete();
+    ZoneManager::Delete();
 
     // Close the engine
     Engine::Delete();

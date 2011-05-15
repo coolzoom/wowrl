@@ -10,7 +10,7 @@
 #include "unit/frost_creature.h"
 #include "unit/frost_healthtype.h"
 #include "unit/frost_powertype.h"
-#include "model/frost_modelmanager.h"
+#include <model/frost_modelmanager.h>
 
 #include <frost_xml_document.h>
 
@@ -338,7 +338,7 @@ namespace Frost
 
     s_bool UnitManager::ParseCreatures_()
     {
-
+        return true;
     }
 
     s_bool UnitManager::ParseSpellSchools_()

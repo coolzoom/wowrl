@@ -9,7 +9,7 @@
 #ifndef FROST_POWERTYPE_H
 #define FROST_POWERTYPE_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 
 #include <frost_utils_timers.h>
 

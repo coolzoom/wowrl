@@ -9,9 +9,9 @@
 #ifndef FROST_UNIT_H
 #define FROST_UNIT_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 #include "unit/frost_stats.h"
-#include "scene/frost_sceneobject.h"
+#include <scene/frost_sceneobject.h>
 
 #include <frost_utils_lua.h>
 #include <frost_utils_eventreceiver.h>

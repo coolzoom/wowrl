@@ -7,16 +7,16 @@
 
 #include "unit/frost_character.h"
 
-#include "model/frost_modelmanager.h"
-#include "model/frost_model.h"
-#include "scene/frost_node.h"
-#include "model/frost_animmanager.h"
-#include "material/frost_materialmanager.h"
-#include "material/frost_material.h"
-#include "camera/frost_camera.h"
+#include <model/frost_modelmanager.h>
+#include <model/frost_model.h>
+#include <scene/frost_node.h>
+#include <model/frost_animmanager.h>
+#include <material/frost_materialmanager.h>
+#include <material/frost_material.h>
+#include <camera/frost_camera.h>
 #include "unit/frost_unitmanager.h"
 #include "unit/frost_movableunithandler.h"
-#include "frost_engine.h"
+#include <frost_engine.h>
 
 using namespace std;
 
@@ -128,7 +128,8 @@ namespace Frost
 
     Character::~Character()
     {
-        pBodyModel_->Detach();
+        if (pBodyModel_)
+            pBodyModel_->Detach();
     }
 
     void Character::CreateGlue( s_ptr<Lua::State> pLua )
