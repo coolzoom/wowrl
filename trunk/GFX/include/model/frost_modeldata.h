@@ -53,6 +53,7 @@ namespace Frost
         s_map< s_uint, AxisAlignedBox >                  lBoxList_;
 
     };
+
 }
 
 #endif

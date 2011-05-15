@@ -7,6 +7,7 @@
 #include "ogrexmlloader.h"
 
 #include <frost_utils_file.h>
+#include <frost_utilsmanager.h>
 
 using namespace Frost;
 
@@ -17,14 +18,6 @@ void LogCout(const s_str& sMessage, const s_bool& bStamps, const s_uint& uiOffse
     std::cout << sMessage.Get() << std::endl;
     mLog.WriteLine(sMessage.Get());
     mLog.Flush();
-}
-
-namespace Frost
-{
-    s_double GetTime()
-    {
-        return 0.0;
-    }
 }
 
 s_bool LoadModel( ModelData& mData, const s_str& sFile )
@@ -306,6 +299,38 @@ void Rotate(ModelData& mData, Vector mAxis, const s_float& fAngle)
     Log("Done.");
 }
 
+void Scale(ModelData& mData, const s_float& fFactor)
+{
+    Log("Scaling of "+fFactor*100+"%...");
+
+    s_array<SubMesh>::iterator iterSubMesh;
+    foreach (iterSubMesh, mData.lSubMeshList)
+    {
+        s_array<Vertex>::iterator iterVertex;
+        foreach (iterVertex, iterSubMesh->lVertexList)
+        {
+            iterVertex->mPos *= fFactor;
+        }
+    }
+
+    s_array<Bone>::iterator iterBone;
+    foreach (iterBone, mData.lBoneList)
+    {
+        iterBone->mPos *= fFactor;
+
+        s_map<s_uint, Vector>::iterator iterTrans;
+        foreach (iterTrans, iterBone->lTranslationAnimation)
+        {
+            iterTrans->second *= fFactor;
+        }
+    }
+
+    mData.mBoundingBox.SetMin(mData.mBoundingBox.GetMin()*fFactor);
+    mData.mBoundingBox.SetMax(mData.mBoundingBox.GetMax()*fFactor);
+
+    Log("Done.");
+}
+
 void CalculateBoundingBox(ModelData& mData)
 {
     Log("Recalculating bounding box...");
@@ -332,6 +357,23 @@ void CalculateBoundingBox(ModelData& mData)
     }
 
     Log("New : "+mData.mBoundingBox);
+}
+
+void NormalizeNormals(ModelData& mData)
+{
+    Log("Normalizing normals...");
+
+    s_array<SubMesh>::iterator iterSubMesh;
+    foreach (iterSubMesh, mData.lSubMeshList)
+    {
+        s_array<Vertex>::iterator iterVertex;
+        foreach (iterVertex, iterSubMesh->lVertexList)
+        {
+            iterVertex->mNormal.Normalize();
+        }
+    }
+
+    Log("Done.");
 }
 
 int main(int argc, char** argv)
@@ -368,8 +410,10 @@ int main(int argc, char** argv)
                     std::cout << " - 0 : exit" << std::endl;
                     std::cout << " - 1 : reverse axis" << std::endl;
                     std::cout << " - 2 : rotate model" << std::endl;
-                    std::cout << " - 3 : reverse normals" << std::endl;
-                    std::cout << " - 4 : recalculate bounding box" << std::endl;
+                    std::cout << " - 3 : scale model" << std::endl;
+                    std::cout << " - 4 : reverse normals" << std::endl;
+                    std::cout << " - 5 : normalize normals" << std::endl;
+                    std::cout << " - 6 : recalculate bounding box" << std::endl;
                     std::cout << "What do you want to do ? ";
                     int iChoice;
                     std::cin >> iChoice;
@@ -431,10 +475,22 @@ int main(int argc, char** argv)
                     }
                     else if (iChoice == 3)
                     {
+                        std::cout << "\nBy how much do you want to scale (1 : identity) ? ";
+                        float fScale;
+                        std::cin >> fScale;
+
+                        Scale(mData, fScale);
+                    }
+                    else if (iChoice == 4)
+                    {
                         std::cout << "Not yet implemented, sorry." << std::endl;
                         continue;
                     }
-                    else if (iChoice == 4)
+                    else if (iChoice == 5)
+                    {
+                        NormalizeNormals(mData);
+                    }
+                    else if (iChoice == 6)
                     {
                         CalculateBoundingBox(mData);
                     }
