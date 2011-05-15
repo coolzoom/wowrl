@@ -9,9 +9,9 @@
 #ifndef FROST_DOODAD_H
 #define FROST_DOODAD_H
 
-#include "frost.h"
-#include "scene/frost_movableobject.h"
-#include "scene/frost_sceneobject.h"
+#include "frost_prereqs.h"
+#include <scene/frost_movableobject.h>
+#include <scene/frost_sceneobject.h>
 
 namespace Frost
 {

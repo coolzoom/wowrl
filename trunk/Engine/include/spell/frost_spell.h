@@ -9,7 +9,7 @@
 #ifndef FROST_SPELL_H
 #define FROST_SPELL_H
 
-#include "frost.h"
+#include "frost_prereqs.h"
 
 namespace Frost
 {

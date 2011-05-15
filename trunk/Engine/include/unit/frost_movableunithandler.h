@@ -8,8 +8,8 @@
 #ifndef FROST_MOVABLEUNITHANDLER_H
 #define FROST_MOVABLEUNITHANDLER_H
 
-#include "frost.h"
-#include "scene/frost_physicshandler.h"
+#include "frost_prereqs.h"
+#include <scene/frost_physicshandler.h>
 
 namespace Frost
 {

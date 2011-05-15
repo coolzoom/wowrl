@@ -7,8 +7,8 @@
 
 #include "scene/frost_zone.h"
 #include "scene/frost_doodad.h"
-#include "scene/frost_terrainchunk.h"
-#include "model/frost_model.h"
+#include <scene/frost_terrainchunk.h>
+#include <model/frost_model.h>
 
 #include <frost_utils_file.h>
 
@@ -16,13 +16,7 @@ using namespace std;
 
 namespace Frost
 {
-    s_str SerializeColorRGB( const Color& mColor, const s_str& sTag )
-    {
-        return "<"+sTag+" r=\""+mColor.GetR()+"\""
-                        " g=\""+mColor.GetG()+"\""
-                        " b=\""+mColor.GetB()+"\"/>";
-    }
-
+    s_str SerializeColorRGB( const Color& mColor, const s_str& sTag);
     s_str SerializeColorARGB( const Color& mColor, const s_str& sTag )
     {
         return "<"+sTag+" a=\""+mColor.GetA()+"\""

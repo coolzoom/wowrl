@@ -7,13 +7,13 @@
 
 #include "scene/frost_doodad.h"
 
-#include "model/frost_modelmanager.h"
-#include "model/frost_model.h"
-#include "scene/frost_scenemanager.h"
-#include "scene/frost_gizmo.h"
-#include "scene/frost_zone.h"
-#include "scene/frost_physicsmanager.h"
-#include "frost_engine.h"
+#include <model/frost_modelmanager.h>
+#include <model/frost_model.h>
+#include <scene/frost_scenemanager.h>
+#include <scene/frost_gizmo.h>
+#include <scene/frost_zone.h>
+#include <scene/frost_physicsmanager.h>
+#include <frost_engine.h>
 
 #include <frost_utils_eventmanager.h>
 #include <frost_utils_event.h>

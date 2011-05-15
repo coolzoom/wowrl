@@ -9,15 +9,15 @@
 
 #include "unit/frost_character.h"
 #include "unit/frost_creature.h"
-#include "model/frost_modelmanager.h"
-#include "model/frost_model.h"
-#include "material/frost_materialmanager.h"
-#include "material/frost_material.h"
-#include "lua/frost_lua.h"
+#include <model/frost_modelmanager.h>
+#include <model/frost_model.h>
+#include <material/frost_materialmanager.h>
+#include <material/frost_material.h>
+#include <lua/frost_lua.h>
 #include "unit/frost_healthtype.h"
 #include "unit/frost_powertype.h"
-#include "gameplay/frost_gameplaymanager.h"
-#include "frost_engine.h"
+#include <gameplay/frost_gameplaymanager.h>
+#include <frost_engine.h>
 
 #include <frost_inputmanager.h>
 
@@ -42,6 +42,18 @@ namespace Frost
         }
 
         LuaManager::GetSingleton()->CloseLua(pLua_);
+    }
+
+    namespace Lua {
+    void RegisterUnitClass( s_ptr<Lua::State> pLua )
+    {
+        pLua->Register<LuaUnitManager>();
+        UnitManager::GetSingleton()->CreateGlue(pLua);
+        pLua->Register<LuaUnit>();
+        pLua->Register<LuaMovableUnit>();
+        pLua->Register<LuaCharacter>();
+        pLua->Register<LuaCreature>();
+    }
     }
 
     void UnitManager::Initialize()
@@ -247,14 +259,22 @@ namespace Frost
 
     void UnitManager::ParseData()
     {
-        ParseSpellSchools_();
-        ParseCharacterModels_();
-        ParseRaces_();
-        ParseClasses_();
-        ParseHealthTypes_();
-        ParsePowerTypes_();
-        ParseCreatureModels_();
-        ParseCreatures_();
+        if (!ParseSpellSchools_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
+        if (!ParseCharacterModels_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
+        if (!ParseRaces_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
+        if (!ParseClasses_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
+        if (!ParseHealthTypes_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
+        if (!ParsePowerTypes_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
+        if (!ParseCreatureModels_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
+        if (!ParseCreatures_())
+            throw Exception(CLASS_NAME, "Failed to read configuration.");
     }
 
     s_ptr<Lua::State> UnitManager::GetLua()

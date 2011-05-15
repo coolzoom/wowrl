@@ -6,6 +6,7 @@
 /*                                        */
 
 #include "unit/frost_stats.h"
+
 #include "unit/frost_unitmanager.h"
 
 using namespace std;

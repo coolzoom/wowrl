@@ -7,11 +7,11 @@
 
 #include "scene/frost_zone.h"
 #include "scene/frost_zonemanager.h"
-#include "scene/frost_terrainchunk.h"
 #include "scene/frost_doodad.h"
-#include "material/frost_material.h"
-#include "material/frost_materialmanager.h"
-#include "model/frost_model.h"
+#include <scene/frost_terrainchunk.h>
+#include <material/frost_material.h>
+#include <material/frost_materialmanager.h>
+#include <model/frost_model.h>
 #include <frost_xml_document.h>
 #include <frost_utils_file.h>
 
@@ -155,7 +155,7 @@ namespace Frost
         s_uint uiChunkNbr;
         foreach_block (pChunkBlock, pChunksBlock)
         {
-            s_ptr<TerrainChunk> pChunk = new TerrainChunk(this);
+            s_ptr<TerrainChunk> pChunk = new TerrainChunk(lChunkList_.GetSize());
 
             // Position
             s_ptr<XML::Block> pPositionBlock = pChunkBlock->GetBlock("Position");
@@ -327,6 +327,7 @@ namespace Frost
                 }
             }
 
+            AddChunk(pChunk);
             ++uiChunkNbr;
         }
     }

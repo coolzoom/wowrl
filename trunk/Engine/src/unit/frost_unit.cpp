@@ -7,21 +7,21 @@
 
 #include "unit/frost_unit.h"
 
-#include "model/frost_modelmanager.h"
-#include "model/frost_model.h"
-#include "model/frost_animmanager.h"
-#include "scene/frost_scenemanager.h"
-#include "scene/frost_node.h"
-#include "scene/frost_zonemanager.h"
-#include "camera/frost_cameramanager.h"
-#include "camera/frost_camera.h"
 #include "unit/frost_unitmanager.h"
 #include "unit/frost_healthtype.h"
 #include "unit/frost_powertype.h"
-#include "material/frost_material.h"
-#include "material/frost_decal.h"
-#include "material/frost_shadermanager.h"
-#include "gameplay/frost_gameplaymanager.h"
+#include "scene/frost_zonemanager.h"
+#include <model/frost_modelmanager.h>
+#include <model/frost_model.h>
+#include <model/frost_animmanager.h>
+#include <scene/frost_scenemanager.h>
+#include <scene/frost_node.h>
+#include <camera/frost_cameramanager.h>
+#include <camera/frost_camera.h>
+#include <material/frost_material.h>
+#include <material/frost_decal.h>
+#include <material/frost_shadermanager.h>
+#include <gameplay/frost_gameplaymanager.h>
 
 using namespace std;
 

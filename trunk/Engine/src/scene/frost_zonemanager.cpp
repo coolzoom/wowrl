@@ -8,15 +8,15 @@
 #include "scene/frost_zonemanager.h"
 
 #include "scene/frost_zone.h"
-#include "lua/frost_lua.h"
-#include "model/frost_modelmanager.h"
-#include "camera/frost_cameramanager.h"
-#include "scene/frost_lightmanager.h"
-#include "scene/frost_scenemanager.h"
 #include "scene/frost_doodad.h"
-#include "material/frost_decal.h"
-#include "frost_inputmanager.h"
-#include "frost_engine.h"
+#include <lua/frost_lua.h>
+#include <model/frost_modelmanager.h>
+#include <camera/frost_cameramanager.h>
+#include <scene/frost_lightmanager.h>
+#include <scene/frost_scenemanager.h>
+#include <material/frost_decal.h>
+#include <frost_inputmanager.h>
+#include <frost_engine.h>
 
 #include <frost_utils_event.h>
 #include <frost_utils_eventmanager.h>
@@ -71,6 +71,8 @@ namespace Frost
             pCurrentZone_->AddDecal(*iter);
         }
 
+        bZoneSaved_ = false;
+
         return pCurrentZone_;
     }
 
@@ -100,6 +102,8 @@ namespace Frost
             Error(CLASS_NAME, "\""+sZoneFile+"\" is not a valid zone file (must be an XML file).");
         }
 
+        bZoneSaved_ = true;
+
         return pCurrentZone_;
     }
 
@@ -122,6 +126,8 @@ namespace Frost
             pCurrentZone_->AddDecal(*iter);
         }
 
+        bZoneSaved_ = true;
+
         return pCurrentZone_;
     }
 
@@ -137,6 +143,7 @@ namespace Frost
 
             pCurrentZone_.Delete();
             ModelManager::GetSingleton()->RemoveCategory("Zone");
+            sCurrentZoneFile_ = "";
         }
     }
 
@@ -144,6 +151,8 @@ namespace Frost
     {
         if (pCurrentZone_)
             pCurrentZone_->Serialize(sZoneFile);
+
+        bZoneSaved_ = true;
     }
 
     void ZoneManager::EnableMouseDecal( s_wptr<Decal> pDecal )
@@ -215,6 +224,16 @@ namespace Frost
         return pCurrentZone_;
     }
 
+    const s_str& ZoneManager::GetCurrentZoneFile()
+    {
+        return sCurrentZoneFile_;
+    }
+
+    const s_bool& ZoneManager::IsZoneSaved()
+    {
+        return bZoneSaved_;
+    }
+
     s_ptr<Lua::State> ZoneManager::GetLua()
     {
         return pLua_;
@@ -265,7 +284,7 @@ namespace Frost
         s_ptr<Doodad> pDoodad = pZone->AddDoodad(sName_, sModel_);
 
         if (pDoodad)
-            SceneManager::GetSingleton()->StartMoving(pDoodad, Vector::CONSTRAINT_NONE, true);
+            SceneManager::GetSingleton()->StartMoving(pDoodad, Vector::CONSTRAINT_NONE);
 
         EventManager::GetSingleton()->FireEvent(Event("DOODAD_ADDED"));
     }

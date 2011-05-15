@@ -7,16 +7,16 @@
 
 #include "scene/frost_zone.h"
 
-#include "scene/frost_terrainchunk.h"
 #include "scene/frost_doodad.h"
-#include "model/frost_modelmanager.h"
-#include "camera/frost_cameramanager.h"
-#include "camera/frost_camera.h"
-#include "material/frost_materialmanager.h"
-#include "material/frost_material.h"
-#include "material/frost_decal.h"
-#include "material/frost_shadermanager.h"
-#include "model/frost_model.h"
+#include <scene/frost_terrainchunk.h>
+#include <model/frost_modelmanager.h>
+#include <camera/frost_cameramanager.h>
+#include <camera/frost_camera.h>
+#include <material/frost_materialmanager.h>
+#include <material/frost_material.h>
+#include <material/frost_decal.h>
+#include <material/frost_shadermanager.h>
+#include <model/frost_model.h>
 
 #include <OgreCamera.h>
 

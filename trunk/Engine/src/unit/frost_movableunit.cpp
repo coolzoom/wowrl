@@ -6,14 +6,15 @@
 /*                                        */
 
 #include "unit/frost_movableunit.h"
-#include "model/frost_model.h"
-#include "scene/frost_node.h"
-#include "model/frost_animmanager.h"
+
 #include "unit/frost_healthtype.h"
 #include "unit/frost_powertype.h"
-#include "camera/frost_camera.h"
-#include "scene/frost_physicsmanager.h"
 #include "unit/frost_movableunithandler.h"
+#include <model/frost_model.h>
+#include <scene/frost_node.h>
+#include <model/frost_animmanager.h>
+#include <camera/frost_camera.h>
+#include <scene/frost_physicsmanager.h>
 
 #include <frost_utils_event.h>
 
