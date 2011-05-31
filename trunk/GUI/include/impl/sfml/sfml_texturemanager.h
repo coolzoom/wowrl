@@ -5,7 +5,10 @@
 #include <frost_utils_manager.h>
 #include <frost_utils_thread.h>
 
-#include <SFML/Graphics.hpp>
+namespace sf
+{
+    class Image;
+}
 
 namespace Frost
 {

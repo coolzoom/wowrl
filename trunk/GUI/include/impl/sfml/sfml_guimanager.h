@@ -10,7 +10,13 @@
 #define FROST_GUIMANAGERIMPL_H
 
 #include <frost_utils.h>
-#include <SFML/Graphics.hpp>
+
+namespace sf
+{
+    class RenderImage;
+    class RenderWindow;
+    class RenderTarget;
+}
 
 namespace Frost
 {

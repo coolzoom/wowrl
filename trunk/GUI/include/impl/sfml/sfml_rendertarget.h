@@ -9,7 +9,13 @@
 #define FROST_GUI_RENDERTARGETIMPL_H
 
 #include <frost_utils.h>
-#include <SFML/Graphics.hpp>
+
+#include <SFML/Graphics/RenderImage.hpp>
+
+namespace sf
+{
+    class Image;
+}
 
 namespace Frost
 {

@@ -3,7 +3,7 @@
 
 #include <frost_utils.h>
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Image.hpp>
 
 namespace Frost
 {

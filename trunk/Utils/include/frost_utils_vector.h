@@ -14,6 +14,7 @@ namespace Ogre
 {
     class Vector3;
     class Matrix4;
+    class Quaternion;
 }
 #endif
 
@@ -227,6 +228,7 @@ namespace Frost
 
     #ifdef USING_OGRE
     Vector operator * (const Ogre::Matrix4& mLeft, const Vector& mRight);
+    Vector operator * (const Ogre::Quaternion& mLeft, const Vector& mRight);
     #endif
 
     /** \cond NOT_REMOVE_FROM_DOC

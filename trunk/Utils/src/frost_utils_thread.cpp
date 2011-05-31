@@ -6,6 +6,7 @@
 /*                                        */
 
 #include "frost_utils_thread.h"
+#include "boost_thread.h"
 
 using namespace std;
 

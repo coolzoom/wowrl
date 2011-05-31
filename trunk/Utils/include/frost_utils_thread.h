@@ -10,7 +10,9 @@
 
 #include "frost_utils_types.h"
 
+#define NO_BOOST_THREAD_H
 #include "boost_thread.h"
+#undef NO_BOOST_THREAD_H
 
 namespace Frost
 {
