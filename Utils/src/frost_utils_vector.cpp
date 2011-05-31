@@ -282,6 +282,19 @@ namespace Frost
 
         return mR;
     }
+
+    Vector operator * (const Ogre::Quaternion& mLeft, const Vector& mRight)
+    {
+        // Code taken from Ogre3D.
+		Vector uv, uuv;
+		Vector qvec(mLeft.x, mLeft.y, mLeft.z);
+		uv = qvec ^ mRight;
+		uuv = qvec ^ uv;
+		uv *= (2.0f * mLeft.w);
+		uuv *= 2.0f;
+
+		return mRight + uv + uuv;
+    }
     #endif
 
     s_str::string StringConverter<string_element, Vector>::Convert( const Vector& mVector )

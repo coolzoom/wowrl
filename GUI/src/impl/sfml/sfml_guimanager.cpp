@@ -4,6 +4,8 @@
 #include "frost_fontmanager.h"
 #include "impl/sfml/sfml_texturemanager.h"
 
+#include <SFML/Graphics.hpp>
+
 using namespace std;
 using namespace Frost;
 

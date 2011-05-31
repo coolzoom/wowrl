@@ -20,7 +20,13 @@
 
 #include <frost_utils.h>
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Quad.hpp>
+
+namespace sf
+{
+    class Image;
+}
 
 namespace Frost
 {

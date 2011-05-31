@@ -1,5 +1,7 @@
 #include "impl/sfml/sfml_texturemanager.h"
 
+#include <SFML/Graphics/Image.hpp>
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::GUI;
