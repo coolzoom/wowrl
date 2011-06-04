@@ -7,6 +7,7 @@
 
 #include "frost_engine_glues.h"
 #include <frost_inputmanager.h>
+#include <frost_handler_ois.h>
 #include <frost_fontmanager.h>
 #include <frost_guimanager.h>
 #include <impl/ogre/ogre_guimanager.h>
@@ -180,7 +181,7 @@ namespace Frost
         size_t iWindowHnd = 0; pRenderWindow_->getCustomAttribute("WINDOW", &iWindowHnd);
         ostringstream os;
         os << iWindowHnd;
-        pInputMgr_->Initialize(os.str(), pRenderWindow_->getWidth(), pRenderWindow_->getHeight());
+        pInputMgr_->Initialize(OISInputHandler(os.str(), pRenderWindow_->getWidth(), pRenderWindow_->getHeight()));
 
         if (IsConstantDefined("DoubleClickTime"))
             pInputMgr_->SetDoubleClickTime(s_double(GetFloatConstant("DoubleClickTime")));

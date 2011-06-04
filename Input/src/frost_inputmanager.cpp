@@ -12,8 +12,6 @@
 #include <frost_utils_eventmanager.h>
 #include <frost_utils_timemanager.h>
 
-#include <OIS/OIS.h>
-
 using namespace std;
 
 namespace Frost
@@ -30,51 +28,12 @@ namespace Frost
 
     InputManager::~InputManager()
     {
-        if (pOISInputMgr_)
-        {
-            pOISInputMgr_->destroyInputObject(pMouse_.Get());
-            pOISInputMgr_->destroyInputObject(pKeyboard_.Get());
-            OIS::InputManager::destroyInputSystem(pOISInputMgr_.Get());
-        }
+        mHandler_.Delete();
     }
 
-    void InputManager::Initialize( const s_str& sWindowHandle, const s_float& fWidth, const s_float& fHeight )
+    void InputManager::Initialize( const InputHandler& mHandler )
     {
-        fScreenWidth_ = fWidth;
-        fScreenHeight_ = fHeight;
-
-        multimap<string, string> mPL;
-        mPL.insert(make_pair(string("WINDOW"), sWindowHandle.Get()));
-        #ifdef WIN32
-            mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_FOREGROUND")));
-            mPL.insert(make_pair(string("w32_mouse"),    string("DISCL_NONEXCLUSIVE")));
-            mPL.insert(make_pair(string("w32_keyboard"), string("DISCL_FOREGROUND")));
-            mPL.insert(make_pair(string("w32_keyboard"), string("DISCL_NONEXCLUSIVE")));
-        #else
-            mPL.insert(make_pair(string("x11_mouse_grab"),    string("false")));
-            mPL.insert(make_pair(string("x11_mouse_hide"),    string("false")));
-            mPL.insert(make_pair(string("x11_keyboard_grab"), string("false")));
-            mPL.insert(make_pair(string("XAutoRepeatOn"),     string("true")));
-        #endif
-
-        pOISInputMgr_ = OIS::InputManager::createInputSystem(mPL);
-
-        if (pOISInputMgr_)
-        {
-            pKeyboard_ = static_cast<OIS::Keyboard*>(pOISInputMgr_->createInputObject(OIS::OISKeyboard, true));
-            pMouse_ = static_cast<OIS::Mouse*>(pOISInputMgr_->createInputObject(OIS::OISMouse, false));
-
-            // Oww... these are "mutable" attributes, and can be changed even
-            // if the object is declared "const". This is ugly, but it's not
-            // my code ;)
-            const OIS::MouseState& mState = pMouse_->getMouseState();
-            mState.width = fScreenWidth_.Get();
-            mState.height = fScreenHeight_.Get();
-        }
-        else
-        {
-            throw Exception(CLASS_NAME, "Couldn't create OIS input system.");
-        }
+        mHandler_ = mHandler;
     }
 
     void InputManager::AllowClicks( const s_str& sGroupName )
@@ -144,7 +103,7 @@ namespace Frost
 
     s_str InputManager::GetKeyName( KeyCode mKey ) const
     {
-        return pKeyboard_->getAsString((OIS::KeyCode)mKey);
+        return LocaleManager::GetSingleton()->GetKeyName(mKey);
     }
 
     s_str InputManager::GetKeyName( KeyCode mKey, KeyCode mModifier ) const
@@ -168,11 +127,11 @@ namespace Frost
                 break;
 
             default :
-                sString = pKeyboard_->getAsString((OIS::KeyCode)mModifier) + " + ";
+                sString = LocaleManager::GetSingleton()->GetKeyName(mModifier) + " + ";
                 break;
         }
 
-        return sString + pKeyboard_->getAsString((OIS::KeyCode)mKey);
+        return sString + LocaleManager::GetSingleton()->GetKeyName(mKey);
     }
 
     s_str InputManager::GetKeyName( KeyCode mKey, KeyCode mModifier1, KeyCode mModifier2 ) const
@@ -196,7 +155,7 @@ namespace Frost
                 break;
 
             default :
-                sString = pKeyboard_->getAsString((OIS::KeyCode)mModifier1) + " + ";
+                sString = LocaleManager::GetSingleton()->GetKeyName(mModifier1) + " + ";
                 break;
         }
 
@@ -218,11 +177,11 @@ namespace Frost
                 break;
 
             default :
-                sString += pKeyboard_->getAsString((OIS::KeyCode)mModifier2) + " + ";
+                sString += LocaleManager::GetSingleton()->GetKeyName(mModifier2) + " + ";
                 break;
         }
 
-        return sString + pKeyboard_->getAsString((OIS::KeyCode)mKey);
+        return sString + LocaleManager::GetSingleton()->GetKeyName(mKey);
     }
 
     const s_ctnr<s_uint>& InputManager::GetPressedList() const
@@ -308,6 +267,20 @@ namespace Frost
         return bWheelRolled_;
     }
 
+    void InputHandler::Update()
+    {
+        if (!pImpl_)
+            throw Exception("InputManager", "No input source defined !");
+
+        pImpl_->FillKeyboardState(mKeyboard);
+        pImpl_->FillMouseState(mMouse);
+    }
+
+    void InputHandler::Delete()
+    {
+        pImpl_->Delete();
+    }
+
     void InputManager::Update( const s_float& fTempDelta )
     {
         if (bRemoveFocus_)
@@ -317,8 +290,7 @@ namespace Frost
             bRemoveFocus_ = false;
         }
 
-        pKeyboard_->capture();
-        pMouse_->capture();
+        mHandler_.Update();
 
         // Control extreme delta time after loading/at startup etc
         s_double dDelta = s_double(fTempDelta);
@@ -330,9 +302,6 @@ namespace Frost
         s_ptr<EventManager> pEventMgr = EventManager::GetSingleton();
         Event mKeyboardEvent;
         mKeyboardEvent.Add(s_var(s_uint()));
-
-        char lTempBuff[256];
-        pKeyboard_->copyKeyStates(lTempBuff);
 
         for (uint i = 0; i < 256; ++i)
         {
@@ -352,7 +321,7 @@ namespace Frost
             }
 
             // Update state
-            lKeyBuf_[i] = (lTempBuff[i] != 0);
+            lKeyBuf_[i] = mHandler_.mKeyboard.lKeyState[i];
 
             if (lKeyBuf_[i])
             {
@@ -401,12 +370,11 @@ namespace Frost
         bAltPressed_ = KeyIsDown(KEY_LMENU, true) || KeyIsDown(KEY_RMENU, true);
 
         // Update mouse state
-        OIS::MouseState mMouseState = pMouse_->getMouseState();
         s_bool bNewDragged = false;
         Event mMouseEvent;
         mMouseEvent.Add(s_uint());
-        mMouseEvent.Add(s_float(mMouseState.X.abs));
-        mMouseEvent.Add(s_float(mMouseState.Y.abs));
+        mMouseEvent.Add(s_float(mHandler_.mMouse.fAbsX));
+        mMouseEvent.Add(s_float(mHandler_.mMouse.fAbsY));
         s_bool bMouseState, bOldMouseState;
         for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; ++i)
         {
@@ -432,7 +400,7 @@ namespace Frost
             }
 
             // Update state
-            bMouseState = lMouseBuf_[i] = mMouseState.buttonDown((OIS::MouseButtonID)i);
+            bMouseState = lMouseBuf_[i] = mHandler_.mMouse.lButtonState[i];
 
             // Handle dragging
             s_bool bDragStartTest = true;
@@ -503,19 +471,17 @@ namespace Frost
             bLastDragged_ = false;
 
         // Update mouse position
-        fRawDMX_ = fDMX_ = (float)mMouseState.X.abs - fMX_;
-        fRawDMY_ = fDMY_ = (float)mMouseState.Y.abs - fMY_;
-        /*fRawDMX_ = fDMX_ = mMouseState.X.rel;
-        fRawDMY_ = fDMY_ = mMouseState.Y.rel;*/
+        fRawDMX_ = fDMX_ = mHandler_.mMouse.fAbsX - fMX_;
+        fRawDMY_ = fDMY_ = mHandler_.mMouse.fAbsY - fMY_;
 
-        fMX_ = mMouseState.X.abs;
-        fMY_ = mMouseState.Y.abs;
+        fMX_ = mHandler_.mMouse.fAbsX;
+        fMY_ = mHandler_.mMouse.fAbsY;
 
         fDMX_ *= fMouseSensibility_;
         fDMY_ *= fMouseSensibility_;
 
-        iMWheel_ = mMouseState.Z.rel/120;
-        if (iMWheel_ == 0u)
+        fMWheel_ = mHandler_.mMouse.fRelWheel;
+        if (fMWheel_ == 0.0f)
             bWheelRolled_ = false;
         else
             bWheelRolled_ = true;
@@ -524,13 +490,13 @@ namespace Frost
         {
             fSmoothDMX_    = fDMX_;
             fSmoothDMY_    = fDMY_;
-            fSmoothMWheel_ = s_float(iMWheel_);
+            fSmoothMWheel_ = fMWheel_;
         }
         else
         {
             lMouseHistory_.PushFront(MakePair(
                 TimeManager::GetSingleton()->GetTime(),
-                s_array<s_float,3>((fDMX_, fDMY_, s_float(iMWheel_)))
+                s_array<s_float,3>((fDMX_, fDMY_, fMWheel_))
             ));
 
             s_double dHistoryLength = lMouseHistory_.Front().First() - lMouseHistory_.Back().First();
@@ -564,8 +530,8 @@ namespace Frost
             Event mMouseMovedEvent("MOUSE_MOVED", true);
             mMouseMovedEvent.Add(fDMX_);
             mMouseMovedEvent.Add(fDMY_);
-            mMouseMovedEvent.Add(fDMX_/fScreenWidth_);
-            mMouseMovedEvent.Add(fDMY_/fScreenHeight_);
+            mMouseMovedEvent.Add(fDMX_*mHandler_.mMouse.fRelX/mHandler_.mMouse.fAbsX);
+            mMouseMovedEvent.Add(fDMY_*mHandler_.mMouse.fRelY/mHandler_.mMouse.fAbsY);
             pEventMgr->FireEvent(mMouseMovedEvent);
         }
 
@@ -574,8 +540,8 @@ namespace Frost
             Event mMouseMovedEvent("MOUSE_MOVED_RAW", true);
             mMouseMovedEvent.Add(fRawDMX_);
             mMouseMovedEvent.Add(fRawDMY_);
-            mMouseMovedEvent.Add(fRawDMX_/fScreenWidth_);
-            mMouseMovedEvent.Add(fRawDMY_/fScreenHeight_);
+            mMouseMovedEvent.Add(fRawDMX_*mHandler_.mMouse.fRelX/mHandler_.mMouse.fAbsX);
+            mMouseMovedEvent.Add(fRawDMY_*mHandler_.mMouse.fRelY/mHandler_.mMouse.fAbsY);
             pEventMgr->FireEvent(mMouseMovedEvent);
         }
 
@@ -584,15 +550,15 @@ namespace Frost
             Event mMouseMovedEvent("MOUSE_MOVED_SMOOTH", true);
             mMouseMovedEvent.Add(fSmoothDMX_);
             mMouseMovedEvent.Add(fSmoothDMY_);
-            mMouseMovedEvent.Add(fSmoothDMX_/fScreenWidth_);
-            mMouseMovedEvent.Add(fSmoothDMY_/fScreenHeight_);
+            mMouseMovedEvent.Add(fSmoothDMX_*mHandler_.mMouse.fRelX/mHandler_.mMouse.fAbsX);
+            mMouseMovedEvent.Add(fSmoothDMY_*mHandler_.mMouse.fRelY/mHandler_.mMouse.fAbsY);
             pEventMgr->FireEvent(mMouseMovedEvent);
         }
 
         if (bWheelRolled_)
         {
             Event mMouseWheelEvent("MOUSE_WHEEL", true);
-            mMouseWheelEvent.Add(iMWheel_);
+            mMouseWheelEvent.Add(fMWheel_);
             pEventMgr->FireEvent(mMouseWheelEvent);
         }
 
@@ -703,9 +669,9 @@ namespace Frost
         return fSmoothDMY_;
     }
 
-    const s_int& InputManager::GetMouseWheel() const
+    const s_float& InputManager::GetMouseWheel() const
     {
-        return iMWheel_;
+        return fMWheel_;
     }
 
     void InputManager::SetMouseSensibility(const s_float& fMouseSensibility)

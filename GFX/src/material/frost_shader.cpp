@@ -378,9 +378,7 @@ namespace Frost
                 pProgram->setParameter("entry_point", "main_ps");
                 pProgram->setParameter("target", "ps_2_0");
                 if (!sPPCommands_.IsEmpty())
-                {
                     pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
-                }
 
                 // GLSL
                 pProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
@@ -388,9 +386,7 @@ namespace Frost
                 ).get();
                 pProgram->setSourceFile((sFile_+".glsl").Get());
                 if (!sPPCommands_.IsEmpty())
-                {
                     pProgram->setParameter("preprocessor_defines", sPPCommands_.Get());
-                }
 
                 // Unified pixel shader
                 pOgreShader_ = static_cast<Ogre::UnifiedHighLevelGpuProgram*>(
