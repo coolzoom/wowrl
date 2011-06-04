@@ -8,9 +8,9 @@
 		<Build>
 			<Target title="Release_Win32">
 				<Option platforms="Windows;" />
-				<Option output="bin\Frost" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin\" />
-				<Option object_output="obj\Release_Win32\" />
+				<Option output="bin/Frost" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj/Release_Win32/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -38,16 +38,16 @@
 					<Add library="libutils_ogre.a" />
 					<Add library="liblua5.1.a" />
 					<Add library="libxml.a" />
-					<Add library="..\lib\dxguid.lib" />
-					<Add library="..\lib\dinput8.lib" />
+					<Add library="../lib/dxguid.lib" />
+					<Add library="../lib/dinput8.lib" />
 					<Add library="libfreetype2311.a" />
 				</Linker>
 			</Target>
 			<Target title="Debug_Win32">
 				<Option platforms="Windows;" />
-				<Option output="bin\Frost_d" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin\" />
-				<Option object_output="obj\Debug_Win32\" />
+				<Option output="bin/Frost_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj/Debug_Win32/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -74,33 +74,34 @@
 					<Add library="libutils_ogre_d.a" />
 					<Add library="liblua5.1_d.a" />
 					<Add library="libxml_d.a" />
-					<Add library="..\lib\dxguid.lib" />
-					<Add library="..\lib\dinput8.lib" />
+					<Add library="../lib/dxguid.lib" />
+					<Add library="../lib/dinput8.lib" />
 					<Add library="libfreetype2311.a" />
 				</Linker>
 			</Target>
 			<Target title="Release_Linux">
 				<Option platforms="Unix;" />
-				<Option output="bin\Frost" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin\" />
-				<Option object_output="obj\Release_Linux\" />
+				<Option output="bin/Frost" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj/Release_Linux/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-g" />
+					<Add option="-O3" />
 					<Add option="-fmessage-length=0" />
 					<Add option="-fexceptions" />
 					<Add option="-fident" />
 					<Add option="-DFROST_LINUX" />
 				</Compiler>
 				<Linker>
+					<Add option="-s" />
 					<Add option="-Wl,--allow-multiple-definition" />
 					<Add library="libfrost.a" />
 					<Add library="libinput.a" />
 					<Add library="libgui_ogre.a" />
 					<Add library="libxml.a" />
 					<Add library="libutils_ogre.a" />
-					<Add library="liblua.a" />
+					<Add library="liblua5.1.a" />
 					<Add library="OgreMain" />
 					<Add library="OIS" />
 					<Add library="dl" />
@@ -108,9 +109,9 @@
 			</Target>
 			<Target title="Debug_Linux">
 				<Option platforms="Unix;" />
-				<Option output="bin\Frost_d" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin\" />
-				<Option object_output="obj\Debug_Linux\" />
+				<Option output="bin/Frost_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin/" />
+				<Option object_output="obj/Debug_Linux/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -128,7 +129,7 @@
 					<Add library="libgui_ogre_d.a" />
 					<Add library="libxml_d.a" />
 					<Add library="libutils_ogre_d.a" />
-					<Add library="liblua_d.a" />
+					<Add library="liblua5.1_d.a" />
 					<Add library="OgreMain_d" />
 					<Add library="OIS_d" />
 					<Add library="dl" />
@@ -139,61 +140,61 @@
 			<Add option="-Wall" />
 			<Add option="-DUSING_OGRE" />
 			<Add directory="include" />
-			<Add directory="..\GFX\include" />
-			<Add directory="..\Utils\include" />
-			<Add directory="..\XML\include" />
-			<Add directory="..\Input\include" />
-			<Add directory="..\GUI\include" />
-			<Add directory="..\Lunar" />
-			<Add directory="..\..\ogre\OgreMain\include" />
-			<Add directory="..\..\ois\includes" />
-			<Add directory="..\..\lua5.1\include" />
+			<Add directory="../GFX/include" />
+			<Add directory="../Utils/include" />
+			<Add directory="../XML/include" />
+			<Add directory="../Input/include" />
+			<Add directory="../GUI/include" />
+			<Add directory="../Lunar" />
+			<Add directory="../../ogre/OgreMain/include" />
+			<Add directory="../../ois/includes" />
+			<Add directory="../../lua5.1/include" />
 		</Compiler>
 		<Linker>
-			<Add directory="..\lib" />
+			<Add directory="../lib" />
 			<Add directory="bin" />
 		</Linker>
-		<Unit filename="include\frost_lua_glues.h" />
-		<Unit filename="include\frost_prereqs.h" />
-		<Unit filename="include\scene\frost_doodad.h" />
-		<Unit filename="include\scene\frost_zone.h" />
-		<Unit filename="include\scene\frost_zonemanager.h" />
-		<Unit filename="include\spell\frost_spell.h" />
-		<Unit filename="include\unit\frost_character.h" />
-		<Unit filename="include\unit\frost_creature.h" />
-		<Unit filename="include\unit\frost_healthtype.h" />
-		<Unit filename="include\unit\frost_movableunit.h" />
-		<Unit filename="include\unit\frost_movableunithandler.h" />
-		<Unit filename="include\unit\frost_powertype.h" />
-		<Unit filename="include\unit\frost_stats.h" />
-		<Unit filename="include\unit\frost_unit.h" />
-		<Unit filename="include\unit\frost_unitmanager.h" />
+		<Unit filename="include/frost_lua_glues.h" />
+		<Unit filename="include/frost_prereqs.h" />
+		<Unit filename="include/scene/frost_doodad.h" />
+		<Unit filename="include/scene/frost_zone.h" />
+		<Unit filename="include/scene/frost_zonemanager.h" />
+		<Unit filename="include/spell/frost_spell.h" />
+		<Unit filename="include/unit/frost_character.h" />
+		<Unit filename="include/unit/frost_creature.h" />
+		<Unit filename="include/unit/frost_healthtype.h" />
+		<Unit filename="include/unit/frost_movableunit.h" />
+		<Unit filename="include/unit/frost_movableunithandler.h" />
+		<Unit filename="include/unit/frost_powertype.h" />
+		<Unit filename="include/unit/frost_stats.h" />
+		<Unit filename="include/unit/frost_unit.h" />
+		<Unit filename="include/unit/frost_unitmanager.h" />
 		<Unit filename="ressources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="src\frost_lua_glues.cpp" />
-		<Unit filename="src\frost_main.cpp" />
-		<Unit filename="src\parsers\frost_unitmanager_parser.cpp" />
-		<Unit filename="src\scene\frost_doodad.cpp" />
-		<Unit filename="src\scene\frost_zone.cpp" />
-		<Unit filename="src\scene\frost_zone_parser.cpp" />
-		<Unit filename="src\scene\frost_zone_serializer.cpp" />
-		<Unit filename="src\scene\frost_zonemanager.cpp" />
-		<Unit filename="src\spell\frost_spell.cpp" />
-		<Unit filename="src\unit\frost_character.cpp" />
-		<Unit filename="src\unit\frost_character_glues.cpp" />
-		<Unit filename="src\unit\frost_creature.cpp" />
-		<Unit filename="src\unit\frost_creature_glues.cpp" />
-		<Unit filename="src\unit\frost_healthtype.cpp" />
-		<Unit filename="src\unit\frost_movableunit.cpp" />
-		<Unit filename="src\unit\frost_movableunit_glues.cpp" />
-		<Unit filename="src\unit\frost_movableunithandler.cpp" />
-		<Unit filename="src\unit\frost_powertype.cpp" />
-		<Unit filename="src\unit\frost_stats.cpp" />
-		<Unit filename="src\unit\frost_unit.cpp" />
-		<Unit filename="src\unit\frost_unit_glues.cpp" />
-		<Unit filename="src\unit\frost_unitmanager.cpp" />
-		<Unit filename="src\unit\frost_unitmanager_glues.cpp" />
+		<Unit filename="src/frost_lua_glues.cpp" />
+		<Unit filename="src/frost_main.cpp" />
+		<Unit filename="src/parsers/frost_unitmanager_parser.cpp" />
+		<Unit filename="src/scene/frost_doodad.cpp" />
+		<Unit filename="src/scene/frost_zone.cpp" />
+		<Unit filename="src/scene/frost_zone_parser.cpp" />
+		<Unit filename="src/scene/frost_zone_serializer.cpp" />
+		<Unit filename="src/scene/frost_zonemanager.cpp" />
+		<Unit filename="src/spell/frost_spell.cpp" />
+		<Unit filename="src/unit/frost_character.cpp" />
+		<Unit filename="src/unit/frost_character_glues.cpp" />
+		<Unit filename="src/unit/frost_creature.cpp" />
+		<Unit filename="src/unit/frost_creature_glues.cpp" />
+		<Unit filename="src/unit/frost_healthtype.cpp" />
+		<Unit filename="src/unit/frost_movableunit.cpp" />
+		<Unit filename="src/unit/frost_movableunit_glues.cpp" />
+		<Unit filename="src/unit/frost_movableunithandler.cpp" />
+		<Unit filename="src/unit/frost_powertype.cpp" />
+		<Unit filename="src/unit/frost_stats.cpp" />
+		<Unit filename="src/unit/frost_unit.cpp" />
+		<Unit filename="src/unit/frost_unit_glues.cpp" />
+		<Unit filename="src/unit/frost_unitmanager.cpp" />
+		<Unit filename="src/unit/frost_unitmanager_glues.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

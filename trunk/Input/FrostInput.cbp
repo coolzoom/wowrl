@@ -141,12 +141,22 @@
 			<Add directory="../Input/include" />
 			<Add directory="../Utils/include" />
 			<Add directory="../Lunar" />
-			<Add directory="../../OIS/includes" />
+			<Add directory="../../ois/includes" />
+			<Add directory="../../SFML-2.0/include/" />
 			<Add directory="../../lua5.1/include" />
 			<Add directory="../../boost_1_43_0" />
 		</Compiler>
+		<Unit filename="include/frost_handler_ois.h" />
+		<Unit filename="include/frost_handler_sfml.h" />
 		<Unit filename="include/frost_inputmanager.h" />
 		<Unit filename="include/frost_localemanager.h" />
+		<Unit filename="src/frost_handler_ois.cpp" />
+		<Unit filename="src/frost_handler_sfml.cpp">
+			<Option target="Win32_Release_Threads" />
+			<Option target="Win32_Debug_Threads" />
+			<Option target="Linux_Release_Threads" />
+			<Option target="Linux_Debug_Threads" />
+		</Unit>
 		<Unit filename="src/frost_inputmanager.cpp" />
 		<Unit filename="src/frost_localemanager.cpp" />
 		<Extensions>

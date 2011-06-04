@@ -29,6 +29,15 @@ namespace Frost
         */
         s_str        GetLocalizedString(const s_str& sStr);
 
+        /// Gets the localized name of the provided keyboard button.
+        /** \param uiKey The keyboard button
+        *   \note This is not the character that will be created when typing,
+        *         just a human readable name for keyboard buttons. For
+        *         example : "Shift", "Left arrow", ...<br>
+        *         These are mainly used for keyboard configuration screens.
+        */
+        s_str        GetKeyName(const s_uint& uiKey) const;
+
         /// Gets the string corresponding to the provided keyboard button.
         /** \param uiKey The keyboard button
         *   \note This is the normal key, with no modifier key pressed.
@@ -133,7 +142,7 @@ namespace Frost
         s_str             sLocale_;
         s_ptr<Lua::State> pLua_;
 
-        s_map< s_uint, s_array<s_str,3> >                 lKeyMap_;
+        s_map< s_uint, s_array<s_str,4> >                 lKeyMap_;
         s_map< s_str, s_map< s_uint, s_array<s_str,3> > > lComboKeyMap_;
     };
 }

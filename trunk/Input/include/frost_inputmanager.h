@@ -12,8 +12,6 @@
 #include <frost_utils.h>
 #include <frost_utils_manager.h>
 
-#include <OIS/OISPrereqs.h>
-
 #define INPUT_MOUSE_BUTTON_NUMBER 3
 
 namespace Frost
@@ -181,7 +179,52 @@ namespace Frost
 		KEY_WEBBACK     = 0xEA,    /// Web Back
 		KEY_MYCOMPUTER  = 0xEB,    /// My Computer
 		KEY_MAIL        = 0xEC,    /// Mail
-		KEY_MEDIASELECT = 0xED     /// Media Select
+		KEY_MEDIASELECT = 0xED,    /// Media Select
+		KEY_MAXKEY      = 0xFF
+    };
+
+    class InputHandlerImpl;
+
+    class InputHandler
+    {
+    public :
+
+        InputHandler() {}
+
+        template<class T>
+        InputHandler(const T& mImpl)
+        {
+            pImpl_ = s_refptr<T>(new T(mImpl));
+        }
+
+        void Update();
+        void Delete();
+
+        struct KeyboardState
+        {
+            bool lKeyState[KEY_MAXKEY];
+        } mKeyboard;
+
+        struct MouseState
+        {
+            bool lButtonState[INPUT_MOUSE_BUTTON_NUMBER];
+            float fAbsX, fAbsY;
+            float fRelX, fRelY, fRelWheel;
+        } mMouse;
+
+    private :
+
+        s_refptr<InputHandlerImpl>  pImpl_;
+    };
+
+    class InputHandlerImpl
+    {
+    public :
+
+        virtual void Delete() {}
+
+        virtual void FillKeyboardState(InputHandler::KeyboardState& mState) = 0;
+        virtual void FillMouseState(InputHandler::MouseState& mState) = 0;
     };
 
     /// Handles inputs (keyboard and mouse)
@@ -190,13 +233,13 @@ namespace Frost
     friend class Manager<InputManager>;
     public :
 
-        /// Initializes this manager.
-        /** \param sWindowHandle A string containing a formatted window handle
-        *   \param fWidth        The width of the window
-        *   \param fHeight       the height of the window
-        *   \note For more infos regarding the window handle, see OIS's docs.
+        /// Initializes this manager with the proper input source.
+        /** \param mHandler The input source (from another library)
+        *   \note If you want to use OIS as input source, then you
+        *         have to call :<br>
+        *         pInputMgr->Initialize(OISInputHandler(sWindow, fWidth, fHeight));
         */
-        void            Initialize(const s_str& sWindowHandle, const s_float& fWidth, const s_float& fHeight);
+        void            Initialize(const InputHandler& mHandler);
 
         /// Updates input (keyboard and mouse).
         void            Update(const s_float& fDelta);
@@ -450,7 +493,7 @@ namespace Frost
         /// Returns the rolling ammount of the mouse wheel.
         /** \return The rolling ammount of the mouse wheel
         */
-        const s_int&    GetMouseWheel() const;
+        const s_float&  GetMouseWheel() const;
 
         /// Returns the string associated to a mouse button.
         /** \param mID The ID code of the mouse button you're interested in
@@ -550,9 +593,6 @@ namespace Frost
 
     private :
 
-        s_float fScreenWidth_;
-        s_float fScreenHeight_;
-
         s_bool               bRemoveFocus_;
         s_bool               bFocus_;
         s_ptr<EventReceiver> pFocusReceiver_;
@@ -592,15 +632,12 @@ namespace Frost
         s_double dLongPressDelay_;
         s_ctnr< s_pair< s_double, s_array<s_float,3> > > lMouseHistory_;
         s_float fSmoothDMX_, fSmoothDMY_, fSmoothMWheel_;
-        s_int   iMWheel_;
+        s_float fMWheel_;
         s_bool  bWheelRolled_;
         s_str   sMouseButton_;
         s_bool  bLastDragged_;
 
-        // OIS
-        s_ptr<OIS::InputManager> pOISInputMgr_;
-        s_ptr<OIS::Keyboard>     pKeyboard_;
-        s_ptr<OIS::Mouse>        pMouse_;
+        InputHandler mHandler_;
     };
 }
 

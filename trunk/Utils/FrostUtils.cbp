@@ -127,7 +127,7 @@
 					<Add option="-g" />
 					<Add option="-DFROST_LINUX" />
 					<Add option="-DUSING_OGRE" />
-					<Add directory="../ogre/OgreMain/include" />
+					<Add directory="../../ogre/OgreMain/include" />
 				</Compiler>
 			</Target>
 			<Target title="ThreadRelease_Win32">

@@ -35,9 +35,18 @@ namespace Frost
         return pLua_->GetGlobalString(sStr, false, "<"+sStr+">");
     }
 
+    s_str LocaleManager::GetKeyName( const s_uint& uiKey ) const
+    {
+        s_map< s_uint, s_array<s_str,4> >::const_iterator iter = lKeyMap_.Get(uiKey);
+        if (iter != lKeyMap_.End())
+            return iter->second[3];
+        else
+            return "";
+    }
+
     s_str LocaleManager::GetKeyString( const s_uint& uiKey ) const
     {
-        s_map< s_uint, s_array<s_str,3> >::const_iterator iter = lKeyMap_.Get(uiKey);
+        s_map< s_uint, s_array<s_str,4> >::const_iterator iter = lKeyMap_.Get(uiKey);
         if (iter != lKeyMap_.End())
             return iter->second[0];
         else
@@ -46,7 +55,7 @@ namespace Frost
 
     s_str LocaleManager::GetKeyShiftString( const s_uint& uiKey ) const
     {
-        s_map< s_uint, s_array<s_str,3> >::const_iterator iter = lKeyMap_.Get(uiKey);
+        s_map< s_uint, s_array<s_str,4> >::const_iterator iter = lKeyMap_.Get(uiKey);
         if (iter != lKeyMap_.End())
             return iter->second[1];
         else
@@ -55,7 +64,7 @@ namespace Frost
 
     s_str LocaleManager::GetKeyAltString( const s_uint& uiKey ) const
     {
-        s_map< s_uint, s_array<s_str,3> >::const_iterator iter = lKeyMap_.Get(uiKey);
+        s_map< s_uint, s_array<s_str,4> >::const_iterator iter = lKeyMap_.Get(uiKey);
         if (iter != lKeyMap_.End())
             return iter->second[2];
         else
@@ -191,9 +200,9 @@ namespace Frost
                 }
 
                 s_uint uiKey = s_uint(pLua_->GetNumber(-2));
-                s_array<s_str,3> lMaps;
+                s_array<s_str,4> lMaps;
                 s_uint i;
-                for (pLua_->PushNil(); pLua_->Next(); pLua_->Pop())
+                for (pLua_->PushNil(); pLua_->Next() && i < 4; pLua_->Pop())
                 {
                     if (pLua_->GetType(-1) != Lua::TYPE_STRING)
                     {
@@ -264,7 +273,7 @@ namespace Frost
                     s_uint uiSecondKey = s_uint(pLua_->GetNumber(-2));
                     s_array<s_str,3> lComboMap;
                     s_uint i;
-                    for (pLua_->PushNil(); pLua_->Next(); pLua_->Pop())
+                    for (pLua_->PushNil(); pLua_->Next() && i < 3; pLua_->Pop())
                     {
                         if (pLua_->GetType(-1) != Lua::TYPE_STRING)
                         {

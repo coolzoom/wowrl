@@ -23,38 +23,6 @@
 using namespace std;
 using namespace Frost;
 
-s_ptr<ModelData> LoadModelData_( const s_str& sFile )
-{
-    Log<3>("    Loading model : "+sFile);
-    try
-    {
-        if (sFile.EndsWith(".m2"))
-        {
-            //return new M2ModelData(sFile);
-            return nullptr;
-        }
-        else if (sFile.EndsWith(".fm"))
-        {
-            return new FMModelData(sFile);
-        }
-        else if (sFile.EndsWith(".mesh"))
-        {
-            //return new OgreMeshModelData(sFile);
-            return nullptr;
-        }
-        else
-        {
-            s_str sExtension = sFile.Cut(".").Back();
-            throw ModelLoadingException("ModelManager", "Model extension \""+sExtension+"\" is not supported.");
-        }
-    }
-    catch (const ModelLoadingException& e)
-    {
-        Error("ModelManager", "Model \""+sFile+"\" couldn't be loaded : \n"+e.GetDescription());
-        return nullptr;
-    }
-}
-
 s_bool GameFrameFunc()
 {
     static s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
@@ -165,7 +133,7 @@ s_bool EditorFrameFunc()
 
 int main(int argc, char* argv[])
 {
-    s_bool bEditor = false;
+    s_bool bEditor = true;
 
     // Read commands
     if (argc > 1)
