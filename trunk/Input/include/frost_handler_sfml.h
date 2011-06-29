@@ -35,6 +35,8 @@ namespace Frost
         s_float fScreenWidth_;
         s_float fScreenHeight_;
 
+        s_float fOldMouseWheel_;
+
         s_ptr<sf::Window> pWindow_;
     };
 }

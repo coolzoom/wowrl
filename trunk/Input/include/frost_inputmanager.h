@@ -202,14 +202,14 @@ namespace Frost
 
         struct KeyboardState
         {
-            bool lKeyState[KEY_MAXKEY];
+            s_bool lKeyState[KEY_MAXKEY];
         } mKeyboard;
 
         struct MouseState
         {
-            bool lButtonState[INPUT_MOUSE_BUTTON_NUMBER];
-            float fAbsX, fAbsY;
-            float fRelX, fRelY, fRelWheel;
+            s_bool lButtonState[INPUT_MOUSE_BUTTON_NUMBER];
+            s_float fAbsX, fAbsY;
+            s_float fRelX, fRelY, fRelWheel;
         } mMouse;
 
     private :
