@@ -140,7 +140,9 @@ namespace Frost
         mState.fAbsY = pWindow_->GetInput().GetMouseY();
         mState.fRelX = mState.fAbsX / pWindow_->GetWidth();
         mState.fRelY = mState.fAbsY / pWindow_->GetHeight();
-        mState.fRelWheel = pWindow_->GetInput().GetMouseWheel();
+        s_float fMouseWheel = pWindow_->GetInput().GetMouseWheel();
+        mState.fRelWheel = fMouseWheel - fOldMouseWheel_;
+        fOldMouseWheel_ = fMouseWheel;
 
         for (int i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; ++i)
             mState.lButtonState[i] = pWindow_->GetInput().IsMouseButtonDown((sf::Mouse::Button)i);

@@ -373,8 +373,8 @@ namespace Frost
         s_bool bNewDragged = false;
         Event mMouseEvent;
         mMouseEvent.Add(s_uint());
-        mMouseEvent.Add(s_float(mHandler_.mMouse.fAbsX));
-        mMouseEvent.Add(s_float(mHandler_.mMouse.fAbsY));
+        mMouseEvent.Add(mHandler_.mMouse.fAbsX);
+        mMouseEvent.Add(mHandler_.mMouse.fAbsY);
         s_bool bMouseState, bOldMouseState;
         for (uint i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; ++i)
         {
