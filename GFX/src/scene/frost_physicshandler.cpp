@@ -35,9 +35,14 @@ namespace Frost
         bEnabled_ = false;
     }
 
-    const s_bool& PhysicsHandler::IsEnabled()
+    const s_bool& PhysicsHandler::IsEnabled() const
     {
         return bEnabled_;
+    }
+
+    s_ptr<const MovableObject> PhysicsHandler::GetParent() const
+    {
+        return pParent_;
     }
 
     s_ptr<MovableObject> PhysicsHandler::GetParent()

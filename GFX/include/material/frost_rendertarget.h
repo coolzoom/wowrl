@@ -141,7 +141,7 @@ namespace Frost
         Usage  mUsage_;
         Ogre::PixelFormat mPixelFormat_;
 
-        s_ptr<Ogre::RenderTarget> pOgreRenderTarget_;
+        mutable s_ptr<Ogre::RenderTarget> pOgreRenderTarget_;
 
         s_ctnr< s_ptr<Ogre::RenderTargetListener> > lListenerList_;
 

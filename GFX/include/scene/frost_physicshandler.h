@@ -43,7 +43,12 @@ namespace Frost
         /** \return 'true' if the MovableObject is under control
         *   \note Disabled by default.
         */
-        const s_bool&        IsEnabled();
+        const s_bool&        IsEnabled() const;
+
+        /// Returns this handler's parent.
+        /** \return this handler's parent
+        */
+        s_ptr<const MovableObject> GetParent() const;
 
         /// Returns this handler's parent.
         /** \return this handler's parent
