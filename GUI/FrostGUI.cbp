@@ -127,6 +127,7 @@
 					<Add option="-DUSING_OGRE" />
 					<Add option="-DFROST_LINUX" />
 					<Add directory="../../ogre/OgreMain/include" />
+					<Add directory="/usr/include/freetype2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -146,6 +147,7 @@
 					<Add option="-DUSING_OGRE" />
 					<Add option="-DFROST_LINUX" />
 					<Add directory="../../ogre/OgreMain/include" />
+					<Add directory="/usr/include/freetype2" />
 				</Compiler>
 			</Target>
 			<Target title="Release_Linux_SFML_Threads">
