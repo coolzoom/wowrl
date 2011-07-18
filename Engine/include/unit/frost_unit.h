@@ -130,7 +130,7 @@ namespace Frost
         /// Checks if this Unit is dead.
         /** \return 'true' if this Unit is dead
         */
-        const s_bool&    IsDead();
+        const s_bool&    IsDead() const;
 
         /// Resurrects this Unit.
         /** \note The Unit has to be dead, else this function will have
