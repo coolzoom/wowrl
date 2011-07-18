@@ -66,9 +66,9 @@ namespace Frost
         *         default value.
         */
         template<class T>
-        T Get() const
+        const T Get() const
         {
-            value<T>* pValue = dynamic_cast< value<T>* >(pValue_.Get());
+            const value<T>* pValue = dynamic_cast< const value<T>* >(pValue_.Get());
             if (pValue)
             {
                 return pValue->mT_;
@@ -155,7 +155,7 @@ namespace Frost
                 // refers to a specialization of a function template"
                 #pragma warning( disable : 4396 )
             #endif
-            friend T s_var::Get<>() const;
+            friend const T s_var::Get<>() const;
 
             value(const T& mT) : mT_(mT) {}
 

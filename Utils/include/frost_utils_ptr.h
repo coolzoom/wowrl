@@ -1,6 +1,20 @@
 // Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
+    template<class T>
+    struct PtrTraits
+    {
+        typedef const T& CRef;
+        typedef T&       Ref;
+    };
+
+    template<>
+    struct PtrTraits<void>
+    {
+        typedef void CRef;
+        typedef void Ref;
+    };
+
     /// Smart pointer
     /** This is very basic pointer.<br>
     *   Its only advantage is that it is initialized
@@ -50,7 +64,15 @@ namespace Frost
         /// Returns the contained pointer.
         /** \return The contained pointer
         */
-        T* Get() const
+        const T* Get() const
+        {
+            return pValue_;
+        }
+
+        /// Returns the contained pointer.
+        /** \return The contained pointer
+        */
+        T* Get()
         {
             return pValue_;
         }
@@ -79,7 +101,15 @@ namespace Frost
         /// Returns a reference to the contained value.
         /** \return A reference to the contained value
         */
-        typename TypeTraits<T>::RefType operator * () const
+        typename PtrTraits<T>::CRef operator * () const
+        {
+            return *pValue_;
+        }
+
+        /// Returns a reference to the contained value.
+        /** \return A reference to the contained value
+        */
+        typename PtrTraits<T>::Ref operator * ()
         {
             return *pValue_;
         }
@@ -87,7 +117,15 @@ namespace Frost
         /// Dereferences the pointer.
         /** \return The contained pointer
         */
-        T* operator -> () const
+        const T* operator -> () const
+        {
+            return pValue_;
+        }
+
+        /// Dereferences the pointer.
+        /** \return The contained pointer
+        */
+        T* operator -> ()
         {
             return pValue_;
         }
@@ -279,6 +317,13 @@ namespace Frost
             return s_ptr<N>(pValue_);
         }
 
+        /// Allows limited implicit inheritance conversion.
+        template<class N>
+        operator s_ptr<const N>() const
+        {
+            return s_ptr<const N>(pValue_);
+        }
+
         s_ctnr< s_ptr<T> > operator , (const s_ptr<T>& pValue) const
         {
             s_ctnr< s_ptr<T> > mContainer;
@@ -378,17 +423,5 @@ namespace Frost
     };
     /** \endcond
     */
-
-    /*template<class T>
-    s_str operator+ (const s_str& sLeft, const s_ptr<T>& pRight)
-    {
-        return s_str(sLeft) << static_cast<void*>(pRight.Get());
-    }
-
-    template<class T>
-    s_str& operator<< (s_str& sLeft, const s_ptr<T>& pRight)
-    {
-        return sLeft << static_cast<void*>(pRight.Get());
-    }*/
 }
 

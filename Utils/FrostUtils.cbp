@@ -44,9 +44,13 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DFROST_LINUX" />
 				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
 			</Target>
 			<Target title="Debug_Linux">
 				<Option platforms="Unix;" />
@@ -206,6 +210,7 @@
 			<Add alias="Win32 Thread" targets="ThreadRelease_Win32;ThreadDebug_Win32;" />
 		</VirtualTargets>
 		<Compiler>
+			<Add option="-std=c++0x" />
 			<Add directory="include" />
 			<Add directory="../Lunar" />
 			<Add directory="../../lua5.1/include" />

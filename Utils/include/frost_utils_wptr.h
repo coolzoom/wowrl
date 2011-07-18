@@ -123,7 +123,20 @@ namespace Frost
         *   \note If this pointer is invalid, this function returns an empty
         *         s_refptr.
         */
-        s_refptr<T> Lock() const
+        s_refptr<const T> Lock() const
+        {
+            if (IsValid())
+                return s_refptr<const T>(pValue_, pCounter_, pWCounter_);
+            else
+                return s_refptr<const T>();
+        }
+
+        /// Creates a s_refptr pointing to the object (if any).
+        /** \returns A s_refptr pointing to the object (if any)
+        *   \note If this pointer is invalid, this function returns an empty
+        *         s_refptr.
+        */
+        s_refptr<T> Lock()
         {
             if (IsValid())
                 return s_refptr<T>(pValue_, pCounter_, pWCounter_);
@@ -133,18 +146,40 @@ namespace Frost
 
         /// Dereferences the pointer.
         /** \return The contained pointer
-        *   \note Actually returns a s_refptr for code safety. You can't
-        *         access the raw pointer directly from weak_ptr.
         *   \note You should test for the pointer's validity before using
         *         this operator, unless you're sure the object is still
         *         alive.
         */
-        s_refptr<T> operator -> () const
+        const T* operator -> () const
         {
-            if (IsValid())
-                return s_refptr<T>(pValue_, pCounter_, pWCounter_);
-            else
-                return s_refptr<T>();
+            return pValue_;
+        }
+
+        /// Dereferences the pointer.
+        /** \return The contained pointer
+        *   \note You should test for the pointer's validity before using
+        *         this operator, unless you're sure the object is still
+        *         alive.
+        */
+        T* operator -> ()
+        {
+            return pValue_;
+        }
+
+        /// Returns a reference to the contained value.
+        /** \return A reference to the contained value
+        */
+        typename PtrTraits<T>::CRef operator * () const
+        {
+            return *pValue_;
+        }
+
+        /// Returns a reference to the contained value.
+        /** \return A reference to the contained value
+        */
+        typename PtrTraits<T>::Ref operator * ()
+        {
+            return *pValue_;
         }
 
         /// nullptr assignation operator.

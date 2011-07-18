@@ -84,7 +84,15 @@ namespace Frost
         /// Returns the contained pointer.
         /** \return The contained pointer
         */
-        T* Get() const
+        const T* Get() const
+        {
+            return pValue_;
+        }
+
+        /// Returns the contained pointer.
+        /** \return The contained pointer
+        */
+        T* Get()
         {
             return pValue_;
         }
@@ -143,7 +151,15 @@ namespace Frost
         /// Returns a reference to the contained value.
         /** \return A reference to the contained value
         */
-        T& operator * () const
+        typename PtrTraits<T>::CRef operator * () const
+        {
+            return *pValue_;
+        }
+
+        /// Returns a reference to the contained value.
+        /** \return A reference to the contained value
+        */
+        typename PtrTraits<T>::Ref operator * ()
         {
             return *pValue_;
         }
@@ -151,7 +167,15 @@ namespace Frost
         /// Dereferences the pointer.
         /** \return The contained pointer
         */
-        T* operator -> () const
+        const T* operator -> () const
+        {
+            return pValue_;
+        }
+
+        /// Dereferences the pointer.
+        /** \return The contained pointer
+        */
+        T* operator -> ()
         {
             return pValue_;
         }
@@ -269,7 +293,14 @@ namespace Frost
 
         /// Allows limited implicit inheritance conversion.
         template<class N>
-        operator s_refptr<N>() const
+        operator s_refptr<const N>() const
+        {
+            return s_refptr<N>(pValue_, pCounter_, pWCounter_);
+        }
+
+        /// Allows limited implicit inheritance conversion.
+        template<class N>
+        operator s_refptr<N>()
         {
             return s_refptr<N>(pValue_, pCounter_, pWCounter_);
         }

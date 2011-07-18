@@ -54,7 +54,7 @@ namespace Frost
         /// Constructor.
         /** \param fValue The value to put in all coordinates
         */
-        Vector(const s_float& fValue);
+        explicit Vector(const s_float& fValue);
 
         /// Checks if this vector is null (0, 0, 0).
         /** \return 'true' if this vector is null (0, 0, 0)
@@ -121,6 +121,18 @@ namespace Frost
         *   \note Results in : (x/mScale.x, y/mScale.y, z/mScale.z).
         */
         void           ScaleDown(const Vector& mScale);
+
+        /// Scales this vector component-wise (multiplies).
+        /** \param mScale The scale vector
+        *   \note Results in : (mV.x*mScale.x, mV.y*mScale.y, mV.z*mScale.z).
+        */
+        static Vector  ScaleUp(const Vector& mV, const Vector& mScale);
+
+        /// Scales this vector component-wise (divides).
+        /** \param mScale The scale vector
+        *   \note Results in : (mV.x/mScale.x, mV.y/mScale.y, mV.z/mScale.z).
+        */
+        static Vector  ScaleDown(const Vector& mV, const Vector& mScale);
 
         /// Makes this vector invalid.
         void           SetNaN();
