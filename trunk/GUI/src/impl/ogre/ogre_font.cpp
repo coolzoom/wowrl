@@ -269,7 +269,7 @@ const s_float& FontImpl::GetTextureHeight() const
     return fTextureHeight_;
 }
 
-Material FontImpl::GetTexture()
+Material FontImpl::GetTexture() const
 {
     return Material(pMatImpl_);
 }
