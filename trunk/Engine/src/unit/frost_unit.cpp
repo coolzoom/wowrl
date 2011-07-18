@@ -199,7 +199,7 @@ namespace Frost
         }
     }
 
-    const s_bool& Unit::IsDead()
+    const s_bool& Unit::IsDead() const
     {
         return bDead_;
     }
