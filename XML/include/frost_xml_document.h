@@ -104,6 +104,12 @@ namespace XML
         /** \param sName The name of the predefined Block you want
         *   \note Only used in loading stage.
         */
+        s_ptr<const Block> GetPredefinedBlock(const s_str& sName) const;
+
+        /// Returns a predefined Block.
+        /** \param sName The name of the predefined Block you want
+        *   \note Only used in loading stage.
+        */
         s_ptr<Block> GetPredefinedBlock(const s_str& sName);
 
         /// Flags this Document as invalid.

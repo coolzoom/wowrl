@@ -70,6 +70,7 @@
 			<Add alias="Win32" targets="Release_Win32;Debug_Win32;" />
 		</VirtualTargets>
 		<Compiler>
+			<Add option="-std=c++0x" />
 			<Add option="-Wall" />
 			<Add directory="include" />
 			<Add directory="../Utils/include" />
