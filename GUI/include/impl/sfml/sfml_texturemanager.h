@@ -3,7 +3,9 @@
 
 #include <frost_utils.h>
 #include <frost_utils_manager.h>
+#ifdef USING_THREADS
 #include <frost_utils_thread.h>
+#endif
 
 namespace sf
 {
@@ -32,7 +34,9 @@ namespace GUI
 
         s_map< s_str, s_ptr<sf::Image> > lTextureList_;
 
+        #ifdef USING_THREADS
         Mutex mMutex_;
+        #endif
 
     };
 }

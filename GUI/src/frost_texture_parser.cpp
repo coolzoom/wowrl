@@ -24,13 +24,7 @@ void Texture::ParseAttributes_( s_ptr<XML::Block> pBlock )
 {
     LayeredRegion::ParseAttributes_(pBlock);
 
-    s_str sFile = pBlock->GetAttribute("file");
-    if (!sFile.IsEmpty())
-    {
-        SetTexture(pManager_->ParseFileName(
-            pBlock->GetAttribute("file")
-        ));
-    }
+    SetTexture(pManager_->ParseFileName(pBlock->GetAttribute("file")));
 }
 
 void Texture::ParseTexCoordsBlock_( s_ptr<XML::Block> pBlock )

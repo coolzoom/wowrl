@@ -65,12 +65,12 @@ namespace Frost
             /// Returns this Anchor's base widget.
             /** \return This Anchor's base widget
             */
-            s_ptr<UIObject>    GetObject() const;
+            s_ptr<const UIObject> GetObject() const;
 
             /// Returns this Anchor's parent widget.
             /** \return This Anchor's parent widget
             */
-            s_ptr<UIObject>    GetParent() const;
+            s_ptr<const UIObject> GetParent() const;
 
             /// Returns this Anchor's parent's raw name (unmodified).
             /** \return This Anchor's parent's raw name (unmodified)
@@ -168,21 +168,21 @@ namespace Frost
 
         private :
 
-            s_ptr<UIObject> pObj_;
-            AnchorPoint     mParentPoint_;
-            AnchorPoint     mPoint_;
-            AnchorType      mType_;
-            s_int           iAbsOffX_, iAbsOffY_;
-            s_float         fRelOffX_, fRelOffY_;
+            s_ptr<const UIObject> pObj_;
+            AnchorPoint           mParentPoint_;
+            AnchorPoint           mPoint_;
+            AnchorType            mType_;
+            s_int                 iAbsOffX_, iAbsOffY_;
+            s_float               fRelOffX_, fRelOffY_;
 
             mutable s_int iParentWidth_, iParentHeight_;
 
             mutable s_int   iAbsX_, iAbsY_;
             mutable s_float fRelX_, fRelY_;
 
-            mutable s_ptr<UIObject> pParent_;
-            mutable s_str           sParent_;
-            mutable s_bool          bParentUpdated_;
+            mutable s_ptr<const UIObject> pParent_;
+            mutable s_str                 sParent_;
+            mutable s_bool                bParentUpdated_;
         };
     }
 }

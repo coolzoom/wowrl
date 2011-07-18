@@ -30,7 +30,9 @@ s_ptr<sf::Image> TextureManager::LoadTexture( const s_str& sFile )
     }
     else
     {
+        #ifdef USING_THREADS
         Lock l(mMutex_);
+        #endif
         s_ptr<sf::Image> pImg = lTextureList_[sFile] = new sf::Image();
         if (!pImg->LoadFromFile(sFile.Get()))
         {

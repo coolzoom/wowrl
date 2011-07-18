@@ -31,7 +31,7 @@ namespace GUI
 
         s_float GetCharacterKerning(const s_uint& uiChar1, const s_uint& uiChar2) const;
 
-        Material GetTexture();
+        Material GetTexture() const;
 
         const s_float& GetTextureWidth() const;
 

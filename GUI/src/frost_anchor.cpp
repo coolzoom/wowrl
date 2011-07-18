@@ -36,7 +36,7 @@ void Anchor::UpdateParent() const
     {
         if (!sParent_.IsEmpty())
         {
-            s_ptr<UIObject> pObjParent = pObj_->GetParent();
+            s_ptr<const UIObject> pObjParent = pObj_->GetParent();
 
             if (pObjParent)
             {
@@ -156,12 +156,12 @@ const s_int& Anchor::GetAbsY() const
     return iAbsY_;
 }
 
-s_ptr<UIObject> Anchor::GetObject() const
+s_ptr<const UIObject> Anchor::GetObject() const
 {
     return pObj_;
 }
 
-s_ptr<UIObject> Anchor::GetParent() const
+s_ptr<const UIObject> Anchor::GetParent() const
 {
     UpdateParent();
     return pParent_;

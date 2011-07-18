@@ -83,10 +83,10 @@ namespace Frost
             virtual void    CopyFrom(s_ptr<UIObject> pObj);
 
             /// Tells this widget to update its borders.
-            virtual void    FireUpdateBorders();
+            virtual void    FireUpdateBorders() const;
 
             /// Tells this widget to update its dimensions.
-            void            FireUpdateDimensions();
+            void            FireUpdateDimensions() const;
 
             /// Returns this widget's name.
             /** \return This widget's name
@@ -116,6 +116,11 @@ namespace Frost
             *   \note Default is nullptr.
             */
             virtual void    SetParent(s_ptr<UIObject> pParent);
+
+            /// Returns this widget's parent.
+            /** \return This widget's parent
+            */
+            s_ptr<const UIObject> GetParent() const;
 
             /// Returns this widget's parent.
             /** \return This widget's parent
@@ -217,7 +222,7 @@ namespace Frost
             *         use this function instead of GetAbsWidth(), because
             *         some widgets can have an infinite or undefined width.
             */
-            s_uint          GetAppearentWidth();
+            s_uint          GetAppearentWidth() const;
 
             /// Returns this widget's absolute height (in pixels).
             /** \return This widget's absolute height (in pixels)
@@ -233,7 +238,7 @@ namespace Frost
             *         use this function instead of GetAbsHeight(), because
             *         some widgets can have an infinite or undefined height.
             */
-            s_uint          GetAppearentHeight();
+            s_uint          GetAppearentHeight() const;
 
             /// Returns this widget's width (relative to its parent).
             /** \return This widget's width (relative to its parent)
@@ -374,7 +379,7 @@ namespace Frost
             /** \param pObj      The anchored widget
             *   \param bAnchored 'true' if it is anchored, 'false' if it's no longer the case
             */
-            void            NotifyAnchoredObject(s_ptr<UIObject> pObj, const s_bool& bAnchored);
+            void            NotifyAnchoredObject(s_ptr<UIObject> pObj, const s_bool& bAnchored) const;
 
             /// Checks if this UIObject is virtual.
             /** \return 'true' if this UIObject is virtual
@@ -445,12 +450,12 @@ namespace Frost
             /// Notifies the renderer of this widget that it needs to be redrawn.
             /** \note Automatically called by any shape changing function.
             */
-            virtual void    NotifyRendererNeedRedraw();
+            virtual void    NotifyRendererNeedRedraw() const;
 
             /// Tells this widget that a manually rendered widget requires redraw.
             /** \note This function does nothing by default.
             */
-            virtual void    FireRedraw();
+            virtual void    FireRedraw() const;
 
             /// Adds a Lua variable to copy when derivating.
             /** \param sVariable The name of the variable
@@ -471,7 +476,15 @@ namespace Frost
             /// Notifies this widget that it has been fully loaded.
             void            NotifyLoaded();
 
+            /// Returns this widget's GUIManager.
+            /** \return This widget's GUIManager
+            */
             s_ptr<GUIManager> GetManager();
+
+            /// Returns this widget's GUIManager.
+            /** \return This widget's GUIManager
+            */
+            s_ptr<const GUIManager> GetManager() const;
 
             /// Creates the associated Lua glue.
             /** \note This method is pure virtual : it must be overriden.
@@ -479,7 +492,7 @@ namespace Frost
             virtual void    CreateGlue() = 0;
 
             /// Removes the Lua glue.
-            void            RemoveGlue() const;
+            void            RemoveGlue();
 
             /// Pushes this UIObject on the provided Lua::State.
             /** \param pLua The Lua::State on which to push the glue
@@ -500,9 +513,9 @@ namespace Frost
             virtual void ParseAnchorsBlock_(s_ptr<XML::Block> pBlock);
 
             void         ReadAnchors_(s_int& iLeft, s_int& iRight, s_int& iTop, s_int& iBottom, s_int& iXCenter, s_int& iYCenter) const;
-            void         MakeBorders_(s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize);
-            virtual void UpdateBorders_();
-            virtual void UpdateDimensions_();
+            void         MakeBorders_(s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize) const;
+            virtual void UpdateBorders_() const;
+            virtual void UpdateDimensions_() const;
 
             virtual void NotifyManuallyRenderedObject_(s_ptr<UIObject> pObject, const s_bool& bManuallyRendered);
 
@@ -522,33 +535,34 @@ namespace Frost
 
             s_bool          bVirtual_;
             s_bool          bLoaded_;
-            s_bool          bReady_;
+            mutable s_bool  bReady_;
 
             s_ctnr< s_ptr<LuaGlue> > lGlueList_;
             s_ctnr<s_str>            lCopyList_;
 
             s_ctnr<s_str> lType_;
 
-            s_map<AnchorPoint, Anchor> lAnchorList_;
-            s_ctnr< s_ptr<UIObject> >  lPreviousAnchorParentList_;
-            s_array<s_bool, 4>         lDefinedBorderList_;
-            s_array<s_int, 4>          lBorderList_;
+            s_map<AnchorPoint, Anchor>      lAnchorList_;
+            s_ctnr< s_ptr<const UIObject> > lPreviousAnchorParentList_;
+            s_array<s_bool, 4>              lDefinedBorderList_;
+            mutable s_array<s_int, 4>       lBorderList_;
 
             s_float fAlpha_;
             s_bool  bIsShown_;
             s_bool  bIsVisible_;
-            s_uint  uiAbsWidth_;
-            s_uint  uiAbsHeight_;
-            s_float fRelWidth_;
-            s_float fRelHeight_;
-            s_bool  bIsWidthAbs_;
-            s_bool  bIsHeightAbs_;
 
-            s_bool bUpdateAnchors_;
-            s_bool bUpdateBorders_;
-            s_bool bUpdateDimensions_;
+            mutable s_bool  bIsWidthAbs_;
+            mutable s_bool  bIsHeightAbs_;
+            mutable s_uint  uiAbsWidth_;
+            mutable s_uint  uiAbsHeight_;
+            mutable s_float fRelWidth_;
+            mutable s_float fRelHeight_;
 
-            s_map< s_uint, s_ptr<UIObject> > lAnchoredObjectList_;
+            mutable s_bool bUpdateAnchors_;
+            mutable s_bool bUpdateBorders_;
+            mutable s_bool bUpdateDimensions_;
+
+            mutable s_map< s_uint, s_ptr<UIObject> > lAnchoredObjectList_;
         };
 
         /** \cond NOT_REMOVE_FROM_DOC

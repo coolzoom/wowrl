@@ -482,7 +482,7 @@ s_wptr<Text> FontString::GetTextObject()
     return pText_;
 }
 
-void FontString::UpdateBorders_()
+void FontString::UpdateBorders_() const
 {
     if (!bUpdateBorders_)
         return;

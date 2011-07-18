@@ -80,7 +80,7 @@ namespace Frost
             /// Notifies the renderer of this widget that it needs to be redrawn.
             /** \note Automatically called by any shape changing function.
             */
-            virtual void   NotifyRendererNeedRedraw();
+            virtual void   NotifyRendererNeedRedraw() const;
 
             /// Parses data from an XML::Block.
             /** \param pBlock The Frame's XML::Block

@@ -409,7 +409,7 @@ void Frame::CreateTitleRegion()
 
 s_ptr<Frame> Frame::GetChild( const s_str& sName ) const
 {
-    s_ptr<UIObject> pObj = pManager_->GetUIObjectByName(sName);
+    s_ptr<const UIObject> pObj = pManager_->GetUIObjectByName(sName);
 
     if (pObj && lChildList_.Find(pObj->GetID()))
         return lChildList_.Get(pObj->GetID())->second;
@@ -419,7 +419,7 @@ s_ptr<Frame> Frame::GetChild( const s_str& sName ) const
 
 s_ptr<LayeredRegion> Frame::GetRegion( const s_str& sName ) const
 {
-    s_ptr<UIObject> pObj = pManager_->GetUIObjectByName(sName);
+    s_ptr<const UIObject> pObj = pManager_->GetUIObjectByName(sName);
 
     if (pObj && lRegionList_.Find(pObj->GetID()))
         return lRegionList_.Get(pObj->GetID())->second;
@@ -1544,7 +1544,7 @@ void Frame::NotifyTopLevelParent_( const s_bool& bTopLevel, s_ptr<Frame> pParent
     }
 }
 
-void Frame::NotifyRendererNeedRedraw()
+void Frame::NotifyRendererNeedRedraw() const
 {
     if (!bVirtual_)
     {

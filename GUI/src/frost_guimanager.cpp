@@ -117,17 +117,17 @@ namespace Frost
         bEnabled_ = false;
     }
 
-    const s_bool& GUIManager::IsEnabled()
+    const s_bool& GUIManager::IsEnabled() const
     {
         return bEnabled_;
     }
 
-    const s_uint& GUIManager::GetScreenWidth()
+    const s_uint& GUIManager::GetScreenWidth() const
     {
         return uiScreenWidth_;
     }
 
-    const s_uint& GUIManager::GetScreenHeight()
+    const s_uint& GUIManager::GetScreenHeight() const
     {
         return uiScreenHeight_;
     }
@@ -143,7 +143,7 @@ namespace Frost
         lGUIDirectoryList_.Clear();
     }
 
-    s_bool GUIManager::CheckUIObjectName( const s_str& sName )
+    s_bool GUIManager::CheckUIObjectName( const s_str& sName ) const
     {
         if (s_str::IsNumber(sName[0]))
         {
@@ -449,27 +449,59 @@ namespace Frost
         lMainObjectList_.Erase(pObj->GetID());
     }
 
-    s_ptr<GUI::UIObject> GUIManager::GetUIObject( const s_uint& uiID )
+    s_ptr<const GUI::UIObject> GUIManager::GetUIObject( const s_uint& uiID ) const
     {
-        if (lObjectList_.Find(uiID))
-            return lObjectList_[uiID];
+        s_map< s_uint, s_ptr<GUI::UIObject> >::const_iterator iter = lObjectList_.Get(uiID);
+        if (iter != lObjectList_.End())
+            return iter->second;
         else
             return nullptr;
+    }
+
+    s_ptr<GUI::UIObject> GUIManager::GetUIObject( const s_uint& uiID )
+    {
+        s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iter = lObjectList_.Get(uiID);
+        if (iter != lObjectList_.End())
+            return iter->second;
+        else
+            return nullptr;
+    }
+
+    s_ptr<const GUI::UIObject> GUIManager::GetUIObjectByName( const s_str& sName, const s_bool& bVirtual ) const
+    {
+        if (bVirtual)
+        {
+            s_map< s_str, s_ptr<GUI::UIObject> >::const_iterator iter = lNamedVirtualObjectList_.Get(sName);
+            if (iter != lNamedVirtualObjectList_.End())
+                return iter->second;
+            else
+                return nullptr;
+        }
+        else
+        {
+            s_map< s_str, s_ptr<GUI::UIObject> >::const_iterator iter = lNamedObjectList_.Get(sName);
+            if (iter != lNamedObjectList_.End())
+                return iter->second;
+            else
+                return nullptr;
+        }
     }
 
     s_ptr<GUI::UIObject> GUIManager::GetUIObjectByName( const s_str& sName, const s_bool& bVirtual )
     {
         if (bVirtual)
         {
-            if (lNamedVirtualObjectList_.Find(sName))
-                return lNamedVirtualObjectList_[sName];
+            s_map< s_str, s_ptr<GUI::UIObject> >::iterator iter = lNamedVirtualObjectList_.Get(sName);
+            if (iter != lNamedVirtualObjectList_.End())
+                return iter->second;
             else
                 return nullptr;
         }
         else
         {
-            if (lNamedObjectList_.Find(sName))
-                return lNamedObjectList_[sName];
+            s_map< s_str, s_ptr<GUI::UIObject> >::iterator iter = lNamedObjectList_.Get(sName);
+            if (iter != lNamedObjectList_.End())
+                return iter->second;
             else
                 return nullptr;
         }
@@ -1340,9 +1372,11 @@ namespace Frost
         bObjectMoved_ = true;
     }
 
-    void GUIManager::FireRedraw( FrameStrata mStrata )
+    void GUIManager::FireRedraw( FrameStrata mStrata ) const
     {
-        lStrataList_[mStrata].bRedraw = true;
+        s_map<FrameStrata, Strata>::const_iterator iter = lStrataList_.Get(mStrata);
+        if (iter != lStrataList_.End())
+            iter->second.bRedraw = true;
     }
 
     void GUIManager::ToggleCaching()
@@ -1375,7 +1409,7 @@ namespace Frost
         bClearFontsOnClose_ = bClear;
     }
 
-    s_ptr<GUI::Frame> GUIManager::GetOveredFrame() const
+    s_ptr<const GUI::Frame> GUIManager::GetOveredFrame() const
     {
         return pOveredFrame_;
     }
@@ -1714,16 +1748,16 @@ namespace Frost
         }
     }
 
-    void GUIManager::PrintUI()
+    void GUIManager::PrintUI() const
     {
         if (lAddOnList_.GetSize() >= 1)
         {
             Log("\n\n######################## Loaded AddOns ########################\n");
-            s_map< s_str, s_map<s_str, AddOn> >::iterator iterDirectory;
+            s_map< s_str, s_map<s_str, AddOn> >::const_iterator iterDirectory;
             foreach (iterDirectory, lAddOnList_)
             {
                 Log("# Directory : "+iterDirectory->first+"\n|-###");
-                s_map<s_str, AddOn>::iterator iterAdd;
+                s_map<s_str, AddOn>::const_iterator iterAdd;
                 foreach (iterAdd, iterDirectory->second)
                 {
                     if (iterAdd->second.bEnabled)
@@ -1735,7 +1769,7 @@ namespace Frost
         if (lObjectList_.GetSize() >= 1)
         {
             Log("\n\n######################## UIObjects ########################\n\n########################\n");
-            s_map< s_uint, s_ptr<GUI::UIObject> >::iterator iterObj;
+            s_map< s_uint, s_ptr<GUI::UIObject> >::const_iterator iterObj;
             foreach (iterObj, lObjectList_)
             {
                 if (!iterObj->second->IsVirtual() && !iterObj->second->GetParent())

@@ -59,6 +59,11 @@ namespace Frost
         /// Internal method for rendering.
         /** \return The current active render target.
         */
+        s_ptr<const sf::RenderTarget> GetCurrentRenderTarget() const;
+
+        /// Internal method for rendering.
+        /** \return The current active render target.
+        */
         s_ptr<sf::RenderTarget> GetCurrentRenderTarget();
 
         /// Returns the main render window.
