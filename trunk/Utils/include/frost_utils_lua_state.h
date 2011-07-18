@@ -282,7 +282,7 @@ namespace Frost
             *   \return The Lunar object at the given index
             */
             template<class T>
-            s_ptr<T> Get(const s_int& iIndex = -1)
+            s_ptr<T> Get(const s_int& iIndex = -1) const
             {
                 return Lunar<T>::widecheck(pLua_, iIndex.Get());
             }

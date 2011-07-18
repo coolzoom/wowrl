@@ -126,6 +126,16 @@ namespace Frost
         fZ_ /= mScale.fZ_;
     }
 
+    Vector Vector::ScaleUp( const Vector& mV, const Vector& mScale )
+    {
+        return Vector(mV.fX_*mScale.fX_, mV.fY_*mScale.fY_, mV.fZ_*mScale.fZ_);
+    }
+
+    Vector Vector::ScaleDown( const Vector& mV, const Vector& mScale )
+    {
+        return Vector(mV.fX_/mScale.fX_, mV.fY_/mScale.fY_, mV.fZ_/mScale.fZ_);
+    }
+
     void Vector::SetNaN()
     {
         fX_ = fY_ = fZ_ = s_float::NaN;

@@ -247,8 +247,18 @@ void State::DoFile( const s_str& sFile )
 
         if (luaL_loadfile(pLua_, sFile.c_str()) != 0)
         {
-            lua_remove(pLua_, uiFuncPos.Get());
-            throw LuaException(CLASS_NAME, "Cannot load file.");
+            if (lua_isstring(pLua_, -1))
+            {
+                s_str sError = lua_tostring(pLua_, -1);
+                lua_pop(pLua_, 1);
+                lua_remove(pLua_, uiFuncPos.Get());
+                throw LuaException(sError);
+            }
+            else
+            {
+                lua_remove(pLua_, uiFuncPos.Get());
+                throw LuaException(CLASS_NAME, "Cannot load file : \""+sFile+"\"");
+            }
         }
 
         int iError = lua_pcall(pLua_, 0, LUA_MULTRET, -2);
@@ -284,8 +294,17 @@ void State::DoString( const s_str& sStr )
 
     if (luaL_loadstring(pLua_, sStr.c_str()) != 0)
     {
-        lua_remove(pLua_, uiFuncPos.Get());
-        throw LuaException(CLASS_NAME, "Unhandled error.");
+        if (lua_isstring(pLua_, -1))
+        {
+            s_str sError = lua_tostring(pLua_, -1);
+            lua_settop(pLua_, (uiFuncPos-1).Get());
+            throw LuaException(sError);
+        }
+        else
+        {
+            lua_settop(pLua_, (uiFuncPos-1).Get());
+            throw LuaException(CLASS_NAME, "Unhandled error.");
+        }
     }
 
     int iError = lua_pcall(pLua_, 0, LUA_MULTRET, -2);
@@ -294,14 +313,12 @@ void State::DoString( const s_str& sStr )
         if (lua_isstring(pLua_, -1))
         {
             s_str sError = lua_tostring(pLua_, -1);
-            lua_pop(pLua_, 1);
-            lua_remove(pLua_, uiFuncPos.Get());
+            lua_settop(pLua_, (uiFuncPos-1).Get());
             throw LuaException(sError);
         }
         else
         {
-            lua_pop(pLua_, 1);
-            lua_remove(pLua_, uiFuncPos.Get());
+            lua_settop(pLua_, (uiFuncPos-1).Get());
             throw LuaException(CLASS_NAME, "Unhandled error.");
         }
     }

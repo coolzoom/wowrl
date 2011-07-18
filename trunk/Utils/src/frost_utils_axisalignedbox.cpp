@@ -168,8 +168,11 @@ namespace Frost
             Vector mPoint = mRayOrigin + mRayDirection*fT;
             if (mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
             {
-                fLowestT = s_float::Min(fLowestT, fT);
-                mIntersection = mPoint;
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                }
             }
         }
         if (mRayOrigin.X() >= mMax_.X() && mRayDirection.X() < 0.0f)
@@ -178,8 +181,11 @@ namespace Frost
             Vector mPoint = mRayOrigin + mRayDirection*fT;
             if (mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
             {
-                fLowestT = s_float::Min(fLowestT, fT);
-                mIntersection = mPoint;
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                }
             }
         }
 
@@ -190,8 +196,11 @@ namespace Frost
             Vector mPoint = mRayOrigin + mRayDirection*fT;
             if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
             {
-                fLowestT = s_float::Min(fLowestT, fT);
-                mIntersection = mPoint;
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                }
             }
         }
         if (mRayOrigin.Y() >= mMax_.Y() && mRayDirection.Y() < 0.0f)
@@ -200,8 +209,11 @@ namespace Frost
             Vector mPoint = mRayOrigin + mRayDirection*fT;
             if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
             {
-                fLowestT = s_float::Min(fLowestT, fT);
-                mIntersection = mPoint;
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                }
             }
         }
 
@@ -212,8 +224,11 @@ namespace Frost
             Vector mPoint = mRayOrigin + mRayDirection*fT;
             if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()))
             {
-                fLowestT = s_float::Min(fLowestT, fT);
-                mIntersection = mPoint;
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                }
             }
         }
         if (mRayOrigin.Z() >= mMax_.Z() && mRayDirection.Z() < 0.0f)
@@ -222,8 +237,115 @@ namespace Frost
             Vector mPoint = mRayOrigin + mRayDirection*fT;
             if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()))
             {
-                fLowestT = s_float::Min(fLowestT, fT);
-                mIntersection = mPoint;
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                }
+            }
+        }
+
+        return fLowestT.IsValid();
+    }
+
+    s_bool AxisAlignedBox::GetRayIntersection( const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection, Face& mFace ) const
+    {
+        if (Contains(mRayOrigin))
+        {
+            mIntersection = mRayOrigin;
+            return true;
+        }
+
+        // Check collision with each face of the bounding box (the 3 closest)
+        s_float fLowestT = s_float::INFPLUS;
+
+        // X
+        if (mRayOrigin.X() <= mMin_.X() && mRayDirection.X() > 0.0f)
+        {
+            s_float fT = (mMin_.X() - mRayOrigin.X())/mRayDirection.X();
+            Vector mPoint = mRayOrigin + mRayDirection*fT;
+            if (mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
+            {
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                    mFace = LEFT;
+                }
+            }
+        }
+        if (mRayOrigin.X() >= mMax_.X() && mRayDirection.X() < 0.0f)
+        {
+            s_float fT = (mMax_.X() - mRayOrigin.X())/mRayDirection.X();
+            Vector mPoint = mRayOrigin + mRayDirection*fT;
+            if (mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
+            {
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                    mFace = RIGHT;
+                }
+            }
+        }
+
+        // Y
+        if (mRayOrigin.Y() <= mMin_.Y() && mRayDirection.Y() > 0.0f)
+        {
+            s_float fT = (mMin_.Y() - mRayOrigin.Y())/mRayDirection.Y();
+            Vector mPoint = mRayOrigin + mRayDirection*fT;
+            if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
+            {
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                    mFace = BOTTOM;
+                }
+            }
+        }
+        if (mRayOrigin.Y() >= mMax_.Y() && mRayDirection.Y() < 0.0f)
+        {
+            s_float fT = (mMax_.Y() - mRayOrigin.Y())/mRayDirection.Y();
+            Vector mPoint = mRayOrigin + mRayDirection*fT;
+            if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Z().IsInRange(mMin_.Z(), mMax_.Z()))
+            {
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                    mFace = TOP;
+                }
+            }
+        }
+
+        // Z
+        if (mRayOrigin.Z() <= mMin_.Z() && mRayDirection.Z() > 0.0f)
+        {
+            s_float fT = (mMin_.Z() - mRayOrigin.Z())/mRayDirection.Z();
+            Vector mPoint = mRayOrigin + mRayDirection*fT;
+            if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()))
+            {
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                    mFace = FRONT;
+                }
+            }
+        }
+        if (mRayOrigin.Z() >= mMax_.Z() && mRayDirection.Z() < 0.0f)
+        {
+            s_float fT = (mMax_.Z() - mRayOrigin.Z())/mRayDirection.Z();
+            Vector mPoint = mRayOrigin + mRayDirection*fT;
+            if (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) && mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()))
+            {
+                if (fT < fLowestT)
+                {
+                    fLowestT = fT;
+                    mIntersection = mPoint;
+                    mFace = BACK;
+                }
             }
         }
 

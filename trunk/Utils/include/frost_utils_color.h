@@ -73,37 +73,43 @@ namespace Frost
         /// Returns the packed ARGB value.
         /** \return The packed ARGB value
         */
-        const s_uint& GetPacked() const;
+        s_uint         GetPacked() const;
 
         /// Sets the alpha component.
         /** \param fA The alpha component
         */
-        void          SetA(const s_float& fA);
+        void           SetA(const s_float& fA);
 
         /// Sets the red component.
         /** \param fR The red component
         */
-        void          SetR(const s_float& fR);
+        void           SetR(const s_float& fR);
 
         /// Sets the green component.
         /** \param fG The green component
         */
-        void          SetG(const s_float& fG);
+        void           SetG(const s_float& fG);
 
         /// Sets the blue component.
         /** \param fB The blue component
         */
-        void          SetB(const s_float& fB);
+        void           SetB(const s_float& fB);
 
         /// Sets the packed ARGB component.
         /** \param uiColor packed ARGB component.
         */
-        void          SetPacked(const s_uint& uiColor);
+        void           SetPacked(const s_uint& uiColor);
+
+        /// Clamps color components to [0,1].
+        void           Saturate();
 
         /// Sets if this Color has a NaN chanel.
         /** \return 'true' if this Color has a NaN chanel
         */
-        s_bool        IsNaN() const;
+        s_bool         IsNaN() const;
+
+        s_float&       operator [] (const s_uint& uiIndex);
+        const s_float& operator [] (const s_uint& uiIndex) const;
 
         s_bool operator == (const Color& mColor) const;
         s_bool operator != (const Color& mColor) const;
@@ -132,6 +138,12 @@ namespace Frost
         */
         static Color  Random(const s_bool& bRandomAlpha = false);
 
+        /// Clamps color components to [0,1].
+        /** \param mColor The color to clamp
+        *   \return The clamped color
+        */
+        static Color  Saturate(const Color& mColor);
+
         #ifdef USING_OGRE
         /// Converts a Frost color to an Ogre one.
         /** \param mColor The color to convert
@@ -156,17 +168,15 @@ namespace Frost
 
         static const s_str CLASS_NAME;
 
+        s_float a;
+        s_float r;
+        s_float g;
+        s_float b;
+
     private :
 
-        void BuildUIColor_();
-        void BuildABGRColor_();
-
-        s_float fA_;
-        s_float fR_;
-        s_float fG_;
-        s_float fB_;
-
-        s_uint uiColor_;
+        s_uint BuildUIColor_() const;
+        void BuildABGRColor_(const s_uint& uiColor);
     };
 
     Color operator * (const s_float& fLeft, const Color& mRight);

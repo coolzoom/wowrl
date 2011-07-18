@@ -26,6 +26,17 @@ namespace Frost
     {
     public :
 
+        /// Enumerates all faces of an axis aligned box
+        enum Face
+        {
+            LEFT = 0,
+            RIGHT,
+            FRONT,
+            BACK,
+            TOP,
+            BOTTOM
+        };
+
         /// Default constructor.
         /** \note The default box is infinite.
         */
@@ -92,6 +103,15 @@ namespace Frost
         *   \return 'true' if the ray has intersected the box
         */
         s_bool        GetRayIntersection(const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection) const;
+
+        /// Checks if a ray intersects this box.
+        /** \param mRayOrigin         The start point of the ray
+        *   \param mRayDirection      The direction on which to cast the ray
+        *   \param[out] mIntersection The intersection point
+        *   \param[out] mFace         The face of the box on which relies the intersection
+        *   \return 'true' if the ray has intersected the box
+        */
+        s_bool        GetRayIntersection(const Vector& mRayOrigin, const Vector& mRayDirection, Vector& mIntersection, Face& mFace) const;
 
         Vector operator[] (const s_uint& uiIndex) const;
         Vector operator[] (const uint& uiIndex) const;
