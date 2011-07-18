@@ -89,8 +89,8 @@ namespace GUI
         s_uint uiWidth_;
         s_uint uiHeight_;
 
-        ulong                     hResourceHandle_;
-        s_ptr<Ogre::RenderTarget> pOgreRenderTarget_;
+        ulong                             hResourceHandle_;
+        mutable s_ptr<Ogre::RenderTarget> pOgreRenderTarget_;
 
     };
 }

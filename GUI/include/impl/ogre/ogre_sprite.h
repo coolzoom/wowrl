@@ -318,7 +318,7 @@ namespace GUI
 
     private :
 
-        s_ptr<GUIManager> pManager_;
+        mutable s_ptr<GUIManager> pManager_;
 
         mutable Quad mQuad_;
         s_str sTextureFile_;
