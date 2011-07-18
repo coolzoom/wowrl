@@ -45,7 +45,7 @@ namespace Frost
         /// Checks if this object is visible.
         /** \return 'true' if this object is visible
         */
-        const s_bool& IsShown();
+        const s_bool& IsShown() const;
 
         /// Selects this object.
         /** \param bSelected 'true' to select the object

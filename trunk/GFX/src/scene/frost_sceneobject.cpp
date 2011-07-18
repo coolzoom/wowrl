@@ -43,7 +43,7 @@ namespace Frost
         bIsShown_ = true;
     }
 
-    const s_bool& SceneObject::IsShown()
+    const s_bool& SceneObject::IsShown() const
     {
         return bIsShown_;
     }
