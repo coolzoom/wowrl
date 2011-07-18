@@ -199,6 +199,7 @@ namespace Frost
 
         void Update();
         void Delete();
+        void SetMousePosition(const s_float& fX, const s_float& fY);
 
         struct KeyboardState
         {
@@ -208,8 +209,9 @@ namespace Frost
         struct MouseState
         {
             s_bool lButtonState[INPUT_MOUSE_BUTTON_NUMBER];
-            s_float fAbsX, fAbsY;
+            s_float fAbsX, fAbsY, fDX, fDY;
             s_float fRelX, fRelY, fRelWheel;
+            s_bool bHasDelta;
         } mMouse;
 
     private :
@@ -221,7 +223,15 @@ namespace Frost
     {
     public :
 
+        virtual void Update(InputHandler::MouseState& mMState, InputHandler::KeyboardState& mKState)
+        {
+            FillKeyboardState(mKState);
+            FillMouseState(mMState);
+        }
+
         virtual void Delete() {}
+
+        virtual void SetMousePosition(const s_float& fX, const s_float& fY) = 0;
 
         virtual void FillKeyboardState(InputHandler::KeyboardState& mState) = 0;
         virtual void FillMouseState(InputHandler::MouseState& mState) = 0;
@@ -243,6 +253,9 @@ namespace Frost
 
         /// Updates input (keyboard and mouse).
         void            Update(const s_float& fDelta);
+
+        /// Sets the position of the mouse cursor
+        void            SetMousePosition(const s_float& fX, const s_float& fY);
 
         /// Allows a particular input group to receive click events.
         /** \param sGroupName The name of the group to enable
