@@ -25,6 +25,8 @@ namespace Frost
         */
         SFMLInputHandler(s_ptr<sf::Window> pWindow);
 
+        void SetMousePosition(const s_float& fX, const s_float& fY);
+
         void FillKeyboardState(InputHandler::KeyboardState& mState);
         void FillMouseState(InputHandler::MouseState& mState);
 

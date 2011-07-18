@@ -128,6 +128,11 @@ namespace Frost
         pWindow_ = pWindow;
     }
 
+    void SFMLInputHandler::SetMousePosition( const s_float& fX, const s_float& fY )
+    {
+        pWindow_->SetCursorPosition(fX.Get(), fY.Get());
+    }
+
     void SFMLInputHandler::FillKeyboardState( InputHandler::KeyboardState& mState )
     {
         for (int i = 0; i < 100; ++i)
@@ -140,6 +145,9 @@ namespace Frost
         mState.fAbsY = pWindow_->GetInput().GetMouseY();
         mState.fRelX = mState.fAbsX / pWindow_->GetWidth();
         mState.fRelY = mState.fAbsY / pWindow_->GetHeight();
+        mState.bHasDelta = true;
+        mState.fDX = pWindow_->GetInput().GetMouseDX();
+        mState.fDY = pWindow_->GetInput().GetMouseDY();
         s_float fMouseWheel = pWindow_->GetInput().GetMouseWheel();
         mState.fRelWheel = fMouseWheel - fOldMouseWheel_;
         fOldMouseWheel_ = fMouseWheel;

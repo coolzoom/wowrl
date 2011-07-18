@@ -138,6 +138,7 @@
 			<Add alias="Win32_Threads" targets="Win32_Release_Threads;Win32_Debug_Threads;" />
 		</VirtualTargets>
 		<Compiler>
+			<Add option="-std=c++0x" />
 			<Add directory="../Input/include" />
 			<Add directory="../Utils/include" />
 			<Add directory="../Lunar" />
@@ -156,6 +157,8 @@
 			<Option target="Win32_Debug_Threads" />
 			<Option target="Linux_Release_Threads" />
 			<Option target="Linux_Debug_Threads" />
+			<Option target="Linux_Release" />
+			<Option target="Linux_Debug" />
 		</Unit>
 		<Unit filename="src/frost_inputmanager.cpp" />
 		<Unit filename="src/frost_localemanager.cpp" />

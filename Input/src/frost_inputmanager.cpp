@@ -36,6 +36,11 @@ namespace Frost
         mHandler_ = mHandler;
     }
 
+    void InputManager::SetMousePosition( const s_float& fX, const s_float& fY )
+    {
+        mHandler_.SetMousePosition(fX, fY);
+    }
+
     void InputManager::AllowClicks( const s_str& sGroupName )
     {
         lClickGroupList_[sGroupName] = true;
@@ -267,18 +272,26 @@ namespace Frost
         return bWheelRolled_;
     }
 
+    void InputHandler::SetMousePosition( const s_float& fX, const s_float& fY )
+    {
+        if (!pImpl_)
+            throw Exception("InputManager", "No input source defined !");
+
+        pImpl_->SetMousePosition(fX, fY);
+    }
+
     void InputHandler::Update()
     {
         if (!pImpl_)
             throw Exception("InputManager", "No input source defined !");
 
-        pImpl_->FillKeyboardState(mKeyboard);
-        pImpl_->FillMouseState(mMouse);
+        pImpl_->Update(mMouse, mKeyboard);
     }
 
     void InputHandler::Delete()
     {
-        pImpl_->Delete();
+        if (!pImpl_)
+            pImpl_->Delete();
     }
 
     void InputManager::Update( const s_float& fTempDelta )
@@ -471,8 +484,16 @@ namespace Frost
             bLastDragged_ = false;
 
         // Update mouse position
-        fRawDMX_ = fDMX_ = mHandler_.mMouse.fAbsX - fMX_;
-        fRawDMY_ = fDMY_ = mHandler_.mMouse.fAbsY - fMY_;
+        if (mHandler_.mMouse.bHasDelta)
+        {
+            fRawDMX_ = fDMX_ = mHandler_.mMouse.fDX;
+            fRawDMY_ = fDMY_ = mHandler_.mMouse.fDY;
+        }
+        else
+        {
+            fRawDMX_ = fDMX_ = mHandler_.mMouse.fAbsX - fMX_;
+            fRawDMY_ = fDMY_ = mHandler_.mMouse.fAbsY - fMY_;
+        }
 
         fMX_ = mHandler_.mMouse.fAbsX;
         fMY_ = mHandler_.mMouse.fAbsY;
