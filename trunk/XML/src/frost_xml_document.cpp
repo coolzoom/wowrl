@@ -548,6 +548,19 @@ void Document::CreatePredefinedBlock( const s_str& sName, const s_str& sInherita
         lPredefinedBlockList_[sName] = lPredefinedBlockList_[sInheritance];
 }
 
+s_ptr<const Block> Document::GetPredefinedBlock( const s_str& sName ) const
+{
+    s_map<s_str, Block>::const_iterator iter = lPredefinedBlockList_.Get(sName);
+    if (iter != lPredefinedBlockList_.End())
+    {
+        return &iter->second;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
 s_ptr<Block> Document::GetPredefinedBlock( const s_str& sName )
 {
     s_map<s_str, Block>::iterator iter = lPredefinedBlockList_.Get(sName);
