@@ -42,6 +42,11 @@ UIObject::~UIObject()
     }
 }
 
+s_ptr<const GUIManager> UIObject::GetManager() const
+{
+    return pManager_;
+}
+
 s_ptr<GUIManager> UIObject::GetManager()
 {
     return pManager_;
@@ -322,7 +327,7 @@ const s_uint& UIObject::GetAbsWidth() const
     return uiAbsWidth_;
 }
 
-s_uint UIObject::GetAppearentWidth()
+s_uint UIObject::GetAppearentWidth() const
 {
     UpdateBorders_();
     return s_uint(lBorderList_[BORDER_RIGHT] - lBorderList_[BORDER_LEFT]);
@@ -333,7 +338,7 @@ const s_uint& UIObject::GetAbsHeight() const
     return uiAbsHeight_;
 }
 
-s_uint UIObject::GetAppearentHeight()
+s_uint UIObject::GetAppearentHeight() const
 {
     UpdateBorders_();
     return s_uint(lBorderList_[BORDER_BOTTOM] - lBorderList_[BORDER_TOP]);
@@ -362,6 +367,11 @@ void UIObject::SetParent( s_ptr<UIObject> pParent )
             "Can't call SetParent(this)."
         );
     }
+}
+
+s_ptr<const UIObject> UIObject::GetParent() const
+{
+    return pParent_;
 }
 
 s_ptr<UIObject> UIObject::GetParent()
@@ -645,7 +655,7 @@ s_bool UIObject::DependsOn( s_ptr<UIObject> pObj ) const
         s_map<AnchorPoint, Anchor>::const_iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
-            s_ptr<UIObject> pParent = iterAnchor->second.GetParent();
+            s_ptr<const UIObject> pParent = iterAnchor->second.GetParent();
             if (pParent == pObj)
                 return true;
 
@@ -715,7 +725,7 @@ void UIObject::SetID( const s_uint& uiID )
     }
 }
 
-void UIObject::NotifyAnchoredObject( s_ptr<UIObject> pObj, const s_bool& bAnchored )
+void UIObject::NotifyAnchoredObject( s_ptr<UIObject> pObj, const s_bool& bAnchored ) const
 {
     if (!pObj)
         return;
@@ -731,7 +741,7 @@ void UIObject::NotifyAnchoredObject( s_ptr<UIObject> pObj, const s_bool& bAnchor
     }
 }
 
-void UIObject::UpdateDimensions_()
+void UIObject::UpdateDimensions_() const
 {
     if (pParent_)
     {
@@ -759,7 +769,7 @@ void UIObject::UpdateDimensions_()
     }
 }
 
-void UIObject::MakeBorders_( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize )
+void UIObject::MakeBorders_( s_int& iMin, s_int& iMax, const s_int& iCenter, const s_int& iSize ) const
 {
     if (!iMin.IsValid() && !iMax.IsValid())
     {
@@ -824,7 +834,7 @@ void UIObject::ReadAnchors_( s_int& iLeft, s_int& iRight, s_int& iTop, s_int& iB
     foreach (iterAnchor, lAnchorList_)
     {
         // Make sure the anchored object has its borders updated
-        s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
+        s_ptr<const UIObject> pObj = iterAnchor->second.GetParent();
         if (pObj)
             pObj->UpdateBorders_();
 
@@ -870,7 +880,7 @@ void UIObject::ReadAnchors_( s_int& iLeft, s_int& iRight, s_int& iTop, s_int& iB
     }
 }
 
-void UIObject::UpdateBorders_()
+void UIObject::UpdateBorders_() const
 {
     if (!bUpdateBorders_)
         return;
@@ -933,7 +943,7 @@ void UIObject::UpdateAnchors()
         s_map<AnchorPoint, Anchor>::iterator iterAnchor;
         foreach (iterAnchor, lAnchorList_)
         {
-            s_ptr<UIObject> pObj = iterAnchor->second.GetParent();
+            s_ptr<const UIObject> pObj = iterAnchor->second.GetParent();
             if (pObj && pObj->DependsOn(this))
             {
                 Error(CLASS_NAME, "Cyclic anchor dependency ! \""+sName_+"\" and \""+pObj->GetName()+"\"\n"
@@ -950,26 +960,26 @@ void UIObject::UpdateAnchors()
             lAnchorList_.Erase(*iterErase);
         }
 
-        s_ctnr< s_ptr<UIObject> > lAnchorParentList;
+        s_ctnr< s_ptr<const UIObject> > lAnchorParentList;
         foreach (iterAnchor, lAnchorList_)
         {
-            s_ptr<UIObject> pParent = iterAnchor->second.GetParent();
+            s_ptr<const UIObject> pParent = iterAnchor->second.GetParent();
             if (pParent && !lAnchorParentList.Find(pParent))
                 lAnchorParentList.PushBack(pParent);
         }
 
-        s_ctnr< s_ptr<UIObject> >::iterator iterOldParent;
+        s_ctnr< s_ptr<const UIObject> >::iterator iterOldParent;
         foreach (iterOldParent, lPreviousAnchorParentList_)
         {
-            s_ptr<UIObject> pParent = *iterOldParent;
+            s_ptr<const UIObject> pParent = *iterOldParent;
             if (!lAnchorParentList.Find(pParent))
                 pParent->NotifyAnchoredObject(this, false);
         }
 
-        s_ctnr< s_ptr<UIObject> >::iterator iterParent;
+        s_ctnr< s_ptr<const UIObject> >::iterator iterParent;
         foreach (iterParent, lAnchorParentList)
         {
-            s_ptr<UIObject> pParent = *iterParent;
+            s_ptr<const UIObject> pParent = *iterParent;
             if (!lPreviousAnchorParentList_.Find(pParent))
                 pParent->NotifyAnchoredObject(this, true);
         }
@@ -979,18 +989,18 @@ void UIObject::UpdateAnchors()
     }
 }
 
-void UIObject::FireUpdateBorders()
+void UIObject::FireUpdateBorders() const
 {
     bUpdateBorders_ = true;
 
-    s_map< s_uint, s_ptr<UIObject> >::iterator iterAnchored;
+    s_map< s_uint, s_ptr<UIObject> >::const_iterator iterAnchored;
     foreach (iterAnchored, lAnchoredObjectList_)
     {
         iterAnchored->second->FireUpdateBorders();
     }
 }
 
-void UIObject::FireUpdateDimensions()
+void UIObject::FireUpdateDimensions() const
 {
     FireUpdateBorders();
     bUpdateDimensions_ = true;
@@ -1012,7 +1022,7 @@ void UIObject::PushOnLua( s_ptr<Lua::State> pLua ) const
     pLua->PushGlobal(sLuaName_);
 }
 
-void UIObject::RemoveGlue() const
+void UIObject::RemoveGlue()
 {
     s_ptr<Lua::State> pLua = pManager_->GetLua();
     pLua->PushNil();
@@ -1065,14 +1075,12 @@ const s_bool& UIObject::IsNewlyCreated() const
     return bNewlyCreated_;
 }
 
-void UIObject::NotifyRendererNeedRedraw()
+void UIObject::NotifyRendererNeedRedraw() const
 {
-
 }
 
-void UIObject::FireRedraw()
+void UIObject::FireRedraw() const
 {
-
 }
 
 void UIObject::NotifyManuallyRenderedObject_(s_ptr<UIObject> pObject, const s_bool& bManuallyRendered)

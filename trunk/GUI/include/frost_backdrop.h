@@ -60,7 +60,8 @@ namespace Frost
 
             /// Sets the background color.
             /** \param mColor The background color
-            *   \note This color is only used to tint the background texture.
+            *   \note This color can be used to tint the background texture if any
+            *         or simply render a plain color background.
             */
             void SetBackgroundColor(const Color& mColor);
 
@@ -149,14 +150,15 @@ namespace Frost
             */
             const s_str& GetEdgeFile() const;
 
-            /// Sets the edge/corner color.
-            /** \param mColor The edge/corner color
-            *   \note This color is only used to tint the edge/corner texture.
+            /// Sets the edge color.
+            /** \param mColor The edge color
+            *   \note This color can be used to tint the edge texture if any
+            *         or simply render a plain color edge.
             */
             void SetEdgeColor(const Color& mColor);
 
-            /// Returns the edge/corner color.
-            /** \return The edge/corner color
+            /// Returns the edge color.
+            /** \return The edge color
             */
             Color GetEdgeColor() const;
 
@@ -178,11 +180,12 @@ namespace Frost
 
         private :
 
-            s_ptr<Frame>                pParent_;
-            s_refptr<Sprite>            pBackground_;
-            s_str                       sBackgroundFile_;
-            s_array<s_refptr<Sprite>,8> lEdgeList_;
-            s_str                       sEdgeFile_;
+            s_ptr<Frame>  pParent_;
+            s_str         sBackgroundFile_;
+            s_str         sEdgeFile_;
+
+            mutable s_refptr<Sprite>            pBackground_;
+            mutable s_array<s_refptr<Sprite>,8> lEdgeList_;
 
             s_bool           bBackgroundTilling_;
             s_uint           uiTileSize_;

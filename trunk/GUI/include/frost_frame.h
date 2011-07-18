@@ -514,7 +514,7 @@ namespace Frost
             /// Notifies the renderer of this widget that it needs to be redrawn.
             /** \note Automatically called by any shape changing function.
             */
-            virtual void        NotifyRendererNeedRedraw();
+            virtual void        NotifyRendererNeedRedraw() const;
 
             /// Tells this Frame to rebuilt the layer list.
             /** \note Automatically called by AddRegion(), RemoveRegion(), and

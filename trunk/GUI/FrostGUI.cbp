@@ -89,7 +89,6 @@
 					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DFRONT_END_SFML" />
-					<Add option="-DUSING_THREADS" />
 					<Add option="-DFROST_LINUX" />
 					<Add directory="../../boost_1_43_0" />
 					<Add directory="../../SFML-2.0/include" />
@@ -109,7 +108,6 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DFRONT_END_SFML" />
-					<Add option="-DUSING_THREADS" />
 					<Add option="-DFROST_LINUX" />
 					<Add directory="../../boost_1_43_0" />
 					<Add directory="../../SFML-2.0/include" />
@@ -150,6 +148,43 @@
 					<Add directory="../../ogre/OgreMain/include" />
 				</Compiler>
 			</Target>
+			<Target title="Release_Linux_SFML_Threads">
+				<Option output="../lib/libgui_sfml_threads" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/SFML/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DFRONT_END_SFML" />
+					<Add option="-DUSING_THREADS" />
+					<Add option="-DFROST_LINUX" />
+					<Add directory="../../boost_1_43_0" />
+					<Add directory="../../SFML-2.0/include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Debug_Linux_SFML_Threads">
+				<Option output="../lib/libgui_sfml_threads_d" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/SFML/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DFRONT_END_SFML" />
+					<Add option="-DUSING_THREADS" />
+					<Add option="-DFROST_LINUX" />
+					<Add directory="../../boost_1_43_0" />
+					<Add directory="../../SFML-2.0/include" />
+				</Compiler>
+			</Target>
 		</Build>
 		<VirtualTargets>
 			<Add alias="Linux_OGRE" targets="Release_Linux_OGRE;Debug_Linux_OGRE;" />
@@ -158,6 +193,7 @@
 			<Add alias="Win32_SFML" targets="Release_Win32_SFML;Debug_Win32_SFML;" />
 		</VirtualTargets>
 		<Compiler>
+			<Add option="-std=c++0x" />
 			<Add directory="include" />
 			<Add directory="../Input/include" />
 			<Add directory="../XML/include" />
@@ -238,36 +274,48 @@
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="include/impl/sfml/sfml_guimanager.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="include/impl/sfml/sfml_material.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="include/impl/sfml/sfml_rendertarget.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="include/impl/sfml/sfml_sprite.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="include/impl/sfml/sfml_texturemanager.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="src/frost_anchor.cpp" />
 		<Unit filename="src/frost_backdrop.cpp" />
@@ -362,36 +410,48 @@
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="src/impl/sfml/sfml_guimanager.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="src/impl/sfml/sfml_material.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="src/impl/sfml/sfml_rendertarget.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="src/impl/sfml/sfml_sprite.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Unit filename="src/impl/sfml/sfml_texturemanager.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
 			<Option target="Debug_Linux_SFML" />
+			<Option target="Release_Linux_SFML_Threads" />
+			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
 		<Extensions>
 			<code_completion />

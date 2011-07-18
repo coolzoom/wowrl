@@ -267,9 +267,10 @@ namespace Frost
             void ParseColorBlock_(s_ptr<XML::Block> pBlock);
             void ParseShadowBlock_(s_ptr<XML::Block> pBlock);
 
-            void UpdateBorders_();
+            void UpdateBorders_() const;
 
-            s_refptr<Text>  pText_;
+            mutable s_refptr<Text> pText_;
+
             s_str           sText_;
             s_str           sFontName_;
             s_uint          uiHeight_;

@@ -112,7 +112,7 @@ namespace Frost
     {
         s_uint                   uiID;
         s_map<s_int, Level>      lLevelList;
-        s_bool                   bRedraw;
+        mutable s_bool           bRedraw;
         s_ptr<GUI::RenderTarget> pRenderTarget;
         s_refptr<GUI::Sprite>    pSprite;
         s_uint                   uiRedrawCount;
@@ -169,7 +169,7 @@ namespace Frost
         *   \note All widgets must call this function and check
         *         its return value before reacting to input events.
         */
-        const s_bool&        IsEnabled();
+        const s_bool&        IsEnabled() const;
 
         /// Returns the "screen" width.
         /** \return The screen width
@@ -178,7 +178,7 @@ namespace Frost
         *         that takes only a portion of the real screen, then
         *         this function returns the width of the render target.
         */
-        const s_uint&        GetScreenWidth();
+        const s_uint&        GetScreenWidth() const;
 
         /// Returns the "screen" height.
         /** \return The screen height
@@ -187,7 +187,7 @@ namespace Frost
         *         that takes only a portion of the real screen, then
         *         this function returns the height of the render target.
         */
-        const s_uint&        GetScreenHeight();
+        const s_uint&        GetScreenHeight() const;
 
         /// Adds a new directory to be parsed for UI AddOns.
         /** \param sDirectory The new directory
@@ -205,7 +205,7 @@ namespace Frost
         /** \param sName The string to test
         *   \return 'true' if the provided string can be the name of a widget
         */
-        s_bool               CheckUIObjectName(const s_str& sName);
+        s_bool               CheckUIObjectName(const s_str& sName) const;
 
         /// Creates a new UIObject.
         /** \param sClassName The class of the UIObject (Frame, FontString, Button, ...)
@@ -275,7 +275,20 @@ namespace Frost
         /** \param uiID The unique ID representing the widget
         *   \return The UIObject associated with the given ID
         */
+        s_ptr<const GUI::UIObject> GetUIObject(const s_uint& uiID) const;
+
+        /// Returns the UIObject associated with the given ID.
+        /** \param uiID The unique ID representing the widget
+        *   \return The UIObject associated with the given ID
+        */
         s_ptr<GUI::UIObject> GetUIObject(const s_uint& uiID);
+
+        /// Returns the UIObject associated with the given name.
+        /** \param sName    The name of the widget you're after
+        *   \param bVirtual 'true' to search for a virtual frame
+        *   \return The UIObject associated with the given name
+        */
+        s_ptr<const GUI::UIObject> GetUIObjectByName(const s_str& sName, const s_bool& bVirtual = false) const;
 
         /// Returns the UIObject associated with the given name.
         /** \param sName    The name of the widget you're after
@@ -293,7 +306,7 @@ namespace Frost
         /// Prints debug informations in the log file.
         /** \note Calls UIObject::Serialize().
         */
-        void                 PrintUI();
+        void                 PrintUI() const;
 
         /// Returns the AddOn that is being parsed.
         /** \return The AddOn that is being parsed
@@ -452,7 +465,7 @@ namespace Frost
         void                 NotifyObjectMoved();
 
         /// Tells this manager to redraw the UI.
-        void                 FireRedraw(FrameStrata mStrata);
+        void                 FireRedraw(FrameStrata mStrata) const;
 
         /// Enables/disables GUI caching.
         /** \param bEnable 'true' to enable
@@ -498,7 +511,7 @@ namespace Frost
         /// Returns the Frame under the mouse.
         /** \return The Frame under the mouse (nullptr if none)
         */
-        s_ptr<GUI::Frame>    GetOveredFrame() const;
+        s_ptr<const GUI::Frame> GetOveredFrame() const;
 
         /// Asks this manager for focus.
         /** \param pEditBox The EditBox requesting focus
@@ -564,6 +577,11 @@ namespace Frost
             lCustomRegionList_[sClassName] = &CreateNewLayeredRegion<T>;
             pLua_->Register<typename T::Glue>();
         }
+
+        /// Returns the implementation dependent GUIManagerImpl.
+        /** \return The implementation dependent GUIManagerImpl
+        */
+        s_wptr<const GUIManagerImpl> GetImpl() const;
 
         /// Returns the implementation dependent GUIManagerImpl.
         /** \return The implementation dependent GUIManagerImpl

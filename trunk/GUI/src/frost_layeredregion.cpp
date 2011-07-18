@@ -125,7 +125,7 @@ void LayeredRegion::SetDrawLayer( const s_str& sLayer )
     }
 }
 
-void LayeredRegion::NotifyRendererNeedRedraw()
+void LayeredRegion::NotifyRendererNeedRedraw() const
 {
     if (!bVirtual_)
     {

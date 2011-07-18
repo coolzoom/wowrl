@@ -226,6 +226,21 @@ void Backdrop::SetEdgeColor( const Color& mColor )
         for (int i = 0; i < 8; ++i)
             lEdgeList_[i]->SetColor(mColor);
     }
+    else
+    {
+        if (uiEdgeSize_ == 0)
+            uiEdgeSize_ = 1;
+
+        uiOriginalEdgeSize_ = 1;
+
+        for (int i = 0; i < 8; ++i)
+            lEdgeList_[i] = s_refptr<Sprite>(new Sprite(pParent_->GetManager(), mColor, 1, 1));
+
+        lEdgeList_[EDGE_TOPLEFT]->SetHotSpot(0.0f, 0.0f);
+        lEdgeList_[EDGE_TOPRIGHT]->SetHotSpot(1.0f, 0.0f);
+        lEdgeList_[EDGE_BOTTOMLEFT]->SetHotSpot(0.0f, 1.0f);
+        lEdgeList_[EDGE_BOTTOMRIGHT]->SetHotSpot(1.0f, 1.0f);
+    }
 }
 
 Color Backdrop::GetEdgeColor() const

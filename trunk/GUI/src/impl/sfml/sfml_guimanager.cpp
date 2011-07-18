@@ -77,6 +77,14 @@ s_ptr<sf::RenderWindow> GUIManagerImpl::GetRenderWindow()
     return pWindow_;
 }
 
+s_ptr<const sf::RenderTarget> GUIManagerImpl::GetCurrentRenderTarget() const
+{
+    if (!pRenderTarget_)
+        return pWindow_;
+    else
+        return pRenderTarget_;
+}
+
 s_ptr<sf::RenderTarget> GUIManagerImpl::GetCurrentRenderTarget()
 {
     if (!pRenderTarget_)

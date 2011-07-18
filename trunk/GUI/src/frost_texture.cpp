@@ -319,6 +319,9 @@ void Texture::SetTexture( const s_str& sFile )
 
     pSprite_ = nullptr; // Deletes the old sprite and its material
 
+    if (sTextureFile_ == "")
+        return;
+
     if (File::Exists(sTextureFile_))
     {
         pSprite_ = s_refptr<Sprite>(new Sprite(pManager_, sTextureFile_));

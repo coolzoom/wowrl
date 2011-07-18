@@ -42,7 +42,7 @@ namespace Frost
             *   \param iY The vertical coordinate
             *   \return 'true' if the provided coordinates are inside this region
             */
-            virtual s_bool IsInRegion(const s_int& iX, const s_int& iY);
+            virtual s_bool IsInRegion(const s_int& iX, const s_int& iY) const;
 
             /// Creates the associated Lua glue.
             virtual void   CreateGlue();
