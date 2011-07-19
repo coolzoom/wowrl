@@ -26,14 +26,21 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <SFML/Window/Input.hpp>
+#include <SFML/Window/Window.hpp>
 
+#include <fstream>
+
+static std::fstream mLog("SFML.log", std::ios::out);
 
 namespace sf
 {
 ////////////////////////////////////////////////////////////
 Input::Input() :
-myMouseX(0),
-myMouseY(0)
+myMouseX(0), myMouseY(0),
+myMouseOldX(0), myMouseOldY(0),
+myMouseDX(0), myMouseDY(0),
+myGrabMouse(false), myWarped(false),
+myMouseMoved(false)
 {
     ResetStates();
 }
@@ -78,6 +85,20 @@ int Input::GetMouseY() const
 
 
 ////////////////////////////////////////////////////////////
+int Input::GetMouseDX() const
+{
+    return myMouseDX;
+}
+
+
+////////////////////////////////////////////////////////////
+int Input::GetMouseDY() const
+{
+    return myMouseDY;
+}
+
+
+////////////////////////////////////////////////////////////
 int Input::GetMouseWheel() const
 {
     return myMouseWheel;
@@ -91,6 +112,18 @@ float Input::GetJoystickAxis(unsigned int joystick, Joy::Axis axis) const
         return myJoystickAxis[joystick][axis];
     else
         return 0.f;
+}
+
+void Input::SetWindow(sf::Window* window)
+{
+    myWindow = window;
+}
+
+void Input::Update()
+{
+    //myWarped = false;
+    myMouseDX = 0;
+    myMouseDY = 0;
 }
 
 
@@ -109,8 +142,84 @@ void Input::OnEvent(const Event& event)
 
         // Mouse move event
         case Event::MouseMoved :
-            myMouseX = event.MouseMove.X;
-            myMouseY = event.MouseMove.Y;
+        {
+            if (!myMouseMoved)
+            {
+                mLog << "# : " << event.MouseMove.X << ", " << event.MouseMove.Y << std::endl;
+                myMouseOldX = myMouseX = event.MouseMove.X;
+                myMouseOldY = myMouseY = event.MouseMove.Y;
+                myMouseMoved = true;
+                return;
+            }
+
+            int windowWidth = myWindow->GetWidth();
+            int windowHeight = myWindow->GetHeight();
+
+            mLog << event.MouseMove.X << ", " << event.MouseMove.Y
+                 << (myWarped ? " warped!" : "") << std::endl;
+
+            if (myWarped)
+            {
+                if (event.MouseMove.X == windowWidth/2 &&
+                    event.MouseMove.Y == windowHeight/2)
+                {
+                    myMouseX = windowWidth/2;  // center x
+                    myMouseY = windowHeight/2; // center y
+                    myWarped = false;
+                    return;
+                }
+            }
+
+            //Compute this frames Relative X & Y motion
+			int dx = event.MouseMove.X - myMouseX;
+			int dy = event.MouseMove.Y - myMouseY;
+
+			//Store old values for next time to compute relative motion
+            myMouseOldX = myMouseX;
+            myMouseOldY = myMouseY;
+
+			myMouseX += dx;
+			myMouseY += dy;
+
+			myMouseDX += dx;
+			myMouseDY += dy;
+
+            mLog << " " << myMouseDX << ", " << myMouseDY << std::endl;
+
+			// Check to see if we are grabbing the mouse to the window (requires clipping and warping)
+			if (myGrabMouse)
+			{
+				if (myMouseX < 0)
+					myMouseX = 0;
+				else if (myMouseX > windowWidth)
+					myMouseX = windowWidth;
+
+				if (myMouseY < 0)
+					myMouseY = 0;
+				else if (myMouseY > windowHeight)
+					myMouseY = windowHeight;
+
+                // Keep mouse in window (fudge factor)
+                if (event.MouseMove.X < 5 || event.MouseMove.X > windowWidth - 5 ||
+                    event.MouseMove.Y < 5 || event.MouseMove.Y > windowHeight - 5)
+                {
+                    myWindow->SetCursorPosition(windowWidth/2, windowHeight/2);
+                    myWarped = true;
+                }
+			}
+
+            break;
+        }
+
+        case Event::MouseLeft :
+			if (myGrabMouse)
+			{
+                int windowWidth = myWindow->GetWidth();
+                int windowHeight = myWindow->GetHeight();
+
+                myWindow->SetCursorPosition(windowWidth/2, windowHeight/2);
+                myWarped = true;
+			}
             break;
 
         // Mouse wheele event

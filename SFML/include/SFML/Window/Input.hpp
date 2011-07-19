@@ -106,6 +106,28 @@ public :
     int GetMouseY() const;
 
     ////////////////////////////////////////////////////////////
+    /// \brief Get the current mouse X position
+    ///
+    /// The returned position is relative to the left border
+    /// of the owner window.
+    ///
+    /// \return Current mouse left position
+    ///
+    ////////////////////////////////////////////////////////////
+    int GetMouseDX() const;
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Get the current mouse Y position
+    ///
+    /// The returned position is relative to the top border
+    /// of the owner window.
+    ///
+    /// \return Current mouse top position
+    ///
+    ////////////////////////////////////////////////////////////
+    int GetMouseDY() const;
+
+    ////////////////////////////////////////////////////////////
     /// \brief Get the current mouse wheel position
     ///
     /// \return Current mouse wheel position
@@ -127,9 +149,15 @@ public :
     ////////////////////////////////////////////////////////////
     float GetJoystickAxis(unsigned int joystick, Joy::Axis axis) const;
 
+    void SetMouseGrab(bool grab) { myGrabMouse = grab; }
+
+    void Update();
+
 private :
 
     friend class Window;
+
+    void SetWindow(sf::Window* window);
 
     ////////////////////////////////////////////////////////////
     /// \brief Notifies the input of a new event
@@ -155,9 +183,17 @@ private :
     bool  myMouseButtons[Mouse::ButtonCount];              ///< Array containing the state of all mouse buttons
     int   myMouseX;                                        ///< Mouse position on X
     int   myMouseY;                                        ///< Mouse position on Y
+    mutable int myMouseOldX;
+    mutable int myMouseOldY;
+    int   myMouseDX;
+    int   myMouseDY;
     int   myMouseWheel;                                    ///< Mouse wheel position
     bool  myJoystickButtons[Joy::Count][Joy::ButtonCount]; ///< Array containing the state of all joysticks buttons
     float myJoystickAxis[Joy::Count][Joy::AxisCount];      ///< Joysticks position on each axis
+    bool  myGrabMouse;
+    bool  myWarped;
+    bool  myMouseMoved;
+    sf::Window* myWindow;
 };
 
 } // namespace sf
