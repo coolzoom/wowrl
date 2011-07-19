@@ -12,7 +12,7 @@
 #include <frost_utils.h>
 #include "frost_inputmanager.h"
 
-#include <OIS/OISPrereqs.h>
+#include <OISPrereqs.h>
 
 #ifdef FROST_LINUX
 #include <X11/Xlib.h>

@@ -7,7 +7,7 @@
 
 #include "frost_handler_ois.h"
 
-#include <OIS/OIS.h>
+#include <OIS.h>
 
 using namespace std;
 

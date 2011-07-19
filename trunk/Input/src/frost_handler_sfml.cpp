@@ -154,5 +154,7 @@ namespace Frost
 
         for (int i = 0; i < INPUT_MOUSE_BUTTON_NUMBER; ++i)
             mState.lButtonState[i] = pWindow_->GetInput().IsMouseButtonDown((sf::Mouse::Button)i);
+
+        pWindow_->GetInput().Update();
     }
 }
