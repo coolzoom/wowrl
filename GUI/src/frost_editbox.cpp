@@ -796,6 +796,7 @@ void EditBox::CreateCarret_()
         AddRegion(pCarret_);
 
         s_refptr<Sprite> pSprite = pFontString_->GetTextObject()->CreateSprite((uint)(uchar)'|');
+        pSprite->SetColor(pFontString_->GetTextColor());
 
         pCarret_->SetSprite(pSprite);
         pCarret_->SetAbsPoint(ANCHOR_LEFT, sName_, ANCHOR_LEFT, lTextInsets_[BORDER_LEFT] - 1, 0);
