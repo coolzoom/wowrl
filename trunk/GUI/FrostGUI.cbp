@@ -92,6 +92,7 @@
 					<Add option="-DFROST_LINUX" />
 					<Add directory="../../boost_1_43_0" />
 					<Add directory="../../SFML-2.0/include" />
+					<Add directory="/usr/include/freetype2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -111,6 +112,7 @@
 					<Add option="-DFROST_LINUX" />
 					<Add directory="../../boost_1_43_0" />
 					<Add directory="../../SFML-2.0/include" />
+					<Add directory="/usr/include/freetype2" />
 				</Compiler>
 			</Target>
 			<Target title="Release_Linux_OGRE">
