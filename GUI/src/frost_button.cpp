@@ -40,6 +40,7 @@ void Button::CreateGlue()
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
     else
     {
@@ -47,6 +48,7 @@ void Button::CreateGlue()
         pLua->PushString(sName_);
         lGlueList_.PushBack(pLua->PushNew<LuaButton>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
 }
 

@@ -192,6 +192,7 @@ void CheckButton::CreateGlue()
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
     else
     {
@@ -199,6 +200,7 @@ void CheckButton::CreateGlue()
         pLua->PushString(sLuaName_);
         lGlueList_.PushBack(pLua->PushNew<LuaCheckButton>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
 }
 

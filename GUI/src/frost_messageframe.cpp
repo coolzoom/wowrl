@@ -38,6 +38,7 @@ void MessageFrame::CreateGlue()
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
     else
     {
@@ -45,5 +46,6 @@ void MessageFrame::CreateGlue()
         pLua->PushString(sLuaName_);
         lGlueList_.PushBack(pLua->PushNew<LuaMessageFrame>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
 }

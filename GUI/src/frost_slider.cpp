@@ -440,6 +440,7 @@ void Slider::CreateGlue()
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
     else
     {
@@ -447,6 +448,7 @@ void Slider::CreateGlue()
         pLua->PushString(sLuaName_);
         lGlueList_.PushBack(pLua->PushNew<LuaSlider>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
 }
 

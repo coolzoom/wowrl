@@ -437,6 +437,7 @@ void ScrollFrame::CreateGlue()
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
     else
     {
@@ -444,6 +445,7 @@ void ScrollFrame::CreateGlue()
         pLua->PushString(sLuaName_);
         lGlueList_.PushBack(pLua->PushNew<LuaScrollFrame>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
 }
 

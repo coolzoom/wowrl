@@ -152,6 +152,7 @@ void FontString::CreateGlue()
     pLua->PushString(sName_);
     lGlueList_.PushBack(pLua->PushNew<LuaFontString>());
     pLua->SetGlobal(sLuaName_);
+    pLua->Pop();
 }
 
 void FontString::CopyFrom( s_ptr<UIObject> pObj )
