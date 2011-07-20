@@ -311,6 +311,7 @@ void EditBox::CreateGlue()
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
     else
     {
@@ -318,6 +319,7 @@ void EditBox::CreateGlue()
         pLua->PushString(sLuaName_);
         lGlueList_.PushBack(pLua->PushNew<LuaEditBox>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
 }
 

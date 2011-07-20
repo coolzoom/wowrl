@@ -1842,8 +1842,7 @@ namespace Frost
         {
             s_ptr<Lua::State> pState = mFunc.GetState();
             pState->GetGlobal("_MGR");
-            s_ptr<LuaGUIManager> pLuaMgr = pState->Get<LuaGUIManager>();
-            s_ptr<GUIManager> pGUIMgr = pLuaMgr->GetManager();
+            s_ptr<GUIManager> pGUIMgr = pState->Get<LuaGUIManager>()->GetManager();
             pState->Pop();
 
             s_uint uiKey = s_uint(mFunc.Get(0)->GetNumber());
@@ -1952,8 +1951,7 @@ namespace Frost
 
                     s_ptr<Lua::State> pState = mFunc.GetState();
                     pState->GetGlobal("_MGR");
-                    s_ptr<LuaGUIManager> pLuaMgr = pState->Get<LuaGUIManager>();
-                    s_ptr<GUIManager> pGUIMgr = pLuaMgr->GetManager();
+                    s_ptr<GUIManager> pGUIMgr = pState->Get<LuaGUIManager>()->GetManager();
                     pState->Pop();
 
                     s_ctnr< s_ptr<GUI::UIObject> >::iterator iterObject;

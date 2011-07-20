@@ -260,6 +260,7 @@ void StatusBar::CreateGlue()
         pLua->PushNumber(uiID_);
         lGlueList_.PushBack(pLua->PushNew<LuaVirtualGlue>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
     else
     {
@@ -267,6 +268,7 @@ void StatusBar::CreateGlue()
         pLua->PushString(sName_);
         lGlueList_.PushBack(pLua->PushNew<LuaStatusBar>());
         pLua->SetGlobal(sLuaName_);
+        pLua->Pop();
     }
 }
 

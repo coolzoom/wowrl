@@ -35,8 +35,7 @@ LuaVirtualGlue::LuaVirtualGlue( lua_State* pLua ) : LuaGlue(pLua)
 
     s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
     pState->GetGlobal("_MGR");
-    s_ptr<LuaGUIManager> pLuaMgr = pState->Get<LuaGUIManager>();
-    s_ptr<GUIManager> pGUIMgr = pLuaMgr->GetManager();
+    s_ptr<GUIManager> pGUIMgr = pState->Get<LuaGUIManager>()->GetManager();
     pState->Pop();
 
     pParent_ = pGUIMgr->GetUIObject(uiID_);
@@ -97,8 +96,7 @@ LuaUIObject::LuaUIObject( lua_State* pLua ) : LuaGlue(pLua)
 
     s_ptr<Lua::State> pState = LuaManager::GetSingleton()->GetState(pLua);
     pState->GetGlobal("_MGR");
-    s_ptr<LuaGUIManager> pLuaMgr = pState->Get<LuaGUIManager>();
-    s_ptr<GUIManager> pGUIMgr = pLuaMgr->GetManager();
+    s_ptr<GUIManager> pGUIMgr = pState->Get<LuaGUIManager>()->GetManager();
     pState->Pop();
 
     pParent_ = pGUIMgr->GetUIObjectByName(sName_);

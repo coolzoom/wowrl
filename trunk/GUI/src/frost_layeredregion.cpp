@@ -49,6 +49,7 @@ void LayeredRegion::CreateGlue()
     pLua->PushString(sName_);
     lGlueList_.PushBack(pLua->PushNew<LuaLayeredRegion>());
     pLua->SetGlobal(sName_);
+    pLua->Pop();
 }
 
 void LayeredRegion::SetParent( s_ptr<UIObject> pParent )

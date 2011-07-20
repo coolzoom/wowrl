@@ -30,6 +30,7 @@ void Region::CreateGlue()
     pLua->PushString(sName_);
     lGlueList_.PushBack(pLua->PushNew<LuaUIObject>());
     pLua->SetGlobal(sName_);
+    pLua->Pop();
 }
 
 s_bool Region::IsInRegion( const s_int& iX, const s_int& iY ) const

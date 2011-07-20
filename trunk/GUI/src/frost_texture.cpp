@@ -98,6 +98,7 @@ void Texture::CreateGlue()
     pLua->PushString(sName_);
     lGlueList_.PushBack(pLua->PushNew<LuaTexture>());
     pLua->SetGlobal(sLuaName_);
+    pLua->Pop();
 }
 
 void Texture::CopyFrom( s_ptr<UIObject> pObj )
