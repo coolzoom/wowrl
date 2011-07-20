@@ -145,6 +145,16 @@ namespace Frost
         */
         void        Write(const void* pBuffer, const s_uint& uiSize);
 
+        /// Writes a table into the file.
+        /** \param pTable The table to write
+        *   \note This function changes the writing position
+        */
+        template<class T>
+        void        Write(const T* pTable, const s_uint& uiNum)
+        {
+            Write((void*)pTable, sizeof(T)*uiNum);
+        }
+
         /// Writes an object into the file.
         /** \param mObject The object to write
         *   \note This function changes the writing position
@@ -152,7 +162,7 @@ namespace Frost
         template<class T>
         void        Write(const T& mObject)
         {
-            Write(&mObject, sizeof(T));
+            Write((void*)&mObject, sizeof(T));
         }
 
         /// Writes down a single char into the file.
