@@ -14,6 +14,8 @@
 #include "frost_utils_log.h"
 #include "frost_utils_var.h"
 
+//#define DEBUG_STACK
+
 using namespace std;
 using namespace Frost;
 using namespace Frost::Lua;
@@ -111,6 +113,9 @@ s_str State::ConcTable( const s_str& sTable )
 
 void State::CopyTable( s_ptr<State> pLua, const s_str& sSrcName, const s_str& sDestName )
 {
+    #ifdef DEBUG_STACK
+    Log("CopyTable : "+GetTop());
+    #endif
     s_str sNewName;
     if (sDestName == "") sNewName = sSrcName;
     else                 sNewName = sDestName;
@@ -220,6 +225,9 @@ void State::CopyTable( s_ptr<State> pLua, const s_str& sSrcName, const s_str& sD
         pLua->NewTable();
         pLua->SetGlobal(sNewName);
     }
+    #ifdef DEBUG_STACK
+    Log("~CopyTable : "+GetTop());
+    #endif
 }
 
 int l_TreatError( lua_State* pLua )
@@ -240,6 +248,9 @@ int l_TreatError( lua_State* pLua )
 
 void State::DoFile( const s_str& sFile )
 {
+    #ifdef DEBUG_STACK
+    Log("DoFile : "+GetTop()+" "+sFile);
+    #endif
     if (File::Exists(sFile))
     {
         lua_pushcfunction(pLua_, pErrorFunction_);
@@ -285,10 +296,16 @@ void State::DoFile( const s_str& sFile )
     {
         throw LuaException(CLASS_NAME, "DoFile : can't open \""+sFile+"\".");
     }
+    #ifdef DEBUG_STACK
+    Log("~DoFile : "+GetTop()+" "+sFile);
+    #endif
 }
 
 void State::DoString( const s_str& sStr )
 {
+    #ifdef DEBUG_STACK
+    Log("DoString : "+GetTop()+" "+sStr);
+    #endif
     lua_pushcfunction(pLua_, pErrorFunction_);
     s_uint uiFuncPos = GetTop();
 
@@ -324,172 +341,102 @@ void State::DoString( const s_str& sStr )
     }
 
     lua_remove(pLua_, uiFuncPos.Get());
+    #ifdef DEBUG_STACK
+    Log("~DoString : "+GetTop()+" "+sStr);
+    #endif
 }
 
 void State::CallFunction( const s_str& sFunctionName )
 {
-    s_ctnr<s_str> lDecomposedName;
-    s_ctnr<s_str> lWords = sFunctionName.Cut(":");
-    s_ctnr<s_str>::iterator iter1;
-    foreach (iter1, lWords)
-    {
-        s_ctnr<s_str> lSubWords = iter1->Cut(".");
-        s_ctnr<s_str>::iterator iter2;
-        foreach (iter2, lSubWords)
-        {
-            lDecomposedName.PushBack(*iter2);
-        }
-    }
-
+    #ifdef DEBUG_STACK
+    Log("CallFunction : "+GetTop()+" "+sFunctionName);
+    #endif
     lua_pushcfunction(pLua_, pErrorFunction_);
     s_uint uiFuncPos = GetTop();
-    lua_getglobal(pLua_, lDecomposedName.Front().c_str());
-    s_uint uiCounter = 1;
 
-    if (!lua_isnil(pLua_, -1))
+    GetGlobal(sFunctionName);
+
+    if (lua_isnil(pLua_, -1))
     {
-        if (lDecomposedName.GetSize() > 1)
+        lua_settop(pLua_, (uiFuncPos-1).Get());
+        throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
+    }
+
+    if (!lua_isfunction(pLua_, -1))
+    {
+        LuaException mExcept(CLASS_NAME, "\""+sFunctionName+"\" is not a function ("+GetTypeName(GetType())+" : "+GetValue().ToString()+").");
+        lua_settop(pLua_, (uiFuncPos-1).Get());
+        throw mExcept;
+    }
+
+    int iError = lua_pcall(pLua_, 0, LUA_MULTRET, -2);
+    if (iError != 0)
+    {
+        if (lua_isstring(pLua_, -1))
         {
-            lDecomposedName.Erase(lDecomposedName.Begin());
-
-            s_ctnr<s_str>::iterator iterWords;
-            foreach (iterWords, lDecomposedName)
-            {
-                lua_getfield(pLua_, -1, iterWords->c_str());
-                ++uiCounter;
-                if (lua_isnil(pLua_, -1))
-                {
-                    Pop(uiCounter);
-                    lua_remove(pLua_, uiFuncPos.Get());
-                    throw LuaException(CLASS_NAME,
-                        "\""+sFunctionName+"\" doesn't exist."
-                    );
-                }
-            }
-        }
-
-        if (lua_isfunction(pLua_, -1))
-        {
-            int iError = lua_pcall(pLua_, 0, 0, -uiCounter.Get());
-            if (iError != 0)
-            {
-                if (lua_isstring(pLua_, -1))
-                {
-                    s_str sError = lua_tostring(pLua_, -1);
-                    Pop(uiCounter + 1);
-                    lua_remove(pLua_, uiFuncPos.Get());
-                    throw LuaException(sError);
-                }
-                else
-                {
-                    Pop(uiCounter + 1);
-                    lua_remove(pLua_, uiFuncPos.Get());
-                    throw LuaException(CLASS_NAME, "Unhandled error.");
-                }
-            }
-
-            --uiCounter;
-            Pop(uiCounter);
-            lua_remove(pLua_, uiFuncPos.Get());
+            s_str sError = lua_tostring(pLua_, -1);
+            lua_settop(pLua_, (uiFuncPos-1).Get());
+            throw LuaException(sError);
         }
         else
         {
-            Pop(uiCounter);
-            lua_remove(pLua_, uiFuncPos.Get());
-            throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" is not a function.");
+            lua_settop(pLua_, (uiFuncPos-1).Get());
+            throw LuaException(CLASS_NAME, "Unhandled error.");
         }
     }
-    else
-    {
-        Pop(uiCounter);
-        lua_remove(pLua_, uiFuncPos.Get());
-        throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
-    }
+
+    lua_remove(pLua_, uiFuncPos.Get());
+    #ifdef DEBUG_STACK
+    Log("~CallFunction : "+GetTop()+" "+sFunctionName);
+    #endif
 }
 
 void State::CallFunction( const s_str& sFunctionName, const s_ctnr<s_var>& lArgumentStack )
 {
-    s_ctnr<s_str> lDecomposedName;
-    s_ctnr<s_str> lWords = sFunctionName.Cut(":");
-    s_ctnr<s_str>::iterator iter1;
-    foreach (iter1, lWords)
-    {
-        s_ctnr<s_str> lSubWords = iter1->Cut(".");
-        s_ctnr<s_str>::iterator iter2;
-        foreach (iter2, lSubWords)
-        {
-            lDecomposedName.PushBack(*iter2);
-        }
-    }
-
+    #ifdef DEBUG_STACK
+    Log("CallFunction : "+GetTop()+" "+sFunctionName+"(args)");
+    #endif
     lua_pushcfunction(pLua_, pErrorFunction_);
     s_uint uiFuncPos = GetTop();
-    lua_getglobal(pLua_, lDecomposedName.Front().c_str());
-    s_uint uiCounter = 2;
 
-    if (!lua_isnil(pLua_, -1))
+    GetGlobal(sFunctionName);
+
+    if (lua_isnil(pLua_, -1))
     {
-        if (lDecomposedName.GetSize() > 1)
+        lua_settop(pLua_, (uiFuncPos-1).Get());
+        throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
+    }
+
+    if (lua_isfunction(pLua_, -1))
+    {
+        lua_settop(pLua_, (uiFuncPos-1).Get());
+        throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" is not a function ("+GetTypeName(GetType())+" : "+GetValue().ToString()+")");
+    }
+
+    s_ctnr<s_var>::const_iterator iter;
+    foreach (iter, lArgumentStack)
+        PushVar(*iter);
+
+    int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), LUA_MULTRET, -2-lArgumentStack.GetSize().Get());
+    if (iError != 0)
+    {
+        if (lua_isstring(pLua_, -1))
         {
-            lDecomposedName.Erase(lDecomposedName.Begin());
-
-            s_ctnr<s_str>::iterator iterWords;
-            foreach (iterWords, lDecomposedName)
-            {
-                lua_getfield(pLua_, -1, iterWords->c_str());
-                ++uiCounter;
-                if (lua_isnil(pLua_, -1))
-                {
-                    Pop(uiCounter);
-                    lua_remove(pLua_, uiFuncPos.Get());
-                    throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
-                }
-            }
-        }
-
-        if (lua_isfunction(pLua_, -1))
-        {
-            s_ctnr<s_var>::const_iterator iter;
-            foreach (iter, lArgumentStack)
-            {
-                PushVar(*iter);
-            }
-
-            int iError = lua_pcall(pLua_, lArgumentStack.GetSize().Get(), 0, -uiCounter.Get());
-            if (iError != 0)
-            {
-                if (lua_isstring(pLua_, -1))
-                {
-                    s_str sError = lua_tostring(pLua_, -1);
-                    Pop(uiCounter + 1);
-                    lua_remove(pLua_, uiFuncPos.Get());
-                    throw LuaException(sError);
-                }
-                else
-                {
-                    Pop(uiCounter + 1);
-                    lua_remove(pLua_, uiFuncPos.Get());
-                    throw LuaException(CLASS_NAME, "Unhandled error.");
-                }
-            }
-
-            --uiCounter;
-            Pop(uiCounter);
-            lua_remove(pLua_, uiFuncPos.Get());
+            s_str sError = lua_tostring(pLua_, -1);
+            lua_settop(pLua_, (uiFuncPos-1).Get());
+            throw LuaException(sError);
         }
         else
         {
-            Pop(uiCounter);
-            lua_remove(pLua_, uiFuncPos.Get());
-            throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" is not a function.");
+            lua_settop(pLua_, (uiFuncPos-1).Get());
+            throw LuaException(CLASS_NAME, "Unhandled error.");
         }
     }
-    else
-    {
-        Pop(uiCounter);
-        lua_remove(pLua_, uiFuncPos.Get());
-        throw LuaException(CLASS_NAME, "\""+sFunctionName+"\" doesn't exist.");
-    }
+
+    lua_remove(pLua_, uiFuncPos.Get());
+    #ifdef DEBUG_STACK
+    Log("~CallFunction : "+GetTop()+" "+sFunctionName+"(args)");
+    #endif
 }
 
 void State::Register( const s_str& sFunctionName, lua_CFunction mFunction )
@@ -562,6 +509,9 @@ s_str State::SerializeGlobal( const s_str& sName )
 
 s_str State::Serialize( const s_str& sTab, const s_int& iIndex )
 {
+    #ifdef DEBUG_STACK
+    Log("Serialize : "+GetTop()+" "+sTab);
+    #endif
     s_int iAbsoluteIndex = iIndex >= 0 ? iIndex : s_int(GetTop()+1) + iIndex;
     s_str sResult;
 
@@ -627,6 +577,10 @@ s_str State::Serialize( const s_str& sTab, const s_int& iIndex )
 
         default : break;
     }
+
+    #ifdef DEBUG_STACK
+    Log("~Serialize : "+GetTop()+" "+sTab);
+    #endif
 
     return sResult;
 }
@@ -703,6 +657,9 @@ void State::PushGlobal( const s_str& sName )
 
 void State::SetGlobal( const s_str& sName )
 {
+    #ifdef DEBUG_STACK
+    Log("SetGlobal : "+GetTop()+" "+sName);
+    #endif
     s_ctnr<s_str> lDecomposedName;
     s_str sVarName;
     s_ctnr<s_str> lWords = sName.Cut(":");
@@ -752,21 +709,43 @@ void State::SetGlobal( const s_str& sName )
     {
         lua_setglobal(pLua_, sName.c_str());
     }
+    #ifdef DEBUG_STACK
+    Log("~SetGlobal : "+GetTop()+" "+sName);
+    #endif
 }
 
 void State::NewTable()
 {
+    #ifdef DEBUG_STACK
+    Log("NewTable : "+GetTop());
+    #endif
     lua_newtable(pLua_);
+    #ifdef DEBUG_STACK
+    Log("~NewTable : "+GetTop());
+    #endif
 }
 
 s_bool State::Next( const s_int& iIndex )
 {
-    return lua_next(pLua_, iIndex.Get()) != 0;
+    #ifdef DEBUG_STACK
+    Log("Next : "+GetTop());
+    #endif
+    int res = lua_next(pLua_, iIndex.Get());
+    #ifdef DEBUG_STACK
+    Log("~Next : "+GetTop());
+    #endif
+    return res != 0;
 }
 
 void State::Pop( const s_uint& uiNumber )
 {
+    #ifdef DEBUG_STACK
+    Log("Pop : "+GetTop()+" "+uiNumber);
+    #endif
     lua_pop(pLua_, static_cast<int>(uiNumber.Get()));
+    #ifdef DEBUG_STACK
+    Log("~Pop : "+GetTop()+" "+uiNumber);
+    #endif
 }
 
 s_float State::GetNumber( const s_int& iIndex )
@@ -840,6 +819,9 @@ s_str State::GetTypeName( Type mType )
 
 void State::GetGlobal( const s_str& sName )
 {
+    #ifdef DEBUG_STACK
+    Log("GetGlobal : "+GetTop()+" "+sName);
+    #endif
     s_ctnr<s_str> lDecomposedName;
     s_ctnr<s_str> lWords = sName.Cut(":");
     s_ctnr<s_str>::iterator iter1;
@@ -854,40 +836,42 @@ void State::GetGlobal( const s_str& sName )
     }
 
     lua_getglobal(pLua_, lDecomposedName.Front().c_str());
-    s_uint uiCounter = 1;
 
-    if (!lua_isnil(pLua_, -1))
+    if (lDecomposedName.GetSize() > 1)
     {
-        if (lDecomposedName.GetSize() > 1)
-        {
-            lDecomposedName.Erase(lDecomposedName.Begin());
+        if (lua_isnil(pLua_, -1))
+            return;
 
-            s_ctnr<s_str>::iterator iterWords;
-            foreach (iterWords, lDecomposedName)
+        lDecomposedName.Erase(lDecomposedName.Begin());
+
+        s_ctnr<s_str>::iterator iterWords;
+        foreach (iterWords, lDecomposedName)
+        {
+            lua_getfield(pLua_, -1, iterWords->c_str());
+            lua_remove(pLua_, -2);
+
+            if (lua_isnil(pLua_, -1))
+                return;
+
+            if (!lua_istable(pLua_, -1) && iterWords+1 != lDecomposedName.End())
             {
-                lua_getfield(pLua_, -1, iterWords->c_str());
-                ++uiCounter;
-                if (lua_isnil(pLua_, -1))
-                {
-                    Pop(uiCounter);
-                    PushNil();
-                    return;
-                }
+                lua_pop(pLua_, 1);
+                lua_pushnil(pLua_);
+                return;
             }
         }
+    }
 
-        lua_insert(pLua_, (-uiCounter).Get());
-        Pop(uiCounter-1);
-    }
-    else
-    {
-        Pop(uiCounter);
-        PushNil();
-    }
+    #ifdef DEBUG_STACK
+    Log("~GetGlobal : "+GetTop()+" "+sName);
+    #endif
 }
 
 s_int State::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetGlobalInt : "+GetTop()+" "+sName);
+    #endif
     s_int i;
     GetGlobal(sName);
     if (lua_isnil(pLua_, -1))
@@ -912,11 +896,17 @@ s_int State::GetGlobalInt( const s_str& sName, const s_bool& bCritical, const s_
         i = (int)lua_tonumber(pLua_, -1);
         lua_pop(pLua_, 1);
     }
+    #ifdef DEBUG_STACK
+    Log("~GetGlobalInt : "+GetTop()+" "+sName);
+    #endif
     return i;
 }
 
 s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetGlobalFloat : "+GetTop()+" "+sName);
+    #endif
     s_float f;
     GetGlobal(sName);
     if (lua_isnil(pLua_, -1))
@@ -941,11 +931,17 @@ s_float State::GetGlobalFloat( const s_str& sName, const s_bool& bCritical, cons
         f = static_cast<float>(lua_tonumber(pLua_, -1));
         lua_pop(pLua_, 1);
     }
+    #ifdef DEBUG_STACK
+    Log("~GetGlobalFloat : "+GetTop()+" "+sName);
+    #endif
     return f;
 }
 
 s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetGlobalString : "+GetTop()+" "+sName);
+    #endif
     s_str s;
     GetGlobal(sName);
     if (lua_isnil(pLua_, -1))
@@ -970,11 +966,17 @@ s_str State::GetGlobalString( const s_str& sName, const s_bool& bCritical, const
         s = lua_tostring(pLua_, -1);
         lua_pop(pLua_, 1);
     }
+    #ifdef DEBUG_STACK
+    Log("~GetGlobalString : "+GetTop()+" "+sName);
+    #endif
     return s;
 }
 
 s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetGlobalBool : "+GetTop()+" "+sName);
+    #endif
     s_bool b;
     GetGlobal(sName);
     if (lua_isnil(pLua_, -1))
@@ -999,25 +1001,43 @@ s_bool State::GetGlobalBool( const s_str& sName, const s_bool& bCritical, const 
         b = (lua_toboolean(pLua_, -1) != 0);
         lua_pop(pLua_, 1);
     }
+    #ifdef DEBUG_STACK
+    Log("~GetGlobalBool : "+GetTop()+" "+sName);
+    #endif
     return b;
 }
 
 void State::GetField( const s_str& sName, const s_int& iIndex )
 {
+    #ifdef DEBUG_STACK
+    Log("GetField : "+GetTop()+" "+sName);
+    #endif
     lua_getfield(pLua_, iIndex.Get(), sName.c_str());
+    #ifdef DEBUG_STACK
+    Log("~GetField : "+GetTop()+" "+sName);
+    #endif
 }
 
 void State::GetField( const s_int& iID, const s_int& iIndex )
 {
+    #ifdef DEBUG_STACK
+    Log("GetField : "+GetTop()+" "+iID);
+    #endif
     lua_pushnumber(pLua_, iID.Get());
     if (iIndex >= 0)
         lua_gettable(pLua_, iIndex.Get());
     else
         lua_gettable(pLua_, iIndex.Get() - 1);
+    #ifdef DEBUG_STACK
+    Log("~GetField : "+GetTop()+" "+iID);
+    #endif
 }
 
 s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue, const s_bool& bSetValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetFieldInt : "+GetTop()+" "+sName);
+    #endif
     s_int i;
     lua_getfield(pLua_, -1, sName.c_str());
     if (lua_isnil(pLua_, -1))
@@ -1044,11 +1064,17 @@ s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_i
         i = (int)lua_tonumber(pLua_, -1);
         lua_pop(pLua_, 1);
     }
+    #ifdef DEBUG_STACK
+    Log("~GetFieldInt : "+GetTop()+" "+sName);
+    #endif
     return i;
 }
 
 s_float State::GetFieldFloat( const s_str& sName, const s_bool& bCritical, const s_float& fDefaultValue, const s_bool& bSetValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetFieldFloat : "+GetTop()+" "+sName);
+    #endif
     s_float f;
     lua_getfield(pLua_, -1, sName.c_str());
     if (lua_isnil(pLua_, -1))
@@ -1076,11 +1102,17 @@ s_float State::GetFieldFloat( const s_str& sName, const s_bool& bCritical, const
         lua_pop(pLua_, 1);
 
     }
+    #ifdef DEBUG_STACK
+    Log("~GetFieldFloat : "+GetTop()+" "+sName);
+    #endif
     return f;
 }
 
 s_str State::GetFieldString( const s_str& sName, const s_bool& bCritical, const s_str& sDefaultValue, const s_bool& bSetValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetFieldString : "+GetTop()+" "+sName);
+    #endif
     s_str s;
     lua_getfield(pLua_, -1, sName.c_str());
     if (lua_isnil(pLua_, -1))
@@ -1107,11 +1139,17 @@ s_str State::GetFieldString( const s_str& sName, const s_bool& bCritical, const 
         s = lua_tostring(pLua_, -1);
         lua_pop(pLua_, 1);
     }
+    #ifdef DEBUG_STACK
+    Log("~GetFieldString : "+GetTop()+" "+sName);
+    #endif
     return s;
 }
 
 s_bool State::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s_bool& bDefaultValue, const s_bool& bSetValue )
 {
+    #ifdef DEBUG_STACK
+    Log("GetFieldBool : "+GetTop()+" "+sName);
+    #endif
     s_bool b;
     lua_getfield(pLua_, -1, sName.c_str());
     if (lua_isnil(pLua_, -1))
@@ -1138,82 +1176,148 @@ s_bool State::GetFieldBool( const s_str& sName, const s_bool& bCritical, const s
         b = (lua_toboolean(pLua_, -1) != 0);
         lua_pop(pLua_, 1);
     }
+    #ifdef DEBUG_STACK
+    Log("~GetFieldBool : "+GetTop()+" "+sName);
+    #endif
     return b;
 }
 
 void State::SetField( const s_str& sName )
 {
+    #ifdef DEBUG_STACK
+    Log("SetField : "+GetTop()+" "+sName);
+    #endif
     lua_pushstring(pLua_, sName.c_str());
     lua_pushvalue(pLua_, -2);
     lua_settable(pLua_, -4);
     lua_pop(pLua_, 1);
+    #ifdef DEBUG_STACK
+    Log("~SetField : "+GetTop()+" "+sName);
+    #endif
 }
 
 void State::SetField( const s_int& iID )
 {
+    #ifdef DEBUG_STACK
+    Log("SetField : "+GetTop()+" "+iID);
+    #endif
     lua_pushnumber(pLua_, iID.Get());
     lua_pushvalue(pLua_, -2);
     lua_settable(pLua_, -4);
     lua_pop(pLua_, 1);
+    #ifdef DEBUG_STACK
+    Log("~SetField : "+GetTop()+" "+iID);
+    #endif
 }
 
 void State::SetFieldInt( const s_str& sName, const s_int& iValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldInt : "+GetTop()+" "+sName);
+    #endif
     lua_pushstring(pLua_, sName.c_str());
     lua_pushnumber(pLua_, iValue.Get());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldInt : "+GetTop()+" "+sName);
+    #endif
 }
 
 void State::SetFieldFloat( const s_str& sName, const s_float& fValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldFloat : "+GetTop()+" "+sName);
+    #endif
     lua_pushstring(pLua_, sName.c_str());
     lua_pushnumber(pLua_, fValue.Get());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldFloat : "+GetTop()+" "+sName);
+    #endif
 }
 
 void State::SetFieldString( const s_str& sName, const s_str& sValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldString : "+GetTop()+" "+sName);
+    #endif
     lua_pushstring(pLua_, sName.c_str());
     lua_pushstring(pLua_, sValue.c_str());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldString : "+GetTop()+" "+sName);
+    #endif
 }
 
 void State::SetFieldBool( const s_str& sName, const s_bool& bValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldBool : "+GetTop()+" "+sName);
+    #endif
     lua_pushstring(pLua_, sName.c_str());
     lua_pushboolean(pLua_, bValue.Get());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldBool : "+GetTop()+" "+sName);
+    #endif
 }
 
 void State::SetFieldInt( const s_int& iID, const s_int& iValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldInt : "+GetTop()+" "+iID);
+    #endif
     lua_pushnumber(pLua_, iID.Get());
     lua_pushnumber(pLua_, iValue.Get());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldInt : "+GetTop()+" "+iID);
+    #endif
 }
 
 void State::SetFieldFloat( const s_int& iID, const s_float& fValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldFloat : "+GetTop()+" "+iID);
+    #endif
     lua_pushnumber(pLua_, iID.Get());
     lua_pushnumber(pLua_, fValue.Get());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldFloat : "+GetTop()+" "+iID);
+    #endif
 }
 
 void State::SetFieldString( const s_int& iID, const s_str& sValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldString : "+GetTop()+" "+iID);
+    #endif
     lua_pushnumber(pLua_, iID.Get());
     lua_pushstring(pLua_, sValue.c_str());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldString : "+GetTop()+" "+iID);
+    #endif
 }
 
 void State::SetFieldBool( const s_int& iID, const s_bool& bValue )
 {
+    #ifdef DEBUG_STACK
+    Log("SetFieldBool : "+GetTop()+" "+iID);
+    #endif
     lua_pushnumber(pLua_, iID.Get());
     lua_pushboolean(pLua_, bValue.Get());
     lua_settable(pLua_, -3);
+    #ifdef DEBUG_STACK
+    Log("~SetFieldBool : "+GetTop()+" "+iID);
+    #endif
 }
 
 void State::SetTop( const s_uint& uiSize )
 {
+    #ifdef DEBUG_STACK
+    Log("SetTop : "+uiSize);
+    #endif
     lua_settop(pLua_, uiSize.Get());
 }
