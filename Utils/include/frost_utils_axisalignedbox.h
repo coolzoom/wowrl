@@ -119,6 +119,9 @@ namespace Frost
         AxisAlignedBox operator + (const Vector& mAdd) const;
         AxisAlignedBox operator - (const Vector& mAdd) const;
 
+        void operator += (const Vector& mAdd);
+        void operator -= (const Vector& mAdd);
+
         #ifdef USING_OGRE
         /// Converts a Frost::AxisAlignedBox to an Ogre::AxisAlignedBox.
         /** \param mBox The box to convert

@@ -147,6 +147,9 @@ namespace Frost
         /// Checks if this float is contained into the provided range.
         s_bool IsInRange(const s_float_t<T>& fMin, const s_float_t<T>& fMax) const;
 
+        /// Checks if this float is contained into the provided range, but not equal to either bounds
+        s_bool IsInRangeOpen(const s_float_t<T>& fMin, const s_float_t<T>& fMax) const;
+
         /// Checks if this float is a Not a Number (NaN)
         /** \return 'true' if this float is NaN
         */
