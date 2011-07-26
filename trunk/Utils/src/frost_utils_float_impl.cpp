@@ -129,6 +129,12 @@ s_bool s_float_t<T>::IsInRange(const s_float_t<T>& fMin, const s_float_t<T>& fMa
 }
 
 template <class T>
+s_bool s_float_t<T>::IsInRangeOpen(const s_float_t<T>& fMin, const s_float_t<T>& fMax) const
+{
+    return ( (fMin < (*this)) && ((*this) < fMax) );
+}
+
+template <class T>
 s_bool s_float_t<T>::IsNaN() const
 {
     #ifdef MSVC

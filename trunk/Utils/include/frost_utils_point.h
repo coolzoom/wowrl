@@ -51,6 +51,11 @@ namespace Frost
             return T(sqrt(mX_*mX_ + mY_*mY_));
         }
 
+        T GetNormSquared() const
+        {
+            return mX_*mX_ + mY_*mY_;
+        }
+
         void Normalize()
         {
             T mNorm = T(sqrt(mX_*mX_ + mY_*mY_));

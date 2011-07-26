@@ -105,7 +105,19 @@ namespace Frost
         return AxisAlignedBox(mMin_ - mAdd, mMax_ - mAdd);
     }
 
-    s_bool AxisAlignedBox::Contains(const AxisAlignedBox& mBox) const
+    void AxisAlignedBox::operator += ( const Vector& mAdd )
+    {
+        mMin_ += mAdd;
+        mMax_ += mAdd;
+    }
+
+    void AxisAlignedBox::operator -= ( const Vector& mAdd )
+    {
+        mMin_ -= mAdd;
+        mMax_ -= mAdd;
+    }
+
+    s_bool AxisAlignedBox::Contains( const AxisAlignedBox& mBox ) const
     {
         if (IsInfinite() || mBox.IsInfinite())
             return true;
@@ -127,7 +139,7 @@ namespace Frost
         return true;
     }
 
-    s_bool AxisAlignedBox::Contains(const Vector& mPoint) const
+    s_bool AxisAlignedBox::Contains( const Vector& mPoint ) const
     {
         return (mPoint.X().IsInRange(mMin_.X(), mMax_.X()) &&
                 mPoint.Y().IsInRange(mMin_.Y(), mMax_.Y()) &&

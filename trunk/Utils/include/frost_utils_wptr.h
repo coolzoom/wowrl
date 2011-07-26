@@ -64,7 +64,7 @@ namespace Frost
         /// s_wptr conversion.
         s_wptr(const s_wptr<N>& pPtr)
         {
-            pValue_    = pPtr.Lock().pValue_;
+            pValue_    = pPtr.pValue_;
             pCounter_  = pPtr.pCounter_;
             pWCounter_ = pPtr.pWCounter_;
 
