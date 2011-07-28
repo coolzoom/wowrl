@@ -562,7 +562,7 @@ s_str State::Serialize( const s_str& sTab, const s_int& iIndex )
                 if (IsSerializable())
                 {
                     sContent << sTab << "    [" << Serialize(sTab + "    ", -2) << "] = "
-                            << Serialize(sTab + "    ", -1) << ";\n";
+                            << Serialize(sTab + "    ", -1) << ",\n";
                 }
                 Pop();
             }
