@@ -189,12 +189,12 @@ namespace Frost
 
     s_float& Color::operator [] ( const s_uint& uiIndex )
     {
-        return (&a)[uiIndex.Get()];
+        return (&r)[uiIndex.Get()];
     }
 
     const s_float& Color::operator [] ( const s_uint& uiIndex ) const
     {
-        return (&a)[uiIndex.Get()];
+        return (&r)[uiIndex.Get()];
     }
 
     s_bool Color::operator == ( const Color& mColor ) const
