@@ -168,10 +168,10 @@ namespace Frost
 
         static const s_str CLASS_NAME;
 
-        s_float a;
         s_float r;
         s_float g;
         s_float b;
+        s_float a;
 
     private :
 
