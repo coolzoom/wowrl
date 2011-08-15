@@ -607,6 +607,8 @@ int luaG_ordererror (lua_State *L, const TValue *p1, const TValue *p2) {
 static void addinfo (lua_State *L, const char *msg) {
   CallInfo *ci = L->ci;
   if (isLua(ci)) {  /* is Lua code? */
+    /* kalith : commenting out this portion of code to allow the program to */
+    /*          format the error string by itself */
     #if 0
     char buff[LUA_IDSIZE];  /* add file:line information */
     int line = currentline(L, ci);

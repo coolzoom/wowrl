@@ -137,6 +137,7 @@ namespace Frost
         pLua->PushNumber(GetID());
         lGlueList_.PushBack(pLua->PushNew<LuaCharacter>());
         pLua->SetGlobal(GetLuaID());
+        pLua->Pop();
     }
 
     const Race& Character::GetRace()

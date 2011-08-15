@@ -286,5 +286,6 @@ namespace Frost
     {
         pLua->PushNew<LuaUnitManager>();
         pLua->SetGlobal("UnitManager");
+        pLua->Pop();
     }
 }

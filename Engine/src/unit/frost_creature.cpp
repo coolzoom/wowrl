@@ -38,6 +38,7 @@ namespace Frost
         pLua->PushNumber(GetID());
         lGlueList_.PushBack(pLua->PushNew<LuaCreature>());
         pLua->SetGlobal(GetLuaID());
+        pLua->Pop();
     }
 
     void Creature::SetBodyModel( const s_str& sModelName )
