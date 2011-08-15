@@ -343,5 +343,6 @@ namespace Frost
         pLua->PushNumber(GetID());
         lGlueList_.PushBack(pLua->PushNew<LuaMovableUnit>());
         pLua->SetGlobal(GetLuaID());
+        pLua->Pop();
     }
 }

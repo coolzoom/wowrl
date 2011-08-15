@@ -426,6 +426,7 @@ namespace Frost
         pLua->PushNumber(GetID());
         lGlueList_.PushBack(pLua->PushNew<LuaUnit>());
         pLua->SetGlobal(GetLuaID());
+        pLua->Pop();
     }
 
     void Unit::OnEvent(const Event& mEvent)
