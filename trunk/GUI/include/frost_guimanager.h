@@ -154,23 +154,6 @@ namespace Frost
         /// Destructor.
         ~GUIManager();
 
-        /// Allows the GUI to receive input and update.
-        /** \note See IsEnabled().
-        */
-        void                 Enable();
-
-        /// Blocks input events.
-        /** \note See IsEnabled().
-        */
-        void                 Disable();
-
-        /// Checks if input can be received.
-        /** \return 'true' if input can be received
-        *   \note All widgets must call this function and check
-        *         its return value before reacting to input events.
-        */
-        const s_bool&        IsEnabled() const;
-
         /// Returns the "screen" width.
         /** \return The screen width
         *   \note This is not necessarily the real screen width.
@@ -480,9 +463,29 @@ namespace Frost
         void                 ToggleCaching();
 
         /// Checks if GUI caching is enabled.
-        /** \return 'true' if GUI cachin is enabled
+        /** \return 'true' if GUI caching is enabled
         */
         const s_bool&        IsCachingEnabled() const;
+
+        /// Enables/disables input response for all widgets.
+        /** \parem bEnable 'true' to enable input
+        *   \note See ToggleInput() and IsInputEnabled().
+        */
+        void                 EnableInput(const s_bool& bEnable);
+
+        /// Toggles input response for all widgets.
+        /** \note Enabled by default.
+        *   \note See IsInputEnabled().
+        */
+        void                 ToggleInput();
+
+        /// Checks if input response is enabled for all widgets.
+        /** \return 'true' if input response is enabled
+        *   \note All widgets must call this function and check
+        *         its return value before reacting to input events.
+        *   \note See ToggleInput().
+        */
+        const s_bool&        IsInputEnabled() const;
 
         /// Sets wether the Manager should clear all fonts when closed.
         /** \param bClear 'true' to clear fonts
@@ -606,6 +609,8 @@ namespace Frost
 
         void SaveVariables_(s_ptr<AddOn> pAddOn);
 
+        void SetOveredFrame_(s_ptr<GUI::Frame> pFrame, const s_int& iX = 0, const s_int& iY = 0);
+
         void CreateStrataRenderTarget_(Strata& mStrata);
         void RenderStrata_(Strata& mStrata);
 
@@ -621,8 +626,10 @@ namespace Frost
         s_bool            bClosed_;
         s_bool            bEnabled_;
         s_bool            bLoadingUI_;
+        s_bool            bFirstIteration_;
 
         s_map< s_uint, s_map< s_uint, s_map<s_uint, s_str> > > lKeyBindingList_;
+        s_bool                                                 bInputEnabled_;
 
         s_map< s_str, s_ptr<GUI::UIObject> >  lNamedObjectList_;
         s_map< s_str, s_ptr<GUI::UIObject> >  lNamedVirtualObjectList_;
@@ -639,6 +646,7 @@ namespace Frost
         s_bool                             bBuildStrataList_;
         s_bool                             bObjectMoved_;
         s_ptr<GUI::Frame>                  pOveredFrame_;
+        s_bool                             bUpdateOveredFrame_;
         s_ptr<GUI::EditBox>                pFocusedEditBox_;
 
         s_ptr<GUI::UIObject> pMovedObject_;

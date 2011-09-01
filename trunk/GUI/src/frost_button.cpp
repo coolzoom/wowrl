@@ -96,7 +96,7 @@ void Button::OnEvent( const Event& mEvent )
 {
     Frame::OnEvent(mEvent);
 
-    if (!pManager_->IsEnabled())
+    if (!pManager_->IsInputEnabled())
         return;
 
     if (mEvent.GetName() == "MOUSE_DOUBLE_CLICKED" && bMouseInFrame_)

@@ -89,6 +89,8 @@ namespace Frost
         bEnableCaching_ = true;
         bEnabled_ = true;
         bClearFontsOnClose_ = true;
+        bFirstIteration_ = true;
+        bInputEnabled_ = true;
     }
 
     GUIManager::~GUIManager()
@@ -105,21 +107,6 @@ namespace Frost
     s_wptr<GUIManagerImpl> GUIManager::GetImpl()
     {
         return pImpl_;
-    }
-
-    void GUIManager::Enable()
-    {
-        bEnabled_ = true;
-    }
-
-    void GUIManager::Disable()
-    {
-        bEnabled_ = false;
-    }
-
-    const s_bool& GUIManager::IsEnabled() const
-    {
-        return bEnabled_;
     }
 
     const s_uint& GUIManager::GetScreenWidth() const
@@ -595,12 +582,6 @@ namespace Frost
                 else
                     lAddOnList_[sAddOnDirectory][sAddOnName] = mAddOn;
             }
-            else
-            {
-                Warning(CLASS_NAME,
-                    "Missing TOC file for AddOn \""+sAddOnName+"\". Directory ignored."
-                );
-            }
         }
     }
 
@@ -1018,10 +999,12 @@ namespace Frost
 
     void GUIManager::Update( const s_float& fDelta )
     {
+        s_ptr<InputManager> pInputMgr = InputManager::GetSingleton();
+
         if (pMovedObject_ || pSizedObject_)
         {
-            fMouseMovementX_ += InputManager::GetSingleton()->GetMouseRawDX();
-            fMouseMovementY_ += InputManager::GetSingleton()->GetMouseRawDY();
+            fMouseMovementX_ += pInputMgr->GetMouseRawDX();
+            fMouseMovementY_ += pInputMgr->GetMouseRawDY();
         }
 
         if (pMovedObject_)
@@ -1161,8 +1144,13 @@ namespace Frost
             (InputManager::GetSingleton()->GetMouseRawDX() != 0.0f) ||
             (InputManager::GetSingleton()->GetMouseRawDY() != 0.0f))
         {
-            s_int iX = s_int(InputManager::GetSingleton()->GetMousePosX());
-            s_int iY = s_int(InputManager::GetSingleton()->GetMousePosY());
+            bUpdateOveredFrame_ = true;
+        }
+
+        if (bUpdateOveredFrame_ && bInputEnabled_)
+        {
+            s_int iX = s_int(pInputMgr->GetMousePosX());
+            s_int iY = s_int(pInputMgr->GetMousePosY());
             s_ptr<GUI::Frame> pOveredFrame;
 
             s_map<FrameStrata, Strata>::const_iterator iterStrata = lStrataList_.End();
@@ -1190,34 +1178,41 @@ namespace Frost
                 }
             }
 
-            if (pOveredFrame && !pOveredFrame->IsWorldInputAllowed())
-                InputManager::GetSingleton()->BlockClicks("WORLD");
-            else
-                InputManager::GetSingleton()->AllowClicks("WORLD");
+            SetOveredFrame_(pOveredFrame, iX, iY);
 
-            if (pOveredFrame != pOveredFrame_)
-            {
-                if (pOveredFrame_)
-                    pOveredFrame_->NotifyMouseInFrame(false, iX, iY);
-
-                pOveredFrame_ = pOveredFrame;
-            }
-
-            if (pOveredFrame_)
-                pOveredFrame_->NotifyMouseInFrame(true, iX, iY);
+            bUpdateOveredFrame_ = false;
         }
 
         bObjectMoved_ = false;
         bBuildStrataList_ = false;
 
-        static s_bool bFirstIteration = true;
-        if (bFirstIteration)
+        s_bool bFirstIteration = true;
+        if (bFirstIteration_)
         {
             EventManager::GetSingleton()->FireEvent(Event("ENTERING_WORLD"));
-            bFirstIteration = false;
+            bFirstIteration_ = false;
         }
 
         ++uiFrameNumber_;
+    }
+
+    void GUIManager::SetOveredFrame_( s_ptr<GUI::Frame> pFrame, const s_int& iX, const s_int& iY )
+    {
+        if (pFrame && !pFrame->IsWorldInputAllowed())
+            InputManager::GetSingleton()->BlockClicks("WORLD");
+        else
+            InputManager::GetSingleton()->AllowClicks("WORLD");
+
+        if (pFrame != pOveredFrame_)
+        {
+            if (pOveredFrame_)
+                pOveredFrame_->NotifyMouseInFrame(false, iX, iY);
+
+            pOveredFrame_ = pFrame;
+        }
+
+        if (pOveredFrame_)
+            pOveredFrame_->NotifyMouseInFrame(true, iX, iY);
     }
 
     void GUIManager::StartMoving( s_ptr<GUI::UIObject> pObj, s_ptr<GUI::Anchor> pAnchor, Vector::Constraint mConstraint )
@@ -1402,6 +1397,37 @@ namespace Frost
     const s_bool& GUIManager::IsCachingEnabled() const
     {
         return bEnableCaching_;
+    }
+
+    void GUIManager::EnableInput(const s_bool& bEnable)
+    {
+        if (bInputEnabled_ != bEnable)
+            ToggleInput();
+    }
+
+    void GUIManager::ToggleInput()
+    {
+        bInputEnabled_ = !bInputEnabled_;
+
+        if (bInputEnabled_)
+        {
+            bUpdateOveredFrame_ = true;
+
+            if (pFocusedEditBox_)
+                InputManager::GetSingleton()->SetFocus(true, pFocusedEditBox_);
+        }
+        else
+        {
+            SetOveredFrame_(nullptr);
+
+            if (pFocusedEditBox_)
+                InputManager::GetSingleton()->SetFocus(false);
+        }
+    }
+
+    const s_bool& GUIManager::IsInputEnabled() const
+    {
+        return bInputEnabled_;
     }
 
     void GUIManager::ClearFontsOnClose( const s_bool& bClear )
