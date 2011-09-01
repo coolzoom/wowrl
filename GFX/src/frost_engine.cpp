@@ -203,6 +203,7 @@ namespace Frost
         lParams["height"] = s_uint((uint)pRenderWindow_->getHeight());
         pGUIMgr_ = s_refptr<GUIManager>(new GUIManager(lParams));
         pGUIMgr_->CreateLua();
+        pGUIMgr_->EnableCaching(GetBoolConstant("EnableGUICaching"));
         pGUIMgr_->RegisterFrame<GUI::ModelFrame>("ModelFrame");
     }
 
