@@ -178,7 +178,7 @@ void EditBox::OnEvent( const Event& mEvent )
 {
     Frame::OnEvent(mEvent);
 
-    if (!pManager_->IsEnabled())
+    if (!pManager_->IsInputEnabled())
         return;
 
     if (mEvent.GetName() == "MOUSE_PRESSED" && bMouseInFrame_)

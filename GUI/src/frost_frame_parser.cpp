@@ -139,8 +139,13 @@ void Frame::ParseAttributes_( s_ptr<XML::Block> pBlock )
             }
             else
             {
+                s_bool bNonVirtual = false;
+                if (pManager_->GetUIObjectByName(*iter))
+                    bNonVirtual = true;
+
                 Warning(pBlock->GetFile()+":"+pBlock->GetLineNbr(),
-                    "Couldn't find inherited object \""+*iter+"\". Inheritance skipped."
+                    "Couldn't find inherited object \""+*iter+"\""+
+                    s_str(bNonVirtual ? " (object is not virtual)" : "")+". Inheritance skipped."
                 );
             }
         }

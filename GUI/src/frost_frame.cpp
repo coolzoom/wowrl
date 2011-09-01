@@ -1004,7 +1004,7 @@ void Frame::OnEvent( const Event& mEvent )
         On("Event", &mTemp);
     }
 
-    if (!pManager_->IsEnabled())
+    if (!pManager_->IsInputEnabled())
         return;
 
     if (bIsMouseEnabled_ && bIsVisible_)

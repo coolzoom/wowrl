@@ -90,7 +90,7 @@ void Slider::OnEvent( const Event& mEvent )
 {
     Frame::OnEvent(mEvent);
 
-    if (bIsMouseEnabled_ && pManager_->IsEnabled())
+    if (bIsMouseEnabled_ && pManager_->IsInputEnabled())
     {
         if (mEvent.GetName() == "MOUSE_PRESSED")
         {
