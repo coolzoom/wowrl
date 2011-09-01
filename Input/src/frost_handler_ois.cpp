@@ -79,8 +79,8 @@ namespace Frost
         XWarpPointer(pDisplay_, None, mWindow_, 0, 0, 0, 0, fX.Get(), fY.Get());
         XFlush(pDisplay_);
     #else
-        POINT position = {fX.Get(), fY.Get()};
-        ClientToScreen(mHandle_, &position);
+        POINT position = {(LONG)fX.Get(), (LONG)fY.Get()};
+        ClientToScreen(mWindow_, &position);
         SetCursorPos(position.x, position.y);
     #endif
     }
