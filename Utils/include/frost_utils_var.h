@@ -28,6 +28,12 @@ namespace Frost
     *   So this class is definatly slower than base types : <b>use it
     *   wisely</b>.
     *   \note This class is highly inspired from boost::any.
+    *   \note The comparison operators '==' and '!=' only work with
+    *         base Frost types (s_str, s_float, s_double, s_uint,
+    *         s_int and s_bool), and they assume that the compared
+    *         variables are of the same internal type.
+    *         If you need to compare another type T, just write :
+    *                   v1.Get<T>() == v2.Get<T>()
     */
     class s_var
     {
@@ -51,7 +57,7 @@ namespace Frost
 
         s_bool operator == (const s_var& mVar) const;
 
-        s_bool operator != (const s_var& mVar);
+        s_bool operator != (const s_var& mVar) const;
 
         /// Swaps this value with another.
         /** \param mVar the value to swap with this one

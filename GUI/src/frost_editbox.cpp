@@ -1000,7 +1000,7 @@ s_bool EditBox::AddChar_( const s_str& sChar )
 
         if (sChar[0] == '.')
         {
-            static uint UNICODE_DOT = UTF8ToUnicode('.');
+            static const s_ustr UNICODE_DOT = UTF8ToUnicode(s_str("."));
 
             if (bIntegerOnly_)
                 return false;
@@ -1010,8 +1010,8 @@ s_bool EditBox::AddChar_( const s_str& sChar )
         }
         else if (sChar[0] == '+' || sChar[0] == '-')
         {
-            static uint UNICODE_PLUS = UTF8ToUnicode('+');
-            static uint UNICODE_MINUS = UTF8ToUnicode('-');
+            static const s_ustr UNICODE_PLUS = UTF8ToUnicode(s_str("+"));
+            static const s_ustr UNICODE_MINUS = UTF8ToUnicode(s_str("-"));
 
             if (bPositiveOnly_)
                 return false;

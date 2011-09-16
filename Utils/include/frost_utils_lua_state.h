@@ -365,6 +365,20 @@ namespace Frost
             */
             void    GetField(const s_int& iID, const s_int& iIndex = -1);
 
+            /// Returns a value from a Lua table.
+            /** \param sName  The name of the key associated to the value
+            *   \param iIndex The position of the table in the stack
+            *   \note Returns s_var() if the key couldn't be found.
+            */
+            s_var   GetFieldValue(const s_str& sName, const s_int& iIndex = -1);
+
+            /// Returns a value from a Lua table.
+            /** \param iID    The id of the key associated to the value
+            *   \param iIndex The position of the table in the stack
+            *   \note Returns s_var() if the key couldn't be found.
+            */
+            s_var   GetFieldValue(const s_int& iID, const s_int& iIndex = -1);
+
             /// Reads an int from a Lua table.
             /** \param sName         The name of the key associated to the value
             *   \param bCritical     If 'true', an error will be printed if
