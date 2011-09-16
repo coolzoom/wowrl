@@ -82,7 +82,7 @@ namespace Frost
         return false;
     }
 
-    s_bool s_var::operator != (const s_var& mVar)
+    s_bool s_var::operator != (const s_var& mVar) const
     {
         return !(operator == (mVar));
     }

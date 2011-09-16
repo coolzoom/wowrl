@@ -1033,6 +1033,34 @@ void State::GetField( const s_int& iID, const s_int& iIndex )
     #endif
 }
 
+s_var State::GetFieldValue( const s_str& sName, const s_int& iIndex )
+{
+    #ifdef DEBUG_STACK
+    Log("GetFieldValue : "+GetTop()+" "+sName);
+    #endif
+    GetField(sName, iIndex);
+    s_var v = GetValue();
+    Pop();
+    #ifdef DEBUG_STACK
+    Log("~GetFieldValue : "+GetTop()+" "+sName);
+    #endif
+    return v;
+}
+
+s_var State::GetFieldValue( const s_int& iID, const s_int& iIndex )
+{
+    #ifdef DEBUG_STACK
+    Log("GetFieldValue : "+GetTop()+" "+iID);
+    #endif
+    GetField(iID, iIndex);
+    s_var v = GetValue();
+    Pop();
+    #ifdef DEBUG_STACK
+    Log("~GetFieldValue : "+GetTop()+" "+iID);
+    #endif
+    return v;
+}
+
 s_int State::GetFieldInt( const s_str& sName, const s_bool& bCritical, const s_int& iDefaultValue, const s_bool& bSetValue )
 {
     #ifdef DEBUG_STACK

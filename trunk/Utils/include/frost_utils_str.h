@@ -57,12 +57,12 @@ namespace Frost
         /// Constructor.
         /** \param c The character to copy
         */
-        s_str_t(const character& c);
+        explicit s_str_t(const character& c);
 
         /// Constructor.
         /** \param c The character to copy
         */
-        s_str_t(const frost_character& c);
+        explicit s_str_t(const frost_character& c);
 
         /// Creates "uiNbr" copies of the provided string.
         /** \param s     The string to copy
