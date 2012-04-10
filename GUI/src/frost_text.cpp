@@ -188,7 +188,7 @@ s_float Text::GetTextHeight() const
 
     if (bReady_)
     {
-        fHeight = GetLineHeight()*(s_float(sText_.CountOccurences("\n"))*GetLineHeight()*fLineSpacing_ + 1.0f);
+        fHeight = GetLineHeight()*(s_float(sText_.CountOccurences("\n"))*fLineSpacing_ + 1.0f);
     }
 
     return fHeight;

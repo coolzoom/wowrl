@@ -450,7 +450,7 @@ void EditBox::InsertAfterCursor( const s_str& sText )
 
 void EditBox::SetMaxLetters( const s_uint& uiMaxLetters )
 {
-    if (uiMaxLetters_ == 0 && !uiMaxLetters_.IsInfinite())
+    if (uiMaxLetters == 0 && !uiMaxLetters_.IsInfinite())
     {
         uiMaxLetters_ = s_uint::INF;
         return;
