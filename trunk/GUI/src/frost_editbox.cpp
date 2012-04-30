@@ -1100,7 +1100,7 @@ s_uint EditBox::GetLetterIDAt_( const s_int& iX, const s_int& iY )
             return uiDisplayPos_;
 
         s_float fX = s_float(iX - lBorderList_[BORDER_LEFT] - lTextInsets_[BORDER_LEFT]);
-        s_float fY = s_float(iY - lBorderList_[BORDER_TOP]  - lTextInsets_[BORDER_TOP]);
+        //s_float fY = s_float(iY - lBorderList_[BORDER_TOP]  - lTextInsets_[BORDER_TOP]);
 
         if (!bMultiLine_)
         {

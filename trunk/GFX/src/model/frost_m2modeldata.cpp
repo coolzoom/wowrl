@@ -42,7 +42,6 @@ bool IsAnimated( char* sBuffer, ModelHeader mHeader )
 
     bool animGeometry = false;
     bool animBones = false;
-    bool ind = false;
 
     ModelVertex *verts = (ModelVertex*)(sBuffer + mHeader.ofsVertices);
     for (uint i = 0; i < mHeader.nVertices && !animGeometry; ++i)
@@ -54,11 +53,6 @@ bool IsAnimated( char* sBuffer, ModelHeader mHeader )
                 ModelBoneDef &bb = bo[verts[i].bones[b]];
                 if (bb.translation.type || bb.rotation.type || bb.scaling.type || (bb.flags&8))
                 {
-                    if (bb.flags & 8)
-                    {
-                        // if we have billboarding, the model will need per-instance animation
-                        ind = true;
-                    }
                     animGeometry = true;
                     break;
                 }
@@ -120,7 +114,7 @@ bool IsAnimated( char* sBuffer, ModelHeader mHeader )
     }
 
     // guess not...
-    return (animGeometry || animTextures || animMisc);
+    return (animGeometry || animTextures || animMisc || animBones);
 }
 
 /** \cond NOT_REMOVE_FROM_DOC

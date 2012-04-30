@@ -457,7 +457,7 @@ int LuaUIObject::_SetAllPoints( lua_State* pLua )
         }
         else
         {
-            pParent_->SetAllPoints(nullptr);
+            pParent_->SetAllPoints(s_ptr<UIObject>(nullptr));
         }
     }
 

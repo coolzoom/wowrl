@@ -129,9 +129,6 @@ void SpriteManager::SetWindowSize( const s_uint& uiScreenWidth, const s_uint& ui
     fXOffset_ = pRS_->getHorizontalTexelOffset()/fWidth;
     fYOffset_ = pRS_->getVerticalTexelOffset()/fHeight;
 
-    s_uint uiWidth = s_uint(fWidth);
-    s_uint uiHeight = s_uint(fHeight);
-
     if (!pMainTarget_)
         pMainTarget_ = s_refptr<GUI::RenderTarget>(new GUI::RenderTarget(uiScreenWidth, uiScreenHeight));
     else

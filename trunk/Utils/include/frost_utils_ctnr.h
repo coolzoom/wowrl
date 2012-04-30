@@ -545,7 +545,7 @@ namespace Frost
 
         s_ctnr& operator, (const ValueType& mElem)
         {
-            PushBack(mElem);
+            ParentContainerType::PushBack(mElem);
             return (*this);
         }
     };

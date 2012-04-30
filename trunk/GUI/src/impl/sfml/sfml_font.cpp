@@ -26,6 +26,12 @@ FontImpl::FontImpl( const s_str& sFontFile, const s_uint& uiSize )
 {
     // NOTE : Code inspired from Ogre::Font, from the OGRE3D graphics engine
     // http://www.ogre3d.org
+    //
+    // Some tweaking has been done to improve the text quality :
+    //  - Disable hinting (FT_LOAD_NO_HINTING)
+    //  - Character width is calculated as : max(x_bearing + width, advance),
+    //    since advance sometimes doesn't cover the whole glyph
+    //    (typical example is the 'w' character, in Consolas:9).
 
     FT_Library mFT;
     if (FT_Init_FreeType(&mFT))
@@ -55,7 +61,8 @@ FontImpl::FontImpl( const s_str& sFontFile, const s_uint& uiSize )
     // Calculate maximum width, height and bearing
     for (uint cp = 32; cp <= 255; ++cp)
     {
-        FT_Load_Char(mFace, cp, FT_LOAD_RENDER);
+        if (FT_Load_Char(mFace, cp, FT_LOAD_RENDER | FT_LOAD_NO_HINTING))
+            continue;
 
         int iCharHeight = 2*(mFace->glyph->bitmap.rows << 6) - mFace->glyph->metrics.horiBearingY;
         if (iCharHeight > iMaxHeight)
@@ -64,18 +71,23 @@ FontImpl::FontImpl( const s_str& sFontFile, const s_uint& uiSize )
         if (mFace->glyph->metrics.horiBearingY > iMaxBearingY)
             iMaxBearingY = mFace->glyph->metrics.horiBearingY;
 
-        int iCharWidth = (mFace->glyph->advance.x >> 6) + (mFace->glyph->metrics.horiBearingX >> 6);
+        int iCharWidth = std::max(
+            mFace->glyph->bitmap.width + int(mFace->glyph->metrics.horiBearingX >> 6),
+            int(mFace->glyph->advance.x >> 6)
+        );
+
         if (iCharWidth > iMaxWidth)
             iMaxWidth = iCharWidth;
     }
 
     iMaxBearingY = iMaxBearingY >> 6;
+    iMaxHeight = iMaxHeight >> 6;
 
     // Calculate the size of the texture
-    size_t uiTexSize = (iMaxWidth + uiSpacing)*((iMaxHeight >> 6) + uiSpacing)*(255-33);
+    size_t uiTexSize = (iMaxWidth + uiSpacing)*(iMaxHeight + uiSpacing)*(255-33);
 
     uint uiTexSide = static_cast<uint>(::sqrt(uiTexSize));
-    uiTexSide += std::max(iMaxWidth, iMaxHeight>>6);
+    uiTexSide += std::max(iMaxWidth, iMaxHeight);
 
     // Round up to nearest power of two
     uint i = 1;
@@ -85,13 +97,10 @@ FontImpl::FontImpl( const s_str& sFontFile, const s_uint& uiSize )
 
     size_t uiFinalWidth, uiFinalHeight;
     if (uiTexSide*uiTexSide/2 >= uiTexSize)
-    {
         uiFinalHeight = uiTexSide/2;
-    }
     else
-    {
         uiFinalHeight = uiTexSide;
-    }
+        
     uiFinalWidth = uiTexSide;
 
     fTextureWidth_ = static_cast<float>(uiFinalWidth);
@@ -105,26 +114,22 @@ FontImpl::FontImpl( const s_str& sFontFile, const s_uint& uiSize )
     {
         mCI.uiCodePoint = cp;
 
-        if (FT_Load_Char(mFace, cp, FT_LOAD_RENDER))
+        if (FT_Load_Char(mFace, cp, FT_LOAD_RENDER | FT_LOAD_NO_HINTING))
         {
             Warning(CLASS_NAME, "Can't load character "+s_uchar(s_uint(cp))+" in font \""+sFontFile+"\".");
             continue;
         }
 
-        FT_Int iAdvance = (mFace->glyph->advance.x >> 6) + (mFace->glyph->metrics.horiBearingX >> 6);
+        size_t uiXBearing = std::max(0, int(mFace->glyph->metrics.horiBearingX >> 6));
 
         uchar* sBuffer = mFace->glyph->bitmap.buffer;
         if (sBuffer)
         {
             int iYBearing = iMaxBearingY - (mFace->glyph->metrics.horiBearingY >> 6);
 
+            for (int k = 0; k < mFace->glyph->bitmap.width; ++k, ++sBuffer)
             for (int j = 0; j < mFace->glyph->bitmap.rows; ++j)
-            {
-                for (int k = 0; k < mFace->glyph->bitmap.width; ++k, ++sBuffer)
-                {
-                    mTexture_.SetPixel(l + k, j + m + iYBearing, sf::Color(255, 255, 255, *sBuffer));
-                }
-            }
+                mTexture_.SetPixel(l + k + uiXBearing, m + j + iYBearing, sf::Color(255, 255, 255, *sBuffer));
         }
 
         /*if (FT_HAS_KERNING(mFace))
@@ -144,11 +149,13 @@ FontImpl::FontImpl( const s_str& sFontFile, const s_uint& uiSize )
                 }
             }
         }*/
+        
+        FT_Int iAdvance = std::max(int(uiXBearing + mFace->glyph->bitmap.width), int(mFace->glyph->advance.x >> 6));
 
         mCI.fU1 = l/static_cast<float>(uiFinalWidth);
         mCI.fV1 = m/static_cast<float>(uiFinalHeight);
-        mCI.fU2 = (l + (mFace->glyph->advance.x >> 6))/static_cast<float>(uiFinalWidth);
-        mCI.fV2 = (m + (iMaxHeight >> 6))/static_cast<float>(uiFinalHeight);
+        mCI.fU2 = (l + iAdvance)/static_cast<float>(uiFinalWidth);
+        mCI.fV2 = (m + iMaxHeight)/static_cast<float>(uiFinalHeight);
 
         lCharacterList_[cp] = mCI;
 
@@ -158,7 +165,7 @@ FontImpl::FontImpl( const s_str& sFontFile, const s_uint& uiSize )
         // If at end of row
         if (l + iAdvance > uiFinalWidth - 1)
         {
-            m += (iMaxHeight >> 6) + uiSpacing;
+            m += iMaxHeight + uiSpacing;
             l = 0;
         }
     }

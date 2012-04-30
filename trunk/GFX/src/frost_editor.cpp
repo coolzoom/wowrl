@@ -101,6 +101,10 @@ namespace Frost
     {
     }
 
+    EditorAction::~EditorAction()
+    {
+    }
+
     const s_bool& EditorAction::CallDoWhenAdded() const
     {
         return bCallDoWhenAdded_;

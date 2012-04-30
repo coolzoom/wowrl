@@ -117,6 +117,8 @@ namespace Frost
             Vector         mPosition_;
         };
 
+        virtual ~Path() {}
+
         /// Creates a new iterator to move along this path.
         /** \return The newly created iterator.
         */

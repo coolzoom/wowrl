@@ -163,6 +163,7 @@ namespace Frost
         static const Color RED;
         static const Color GREEN;
         static const Color BLUE;
+        #undef VOID
         static const Color VOID;
         static const Color NaN;
 
