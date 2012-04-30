@@ -19,6 +19,7 @@ namespace Frost
     public :
 
         EditorAction();
+        virtual ~EditorAction();
 
         virtual void Do() = 0;
         virtual void Undo() = 0;

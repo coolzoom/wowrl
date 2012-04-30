@@ -1186,7 +1186,6 @@ namespace Frost
         bObjectMoved_ = false;
         bBuildStrataList_ = false;
 
-        s_bool bFirstIteration = true;
         if (bFirstIteration_)
         {
             EventManager::GetSingleton()->FireEvent(Event("ENTERING_WORLD"));

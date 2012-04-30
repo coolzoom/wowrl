@@ -1,6 +1,9 @@
 // Warning : If you need to use this file, include frost_utils_types.h
 namespace Frost
 {
+#ifdef HAS_NULLPTR
+    typedef std::nullptr_t s_nullptr;
+#else
     /// Null pointer
     /** A safe replacement for the NULL macro.
     */
@@ -35,4 +38,5 @@ namespace Frost
     };
 
     const s_nullptr nullptr;
+#endif
 }

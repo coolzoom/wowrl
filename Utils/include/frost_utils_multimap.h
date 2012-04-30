@@ -206,7 +206,7 @@ namespace Frost
         */
         iterator Insert(const pair& mPair)
         {
-            return mMulMap_.insert(make_pair(mPair.First(), mPair.Second()));
+            return mMulMap_.insert(std::make_pair(mPair.First(), mPair.Second()));
         }
 
         /// Inserts a pair in the multimap.
@@ -218,7 +218,7 @@ namespace Frost
         */
         iterator Insert(const Key& mKey, const Value& mValue)
         {
-            return mMulMap_.insert(make_pair(mKey, mValue));
+            return mMulMap_.insert(std::make_pair(mKey, mValue));
         }
 
         /// Inserts a pair in the multimap (with hint).

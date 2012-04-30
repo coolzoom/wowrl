@@ -223,6 +223,8 @@ namespace Frost
     {
     public :
 
+        virtual ~InputHandlerImpl() {}
+
         virtual void Update(InputHandler::MouseState& mMState, InputHandler::KeyboardState& mKState)
         {
             FillKeyboardState(mKState);

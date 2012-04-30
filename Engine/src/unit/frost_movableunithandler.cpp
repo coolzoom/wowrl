@@ -145,7 +145,7 @@ namespace Frost
                 {
                     mHorizontalSpeed_ = pMovableUnit_->GetMovementSpeed();
                     mMovement_ = mHorizontalSpeed_*fNewDelta;
-                    s_float fMovement = mMovement_.GetNorm();
+                    //s_float fMovement = mMovement_.GetNorm();
 
                     // Check for collisions
                     uiRecursionCounter_ = 0;
@@ -191,7 +191,7 @@ namespace Frost
             CollisionData mData;
             s_bool bCollision;
 
-            s_ptr<Obstacle> pCurrentlyBinded = pBindedObstacle_;
+            //s_ptr<Obstacle> pCurrentlyBinded = pBindedObstacle_;
             AxisAlignedBox mTempBox = mBoundingBox_ + mPosition_;
 
             // Check for collision with all obstacles

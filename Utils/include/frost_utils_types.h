@@ -38,7 +38,9 @@ namespace Frost
     template<class T>               class s_range;
     template<class Key, class Data> class s_map;
     template<class Key, class Data> class s_multimap;
+#ifndef HAS_NULLPTR
                                     class s_nullptr;
+#endif
     template<class T>               class s_ptr;
     template<class T>               class s_refptr;
     template<class T>               class s_wptr;

@@ -17,11 +17,11 @@ namespace Frost
     const s_type& s_var::VALUE_POINTER = typeid(void*);
 
 
-    s_var::s_var() : pValue_(NULL)
+    s_var::s_var() : pValue_(nullptr)
     {
     }
 
-    s_var::s_var(const s_var& mVar) : pValue_(mVar.pValue_ ? mVar.pValue_->Clone() : NULL)
+    s_var::s_var(const s_var& mVar) : pValue_(mVar.pValue_ ? mVar.pValue_->Clone() : nullptr)
     {
     }
 
@@ -94,7 +94,7 @@ namespace Frost
 
     s_bool s_var::IsEmpty() const
     {
-        return (pValue_ == NULL);
+        return (pValue_ == nullptr);
     }
 
 

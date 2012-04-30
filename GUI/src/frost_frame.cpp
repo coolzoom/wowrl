@@ -991,8 +991,6 @@ void Frame::OnEvent( const Event& mEvent )
 {
     if (lDefinedScriptList_.Find("Event") && (lRegEventList_.Find(mEvent.GetName()) || bHasAllEventsRegistred_))
     {
-        s_ptr<Lua::State> pLua = pManager_->GetLua();
-
         // ADDON_LOADED should only be fired if it's this Frame's addon
         if (mEvent.GetName() == "ADDON_LOADED")
         {

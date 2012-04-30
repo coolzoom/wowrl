@@ -88,7 +88,6 @@ namespace Frost
         mDestination.ScaleDown(mRadiusVector);
 
         Vector mDistance = mDestination - mPosition;
-        Vector mInitialDistance = mDistance;
         s_float fDistanceSquared = mDistance.GetLengthSquared();
 
         Vector mDirection = mDistance;
