@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Win32_Release">
-				<Option output="..\lib\libinput" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Release\" />
 				<Option type="2" />
@@ -23,7 +23,7 @@
 				</Linker>
 			</Target>
 			<Target title="Win32_Debug">
-				<Option output="..\lib\libinput_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Debug\" />
 				<Option type="2" />
@@ -37,7 +37,7 @@
 			</Target>
 			<Target title="Linux_Release">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Release\" />
 				<Option type="2" />
@@ -54,7 +54,7 @@
 			</Target>
 			<Target title="Linux_Debug">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Debug\" />
 				<Option type="2" />
@@ -67,7 +67,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Win32_Release_Threads">
-				<Option output="..\lib\libinput_thread" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input_thread" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Release_Thread\" />
 				<Option type="2" />
@@ -84,7 +84,7 @@
 				</Linker>
 			</Target>
 			<Target title="Win32_Debug_Threads">
-				<Option output="..\lib\libinput_thread_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input_thread_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Debug_Thread\" />
 				<Option type="2" />
@@ -99,7 +99,7 @@
 			</Target>
 			<Target title="Linux_Release_Threads">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput_thread" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input_thread" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Release_Thread\" />
 				<Option type="2" />
@@ -117,7 +117,7 @@
 			</Target>
 			<Target title="Linux_Debug_Threads">
 				<Option platforms="Unix;" />
-				<Option output="..\lib\libinput_thread_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\input_thread_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj\Debug_Thread\" />
 				<Option type="2" />
@@ -139,6 +139,7 @@
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-std=c++0x" />
+			<Add option="-DHAS_NULLPTR" />
 			<Add directory="..\Input\include" />
 			<Add directory="..\Utils\include" />
 			<Add directory="..\Lunar" />

@@ -7,9 +7,9 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release_Win32_SFML">
-				<Option output="../lib/libgui_sfml" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_sfml" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/SFML/" />
+				<Option object_output="obj\Release\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -19,17 +19,17 @@
 					<Add option="-DFRONT_END_SFML" />
 					<Add option="-DUSING_THREADS" />
 					<Add option="-DWIN32" />
-					<Add directory="../../boost_1_43_0" />
-					<Add directory="../../SFML-2.0/include" />
+					<Add directory="..\..\boost_1_43_0" />
+					<Add directory="..\..\SFML-2.0\include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
 			</Target>
 			<Target title="Debug_Win32_SFML">
-				<Option output="../lib/libgui_sfml_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_sfml_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/SFML/" />
+				<Option object_output="obj\Debug\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -39,14 +39,14 @@
 					<Add option="-DFRONT_END_SFML" />
 					<Add option="-DUSING_THREADS" />
 					<Add option="-DWIN32" />
-					<Add directory="../../boost_1_43_0" />
-					<Add directory="../../SFML-2.0/include" />
+					<Add directory="..\..\boost_1_43_0" />
+					<Add directory="..\..\SFML-2.0\include" />
 				</Compiler>
 			</Target>
 			<Target title="Release_Win32_OGRE">
-				<Option output="../lib/libgui_ogre" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_ogre" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/OGRE/" />
+				<Option object_output="obj\Release\OGRE\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -56,16 +56,16 @@
 					<Add option="-DFRONT_END_OGRE" />
 					<Add option="-DUSING_OGRE" />
 					<Add option="-DWIN32" />
-					<Add directory="../../ogre/OgreMain/include" />
+					<Add directory="..\..\ogre\OgreMain\include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
 			</Target>
 			<Target title="Debug_Win32_OGRE">
-				<Option output="../lib/libgui_ogre_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_ogre_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/OGRE/" />
+				<Option object_output="obj\Debug\OGRE\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -75,13 +75,13 @@
 					<Add option="-DFRONT_END_OGRE" />
 					<Add option="-DUSING_OGRE" />
 					<Add option="-DWIN32" />
-					<Add directory="../../ogre/OgreMain/include" />
+					<Add directory="..\..\ogre\OgreMain\include" />
 				</Compiler>
 			</Target>
 			<Target title="Release_Linux_SFML">
-				<Option output="../lib/libgui_sfml" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_sfml" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/SFML/" />
+				<Option object_output="obj\Release\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -90,18 +90,18 @@
 					<Add option="-Wall" />
 					<Add option="-DFRONT_END_SFML" />
 					<Add option="-DFROST_LINUX" />
-					<Add directory="../../boost_1_43_0" />
-					<Add directory="../../SFML-2.0/include" />
-					<Add directory="/usr/include/freetype2" />
+					<Add directory="..\..\boost_1_43_0" />
+					<Add directory="..\..\SFML-2.0\include" />
+					<Add directory="\usr\include\freetype2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
 			</Target>
 			<Target title="Debug_Linux_SFML">
-				<Option output="../lib/libgui_sfml_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_sfml_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/SFML/" />
+				<Option object_output="obj\Debug\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -110,15 +110,15 @@
 					<Add option="-g" />
 					<Add option="-DFRONT_END_SFML" />
 					<Add option="-DFROST_LINUX" />
-					<Add directory="../../boost_1_43_0" />
-					<Add directory="../../SFML-2.0/include" />
-					<Add directory="/usr/include/freetype2" />
+					<Add directory="..\..\boost_1_43_0" />
+					<Add directory="..\..\SFML-2.0\include" />
+					<Add directory="\usr\include\freetype2" />
 				</Compiler>
 			</Target>
 			<Target title="Release_Linux_OGRE">
-				<Option output="../lib/libgui_ogre" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_ogre" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/OGRE/" />
+				<Option object_output="obj\Release\OGRE\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -128,17 +128,17 @@
 					<Add option="-DFRONT_END_OGRE" />
 					<Add option="-DUSING_OGRE" />
 					<Add option="-DFROST_LINUX" />
-					<Add directory="../../ogre/OgreMain/include" />
-					<Add directory="/usr/include/freetype2" />
+					<Add directory="..\..\ogre\OgreMain\include" />
+					<Add directory="\usr\include\freetype2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
 			</Target>
 			<Target title="Debug_Linux_OGRE">
-				<Option output="../lib/libgui_ogre_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_ogre_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/OGRE/" />
+				<Option object_output="obj\Debug\OGRE\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -148,14 +148,14 @@
 					<Add option="-DFRONT_END_OGRE" />
 					<Add option="-DUSING_OGRE" />
 					<Add option="-DFROST_LINUX" />
-					<Add directory="../../ogre/OgreMain/include" />
-					<Add directory="/usr/include/freetype2" />
+					<Add directory="..\..\ogre\OgreMain\include" />
+					<Add directory="\usr\include\freetype2" />
 				</Compiler>
 			</Target>
 			<Target title="Release_Linux_SFML_Threads">
-				<Option output="../lib/libgui_sfml_threads" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_sfml_threads" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/SFML/" />
+				<Option object_output="obj\Release\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -165,17 +165,17 @@
 					<Add option="-DFRONT_END_SFML" />
 					<Add option="-DUSING_THREADS" />
 					<Add option="-DFROST_LINUX" />
-					<Add directory="../../boost_1_43_0" />
-					<Add directory="../../SFML-2.0/include" />
+					<Add directory="..\..\boost_1_43_0" />
+					<Add directory="..\..\SFML-2.0\include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 				</Linker>
 			</Target>
 			<Target title="Debug_Linux_SFML_Threads">
-				<Option output="../lib/libgui_sfml_threads_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\gui_sfml_threads_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/SFML/" />
+				<Option object_output="obj\Debug\SFML\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -185,8 +185,8 @@
 					<Add option="-DFRONT_END_SFML" />
 					<Add option="-DUSING_THREADS" />
 					<Add option="-DFROST_LINUX" />
-					<Add directory="../../boost_1_43_0" />
-					<Add directory="../../SFML-2.0/include" />
+					<Add directory="..\..\boost_1_43_0" />
+					<Add directory="..\..\SFML-2.0\include" />
 				</Compiler>
 			</Target>
 		</Build>
@@ -198,82 +198,83 @@
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-std=c++0x" />
+			<Add option="-DHAS_NULLPTR" />
 			<Add directory="include" />
-			<Add directory="../Input/include" />
-			<Add directory="../XML/include" />
-			<Add directory="../Utils/include" />
-			<Add directory="../Lunar" />
-			<Add directory="../../lua5.1/include" />
-			<Add directory="../../OIS/includes" />
-			<Add directory="../../freetype-2.3.11/include" />
+			<Add directory="..\Input\include" />
+			<Add directory="..\XML\include" />
+			<Add directory="..\Utils\include" />
+			<Add directory="..\Lunar" />
+			<Add directory="..\..\lua5.1\include" />
+			<Add directory="..\..\OIS\includes" />
+			<Add directory="..\..\freetype-2.3.11\include" />
 		</Compiler>
-		<Unit filename="include/frost_anchor.h" />
-		<Unit filename="include/frost_backdrop.h" />
-		<Unit filename="include/frost_button.h" />
-		<Unit filename="include/frost_checkbutton.h" />
-		<Unit filename="include/frost_editbox.h" />
-		<Unit filename="include/frost_font.h" />
-		<Unit filename="include/frost_fontmanager.h" />
-		<Unit filename="include/frost_fontstring.h" />
-		<Unit filename="include/frost_frame.h" />
-		<Unit filename="include/frost_gradient.h" />
-		<Unit filename="include/frost_guimanager.h" />
-		<Unit filename="include/frost_layeredregion.h" />
-		<Unit filename="include/frost_material.h" />
-		<Unit filename="include/frost_messageframe.h" />
-		<Unit filename="include/frost_region.h" />
-		<Unit filename="include/frost_rendertarget.h" />
-		<Unit filename="include/frost_scrollframe.h" />
-		<Unit filename="include/frost_scrollingmessageframe.h" />
-		<Unit filename="include/frost_slider.h" />
-		<Unit filename="include/frost_sprite.h" />
-		<Unit filename="include/frost_statusbar.h" />
-		<Unit filename="include/frost_text.h" />
-		<Unit filename="include/frost_texture.h" />
-		<Unit filename="include/frost_uiobject.h" />
-		<Unit filename="include/impl/ogre/ogre_font.h">
+		<Unit filename="include\frost_anchor.h" />
+		<Unit filename="include\frost_backdrop.h" />
+		<Unit filename="include\frost_button.h" />
+		<Unit filename="include\frost_checkbutton.h" />
+		<Unit filename="include\frost_editbox.h" />
+		<Unit filename="include\frost_font.h" />
+		<Unit filename="include\frost_fontmanager.h" />
+		<Unit filename="include\frost_fontstring.h" />
+		<Unit filename="include\frost_frame.h" />
+		<Unit filename="include\frost_gradient.h" />
+		<Unit filename="include\frost_guimanager.h" />
+		<Unit filename="include\frost_layeredregion.h" />
+		<Unit filename="include\frost_material.h" />
+		<Unit filename="include\frost_messageframe.h" />
+		<Unit filename="include\frost_region.h" />
+		<Unit filename="include\frost_rendertarget.h" />
+		<Unit filename="include\frost_scrollframe.h" />
+		<Unit filename="include\frost_scrollingmessageframe.h" />
+		<Unit filename="include\frost_slider.h" />
+		<Unit filename="include\frost_sprite.h" />
+		<Unit filename="include\frost_statusbar.h" />
+		<Unit filename="include\frost_text.h" />
+		<Unit filename="include\frost_texture.h" />
+		<Unit filename="include\frost_uiobject.h" />
+		<Unit filename="include\impl\ogre\ogre_font.h">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="include/impl/ogre/ogre_guimanager.h">
+		<Unit filename="include\impl\ogre\ogre_guimanager.h">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="include/impl/ogre/ogre_material.h">
+		<Unit filename="include\impl\ogre\ogre_material.h">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="include/impl/ogre/ogre_quad.h">
+		<Unit filename="include\impl\ogre\ogre_quad.h">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="include/impl/ogre/ogre_rendertarget.h">
+		<Unit filename="include\impl\ogre\ogre_rendertarget.h">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="include/impl/ogre/ogre_sprite.h">
+		<Unit filename="include\impl\ogre\ogre_sprite.h">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="include/impl/ogre/ogre_spritemanager.h">
+		<Unit filename="include\impl\ogre\ogre_spritemanager.h">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="include/impl/sfml/sfml_font.h">
+		<Unit filename="include\impl\sfml\sfml_font.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -281,7 +282,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="include/impl/sfml/sfml_guimanager.h">
+		<Unit filename="include\impl\sfml\sfml_guimanager.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -289,7 +290,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="include/impl/sfml/sfml_material.h">
+		<Unit filename="include\impl\sfml\sfml_material.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -297,7 +298,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="include/impl/sfml/sfml_rendertarget.h">
+		<Unit filename="include\impl\sfml\sfml_rendertarget.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -305,7 +306,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="include/impl/sfml/sfml_sprite.h">
+		<Unit filename="include\impl\sfml\sfml_sprite.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -313,7 +314,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="include/impl/sfml/sfml_texturemanager.h">
+		<Unit filename="include\impl\sfml\sfml_texturemanager.h">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -321,95 +322,95 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="src/frost_anchor.cpp" />
-		<Unit filename="src/frost_backdrop.cpp" />
-		<Unit filename="src/frost_button.cpp" />
-		<Unit filename="src/frost_button_glues.cpp" />
-		<Unit filename="src/frost_button_parser.cpp" />
-		<Unit filename="src/frost_checkbutton.cpp" />
-		<Unit filename="src/frost_checkbutton_glues.cpp" />
-		<Unit filename="src/frost_checkbutton_parser.cpp" />
-		<Unit filename="src/frost_editbox.cpp" />
-		<Unit filename="src/frost_editbox_glues.cpp" />
-		<Unit filename="src/frost_editbox_parser.cpp" />
-		<Unit filename="src/frost_font.cpp" />
-		<Unit filename="src/frost_fontmanager.cpp" />
-		<Unit filename="src/frost_fontstring.cpp" />
-		<Unit filename="src/frost_fontstring_glues.cpp" />
-		<Unit filename="src/frost_fontstring_parser.cpp" />
-		<Unit filename="src/frost_frame.cpp" />
-		<Unit filename="src/frost_frame_glues.cpp" />
-		<Unit filename="src/frost_frame_parser.cpp" />
-		<Unit filename="src/frost_gradient.cpp" />
-		<Unit filename="src/frost_guimanager.cpp" />
-		<Unit filename="src/frost_layeredregion.cpp" />
-		<Unit filename="src/frost_layeredregion_glues.cpp" />
-		<Unit filename="src/frost_layeredregion_parser.cpp" />
-		<Unit filename="src/frost_lunar.cpp" />
-		<Unit filename="src/frost_material.cpp" />
-		<Unit filename="src/frost_messageframe.cpp" />
-		<Unit filename="src/frost_messageframe_glues.cpp" />
-		<Unit filename="src/frost_messageframe_parser.cpp" />
-		<Unit filename="src/frost_region.cpp" />
-		<Unit filename="src/frost_region_parser.cpp" />
-		<Unit filename="src/frost_rendertarget.cpp" />
-		<Unit filename="src/frost_scrollframe.cpp" />
-		<Unit filename="src/frost_scrollframe_glues.cpp" />
-		<Unit filename="src/frost_scrollframe_parser.cpp" />
-		<Unit filename="src/frost_scrollingmessageframe.cpp" />
-		<Unit filename="src/frost_scrollingmessageframe_glues.cpp" />
-		<Unit filename="src/frost_scrollingmessageframe_parser.cpp" />
-		<Unit filename="src/frost_slider.cpp" />
-		<Unit filename="src/frost_slider_glues.cpp" />
-		<Unit filename="src/frost_slider_parser.cpp" />
-		<Unit filename="src/frost_sprite.cpp" />
-		<Unit filename="src/frost_statusbar.cpp" />
-		<Unit filename="src/frost_statusbar_glues.cpp" />
-		<Unit filename="src/frost_statusbar_parser.cpp" />
-		<Unit filename="src/frost_text.cpp" />
-		<Unit filename="src/frost_texture.cpp" />
-		<Unit filename="src/frost_texture_glues.cpp" />
-		<Unit filename="src/frost_texture_parser.cpp" />
-		<Unit filename="src/frost_uiobject.cpp" />
-		<Unit filename="src/frost_uiobject_glues.cpp" />
-		<Unit filename="src/frost_uiobject_parser.cpp" />
-		<Unit filename="src/impl/ogre/ogre_font.cpp">
+		<Unit filename="src\frost_anchor.cpp" />
+		<Unit filename="src\frost_backdrop.cpp" />
+		<Unit filename="src\frost_button.cpp" />
+		<Unit filename="src\frost_button_glues.cpp" />
+		<Unit filename="src\frost_button_parser.cpp" />
+		<Unit filename="src\frost_checkbutton.cpp" />
+		<Unit filename="src\frost_checkbutton_glues.cpp" />
+		<Unit filename="src\frost_checkbutton_parser.cpp" />
+		<Unit filename="src\frost_editbox.cpp" />
+		<Unit filename="src\frost_editbox_glues.cpp" />
+		<Unit filename="src\frost_editbox_parser.cpp" />
+		<Unit filename="src\frost_font.cpp" />
+		<Unit filename="src\frost_fontmanager.cpp" />
+		<Unit filename="src\frost_fontstring.cpp" />
+		<Unit filename="src\frost_fontstring_glues.cpp" />
+		<Unit filename="src\frost_fontstring_parser.cpp" />
+		<Unit filename="src\frost_frame.cpp" />
+		<Unit filename="src\frost_frame_glues.cpp" />
+		<Unit filename="src\frost_frame_parser.cpp" />
+		<Unit filename="src\frost_gradient.cpp" />
+		<Unit filename="src\frost_guimanager.cpp" />
+		<Unit filename="src\frost_layeredregion.cpp" />
+		<Unit filename="src\frost_layeredregion_glues.cpp" />
+		<Unit filename="src\frost_layeredregion_parser.cpp" />
+		<Unit filename="src\frost_lunar.cpp" />
+		<Unit filename="src\frost_material.cpp" />
+		<Unit filename="src\frost_messageframe.cpp" />
+		<Unit filename="src\frost_messageframe_glues.cpp" />
+		<Unit filename="src\frost_messageframe_parser.cpp" />
+		<Unit filename="src\frost_region.cpp" />
+		<Unit filename="src\frost_region_parser.cpp" />
+		<Unit filename="src\frost_rendertarget.cpp" />
+		<Unit filename="src\frost_scrollframe.cpp" />
+		<Unit filename="src\frost_scrollframe_glues.cpp" />
+		<Unit filename="src\frost_scrollframe_parser.cpp" />
+		<Unit filename="src\frost_scrollingmessageframe.cpp" />
+		<Unit filename="src\frost_scrollingmessageframe_glues.cpp" />
+		<Unit filename="src\frost_scrollingmessageframe_parser.cpp" />
+		<Unit filename="src\frost_slider.cpp" />
+		<Unit filename="src\frost_slider_glues.cpp" />
+		<Unit filename="src\frost_slider_parser.cpp" />
+		<Unit filename="src\frost_sprite.cpp" />
+		<Unit filename="src\frost_statusbar.cpp" />
+		<Unit filename="src\frost_statusbar_glues.cpp" />
+		<Unit filename="src\frost_statusbar_parser.cpp" />
+		<Unit filename="src\frost_text.cpp" />
+		<Unit filename="src\frost_texture.cpp" />
+		<Unit filename="src\frost_texture_glues.cpp" />
+		<Unit filename="src\frost_texture_parser.cpp" />
+		<Unit filename="src\frost_uiobject.cpp" />
+		<Unit filename="src\frost_uiobject_glues.cpp" />
+		<Unit filename="src\frost_uiobject_parser.cpp" />
+		<Unit filename="src\impl\ogre\ogre_font.cpp">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="src/impl/ogre/ogre_guimanager.cpp">
+		<Unit filename="src\impl\ogre\ogre_guimanager.cpp">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="src/impl/ogre/ogre_material.cpp">
+		<Unit filename="src\impl\ogre\ogre_material.cpp">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="src/impl/ogre/ogre_rendertarget.cpp">
+		<Unit filename="src\impl\ogre\ogre_rendertarget.cpp">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="src/impl/ogre/ogre_sprite.cpp">
+		<Unit filename="src\impl\ogre\ogre_sprite.cpp">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="src/impl/ogre/ogre_spritemanager.cpp">
+		<Unit filename="src\impl\ogre\ogre_spritemanager.cpp">
 			<Option target="Release_Win32_OGRE" />
 			<Option target="Debug_Win32_OGRE" />
 			<Option target="Release_Linux_OGRE" />
 			<Option target="Debug_Linux_OGRE" />
 		</Unit>
-		<Unit filename="src/impl/sfml/sfml_font.cpp">
+		<Unit filename="src\impl\sfml\sfml_font.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -417,7 +418,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="src/impl/sfml/sfml_guimanager.cpp">
+		<Unit filename="src\impl\sfml\sfml_guimanager.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -425,7 +426,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="src/impl/sfml/sfml_material.cpp">
+		<Unit filename="src\impl\sfml\sfml_material.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -433,7 +434,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="src/impl/sfml/sfml_rendertarget.cpp">
+		<Unit filename="src\impl\sfml\sfml_rendertarget.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -441,7 +442,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="src/impl/sfml/sfml_sprite.cpp">
+		<Unit filename="src\impl\sfml\sfml_sprite.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
@@ -449,7 +450,7 @@
 			<Option target="Release_Linux_SFML_Threads" />
 			<Option target="Debug_Linux_SFML_Threads" />
 		</Unit>
-		<Unit filename="src/impl/sfml/sfml_texturemanager.cpp">
+		<Unit filename="src\impl\sfml\sfml_texturemanager.cpp">
 			<Option target="Release_Win32_SFML" />
 			<Option target="Debug_Win32_SFML" />
 			<Option target="Release_Linux_SFML" />
