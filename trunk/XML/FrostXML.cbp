@@ -8,9 +8,9 @@
 		<Build>
 			<Target title="Release_Win32">
 				<Option platforms="Windows;Unix;" />
-				<Option output="../lib/libxml" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\xml" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/" />
+				<Option object_output="obj\Release\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -24,9 +24,9 @@
 			</Target>
 			<Target title="Debug_Win32">
 				<Option platforms="Windows;Unix;" />
-				<Option output="../lib/libxml_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\xml_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/" />
+				<Option object_output="obj\Debug\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -37,9 +37,9 @@
 			</Target>
 			<Target title="Release_Linux">
 				<Option platforms="Windows;Unix;" />
-				<Option output="../lib/libxml" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\xml" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Release/" />
+				<Option object_output="obj\Release\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -53,9 +53,9 @@
 			</Target>
 			<Target title="Debug_Linux">
 				<Option platforms="Windows;Unix;" />
-				<Option output="../lib/libxml_d" prefix_auto="1" extension_auto="1" />
+				<Option output="..\lib\xml_d" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj/Debug/" />
+				<Option object_output="obj\Debug\" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -72,14 +72,15 @@
 		<Compiler>
 			<Add option="-std=c++0x" />
 			<Add option="-Wall" />
+			<Add option="-DHAS_NULLPTR" />
 			<Add directory="include" />
-			<Add directory="../Utils/include" />
+			<Add directory="..\Utils\include" />
 		</Compiler>
-		<Unit filename="include/frost_xml.h" />
-		<Unit filename="include/frost_xml_block.h" />
-		<Unit filename="include/frost_xml_document.h" />
-		<Unit filename="src/frost_xml_block.cpp" />
-		<Unit filename="src/frost_xml_document.cpp" />
+		<Unit filename="include\frost_xml.h" />
+		<Unit filename="include\frost_xml_block.h" />
+		<Unit filename="include\frost_xml_document.h" />
+		<Unit filename="src\frost_xml_block.cpp" />
+		<Unit filename="src\frost_xml_document.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
