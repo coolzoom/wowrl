@@ -1,6 +1,0 @@
-## Interface: 0045
-## Title: Templates
-## Version: 1.0
-## Author: Kalith
-
-Template_Dialog.xml

@@ -1,0 +1,10 @@
+## Interface: 0045
+## Title: ToolBox
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+DefaultConfig.lua
+Localization.lua
+ToolBox.xml
+ToolBox.lua

@@ -1,0 +1,153 @@
+<Ui>
+    <Frame name="ObjectPanelContent">
+        <Frames>
+            <Button name="$parentObjectList" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="TOP">
+                        <Offset>
+                            <AbsDimension y="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.PanelBar:GetLocalizedString("ObjectsObjectList"));
+                    </OnLoad>
+                    <OnClick>
+						if (ObjectList:IsShown()) then
+							ObjectList:Hide();
+						else
+							ObjectList:Show();
+						end
+                    </OnClick>
+                </Scripts>
+            </Button>
+			
+            <Button name="$parentEditModel" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentObjectList" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="13"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.PanelBar:GetLocalizedString("ObjectsEditModel"));
+                    </OnLoad>
+                    <OnClick>
+						if (ModelEditor:IsShown()) then
+							ModelEditor:Hide();
+						else
+							ModelEditor:Show();
+						end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Frame name="$parentPickModel" inherits="FrameTemplate_ScrollableDropDown">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentEditModel" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="13"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetDropDownDefaultText(AddOns.PanelBar:GetLocalizedString("ObjectsPickModel"));
+                        this:SetDropDownMaxHeight(80);
+                        this:RegisterEvent("ZONE_LOADED");
+                        this:RegisterEvent("MODEL_CREATED");
+                        
+                        this.onSelect = function (value)
+                            AddOns.PanelBar.currentModel = value;
+                        end;
+                    </OnLoad>
+                    <OnEvent>
+                        this:GetBase():OnEvent();
+                        
+                        if (event == "ADDON_LOADED") then
+                            if (Editor:IsZoneLoaded()) then
+                                local models = {Editor:GetZoneModelList()};
+                                
+                                for k, v in pairs(models) do
+                                    this:AddDropDownElement(v, v);
+                                end
+                            end
+                        elseif (event == "ZONE_LOADED" or event == "MODEL_CREATED") then
+                            this:ClearDropDownElements();
+                            local models = {Editor:GetZoneModelList()};
+                            
+                            for k, v in pairs(models) do
+                                this:AddDropDownElement(v, v);
+                            end
+                        end
+                    </OnEvent>
+                </Scripts>
+            </Frame>
+            <Button name="$parentAddDoodad" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="$parentPickModel" relativePoint="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="3"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="LEFT">
+                        <Offset>
+                            <AbsDimension x="5"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.PanelBar:GetLocalizedString("ObjectsAddDoodad"));
+                    </OnLoad>
+                    <OnClick>
+                        AddOns.PanelBar:AddDoodad();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+    </Frame>
+    
+    <Script file="ObjectsPanel.lua"/>
+</Ui>

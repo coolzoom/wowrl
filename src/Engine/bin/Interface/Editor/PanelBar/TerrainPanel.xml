@@ -1,0 +1,6 @@
+<Ui>
+    <Frame name="TerrainPanelContent">
+    </Frame>
+    
+    <Script file="TerrainPanel.lua"/>
+</Ui>

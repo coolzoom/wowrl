@@ -1,0 +1,135 @@
+<Ui>
+    <Button name="ButtonTemplate_FileButton" virtual="true">
+        <Size>
+            <AbsDimension y="18"/>
+        </Size>
+        <Anchors>
+            <Anchor point="RIGHT">
+                <Offset>
+                    <AbsDimension x="-5"/>
+                </Offset>
+            </Anchor>
+        </Anchors>
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false" justifyH="LEFT">
+            <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentIconFrame" relativePoint="RIGHT">
+                    <Offset>
+                        <AbsDimension x="1"/>
+                    </Offset>
+                </Anchor>
+                <Anchor point="RIGHT"/>
+            </Anchors>
+            <Color r="1" g="1" b="1"/>
+        </NormalText>
+        <Scripts>
+            <OnLoad>
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = AddOns.FileSelector.normalTextColor*color;
+                    self:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    AddOns.Editor:CallColorFunctions(this);
+                end
+            </OnEvent>
+            <OnClick>
+                FileSelector:SetFile(this.id);
+            </OnClick>
+        </Scripts>
+        <Frames>
+            <Frame name="$parentIconFrame">
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT"/>
+                </Anchors>
+                <Layers>
+                    <Layer>
+                        <Texture name="$parentIcon" setAllPoints="true"/>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+    </Button>
+
+    <Button name="ButtonTemplate_FolderButton" virtual="true">
+        <Size>
+            <AbsDimension y="18"/>
+        </Size>
+        <Anchors>
+            <Anchor point="RIGHT"/>
+        </Anchors>
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false" justifyH="LEFT">
+            <Anchors>
+                <Anchor point="LEFT" relativeTo="$parentIconFrame" relativePoint="RIGHT">
+                    <Offset>
+                        <AbsDimension x="1"/>
+                    </Offset>
+                </Anchor>
+                <Anchor point="RIGHT"/>
+            </Anchors>
+            <Color r="1" g="1" b="1"/>
+        </NormalText>
+        <Scripts>
+            <OnLoad>
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = AddOns.FileSelector.normalTextColor*color;
+                    self:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    AddOns.Editor:CallColorFunctions(this);
+                end
+            </OnEvent>
+            <OnClick>
+                FileSelector:SetFolder(this.id);
+                FileSelector:DevelopFolder(this.id, false);
+            </OnClick>
+        </Scripts>
+        <Frames>
+            <Frame name="$parentIconFrame">
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT" relativeTo="$parentDevelop" relativePoint="RIGHT"/>
+                </Anchors>
+                <Layers>
+                    <Layer>
+                        <Texture name="$parentFolder" file="|FileSelectorIcons.png" setAllPoints="true">
+                            <TexCoords left="0.25" right="0.375" top="0.0" bottom="1.0"/>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+            <Button name="$parentDevelop">
+                <Size>
+                    <AbsDimension x="16" y="16"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="LEFT"/>
+                </Anchors>
+                <Layers>
+                    <Layer>
+                        <Texture name="$parentPlus" file="|FileSelectorIcons.png" setAllPoints="true">
+                            <TexCoords left="0" right="0.125" top="0.0" bottom="1.0"/>
+                        </Texture>
+                        <Texture name="$parentMinus" file="|FileSelectorIcons.png" hidden="true" setAllPoints="true">
+                            <TexCoords left="0.125" right="0.25" top="0.0" bottom="1.0"/>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        FileSelector:DevelopFolder(this:GetParent().id, true);
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+    </Button>
+</Ui>

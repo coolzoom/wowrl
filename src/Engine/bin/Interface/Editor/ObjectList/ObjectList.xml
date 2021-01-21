@@ -1,0 +1,255 @@
+<Ui>
+    <Frame name="ObjectList" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
+        <Size>
+            <AbsDimension x="275" y="400"/>
+        </Size>
+        <ResizeBounds>
+            <Min> <AbsDimension x="275" y="100"/> </Min>
+        </ResizeBounds>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+                this:RegisterEvent("OBJECT_ADDED");
+                this:RegisterEvent("OBJECT_REMOVED");
+                this:RegisterEvent("NEW_ZONE");
+                this:RegisterEvent("ZONE_LOADED");
+
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Title.TitleString:SetTextColor(newColor:Unpack());
+                    self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+
+                this.Title.TitleString:SetText(AddOns.ObjectList:GetLocalizedString("Title"));
+            </OnLoad>
+            <OnEvent>
+                this:GetBase():OnEvent();
+                
+                if ((event == "ADDON_LOADED") or (event == "NEW_ZONE") or (event == "ZONE_LOADED")) then
+                    this:BuildObjectList();
+                end
+                
+                if ((event == "OBJECT_ADDED") or (event == "OBJECT_REMOVED")) then
+                    if (this:IsShown()) then
+                        this:BuildObjectList();
+                    else
+                        this.updateObjectList = true;
+                    end
+                end
+            </OnEvent>
+            <OnShow>
+                if (this.updateObjectList) then
+                    this:BuildObjectList();
+                end
+            </OnShow>
+        </Scripts>
+        <Frames>
+            <Button name="$parentDeleteButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="BOTTOM">
+                        <Offset>
+                            <AbsDimension y="-12"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.ObjectList:GetLocalizedString("Delete"));
+                        this:SetWidth(this:GetTextWidth()+10);
+                    </OnLoad>
+                    <OnClick>
+                        if (ObjectList.currentObject) then
+                            Editor:DeleteObject(ObjectList.currentObject.objectID);
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentDeselectButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT">
+                        <Offset>
+                            <AbsDimension x="-12"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOM" relativeTo="$parentDeleteButton" relativePoint="TOP">
+                        <Offset>
+                            <AbsDimension y="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.ObjectList:GetLocalizedString("Deselect"));
+                        this:SetWidth(this:GetTextWidth()+10);
+                    </OnLoad>
+                    <OnClick>
+                        if (ObjectList.currentObject) then
+                            Editor:DeselectObject(ObjectList.currentObject.objectID);
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentSelectButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentDeselectButton" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.ObjectList:GetLocalizedString("Select"));
+                        this:SetWidth(this:GetTextWidth()+10);
+                    </OnLoad>
+                    <OnClick>
+                        if (ObjectList.currentObject) then
+                            Editor:SelectObject(ObjectList.currentObject.objectID);
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentHideButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentSelectButton" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.ObjectList:GetLocalizedString("Hide"));
+                        this:SetWidth(this:GetTextWidth()+10);
+                    </OnLoad>
+                    <OnClick>
+                        if (ObjectList.currentObject) then
+                            Editor:HideObject(ObjectList.currentObject.objectID);
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentShowButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentHideButton" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.ObjectList:GetLocalizedString("Show"));
+                        this:SetWidth(this:GetTextWidth()+10);
+                    </OnLoad>
+                    <OnClick>
+                        if (ObjectList.currentObject) then
+                            Editor:ShowObject(ObjectList.currentObject.objectID);
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentPropertiesButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentShowButton" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.ObjectList:GetLocalizedString("Properties"));
+                        this:SetWidth(this:GetTextWidth()+10);
+                    </OnLoad>
+                    <OnClick>
+                    
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <ScrollFrame name="$parentList" enableMouse="true" enableMouseWheel="true">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="16" y="32"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$parentDeselectButton" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-13" y="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                <ScrollChild>
+                    <Frame name="$parentScroll">
+                        <Size>
+                            <AbsDimension x="234" y="200"/>
+                        </Size>
+                    </Frame>
+                </ScrollChild>
+                <Scripts>
+                    <OnShow>
+                        this:OnSizeChanged();
+                    </OnShow>
+                    <OnSizeChanged>
+                        if (this.Scroll:GetHeight() and this:GetHeight()) then
+                            this.Slider:SetMinMaxValues(0, math.max(0, this.Scroll:GetHeight() - this:GetHeight()));
+                        end
+                        if (this:GetWidth()) then
+                            this.Scroll:SetWidth(this:GetWidth());
+                        end
+                    </OnSizeChanged>
+                    <OnMouseWheel>
+                        this.Slider:SetValue(this.Slider:GetValue()-18*arg1);
+                    </OnMouseWheel>
+                </Scripts>
+                <Frames>
+                    <Slider name="$parentSlider" minValue="0" maxValue="255" defaultValue="0" valueStep="1" orientation="VERTICAL">
+                        <Size>
+                            <AbsDimension x="6"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                                <Offset>
+                                    <AbsDimension x="5" y="8"/>
+                                </Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOM">
+                                <Offset>
+                                    <AbsDimension y="-8"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <HitRectInsets>
+                            <AbsInset left="-5" right="-5" top="-8" bottom="-8"/>
+                        </HitRectInsets>
+                        <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                        <ThumbTexture file="Interface/Editor/Templates/SliderThumb.png">
+                            <Size>
+                                <AbsDimension x="8" y="8"/>
+                            </Size>
+                        </ThumbTexture>
+                        <Scripts>
+                            <OnLoad>
+                                this:SetBackdropColor(AddOns.Templates.Config.Dialog.sliderColor:Unpack());
+                            </OnLoad>
+                            <OnValueChanged>
+                                this:GetParent():SetVerticalScroll(this:GetValue());
+                            </OnValueChanged>
+                        </Scripts>
+                    </Slider>
+                </Frames>
+            </ScrollFrame>
+        </Frames>
+    </Frame>
+</Ui>

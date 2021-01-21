@@ -1,0 +1,49 @@
+<-------------------->
+<-- FILE STRUCTURE -->
+<-------------------->
+
+<Spells>
+    <SpellFamily n:id>
+        <Spell>
+            <n[1,1]:UI name="" description="" icon="Icons/INV_Misc_QuestionMark.png" b:logInfo="true"/>
+            <n[1,1]:CastInfo n:castTime="0.0" b:channeled="false" n:rangeMin="0" n:rangeMax="5" b:inCombat="true" target="ALL">
+                <n[1,1]:Cost type="MANA">
+                    <n[*]:Absolute       n:val="0"/>
+                    <n[*]:RelativeToMax  n:val="0.0"/>
+                    <n[*]:RelativeToBase n:val="0.0"/>
+                </Cost>
+            </CastInfo>
+            <n[.,1]:RegisteredCooldowns>
+                <Cooldown name/>
+            </RegisteredCooldowns>
+            <n[.,1]:RegisteredEvents>
+            </RegisteredEvents>
+            <n[.,1]:Scripts>
+                <n[.,1]:OnStatsChanged>
+                </OnStatsChanged>
+
+                <n[.,1]:OnUnitSpawn>
+                </OnUnitSpawn>
+
+                <n[.,1]:OnCastBegin>
+                </OnCastBegin>
+
+                <n[.,1]:OnCasted>
+                </OnCasted>
+
+                <n[.,1]:OnEvent>
+                </OnEvent>
+
+                <n[.,1]:OnImpact>
+                </OnImpact>
+
+                <n[.,1]:OnTick>
+                </OnTick>
+
+                <n[.,1]:OnUpdate>
+                </OnUpdate>
+            </Scripts>
+        </Spell>
+    </SpellFamily>
+</Spells>
+

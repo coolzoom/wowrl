@@ -1,0 +1,18 @@
+<Gameplays>
+    <Script file="Editor.lua"/>
+
+    <Gameplay name="Editor">
+        <Selection friendly="MULTIPLE" hostile="MULTIPLE"/>
+        <Scripts>
+            <OnLoad>
+                EditorGameplay.OnLoad();
+            </OnLoad>
+            <OnEvent>
+                EditorGameplay.OnEvent();
+            </OnEvent>
+            <OnUpdate>
+                EditorGameplay.OnUpdate();
+            </OnUpdate>
+        </Scripts>
+    </Gameplay>
+</Gameplays>

@@ -1,0 +1,10 @@
+## Interface: 0045
+## Title: Console
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+DefaultConfig.lua
+Localization.lua
+Console.xml
+Console.lua

@@ -1,0 +1,39 @@
+<Ui>
+    <Frame name="EscMenu" parent="UIParent" inherits="FrameTemplate_Dialog" hidden="true">
+        <Size>
+            <AbsDimension x="150" y="64"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+                this.Title.TitleString:SetText(AddOns.EscMenu:GetLocalizedString("Title"));
+            </OnLoad>
+            <OnShow>
+                this:Raise();
+            </OnShow>
+        </Scripts>
+    </Frame>
+    
+    <Frame name="EscMenuConfirmDialog" parent="UIParent" inherits="FrameTemplate_YesNoDialog">
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+                this:SetMinWidth(100);
+                this:SetMinHeight(110);
+                this.Content:SetText(AddOns.EscMenu:GetLocalizedString("ConfirmExit"));
+                
+                this.OnYes = function(self)
+                    MenuBar.File.Save:OnClick();
+                    Exit();
+                end;
+                
+                this.OnNo = function(self)
+                    Exit();
+                end;
+            </OnLoad>
+        </Scripts>
+    </Frame>
+</Ui>

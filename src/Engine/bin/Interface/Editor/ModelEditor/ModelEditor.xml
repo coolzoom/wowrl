@@ -1,0 +1,88 @@
+<Ui>
+    <Frame name="ModelEditor" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
+        <Size>
+            <AbsDimension x="500" y="290"/>
+        </Size>
+        <ResizeBounds>
+            <Min>
+                <AbsDimension x="301" y="290"/>
+            </Min>
+        </ResizeBounds>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+                
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Title.TitleString:SetTextColor(newColor:Unpack());
+                    self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                    
+                    if (self.optionsEnabled) then
+                        self.Options.SubModelCaption:SetTextColor(color:Unpack());
+                        self.Options.SubEntityCaption:SetTextColor(color:Unpack());
+                        self.Options.SetColorCaption:SetTextColor(color:Unpack());
+                        self.Options.SetTextureCaption:SetTextColor(color:Unpack());
+                    end
+                end);
+                AddOns.Editor:RegisterSecondaryTextColorFunction(this, function (self, color)
+                    if (not self.optionsEnabled) then
+                        self.Options.SubModelCaption:SetTextColor(color:Unpack());
+                        self.Options.SubEntityCaption:SetTextColor(color:Unpack());
+                        self.Options.SetColorCaption:SetTextColor(color:Unpack());
+                        self.Options.SetTextureCaption:SetTextColor(color:Unpack());
+                    end
+                end);
+            </OnLoad>
+            <OnEvent>
+                this:GetBase():OnEvent();
+                
+                if (event == "ADDON_LOADED") then
+                    this:Init();
+                end
+            </OnEvent>
+        </Scripts>
+        <Frames>
+            <Slider name="$parentSplitter" minValue="0" maxValue="200" defaultValue="200" valueStep="1" orientation="HORIZONTAL">
+                <ThumbTexture>
+                    <Size>
+                        <AbsDimension x="5" y="100"/>
+                    </Size>
+                    <Color a="0.5" r="1" g="1" b="1"/>
+                </ThumbTexture>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="100" y="30"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-200" y="-13"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this.ThumbTexture:SetPoint("TOP", this, "TOP");
+                        this.ThumbTexture:SetPoint("BOTTOM", this, "BOTTOM");
+                        this:AllowClicksOutsideThumb(false);
+                    </OnLoad>
+                </Scripts>
+            </Slider>
+        </Frames>
+    </Frame>
+    
+    <Frame name="ModelEditorErrorDialog" parent="UIParent" inherits="FrameTemplate_ErrorDialog">
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+                this:SetMinWidth(100);
+                this:SetMinHeight(85);
+                this:SetHeight(85);
+            </OnLoad>
+        </Scripts>
+    </Frame>
+</Ui>

@@ -1,0 +1,11 @@
+## Interface: 0045
+## Title: ObjectList
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+DefaultConfig.lua
+Localization.lua
+ObjectList_Templates.xml
+ObjectList.xml
+ObjectList.lua

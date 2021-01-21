@@ -1,1 +1,0 @@
-AddOns.FPSCounter = AddOn("FPSCounter");

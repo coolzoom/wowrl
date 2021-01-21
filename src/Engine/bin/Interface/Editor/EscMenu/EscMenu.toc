@@ -1,0 +1,12 @@
+## Interface: 0045
+## Title: EscMenu
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: 
+
+DefaultConfig.lua
+Localization.lua
+EscMenu_Templates.xml
+EscMenu.xml
+EscMenu.lua
+Buttons.lua

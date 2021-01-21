@@ -1,0 +1,272 @@
+<Ui>
+    <Frame name="FileSelector" parent="UIParent" inherits="FrameTemplate_ResizableDialog" hidden="true">
+        <Size>
+            <AbsDimension x="600" y="500"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+
+                this.OnClose = function (self)
+                    if (this.OnCancel ~= nil) then
+                        this:OnCancel();
+                    end
+                end;
+
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self.Title.TitleString:SetTextColor(newColor:Unpack());
+                    self.Title.CloseButton:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+
+                this.Title.TitleString:SetText(AddOns.FileSelector:GetLocalizedString("Title"));
+                this:SetMinWidth(225);
+            </OnLoad>
+            <OnShow>
+                this:InitRootFolder();
+
+                this.Splitter.FolderFrame:On("SizeChanged");
+                this.Splitter.FileFrame:On("SizeChanged");
+            </OnShow>
+        </Scripts>
+        <Frames>
+            <EditBox name="$parentFile" inherits="EditBoxTemplate_EditBox">
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT">
+                        <Offset>
+                            <AbsDimension x="12" y="-12"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentOkButton" relativePoint="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="-5"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+            </EditBox>
+            <Button name="$parentCancelButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset>
+                            <AbsDimension x="-12" y="-12"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogCancel"));
+                    </OnLoad>
+                    <OnClick>
+                        FileSelector:Hide();
+                        if (this.OnCancel ~= nil) then
+                            FileSelector:OnCancel();
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parentOkButton" inherits="ButtonTemplate_Button">
+                <Anchors>
+                    <Anchor point="RIGHT" relativeTo="$parentCancelButton" relativePoint="LEFT">
+                        <Offset>
+                            <AbsDimension x="-3"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this:GetBase():OnLoad();
+                        this:SetText(AddOns.Templates:GetLocalizedString("ConfirmDialogOK"));
+                    </OnLoad>
+                    <OnClick>
+                        if (FileSelector:OnOk()) then
+                            FileSelector:Hide();
+                        end
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Slider name="$parentSplitter" maxValue="376" defaultValue="100" valueStep="1" orientation="HORIZONTAL">
+                <ThumbTexture>
+                    <Size>
+                        <AbsDimension x="5" y="100"/>
+                    </Size>
+                    <Color a="0.5" r="1" g="1" b="1"/>
+                </ThumbTexture>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="112" y="30"/>
+                        </Offset>
+                    </Anchor>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$parentCancelButton" relativePoint="TOPRIGHT">
+                        <Offset>
+                            <AbsDimension x="-100" y="-4"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnLoad>
+                        this.ThumbTexture:SetPoint("TOP", this, "TOP");
+                        this.ThumbTexture:SetPoint("BOTTOM", this, "BOTTOM");
+                    </OnLoad>
+                </Scripts>
+                <Frames>
+                    <ScrollFrame name="$parentFolderFrame" enableMouse="true" enableMouseWheel="true">
+                        <Anchors>
+                            <Anchor point="TOPLEFT">
+                                <Offset>
+                                    <AbsDimension x="-100"/>
+                                </Offset>
+                            </Anchor>
+                            <Anchor point="BOTTOMRIGHT" relativeTo="$parentThumbTexture" relativePoint="BOTTOMLEFT">
+                                <Offset>
+                                    <AbsDimension x="-16"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                        <ScrollChild>
+                            <Frame name="$parentScroll">
+                                <Size>
+                                    <AbsDimension x="200" y="200"/>
+                                </Size>
+                            </Frame>
+                        </ScrollChild>
+                        <Scripts>
+                            <OnShow>
+                                this:OnSizeChanged();
+                            </OnShow>
+                            <OnSizeChanged>
+                                if (this.Scroll:GetHeight() and this:GetHeight()) then
+                                    this.Slider:SetMinMaxValues(0, math.max(0, this.Scroll:GetHeight() - this:GetHeight()));
+                                end
+                                if (this:GetWidth()) then
+                                    this.Scroll:SetWidth(this:GetWidth());
+                                end
+                            </OnSizeChanged>
+                            <OnMouseWheel>
+                                this.Slider:SetValue(this.Slider:GetValue()-18*arg1);
+                            </OnMouseWheel>
+                        </Scripts>
+                        <Frames>
+                            <Slider name="$parentSlider" minValue="0" maxValue="255" defaultValue="0" valueStep="1" orientation="VERTICAL">
+                                <Size>
+                                    <AbsDimension x="6"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="5" y="8"/>
+                                        </Offset>
+                                    </Anchor>
+                                    <Anchor point="BOTTOM">
+                                        <Offset>
+                                            <AbsDimension y="-8"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <HitRectInsets>
+                                    <AbsInset left="-5" right="-5" top="-8" bottom="-8"/>
+                                </HitRectInsets>
+                                <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                                <ThumbTexture file="Interface/Editor/Templates/SliderThumb.png">
+                                    <Size>
+                                        <AbsDimension x="8" y="8"/>
+                                    </Size>
+                                </ThumbTexture>
+                                <Scripts>
+                                    <OnLoad>
+                                        this:SetBackdropColor(AddOns.Templates.Config.Dialog.sliderColor:Unpack());
+                                    </OnLoad>
+                                    <OnValueChanged>
+                                        this:GetParent():SetVerticalScroll(this:GetValue());
+                                    </OnValueChanged>
+                                </Scripts>
+                            </Slider>
+                        </Frames>
+                    </ScrollFrame>
+                    <ScrollFrame name="$parentFileFrame" enableMouse="true" enableMouseWheel="true">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentThumbTexture" relativePoint="TOPRIGHT"/>
+                            <Anchor point="BOTTOMRIGHT">
+                                <Offset>
+                                    <AbsDimension x="84"/>
+                                </Offset>
+                            </Anchor>
+                        </Anchors>
+                        <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                        <ScrollChild>
+                            <Frame name="$parentScroll">
+                                <Size>
+                                    <AbsDimension x="200" y="200"/>
+                                </Size>
+                            </Frame>
+                        </ScrollChild>
+                        <Scripts>
+                            <OnShow>
+                                this:OnSizeChanged();
+                            </OnShow>
+                            <OnSizeChanged>
+                                this.Slider:SetMinMaxValues(0, math.max(0, this.Scroll:GetHeight() - this:GetHeight()));
+                                this.Scroll:SetWidth(this:GetWidth());
+                            </OnSizeChanged>
+                            <OnMouseWheel>
+                                this.Slider:SetValue(this.Slider:GetValue()-18*arg1);
+                            </OnMouseWheel>
+                        </Scripts>
+                        <Frames>
+                            <Slider name="$parentSlider" minValue="0" maxValue="255" defaultValue="0" valueStep="1" orientation="VERTICAL">
+                                <Size>
+                                    <AbsDimension x="6"/>
+                                </Size>
+                                <Anchors>
+                                    <Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+                                        <Offset>
+                                            <AbsDimension x="5" y="8"/>
+                                        </Offset>
+                                    </Anchor>
+                                    <Anchor point="BOTTOM">
+                                        <Offset>
+                                            <AbsDimension y="-8"/>
+                                        </Offset>
+                                    </Anchor>
+                                </Anchors>
+                                <HitRectInsets>
+                                    <AbsInset left="-5" right="-5" top="-5" bottom="-5"/>
+                                </HitRectInsets>
+                                <Backdrop edgeFile="Interface/Editor/Templates/Border1PX.png"/>
+                                <ThumbTexture file="Interface/Editor/Templates/SliderThumb.png">
+                                    <Size>
+                                        <AbsDimension x="8" y="8"/>
+                                    </Size>
+                                </ThumbTexture>
+                                <Scripts>
+                                    <OnLoad>
+                                        this:SetBackdropColor(AddOns.Templates.Config.Dialog.sliderColor:Unpack());
+                                    </OnLoad>
+                                    <OnValueChanged>
+                                        this:GetParent():SetVerticalScroll(this:GetValue());
+                                    </OnValueChanged>
+                                </Scripts>
+                            </Slider>
+                        </Frames>
+                    </ScrollFrame>
+                </Frames>
+            </Slider>
+        </Frames>
+    </Frame>
+
+    <Frame name="FileSelectorNotFoundErrorDialog" parent="UIParent" inherits="FrameTemplate_ErrorDialog">
+        <Scripts>
+            <OnLoad>
+                this:GetBase():OnLoad();
+                this:SetMinWidth(100);
+                this:SetMinHeight(85);
+                this:SetHeight(85);
+            </OnLoad>
+        </Scripts>
+    </Frame>
+</Ui>

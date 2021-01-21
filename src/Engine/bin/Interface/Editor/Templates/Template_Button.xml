@@ -1,0 +1,74 @@
+<Ui>
+    <Button name="ButtonTemplate_Button" virtual="true">
+        <Size>
+            <AbsDimension y="18"/>
+        </Size>
+        <Backdrop edgeFile="|Border2PX.png">
+            <BackgroundInsets>
+                <AbsInset left="2" right="2" top="2" bottom="2"/>
+            </BackgroundInsets>
+        </Backdrop>
+        <PushedTextOffset>
+            <AbsDimension x="1" y="1"/>
+        </PushedTextOffset>
+        <HighlightTexture file="|ButtonHighlight.png"/>
+        <NormalText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false">
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+            <Color r="1" g="1" b="1"/>
+        </NormalText>
+        <DisabledText font="Fonts/Vera.ttf" fontHeight="10" setAllPoints="false">
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+            <Color r="0.5" g="0.5" b="0.5"/>
+        </DisabledText>
+        <Scripts>
+            <OnLoad>
+                this.normalTextColor   = Color(1,1,1);
+                this.disabledTextColor = Color(1,1,1);
+                this.normalBgColor     = Color(0.5, 0.5, 0.5);
+                
+                this:RegisterEvent("ADDON_LOADED");
+                AddOns.Editor:RegisterBackgroundColorFunction(this, function (self, color)
+                    local newColor = self.normalBgColor*color;
+                    self:SetBackdropColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterTextColorFunction(this, function (self, color)
+                    local newColor = self.normalTextColor*color;
+                    self:GetNormalFontObject():SetTextColor(newColor:Unpack());
+                end);
+                AddOns.Editor:RegisterSecondaryTextColorFunction(this, function (self, color)
+                    local newColor = self.disabledTextColor*color;
+                    self:GetDisabledFontObject():SetTextColor(newColor:Unpack());
+                end);
+            </OnLoad>
+            <OnShow>
+                this:SetWidth(this:GetTextWidth()+10);
+            </OnShow>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    AddOns.Editor:CallColorFunctions(this);
+                end
+            </OnEvent>
+        </Scripts>
+    </Button>
+    
+    <CheckButton name="CheckButtonTemplate_SwitchButton" virtual="true">
+        <Size>
+            <AbsDimension x="16" y="16"/>
+        </Size>
+        <NormalTexture    file="|SwitchBase.png"/>
+        <CheckedTexture   file="|SwitchOn.png"/>
+        <DisabledTexture  file="|SwitchDisabled.png"/>
+        <HighlightTexture file="|SwitchHighlight.png" setAllPoints="false">
+            <Size>
+                <AbsDimension x="32" y="32"/>
+            </Size>
+            <Anchors>
+                <Anchor point="CENTER"/>
+            </Anchors>
+        </HighlightTexture>
+    </CheckButton>
+</Ui>

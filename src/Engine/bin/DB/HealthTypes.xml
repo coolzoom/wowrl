@@ -1,0 +1,33 @@
+<HealthTypes>
+    <HealthType name="HEALTH" regenType="TICK" tickDuration="2.0">
+        <Scripts>
+            <OnUnitSpawn>
+                unit:FillHealthGauge();
+            </OnUnitSpawn>
+            <OnUnitDeath>
+                unit:EmptyHealthGauge();
+            </OnUnitDeath>
+            <OnMin>
+                unit:Die();
+            </OnMin>
+            <OnTick>
+                local fCoef = 0.0;
+                if (character) then
+                    if (character:GetRace() == "TROLL") then
+                        fCoef = 0.1;
+                    end
+                end
+                
+                if (not(unit:IsInCombat())) then
+                    fCoef = fCoef + 1.0;
+                end
+                
+                if (unit:IsSitting()) then
+                    fCoef = fCoef*1.33;
+                end
+                
+                unit:AddHealth(math.ceil(fCoef*unit:GetHealthRegenRatio()*(unit:GetStat("SPIRIT")*GetSpiritHealthRegenCoef(unit) + 6)));
+            </OnTick>
+        </Scripts>
+    </HealthType>
+</HealthTypes>

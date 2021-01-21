@@ -1,0 +1,9 @@
+## Interface: 0045
+## Title: Editor
+## Version: 1.0
+## Author: Kalith
+## SavedVariables: AddOns.Editor.Config
+
+DefaultConfig.lua
+Editor.lua
+Editor.xml

@@ -1,0 +1,18 @@
+<Ui>
+    <Frame name="EditorMainFrame">
+        <Scripts>
+            <OnLoad>
+                this:RegisterEvent("ADDON_LOADED");
+                this:RegisterEvent("ZONE_MODIFIED");
+            </OnLoad>
+            <OnEvent>
+                if (event == "ADDON_LOADED") then
+                    Editor:SetBackgroundColor(AddOns.Editor.Config.worldBackgroundColor:Unpack());
+                    AddOns.Editor:EnableMouseDecal(true);
+                elseif (event == "ZONE_MODIFIED") then
+                    AddOns.Editor:NotifyDataChanged();
+                end
+            </OnEvent>
+        </Scripts>
+    </Frame>
+</Ui>

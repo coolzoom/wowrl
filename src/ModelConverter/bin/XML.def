@@ -1,0 +1,53 @@
+<-------------------->
+<-- FILE STRUCTURE -->
+<-------------------->
+
+<Model format>
+
+    <n[1]:BoundingBox>
+        <n[1]:Min n:x n:y n:z/>
+        <n[1]:Max n:x n:y n:z/>
+    </BoundingBox>
+    
+    <n[.,1]:AnimationData>
+        <n[1]:Animations>
+            <Animation n:id n:begin n:end b:loop="false"/>
+        </Animations>
+        
+        <n[1]:Bones>
+            <Bone n:parent="-1">
+                <n[1]:Position n:x n:y n:z/>
+                
+                <n[.,1]:Timeline>
+                    <Key n:time>
+                        <n[.,1]:Translation n:x n:y n:z/>
+                        <n[.,1]:Scaling n:x n:y n:z/>
+                        <n[.,1]:Rotation n:w n:x n:y n:z/>
+                    </Key>
+                </Timeline>
+            </Bone>
+        </Bones>
+    </AnimationData>
+
+    <n[1]:SubMeshes>
+        <SubMesh n:id>
+            <n[1]:VertexPool>
+                <Vertex>
+                    <n[1]:Position n:x n:y n:z/>
+                    <n[1]:Normal n:x n:y n:z/>
+                    <n[1]:TextureCoordinates n:u n:v/>
+                    
+                    <n[.,1]:Bones>
+                        <Bone n:id n:weight="1.0"/>
+                    </Bones>
+                </Vertex>
+            </VertexPool>
+            
+            <n[1]:Triangles>
+                <Triangle n:v1 n:v2 n:v3/>
+            </Triangles>
+        </SubMesh>
+    </SubMeshes>
+
+</Model>
+
